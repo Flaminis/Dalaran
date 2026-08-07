@@ -50,18 +50,21 @@ decisions when appropriate.
 
 ## Scope
 
-This Code of Conduct applies within all community spaces, and also applies when
-an individual is officially representing the community in public spaces.
-Examples of representing our community include using an official e-mail address,
-posting via an official social media account, or acting as an appointed
-representative at an online or offline event.
+This Code of Conduct applies within all Dalaran community spaces — the
+[GitHub repository](https://github.com/Flaminis/Dalaran) and its issues, pull
+requests, and discussions, as well as any chat or forum the project runs — and
+also applies when an individual is officially representing the community in
+public spaces. Examples of representing our community include using an official
+e-mail address, posting via an official social media account, or acting as an
+appointed representative at an online or offline event.
 
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-opensource@dalaran.dev.
-All complaints will be reviewed and investigated promptly and fairly.
+reported to the Dalaran maintainers at <opensource@dalaran.dev>.
+All complaints will be reviewed and investigated promptly and fairly. Reports
+about a maintainer are handled by the other maintainers, and that maintainer is
+excluded from the discussion.
 
 All community leaders are obligated to respect the privacy and security of the
 reporter of any incident.
