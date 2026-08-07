@@ -86,6 +86,7 @@ dalaran = "dalaran_cli.__main__:main"
 dalaran-doctor = "dalaran.tools.doctor:main"
 dalaran-init = "dalaran.tools.scaffold:main"
 dalaran-pack = "dalaran.tools.bundle:main_pack"
+dalaran-ros2 = "dalaran.ros2.cli:main"
 dalaran-unpack = "dalaran.tools.bundle:main_unpack"
 
 
