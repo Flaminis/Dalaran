@@ -118,6 +118,7 @@ examples = [
   "minimal_options",
   "multiprocess_logging",
   "multithreading",
+  "nav2_costmap",
   "nuscenes_dataset",
   "nv12",
   "objectron",
@@ -202,6 +203,7 @@ minimal = { workspace = true }
 minimal_options = { workspace = true }
 multiprocess_logging = { workspace = true }
 multithreading = { workspace = true }
+nav2_costmap = { workspace = true }
 nuscenes_dataset = { workspace = true }
 nv12 = { workspace = true }
 objectron = { workspace = true }
@@ -260,6 +262,7 @@ members = [
   "examples/python/minimal_options",
   "examples/python/multiprocess_logging",
   "examples/python/multithreading",
+  "examples/python/nav2_costmap",
   "examples/python/nuscenes_dataset",
   "examples/python/nv12",
   "examples/python/objectron",

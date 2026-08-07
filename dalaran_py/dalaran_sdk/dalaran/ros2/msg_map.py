@@ -29,6 +29,7 @@ refer to the same entry.
 from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Sequence
+from fnmatch import fnmatchcase
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
@@ -47,8 +48,11 @@ __all__ = [
     "Converter",
     "convert",
     "lookup",
+    "lookup_topic",
     "normalize_type_name",
     "register",
+    "register_topic",
+    "registered_topics",
     "registered_types",
     "unregister",
 ]
@@ -56,6 +60,7 @@ __all__ = [
 Converter = Callable[[Any, str, "Context"], None]
 
 _REGISTRY: dict[str, Converter] = {}
+_TOPIC_REGISTRY: list[tuple[str, Converter]] = []
 
 # Marker fallback color, matching RViz's "you forgot to set a color" magenta.
 _DEFAULT_COLOR = (255, 0, 255, 255)
@@ -144,6 +149,74 @@ def register(*type_names: str, override: bool = False) -> Callable[[Converter], 
     return decorator
 
 
+def register_topic(*patterns: str) -> Callable[[Converter], Converter]:
+    """
+    Register a converter for one or more *topic name* globs, not message types.
+
+    Almost every message can be interpreted from its type alone, but a few cannot.
+    nav2 publishes its costmaps as plain `nav_msgs/OccupancyGrid` on
+    `/global_costmap/costmap` and `/local_costmap/costmap`, so the type says
+    "occupancy probability" while the payload actually carries navigation cost. The
+    only thing that distinguishes them is the topic they arrive on.
+
+    Topic entries are consulted before the type table, and the first matching
+    pattern wins, so a later, more specific registration should be listed first.
+    Patterns are `fnmatch` globs matched against the topic with a leading slash.
+
+    Parameters
+    ----------
+    patterns:
+        Topic globs, e.g. `"/local_costmap/costmap"` or `"*/costmap"`.
+
+    Returns
+    -------
+    collections.abc.Callable
+        The decorator, which returns the converter unchanged.
+
+    Examples
+    --------
+    ```python
+    from dalaran.ros2 import lookup_topic
+
+    assert lookup_topic("/global_costmap/costmap") is not None
+    assert lookup_topic("/map") is None  # a plain map is not a costmap
+    ```
+
+    """
+
+    def decorator(converter: Converter) -> Converter:
+        for pattern in patterns:
+            _TOPIC_REGISTRY.insert(0, (pattern, converter))
+        return converter
+
+    return decorator
+
+
+def lookup_topic(topic: str) -> Converter | None:
+    """
+    Return the converter registered for `topic`, or `None`.
+
+    Examples
+    --------
+    ```python
+    from dalaran.ros2 import lookup_topic
+
+    assert lookup_topic("/local_costmap/costmap") is not None
+    ```
+
+    """
+    normalized = "/" + topic.strip("/")
+    for pattern, converter in _TOPIC_REGISTRY:
+        if fnmatchcase(normalized, pattern) or fnmatchcase(normalized, "/" + pattern.strip("/")):
+            return converter
+    return None
+
+
+def registered_topics() -> list[str]:
+    """Return every registered topic glob, in match order."""
+    return [pattern for pattern, _ in _TOPIC_REGISTRY]
+
+
 def unregister(type_name: str) -> Converter | None:
     """Remove and return the converter for `type_name`, or `None` if there was none."""
     return _REGISTRY.pop(normalize_type_name(type_name), None)
@@ -179,9 +252,13 @@ def registered_types() -> list[str]:
     return sorted(_REGISTRY)
 
 
-def convert(type_name: str, msg: Any, entity_path: str, ctx: Context) -> bool:  # noqa: PLR0917
+def convert(type_name: str, msg: Any, entity_path: str, ctx: Context, *, topic: str | None = None) -> bool:  # noqa: PLR0917
     """
     Convert and log one message, returning whether a converter was found.
+
+    When `topic` is given, the topic table is consulted first, so a message whose
+    meaning depends on where it arrived - a nav2 costmap published as a plain
+    `nav_msgs/OccupancyGrid`, say - is routed by topic rather than by type.
 
     Examples
     --------
@@ -194,7 +271,9 @@ def convert(type_name: str, msg: Any, entity_path: str, ctx: Context) -> bool:  
     ```
 
     """
-    converter = lookup(type_name)
+    converter = lookup_topic(topic) if topic is not None else None
+    if converter is None:
+        converter = lookup(type_name)
     if converter is None:
         return False
     converter(msg, entity_path, ctx)
@@ -506,6 +585,79 @@ def convert_occupancy_grid(msg: Any, entity_path: str, ctx: Context) -> None:
             quaternion=placement.quaternion,
             colormap=dl.components.Colormap.RvizMap,
         ),
+    )
+
+
+@register("nav2_msgs/msg/Costmap")
+def convert_costmap(msg: Any, entity_path: str, ctx: Context) -> None:
+    """
+    Log a `nav2_msgs/Costmap` as a cost-colormapped [`dalaran.GridMap`][].
+
+    `nav2_msgs/Costmap` carries raw `0..=255` cost in `data` and its grid geometry
+    in `metadata` rather than `info`. The reserved values `253`
+    (`INSCRIBED_INFLATED_OBSTACLE`), `254` (`LETHAL_OBSTACLE`) and `255`
+    (`NO_INFORMATION`) are drawn in their own colors by
+    [`dalaran.ros2.costmap.costmap_to_rgba`][], so an inflated-obstacle ring can
+    never be mistaken for a merely expensive cell.
+    """
+    from .costmap import CostmapLayer, log_costmap_layers
+
+    metadata = getattr(msg, "metadata", None) or msg
+    origin_position, origin_orientation = _pose(metadata.origin)
+    placement = occupancy_grid_placement(
+        msg.data,
+        width=getattr(metadata, "size_x", None) or metadata.width,
+        height=getattr(metadata, "size_y", None) or metadata.height,
+        resolution=metadata.resolution,
+        origin_translation=origin_position,
+        origin_quaternion=origin_orientation,
+        frame_id=_frame_id(msg),
+    )
+    layer = str(getattr(metadata, "layer", "") or "costmap")
+    log_costmap_layers(entity_path, [CostmapLayer(layer, msg.data, scale="raw")], placement, ctx=ctx)
+
+
+@register_topic(
+    "/global_costmap/costmap",
+    "/local_costmap/costmap",
+    "*/global_costmap/costmap",
+    "*/local_costmap/costmap",
+    "*_costmap/costmap",
+)
+def convert_costmap_occupancy_grid(msg: Any, entity_path: str, ctx: Context) -> None:
+    """
+    Log a nav2 costmap that arrived as a `nav_msgs/OccupancyGrid`.
+
+    `/global_costmap/costmap` and `/local_costmap/costmap` are `OccupancyGrid`
+    topics, but their values have been squeezed through `costmap_2d`'s translation
+    table: `99` means `INSCRIBED_INFLATED_OBSTACLE` and `100` means
+    `LETHAL_OBSTACLE`, not "99% and 100% occupied". Rendering them with the plain
+    map palette would draw both as ordinary black, which is why the topic decides
+    the converter here and the message type does not.
+
+    The costmap is logged through
+    [`dalaran.ros2.costmap.log_costmap_layers`][] with a single layer, so a local
+    costmap's sliding `info.origin` lands on one stable entity and the layer stays
+    stackable with any others logged under the same path.
+    """
+    from .costmap import CostmapLayer, log_costmap_layers
+
+    info = msg.info
+    origin_position, origin_orientation = _pose(info.origin)
+    placement = occupancy_grid_placement(
+        msg.data,
+        width=info.width,
+        height=info.height,
+        resolution=info.resolution,
+        origin_translation=origin_position,
+        origin_quaternion=origin_orientation,
+        frame_id=_frame_id(msg),
+    )
+    log_costmap_layers(
+        entity_path,
+        [CostmapLayer("costmap", msg.data, scale="occupancy")],
+        placement,
+        ctx=ctx,
     )
 
 
