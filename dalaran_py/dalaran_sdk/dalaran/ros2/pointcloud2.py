@@ -311,7 +311,7 @@ def read_points(
     if organized:
         return points
 
-    points = points.reshape(-1)
+    points = points.reshape(-1)  # type: ignore[assignment]  # 2-D -> 1-D view
     if not is_dense and {"x", "y", "z"} <= set(dtype.names or ()):
         finite = np.isfinite(points["x"]) & np.isfinite(points["y"]) & np.isfinite(points["z"])
         if not finite.all():

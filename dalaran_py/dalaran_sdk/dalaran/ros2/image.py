@@ -102,7 +102,7 @@ def _resolve_encoding(encoding: str) -> tuple[str, int, str, ImageKind, float | 
         if channels == 1 and (bits, letter.lower()) == ("16", "u"):
             # `16UC1` is the ROS depth convention: millimeters.
             return scalar, 1, "rgb", "depth", 1000.0
-        kind: ImageKind = "mono" if channels == 1 else "color"
+        kind = "mono" if channels == 1 else "color"
         return scalar, channels, "rgb", kind, None
 
     if key.startswith("bayer_"):
