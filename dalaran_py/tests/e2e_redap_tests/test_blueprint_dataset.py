@@ -11,8 +11,8 @@ if TYPE_CHECKING:
 
 def test_configure_blueprint_dataset(entry_factory: EntryFactory, resource_prefix: str) -> None:
     """Test configuring a blueprint dataset."""
-    rbl_uri = resource_prefix + "blueprints/table_blueprint.rbl"
-    rbl_uri2 = resource_prefix + "blueprints/table_blueprint2.rbl"
+    dbl_uri = resource_prefix + "blueprints/table_blueprint.dbl"
+    dbl_uri2 = resource_prefix + "blueprints/table_blueprint2.dbl"
 
     ds = entry_factory.create_dataset("my_new_dataset")
     ds.register_prefix(resource_prefix + "dataset").wait()
@@ -20,12 +20,12 @@ def test_configure_blueprint_dataset(entry_factory: EntryFactory, resource_prefi
     bds = ds.blueprint_dataset()
     assert bds is not None
 
-    ds.register_blueprint(rbl_uri)
+    ds.register_blueprint(dbl_uri)
 
     assert len(bds.segment_ids()) == 1
     first_blueprint_name = ds.default_blueprint()
 
-    ds.register_blueprint(rbl_uri2, set_default=False)
+    ds.register_blueprint(dbl_uri2, set_default=False)
 
     assert len(bds.segment_ids()) == 2
     assert first_blueprint_name == ds.default_blueprint()
@@ -39,25 +39,25 @@ def test_configure_blueprint_dataset(entry_factory: EntryFactory, resource_prefi
 
 def test_reregister_same_blueprint(entry_factory: EntryFactory, resource_prefix: str) -> None:
     """Re-registering the same blueprint should succeed, not raise AlreadyExistsError (regression test for RR-3904)."""
-    rbl_uri = resource_prefix + "blueprints/table_blueprint.rbl"
+    dbl_uri = resource_prefix + "blueprints/table_blueprint.dbl"
 
     ds = entry_factory.create_dataset("reregister_blueprint_dataset")
     ds.register_prefix(resource_prefix + "dataset").wait()
 
-    ds.register_blueprint(rbl_uri)
+    ds.register_blueprint(dbl_uri)
 
     bds = ds.blueprint_dataset()
     assert bds is not None
     assert len(bds.segment_ids()) == 1
 
     # Re-register the exact same blueprint — this should not raise
-    ds.register_blueprint(rbl_uri)
+    ds.register_blueprint(dbl_uri)
 
 
 def test_configure_table_blueprint_dataset(entry_factory: EntryFactory, resource_prefix: str) -> None:
     """Test configuring a table blueprint dataset."""
-    rbl_uri = resource_prefix + "blueprints/table_blueprint.rbl"
-    rbl_uri2 = resource_prefix + "blueprints/table_blueprint2.rbl"
+    dbl_uri = resource_prefix + "blueprints/table_blueprint.dbl"
+    dbl_uri2 = resource_prefix + "blueprints/table_blueprint2.dbl"
 
     table = entry_factory.create_table("table_with_blueprints", pa.schema([pa.field("col", pa.int32())]))
 
@@ -65,7 +65,7 @@ def test_configure_table_blueprint_dataset(entry_factory: EntryFactory, resource
     assert table.blueprints() == []
     assert table.default_blueprint() is None
 
-    table.register_blueprint(rbl_uri)
+    table.register_blueprint(dbl_uri)
 
     blueprint_dataset = table.blueprint_dataset()
     assert blueprint_dataset is not None
@@ -76,7 +76,7 @@ def test_configure_table_blueprint_dataset(entry_factory: EntryFactory, resource
     assert first_blueprint_name is not None
     assert first_blueprint_name in table.blueprints()
 
-    table.register_blueprint(rbl_uri2, set_default=False)
+    table.register_blueprint(dbl_uri2, set_default=False)
 
     assert len(table.blueprints()) == 2
     assert table.default_blueprint() == first_blueprint_name
@@ -93,14 +93,14 @@ def test_table_blueprint_set_default_false_creates_dataset_without_default(
     entry_factory: EntryFactory, resource_prefix: str
 ) -> None:
     """Registering the first table blueprint with set_default=False leaves default unset."""
-    rbl_uri = resource_prefix + "blueprints/table_blueprint.rbl"
+    dbl_uri = resource_prefix + "blueprints/table_blueprint.dbl"
 
     table = entry_factory.create_table("table_blueprint_set_default_false", pa.schema([pa.field("col", pa.int32())]))
 
     assert table.blueprint_dataset() is not None
     assert table.default_blueprint() is None
 
-    table.register_blueprint(rbl_uri, set_default=False)
+    table.register_blueprint(dbl_uri, set_default=False)
 
     assert table.default_blueprint() is None
     blueprint_dataset = table.blueprint_dataset()
@@ -124,7 +124,7 @@ def test_table_default_blueprint_rejects_deleted_blueprint_dataset(
 ) -> None:
     """Setting a table default blueprint should fail if the referenced blueprint dataset is gone."""
     table = entry_factory.create_table("table_deleted_blueprint_dataset", pa.schema([pa.field("col", pa.int32())]))
-    table.register_blueprint(resource_prefix + "blueprints/table_blueprint.rbl", set_default=False)
+    table.register_blueprint(resource_prefix + "blueprints/table_blueprint.dbl", set_default=False)
 
     blueprint_dataset = table.blueprint_dataset()
     assert blueprint_dataset is not None

@@ -20,7 +20,7 @@ pub const SETTINGS_URL: &str = "about:settings";
 
 pub const CHUNK_STORE_BROWSER_URL: &str = "about:chunk_store";
 
-/// An eventListener for rrd posted from containing html
+/// An eventListener for dlr posted from containing html
 pub const WEB_EVENT_LISTENER_SCHEME: &str = "web_event:";
 
 /// Origin used to show the examples ui in the redap browser.
@@ -47,7 +47,7 @@ pub enum ViewerOpenUrl {
 
     /// A remote file, served over http.
     ///
-    /// Could be an `.rrd` recording, `.rbl` blueprint, `.mcap`, `.png`, `.glb`, etc.
+    /// Could be an `.dlr` recording, `.dbl` blueprint, `.mcap`, `.png`, `.glb`, etc.
     /// See also [`LogDataSource::HttpUrl`].
     HttpUrl(Url),
 
@@ -368,7 +368,7 @@ impl ViewerOpenUrl {
             Route::Loading(source) => Self::from_data_source(source),
 
             Route::LocalRecording { recording_id } => {
-                // Local recordings includes those downloaded from rrd urls
+                // Local recordings includes those downloaded from dlr urls
                 // (as of writing this includes the sample recordings!)
                 // If it's one of those we want to update the address bar accordingly.
 
@@ -848,12 +848,12 @@ fn handle_web_event_listener(egui_ctx: &egui::Context, command_sender: &CommandS
     use std::sync::Arc;
 
     use dl_log::ResultExt as _;
-    use dl_log_encoding::rrd::stream_from_http::HttpMessage;
+    use dl_log_encoding::dlr::stream_from_http::HttpMessage;
 
-    // Process an rrd when it's posted via `window.postMessage`
+    // Process an dlr when it's posted via `window.postMessage`
     let (tx, rx) = dl_log_channel::log_channel(dl_log_channel::LogSource::RrdWebEvent);
     let egui_ctx = egui_ctx.clone();
-    dl_log_encoding::rrd::stream_from_http::stream_rrd_from_event_listener(Arc::new({
+    dl_log_encoding::dlr::stream_from_http::stream_dlr_from_event_listener(Arc::new({
         move |msg| {
             egui_ctx.request_repaint_after(std::time::Duration::from_millis(10));
 
@@ -957,19 +957,19 @@ mod tests {
         // LogDataSource
         {
             // HTTP URL
-            let url = "https://example.com/data.rrd";
+            let url = "https://example.com/data.dlr";
             assert_eq!(
                 ViewerOpenUrl::from_str(url).unwrap(),
-                ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/data.rrd").unwrap())
+                ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/data.dlr").unwrap())
             );
 
             // Test file path (native only)
             #[cfg(not(target_arch = "wasm32"))]
             {
-                let url = "/path/to/file.rrd";
+                let url = "/path/to/file.dlr";
                 assert_eq!(
                     ViewerOpenUrl::from_str(url).unwrap(),
-                    ViewerOpenUrl::FilePath(std::path::PathBuf::from("/path/to/file.rrd"))
+                    ViewerOpenUrl::FilePath(std::path::PathBuf::from("/path/to/file.dlr"))
                 );
             }
 
@@ -978,11 +978,11 @@ mod tests {
         // Test WebViewerUrl
         {
             // Simple - single URL parameter.
-            let url = "https://foo.com/test?url=https://example.com/data.rrd";
+            let url = "https://foo.com/test?url=https://example.com/data.dlr";
             let expected = ViewerOpenUrl::WebViewerUrl {
                 base_url: Url::parse("https://foo.com/test").unwrap(),
                 url_parameters: vec1::vec1![ViewerOpenUrl::HttpUrl(
-                    Url::parse("https://example.com/data.rrd").unwrap()
+                    Url::parse("https://example.com/data.dlr").unwrap()
                 )],
             };
             assert_eq!(ViewerOpenUrl::from_str(url).unwrap(), expected);
@@ -1018,7 +1018,7 @@ mod tests {
             );
 
             // Complex - multiple URL parameters of different typesl
-            let url = "https://foo.com/?url=dalaran://localhost:51234/catalog&url=recording://camera&url=https://example.com/data.rrd";
+            let url = "https://foo.com/?url=dalaran://localhost:51234/catalog&url=recording://camera&url=https://example.com/data.dlr";
             let expected = ViewerOpenUrl::WebViewerUrl {
                 base_url: Url::parse("https://foo.com/").unwrap(),
                 url_parameters: vec1::vec1![
@@ -1028,7 +1028,7 @@ mod tests {
                     ViewerOpenUrl::IntraRecordingSelection(Item::InstancePath(
                         InstancePath::entity_all(EntityPath::from("camera"))
                     )),
-                    ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/data.rrd").unwrap())
+                    ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/data.dlr").unwrap())
                 ],
             };
             assert_eq!(ViewerOpenUrl::from_str(url).unwrap(), expected);
@@ -1148,26 +1148,26 @@ mod tests {
         let id = add_store(
             &mut store_hub,
             Some(LogSource::File {
-                path: std::path::PathBuf::from("/path/to/test.rrd"),
+                path: std::path::PathBuf::from("/path/to/test.dlr"),
             }),
         );
         assert_eq!(
             ViewerOpenUrl::from_route(&store_hub, &Route::LocalRecording { recording_id: id })
                 .unwrap(),
-            ViewerOpenUrl::FilePath(std::path::PathBuf::from("/path/to/test.rrd"))
+            ViewerOpenUrl::FilePath(std::path::PathBuf::from("/path/to/test.dlr"))
         );
 
         // originating from HTTP stream.
         let id = add_store(
             &mut store_hub,
             Some(LogSource::HttpStream {
-                url: "https://example.com/recording.rrd".to_owned(),
+                url: "https://example.com/recording.dlr".to_owned(),
             }),
         );
         assert_eq!(
             ViewerOpenUrl::from_route(&store_hub, &Route::LocalRecording { recording_id: id })
                 .unwrap(),
-            ViewerOpenUrl::HttpUrl("https://example.com/recording.rrd".parse().unwrap())
+            ViewerOpenUrl::HttpUrl("https://example.com/recording.dlr".parse().unwrap())
         );
 
         // originating from SDK (not possible).
@@ -1285,17 +1285,17 @@ mod tests {
         );
 
         assert_eq!(
-            ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/data.rrd").unwrap())
+            ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/data.dlr").unwrap())
                 .sharable_url(None)
                 .unwrap(),
-            "https://example.com/data.rrd"
+            "https://example.com/data.dlr"
         );
 
         assert_eq!(
-            ViewerOpenUrl::FilePath("/path/to/file.rrd".into())
+            ViewerOpenUrl::FilePath("/path/to/file.dlr".into())
                 .sharable_url(None)
                 .unwrap(),
-            "/path/to/file.rrd"
+            "/path/to/file.dlr"
         );
 
         let entry_id = EntryId::new();
@@ -1352,18 +1352,18 @@ mod tests {
             ViewerOpenUrl::WebViewerUrl {
                 base_url: Url::parse("https://foo.com/test").unwrap(),
                 url_parameters: vec1::vec1![ViewerOpenUrl::HttpUrl(
-                    Url::parse("https://example.com/data.rrd").unwrap()
+                    Url::parse("https://example.com/data.dlr").unwrap()
                 )],
             }
             .sharable_url(None)
             .unwrap(),
-            "https://example.com/data.rrd",
+            "https://example.com/data.dlr",
         );
         assert!(
             ViewerOpenUrl::WebViewerUrl {
                 base_url: Url::parse("https://foo.com/test").unwrap(),
                 url_parameters: vec1::vec1![
-                    ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/bar.rrd").unwrap()),
+                    ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/bar.dlr").unwrap()),
                     ViewerOpenUrl::RedapProxy("dalaran://localhost:51234/proxy".parse().unwrap())
                 ],
             }
@@ -1385,10 +1385,10 @@ mod tests {
         );
 
         assert_eq!(
-            ViewerOpenUrl::HttpUrl("https://example.com/data.rrd".parse().unwrap())
+            ViewerOpenUrl::HttpUrl("https://example.com/data.dlr".parse().unwrap())
                 .sharable_url(base_url_param)
                 .unwrap(),
-            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fdata.rrd"
+            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fdata.dlr"
         );
 
         assert_eq!(
@@ -1437,24 +1437,24 @@ mod tests {
             ViewerOpenUrl::WebViewerUrl {
                 base_url: Url::parse("http://foo.com/doesn't-matter").unwrap(),
                 url_parameters: vec1::vec1![ViewerOpenUrl::HttpUrl(
-                    Url::parse("https://example.com/data.rrd").unwrap()
+                    Url::parse("https://example.com/data.dlr").unwrap()
                 )],
             }
             .sharable_url(base_url_param)
             .unwrap(),
-            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fdata.rrd",
+            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fdata.dlr",
         );
         assert_eq!(
             ViewerOpenUrl::WebViewerUrl {
                 base_url: Url::parse("http://foo.com/doesn't-matter").unwrap(),
                 url_parameters: vec1::vec1![
-                    ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/bar.rrd").unwrap()),
+                    ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/bar.dlr").unwrap()),
                     ViewerOpenUrl::RedapProxy("dalaran://localhost:51234/proxy".parse().unwrap())
                 ],
             }
             .sharable_url(base_url_param)
             .unwrap(),
-            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fbar.rrd&url=dalaran%3A%2F%2Flocalhost%3A51234%2Fproxy",
+            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fbar.dlr&url=dalaran%3A%2F%2Flocalhost%3A51234%2Fproxy",
         );
     }
 

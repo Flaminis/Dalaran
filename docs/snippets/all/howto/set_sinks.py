@@ -12,8 +12,8 @@ dl.set_sinks(
     dl.GrpcSink(),
     # To host a gRPC server instead, replace the sink above with:
     # dl.GrpcServerSink(),
-    # Write data to a `data.rrd` file in the current directory
-    dl.FileSink("data.rrd"),
+    # Write data to a `data.dlr` file in the current directory
+    dl.FileSink("data.dlr"),
 )
 
 # Create some data

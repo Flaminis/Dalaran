@@ -6,7 +6,7 @@ Test resources for the `e2e_redap_tests` suite, stored in Git LFS.
 
 ### `dataset/`
 
-Collection of 20 .rrd files for testing dataset registration, querying, and partitioning.
+Collection of 20 .dlr files for testing dataset registration, querying, and partitioning.
 
 See [README.md](dataset/README.md) for more details.
 
@@ -19,7 +19,7 @@ Lance table containing sample data with basic datatypes (int, bool, float).
 - Used for testing DataFusion operations and table registration
 
 ### `blueprints/`
-Static `.rbl` blueprint files for table blueprint tests.
+Static `.dbl` blueprint files for table blueprint tests.
 
 These files let the table blueprint tests run under non-local profiles such as `dpf-docker`, where resources are accessed through `--resource-prefix` instead of generated locally during the test.
 Regenerate them from the repository root with:

@@ -56,7 +56,7 @@ def script_add_args(parser: ArgumentParser) -> None:
         help="Host a GRPC & web server and open a web viewer connecting to it.",
     )
     parser.add_argument("--url", type=str, default=None, help="Connect to this Dalaran URL")
-    parser.add_argument("--save", type=str, default=None, help="Save data to a .rrd file at this path")
+    parser.add_argument("--save", type=str, default=None, help="Save data to a .dlr file at this path")
     parser.add_argument(
         "--stdout",
         dest="stdout",

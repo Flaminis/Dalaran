@@ -31,11 +31,11 @@ impl ViewerOpenUrlDescription {
 
             ViewerOpenUrl::HttpUrl(url) => {
                 let path = url.path();
-                let rrd_file_name = path.split('/').next_back().map(|s| s.to_owned());
+                let dlr_file_name = path.split('/').next_back().map(|s| s.to_owned());
 
                 Self {
                     category: "HTTP url",
-                    target_short: rrd_file_name,
+                    target_short: dlr_file_name,
                 }
             }
 

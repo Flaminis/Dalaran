@@ -15,20 +15,20 @@ See the [catalog object model](../../concepts/query-and-transform/catalog-object
 ```python
 import dalaran as dl
 
-# Start a server with one or more .rrd files
-with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+# Start a server with one or more .dlr files
+with dl.server.Server(datasets={"my_dataset": ["recording.dlr"]}) as server:
     client = server.client()
     dataset = client.get_dataset("my_dataset")
 ```
 
-The server can host multiple datasets. Each dataset maps to either a list of `.rrd` files or a directory (which will be scanned for `.rrd` files):
+The server can host multiple datasets. Each dataset maps to either a list of `.dlr` files or a directory (which will be scanned for `.dlr` files):
 
 ```python
 with dl.server.Server(
     datasets={
-        # Explicit list of RRD files
-        "dataset1": ["recording1.rrd", "recording2.rrd"],
-        # Directory containing RRD files
+        # Explicit list of DLR files
+        "dataset1": ["recording1.dlr", "recording2.dlr"],
+        # Directory containing DLR files
         "dataset2": "/path/to/recordings_dir",
     }
 ) as server:
@@ -62,7 +62,7 @@ New datasets can also be created or appended after the server is launched:
 dataset = client.create_dataset(
     name="oss_demo",
 )
-dataset.register(Path("/path/to/recording/recording.rrd").resolve().as_uri()).wait()
+dataset.register(Path("/path/to/recording/recording.dlr").resolve().as_uri()).wait()
 ```
 
 ## Viewing datasets
@@ -157,7 +157,7 @@ Likewise, DataFusion offers a rich set of tools to convert a dataframe to variou
 ```python
 import dalaran as dl
 
-with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.dlr"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     table = dataset.reader(index="frame_nr").to_arrow_table()
 ```
@@ -167,7 +167,7 @@ with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
 ```python
 import dalaran as dl
 
-with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.dlr"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     df = dataset.reader(index="frame_nr").to_pandas()
 ```
@@ -178,7 +178,7 @@ with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
 import dalaran as dl
 import polars as pl
 
-with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.dlr"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     df = pl.from_arrow(dataset.reader(index="frame_nr").to_arrow_table())
 ```
@@ -189,7 +189,7 @@ with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
 import dalaran as dl
 import duckdb
 
-with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.dlr"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     table = dataset.reader(index="frame_nr").to_arrow_table()
     rel = duckdb.arrow(table)

@@ -27,14 +27,14 @@ dalaran mcap_data/
 
 ### File conversion
 
-Convert MCAP files to Dalaran's native RRD format:
+Convert MCAP files to Dalaran's native DLR format:
 
 ```bash
-# Convert MCAP to RRD format for faster loading
-dalaran mcap convert input.mcap -o output.rrd
+# Convert MCAP to DLR format for faster loading
+dalaran mcap convert input.mcap -o output.dlr
 
 # Convert with custom output location
-dalaran mcap convert data.mcap -o /path/to/output.rrd
+dalaran mcap convert data.mcap -o /path/to/output.dlr
 ```
 
 ## Decoder selection
@@ -45,16 +45,16 @@ Control which processing decoders are applied during conversion:
 
 ```bash
 # Use only protobuf decoding and file statistics
-dalaran mcap convert input.mcap -d protobuf -d stats -o output.rrd
+dalaran mcap convert input.mcap -d protobuf -d stats -o output.dlr
 
 # Use only ROS2 semantic interpretation for robotics data
-dalaran mcap convert input.mcap -d ros2msg -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -o output.dlr
 
 # Add robot geometry from ROS robot_description topics
-dalaran mcap convert input.mcap -d ros2msg -d urdf -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -d urdf -o output.dlr
 
 # Combine multiple decoders for comprehensive data access
-dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.dlr
 ```
 
 ### Available decoder options
@@ -62,11 +62,11 @@ dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.rr
 Decoding:
 - **`raw`**: Preserve original message bytes
 - **`schema`**: Extract metadata and schema information
-- **`stats`**: Compute file and channel statistics into RRD `__mcap_properties`
-- **`metadata`**: Extract metadata records into RRD `__mcap_metadata`, if present
+- **`stats`**: Compute file and channel statistics into DLR `__mcap_properties`
+- **`metadata`**: Extract metadata records into DLR `__mcap_metadata`, if present
 - **`attachments`**: Extract MCAP attachment records into static data under `__mcap_attachments`
 - **`protobuf`**: Decode protobuf messages using into generic Arrow data without Dalaran visualization components
-- **`recording_info`**: Extract recording session metadata into RRD `__mcap_properties`
+- **`recording_info`**: Extract recording session metadata into DLR `__mcap_properties`
 - **`urdf`**: Use Dalaran's built-in URDF loader when a ROS 2 `/robot_description` topic is present
 
 Semantic:
@@ -80,7 +80,7 @@ When no `-d` flags are specified, all available decoders are used:
 ```bash
 # These commands are equivalent (default uses all decoders):
 
-dalaran mcap convert input.mcap -o output.rrd
+dalaran mcap convert input.mcap -o output.dlr
 
 dalaran mcap convert input.mcap \
     -d raw \
@@ -93,5 +93,5 @@ dalaran mcap convert input.mcap \
     -d urdf \
     -d ros2msg \
     -d foxglove \
-    -o output.rrd
+    -o output.dlr
 ```

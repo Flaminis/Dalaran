@@ -26,7 +26,7 @@ class ChunkStore:
     For lazy, on-demand chunk loading, see [`LazyStore`][dalaran.experimental.LazyStore].
 
     Use `stream()` to process chunks through the lazy pipeline, or
-    `write_rrd()` to persist to disk.
+    `write_dlr()` to persist to disk.
     """
 
     _internal: ChunkStoreInternal
@@ -81,7 +81,7 @@ class ChunkStore:
         Build a DataFusion DataFrame over this store.
 
         The returned DataFrame is data-equivalent to the result of round-tripping
-        the same chunks through `write_rrd → dl.server.Server → dataset.reader()`,
+        the same chunks through `write_dlr → dl.server.Server → dataset.reader()`,
         modulo the `dalaran_segment_id` column (absent here because a single
         `ChunkStore` has no segment concept).
 
@@ -154,7 +154,7 @@ class ChunkStore:
             ctx = datafusion.SessionContext.global_ctx()
         return ctx.read_table(table)
 
-    def write_rrd(
+    def write_dlr(
         self,
         path: str | Path,
         *,
@@ -162,11 +162,11 @@ class ChunkStore:
         recording_id: str,
     ) -> None:
         """
-        Write all chunks to an RRD file.
+        Write all chunks to an DLR file.
 
         The caller must provide application_id and recording_id explicitly.
         """
-        self.stream().write_rrd(
+        self.stream().write_dlr(
             path,
             application_id=application_id,
             recording_id=recording_id,

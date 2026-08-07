@@ -83,7 +83,7 @@ def run_comparison(
     full_dump: bool,
     ignore_timelines: list[str] | None = None,
 ) -> None:
-    cmd = ["dalaran", "rrd", "compare", "--unordered", "--ignore-chunks-without-components"]
+    cmd = ["dalaran", "dlr", "compare", "--unordered", "--ignore-chunks-without-components"]
     if full_dump:
         cmd += ["--full-dump"]
     for timeline in ignore_timelines or []:

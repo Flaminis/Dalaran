@@ -32,7 +32,7 @@ from ._query_metrics import (
     QueryMetrics as QueryMetrics,
     query_metrics as query_metrics,
 )
-from ._rrd_reader import RrdReader as RrdReader
+from ._dlr_reader import RrdReader as RrdReader
 from ._selector import Selector as Selector
 from ._send_chunks import send_chunks as send_chunks
 from ._store_entry import StoreEntry as StoreEntry

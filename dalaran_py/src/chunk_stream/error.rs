@@ -49,14 +49,14 @@ impl std::fmt::Display for PythonException {
 
 #[derive(Clone, Debug, thiserror::Error)]
 pub enum ChunkPipelineError {
-    #[error("Failed to decode chunk from RRD file: {reason}")]
+    #[error("Failed to decode chunk from DLR file: {reason}")]
     RrdChunkDecode { reason: String },
 
-    #[error("Failed to read RRD file at {path}: {reason}")]
+    #[error("Failed to read DLR file at {path}: {reason}")]
     RrdRead { path: PathBuf, reason: String },
 
     #[error(
-        "Legacy RRD without footer: {path}. Use RrdReader.stream().collect() to read it eagerly into a ChunkStore."
+        "Legacy DLR without footer: {path}. Use RrdReader.stream().collect() to read it eagerly into a ChunkStore."
     )]
     RrdNoManifest { path: PathBuf },
 

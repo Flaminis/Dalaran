@@ -348,7 +348,7 @@ impl VisualizerEntitySubscriber {
         let store = engine.store();
 
         // Process manifest (virtual additions).
-        if let Some(manifest) = entity_db.rrd_manifest_index().manifest() {
+        if let Some(manifest) = entity_db.dlr_manifest_index().manifest() {
             for meta in dl_chunk_store::ChunkMeta::from_manifest(manifest) {
                 process_entity_components(&self.config, &mut self.mapping, &store_id, &meta);
             }
@@ -366,7 +366,7 @@ impl VisualizerEntitySubscriber {
         dl_tracing::profile_function!(self.config.visualizer);
 
         // TODO(andreas): Need to react to store removals as well. As of writing doesn't exist yet.
-        //                These removals also need to keep in mind that things from the rrd manifest
+        //                These removals also need to keep in mind that things from the dlr manifest
         //                shouldn't be removed.
 
         for event in events {

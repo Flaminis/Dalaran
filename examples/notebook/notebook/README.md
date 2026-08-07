@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Notebook: minimal example"
-description = "Embed the Rerun viewer directly inside Jupyter, Colab, or VSCode. Logged data shows up inline in the notebook."
+description = "Embed the Dalaran viewer directly inside Jupyter, Colab, or VSCode. Logged data shows up inline in the notebook."
 tags = ["Notebook", "API example", "3D"]
 thumbnail = "https://static.rerun.io/notebook_cube/e40da7048fb5c0c12ef9931225791c27469d057d/480w.png"
 thumbnail_dimensions = [480, 480]
@@ -17,20 +17,20 @@ channel = "nightly"
 
 ## Overview
 
-Rerun can be used directly within [Jupyter](https://jupyter.org/) notebooks.
+Dalaran can be used directly within [Jupyter](https://jupyter.org/) notebooks.
 Many additional environments beyond Jupyter are supported such as [Google Colab](https://colab.research.google.com/)
 or [VSCode](https://code.visualstudio.com/blogs/2021/08/05/notebooks).
 
-You need the separate support package [`rerun-notebook`](https://pypi.org/project/rerun-notebook/) to use this feature. Typically this is installed using:
+You need the separate support package [`dalaran-notebook`](https://pypi.org/project/dalaran-notebook/) to use this feature. Typically this is installed using:
 
 ```bash
-pip install "rerun-sdk[notebook]"
+pip install "dalaran-sdk[notebook]"
 ```
 
-In order to show a Rerun Viewer inline within a notebook, you can call:
+In order to show a Dalaran Viewer inline within a notebook, you can call:
 
 ```python
-rr.init("rerun_example_notebook")
+rr.init("dalaran_example_notebook")
 
 rr.log(...)
 
@@ -44,7 +44,7 @@ As with the other stream viewing APIs (`rr.show`, `rr.connect_grpc`, `rr.spawn`)
 a specific recording instance to `notebook_show`
 
 ```python
-rec = rr.RecordingStream("rerun_example_notebook_local")
+rec = rr.RecordingStream("dalaran_example_notebook_local")
 
 rec.log(...)
 rec.notebook_show()
@@ -54,7 +54,7 @@ rec.notebook_show()
 
 The easiest way to get a feel for working with notebooks is to use it.
 
-First, install the requirements (this includes Jupyter, the Rerun SDK, and the notebook support package)
+First, install the requirements (this includes Jupyter, the Dalaran SDK, and the notebook support package)
 
 ```sh
 pip install -r requirements.txt

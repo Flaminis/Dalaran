@@ -12,7 +12,7 @@ thumbnail_dimensions = [480, 264]
   <img src="https://static.rerun.io/custom_view/61089d7178b3bd7f9e3de36ee9c00e5fdf1c6f76/full.png" alt="Custom View UI example screenshot">
 </picture>
 
-Example showing how to add custom View classes to extend the Rerun Viewer.
+Example showing how to add custom View classes to extend the Dalaran Viewer.
 
 The example is really basic, but should be something you can build upon.
 
@@ -21,7 +21,7 @@ The example starts an SDK server which the Python or Rust logging SDK can connec
 
 [#2337](https://github.com/rerun-io/rerun/issues/2337): Note that in order to spawn a web viewer with these customizations applied,
 you have to build the web viewer of the version yourself.
-This is currently not supported outside of the Rerun repository.
+This is currently not supported outside of the Dalaran repository.
 
 ## Testing it
 Start it with `cargo run -p custom_view`.

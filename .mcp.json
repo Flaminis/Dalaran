@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "rerun": {
+    "dalaran": {
       "command": "./target/debug/re-viewer-mcp",
       "args": []
     }

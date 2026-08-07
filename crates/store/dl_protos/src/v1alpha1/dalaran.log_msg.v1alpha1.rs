@@ -11,7 +11,7 @@
 ///    artifact of how `oneof` works in Protobuf: all it does is carry a `dl_protos::log_msg::v1alpha1::log_msg::Msg`.
 ///    For that reason, it is never directly used, except by the legacy SDK comms protocol.
 /// * Finally, `dl_protos::log_msg::v1alpha1::log_msg::Msg` is the real transport-level type that we
-///    care about. It is used all over the place when encoding and decoding RRD streams.
+///    care about. It is used all over the place when encoding and decoding DLR streams.
 ///
 /// TODO(#8631): Remove `LogMsg`
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -269,15 +269,15 @@ impl ::prost::Name for StoreVersion {
         "/dalaran.log_msg.v1alpha1.StoreVersion".into()
     }
 }
-/// This is the payload that is carried in messages of type `::End` in RRD streams.
+/// This is the payload that is carried in messages of type `::End` in DLR streams.
 ///
 /// It keeps track of various useful information about the associated recording.
 ///
-/// During normal operations, there can only be a single `::End` message in an RRD stream, and
+/// During normal operations, there can only be a single `::End` message in an DLR stream, and
 /// therefore a single `RrdFooter`.
 /// It is possible to break that invariant by concatenating streams using external tools,
-/// e.g. by doing something like `cat *.rrd > all_my_recordings.rrd`.
-/// Passing that stream back through Dalaran tools, e.g. `cat *.rrd | dalaran rrd merge > all_my_recordings.rrd`,
+/// e.g. by doing something like `cat *.dlr > all_my_recordings.dlr`.
+/// Passing that stream back through Dalaran tools, e.g. `cat *.dlr | dalaran dlr merge > all_my_recordings.dlr`,
 /// would once again guarantee that only one `::End` message is present though.
 /// I.e. that invariant holds as long as one stays within our ecosystem of tools.
 ///
@@ -285,7 +285,7 @@ impl ::prost::Name for StoreVersion {
 /// in `dl_log_encoding::RrdFooter`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct RrdFooter {
-    /// All the `RrdManifest`s that were found in this RRD stream.
+    /// All the `RrdManifest`s that were found in this DLR stream.
     ///
     /// Each `RrdManifest` corresponds to one, and exactly one, recording.
     ///
@@ -305,8 +305,8 @@ impl ::prost::Name for RrdFooter {
 }
 /// This is the payload found in `RrdFooter`s.
 ///
-/// Each `RrdManifest` corresponds to one, and exactly one, RRD stream (i.e. recording).
-/// This restriction exists to make working with multiple RRD streams much simpler: due to the way
+/// Each `RrdManifest` corresponds to one, and exactly one, DLR stream (i.e. recording).
+/// This restriction exists to make working with multiple DLR streams much simpler: due to the way
 /// the Dalaran data model works, filtering rows of data from a manifest can have hard-to-predict
 /// second order effects on the schema of the stream as a whole.
 /// By keeping manifests for different recordings separate, we remove the need to filter per
@@ -318,21 +318,21 @@ impl ::prost::Name for RrdFooter {
 pub struct RrdManifest {
     /// The recording ID that was used to identify the original recording.
     ///
-    /// This is extracted from the `SetStoreInfo` message of the associated RRD stream.
+    /// This is extracted from the `SetStoreInfo` message of the associated DLR stream.
     #[prost(message, optional, tag = "1")]
     pub store_id: ::core::option::Option<super::super::common::v1alpha1::StoreId>,
-    /// The Sorbet schema of the associated RRD stream.
+    /// The Sorbet schema of the associated DLR stream.
     ///
     /// ⚠️ This is the Sorbet schema of the recording being indexed by this manifest, *not* the
     /// schema of `Self::manifest`.
     #[prost(message, optional, tag = "2")]
     pub sorbet_schema: ::core::option::Option<super::super::common::v1alpha1::Schema>,
-    /// The SHA256 hash of the Sorbet schema of the associated RRD stream.
+    /// The SHA256 hash of the Sorbet schema of the associated DLR stream.
     ///
     /// This is always computed by sorting the fields of the schema by name first.
     #[prost(bytes = "bytes", optional, tag = "3")]
     pub sorbet_schema_sha256: ::core::option::Option<::prost::bytes::Bytes>,
-    /// The complete manifest for the associated RRD stream.
+    /// The complete manifest for the associated DLR stream.
     ///
     /// Each row in this dataframe describes a unique chunk (ID, offset, size, timeline & component stats, etc).
     /// This can be used to compute relevancy queries (latest-at, range, dataframe), without needing to load

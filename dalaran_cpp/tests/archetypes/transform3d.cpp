@@ -4,7 +4,7 @@
 
 #include <dalaran/archetypes/transform3d.hpp>
 
-namespace rrd = dalaran::datatypes;
+namespace dlr = dalaran::datatypes;
 namespace rrc = dalaran::components;
 using namespace dalaran::archetypes;
 using ComponentBatch = dalaran::ComponentBatch;
@@ -20,11 +20,11 @@ SCENARIO(
     "instances",
     TEST_TAG
 ) {
-// Do NOT write this as rrd::Mat3x3 as this actually caught an overload resolution bug.
+// Do NOT write this as dlr::Mat3x3 as this actually caught an overload resolution bug.
 #define MATRIX_ILIST {{1.0f, 2.0f, 3.0f}, {4.0f, 5.0f, 6.0f}, {7.0f, 8.0f, 9.0f}}
-    rrd::Vec3D columns[3] = MATRIX_ILIST;
-    const auto quaternion = rrd::Quaternion::from_xyzw(1.0f, 2.0f, 3.0f, 4.0f);
-    const auto axis_angle = rrd::RotationAxisAngle({1.0f, 2.0f, 3.0f}, rrd::Angle::degrees(90.0f));
+    dlr::Vec3D columns[3] = MATRIX_ILIST;
+    const auto quaternion = dlr::Quaternion::from_xyzw(1.0f, 2.0f, 3.0f, 4.0f);
+    const auto axis_angle = dlr::RotationAxisAngle({1.0f, 2.0f, 3.0f}, dlr::Angle::degrees(90.0f));
 
     Transform3D manual = Transform3D();
 

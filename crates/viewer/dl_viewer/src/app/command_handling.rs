@@ -260,7 +260,7 @@ impl App {
 
                 // Stop receiving into the old recordings.
                 // This is most important when going back to the example screen by using the "Back"
-                // button in the browser, and there is still a connection downloading an .rrd.
+                // button in the browser, and there is still a connection downloading an .dlr.
                 // That's the case of `LogSource::HttpStream`.
                 // TODO(emilk): exactly what things get kept and what gets cleared?
                 self.rx_log.retain(|r| match r.source() {
@@ -838,7 +838,7 @@ impl App {
                 let egui_ctx = egui_ctx.clone();
 
                 let promise = poll_promise::Promise::spawn_local(async move {
-                    let files = async_open_rrd_dialog().await;
+                    let files = async_open_dlr_dialog().await;
                     egui_ctx.request_repaint(); // Wake ui thread
                     files
                 });
@@ -870,7 +870,7 @@ impl App {
                 let egui_ctx = egui_ctx.clone();
 
                 let promise = poll_promise::Promise::spawn_local(async move {
-                    let files = async_open_rrd_dialog().await;
+                    let files = async_open_dlr_dialog().await;
                     egui_ctx.request_repaint(); // Wake ui thread
                     files
                 });
@@ -1378,7 +1378,7 @@ impl App {
                 format!("{}-{}", store.application_id(), store.recording_id())
             }
             .pipe(|name| sanitize_file_name(&name))
-            .pipe(|stem| format!("{stem}.rrd"));
+            .pipe(|stem| format!("{stem}.dlr"));
 
             let file_path = folder.join(file_name.clone());
             let any_error = any_error.clone();
@@ -1732,7 +1732,7 @@ fn open_file_dialog_native(_: crate::MainThreadToken) -> Vec<std::path::PathBuf>
 }
 
 #[cfg(target_arch = "wasm32")]
-async fn async_open_rrd_dialog() -> Vec<web_sys::File> {
+async fn async_open_dlr_dialog() -> Vec<web_sys::File> {
     let supported: Vec<_> = dl_importer::supported_extensions().collect();
 
     rfd::AsyncFileDialog::new()
@@ -1762,7 +1762,7 @@ fn save_recording(
     entity_db: &EntityDb,
     loop_selection: Option<(TimelineName, dl_log_types::AbsoluteTimeRangeF)>,
 ) -> anyhow::Result<()> {
-    let rrd_version = entity_db
+    let dlr_version = entity_db
         .store_info()
         .and_then(|info| info.store_version)
         .unwrap_or(dl_build_info::CrateVersion::LOCAL);
@@ -1771,9 +1771,9 @@ fn save_recording(
         .recording_info_property::<dl_sdk_types::components::Name>(
             dl_sdk_types::archetypes::RecordingInfo::descriptor_name().component,
         ) {
-        format!("{}.rrd", sanitize_file_name(&recording_name))
+        format!("{}.dlr", sanitize_file_name(&recording_name))
     } else {
-        "data.rrd".to_owned()
+        "data.dlr".to_owned()
     };
 
     let title = if loop_selection.is_some() {
@@ -1784,7 +1784,7 @@ fn save_recording(
 
     save_entity_db(
         app,
-        rrd_version,
+        dlr_version,
         file_name,
         title.to_owned(),
         entity_db.to_messages(loop_selection),
@@ -1801,7 +1801,7 @@ fn save_blueprint(
 
     dl_tracing::profile_function!();
 
-    let rrd_version = store_context
+    let dlr_version = store_context
         .blueprint
         .store_info()
         .and_then(|info| info.store_version)
@@ -1836,12 +1836,12 @@ fn save_blueprint(
     let messages = saved_blueprint.to_messages(None);
 
     let file_name = format!(
-        "{}.rbl",
+        "{}.dbl",
         crate::saving::sanitize_app_id(store_context.application_id())
     );
     let title = "Save blueprint";
 
-    save_entity_db(app, rrd_version, file_name, title.to_owned(), messages)
+    save_entity_db(app, dlr_version, file_name, title.to_owned(), messages)
 }
 
 // TODO(emilk): unify this with `ViewerContext::save_file_dialog`
@@ -1849,7 +1849,7 @@ fn save_blueprint(
 #[allow(clippy::unnecessary_wraps)] // cannot return error on web
 fn save_entity_db(
     #[allow(clippy::allow_attributes, unused_variables)] app: &mut App, // only used on native
-    rrd_version: CrateVersion,
+    dlr_version: CrateVersion,
     file_name: String,
     title: String,
     messages: impl Iterator<Item = dl_chunk::ChunkResult<LogMsg>>,
@@ -1870,7 +1870,7 @@ fn save_entity_db(
             // Web
             dl_async::spawn_local(async move {
                 if let Err(err) =
-                    async_save_dialog(rrd_version, &file_name, &title, messages.into_iter()).await
+                    async_save_dialog(dlr_version, &file_name, &title, messages.into_iter()).await
                 {
                     dl_log::error!("File saving failed: {err}");
                 }
@@ -1887,7 +1887,7 @@ fn save_entity_db(
             };
             if let Some(path) = path {
                 app.background_tasks.spawn_file_saver(move || {
-                    crate::saving::encode_to_file(rrd_version, &path, messages.into_iter())?;
+                    crate::saving::encode_to_file(dlr_version, &path, messages.into_iter())?;
                     Ok(path)
                 })?;
             }
@@ -1899,7 +1899,7 @@ fn save_entity_db(
 
 #[cfg(target_arch = "wasm32")]
 async fn async_save_dialog(
-    rrd_version: CrateVersion,
+    dlr_version: CrateVersion,
     file_name: &str,
     title: &str,
     messages: impl Iterator<Item = dl_chunk::ChunkResult<LogMsg>>,
@@ -1916,8 +1916,8 @@ async fn async_save_dialog(
         return Ok(()); // aborted
     };
 
-    let options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
     let mut bytes = Vec::new();
-    dl_log_encoding::Encoder::encode_into(rrd_version, options, messages, &mut bytes)?;
+    dl_log_encoding::Encoder::encode_into(dlr_version, options, messages, &mut bytes)?;
     file_handle.write(&bytes).await.context("Failed to save")
 }

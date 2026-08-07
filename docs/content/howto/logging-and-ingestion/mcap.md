@@ -36,11 +36,11 @@ snippet: howto/load_mcap
 Convert MCAP files to Dalaran's native format for faster loading:
 
 ```bash
-# Convert MCAP to RRD format for faster loading
-dalaran mcap convert input.mcap -o output.rrd
+# Convert MCAP to DLR format for faster loading
+dalaran mcap convert input.mcap -o output.dlr
 
 # View the converted file
-dalaran output.rrd
+dalaran output.dlr
 ```
 
 ## Data model
@@ -61,13 +61,13 @@ Each layer extracts different types of information from the MCAP source and each
 
 - **`raw`**: Logs the unprocessed message bytes as Dalaran blobs without any interpretation
 - **`schema`**: Extracts metadata about channels, topics, and schemas
-- **`stats`**: Extracts file-level metrics like message counts, time ranges, and channel statistics into `__mcap_properties` in the RRD
-- **`metadata`** Extracts metadata records (if present) into `__mcap_metadata` in the RRD
+- **`stats`**: Extracts file-level metrics like message counts, time ranges, and channel statistics into `__mcap_properties` in the DLR
+- **`metadata`** Extracts metadata records (if present) into `__mcap_metadata` in the DLR
 - **`attachments`**: Extracts MCAP attachment records (if present) as static data under `__mcap_attachments`
 - **`protobuf`**: Automatically decodes protobuf-encoded messages using reflection
 - **`ros2msg`**: Provides semantic conversion of common ROS2 message types into Dalaran's visualization components
 - **`ros2_reflection`**: Automatically decodes ROS2 messages using reflection
-- **`recording_info`**: Extracts recording metadata such as message counts, start time, and session information into `__mcap_properties` in the RRD
+- **`recording_info`**: Extracts recording metadata such as message counts, start time, and session information into `__mcap_properties` in the DLR
 - **`urdf`**: Uses Dalaran's built-in URDF loader when a ROS 2 `/robot_description` string topic is present
 
 By default, Dalaran analyzes an MCAP file to determine which decoders are active to provide the most comprehensive view of your data, while avoiding duplication.
@@ -77,13 +77,13 @@ The following shows how to select specific decoders:
 
 ```sh
 # Use only specific decoders
-dalaran mcap convert input.mcap -d protobuf -d stats -o output.rrd
+dalaran mcap convert input.mcap -d protobuf -d stats -o output.dlr
 
 # Use multiple decoders for different perspectives
-dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.dlr
 
 # Add robot geometry from robot_description topics
-dalaran mcap convert input.mcap -d ros2msg -d urdf -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -d urdf -o output.dlr
 ```
 
 For a detailed explanation of how each decoder works and when to use them, see [Decoders Explained](../../concepts/logging-and-ingestion/mcap/decoders-explained.md).

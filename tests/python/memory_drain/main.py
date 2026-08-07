@@ -1,9 +1,9 @@
 """
-Test showing that memory can be drained from a memory recording as valid RRD files.
+Test showing that memory can be drained from a memory recording as valid DLR files.
 
 After running:
 ```bash
-dalaran *.rrd
+dalaran *.dlr
 ```
 """
 
@@ -58,5 +58,5 @@ if __name__ == "__main__":
     while not results_queue.empty():
         name, i, data = results_queue.get()
 
-        with open(f"output_{name}_{i}.rrd", "wb") as f:
+        with open(f"output_{name}_{i}.dlr", "wb") as f:
             f.write(data)

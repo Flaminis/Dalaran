@@ -1,13 +1,13 @@
 #![expect(clippy::disallowed_methods)] // It's just an example
 
-use rerun::external::egui;
-use rerun::external::dl_data_ui::{DataUi, item_ui};
-use rerun::external::dl_entity_db::InstancePath;
-use rerun::external::dl_log_types::EntityPath;
-use rerun::external::dl_sdk_types::ViewClassIdentifier;
-use rerun::external::dl_ui::{self, Help};
-use rerun::external::dl_view;
-use rerun::external::dl_viewer_context::{
+use dalaran::external::egui;
+use dalaran::external::dl_data_ui::{DataUi, item_ui};
+use dalaran::external::dl_entity_db::InstancePath;
+use dalaran::external::dl_log_types::EntityPath;
+use dalaran::external::dl_sdk_types::ViewClassIdentifier;
+use dalaran::external::dl_ui::{self, Help};
+use dalaran::external::dl_view;
+use dalaran::external::dl_viewer_context::{
     DataResultInteractionAddress, HoverHighlight, IdentifiedViewSystem as _, IndicatedEntities,
     Item, MissingChunkReporter, PerVisualizerType, RecommendedVisualizers, SelectionHighlight,
     SystemExecutionOutput, UiLayout, ViewClass, ViewClassExt as _, ViewClassLayoutPriority,
@@ -15,7 +15,7 @@ use rerun::external::dl_viewer_context::{
     ViewSystemExecutionError, ViewSystemIdentifier, ViewSystemRegistrator, ViewerContext,
     VisualizableReason,
 };
-use rerun::external::dl_viewport_blueprint::ViewProperty;
+use dalaran::external::dl_viewport_blueprint::ViewProperty;
 
 use crate::color_coordinate_config::{ColorCoordinatesConfiguration, ColorCoordinatesMode};
 use crate::points3d_color_visualizer::{ColorWithInstance, Points3DColorVisualizer};

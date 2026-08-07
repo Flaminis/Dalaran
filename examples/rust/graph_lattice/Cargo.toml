@@ -7,7 +7,7 @@ license = "Apache-2.0"
 publish = false
 
 [dependencies]
-rerun = { path = "../../../crates/top/rerun" }
+dalaran = { path = "../../../crates/top/dalaran" }
 
 anyhow.workspace = true
 itertools.workspace = true

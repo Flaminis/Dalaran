@@ -33,7 +33,7 @@ pub fn default_blueprint_path(app_id: &ApplicationId) -> anyhow::Result<std::pat
     const MAX_PATH: usize = 255;
     let directory_part_length = blueprint_dir.as_os_str().len();
     let hash_part_length = 16 + 1;
-    let extension_part_length = ".rbl".len();
+    let extension_part_length = ".dbl".len();
     let total_reserved_length = directory_part_length + hash_part_length + extension_part_length;
     if total_reserved_length > MAX_PATH {
         anyhow::bail!(
@@ -52,7 +52,7 @@ pub fn default_blueprint_path(app_id: &ApplicationId) -> anyhow::Result<std::pat
         sanitized_app_id = format!("{sanitized_app_id}-{hash:x}");
     }
 
-    Ok(blueprint_dir.join(format!("{sanitized_app_id}.rbl")))
+    Ok(blueprint_dir.join(format!("{sanitized_app_id}.dbl")))
 }
 
 /// Delete the persisted blueprint for the given `ApplicationId` from disk, if it exists.
@@ -78,7 +78,7 @@ pub fn encode_to_file(
     let mut file = std::fs::File::create(path)
         .with_context(|| format!("Failed to create file at {path:?}"))?;
 
-    let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
     dl_log_encoding::Encoder::encode_into(version, encoding_options, messages, &mut file)
         .map(|_| ())
         .context("Message encode")

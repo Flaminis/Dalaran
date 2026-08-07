@@ -13,7 +13,7 @@ import dalaran as dl
 from dalaran.utilities.datafusion.functions.url_generation import segment_url
 
 sample_5_path = (
-    Path(__file__).parents[5] / "tests" / "assets" / "rrd" / "sample_5"
+    Path(__file__).parents[5] / "tests" / "assets" / "dlr" / "sample_5"
 )
 
 server = dl.server.Server(datasets={"sample_dataset": sample_5_path})

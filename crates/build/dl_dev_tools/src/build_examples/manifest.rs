@@ -7,7 +7,7 @@ use super::{Channel, Example};
 /// Collect examples in the repository and produce a manifest file.
 ///
 /// The manifest file contains example metadata, such as their names
-/// and links to `.rrd` files.
+/// and links to `.dlr` files.
 #[derive(argh::FromArgs)]
 #[argh(subcommand, name = "manifest")]
 pub struct Manifest {
@@ -67,7 +67,7 @@ struct ManifestEntry {
     title: String,
     description: String,
     tags: Vec<String>,
-    rrd_url: String,
+    dlr_url: String,
     thumbnail: Thumbnail,
     source_url: String,
 }
@@ -79,7 +79,7 @@ impl ManifestEntry {
             title: example.title,
             description: example.description,
             tags: example.tags,
-            rrd_url: format!("{base_url}/examples/{name}.rrd"),
+            dlr_url: format!("{base_url}/examples/{name}.dlr"),
             thumbnail: Thumbnail {
                 url: example.thumbnail_url,
                 width: example.thumbnail_dimensions[0],

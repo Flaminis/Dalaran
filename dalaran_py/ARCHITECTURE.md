@@ -54,7 +54,7 @@ The Python SDK is no exception, and large parts of its implementation is generat
 
 #### Archetype
 
-In terms of code generation, archetypes are the simplest object. They consist of a native object whose fields are the various components that make up the archetype. The components are stored in their Arrow extension array form, such that they are ready to be sent to the Dalaran Viewer or saved to a `.rrd` file. The fields always use the respective component's extension array `from_similar()` method as converter.
+In terms of code generation, archetypes are the simplest object. They consist of a native object whose fields are the various components that make up the archetype. The components are stored in their Arrow extension array form, such that they are ready to be sent to the Dalaran Viewer or saved to a `.dlr` file. The fields always use the respective component's extension array `from_similar()` method as converter.
 
 The archetype native objects are the primary user-facing API of the Dalaran SDK.
 

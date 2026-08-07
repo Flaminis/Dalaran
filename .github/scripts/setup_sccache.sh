@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MIRROR_BASE_URL="https://build.rerun.io/mirror/mozilla/sccache"
+MIRROR_BASE_URL="https://build.dalaran.dev/mirror/mozilla/sccache"
 
 usage() {
   cat <<'EOF'
@@ -13,7 +13,7 @@ EOF
 
 version=""
 backend="auto"
-gcs_bucket="rerun-sccache"
+gcs_bucket="dalaran-sccache"
 gcs_read_only="false"
 
 while [[ $# -gt 0 ]]; do
@@ -98,7 +98,7 @@ download() {
     curl_args+=(--retry-all-errors)
   fi
   echo "Downloading $url" >&2
-  curl "${curl_args[@]}" --user-agent "rerun-setup-sccache" --output "$destination" "$url"
+  curl "${curl_args[@]}" --user-agent "dalaran-setup-sccache" --output "$destination" "$url"
 }
 
 sha1_file() {

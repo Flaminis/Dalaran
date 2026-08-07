@@ -40,7 +40,7 @@ impl std::ops::DerefMut for TrackedDirectChunkLineage {
 /// How a chunk relates its direct ancestor(s).
 ///
 /// These ancestors can be other chunk(s) or, at the top of the lineage tree, the origin of where
-/// the data came from in the first place (volatile memory vs. an RRD manifest).
+/// the data came from in the first place (volatile memory vs. an DLR manifest).
 ///
 /// This type never holds any kind of strong reference towards [`Chunk`]s.
 /// This makes it usable in virtual contexts where lineage information alone should never force the
@@ -81,7 +81,7 @@ pub enum ChunkDirectLineage {
     /// Value: `parents`.
     CompactedFrom(Box<[ChunkId]>),
 
-    /// This chunk's data was originally fetched from an RRD manifest.
+    /// This chunk's data was originally fetched from an DLR manifest.
     ///
     /// Even if it gets garbage collected, it can be re-fetched as needed (as long as the backing
     /// Redap server is still available).
@@ -200,7 +200,7 @@ impl ChunkDirectLineage {
 /// How a chunk relates its direct ancestor(s).
 ///
 /// These ancestors can be other chunk(s) or, at the top of the lineage tree, the origin of where
-/// the data came from in the first place (volatile memory vs. an RRD manifest).
+/// the data came from in the first place (volatile memory vs. an DLR manifest).
 ///
 /// This type always holds strong references towards [`Chunk`]s.
 /// This makes it usable in physical contexts where lineage information must ensure that the
@@ -242,7 +242,7 @@ pub enum ChunkDirectLineageReport {
     /// Value: parents
     CompactedFrom(BTreeMap<ChunkId, Arc<Chunk>>),
 
-    /// This chunk's data was originally fetched from an RRD manifest.
+    /// This chunk's data was originally fetched from an DLR manifest.
     ///
     /// Even if it gets garbage collected, it can be re-fetched as needed (as long as the backing
     /// Redap server is still available).
@@ -359,7 +359,7 @@ impl ChunkStore {
     ///
     /// Root-level chunks sit directly at the top of the lineage tree: they cannot be issued from
     /// either a split or a compaction.
-    /// I.e. the next layer is necessarily either a reference to volatile memory, or to an RRD
+    /// I.e. the next layer is necessarily either a reference to volatile memory, or to an DLR
     /// manifest.
     pub fn is_root_chunk(&self, chunk_id: &ChunkId) -> bool {
         let Some(lineage) = self.chunks_lineage.get(chunk_id) else {
@@ -412,9 +412,9 @@ impl ChunkStore {
     ///
     /// Due to compaction, lineage forms a tree rather than a straight line, and therefore it is
     /// possible (and even common) for a chunk to have more than one root, from possibly more than
-    /// one RRD manifest.
+    /// one DLR manifest.
     ///
-    /// The resulting root chunks are guaranteed to be backed by an RRD manifest (non-volatile).
+    /// The resulting root chunks are guaranteed to be backed by an DLR manifest (non-volatile).
     /// If you want to find all root chunks regardless of their origin, refer to [`Self::find_root_chunks`]
     /// instead.
     pub fn find_root_manifest_chunks(&self, chunk_id: &ChunkId) -> Vec<ChunkId> {
@@ -640,7 +640,7 @@ mod tests {
             );
             assert!(
                 store.find_root_manifest_chunks(&chunk.id()).is_empty(),
-                "none of these chunks should have a root RRD manifest"
+                "none of these chunks should have a root DLR manifest"
             );
         }
     }
@@ -678,7 +678,7 @@ mod tests {
         ];
 
         let store_id = StoreId::recording("app_id", "rec_id");
-        let rrd_manifest =
+        let dlr_manifest =
             RrdManifest::build_in_memory_from_chunks(store_id.clone(), chunks.iter().map(|c| &**c))
                 .unwrap();
         let mut store = ChunkStore::new(
@@ -692,7 +692,7 @@ mod tests {
         );
 
         // Load it virtually.
-        let _ignored_events = store.insert_rrd_manifest(rrd_manifest.clone());
+        let _ignored_events = store.insert_dlr_manifest(dlr_manifest.clone());
 
         // Load it physically.
         for chunk in &chunks {
@@ -1367,14 +1367,14 @@ mod tests {
         let mut make_chunk = chunk_factory();
         let chunk = make_chunk(1);
 
-        let rrd_manifest =
+        let dlr_manifest =
             RrdManifest::build_in_memory_from_chunks(store_id.clone(), std::iter::once(&*chunk))
                 .unwrap();
         let mut store = ChunkStore::new(store_id, temporal_config(10));
 
         // Load it virtually: the chunk is tracked and flagged as descending from a manifest, but
         // it isn't physically present yet.
-        let _ignored_events = store.insert_rrd_manifest(rrd_manifest);
+        let _ignored_events = store.insert_dlr_manifest(dlr_manifest);
         {
             let lineage = store
                 .chunks_lineage

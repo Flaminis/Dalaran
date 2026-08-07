@@ -13,7 +13,7 @@ thumbnail_dimensions = [480, 480]
   <img src="https://static.rerun.io/minimal/0e47ac513ab25d56cf2b493128097d499a07e5e8/full.png" alt="Minimal example screenshot">
 </picture>
 
-The simplest example of how to use Rerun with its Web-based UI, showing how to log a point cloud.
+The simplest example of how to use Dalaran with its Web-based UI, showing how to log a point cloud.
 
 ```bash
 cargo run --release

@@ -23,13 +23,13 @@ It's up to you to decide where each recording ends up:
 Here's a simple example of such a workflow:
 ```python
 # Process 1 logs some spheres to a recording file.
-./app1.py  # dl.init(recording_id='my_shared_recording', dl.save('/tmp/recording1.rrd')
+./app1.py  # dl.init(recording_id='my_shared_recording', dl.save('/tmp/recording1.dlr')
 
 # Process 2 logs some cubes to another recording file.
-./app2.py  # dl.init(recording_id='my_shared_recording', dl.save('/tmp/recording2.rrd')
+./app2.py  # dl.init(recording_id='my_shared_recording', dl.save('/tmp/recording2.dlr')
 
 # Visualize a 3D scene with both spheres and cubes.
-dalaran /tmp/recording*.rrd  # they share the same Recording ID!
+dalaran /tmp/recording*.dlr  # they share the same Recording ID!
 ```
 
 For more information, check out our dedicated examples:
@@ -40,6 +40,6 @@ For more information, check out our dedicated examples:
 
 ### Merging recordings with the Dalaran CLI
 
-It is possible to merge multiple recording files into a single one using the [Dalaran CLI](../../reference/cli.md#dalaran-rrd-merge), e.g. `dalaran rrd merge -o merged_recordings.rrd my_first_recording.rrd my_second_recording.rrd`.
+It is possible to merge multiple recording files into a single one using the [Dalaran CLI](../../reference/cli.md#dalaran-dlr-merge), e.g. `dalaran dlr merge -o merged_recordings.dlr my_first_recording.dlr my_second_recording.dlr`.
 
 The Dalaran CLI offers several options to manipulate recordings in different ways, check out [the CLI reference](../../reference/cli.md) for more information.

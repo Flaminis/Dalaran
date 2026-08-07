@@ -20,9 +20,9 @@ if DALARAN_DRAFT_PATH not in sys.path:
     sys.path.insert(0, DALARAN_DRAFT_PATH)
 
 
-def create_simple_rrd(rrd_path: Path, recording_id: str, data_start_value: int) -> None:
+def create_simple_dlr(dlr_path: Path, recording_id: str, data_start_value: int) -> None:
     with dl.RecordingStream("dalaran_example_api_test", recording_id=recording_id) as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
 
         # Avoid `rec.log()` so we dont have the default timelines
         rec.send_columns(
@@ -37,9 +37,9 @@ def create_simple_rrd(rrd_path: Path, recording_id: str, data_start_value: int) 
         )
 
 
-def create_complex_rrd(rrd_path: Path, recording_id: str, data_start_value: int) -> None:
+def create_complex_dlr(dlr_path: Path, recording_id: str, data_start_value: int) -> None:
     with dl.RecordingStream("dalaran_example_api_test", recording_id=recording_id) as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
 
         # Avoid `rec.log()` so we dont have the default timelines
         rec.send_columns(
@@ -76,18 +76,18 @@ def create_complex_rrd(rrd_path: Path, recording_id: str, data_start_value: int)
 def simple_recording_path(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Path]:
     """Create a temporary recording with little but predicatable content."""
 
-    rrd_path = tmp_path_factory.mktemp("simple_recording") / "simple_recording.rrd"
-    create_simple_rrd(rrd_path, "simple_recording_id", 0)
-    yield rrd_path
+    dlr_path = tmp_path_factory.mktemp("simple_recording") / "simple_recording.dlr"
+    create_simple_dlr(dlr_path, "simple_recording_id", 0)
+    yield dlr_path
 
 
 @pytest.fixture(scope="session")
 def complex_recording_path(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Path]:
     """Create a temporary recording with little but predicatable content."""
 
-    rrd_path = tmp_path_factory.mktemp("complex_recording") / "complex_recording.rrd"
-    create_complex_rrd(rrd_path, "complex_recording_id", 0)
-    yield rrd_path
+    dlr_path = tmp_path_factory.mktemp("complex_recording") / "complex_recording.dlr"
+    create_complex_dlr(dlr_path, "complex_recording_id", 0)
+    yield dlr_path
 
 
 @pytest.fixture(scope="session")
@@ -97,7 +97,7 @@ def simple_dataset_prefix(tmp_path_factory: pytest.TempPathFactory) -> Iterator[
     prefix_path = tmp_path_factory.mktemp("simple_dataset_prefix")
 
     for i in range(3):
-        create_simple_rrd(prefix_path / f"simple_recording_{i}.rrd", f"simple_recording_{i}", i)
+        create_simple_dlr(prefix_path / f"simple_recording_{i}.dlr", f"simple_recording_{i}", i)
 
     yield prefix_path
 
@@ -109,6 +109,6 @@ def complex_dataset_prefix(tmp_path_factory: pytest.TempPathFactory) -> Iterator
     prefix_path = tmp_path_factory.mktemp("complex_dataset_prefix")
 
     for i in range(5):
-        create_complex_rrd(prefix_path / f"complex_recording_{i}.rrd", f"complex_recording_{i}", i)
+        create_complex_dlr(prefix_path / f"complex_recording_{i}.dlr", f"complex_recording_{i}", i)
 
     yield prefix_path

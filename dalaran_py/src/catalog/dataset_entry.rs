@@ -381,7 +381,7 @@ impl PyDatasetEntryInternal {
         .to_string())
     }
 
-    /// Register RRD URIs to the dataset and return a handle to track progress.
+    /// Register DLR URIs to the dataset and return a handle to track progress.
     ///
     /// This method initiates the registration of recordings to the dataset, and returns
     /// a handle that can be used to wait for completion or iterate over results.

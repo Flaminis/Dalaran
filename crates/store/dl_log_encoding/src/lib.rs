@@ -2,14 +2,14 @@
 
 //! This crate covers two equally important but orthogonal matters:
 //! * Converting between transport-level and application-level Dalaran types.
-//! * Encoding and decoding Dalaran RRD streams.
+//! * Encoding and decoding Dalaran DLR streams.
 //!
 //! If you are working with one of the gRPC APIs (Redap or SDK comms), then you want to be looking
-//! at the [`ToTransport`]/[`ToApplication`] traits. The [`rrd`] module is completely irrelevant in
+//! at the [`ToTransport`]/[`ToApplication`] traits. The [`dlr`] module is completely irrelevant in
 //! that case. You can learn more about these traits below.
 //!
-//! If you are working with actual RRD streams (i.e. everything that does not go through gRPC:
-//! files, standard I/O, HTTP, importers, etc), then have a look into the [`rrd`] module.
+//! If you are working with actual DLR streams (i.e. everything that does not go through gRPC:
+//! files, standard I/O, HTTP, importers, etc), then have a look into the [`dlr`] module.
 //! The [`ToTransport`]/[`ToApplication`] traits will also be useful to you. You can learn more
 //! about these traits below.
 //!
@@ -52,7 +52,7 @@
 //!   artifact of how `oneof` works in Protobuf: all it does is carry a `dl_protos::log_msg::v1alpha1::log_msg::Msg`.
 //!   For that reason, it is never directly used, except by the legacy SDK comms protocol.
 //! * Finally, `dl_protos::log_msg::v1alpha1::log_msg::Msg` is the real transport-level type that we
-//!   care about. It is used all over the place when encoding and decoding RRD streams.
+//!   care about. It is used all over the place when encoding and decoding DLR streams.
 //!
 //! ## What are the different protocols supported by Dalaran?
 //!
@@ -60,16 +60,16 @@
 //! * Redap (Dalaran Data Protocol): our gRPC-based protocol used by our OSS and proprietary data platforms.
 //! * SDK comms: our legacy gRPC-based protocol, currently used by everything relying on the old
 //!   `StoreHub` model (logging, message proxy, etc).
-//! * RRD streams: the binary protocol that we use for all stream-based interfaces (files, stdio,
+//! * DLR streams: the binary protocol that we use for all stream-based interfaces (files, stdio,
 //!   importers, HTTP fetches, etc).
 //!
 //! *All these protocols use the exact same encoding*. There is only one encoding: the Dalaran encoding.
 //! It often happens that one protocol makes use of some types while others don't (e.g. the
-//! top-level `LogMsg` object is never used in RRD streams, but is used in SDK comms), but for all
+//! top-level `LogMsg` object is never used in DLR streams, but is used in SDK comms), but for all
 //! the types they do share, the encoding will be the exact same.
 
 pub mod chunk_provider;
-pub mod rrd;
+pub mod dlr;
 
 mod app_id_injector;
 mod transport_to_app;
@@ -84,5 +84,5 @@ pub use self::app_id_injector::{
 #[cfg(feature = "decoder")]
 pub use self::chunk_provider::RrdChunkProvider;
 pub use self::chunk_provider::{ChunkProvider, ChunkProviderError};
-pub use self::rrd::*;
+pub use self::dlr::*;
 pub use self::transport_to_app::{ToApplication, ToTransport};

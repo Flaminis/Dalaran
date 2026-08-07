@@ -168,17 +168,17 @@ impl RecordingCommandKind {
         match self {
             Self::Save => (
                 "Save recording…",
-                "Save all data to a Dalaran data file (.rrd)",
+                "Save all data to a Dalaran data file (.dlr)",
             ),
 
             Self::SaveTimeSelection => (
                 "Save current time selection…",
-                "Save data for the current loop selection to a Dalaran data file (.rrd)",
+                "Save data for the current loop selection to a Dalaran data file (.dlr)",
             ),
 
             Self::SaveBlueprint => (
                 "Save blueprint…",
-                "Save the current viewer setup as a Dalaran blueprint file (.rbl)",
+                "Save the current viewer setup as a Dalaran blueprint file (.dbl)",
             ),
 
             Self::Close => (

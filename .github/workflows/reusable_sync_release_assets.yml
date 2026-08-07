@@ -29,7 +29,7 @@ permissions:
 
 jobs:
   sync-assets:
-    name: Upload assets from build.rerun.io
+    name: Upload assets from build.dalaran.dev
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -52,7 +52,7 @@ jobs:
         with:
           version: ">= 363.0.0"
 
-      - name: Sync release assets & build.rerun.io
+      - name: Sync release assets & build.dalaran.dev
         run: |
           pixi run python ./scripts/ci/sync_release_assets.py \
             --github-release ${{ inputs.RELEASE_VERSION }} \

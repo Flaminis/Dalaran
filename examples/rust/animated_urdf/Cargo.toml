@@ -7,7 +7,7 @@ license = "Apache-2.0"
 publish = false
 
 [dependencies]
-rerun = { path = "../../../crates/top/rerun", features = ["clap", "importers"] }
+dalaran = { path = "../../../crates/top/dalaran", features = ["clap", "importers"] }
 
 anyhow.workspace = true
 clap = { workspace = true, features = ["derive"] }

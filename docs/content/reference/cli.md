@@ -20,12 +20,12 @@ The Dalaran command-line interface:
 
 * `analytics`: Configure the behavior of our analytics.
 * `auth`: Authentication with the redap.
-* `download`: Download recordings and save them as .rrd files.
+* `download`: Download recordings and save them as .dlr files.
 * `man`: Generates the Dalaran CLI manual (markdown).
 * `mcap`: Manipulate the contents of .mcap files.
 * `viewer-mcp`: Run an MCP server that controls a running Dalaran Viewer.
 * `reset`: Reset the memory of the Dalaran Viewer.
-* `rrd`: Manipulate the contents of .rrd and .rbl files.
+* `dlr`: Manipulate the contents of .dlr and .dbl files.
 * `server`: In-memory Dalaran data server.
 
 **Arguments**
@@ -33,9 +33,9 @@ The Dalaran command-line interface:
 * `<URL_OR_PATHS>`
 > Any combination of:
 > - A gRPC url to a Dalaran server
-> - A path to a Dalaran .rrd recording
-> - A path to a Dalaran .rbl blueprint
-> - An HTTP(S) URL to an .rrd or .rbl file to load
+> - A path to a Dalaran .dlr recording
+> - A path to a Dalaran .dbl blueprint
+> - An HTTP(S) URL to an .dlr or .dbl file to load
 > - A path to an image or mesh, or any other file that Dalaran can load (see https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview)
 >
 > If no arguments are given, a server will be hosted which a Dalaran SDK can connect to.
@@ -104,7 +104,7 @@ The Dalaran command-line interface:
 > [Default: `false`]
 
 * `--save <SAVE>`
-> Stream incoming log events to an .rrd file at the given path.
+> Stream incoming log events to an .dlr file at the given path.
 
 * `--screenshot-to <SCREENSHOT_TO>`
 > Take a screenshot of the app and quit. We use this to generate screenshots of our examples. Useful together with `--window-size`.
@@ -338,7 +338,7 @@ It's closer to an API key than an access token, as it can be revoked before it e
 
 ## dalaran download
 
-Download recordings and save them as .rrd files.
+Download recordings and save them as .dlr files.
 
 Supports downloading from Dalaran Hub as well as any other supported URI.
 
@@ -352,7 +352,7 @@ Supports downloading from Dalaran Hub as well as any other supported URI.
 **Options**
 
 * `-o, --output-dir <OUTPUT_DIR>`
-> Override the output directory for the downloaded `.rrd` files.
+> Override the output directory for the downloaded `.dlr` files.
 >
 > Defaults to the current working directory.
 
@@ -364,13 +364,13 @@ Manipulate the contents of .mcap files.
 
 **Commands**
 
-* `convert`: Convert an .mcap file to an .rrd.
+* `convert`: Convert an .mcap file to an .dlr.
 * `info`: Print recording, channel, and compression information for an .mcap file.
 * `check`: Check an .mcap file for structural and timeline issues.
 
 ## dalaran mcap convert
 
-Convert an .mcap file to an .rrd.
+Convert an .mcap file to an .dlr.
 
 **Usage**: `dalaran mcap convert [OPTIONS] <PATH_TO_INPUT_MCAP>`
 
@@ -381,7 +381,7 @@ Convert an .mcap file to an .rrd.
 
 **Options**
 
-* `-o, --output <dst.rrd>`
+* `-o, --output <dst.dlr>`
 > Path to write to. Writes to standard output if unspecified.
 
 * `--application-id <APPLICATION_ID>`
@@ -492,32 +492,32 @@ Reports timelines that disagree on row ordering, whole-topic ordering conflicts,
 >
 > [Default: `false`]
 
-## dalaran rrd
+## dalaran dlr
 
-Manipulate the contents of .rrd and .rbl files.
+Manipulate the contents of .dlr and .dbl files.
 
-**Usage**: `dalaran rrd <COMMAND>`
+**Usage**: `dalaran dlr <COMMAND>`
 
 **Commands**
 
-* `compare`: Compares the data between 2 .rrd files, returning a successful shell exit code if they match.
-* `filter`: Filters out data from .rrd/.rbl files/streams, and writes the result to standard output.
-* `merge`: Merges the contents of multiple .rrd/.rbl files/streams, and writes the result to standard output.
-* `migrate`: Migrate one or more .rrd files to the newest Dalaran version.
-* `optimize`: Optimizes the contents of one or more .rrd/.rbl files/streams by compacting chunks, and writes the result to standard output.
-* `print`: Print the contents of one or more .rrd/.rbl files/streams.
+* `compare`: Compares the data between 2 .dlr files, returning a successful shell exit code if they match.
+* `filter`: Filters out data from .dlr/.dbl files/streams, and writes the result to standard output.
+* `merge`: Merges the contents of multiple .dlr/.dbl files/streams, and writes the result to standard output.
+* `migrate`: Migrate one or more .dlr files to the newest Dalaran version.
+* `optimize`: Optimizes the contents of one or more .dlr/.dbl files/streams by compacting chunks, and writes the result to standard output.
+* `print`: Print the contents of one or more .dlr/.dbl files/streams.
 * `route`: Manipulates the metadata of log message streams without decoding the payloads.
 * `split`: Optimally splits a recording on a specified timeline.
-* `stats`: Compute important statistics for one or more .rrd/.rbl files/streams.
-* `verify`: Verify the that the .rrd file can be loaded and correctly interpreted.
+* `stats`: Compute important statistics for one or more .dlr/.dbl files/streams.
+* `verify`: Verify the that the .dlr file can be loaded and correctly interpreted.
 
-## dalaran rrd compare
+## dalaran dlr compare
 
-Compares the data between 2 .rrd files, returning a successful shell exit code if they match.
+Compares the data between 2 .dlr files, returning a successful shell exit code if they match.
 
 This ignores the `log_time` timeline.
 
-**Usage**: `dalaran rrd compare [OPTIONS] <PATH_TO_RRD1> <PATH_TO_RRD2>`
+**Usage**: `dalaran dlr compare [OPTIONS] <PATH_TO_RRD1> <PATH_TO_RRD2>`
 
 **Arguments**
 
@@ -535,7 +535,7 @@ This ignores the `log_time` timeline.
 > [Default: `false`]
 
 * `--full-dump <FULL_DUMP>`
-> If specified, dumps both .rrd files as tables.
+> If specified, dumps both .dlr files as tables.
 >
 > [Default: `false`]
 
@@ -549,17 +549,17 @@ This ignores the `log_time` timeline.
 >
 > Useful when comparing recordings produced with different default-timeline settings, e.g. `--ignore-timeline log_tick` (which is opt-in). Can be specified multiple times.
 
-## dalaran rrd filter
+## dalaran dlr filter
 
-Filters out data from .rrd/.rbl files/streams, and writes the result to standard output.
+Filters out data from .dlr/.dbl files/streams, and writes the result to standard output.
 
 Reads from standard input if no paths are specified.
 
 This will not affect the chunking of the data in any way.
 
-Example: `dalaran rrd filter --drop-timeline log_tick /my/recordings/*.rrd > output.rrd`
+Example: `dalaran dlr filter --drop-timeline log_tick /my/recordings/*.dlr > output.dlr`
 
-**Usage**: `dalaran rrd filter [OPTIONS] [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr filter [OPTIONS] [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
@@ -568,7 +568,7 @@ Example: `dalaran rrd filter --drop-timeline log_tick /my/recordings/*.rrd > out
 
 **Options**
 
-* `-o, --output <dst.(rrd|rbl)>`
+* `-o, --output <dst.(dlr|dbl)>`
 > Path to write to. Writes to standard output if unspecified.
 
 * `--drop-timeline <DROPPED_TIMELINES>`
@@ -582,17 +582,17 @@ Example: `dalaran rrd filter --drop-timeline log_tick /my/recordings/*.rrd > out
 >
 > [Default: `false`]
 
-## dalaran rrd merge
+## dalaran dlr merge
 
-Merges the contents of multiple .rrd/.rbl files/streams, and writes the result to standard output.
+Merges the contents of multiple .dlr/.dbl files/streams, and writes the result to standard output.
 
 Reads from standard input if no paths are specified.
 
-⚠️ This will automatically migrate the data to the latest version of the RRD protocol, if needed. ⚠️
+⚠️ This will automatically migrate the data to the latest version of the DLR protocol, if needed. ⚠️
 
-Example: `dalaran rrd merge /my/recordings/*.rrd > output.rrd`
+Example: `dalaran dlr merge /my/recordings/*.dlr > output.dlr`
 
-**Usage**: `dalaran rrd merge [OPTIONS] [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr merge [OPTIONS] [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
@@ -601,7 +601,7 @@ Example: `dalaran rrd merge /my/recordings/*.rrd > output.rrd`
 
 **Options**
 
-* `-o, --output <dst.(rrd|rbl)>`
+* `-o, --output <dst.(dlr|dbl)>`
 > Path to write to. Writes to standard output if unspecified.
 
 * `--continue-on-error <CONTINUE_ON_ERROR>`
@@ -609,26 +609,26 @@ Example: `dalaran rrd merge /my/recordings/*.rrd > output.rrd`
 >
 > [Default: `false`]
 
-## dalaran rrd migrate
+## dalaran dlr migrate
 
-Migrate one or more .rrd files to the newest Dalaran version.
+Migrate one or more .dlr files to the newest Dalaran version.
 
-Example: `dalaran rrd migrate foo.rrd` Results in a `foo.backup.rrd` (copy of the old file) and a new `foo.rrd` (migrated).
+Example: `dalaran dlr migrate foo.dlr` Results in a `foo.backup.dlr` (copy of the old file) and a new `foo.dlr` (migrated).
 
-**Usage**: `dalaran rrd migrate [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr migrate [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
 * `<PATH_TO_INPUT_RRDS>`
-> Paths to rrd files to migrate.
+> Paths to dlr files to migrate.
 
-## dalaran rrd optimize
+## dalaran dlr optimize
 
-Optimizes the contents of one or more .rrd/.rbl files/streams by compacting chunks, and writes the result to standard output.
+Optimizes the contents of one or more .dlr/.dbl files/streams by compacting chunks, and writes the result to standard output.
 
 Reads from standard input if no paths are specified.
 
-If any input is a directory, the command switches to **directory mirror mode**: every `.rrd`/`.rbl` file under the input is optimized independently, and written to the output path while preserving the input folder structure. In this mode the output (`-o`) must be set and is treated as a directory root.
+If any input is a directory, the command switches to **directory mirror mode**: every `.dlr`/`.dbl` file under the input is optimized independently, and written to the output path while preserving the input folder structure. In this mode the output (`-o`) must be set and is treated as a directory root.
 
 Uses the usual environment variables to control the compaction thresholds: `DALARAN_CHUNK_MAX_ROWS`, `DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED`, `DALARAN_CHUNK_MAX_BYTES`.
 
@@ -636,19 +636,19 @@ Unless explicit flags are passed, in which case they will override environment v
 
 Video stream chunks are also rebatched on GoP (keyframe) boundaries so that each chunk holds one or more complete GoPs. Pass `--no-rebatch-videos` to disable that.
 
-⚠️ This will automatically migrate the data to the latest version of the RRD protocol, if needed. ⚠️
+⚠️ This will automatically migrate the data to the latest version of the DLR protocol, if needed. ⚠️
 
 Examples:
 
-* Optimize a single recording into one optimized file (`-o`): `dalaran rrd optimize my.rrd -o my-compacted.rrd`
+* Optimize a single recording into one optimized file (`-o`): `dalaran dlr optimize my.dlr -o my-compacted.dlr`
 
-* Merge many recordings into one optimized file: `dalaran rrd optimize --max-size 2MiB /my/recordings/*.rrd -o output.rrd`
+* Merge many recordings into one optimized file: `dalaran dlr optimize --max-size 2MiB /my/recordings/*.dlr -o output.dlr`
 
-* Pipe through stdin/stdout, overriding both row and size thresholds: `cat my.rrd | dalaran rrd optimize --max-rows 4096 --max-size 2MiB > output.rrd`
+* Pipe through stdin/stdout, overriding both row and size thresholds: `cat my.dlr | dalaran dlr optimize --max-rows 4096 --max-size 2MiB > output.dlr`
 
-* Directory mirror mode — optimize every `.rrd`/`.rbl` under a tree, preserving structure: `dalaran rrd optimize --max-size 2MiB /my/recordings -o /my/recordings-compacted`
+* Directory mirror mode — optimize every `.dlr`/`.dbl` under a tree, preserving structure: `dalaran dlr optimize --max-size 2MiB /my/recordings -o /my/recordings-compacted`
 
-**Usage**: `dalaran rrd optimize [OPTIONS] [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr optimize [OPTIONS] [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
@@ -657,17 +657,17 @@ Examples:
 
 **Options**
 
-* `-o, --output <dst.(rrd|rbl)>`
+* `-o, --output <dst.(dlr|dbl)>`
 > Path to write the optimized recording to.
 >
 > In single-file mode (the default), this is the output file path. If unspecified, the recording is written to standard output.
 >
-> In directory mirror mode (when any input is a directory), this must be set and is treated as the output directory root: the input folder structure is mirrored underneath it, with each `.rrd`/`.rbl` file optimized independently.
+> In directory mirror mode (when any input is a directory), this must be set and is treated as the output directory root: the input folder structure is mirrored underneath it, with each `.dlr`/`.dbl` file optimized independently.
 
 * `--profile <PROFILE>`
 > Optimization profile to start from.
 >
-> Per-knob flags and `DALARAN_CHUNK_MAX_*` env vars override the profile's values. `DALARAN_STORE_ENABLE_CHANGELOG` is ignored by this command — `dalaran rrd optimize` is always headless.
+> Per-knob flags and `DALARAN_CHUNK_MAX_*` env vars override the profile's values. `DALARAN_STORE_ENABLE_CHANGELOG` is ignored by this command — `dalaran dlr optimize` is always headless.
 >
 > [Default: `object-store`]
 
@@ -716,7 +716,7 @@ Examples:
 * `--fix-keyframe <FIX_KEYFRAME>`
 > Drop any user-supplied `VideoStream:is_keyframe` labels and re-derive them from the encoded samples.
 >
-> By default, `rrd optimize` validates user-supplied keyframe labels against the encoded samples and errors out if they disagree. Pass this flag to ignore the existing labels and unconditionally re-derive them.
+> By default, `dlr optimize` validates user-supplied keyframe labels against the encoded samples and errors out if they disagree. Pass this flag to ignore the existing labels and unconditionally re-derive them.
 >
 > [Default: `false`]
 
@@ -727,15 +727,15 @@ Examples:
 >
 > A good starting value is 10.0. If unset, the profile's value is used.
 
-## dalaran rrd print
+## dalaran dlr print
 
-Print the contents of one or more .rrd/.rbl files/streams.
+Print the contents of one or more .dlr/.dbl files/streams.
 
 Reads from standard input if no paths are specified.
 
-Example: `dalaran rrd print /my/recordings/*.rrd`
+Example: `dalaran dlr print /my/recordings/*.dlr`
 
-**Usage**: `dalaran rrd print [OPTIONS] [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr print [OPTIONS] [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
@@ -788,15 +788,15 @@ Example: `dalaran rrd print /my/recordings/*.rrd`
 * `--transposed <TRANSPOSED>`
 > Transpose record batches before printing them?
 
-## dalaran rrd route
+## dalaran dlr route
 
 Manipulates the metadata of log message streams without decoding the payloads.
 
-This can be used to combine multiple .rrd files into a single recording. Example: `dalaran rrd route --recording-id my_recording /my/recordings/*.rrd > output.rrd`
+This can be used to combine multiple .dlr files into a single recording. Example: `dalaran dlr route --recording-id my_recording /my/recordings/*.dlr > output.dlr`
 
 Note: Because the payload of the messages is never decoded, no migration or verification will performed.
 
-**Usage**: `dalaran rrd route [OPTIONS] [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr route [OPTIONS] [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
@@ -805,7 +805,7 @@ Note: Because the payload of the messages is never decoded, no migration or veri
 
 **Options**
 
-* `-o, --output <dst.rrd>`
+* `-o, --output <dst.dlr>`
 > Path to write to. Writes to standard output if unspecified.
 
 * `--continue-on-error <CONTINUE_ON_ERROR>`
@@ -821,25 +821,25 @@ Note: Because the payload of the messages is never decoded, no migration or veri
 >
 > When this flag is set and multiple input .rdd files are specified, blueprint activation commands will be dropped from the resulting output.
 
-## dalaran rrd split
+## dalaran dlr split
 
 Optimally splits a recording on a specified timeline.
 
 The sum of the generated splits will always exactly match the original recording.
 
-Example: `dalaran rrd split --output-dir ./splits --timeline log_tick --time 33 --time 66 ./my_video.rrd`
+Example: `dalaran dlr split --output-dir ./splits --timeline log_tick --time 33 --time 66 ./my_video.dlr`
 
-**Usage**: `dalaran rrd split [OPTIONS] --output-dir <output directory> --timeline <TIMELINE> <PATH_TO_INPUT_RRD>`
+**Usage**: `dalaran dlr split [OPTIONS] --output-dir <output directory> --timeline <TIMELINE> <PATH_TO_INPUT_DLR>`
 
 **Arguments**
 
-* `<PATH_TO_INPUT_RRD>`
+* `<PATH_TO_INPUT_DLR>`
 > Path to read from.
 
 **Options**
 
 * `-o, --output-dir <output directory>`
-> Path to the output directory. All generated RRD files will end up there.
+> Path to the output directory. All generated DLR files will end up there.
 
 * `--timeline <TIMELINE>`
 > The timeline used to compute the splits.
@@ -870,15 +870,15 @@ Example: `dalaran rrd split --output-dir ./splits --timeline log_tick --time 33 
 >
 > [Default: `false`]
 
-## dalaran rrd stats
+## dalaran dlr stats
 
-Compute important statistics for one or more .rrd/.rbl files/streams.
+Compute important statistics for one or more .dlr/.dbl files/streams.
 
 Reads from standard input if no paths are specified.
 
-Example: `dalaran rrd stats /my/recordings/*.rrd`
+Example: `dalaran dlr stats /my/recordings/*.dlr`
 
-**Usage**: `dalaran rrd stats [OPTIONS] [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr stats [OPTIONS] [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
@@ -899,13 +899,13 @@ Example: `dalaran rrd stats /my/recordings/*.rrd`
 >
 > [Default: `true`]
 
-## dalaran rrd verify
+## dalaran dlr verify
 
-Verify the that the .rrd file can be loaded and correctly interpreted.
+Verify the that the .dlr file can be loaded and correctly interpreted.
 
 Can be used to ensure that the current Dalaran version can load the data.
 
-**Usage**: `dalaran rrd verify [OPTIONS] [PATH_TO_INPUT_RRDS]…`
+**Usage**: `dalaran dlr verify [OPTIONS] [PATH_TO_INPUT_RRDS]…`
 
 **Arguments**
 
@@ -915,7 +915,7 @@ Can be used to ensure that the current Dalaran version can load the data.
 **Options**
 
 * `--check-footers <CHECK_FOOTERS>`
-> If true, ensures that RRD footers are present and well formed.
+> If true, ensures that DLR footers are present and well formed.
 >
 > [Default: `true`]
 
@@ -938,7 +938,7 @@ In-memory Dalaran data server.
 > [Default: `51234`]
 
 * `-d, --dataset <[NAME=]DIR_PATH>`
-> Load a directory of RRD as dataset (can be specified multiple times). You can specify only a path or provide a name such as `-d my_dataset=./path/to/files`.
+> Load a directory of DLR as dataset (can be specified multiple times). You can specify only a path or provide a name such as `-d my_dataset=./path/to/files`.
 
 * `-t, --table <[NAME=]TABLE_PATH>`
 > Load a lance file as a table (can be specified multiple times). You can specify only a path or provide a name such as `-t my_table=./path/to/table`.

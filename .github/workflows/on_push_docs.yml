@@ -89,10 +89,10 @@ jobs:
         env:
           ISR_BYPASS_TOKEN: ${{ secrets.ISR_BYPASS_TOKEN }}
           VERSION_LABEL: ${{ needs.get-version.outputs.version }}
-          RERUN_COMMIT: ${{ github.sha }}
+          DALARAN_COMMIT: ${{ github.sha }}
         run: |
           pixi run uv run scripts/ci/upload_docs.py upload \
             --version "$VERSION_LABEL" \
-            --rerun-commit "$RERUN_COMMIT" \
+            --dalaran-commit "$DALARAN_COMMIT" \
             --mark-latest \
             --purge-token "$ISR_BYPASS_TOKEN"

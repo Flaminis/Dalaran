@@ -125,7 +125,7 @@ snippet: archetypes/points3d_simple
 
 This renders a tabbed code block with all available languages. Snippets can also be referenced from `.fbs` files via `\example archetypes/points3d_simple title="…" image="…"`. Use `[section]` syntax to include only part of a snippet: `snippet: tutorials/data_out[imports]`.
 
-Snippets are validated in CI via `docs/snippets/compare_snippet_output.py`, which builds and runs each snippet in all languages and compares their `.rrd` outputs.
+Snippets are validated in CI via `docs/snippets/compare_snippet_output.py`, which builds and runs each snippet in all languages and compares their `.dlr` outputs.
 
 ### Screenshot links
 

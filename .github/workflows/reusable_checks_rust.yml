@@ -73,10 +73,10 @@ jobs:
         if: ${{ inputs.CHANNEL == 'nightly' }}
         run: pixi run rs-check --skip tests tests_without_all_features # Tests run in a separate job
 
-      - name: .rrd backwards compatibility
+      - name: .dlr backwards compatibility
         # We don't yet guarantee backwards compatibility, but we at least check it
         # so that we _know_ if/when we break it.
-        # See tests/assets/rrd/README.md for more
+        # See tests/assets/dlr/README.md for more
         run: pixi run check-backwards-compatibility
 
       - name: Check dependency tree (no cycles)
@@ -109,7 +109,7 @@ jobs:
       # Install the Vulkan SDK, so we can use the software rasterizer.
       # TODO(andreas): It would be nice if `setup_software_rasterizer.py` could do that for us as well (note though that this action here is very fast when cached!)
       - name: Install Vulkan SDK
-        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-rerun
+        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-dalaran
         with:
           vulkan_version: ${{ env.VULKAN_SDK_VERSION }}
           install_runtime: true
@@ -181,7 +181,7 @@ jobs:
       # Install the Vulkan SDK, so we can use the software rasterizer.
       # TODO(andreas): It would be nice if `setup_software_rasterizer.py` could do that for us as well (note though that this action here is very fast when cached!)
       - name: Install Vulkan SDK
-        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-rerun
+        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-dalaran
         with:
           vulkan_version: ${{ env.VULKAN_SDK_VERSION }}
           install_runtime: true
@@ -270,7 +270,7 @@ jobs:
       # Install the Vulkan SDK, so we can use the software rasterizer.
       # TODO(andreas): It would be nice if `setup_software_rasterizer.py` could do that for us as well (note though that this action here is very fast when cached!)
       - name: Install Vulkan SDK
-        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-rerun
+        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-dalaran
         with:
           vulkan_version: ${{ env.VULKAN_SDK_VERSION }}
           install_runtime: true

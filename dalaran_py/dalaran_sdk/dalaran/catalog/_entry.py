@@ -189,7 +189,7 @@ class DatasetEntry(Entry[DatasetEntryInternal]):
 
     def register_blueprint(self, uri: str, set_default: bool = True, *, segment_table: bool = False) -> None:
         """
-        Register an existing .rbl visible to the server.
+        Register an existing .dbl visible to the server.
 
         By default, also set this blueprint as default.
 
@@ -266,10 +266,10 @@ class DatasetEntry(Entry[DatasetEntryInternal]):
 
     def register_asset(self, uri: str) -> str:
         """
-        Register an existing .rrd visible to the server as an asset.
+        Register an existing .dlr visible to the server as an asset.
 
         Asset datasets hold a small set of static blobs shared across a dataset's segments,
-        so they are kept deliberately small. The server enforces a few limits on the .rrd you register:
+        so they are kept deliberately small. The server enforces a few limits on the .dlr you register:
 
         * it must contain only static data, temporal chunks are rejected,
         * each asset segment must stay under a per-segment size limit,
@@ -278,7 +278,7 @@ class DatasetEntry(Entry[DatasetEntryInternal]):
         Parameters
         ----------
         uri:
-            The URI of the .rrd file to register. It must be visible to the server.
+            The URI of the .dlr file to register. It must be visible to the server.
 
         Returns
         -------
@@ -490,7 +490,7 @@ class DatasetEntry(Entry[DatasetEntryInternal]):
         on_duplicate: OnDuplicateSegmentLayer = OnDuplicateSegmentLayer.ERROR,
     ) -> RegistrationHandle:
         """
-        Register RRD URIs to the dataset and return a handle to track progress.
+        Register DLR URIs to the dataset and return a handle to track progress.
 
         This method initiates the registration of recordings to the dataset, and returns
         a handle that can be used to wait for completion or iterate over results.
@@ -1330,7 +1330,7 @@ class TableEntry(Entry[TableEntryInternal]):
 
     def register_blueprint(self, uri: str, set_default: bool = True) -> None:
         """
-        Register an existing .rbl visible to the server as this table's blueprint.
+        Register an existing .dbl visible to the server as this table's blueprint.
 
         By default, also set this blueprint as default.
 

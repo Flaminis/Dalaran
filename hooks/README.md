@@ -1,5 +1,5 @@
 ## Hooks
-This folder contains the official Rerun githooks.
+This folder contains the official Dalaran githooks.
 
 Each hook is designed to call through to a corresponding hook in the scripts directory.
  - `pre-push` -> `scripts/pre-push.sh`

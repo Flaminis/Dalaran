@@ -89,7 +89,7 @@ pub enum StreamError {
     TonicStatus(#[from] TonicStatusError),
 
     #[error(transparent)]
-    Codec(#[from] dl_log_encoding::rrd::CodecError),
+    Codec(#[from] dl_log_encoding::dlr::CodecError),
 }
 
 const _: () = assert!(

@@ -2,7 +2,7 @@
 # - The correct version of Rust based on the `rust-toolchain` file
 # - All components + targets specified in `rust-toolchain`
 # - Caching of individual compilation requests via `sccache` and GCS
-#   - Downloads sccache from the mirror at build.rerun.io
+#   - Downloads sccache from the mirror at build.dalaran.dev
 # - `cargo nextest`
 #
 # Note that due to the use of GCS as an sccache storage backend,

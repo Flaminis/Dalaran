@@ -15,15 +15,15 @@ This change is motivated by the ambiguity of the term "layer", which is also a c
 Before:
 
 ```bash
-dalaran mcap convert input.mcap -l protobuf -l stats -o output.rrd
-dalaran mcap convert input.mcap -l ros2msg -l raw -l recording_info -o output.rrd
+dalaran mcap convert input.mcap -l protobuf -l stats -o output.dlr
+dalaran mcap convert input.mcap -l ros2msg -l raw -l recording_info -o output.dlr
 ```
 
 After:
 
 ```bash
-dalaran mcap convert input.mcap -d protobuf -d stats -o output.rrd
-dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.rrd
+dalaran mcap convert input.mcap -d protobuf -d stats -o output.dlr
+dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.dlr
 ```
 
 When no `-d` flags are specified, all available decoders are still used by default (same behavior as before).

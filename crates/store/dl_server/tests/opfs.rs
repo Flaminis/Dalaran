@@ -35,16 +35,16 @@ async fn version() {
 }
 
 #[wasm_bindgen_test]
-async fn register_rrd_with_footer_from_file_url_in_opfs() {
-    register_rrd_from_file_url_in_opfs(true).await;
+async fn register_dlr_with_footer_from_file_url_in_opfs() {
+    register_dlr_from_file_url_in_opfs(true).await;
 }
 
 #[wasm_bindgen_test]
-async fn register_rrd_without_footer_from_file_url_in_opfs() {
-    register_rrd_from_file_url_in_opfs(false).await;
+async fn register_dlr_without_footer_from_file_url_in_opfs() {
+    register_dlr_from_file_url_in_opfs(false).await;
 }
 
-async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
+async fn register_dlr_from_file_url_in_opfs(with_footer: bool) {
     let service = DalaranCloudHandlerBuilder::new().build();
     let footer_suffix = if with_footer {
         "with_footer"
@@ -53,10 +53,10 @@ async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
     };
     let dataset_name =
         EntryName::new(format!("opfs_dataset_{footer_suffix}")).expect("valid dataset name");
-    let file_name = format!("{}.rrd", dl_tuid::Tuid::new());
+    let file_name = format!("{}.dlr", dl_tuid::Tuid::new());
     let url = format!("file:///{file_name}");
 
-    dl_web::fs::write(&file_name, encode_rrd(with_footer).into())
+    dl_web::fs::write(&file_name, encode_dlr(with_footer).into())
         .await
         .expect("failed to write OPFS file");
 
@@ -75,14 +75,14 @@ async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
                     storage_url: Some(url.clone()),
                     layer: None,
                     prefix: false,
-                    typ: DataSourceKind::Rrd as i32,
+                    typ: DataSourceKind::Dlr as i32,
                 }],
                 on_duplicate: Default::default(),
             })
             .with_entry_name(dataset_name.clone()),
         )
         .await
-        .expect("failed to register OPFS RRD")
+        .expect("failed to register OPFS DLR")
         .into_inner();
 
     let registered: arrow::array::RecordBatch = response
@@ -104,7 +104,7 @@ async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
             .dalaran_segment_type
             .into_iter_owned()
             .collect::<Vec<_>>(),
-        ["rrd"]
+        ["dlr"]
     );
 
     let schema = service
@@ -128,7 +128,7 @@ async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
     }));
 }
 
-fn encode_rrd(with_footer: bool) -> Vec<u8> {
+fn encode_dlr(with_footer: bool) -> Vec<u8> {
     let store_id = StoreId::random(StoreKind::Recording, "opfs_test");
     let timeline = Timeline::new_sequence("frame");
     let points = MyPoint::from_iter(0..1);
@@ -147,7 +147,7 @@ fn encode_rrd(with_footer: bool) -> Vec<u8> {
         dl_log_encoding::EncodingOptions::PROTOBUF_COMPRESSED,
         &mut bytes,
     )
-    .expect("failed to create test RRD encoder");
+    .expect("failed to create test DLR encoder");
     if !with_footer {
         encoder.do_not_emit_footer();
     }
@@ -165,7 +165,7 @@ fn encode_rrd(with_footer: bool) -> Vec<u8> {
                 .expect("test chunk should encode as arrow"),
         ))
         .expect("failed to write test chunk");
-    encoder.finish().expect("failed to finish test RRD");
+    encoder.finish().expect("failed to finish test DLR");
     drop(encoder);
     bytes
 }

@@ -11,7 +11,7 @@ mcap_path = (
     / "mcap"
     / "trossen_transfer_cube.mcap"
 )
-output_path = Path("chunk_processing_intro.rrd")
+output_path = Path("chunk_processing_intro.dlr")
 
 # region: read
 from dalaran.experimental import McapReader
@@ -24,7 +24,7 @@ stream = stream.filter(content="/robot_left/**")
 # endregion: filter
 
 # region: terminal
-stream.write_rrd(
+stream.write_dlr(
     output_path,
     application_id="dalaran_example_chunk_processing_intro",
     recording_id="run1",

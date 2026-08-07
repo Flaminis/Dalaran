@@ -211,7 +211,7 @@ impl App {
             ui.add_enabled_ui(recording_id.is_some(), |ui| {
                 if ui
                     .add(save_recording_button)
-                    .on_hover_text("Save all data to a Dalaran data file (.rrd)")
+                    .on_hover_text("Save all data to a Dalaran data file (.dlr)")
                     .clicked()
                     && let Some(recording_id) = recording_id
                 {
@@ -232,7 +232,7 @@ impl App {
                 if ui
                     .add_enabled(loop_selection.is_some(), save_selection_button)
                     .on_hover_text(
-                        "Save data for the current loop selection to a Dalaran data file (.rrd)",
+                        "Save data for the current loop selection to a Dalaran data file (.dlr)",
                     )
                     .clicked()
                     && let Some(recording_id) = recording_id

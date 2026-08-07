@@ -8,7 +8,7 @@ compile_error!("msg_encode_benchmark requires 'decoder' and 'encoder' features."
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 use dl_chunk::{Chunk, RowId};
-use dl_log_encoding::rrd::EncodingOptions;
+use dl_log_encoding::dlr::EncodingOptions;
 use dl_log_types::example_components::{MyColor, MyPoint, MyPoints};
 use dl_log_types::{LogMsg, StoreId, StoreKind, TimeInt, TimeType, Timeline, entity_path};
 const PROTOBUF_COMPRESSED: EncodingOptions = EncodingOptions::PROTOBUF_COMPRESSED;
@@ -36,7 +36,7 @@ criterion_main!(benches);
 
 fn encode_log_msgs(
     messages: &[LogMsg],
-    encoding_options: dl_log_encoding::rrd::EncodingOptions,
+    encoding_options: dl_log_encoding::dlr::EncodingOptions,
 ) -> Vec<u8> {
     let mut bytes = vec![];
     dl_log_encoding::Encoder::encode_into(

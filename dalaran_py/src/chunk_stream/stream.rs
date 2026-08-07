@@ -3,7 +3,7 @@
 //! This module contains the declarative, user-facing types that describe a lazy chunk pipeline:
 //! [`StructuredFilter`], [`PipelineStep`], [`StreamSource`], and [`LazyChunkStream`] itself.
 //! We model this as a single-sink DAG, aka the API user holds on the DAG by the sink node, which is
-//! then executed into a materialized collection of chunk (RRD, `list[Chunk]`, etc.).
+//! then executed into a materialized collection of chunk (DLR, `list[Chunk]`, etc.).
 //!
 //! Execution happens in [`super::engine`], which is reached through
 //! [`LazyChunkStream::compile`].
@@ -397,7 +397,7 @@ pub struct SplitOrigin {
 /// Lazy, composable pipeline over chunks.
 ///
 /// Transform methods consume `self` (move semantics) and return a new `LazyChunkStream`.
-/// Work only happens when a terminal (`write_rrd`, `collect`, iterator) is called.
+/// Work only happens when a terminal (`write_dlr`, `collect`, iterator) is called.
 ///
 /// This type is intentionally **not** `Clone`. The PyO3 layer enforces move semantics via
 /// `Option::take()`, preventing accidental reuse of a stream after it has been consumed by a

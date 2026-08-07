@@ -65,8 +65,8 @@ jobs:
   #   run: |
   #     pixi run ./scripts/zombie_todos.py --token ${{ secrets.GITHUB_TOKEN }}
 
-  rerun-lints:
-    name: Rerun lints
+  dalaran-lints:
+    name: Dalaran lints
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -83,8 +83,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Rerun lints
-        run: pixi run lint-rerun
+      - name: Dalaran lints
+        run: pixi run lint-dalaran
 
       - name: Check dependencies
         run: pixi run scripts/check_utils_dependencies.py

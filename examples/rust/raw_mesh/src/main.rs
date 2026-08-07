@@ -1,21 +1,21 @@
 //! Shows how to log a 3D scene as raw mesh data or as a prepacked asset.
 //!
 //! By default, the example parses the scene and logs its geometry and transform hierarchy with
-//! [`Mesh3D`](https://rerun.io/docs/reference/types/archetypes/mesh3d).
+//! [`Mesh3D`](https://dalaran.dev/docs/reference/types/archetypes/mesh3d).
 //! Pass `--asset3d` to log the original file directly with
-//! [`Asset3D`](https://rerun.io/docs/reference/types/archetypes/asset3d).
+//! [`Asset3D`](https://dalaran.dev/docs/reference/types/archetypes/asset3d).
 
 use std::path::PathBuf;
 
 use bytes::Bytes;
-use rerun::external::dl_log;
-use rerun::{Color, Mesh3D, RecordingStream, Rgba32};
+use dalaran::external::dl_log;
+use dalaran::{Color, Mesh3D, RecordingStream, Rgba32};
 
-// TODO(cmc): This example needs to support animations to showcase Rerun's time capabilities.
+// TODO(cmc): This example needs to support animations to showcase Dalaran's time capabilities.
 
-// --- Rerun logging ---
+// --- Dalaran logging ---
 
-// Declare how to turn a glTF primitive into a Rerun component (`Mesh3D`).
+// Declare how to turn a glTF primitive into a Dalaran component (`Mesh3D`).
 #[expect(clippy::fallible_impl_from)]
 impl From<GltfPrimitive> for Mesh3D {
     fn from(primitive: GltfPrimitive) -> Self {
@@ -54,26 +54,26 @@ impl From<GltfPrimitive> for Mesh3D {
     }
 }
 
-// Declare how to turn a glTF transform into a Rerun component (`Transform`).
-impl From<GltfTransform> for rerun::Transform3D {
+// Declare how to turn a glTF transform into a Dalaran component (`Transform`).
+impl From<GltfTransform> for dalaran::Transform3D {
     fn from(transform: GltfTransform) -> Self {
-        rerun::Transform3D::from_translation_rotation_scale(
+        dalaran::Transform3D::from_translation_rotation_scale(
             transform.t,
-            rerun::datatypes::Quaternion::from_xyzw(transform.r),
+            dalaran::datatypes::Quaternion::from_xyzw(transform.r),
             transform.s,
         )
     }
 }
 
-/// Log a glTF node with Rerun.
+/// Log a glTF node with Dalaran.
 fn log_node(rec: &RecordingStream, node: GltfNode) -> anyhow::Result<()> {
     rec.set_time_sequence("keyframe", 0);
 
-    if let Some(transform) = node.transform.map(rerun::Transform3D::from) {
+    if let Some(transform) = node.transform.map(dalaran::Transform3D::from) {
         rec.log(node.name.as_str(), &transform)?;
     }
 
-    // Convert glTF objects into Rerun components.
+    // Convert glTF objects into Dalaran components.
     for (i, primitive) in node.primitives.into_iter().enumerate() {
         let mesh: Mesh3D = primitive.into();
         rec.log(format!("{}/{}", node.name, i), &mesh)?;
@@ -103,7 +103,7 @@ enum Scene {
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 
     /// Specifies the glTF scene to load.
     #[clap(long, value_enum, default_value = "buggy")]
@@ -118,7 +118,7 @@ struct Args {
     asset3d: bool,
 }
 
-// TODO(cmc): move all rerun args handling to helpers
+// TODO(cmc): move all dalaran args handling to helpers
 impl Args {
     fn scene_path(&self) -> anyhow::Result<PathBuf> {
         if let Some(scene_path) = self.scene_path.clone() {
@@ -151,8 +151,8 @@ fn run(rec: &RecordingStream, args: &Args) -> anyhow::Result<()> {
     let scene_path = args.scene_path()?;
 
     if args.asset3d {
-        rec.log_static("world", &rerun::ViewCoordinates::RIGHT_HAND_Y_UP())?;
-        rec.log("world/asset", &rerun::Asset3D::from_file_path(scene_path)?)?;
+        rec.log_static("world", &dalaran::ViewCoordinates::RIGHT_HAND_Y_UP())?;
+        rec.log("world/asset", &dalaran::Asset3D::from_file_path(scene_path)?)?;
         return Ok(());
     }
 
@@ -160,12 +160,12 @@ fn run(rec: &RecordingStream, args: &Args) -> anyhow::Result<()> {
     let (doc, buffers, _) = gltf::import_slice(Bytes::from(std::fs::read(scene_path)?))?;
     let nodes = load_gltf(&doc, &buffers);
 
-    // Log raw glTF nodes and their transforms with Rerun
+    // Log raw glTF nodes and their transforms with Dalaran
     for root in nodes {
         dl_log::info!(scene = root.name, "logging glTF scene");
         rec.log_static(
             root.name.as_str(),
-            &rerun::ViewCoordinates::RIGHT_HAND_Y_UP(),
+            &dalaran::ViewCoordinates::RIGHT_HAND_Y_UP(),
         )?;
         log_node(rec, root)?;
     }
@@ -179,7 +179,7 @@ fn main() -> anyhow::Result<()> {
     use clap::Parser as _;
     let args = Args::parse();
 
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_raw_mesh")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_raw_mesh")?;
     run(&rec, &args)
 }
 

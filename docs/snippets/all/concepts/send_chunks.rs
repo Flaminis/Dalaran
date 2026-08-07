@@ -1,4 +1,4 @@
-//! Send a `.rrd` to a new recording stream.
+//! Send a `.dlr` to a new recording stream.
 
 use dalaran::{ChunkStore, ChunkStoreConfig};
 
@@ -8,9 +8,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::env::args().nth(2).ok_or("Missing filename argument")?;
 
     // Load the chunk store from the file.
-    let mut rrd_file = std::fs::File::open(&filename)?;
+    let mut dlr_file = std::fs::File::open(&filename)?;
     let (store_id, store) =
-        ChunkStore::from_rrd_reader(&ChunkStoreConfig::DEFAULT, &mut rrd_file)?
+        ChunkStore::from_dlr_reader(&ChunkStoreConfig::DEFAULT, &mut dlr_file)?
             .into_iter()
             .next()
             .ok_or("Expected exactly one recording in the archive")?;

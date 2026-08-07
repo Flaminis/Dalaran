@@ -64,7 +64,7 @@ Solving such a task in an elegant way requires a non-trivial amount of engineeri
 The example code implements this pipeline and contains several explanatory comments.
 We recommend reading the concept explanations below, before going through the `main()` function of [`robot_data_preprocessing.py`](robot_data_preprocessing.py) to understand the code structure.
 
-> ℹ️ Note that we create two separate RRD files in this example.
+> ℹ️ Note that we create two separate DLR files in this example.
 For the Dalaran Viewer or Catalog, both *physical* files form one [*logical* recording](https://dalaran.dev/docs/concepts/logging-and-ingestion/recordings#logical-vs-physical-recordings) since they specify the same recording ID.
 
 ### Chunk streams
@@ -134,8 +134,8 @@ Due to this input-to-output row length mismatch, we use two sequential lenses:
 
 Besides fixing camera data and computing forward kinematics, we also apply lenses for smaller things like URDF model colorization.
 
-Finally, the streams are merged and written to two RRD files with the same recording ID to form layers of a single [logical recording](https://dalaran.dev/docs/concepts/logging-and-ingestion/recordings#logical-vs-physical-recordings).
-We use two RRDs for demonstration purposes, but merging into a single RRD would be also possible.
+Finally, the streams are merged and written to two DLR files with the same recording ID to form layers of a single [logical recording](https://dalaran.dev/docs/concepts/logging-and-ingestion/recordings#logical-vs-physical-recordings).
+We use two RRDs for demonstration purposes, but merging into a single DLR would be also possible.
 
 See the code for all implementation details.
 
@@ -148,9 +148,9 @@ python -m robot_data_preprocessing
 
 The resulting RRDs can be opened in the viewer:
 ```bash
-dalaran examples/python/robot_data_preprocessing/output/*.rrd
+dalaran examples/python/robot_data_preprocessing/output/*.dlr
 ```
-Since we use consistent recording IDs, the two output RRD layers show up as a single recording.
+Since we use consistent recording IDs, the two output DLR layers show up as a single recording.
 
 <image src="https://static.rerun.io/e8b3975732ed5f42e125b0c80b487e97d8e99041_robot_postprocessing.gif" width=500/>
 <!-- MP4 version: https://static.rerun.io/5e0d6be2f9a1c21686ff8177a9085c6858ec3f74_robot_postprocessing.mp4 -->

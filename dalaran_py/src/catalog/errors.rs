@@ -68,7 +68,7 @@ enum ExternalError {
     UrlParseError(#[from] url::ParseError),
 
     #[error(transparent)]
-    CodecError(#[from] dl_log_encoding::rrd::CodecError),
+    CodecError(#[from] dl_log_encoding::dlr::CodecError),
 
     #[error(transparent)]
     SorbetError(#[from] dl_sorbet::SorbetError),

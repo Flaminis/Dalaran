@@ -13,8 +13,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             //     dalaran::DEFAULT_SERVER_PORT,
             //     dalaran::ServerOptions::default(),
             // )?,
-            // Write data to a `data.rrd` file in the current directory.
-            dalaran::sink::FileSink::new("data.rrd")?,
+            // Write data to a `data.dlr` file in the current directory.
+            dalaran::sink::FileSink::new("data.dlr")?,
         ))?;
 
     // Create some data using the `grid` utility function.

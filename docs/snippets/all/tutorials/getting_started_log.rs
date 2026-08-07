@@ -2,7 +2,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
         dalaran::RecordingStreamBuilder::new("dalaran_example_getting_started")
             .recording_id("run-1")
-            .save("run-1.rrd")?;
+            .save("run-1.dlr")?;
 
     for t in 0..10 {
         rec.set_time_sequence("step", t);

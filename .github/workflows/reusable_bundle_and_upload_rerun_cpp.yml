@@ -15,7 +15,7 @@ on:
         default: ""
 
 concurrency:
-  group: ${{ inputs.CONCURRENCY }}-bundle-and-upload-rerun-cpp
+  group: ${{ inputs.CONCURRENCY }}-bundle-and-upload-dalaran-cpp
   cancel-in-progress: true
 
 defaults:
@@ -27,8 +27,8 @@ permissions:
   id-token: "write"
 
 jobs:
-  bundle-and-upload-rerun_cpp:
-    name: Bundle and upload rerun_cpp_sdk.zip
+  bundle-and-upload-dalaran_cpp:
+    name: Bundle and upload dalaran_cpp_sdk.zip
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
@@ -57,5 +57,5 @@ jobs:
           full_commit="${{ inputs.RELEASE_COMMIT || ((github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha) }}"
           echo "sha=$(echo $full_commit | cut -c1-7)" >> "$GITHUB_OUTPUT"
 
-      - name: "Bundle and upload rerun_cpp_sdk.zip"
-        run: python3 ./scripts/ci/bundle_and_upload_rerun_cpp.py --git-hash ${{ steps.get-sha.outputs.sha }} --platform-filter=${{ inputs.PLATFORM_FILTER }}
+      - name: "Bundle and upload dalaran_cpp_sdk.zip"
+        run: python3 ./scripts/ci/bundle_and_upload_dalaran_cpp.py --git-hash ${{ steps.get-sha.outputs.sha }} --platform-filter=${{ inputs.PLATFORM_FILTER }}

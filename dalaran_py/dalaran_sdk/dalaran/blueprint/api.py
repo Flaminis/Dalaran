@@ -754,7 +754,7 @@ class Blueprint:
 
     def save(self, application_id: str, path: str | Path | None = None) -> None:
         """
-        Save this blueprint to a file. Dalaran recommends the `.rbl` suffix.
+        Save this blueprint to a file. Dalaran recommends the `.dbl` suffix.
 
         Parameters
         ----------
@@ -762,12 +762,12 @@ class Blueprint:
             The application ID to use for this blueprint. This must match the application ID used
             when initiating dalaran for any data logging you wish to associate with this blueprint.
         path
-            The path to save the blueprint to. Defaults to `<application_id>.rbl`.
+            The path to save the blueprint to. Defaults to `<application_id>.dbl`.
 
         """
 
         if path is None:
-            path = f"{application_id}.rbl"
+            path = f"{application_id}.dbl"
         else:
             path = str(path)
 

@@ -496,7 +496,7 @@ impl VideoStreamCache {
 }
 
 /// For a deletion event we want to:
-/// - Return samples to their root chunk in the rrd manifest.
+/// - Return samples to their root chunk in the dlr manifest.
 /// - Remove samples that are from volatile root chunks.
 ///
 /// While keeping sample indices stable. So if we get deletion
@@ -520,7 +520,7 @@ fn handle_deletion(
 
     let tmp = BTreeMap::default();
     let per_chunk_map = entity_db
-        .rrd_manifest_index()
+        .dlr_manifest_index()
         .manifest()
         .and_then(|manifest| manifest.temporal_map().get(deleted_chunk.entity_path()))
         .and_then(|per_timeline| {
@@ -529,7 +529,7 @@ fn handle_deletion(
         })
         .unwrap_or(&tmp);
 
-    let mut rrd_manifest_chunks: Vec<_> = store
+    let mut dlr_manifest_chunks: Vec<_> = store
         .find_root_chunks(&deleted_chunk.id())
         .into_iter()
         .filter_map(|chunk_id| {
@@ -558,11 +558,11 @@ fn handle_deletion(
             },
         );
 
-    // The number of samples in this chunk that come from the rrd manifest.
+    // The number of samples in this chunk that come from the dlr manifest.
     //
     // For split chunks this will be larger than the actual number of samples
     // in the chunk.
-    let count_from_manifest = rrd_manifest_chunks
+    let count_from_manifest = dlr_manifest_chunks
         .iter()
         .map(|(entry, _)| entry.num_rows as usize)
         .sum::<usize>();
@@ -607,13 +607,13 @@ fn handle_deletion(
         .iter_index_range_clamped_mut(&known_range.idx_range());
 
     if clear_start {
-        rrd_manifest_chunks
+        dlr_manifest_chunks
             .sort_unstable_by_key(|(entry, _)| std::cmp::Reverse(entry.time_range.min));
     } else {
-        rrd_manifest_chunks.sort_unstable_by_key(|(entry, _)| entry.time_range.min);
+        dlr_manifest_chunks.sort_unstable_by_key(|(entry, _)| entry.time_range.min);
     }
 
-    'outer: for (entry, chunk_id) in rrd_manifest_chunks {
+    'outer: for (entry, chunk_id) in dlr_manifest_chunks {
         for _ in 0..entry.num_rows {
             let sample = if clear_start {
                 samples.next_back()
@@ -807,7 +807,7 @@ fn handle_compacted_chunk_addition(
 
 /// For splits we want to:
 /// * The first time we see a split we allocate samples for all its siblings.
-///   Or if said chunk has a root in the rrd manifest, update samples that has
+///   Or if said chunk has a root in the dlr manifest, update samples that has
 ///   the root chunk as source.
 /// * Load samples from the incoming `chunk`.
 ///
@@ -1500,7 +1500,7 @@ impl Cache for VideoStreamCache {
 
         for event in events {
             if event.is_virtual_addition() {
-                // Reset everything when we receive an rrd manifest.
+                // Reset everything when we receive an dlr manifest.
                 self.entries.clear();
                 self.keys_per_entity.clear();
                 continue;
@@ -1766,7 +1766,7 @@ fn load_known_chunk_ranges(
 
     let dummy_chunks = BTreeMap::new();
     let (static_chunk_from_manifest, temporal_chunks_from_manifest) = if let Some(manifest) =
-        store.rrd_manifest_index().manifest()
+        store.dlr_manifest_index().manifest()
     {
         let static_chunk = if let Some(entity_components) = manifest.static_map().get(entity_path)
             && let Some(c) = entity_components.get(&sample_component)

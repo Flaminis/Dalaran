@@ -71,7 +71,7 @@ def _build_fixture_store() -> ChunkStore:
     `include_tombstone_columns` / `include_semantically_empty_columns` is set.
     """
     with tempfile.TemporaryDirectory() as td:
-        path = Path(td) / "build.rrd"
+        path = Path(td) / "build.dlr"
         with dl.RecordingStream("dalaran_example_fixture", recording_id="fix") as rec:
             rec.save(path)
             rec.log("/c", dl.Scalars(scalars=[42.0]), static=True)
@@ -98,15 +98,15 @@ def store_and_dataset(
     tmp_path_factory: pytest.TempPathFactory,
 ) -> Iterator[tuple[ChunkStore, DatasetEntry]]:
     """
-    Module-scoped server hosting a dataset registered from a single RRD.
+    Module-scoped server hosting a dataset registered from a single DLR.
 
     The same `ChunkStore` is yielded so both reader paths see the same data.
     """
     store = _build_fixture_store()
-    rrd_dir = tmp_path_factory.mktemp("rt_dir")
-    rrd = rrd_dir / "rt.rrd"
-    store.write_rrd(rrd, application_id="dalaran_example_test", recording_id="rt-rec")
-    with dl.server.Server(datasets={"rt": rrd_dir}) as server:
+    dlr_dir = tmp_path_factory.mktemp("rt_dir")
+    dlr = dlr_dir / "rt.dlr"
+    store.write_dlr(dlr, application_id="dalaran_example_test", recording_id="rt-rec")
+    with dl.server.Server(datasets={"rt": dlr_dir}) as server:
         client = server.client()
         yield store, client.get_dataset("rt")
 

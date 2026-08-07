@@ -16,7 +16,7 @@ This example demonstrates how to use [`ChunkStoreSubscriber`]s and [`ChunkStoreE
 
 Usage:
 ```sh
-# Start the Rerun Viewer with our custom view in a terminal:
+# Start the Dalaran Viewer with our custom view in a terminal:
 $ cargo r -p custom_store_subscriber
 
 # Log any kind of data from another terminal:

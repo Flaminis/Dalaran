@@ -13,6 +13,6 @@ Handles different ways of loading Dalaran data, e.g.:
 * From disk
 
 Also handles different file types:
-* .rrd
+* .dlr
 * images
 * meshes

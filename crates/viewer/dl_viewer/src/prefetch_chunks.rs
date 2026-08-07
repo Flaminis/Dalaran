@@ -51,10 +51,10 @@ pub fn prefetch_chunks_for_recordings(
 
             let info = recordings_info.get(recording.store_id())?;
 
-            let (rrd_manifest, storage_engine) =
-                recording.rrd_manifest_index_mut_and_storage_engine();
+            let (dlr_manifest, storage_engine) =
+                recording.dlr_manifest_index_mut_and_storage_engine();
 
-            Some((info, rrd_manifest, storage_engine))
+            Some((info, dlr_manifest, storage_engine))
         })
         .collect::<Vec<_>>();
 
@@ -192,7 +192,7 @@ pub fn prefetch_chunks_for_recordings(
 
         match result {
             Ok(res) => {
-                recording.rrd_manifest_index_mut().handle_fetch_result(res);
+                recording.dlr_manifest_index_mut().handle_fetch_result(res);
             }
             Err(err) => {
                 dl_log::warn_once!("prefetch_chunks failed: {err}");

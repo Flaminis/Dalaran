@@ -1,5 +1,5 @@
 FROM quay.io/pypa/manylinux_2_28
-LABEL maintainer="opensource@rerun.io"
+LABEL maintainer="opensource@dalaran.dev"
 # Remember to update the version in publish.sh
 # TODO(jleibs) use this version in the publish.sh script and below in the CACHE_KEY
 LABEL version="0.18.0-x86-64"
@@ -44,7 +44,7 @@ ENV RUSTUP_HOME=/usr/local/rustup \
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # Increment this to invalidate cache
-ENV CACHE_KEY=rerun_docker_v0.18.0
+ENV CACHE_KEY=dalaran_docker_v0.18.0
 
 # See: https://github.com/actions/runner-images/issues/6775#issuecomment-1410270956
 RUN git config --system --add safe.directory '*'

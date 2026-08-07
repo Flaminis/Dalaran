@@ -92,7 +92,7 @@ uv run python prepare_dataset.py
 
 By default it auto-selects the source:
 
-- **Monorepo checkout** — it uses the episodes bundled in the repo at `tests/assets/rrd/sample_5` (via git-LFS), so there's nothing to download. If those are un-pulled LFS pointers, run `git lfs install && git lfs pull` first.
+- **Monorepo checkout** — it uses the episodes bundled in the repo at `tests/assets/dlr/sample_5` (via git-LFS), so there's nothing to download. If those are un-pulled LFS pointers, run `git lfs install && git lfs pull` first.
 - **Standalone checkout** — when the bundled episodes aren't present, it downloads a few from [`dalaran/droid_sample`](https://huggingface.co/datasets/dalaran/droid_sample) on the Hugging Face Hub into `./data`.
 
 Useful flags:

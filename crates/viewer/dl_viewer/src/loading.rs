@@ -21,11 +21,11 @@ pub fn load_blueprint_file(path: &std::path::Path) -> Option<StoreBundle> {
         let reader = std::io::BufReader::new(file);
         let data_source = dl_log_channel::LogSource::File { path: path.into() };
 
-        Ok(StoreBundle::from_rrd(reader, &data_source)?)
+        Ok(StoreBundle::from_dlr(reader, &data_source)?)
     }
 
     match load_file_path_impl(path) {
-        Ok(rrd) => Some(rrd),
+        Ok(dlr) => Some(dlr),
         Err(err) => {
             let msg = format!("Failed loading {path:?}: {err}");
 

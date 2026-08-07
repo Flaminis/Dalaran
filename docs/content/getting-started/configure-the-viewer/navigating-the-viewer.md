@@ -9,7 +9,7 @@ By default, the Dalaran Viewer uses heuristics to automatically determine an app
 
 This guide covers three complementary ways to work with the viewer:
 - **[Interactive configuration](#interactive-configuration)**: Modify layouts directly in the Viewer UI
-- **[Save and load blueprint files](#save-and-load-blueprint-files)**: Share layouts using `.rbl` files
+- **[Save and load blueprint files](#save-and-load-blueprint-files)**: Share layouts using `.dbl` files
 - **[Programmatic blueprints](#programmatic-blueprints)**: Control layouts from code
 
 ## Interactive configuration
@@ -174,7 +174,7 @@ See [Visualizers and Overrides](../../concepts/visualization/customize-views.md)
 
 ## Save and load blueprint files
 
-Once you've configured your layout, you can save it as a blueprint file (`.rbl`) to reuse across sessions or share with your team.
+Once you've configured your layout, you can save it as a blueprint file (`.dbl`) to reuse across sessions or share with your team.
 
 ### Saving a blueprint
 
@@ -188,7 +188,7 @@ Blueprint files are small, portable, and can be version-controlled alongside you
 
 ### Loading a blueprint
 
-Load a blueprint file using "Open…" from the file menu, or simply drag and drop the `.rbl` file into the Viewer.
+Load a blueprint file using "Open…" from the file menu, or simply drag and drop the `.dbl` file into the Viewer.
 
 > [!IMPORTANT]
 > The blueprint's Application ID must match the Application ID of your recording. Blueprints are bound to specific Application IDs to ensure they work with compatible data structures. See [Application IDs](../../concepts/visualization/blueprints.md#application-ids-binding-blueprints-to-data) for more details.
@@ -198,7 +198,7 @@ Load a blueprint file using "Open…" from the file menu, or simply drag and dro
 Blueprint files make it easy to ensure everyone on your team views data consistently:
 
 1. Configure your ideal layout interactively
-2. Save the blueprint to a `.rbl` file
+2. Save the blueprint to a `.dbl` file
 3. Commit the file to your repository
 4. Team members load the blueprint when viewing recordings with the same Application ID
 

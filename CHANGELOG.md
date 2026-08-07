@@ -1,8 +1,8 @@
-# Rerun changelog
+# Dalaran changelog
 
 ## [0.35.0](https://github.com/rerun-io/rerun/compare/0.34.1...0.35.0) - 2026-07-23
 
-🧳 Migration guide: https://rerun.io/docs/changelog/changeset-0-35#breaking-changes
+🧳 Migration guide: https://dalaran.dev/docs/changelog/changeset-0-35#breaking-changes
 
 ### ✨ Overview & highlights
 
@@ -14,16 +14,16 @@
 - Time-windowed and corrupted MCAP conversion
 - Improved ROS 2 timestamp handling
 
-📖 Release notes: https://rerun.io/docs/changelog/changeset-0-35#highlights
+📖 Release notes: https://dalaran.dev/docs/changelog/changeset-0-35#highlights
 
 ### ⚠️ Breaking changes
 
 - **Rust SDK**: `StateChange::with_state` now takes an iterator of values.
   Use `StateChange::single("open")` for one state, or pass an array such as `with_state(["open"])`.
-- **CLI**: The `--follow` mode for tailing `.rrd` files has been removed.
-  For live workflows, log to the Viewer and an `.rrd` file with multiple sinks instead.
+- **CLI**: The `--follow` mode for tailing `.dlr` files has been removed.
+  For live workflows, log to the Viewer and an `.dlr` file with multiple sinks instead.
 
-🧳 Migration guide: https://rerun.io/docs/changelog/changeset-0-35#breaking-changes
+🧳 Migration guide: https://dalaran.dev/docs/changelog/changeset-0-35#breaking-changes
 
 ### 🔎 Details
 
@@ -99,10 +99,10 @@
 - Format target frame suggestions hierarchically [e6fdc4e](https://github.com/rerun-io/rerun/commit/e6fdc4e787c2ca1b6820561af346b85c165bc13c)
 - Command palette: find entities, components [96912a8](https://github.com/rerun-io/rerun/commit/96912a83a2e868658ea9af6cfa2b56b198b9522a)
 - Use a better color for highlighted nodes/edges in transform tree UI [204032a](https://github.com/rerun-io/rerun/commit/204032ab99e0666d8adaf2a7ba77187bee9bba73)
-- Improve display of reruns builtin url types [bfa1e30](https://github.com/rerun-io/rerun/commit/bfa1e30a54f3225ef75c0d1c5cfbcda2a019bc51)
+- Improve display of dalarans builtin url types [bfa1e30](https://github.com/rerun-io/rerun/commit/bfa1e30a54f3225ef75c0d1c5cfbcda2a019bc51)
 
 #### 🕸️ Web
-- Load `.rrd`s into `dl_server` via Origin Private Filesystem APIs [11482fb](https://github.com/rerun-io/rerun/commit/11482fb47a715cbc5091206a68826efe58226c2a)
+- Load `.dlr`s into `dl_server` via Origin Private Filesystem APIs [11482fb](https://github.com/rerun-io/rerun/commit/11482fb47a715cbc5091206a68826efe58226c2a)
 - Make `ChunkProvider` and `RrdChunkProvider` async [8d0e46c](https://github.com/rerun-io/rerun/commit/8d0e46c41c6ec266c9b01f3a4521c308259a4d4c)
 
 #### 🧢 MCAP
@@ -139,29 +139,29 @@
 
 ## [0.34.0](https://github.com/rerun-io/rerun/compare/0.33.1...0.34.0) - 2026-07-06
 
-🧳 Migration guide: https://rerun.io/docs/changelog/changeset-0-34#breaking-changes
+🧳 Migration guide: https://dalaran.dev/docs/changelog/changeset-0-34#breaking-changes
 
 ### ✨ Overview & highlights
 
 - Viewer MCP
 - Learning course
-- Rerun agent skills
+- Dalaran agent skills
 - `VoxelGridMap` archetype
 - 🎮 Gamepad support in 3D views
 - Drag & drop components
 - Transform debugging tool
 
-📖 Release notes: https://rerun.io/docs/changelog/changeset-0-34#highlights
+📖 Release notes: https://dalaran.dev/docs/changelog/changeset-0-34#highlights
 
 ### ⚠️ Breaking changes
 
 - **SDK**: If you relied on the `log_tick` timeline being automatically created, you'll now have to call `set_log_tick_enabled(true)`.
 - **Python**: `rr.send_dataframe` is now stricter for more correctness. See the migration guide for more details.
-- **Python**: The deprecated python module `rerun.recording` has been removed; Use `rerun.experimental.RrdReader` instead.
+- **Python**: The deprecated python module `dalaran.recording` has been removed; Use `dalaran.experimental.RrdReader` instead.
 - **SDK**: Several deprecated `DatasetEntry` methods have been removed.
-- **SDK**: `ParquetReader` column rules have been removed in favor of [lenses](https://rerun.io/docs/concepts/query-and-transform/lenses).
+- **SDK**: `ParquetReader` column rules have been removed in favor of [lenses](https://dalaran.dev/docs/concepts/query-and-transform/lenses).
 
-🧳 Migration guide: https://rerun.io/docs/changelog/changeset-0-34#breaking-changes
+🧳 Migration guide: https://dalaran.dev/docs/changelog/changeset-0-34#breaking-changes
 
 ### 🔎 Details
 
@@ -173,7 +173,7 @@
 
 #### 🐍 Python API
 - Add headless viewer mode [7e31c42](https://github.com/rerun-io/rerun/commit/7e31c42409b7c3d3f00b7d28c28573c65240597a)
-- rerun-sdk[datafusion] and rerun-sdk[dataplatform] extras are now rerun-sdk[catalog] [182cbb0](https://github.com/rerun-io/rerun/commit/182cbb03b8218cf69607cf77c78453960368904a)
+- dalaran-sdk[datafusion] and dalaran-sdk[dataplatform] extras are now dalaran-sdk[catalog] [182cbb0](https://github.com/rerun-io/rerun/commit/182cbb03b8218cf69607cf77c78453960368904a)
 - Remove deprecated `Recording` and related APIs [2156155](https://github.com/rerun-io/rerun/commit/2156155687b619944cebebd7bdc91864524a3641)
 - Split dataloader queries into windowed and keyframe-anchored [9ccc89e](https://github.com/rerun-io/rerun/commit/9ccc89e4b3f4be2f0c01e673d6f752896f544b90)
 - Introduce direct `ChunkStore` querying with `.reader()` [d14018e](https://github.com/rerun-io/rerun/commit/d14018eb59f2ad7c7bb8624670e084b2b318c65d)
@@ -206,7 +206,7 @@
 - Handle codec changing for video-likes [f7466ef](https://github.com/rerun-io/rerun/commit/f7466efea1945e1b9a3dd5db7256d142f8e99de7)
 - Retain entry list in recording panel on refresh [e7357ba](https://github.com/rerun-io/rerun/commit/e7357baa3858a7cc9f174c194e40d443ab908697)
 - Don't buffer & fetch more of entities based on what's hovered [d9b3008](https://github.com/rerun-io/rerun/commit/d9b3008f8431ec1d8b40a891b6e810fffaa89252)
-- `rerun rrd optimize`: continue on error [63e0882](https://github.com/rerun-io/rerun/commit/63e08824e5e7781104008a64e8273ebf387122a7)
+- `dalaran dlr optimize`: continue on error [63e0882](https://github.com/rerun-io/rerun/commit/63e08824e5e7781104008a64e8273ebf387122a7)
 - Look at `source_component` and `selector` when assigning colors to plots [71e2cf7](https://github.com/rerun-io/rerun/commit/71e2cf7cb75507d0df347a52b645d5ccab52efeb)
 - Fix viewer hang when loading static compressed images [b9acd34](https://github.com/rerun-io/rerun/commit/b9acd34aa2c90631759cbeb426082a68230a2f69)
 
@@ -227,7 +227,7 @@
 - Always buffer time [81384a4](https://github.com/rerun-io/rerun/commit/81384a43489d9273aef52cbc44484426a8e47f6a)
 - Visualize transform trees in dev panel [a534ac6](https://github.com/rerun-io/rerun/commit/a534ac61ea388f33699940fb93981060e96fbf92)
 - Query only visible parts of the state timeline [9118c03](https://github.com/rerun-io/rerun/commit/9118c03effe1c6d04cae8257de8e3e7fe2948a85)
-- Add `rerun viewer-mcp` [aa56c88](https://github.com/rerun-io/rerun/commit/aa56c88190ab5c4337f6acc6708c94a90454a5aa)
+- Add `dalaran viewer-mcp` [aa56c88](https://github.com/rerun-io/rerun/commit/aa56c88190ab5c4337f6acc6708c94a90454a5aa)
 - Hide screenshot notification on automated screenshots (scripts, mcp) [8924417](https://github.com/rerun-io/rerun/commit/8924417429de45fe52e9c8f073590b82727bb299)
 - State timeline view is now stable [0a26a8b](https://github.com/rerun-io/rerun/commit/0a26a8bfb9b161edee370d34578f415ec3354068)
 
@@ -256,7 +256,7 @@
 - Move sensor_msgs/msg/MagneticField to lens [fe9b74f](https://github.com/rerun-io/rerun/commit/fe9b74f233f9e017f594636799b354b466d0138e)
 
 #### 🧑‍💻 Dev-experience
-- Add Rerun agent skills [6732840](https://github.com/rerun-io/rerun/commit/673284042dda3d6ff218c6c2e954315cbcfc9aa7)
+- Add Dalaran agent skills [6732840](https://github.com/rerun-io/rerun/commit/673284042dda3d6ff218c6c2e954315cbcfc9aa7)
 - Show bound and connect URLs when serving web viewer [#12753](https://github.com/rerun-io/rerun/pull/12753) (thanks [@terror](https://github.com/terror)!)
 - Skills: mandate the idiomatic reader+lens pipeline (steer away from hand-built chunks) [c436da5](https://github.com/rerun-io/rerun/commit/c436da5a61956bb3645de61993b29997d0695e59)
 
@@ -268,7 +268,7 @@
 
 #### 🤷‍ Other
 - Push down selected components to `fuzzy_descriptors` [92f2281](https://github.com/rerun-io/rerun/commit/92f22810ea0789323f72e3d116ed8bba8b99b053)
-- Add RRD footers section to `rerun rrd stats` [4ab8388](https://github.com/rerun-io/rerun/commit/4ab838881f2fd4a4996be25b02b9510ca43d52fd)
+- Add DLR footers section to `dalaran dlr stats` [4ab8388](https://github.com/rerun-io/rerun/commit/4ab838881f2fd4a4996be25b02b9510ca43d52fd)
 - Bound server chunk scans with per-segment index-value pushdown [990166c](https://github.com/rerun-io/rerun/commit/990166c2f284a29bd63a6f03f103b70de7a1ac81)
 - sdk: retry+backoff on behalf of the customer [2ef0fde](https://github.com/rerun-io/rerun/commit/2ef0fde4e08b54de30a456a6fd435163f3cee2d2)
 
@@ -284,7 +284,7 @@
 
 ## [0.33.0](https://github.com/rerun-io/rerun/compare/0.32.2...0.33.0) - 2026-05-29
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-33
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-33
 
 ### ✨ Overview & highlights
 
@@ -296,13 +296,13 @@ This release comes with a new headless mode for the viewer!
 Together with smaller improvements to the screenshot API, this can be an invaluable tool for automation and LLM usage.
 
 ```python
-import rerun.blueprint as rrb
-from rerun.experimental import ViewerClient
+import dalaran.blueprint as rrb
+from dalaran.experimental import ViewerClient
 
 # Spawn a headless viewer; the client owns its lifetime.
 # ⚠️ you need a graphics driver to run this (software rasterizers like lavapipe are fine too!).
 with ViewerClient(spawn=True, headless=True) as viewer:
-    rec = rr.RecordingStream("rerun_example_screenshot")
+    rec = rr.RecordingStream("dalaran_example_screenshot")
     rec.connect_grpc(url=viewer.url)
 
     view = rrb.Spatial3DView(name="my blue 3D", background=[100, 149, 237])
@@ -323,7 +323,7 @@ Stay tuned!
 This release brings a significant optimization to pipelines in the shape of:
 
 ```python
-from rerun.experimental import RrdReader
+from dalaran.experimental import RrdReader
 
 lazy_store = RrdReader(...).store()
 stream = lazy_store.stream().filter(...)
@@ -331,7 +331,7 @@ stream = lazy_store.stream().filter(...)
 ```
 
 The filter is now pushed down to `RrdReader`, which will selectively load the matching chunks only.
-This massively accelerates targeted data extraction from large RRDs (e.g. extract a joint data from a RRD that also contains multiple video streams).
+This massively accelerates targeted data extraction from large RRDs (e.g. extract a joint data from a DLR that also contains multiple video streams).
 
 #### Improvements on experimental state timeline view
 
@@ -379,7 +379,7 @@ Bit too bulky!
  On Gnome desktop:
 
 <picture>
-  <img src="https://static.rerun.io/rerun-gnome/2fc36bae4a37631d210d52a62de164a974c81b84/full.png" alt="Rerun on Gnome">
+  <img src="https://static.rerun.io/rerun-gnome/2fc36bae4a37631d210d52a62de164a974c81b84/full.png" alt="Dalaran on Gnome">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/rerun-gnome/2fc36bae4a37631d210d52a62de164a974c81b84/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/rerun-gnome/2fc36bae4a37631d210d52a62de164a974c81b84/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/rerun-gnome/2fc36bae4a37631d210d52a62de164a974c81b84/1024w.png">
@@ -395,15 +395,15 @@ The Python optional-dependency extra for catalog/query API tools has been rename
 
 | Before                       | After                 |
 |------------------------------|-----------------------|
-| `pip install rerun-sdk[dataplatform]` | `pip install rerun-sdk[catalog]` |
-| `pip install rerun-sdk[datafusion]`   | `pip install rerun-sdk[catalog]` |
+| `pip install dalaran-sdk[dataplatform]` | `pip install dalaran-sdk[catalog]` |
+| `pip install dalaran-sdk[datafusion]`   | `pip install dalaran-sdk[catalog]` |
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-33
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-33
 
 ### 🔎 Details
 
 #### 🪵 Log API
-- Fix problem of intermixing different store messages in one rrd [bee551f](https://github.com/rerun-io/rerun/commit/bee551f0a8f993007563ddde6a97dfe20e4993c6)
+- Fix problem of intermixing different store messages in one dlr [bee551f](https://github.com/rerun-io/rerun/commit/bee551f0a8f993007563ddde6a97dfe20e4993c6)
 
 #### 🐍 Python API
 - Add `trim_metadata_keys` argument to `Chunk.format` [2d6cd8d](https://github.com/rerun-io/rerun/commit/2d6cd8db8064106d9b0a40036a3161d79018f83a)
@@ -413,7 +413,7 @@ The Python optional-dependency extra for catalog/query API tools has been rename
 - Dedup video stream samples in video decoder [d341ba4](https://github.com/rerun-io/rerun/commit/d341ba465d45aecda5a2ddcedd6b8ad791adadf3)
 - Pushdown `LazyChunkStore.filter()` to `LazyStore` [99a2149](https://github.com/rerun-io/rerun/commit/99a21494776e3ce431e6aa22f397fc989b996b11)
 - Add headless viewer mode [b050087](https://github.com/rerun-io/rerun/commit/b05008774816aab3b18f2b3dbc434ac2b871a72d)
-- rerun-sdk[datafusion] and rerun-sdk[dataplatform] extras are now rerun-sdk[catalog] [fcb5b13](https://github.com/rerun-io/rerun/commit/fcb5b13a34d4e0862d4a633838ff6f8344257bc4)
+- dalaran-sdk[datafusion] and dalaran-sdk[dataplatform] extras are now dalaran-sdk[catalog] [fcb5b13](https://github.com/rerun-io/rerun/commit/fcb5b13a34d4e0862d4a633838ff6f8344257bc4)
 
 #### 🦀 Rust API
 - Increase the dl_sdk viewer spawn timeout to 4s [230cde6](https://github.com/rerun-io/rerun/commit/230cde680c96cdfb9529b8f8a36370ae786f3f59)
@@ -440,7 +440,7 @@ The Python optional-dependency extra for catalog/query API tools has been rename
 - Take grpc server into account when purging viewer memory [09b0192](https://github.com/rerun-io/rerun/commit/09b0192ce32c2a5f820133bc865d5afb2341fe97)
 
 #### 🌁 Viewer improvements
-- Emit `VideoStream::is_keyframe` in `rrd optimize` [ab74f37](https://github.com/rerun-io/rerun/commit/ab74f37dca39cab50143bfd5579c21eaa2c825a6)
+- Emit `VideoStream::is_keyframe` in `dlr optimize` [ab74f37](https://github.com/rerun-io/rerun/commit/ab74f37dca39cab50143bfd5579c21eaa2c825a6)
 - Opening a url with a timestamp anchor now always pauses the recording [24827ea](https://github.com/rerun-io/rerun/commit/24827ea8a53f97bb2701e41588a9d032f55e6690)
 - Add a copy button to image previews [8e5e5ad](https://github.com/rerun-io/rerun/commit/8e5e5adf6defc5ac4bf2db2d69c24651c35e5187)
 - Components from timeline panel can be dropped to State timeline [e68e001](https://github.com/rerun-io/rerun/commit/e68e001b3c5e7aa302b557cfcb63b6eaca97daef)
@@ -519,11 +519,11 @@ The Python optional-dependency extra for catalog/query API tools has been rename
 ### 🔎 Details
 
 #### 🪵 Log API
-- Fix problem of intermixing different store messages in one rrd [5620f47](https://github.com/rerun-io/rerun/commit/5620f47064a46c4733eea1189e7757d898340a9b)
+- Fix problem of intermixing different store messages in one dlr [5620f47](https://github.com/rerun-io/rerun/commit/5620f47064a46c4733eea1189e7757d898340a9b)
 
 ## [0.32.0](https://github.com/rerun-io/rerun/compare/0.31.4...0.32.0) - 2026-05-13 - Chunk Processing, Pytorch dataloader, Dataset Review
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-32
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-32
 
 ### ✨ Overview & highlights
 
@@ -532,13 +532,13 @@ The Python optional-dependency extra for catalog/query API tools has been rename
 This release introduces a chunk processing API designed for systematic and efficient wrangling of robotics data.
 It includes:
 - A `Chunk` object for inspecting, creating, and manipulating chunks.
-- Readers for common file formats (RRD, MCAP, Parquet, URDF, and more to come) which output streams of chunks.
+- Readers for common file formats (DLR, MCAP, Parquet, URDF, and more to come) which output streams of chunks.
 - A composable `LazyChunkStream` class to define memory-bounded chunk-based filtering and transformation pipelines.
 - Lenses: an expressive and performant API to manipulate component data in chunks.
 - A multithreaded, GIL-free, native engine for pipeline execution that is designed for distributed execution in the future.
-- Interoperability with a catalog server and the Rerun SDK logging API.
+- Interoperability with a catalog server and the Dalaran SDK logging API.
 
-In addition to enabling powerful data wrangling pipelines, the chunk processing API is significant for offering read/write chunk-level control of RRD files down to the raw Arrow data.
+In addition to enabling powerful data wrangling pipelines, the chunk processing API is significant for offering read/write chunk-level control of DLR files down to the raw Arrow data.
 
 _Note_: this API is experimental and subject to breaking changes as we continue to improve it.
 
@@ -569,11 +569,11 @@ A new experimental view for visualizing discrete state transitions over time as 
   <img src="https://static.rerun.io/state_timeline/3f821055b73ffda964dbd2573c0279f99cee02a8/full.png" alt="State timeline view">
 </picture>
 
-Read [our guide](https://rerun.io/docs/howto/visualization/state-timeline) to get started. Feedback is appreciated!
+Read [our guide](https://dalaran.dev/docs/howto/visualization/state-timeline) to get started. Feedback is appreciated!
 
 #### `GridMap` archetype and MCAP support for ROS occupancy grids
 
-Rerun now supports 2D grid maps, as used e.g. in robot mapping & navigation applications, through a new `GridMap` archetype.
+Dalaran now supports 2D grid maps, as used e.g. in robot mapping & navigation applications, through a new `GridMap` archetype.
 
 * A `GridMap` is an image buffer with defined cell size per pixel, which can be embedded as a textured rectangle in a 3D scene.
 * `GridMap` has a regular `ImageBuffer` component, so you can also send color images (e.g. to do custom color-mapping in your code).
@@ -582,10 +582,10 @@ Rerun now supports 2D grid maps, as used e.g. in robot mapping & navigation appl
 * In a 3D scene, the map appears at the entity's coordinate frame (either entity-path based or with TF-style named frame like `CoordinateFrame("map")`). Additionally, an optional translation & rotation offset can be specified.
 
 For ROS 2 users:
-* 🧢 Rerun's MCAP importer automatically loads ROS 2 `nav_msgs/OccupancyGrid` messages as `GridMap`s.
-* 📖 Our [ROS 2 guide](https://rerun.io/docs/howto/integrations/ros2-nav-turtlebot) also shows an example how you can log `GridMap` from your custom ROS nodes.
+* 🧢 Dalaran's MCAP importer automatically loads ROS 2 `nav_msgs/OccupancyGrid` messages as `GridMap`s.
+* 📖 Our [ROS 2 guide](https://dalaran.dev/docs/howto/integrations/ros2-nav-turtlebot) also shows an example how you can log `GridMap` from your custom ROS nodes.
 
-Here's a demo video showing a typical ROS 2 MCAP recording with multiple map and costmap layers in Rerun:
+Here's a demo video showing a typical ROS 2 MCAP recording with multiple map and costmap layers in Dalaran:
 
 <!-- https://static.rerun.io/9e9a2cce0b76c8bde35edc0b85dfbaa0dd1db6ec_grid_map_release_0.32.mp4 -->
 
@@ -593,13 +593,13 @@ https://github.com/user-attachments/assets/f31b712d-2dd7-4e45-bb6a-0e103e7016b3
 
 #### OSS catalog server now streams from disk
 
-The OSS server (`rerun server` and `rr.server.Server`) no longer eagerly loads RRDs in memory when registering datasets.
+The OSS server (`dalaran server` and `rr.server.Server`) no longer eagerly loads RRDs in memory when registering datasets.
 It instead uses the manifest embedded in the RRDs to load chunks on demand when serving requests.
 This greatly extends the amount of data that can be registered and queried for a given memory budget, and makes registration orders of magnitude faster.
 
 _Note_: This requires the RRDs to have a manifest, which most modern RRDs have.
 Legacy RRDs are still eagerly loaded.
-Use the `rerun rrd optimize` CLI to migrate and optimize legacy RRDs.
+Use the `dalaran dlr optimize` CLI to migrate and optimize legacy RRDs.
 
 #### Plot improvements
 
@@ -619,23 +619,23 @@ This release comes with a few significant performance improvements. Among other 
 * Visualizing scenes with many transforms on the same entity (as it is often the case with `tf`-style named transforms) will now perform vastly better
 * Plot line tessellation is now GPU accelerated, using the same rendering path as our 3D lines
 * Web viewer now decodes images using the web decoder, resulting in much smoother play of raw-image "videos"
-* various improvements to `rrd optimize` (former `rrd compact`) to produce more streaming & object storage friendly data
+* various improvements to `dlr optimize` (former `dlr compact`) to produce more streaming & object storage friendly data
 * MCAP decoder is now multithreaded
 
 #### New branding
 <picture>
-  <img src="https://static.rerun.io/fadf335a4b294030ade19d405811ab41607f898b_brand.png" alt="new rerun app icon" width="400">
+  <img src="https://static.rerun.io/fadf335a4b294030ade19d405811ab41607f898b_brand.png" alt="new dalaran app icon" width="400">
 </picture> <br>
 
 <picture>
-  <img src="https://static.rerun.io/4aecf4577ab81493fda003882da6faeb886966dd_app-icon.png" alt="new rerun app icon" width="600">
+  <img src="https://static.rerun.io/4aecf4577ab81493fda003882da6faeb886966dd_app-icon.png" alt="new dalaran app icon" width="600">
 </picture>
 
-You may have noticed a new Rerun logo and app icon! We've also slightly tweaked our color palette. Stay tuned for more exciting news!
+You may have noticed a new Dalaran logo and app icon! We've also slightly tweaked our color palette. Stay tuned for more exciting news!
 
 #### Docs feedback on the website.
 
-As a part of our [website](https://rerun.io/) update, we've also added a feedback form to all our documentation pages. So you can add your feedback directly to the respective topic.
+As a part of our [website](https://dalaran.dev/) update, we've also added a feedback form to all our documentation pages. So you can add your feedback directly to the respective topic.
 
 <picture>
   <img src="https://static.rerun.io/feedback-form/e96b0889824e4bc0cf42039bead0612953e54a87/full.png" alt="feedback form">
@@ -643,40 +643,40 @@ As a part of our [website](https://rerun.io/) update, we've also added a feedbac
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/feedback-form/e96b0889824e4bc0cf42039bead0612953e54a87/768w.png">
 </picture>
 
-### ☁️ Highlights for Rerun Hub customers
+### ☁️ Highlights for Dalaran Hub customers
 
-Several improvements in the open-source Rerun SDK are designed specifically to work with Rerun Hub.
- Here are the key updates that are especially relevant if you're a customer of Rerun Hub:
+Several improvements in the open-source Dalaran SDK are designed specifically to work with Dalaran Hub.
+ Here are the key updates that are especially relevant if you're a customer of Dalaran Hub:
 
-#### Direct fetch from object storage for commercial `Rerun Hub` customers
+#### Direct fetch from object storage for commercial `Dalaran Hub` customers
 
 The SDK will now fetch chunk data directly from the object store that holds your recordings, without needing to proxy the data through the server.
 This allows for better performance in highly parallel workloads, as well as lower latency when the client is located close to the data store.
 
-The old proxy path is still supported, and can be opted into using the `RERUN_CHUNK_STRATEGY=grpc` environment variable.
+The old proxy path is still supported, and can be opted into using the `DALARAN_CHUNK_STRATEGY=grpc` environment variable.
 
 #### Experimental training dataloader
 
-You can now train PyTorch models directly against the Rerun OSS server, with no intermediate export step!
+You can now train PyTorch models directly against the Dalaran OSS server, with no intermediate export step!
 
-The new highly experimental `rerun.experimental.dataloader` module exposes Rerun recordings as iterable or map-style PyTorch datasets, streaming encoded images, scalars, and compressed video (`h264`/`h265`/`av1`) on the fly. Random access, multi-worker prefetching, and DDP support work out of the box.
+The new highly experimental `dalaran.experimental.dataloader` module exposes Dalaran recordings as iterable or map-style PyTorch datasets, streaming encoded images, scalars, and compressed video (`h264`/`h265`/`av1`) on the fly. Random access, multi-worker prefetching, and DDP support work out of the box.
 
 Each field accepts an optional `window=(start_offset, end_offset)` parameter, an inclusive range relative to the current index. When set, the field yields the slice of values across that window instead of a single sample. For example, `window=(1, CHUNK_SIZE)` returns the next `CHUNK_SIZE` action values after every observation, making action-chunking policies a single query per batch.
 
 See the new [LeRobot ACT training example](https://github.com/rerun-io/rerun/tree/main/examples/python/dataloader).
 
-Expect breaking changes between releases while we iterate on the design. For large-scale training, Rerun Hub offers a higher-performance backend.
+Expect breaking changes between releases while we iterate on the design. For large-scale training, Dalaran Hub offers a higher-performance backend.
 
 ### ⚠️ Breaking changes
 
 * "Data loaders" renamed to "importers" to avoid confusion with the widely-used ML/PyTorch "dataloader" concept
 * Rust Lenses API has been restructured
-* `rerun rrd compact` renamed to `rerun rrd optimize`, has profiles and new defaults
+* `dalaran dlr compact` renamed to `dalaran dlr optimize`, has profiles and new defaults
 * `DatasetEntry.register` requires a sequence of URIs (Python)
 * URDF importer now loads the static transforms of the model to the `/tf_static` entity by default
 * MCAP metadata and statistics are now saved to `__mcap_metadata`
 
-🧳 Full Migration guide: https://rerun.io/docs/reference/migration/migration-0-32
+🧳 Full Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-32
 
 ### 🔎 Details
 
@@ -710,7 +710,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - Add `Chunk.apply_lenses()` API [88fea86](https://github.com/rerun-io/rerun/commit/88fea86e302742ef1982a60dd126829b27f0818c)
 - Expose split-size-ratio in python [c21a5b8](https://github.com/rerun-io/rerun/commit/c21a5b8cd0701044ea1f34e0f30be922eb25269b)
 - Initial torch dataloader [dca28f2](https://github.com/rerun-io/rerun/commit/dca28f27b0fc936d7e043ceaf41895bab84b84b7)
-- Rename `rrd compact` to `rrd optimize` [c5b027b](https://github.com/rerun-io/rerun/commit/c5b027ba02d8fb1fbf30bdda7ab7b430ce90383f)
+- Rename `dlr compact` to `dlr optimize` [c5b027b](https://github.com/rerun-io/rerun/commit/c5b027ba02d8fb1fbf30bdda7ab7b430ce90383f)
 - Add `apply_selector` methods to `Chunk` [5a20bd6](https://github.com/rerun-io/rerun/commit/5a20bd679677cbbfb0f808e774a3c654c47d7ac2)
 - Use `Mapping`-based `LensOutput` and improve naming [2fc409e](https://github.com/rerun-io/rerun/commit/2fc409e5f1a74fa91abf4dcb8fdbb1b3b583830d)
 - Add Map-style torch dataset [ebb9953](https://github.com/rerun-io/rerun/commit/ebb9953034baa59817326f3c1fdbaa508149cd2f)
@@ -724,9 +724,9 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - Introduce optimization profiles and change default [d3488bc](https://github.com/rerun-io/rerun/commit/d3488bc7f5fb640ff3bbe583d1414873d8ea7410)
 - Split off `LazyStore` from `ChunkStore` (now returned by `dataset.segment_store()` and `RrdReader.store()`) [fa63189](https://github.com/rerun-io/rerun/commit/fa631894c4f2f0805a1b643dd8d068c841105159)
 - Improve dataloader config [b96a985](https://github.com/rerun-io/rerun/commit/b96a9859bcf412f24ba8444138a2ce8fd49d7a3f)
-- Add support for multi-store RRD to `RrdReader` [41ed51a](https://github.com/rerun-io/rerun/commit/41ed51ac0d37f4f80c8834a33a38b8587f8a32d1)
+- Add support for multi-store DLR to `RrdReader` [41ed51a](https://github.com/rerun-io/rerun/commit/41ed51ac0d37f4f80c8834a33a38b8587f8a32d1)
 - Rename `send_chunk` to `send_chunks` and accepts stores and `LazyChunkStream` [c8e0965](https://github.com/rerun-io/rerun/commit/c8e0965fb50f4d70599f448b4175dd563e72cdf1)
-- Deprecate `rerun.recording` [8b52512](https://github.com/rerun-io/rerun/commit/8b52512035c9afc58e543c07862ac14cb4bc677e)
+- Deprecate `dalaran.recording` [8b52512](https://github.com/rerun-io/rerun/commit/8b52512035c9afc58e543c07862ac14cb4bc677e)
 - Fix disconnect footgun [4833706](https://github.com/rerun-io/rerun/commit/483370692c187865c9a694264897a5d4e02a5166)
 
 #### 🦀 Rust API
@@ -747,7 +747,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - Fix our python 3.10 support [7d4716d](https://github.com/rerun-io/rerun/commit/7d4716dd5e6bf36203cd246731b2d530ece6dc38)
 - Fix MCAP CLI decoder identifier list [5b170a4](https://github.com/rerun-io/rerun/commit/5b170a499f9f016b5fb47abb4b6dedb031b2aaf2)
 - Fix bug where shapes defined with UI units were scaled incorrectly [7e7ec15](https://github.com/rerun-io/rerun/commit/7e7ec157f4c772b235f1bbff57a5dcde75db412c)
-- Improve `rerun download` [1c9aa10](https://github.com/rerun-io/rerun/commit/1c9aa10c1c8984dd63606f4d3c534cd6505e9cd4)
+- Improve `dalaran download` [1c9aa10](https://github.com/rerun-io/rerun/commit/1c9aa10c1c8984dd63606f4d3c534cd6505e9cd4)
 - Fix off-by-one bug in video stream cache [f0484ee](https://github.com/rerun-io/rerun/commit/f0484eedaaa7263d19a3c3386955930829cfb0d0)
 - Fix: Hyperlinks shown in tables wouldn't resize [f16707e](https://github.com/rerun-io/rerun/commit/f16707e0cd651d04453fa6ff8e59e69d39faf528)
 - Fix range queries on 3D points in `SpatialView3D` [e8dc5e0](https://github.com/rerun-io/rerun/commit/e8dc5e0a3febf793433c72646bf838a938add107)
@@ -756,7 +756,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - Fix silent error swallowing in gRPC streaming, add error injection testing infrastructure [ec01f7a](https://github.com/rerun-io/rerun/commit/ec01f7a3c167467a37e5c78e616b7aa2dbc67e17)
 - Fix `follow` not being propagated to `http` URLs with extensions [09d5f94](https://github.com/rerun-io/rerun/commit/09d5f94c98bf06aa84ab6f041cc13ef0f21f3537)
 - Fix renderer registration order influencing draw order [97db1a1](https://github.com/rerun-io/rerun/commit/97db1a16382f5ae689d2e6a76dfedd7654e2802a)
-- Unify `rerun//` and `rerun+https` at parse time, fixing Viewer bugs for incorrectly distinguishing them [69ff58d](https://github.com/rerun-io/rerun/commit/69ff58d66a1e8c7ca524bca4b7daf0f691842710)
+- Unify `dalaran//` and `dalaran+https` at parse time, fixing Viewer bugs for incorrectly distinguishing them [69ff58d](https://github.com/rerun-io/rerun/commit/69ff58d66a1e8c7ca524bca4b7daf0f691842710)
 - Add `SystemCommand::RemoveRedapServer` for more thorough cleanup [52bc3ea](https://github.com/rerun-io/rerun/commit/52bc3ea69bad2a4b73ea3019e4b9b7a728c281a4)
 - Close recordings when a server is removed [ad7371f](https://github.com/rerun-io/rerun/commit/ad7371f3cbaada95147577eed60c7d71da59a516)
 - Fix visualizations not showing up when initial data was empty [c867040](https://github.com/rerun-io/rerun/commit/c867040a23cb78b4a27d766fabb5ce9e00c44ca2)
@@ -774,7 +774,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - Select `message_log_time` as default timeline for MCAP [b687bd6](https://github.com/rerun-io/rerun/commit/b687bd644f405106d8e13357719e68b9f6e4b3d3)
 - Properly handle outline masks of overlapping coplanar rectangles [617a7c2](https://github.com/rerun-io/rerun/commit/617a7c2a25f49d80b5a691178dbd75b357275219)
 - New liftable shape limit to avoid unresponsive viewer [a4f6223](https://github.com/rerun-io/rerun/commit/a4f62231ae91b8bf19fa646abfd4d0c0b75b881b)
-- Add configurable CORS policy for rerun proxy and dl_server [8baa142](https://github.com/rerun-io/rerun/commit/8baa142ffc5e81a8574e6bc9629d35d012036af9)
+- Add configurable CORS policy for dalaran proxy and dl_server [8baa142](https://github.com/rerun-io/rerun/commit/8baa142ffc5e81a8574e6bc9629d35d012036af9)
 - Smarter `VideoStream` streaming [2f73783](https://github.com/rerun-io/rerun/commit/2f73783025afeb9c026fe7032a73d1a98946506b)
 - Support focusing specific 3D points in viewer [ddda5cf](https://github.com/rerun-io/rerun/commit/ddda5cf159f5c50ee6a42a5bc9b6e32190e4b516)
 - Experimental grid layout & flagging for tables [9b6bf71](https://github.com/rerun-io/rerun/commit/9b6bf710021a495a7b96e3f24bf73b7b0e634157)
@@ -800,13 +800,13 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - Clamp time controls [8af40e2](https://github.com/rerun-io/rerun/commit/8af40e283df04b9d4d26123fc09c201b9751d8df)
 
 #### 🗄️ OSS server
-- Lazy RRD loading in OSS server [4aea4a5](https://github.com/rerun-io/rerun/commit/4aea4a570a245949314f97b282e011c708efce01)
+- Lazy DLR loading in OSS server [4aea4a5](https://github.com/rerun-io/rerun/commit/4aea4a570a245949314f97b282e011c708efce01)
 - No longer cache chunks in OSS server [853591a](https://github.com/rerun-io/rerun/commit/853591a3d143da30e79aea113c35af6435728124)
 
 #### 🚀 Performance improvements
 - Decode encoded images using our video-player system, and use the web video decoder [794a722](https://github.com/rerun-io/rerun/commit/794a722d64c46e8c643af7d43c86aa92c2ea7135)
 - Drop details from the manifest that aren't needed to reduce manifest memory bloat [612e9ef](https://github.com/rerun-io/rerun/commit/612e9ef5a75a1b9f3e8fa3d81b1142903b83d7a6)
-- `rerun rrd compact`: split by video GoP boundaries [2485570](https://github.com/rerun-io/rerun/commit/248557024b14e95257659d63fdadb105ac5a2f87)
+- `dalaran dlr compact`: split by video GoP boundaries [2485570](https://github.com/rerun-io/rerun/commit/248557024b14e95257659d63fdadb105ac5a2f87)
 - By default, only prefetched what is visible [b509f91](https://github.com/rerun-io/rerun/commit/b509f91d244128339a2e3204a39ca66c6564197d)
 - Speed up `DatasetView.reader`: only fetch schema once [b266938](https://github.com/rerun-io/rerun/commit/b26693866da4ae496aceb58042cc232d5b1aeae9)
 - Huge speedup transform lookups for overlapping transform chunks [803337d](https://github.com/rerun-io/rerun/commit/803337de7dc94e19613946a9b34d7a914107511d)
@@ -826,7 +826,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 
 #### 📚 Docs
 - Clearer behavior for `CoordinateFrame("")` [5bf9c4a](https://github.com/rerun-io/rerun/commit/5bf9c4a6027ce525a11c35dc9ff43e77324c3e6d)
-- Move "Installing Rerun" into Getting Started [0296f67](https://github.com/rerun-io/rerun/commit/0296f67bd56b1ed1625b08e9054d86d13d01767d)
+- Move "Installing Dalaran" into Getting Started [0296f67](https://github.com/rerun-io/rerun/commit/0296f67bd56b1ed1625b08e9054d86d13d01767d)
 - Reduce python docs footguns [4e158e1](https://github.com/rerun-io/rerun/commit/4e158e1c6221f79ad5dbb4e1cb03b1f73f8c7903)
 - Split "Set up a project" out of Log and Ingest [d0d63bc](https://github.com/rerun-io/rerun/commit/d0d63bc775ef6c3964563c7ea2d52df3f9a619b1)
 
@@ -839,8 +839,8 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - change colors for new brand colors [27c9036](https://github.com/rerun-io/rerun/commit/27c90366696241da2e2ff7deea9cf97f330fc7eb)
 
 #### 🕸️ Web
-- Add progress bar to rerun-js and handle incomplete wasm downloads [ad551bd](https://github.com/rerun-io/rerun/commit/ad551bdf95f7abe2d1544693042ddf79fdd76e2a)
-- Add rerun-js login setting and default to hiding the login button [0d14814](https://github.com/rerun-io/rerun/commit/0d148144f367852084ea48767412f9198c0f1b95)
+- Add progress bar to dalaran-js and handle incomplete wasm downloads [ad551bd](https://github.com/rerun-io/rerun/commit/ad551bdf95f7abe2d1544693042ddf79fdd76e2a)
+- Add dalaran-js login setting and default to hiding the login button [0d14814](https://github.com/rerun-io/rerun/commit/0d148144f367852084ea48767412f9198c0f1b95)
 - web_viewer: support overriding theme via ?theme= URL param [34b9958](https://github.com/rerun-io/rerun/commit/34b9958d5500741787350ae74bf3cf927a7b0fbb)
 
 #### 🎨 Renderer improvements
@@ -861,7 +861,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - More SDK analytics [fc6c8c7](https://github.com/rerun-io/rerun/commit/fc6c8c79fdd8201fef8119a66f9b1540d2a2f8da)
 
 #### 🧑‍💻 Dev-experience
-- Add `rerun.tracing_session()` for support correlation [ec9f048](https://github.com/rerun-io/rerun/commit/ec9f048dfbd83fef934dcd4f19c752618c2ec81a)
+- Add `dalaran.tracing_session()` for support correlation [ec9f048](https://github.com/rerun-io/rerun/commit/ec9f048dfbd83fef934dcd4f19c752618c2ec81a)
 
 #### 📦 Dependencies
 - Update datafusion to 52.5.0 [2832f82](https://github.com/rerun-io/rerun/commit/2832f8264a303e5ad8187183178c0f399a845205)
@@ -869,7 +869,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 
 #### 🤷‍ Other
 - Add option to split chunks with large component size differences for different archetypes [b0e6f90](https://github.com/rerun-io/rerun/commit/b0e6f90b3abcb7599d94d561774ff03b0b310dc4)
-- Run `rerun rrd optimize` on a folder of recordings [9ccb8b2](https://github.com/rerun-io/rerun/commit/9ccb8b2f8d731e78f2ffb8b04dbe0e1d60fe54ee)
+- Run `dalaran dlr optimize` on a folder of recordings [9ccb8b2](https://github.com/rerun-io/rerun/commit/9ccb8b2f8d731e78f2ffb8b04dbe0e1d60fe54ee)
 
 ## [0.31.4](https://github.com/rerun-io/rerun/compare/0.31.3...0.31.4) - 2026-04-29
 
@@ -915,8 +915,8 @@ Expect breaking changes between releases while we iterate on the design. For lar
 - Fix typo in micro-batching documentation [#12716](https://github.com/rerun-io/rerun/pull/12716) (thanks [@wolfd](https://github.com/wolfd)!)
 
 #### 🕸️ Web
-- Add progress bar to rerun-js and handle incomplete wasm downloads [476a178](https://github.com/rerun-io/rerun/commit/476a1780a52cf99b600d51a184e16028a05f6cce)
-- Add rerun-js login setting and default to hiding the login button [3203577](https://github.com/rerun-io/rerun/commit/320357798161a7663dea5777bec8d73431585239)
+- Add progress bar to dalaran-js and handle incomplete wasm downloads [476a178](https://github.com/rerun-io/rerun/commit/476a1780a52cf99b600d51a184e16028a05f6cce)
+- Add dalaran-js login setting and default to hiding the login button [3203577](https://github.com/rerun-io/rerun/commit/320357798161a7663dea5777bec8d73431585239)
 
 #### 🤷‍ Other
 - Stop creating the search index into `docs.rs` [6afa84b](https://github.com/rerun-io/rerun/commit/6afa84bfaf501cacb46cbdf5a63ea626473cd1a1)
@@ -931,7 +931,7 @@ Expect breaking changes between releases while we iterate on the design. For lar
 
 ## [0.31.0](https://github.com/rerun-io/rerun/compare/0.30.2...0.31.0) - 2026-03-30 - component mappings & prettier primitives
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-31
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-31
 
 ### ✨ Overview & highlights
 
@@ -957,10 +957,10 @@ Our 3D primitives got a new default look!
 ### ⚠️ Breaking changes
 
 - MCAP "layers" renamed to "decoders" [cf0a800](https://github.com/rerun-io/rerun/commit/cf0a800770845d4a88c0d5671b246c45c1f3507d)
-- `rr.Server` and `rr.CatalogClient`: `address` parameter/method renamed to `url`; `rerun server --address` is now `--host` [#12402](https://github.com/rerun-io/rerun/pull/12402)
+- `rr.Server` and `rr.CatalogClient`: `address` parameter/method renamed to `url`; `dalaran server --address` is now `--host` [#12402](https://github.com/rerun-io/rerun/pull/12402)
 - `Entry.update(name=…)` is deprecated in favor of `Entry.set_name(…)` [#12370](https://github.com/rerun-io/rerun/pull/12370)
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-31
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-31
 
 ### 🔎 Details
 
@@ -996,12 +996,12 @@ Our 3D primitives got a new default look!
 #### 🪳 Bug fixes
 - Fixes recording staying open when user logs out [80ab340](https://github.com/rerun-io/rerun/commit/80ab340688ae045b7201c6b89b4179ac154e5ddf)
 - Selection panel: show all values at the latest time stamp [474dbe8](https://github.com/rerun-io/rerun/commit/474dbe8a5694fd4ff031b78a15c89628ed374d9f)
-- Gracefully handle Rrd Manifest failures [900edfd](https://github.com/rerun-io/rerun/commit/900edfdfc81dc182b110296b8e06f41001d4ac1e)
+- Gracefully handle Dlr Manifest failures [900edfd](https://github.com/rerun-io/rerun/commit/900edfdfc81dc182b110296b8e06f41001d4ac1e)
 - Fix docs urls being loaded as data sources [80e3ce6](https://github.com/rerun-io/rerun/commit/80e3ce680cfafb80d60e863d84b9c0de94e5f52f)
 - Fix: fix clicking names of color maps [92529ca](https://github.com/rerun-io/rerun/commit/92529ca9ba227e5e629176da1ecd8dd29423866f)
 - Fix rare ui id conflict in list item content [0966696](https://github.com/rerun-io/rerun/commit/09666960eafc6a8b6c215643d0b28f503dbc1c05)
 - Fix drag'n'drop issue on web [2d97010](https://github.com/rerun-io/rerun/commit/2d9701073e5f6f7945c0b4107a2664bb851ac44a)
-- Handle `?url=rerun+http://…` in web viewer [0a47b41](https://github.com/rerun-io/rerun/commit/0a47b41dba92e4462f5ecfbd710213522a8e51a1)
+- Handle `?url=dalaran+http://…` in web viewer [0a47b41](https://github.com/rerun-io/rerun/commit/0a47b41dba92e4462f5ecfbd710213522a8e51a1)
 - Fix weird tooltip sizes in streams view [0d98570](https://github.com/rerun-io/rerun/commit/0d985702eb03c7518ced87139184239270a88b00)
 - Fix showing empty label boxes for various 2d & 3d visualizations [9c547ce](https://github.com/rerun-io/rerun/commit/9c547ce5d1f70815f77c0bab084cfa69dcfeb956)
 - Fix bounding box calculation for GLB/GLTF & DAE meshes [8382f14](https://github.com/rerun-io/rerun/commit/8382f1492d14b1e47aa8e42b3c609952d9d15bc1)
@@ -1059,7 +1059,7 @@ Our 3D primitives got a new default look!
 #### 🚀 Performance improvements
 - Remove collapsing time gaps for performance reasons [eb0b67a](https://github.com/rerun-io/rerun/commit/eb0b67af333256c9eafebe86f42e56923c077955)
 - Share video players between views, de-duplicating video decoding work between pinholes and 2d views [64f1003](https://github.com/rerun-io/rerun/commit/64f100332a1c971cf0d9f339dcfa796535cbfdae)
-- Support progressive ingest of the rrd manifest [9a67723](https://github.com/rerun-io/rerun/commit/9a67723fe6ee4bbd2a73cb3d2402501008c7f7d2)
+- Support progressive ingest of the dlr manifest [9a67723](https://github.com/rerun-io/rerun/commit/9a67723fe6ee4bbd2a73cb3d2402501008c7f7d2)
 - Performance improvements for many views + many entities [8f297fe](https://github.com/rerun-io/rerun/commit/8f297fec7324feca12be5c3b8eae05cf6c74b84e)
 - Speed up many-entities (Refactor view class store subscriber) [e24407f](https://github.com/rerun-io/rerun/commit/e24407f936bd0ade4313e832a0939484a958fc0d)
 - Much faster 3D point clouds [cb62f8c](https://github.com/rerun-io/rerun/commit/cb62f8c1b421bc79f28d429bfe83018c8703e908)
@@ -1118,14 +1118,14 @@ Our 3D primitives got a new default look!
 
 #### 🤷‍ Other
 - Add `--new` flag to always spawn a new viewer even if another one is already using the default port [874d3a8](https://github.com/rerun-io/rerun/commit/874d3a844b16322b9609b5b1490966657a191aa6)
-- Add `rerun download` to download full recording from server [ac95098](https://github.com/rerun-io/rerun/commit/ac9509840b9024ac1538270a7b82d19da649fa11)
-- Fix `rerun rrd stats` reporting identical compressed/uncompressed sizes [5ac9604](https://github.com/rerun-io/rerun/commit/5ac960404ffb3919353870a28e2e1cdf8d8d53d4)
+- Add `dalaran download` to download full recording from server [ac95098](https://github.com/rerun-io/rerun/commit/ac9509840b9024ac1538270a7b82d19da649fa11)
+- Fix `dalaran dlr stats` reporting identical compressed/uncompressed sizes [5ac9604](https://github.com/rerun-io/rerun/commit/5ac960404ffb3919353870a28e2e1cdf8d8d53d4)
 
 ## [0.30.2](https://github.com/rerun-io/rerun/compare/0.30.1...0.30.2) - 2026-03-11
 
 ### ✨ Overview
 
-Among many other things, this patch addresses a security advisory ([SNYK-RUST-JSONWEBTOKEN-15189005](https://security.snyk.io/vuln/SNYK-RUST-JSONWEBTOKEN-15189005)) and adds a [new example](https://rerun.io/examples/robotics/any_scalar)!
+Among many other things, this patch addresses a security advisory ([SNYK-RUST-JSONWEBTOKEN-15189005](https://security.snyk.io/vuln/SNYK-RUST-JSONWEBTOKEN-15189005)) and adds a [new example](https://dalaran.dev/examples/robotics/any_scalar)!
 
 ### 🔎 Details
 
@@ -1133,7 +1133,7 @@ Among many other things, this patch addresses a security advisory ([SNYK-RUST-JS
 - Expose executable_name and executable_path in Python spawn() [#12685](https://github.com/rerun-io/rerun/pull/12685)
 
 #### 🪳 Bug fixes
-- Handle `?url=rerun+http://…` in web viewer [5f2d65d](https://github.com/rerun-io/rerun/commit/5f2d65da30c83e8de0d2129feaff57f9461c3806)
+- Handle `?url=dalaran+http://…` in web viewer [5f2d65d](https://github.com/rerun-io/rerun/commit/5f2d65da30c83e8de0d2129feaff57f9461c3806)
 - Fix weird tooltip sizes in streams view [92403bb](https://github.com/rerun-io/rerun/commit/92403bbac8a9fbfed94753929a9cf0633088dd00)
 
 #### 🚀 Performance improvements
@@ -1174,7 +1174,7 @@ src="https://github.com/user-attachments/assets/ee226e5a-9d75-4b79-87cd-8198fa57
 - Fix `using_index_value` not accepting pyarrow data of the correct types [c59df09](https://github.com/rerun-io/rerun/commit/c59df09001094f6b494039ec13ab6cd35f97438e)
 
 #### 🪳 Bug fixes
-- Gracefully handle Rrd Manifest failures [f14e343](https://github.com/rerun-io/rerun/commit/f14e343fc09a481e76f8898d8fbfe987a4161b80)
+- Gracefully handle Dlr Manifest failures [f14e343](https://github.com/rerun-io/rerun/commit/f14e343fc09a481e76f8898d8fbfe987a4161b80)
 - Fix docs urls being loaded as data sources [3eb98db](https://github.com/rerun-io/rerun/commit/3eb98dbbb4ade0478ba333e05f02fb7bb942e989)
 - Fix fix clicking names of color maps [700b590](https://github.com/rerun-io/rerun/commit/700b590dca0f658b750197f9be5b9bc3495b9dfd)
 - Fix rare ui id conflict in list item content [352f7c8](https://github.com/rerun-io/rerun/commit/352f7c8b5b659fa815d3bc436c54b6d28ca05396)
@@ -1215,7 +1215,7 @@ src="https://github.com/user-attachments/assets/ee226e5a-9d75-4b79-87cd-8198fa57
 - Fix `using_index_value` not accepting pyarrow data of the correct types [c59df09](https://github.com/rerun-io/rerun/commit/c59df09001094f6b494039ec13ab6cd35f97438e)
 
 #### 🪳 Bug fixes
-- Gracefully handle Rrd Manifest failures [f14e343](https://github.com/rerun-io/rerun/commit/f14e343fc09a481e76f8898d8fbfe987a4161b80)
+- Gracefully handle Dlr Manifest failures [f14e343](https://github.com/rerun-io/rerun/commit/f14e343fc09a481e76f8898d8fbfe987a4161b80)
 - Fix docs urls being loaded as data sources [3eb98db](https://github.com/rerun-io/rerun/commit/3eb98dbbb4ade0478ba333e05f02fb7bb942e989)
 - Fix fix clicking names of color maps [700b590](https://github.com/rerun-io/rerun/commit/700b590dca0f658b750197f9be5b9bc3495b9dfd)
 - Fix rare ui id conflict in list item content [352f7c8](https://github.com/rerun-io/rerun/commit/352f7c8b5b659fa815d3bc436c54b6d28ca05396)
@@ -1239,7 +1239,7 @@ src="https://github.com/user-attachments/assets/ee226e5a-9d75-4b79-87cd-8198fa57
 
 ## [0.30.0](https://github.com/rerun-io/rerun/compare/0.29.2...0.30.0) - 2026-02-25 - plot any scalar & on-demand streaming
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-30
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-30
 
 ### ✨ Overview & highlights
 
@@ -1249,7 +1249,7 @@ src="https://github.com/user-attachments/assets/ee226e5a-9d75-4b79-87cd-8198fa57
 
 https://github.com/user-attachments/assets/cb10e8fd-7428-44ae-9f22-37fd721a357f
 
-You can now plot any scalar value, even if it lacks Rerun semantics in time series views. For instance, this lets you plot any value in an MCAP file.
+You can now plot any scalar value, even if it lacks Dalaran semantics in time series views. For instance, this lets you plot any value in an MCAP file.
 
 In addition to plotting scalars from MCAP files, it is now possible to visualize arbitrary scalar components that were logged using `AnyValues` or `DynamicArchetype`. The supported data types are:
 
@@ -1259,9 +1259,9 @@ In addition to plotting scalars from MCAP files, it is now possible to visualize
 - `Boolean`
 - Any of the above nested inside of [Arrow structs](https://arrow.apache.org/docs/format/Intro.html#struct).
 
-This also makes it possible to log and visualize multiple scalars to the same entity, which can drastically reduce the size of the resulting `.rrd` files.
+This also makes it possible to log and visualize multiple scalars to the same entity, which can drastically reduce the size of the resulting `.dlr` files.
 
-_Note that by default, and without blueprints, views are still only spawned for entities with Rerun semantics._
+_Note that by default, and without blueprints, views are still only spawned for entities with Dalaran semantics._
 
 Time series views for entities with custom scalar components need to be spawned either:
 
@@ -1283,9 +1283,9 @@ To quickly navigate to the desired visualizer, each time series view now shows a
 
 For more details please refer to our documentation:
 
-- [Customize views](https://rerun.io/docs/concepts/visualization/customize-views)
-- [Plot any scalar](https://rerun.io/docs/howto/visualization/plot-any-scalar)
-- [Component mappings outside of plotting](https://rerun.io/docs/howto/visualization/component-mappings), shown on the example of a colored point cloud
+- [Customize views](https://dalaran.dev/docs/concepts/visualization/customize-views)
+- [Plot any scalar](https://dalaran.dev/docs/howto/visualization/plot-any-scalar)
+- [Component mappings outside of plotting](https://dalaran.dev/docs/howto/visualization/component-mappings), shown on the example of a colored point cloud
 
 And finally, thanks to a contribution from [@vfilter](https://github.com/vfilter), the series lines visualizer now also supports different interpolation modes to render staircase (or step) functions:
 
@@ -1294,34 +1294,34 @@ And finally, thanks to a contribution from [@vfilter](https://github.com/vfilter
 </picture>
 
 #### 📡 On-demand streaming / larger-than-RAM
-The Rerun Viewer now supports _on-demand streaming_, when connected to either the OSS server or [Rerun Hub](https://5li7zhj98k8.typeform.com/to/a5XDpBkZ?typeform-source=rerun.io).
+The Dalaran Viewer now supports _on-demand streaming_, when connected to either the OSS server or [Dalaran Hub](https://5li7zhj98k8.typeform.com/to/a5XDpBkZ?typeform-source=dalaran.dev).
 
 With on-demand streaming, whatever you are currently viewing will be downloaded first.
 This includes time-scrubbing to the end of a very long recording and quickly seeing what is there, or viewing only one camera feed of many.
 
 Of course, your memory limit will be respected, and when you change your view or move the time cursor, the stale data will be evicted and the new data downloaded.
 
-This also means that the web viewer can finally view recordings larger than the 4GiB limit enforced by Wasm32, as long as those recordings are served by a Rerun server.
+This also means that the web viewer can finally view recordings larger than the 4GiB limit enforced by Wasm32, as long as those recordings are served by a Dalaran server.
 
-It also means that Rerun Hub users can view huge recordings, larger than what fits into RAM.
+It also means that Dalaran Hub users can view huge recordings, larger than what fits into RAM.
 The OSS server, however, still loads everything into RAM before serving it.
 
 Usage:
 
 ```
-> rerun server -d folder_with_large_recordings
+> dalaran server -d folder_with_large_recordings
 ```
 
 Then either open the native viewer:
 
 ```
-> rerun "rerun+http://127.0.0.1:51234"
+> dalaran "dalaran+http://127.0.0.1:51234"
 ```
 
 Or the web viewer:
 
 ```
-> rerun --serve-web "rerun+http://127.0.0.1:51234"
+> dalaran --serve-web "dalaran+http://127.0.0.1:51234"
 ```
 
 #### 🦾 Support for many more MCAP message types
@@ -1329,7 +1329,7 @@ Like in the previous releases, we're continually expanding our support for commo
 
 This release adds support for Foxglove Protobuf schemas to our built-in MCAP data loader, in addition to the existing set of supported ROS 2 messages.
 
-You can find an overview of all the messages that are currently supported [here](https://rerun.io/docs/concepts/logging-and-ingestion/mcap/message-formats).
+You can find an overview of all the messages that are currently supported [here](https://dalaran.dev/docs/concepts/logging-and-ingestion/mcap/message-formats).
 
 
 <picture>
@@ -1360,16 +1360,16 @@ https://github.com/user-attachments/assets/df609f10-5515-49bc-86fd-6940cc25706f
 In practice this works currently only well for 2D, 3D, and Map views but we'll keep working towards
 making the Viewer more and more modular & extensible!
 
-For more details, see the [custom visualizer example](https://github.com/rerun-io/rerun/tree/latest/examples/rust/custom_visualizer) and the [viewer rust extension docs](https://rerun.io/docs/howto/visualization/extend-ui) for a general overview.
+For more details, see the [custom visualizer example](https://github.com/rerun-io/rerun/tree/latest/examples/rust/custom_visualizer) and the [viewer rust extension docs](https://dalaran.dev/docs/howto/visualization/extend-ui) for a general overview.
 
 ### ⚠️ Breaking changes
 
 - **Python**: `segment_url_udf` and `segment_url_with_timeref_udf` have been removed
 - **Python**: `segment_url` parameter names have been updated
-- **CLI**: `.rrd` files are no longer tailed by default
+- **CLI**: `.dlr` files are no longer tailed by default
 - **SDK**: `SeriesVisible` component type has been removed
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-30
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-30
 
 
 ### 🔎 Details
@@ -1377,15 +1377,15 @@ For more details, see the [custom visualizer example](https://github.com/rerun-i
 #### 🪵 Log API
 - Fix performance regression with `--server-memory-limit 0` [cfc9a4c](https://github.com/rerun-io/rerun/commit/cfc9a4cab52b5ffe53861961418081f91e7be4e1)
 - Remove `SeriesVisible` component in favor of `Visible` [1fca08a](https://github.com/rerun-io/rerun/commit/1fca08ad65a86b0879e175ee984f931a523c6e17)
-- `rerun rrd verify` now checks for the presence of RRD manifests [2000ba5](https://github.com/rerun-io/rerun/commit/2000ba543f76d026fabc0aee3c9b92ae5da7aaca)
-- Footer-preserving RRD routing [b56a145](https://github.com/rerun-io/rerun/commit/b56a145262bc434542151776b569881522f735b5)
+- `dalaran dlr verify` now checks for the presence of DLR manifests [2000ba5](https://github.com/rerun-io/rerun/commit/2000ba543f76d026fabc0aee3c9b92ae5da7aaca)
+- Footer-preserving DLR routing [b56a145](https://github.com/rerun-io/rerun/commit/b56a145262bc434542151776b569881522f735b5)
 
 #### 🌊 C++ API
 - Build C++ snippets into a single executable to avoid link time overhead [b0a3876](https://github.com/rerun-io/rerun/commit/b0a3876bc26ae1caff59ad1bf230279182522bb9)
 
 #### 🐍 Python API
 - Basic Rust & Python blueprint API for component mappings [c6d7409](https://github.com/rerun-io/rerun/commit/c6d7409bcd94402e219b4d31c682fef52eb3b340)
-- Ensure that `import rerun_sdk.rerun` can be used [196c658](https://github.com/rerun-io/rerun/commit/196c658c2037a3cee7c2e7c25bda499074b4199e)
+- Ensure that `import dalaran_sdk.dalaran` can be used [196c658](https://github.com/rerun-io/rerun/commit/196c658c2037a3cee7c2e7c25bda499074b4199e)
 - Expose `on_duplicate` in the Python SDK [e909e20](https://github.com/rerun-io/rerun/commit/e909e20b7a97eb2666421afa95052e4431fcb5db)
 - Small conversion improvement [383d37d](https://github.com/rerun-io/rerun/commit/383d37db68ae92a16eaf2f669090db1142e39ef2)
 - Table entry APIs: provide a hint for single-row list data [cb38397](https://github.com/rerun-io/rerun/commit/cb3839758c45d0464c1d507ebc460cb854df5d3a)
@@ -1393,14 +1393,14 @@ For more details, see the [custom visualizer example](https://github.com/rerun-i
 - No longer return all columns when `filter_content()` matches nothing [5997d6f](https://github.com/rerun-io/rerun/commit/5997d6f932cc58954250d86a023b8667b9bd9e32)
 - Remove deprecated UDFs [b078e18](https://github.com/rerun-io/rerun/commit/b078e181367782d23ba37fc14fcc6ca795054a86)
 - Allow access to redap token from python sdk [bc2ce79](https://github.com/rerun-io/rerun/commit/bc2ce79f72521773fdbef31576cb00a49473fd8d)
-- Expose "rerun_registration_status" to `DatasetEntry.manifest()` [881cee6](https://github.com/rerun-io/rerun/commit/881cee6003b5ae0146850597782452fca3ac5faa)
+- Expose "dalaran_registration_status" to `DatasetEntry.manifest()` [881cee6](https://github.com/rerun-io/rerun/commit/881cee6003b5ae0146850597782452fca3ac5faa)
 - Correctly handle lists in `AnyValues`/`DynamicArchetype` `.columns` [d2b53da](https://github.com/rerun-io/rerun/commit/d2b53da9ff1274c502968dc62fe96172a0a2ec9f)
 - Atomic (un)registrations [153acd1](https://github.com/rerun-io/rerun/commit/153acd1410d9daab045222ce7be69bde27b50723)
 - The `url` argument of `CatalogClient.create_table()` is now a prefix [1eb6c79](https://github.com/rerun-io/rerun/commit/1eb6c790d7c26f47da8dcfc88942713d97d57a42)
 - notebook: Re-export viewer event types [4c7d978](https://github.com/rerun-io/rerun/commit/4c7d97826a284371291155a5bb67359fb025b3de)
 - Add `entity_paths()`, `archetypes()`, and `component_types()` methods to `Schema` [015f1fc](https://github.com/rerun-io/rerun/commit/015f1fc22c6aa8b7af3b42fecf6feaf81dff2ef0)
 - Error when querying an unknown index [74a27df](https://github.com/rerun-io/rerun/commit/74a27dfb1c1257d6edbabbf42f28afe8bb043d2b)
-- Rename `rerun-sdk[datafusion]` to `rerun-sdk[dataplatform]` and add pandas dependency [b82cd06](https://github.com/rerun-io/rerun/commit/b82cd060273a20ce2a5b99b3b591bce654182710) <!-- NOLINT -->
+- Rename `dalaran-sdk[datafusion]` to `dalaran-sdk[dataplatform]` and add pandas dependency [b82cd06](https://github.com/rerun-io/rerun/commit/b82cd060273a20ce2a5b99b3b591bce654182710) <!-- NOLINT -->
 - Add (and document) time range and selection support to `segment_url` [b2e7eff](https://github.com/rerun-io/rerun/commit/b2e7eff71b53e75d3a6d34c1804773ccc483f648)
 
 #### 🦀 Rust API
@@ -1448,7 +1448,7 @@ For more details, see the [custom visualizer example](https://github.com/rerun-i
 - Adds visualizer list to time series view selection [127efa6](https://github.com/rerun-io/rerun/commit/127efa6c9ae311b3ec1338b6d2f0d87558867a79)
 - Make labels in spatial view translucent [2c376b1](https://github.com/rerun-io/rerun/commit/2c376b1565acd23f16cc7af2ce7951153afd90d7)
 - Fix sometimes not showing correct values in visualizer ui [a4839ce](https://github.com/rerun-io/rerun/commit/a4839ce5db37e35b5631d7eaf2b46874acf1c45c)
-- Show error when rerun_js viewer panics or fails to load [3f7a96d](https://github.com/rerun-io/rerun/commit/3f7a96d4cfb5ac884818d36ad4c991b83098b911)
+- Show error when dalaran_js viewer panics or fails to load [3f7a96d](https://github.com/rerun-io/rerun/commit/3f7a96d4cfb5ac884818d36ad4c991b83098b911)
 - Visualizer list now shows color codes for time series data [2a4ef19](https://github.com/rerun-io/rerun/commit/2a4ef194388e7a22d000372da2def99848f382fd)
 - Tweak `spawn_heuristics` and `recommended_visualizers` for time series views [cebc107](https://github.com/rerun-io/rerun/commit/cebc10792fa11f0175b8c1105132b8f0f53d20f7)
 - Fix color array display, allow editing color arrays in some cases [1e17b86](https://github.com/rerun-io/rerun/commit/1e17b862b6099a3401f7cffacb5f54668efb35b6)
@@ -1485,18 +1485,18 @@ For more details, see the [custom visualizer example](https://github.com/rerun-i
 - Make handling of out of order video chunks much faster [f050460](https://github.com/rerun-io/rerun/commit/f050460c8b37c83beb0a0c33cf504d79e2aeb206)
 
 #### 🧑‍🏫 Examples
-- Rerun to LeRobot export example [#12541](https://github.com/rerun-io/rerun/pull/12541)
+- Dalaran to LeRobot export example [#12541](https://github.com/rerun-io/rerun/pull/12541)
 - Add ROS TF example [#12603](https://github.com/rerun-io/rerun/pull/12603)
 - Add webpage example [e2fd7f6](https://github.com/rerun-io/rerun/commit/e2fd7f65fa0b264f68a61935aba33ef54ff20ab4)
 
 #### 📚 Docs
 - Add a disambiguation from RViz to the README [90faabb](https://github.com/rerun-io/rerun/commit/90faabb4f83659302f186bcddb0813178cb8d366)
-- Add snippet demonstrating conversion of custom mcap protobuf file to rrd [ebd731c](https://github.com/rerun-io/rerun/commit/ebd731c992e2f68eb3f0085742cbe7ff2a047a1a)
+- Add snippet demonstrating conversion of custom mcap protobuf file to dlr [ebd731c](https://github.com/rerun-io/rerun/commit/ebd731c992e2f68eb3f0085742cbe7ff2a047a1a)
 - Adding snippet to convert mcap with send_column [f2b3770](https://github.com/rerun-io/rerun/commit/f2b3770e827d3ad01799cf425a05c6c446c48efe)
 - Adding urdf import support to protobuf convert snippets [8be967d](https://github.com/rerun-io/rerun/commit/8be967d22d17766c13b00f5dc34c714f127b00e2)
-- Add documentation for converting custom data to rrd using log/send_column [f8cf13c](https://github.com/rerun-io/rerun/commit/f8cf13c6686b0dd06e518ec0b8ebe24017bc75ab)
+- Add documentation for converting custom data to dlr using log/send_column [f8cf13c](https://github.com/rerun-io/rerun/commit/f8cf13c6686b0dd06e518ec0b8ebe24017bc75ab)
 - Update MCAP message support documentation [a77922a](https://github.com/rerun-io/rerun/commit/a77922a46338cc1037d5c97ef9680e9879c86f2f)
-- Add layer identifier "foxglove" to `rerun mcap convert` [1436027](https://github.com/rerun-io/rerun/commit/14360275483603361d0c05ce522046344b226fed)
+- Add layer identifier "foxglove" to `dalaran mcap convert` [1436027](https://github.com/rerun-io/rerun/commit/14360275483603361d0c05ce522046344b226fed)
 
 #### 🖼 UI improvements
 - Show that other timelines have data on timeline loader [47bf28f](https://github.com/rerun-io/rerun/commit/47bf28f7377bf09230ddf38151db43c58cfdc3fa)
@@ -1520,8 +1520,8 @@ For more details, see the [custom visualizer example](https://github.com/rerun-i
 
 #### 🤷‍ Other
 - Refactor `add to new view` section [8871a13](https://github.com/rerun-io/rerun/commit/8871a1307614ab97763e22f782d7d9805fa5676a)
-- Add `rerun auth logout` [7b3ae54](https://github.com/rerun-io/rerun/commit/7b3ae543dc0de39cf382aefc435f420de99ef223)
-- `rerun rrd split` [9bde24f](https://github.com/rerun-io/rerun/commit/9bde24fb5860f507bec155da377f40c1b8b0359e)
+- Add `dalaran auth logout` [7b3ae54](https://github.com/rerun-io/rerun/commit/7b3ae543dc0de39cf382aefc435f420de99ef223)
+- `dalaran dlr split` [9bde24f](https://github.com/rerun-io/rerun/commit/9bde24fb5860f507bec155da377f40c1b8b0359e)
 - Add `--follow` option to explicitly follow files and URLs [c34a84b](https://github.com/rerun-io/rerun/commit/c34a84b5382620033182bb41719d1e1de74f10c6)
 
 
@@ -1529,7 +1529,7 @@ For more details, see the [custom visualizer example](https://github.com/rerun-i
 
 ### ✨ Overview & highlights
 
-This patch release contains bug fixes and adds a documentation guide with an example for [converting existing data to Rerun](https://rerun.io/docs/howto/logging-and-ingestion/convert-existing-data).
+This patch release contains bug fixes and adds a documentation guide with an example for [converting existing data to Dalaran](https://dalaran.dev/docs/howto/logging-and-ingestion/convert-existing-data).
 
 ### 🔎 Details
 
@@ -1545,11 +1545,11 @@ This patch release contains bug fixes and adds a documentation guide with an exa
 - Ensure we report file loading errors on web [7fd794e](https://github.com/rerun-io/rerun/commit/7fd794ed39f480764da6c4a6c01b47426265cbf0)
 
 #### 🌁 Viewer improvements
-- Show error when rerun_js viewer panics or fails to load [04e7ae8](https://github.com/rerun-io/rerun/commit/04e7ae8fe761b2e982c55575f62dc4925e6afead)
+- Show error when dalaran_js viewer panics or fails to load [04e7ae8](https://github.com/rerun-io/rerun/commit/04e7ae8fe761b2e982c55575f62dc4925e6afead)
 
 #### 📚 Docs
-- Add snippet demonstrating conversion of custom MCAP protobuf file to RRD [53fbeeb](https://github.com/rerun-io/rerun/commit/53fbeeb7ee0485242b504fb666bd7b6f8cc8e90a)
-- Add documentation for converting custom data to RRD using log/send_column [815d45c](https://github.com/rerun-io/rerun/commit/815d45c25e23851629f2ab77d9c8446e5aa87da0)
+- Add snippet demonstrating conversion of custom MCAP protobuf file to DLR [53fbeeb](https://github.com/rerun-io/rerun/commit/53fbeeb7ee0485242b504fb666bd7b6f8cc8e90a)
+- Add documentation for converting custom data to DLR using log/send_column [815d45c](https://github.com/rerun-io/rerun/commit/815d45c25e23851629f2ab77d9c8446e5aa87da0)
 
 #### 🖼 UI improvements
 - Fix moving text cursor with cmd-arrows [13f7124](https://github.com/rerun-io/rerun/commit/13f71249f36ba9a5b5d99cfbc54630bf1041f898)
@@ -1564,13 +1564,13 @@ This is mainly a patch release with some fixes and improvements.
 
 We also included a change that makes labels translucent. This makes them less obtrusive and improves visibility of overlapping labels, as shown in the image segmentation example below.
 <picture>
-  <img src="https://static.rerun.io/translucent_labels/19694d87d846e01cc59837c4f3982eeab6d4a1a5/full.png" alt="Example of translucent labels in Rerun 0.29.1">
+  <img src="https://static.rerun.io/translucent_labels/19694d87d846e01cc59837c4f3982eeab6d4a1a5/full.png" alt="Example of translucent labels in Dalaran 0.29.1">
 </picture>
 
 ### 🔎 Details
 
 #### 🐍 Python API
-- Ensure that `import rerun_sdk.rerun` can be used [fd28cd3](https://github.com/rerun-io/rerun/commit/fd28cd3946567929b6e968d9df07bec5a67eabb0)
+- Ensure that `import dalaran_sdk.dalaran` can be used [fd28cd3](https://github.com/rerun-io/rerun/commit/fd28cd3946567929b6e968d9df07bec5a67eabb0)
 - Allow access to redap token from Python SDK [51506ca](https://github.com/rerun-io/rerun/commit/51506caeb34a6edadbca4c8938c0039fb0e35a51)
 
 #### 🪳 Bug fixes
@@ -1586,14 +1586,14 @@ We also included a change that makes labels translucent. This makes them less ob
 
 ## [0.29.0](https://github.com/rerun-io/rerun/compare/0.28.2...0.29.0) - 2026-01-28 - URDF improvements, improved ROS 2 docs, and memory panel
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-29
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-29
 
 ### ✨ Overview & highlights
 
 
 #### URDF loader improvements
 
-In the previous 0.28 release, we overhauled Rerun's [built-in URDF loader](https://rerun.io/docs/howto/logging-and-ingestion/urdf) to work with TF-style transforms with `parent` and `child` frames.
+In the previous 0.28 release, we overhauled Dalaran's [built-in URDF loader](https://dalaran.dev/docs/howto/logging-and-ingestion/urdf) to work with TF-style transforms with `parent` and `child` frames.
 Now, taking advantage of these entity-path-independent transforms, we simplified the hierarchy in which URDF assets are stored.
 Collision and visual meshes are now below separate entity path roots, making it easy to toggle one or the other.
 Additionally, the paths are now more compact to make it easier to scroll through them.
@@ -1605,7 +1605,7 @@ https://github.com/user-attachments/assets/7a3f6112-e87f-4249-977b-ed9944e2c356
 
 #### `UrdfTree` utility in Python
 
-We added a [`UrdfTree` Python utility](https://rerun.io/docs/howto/logging-and-ingestion/urdf#urdf-utilities-python) that can be used to simplify operations with URDF models, e.g.:
+We added a [`UrdfTree` Python utility](https://dalaran.dev/docs/howto/logging-and-ingestion/urdf#urdf-utilities-python) that can be used to simplify operations with URDF models, e.g.:
 * accessing links and joints
 * computing transforms from joint states
 * retrieving geometry entity paths for links
@@ -1643,10 +1643,10 @@ https://github.com/user-attachments/assets/4ba25a41-de6a-4209-bd06-c31a33d8d993
 
 #### Updated ROS 2 example & documentation
 
-We refreshed the documentation showing examples of how some ROS concepts and messages can be mapped to Rerun, together with an updated Python node example. The documentation page can be found [here](https://rerun.io/docs/howto/integrations/ros2-nav-turtlebot).
+We refreshed the documentation showing examples of how some ROS concepts and messages can be mapped to Dalaran, together with an updated Python node example. The documentation page can be found [here](https://dalaran.dev/docs/howto/integrations/ros2-nav-turtlebot).
 
 <picture>
-  <img src="https://static.rerun.io/ros_node_example/ddc3387995cda1b283a5c58ffbc6021d91abde7d/full.png" alt="Rerun viewer showing data streamed from the example ROS node">
+  <img src="https://static.rerun.io/ros_node_example/ddc3387995cda1b283a5c58ffbc6021d91abde7d/full.png" alt="Dalaran viewer showing data streamed from the example ROS node">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/ros_node_example/ddc3387995cda1b283a5c58ffbc6021d91abde7d/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/ros_node_example/ddc3387995cda1b283a5c58ffbc6021d91abde7d/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/ros_node_example/ddc3387995cda1b283a5c58ffbc6021d91abde7d/1024w.png">
@@ -1664,27 +1664,27 @@ You can now get some insight on which parts of your recording use how much memor
 - **Python**: New API for visualizer overrides - `VisualizerOverrides` removed, now pass visualizer objects directly (e.g., `rr.SeriesLines()`)
 - **Python**: `Entry.update()` deprecated in favor of `Entry.set_name()`
 - **Python**: `CatalogClient` and `Server` constructor parameters renamed (`addr` → `url`/`host`)
-- **Python**: Removed deprecated `rerun.dataframe` module (use `rerun.server.Server` and `rerun.catalog` instead)
-- **Python**: Removed deprecated `rerun.catalog` APIs from 0.28
+- **Python**: Removed deprecated `dalaran.dataframe` module (use `dalaran.server.Server` and `dalaran.catalog` instead)
+- **Python**: Removed deprecated `dalaran.catalog` APIs from 0.28
 - **Python**: Internal submodules moved to underscore-prefixed names (e.g., `rr.color_conversion` → `rr._color_conversion`)
-- **CLI**: `rerun server --addr` renamed to `rerun server --host`
-- **Blueprint**: Component overrides from `.rbl` files created in previous versions cannot be loaded in 0.29
+- **CLI**: `dalaran server --addr` renamed to `dalaran server --host`
+- **Blueprint**: Component overrides from `.dbl` files created in previous versions cannot be loaded in 0.29
 - **Catalog server**: Datasets need re-registration to populate `name` and `start_time` in segment table
 
-🧳 Check the migration guide for details: https://rerun.io/docs/reference/migration/migration-0-29
+🧳 Check the migration guide for details: https://dalaran.dev/docs/reference/migration/migration-0-29
 
 
 ### 🔎 Details
 
 #### 🪵 Log API
-- Fix dropping of entities when using `rerun rrd filter` [#12584](https://github.com/rerun-io/rerun/pull/12584)
+- Fix dropping of entities when using `dalaran dlr filter` [#12584](https://github.com/rerun-io/rerun/pull/12584)
 - Apply backpressure in gRPC proxy server [cac538e](https://github.com/rerun-io/rerun/commit/cac538e05e122ad7363aa99248d14a9c4a411581)
 - Enforce `Selector` usage in `dl_sdk::lenses` [521c796](https://github.com/rerun-io/rerun/commit/521c7967355c4a0cf06d9fcf4e2b52001e79bc87)
 
 #### 🐍 Python API
 - Allow tables to be created without providing a URL [#12132](https://github.com/rerun-io/rerun/pull/12132)
-- Remove deprecated dataframe API (`rerun.dataframe`) [#12320](https://github.com/rerun-io/rerun/pull/12320)
-- Remove deprecated APIs in `rerun.catalog` [#12321](https://github.com/rerun-io/rerun/pull/12321)
+- Remove deprecated dataframe API (`dalaran.dataframe`) [#12320](https://github.com/rerun-io/rerun/pull/12320)
+- Remove deprecated APIs in `dalaran.catalog` [#12321](https://github.com/rerun-io/rerun/pull/12321)
 - Deprecate `Entry.update` in favor of `Entry.set_name` [#12370](https://github.com/rerun-io/rerun/pull/12370)
 - Fix missing `child_frame`/`parent_frame` arguments from pinhole constructor [#12360](https://github.com/rerun-io/rerun/pull/12360)
 - Use visualizer objects in blueprint override API [#12345](https://github.com/rerun-io/rerun/pull/12345)
@@ -1694,7 +1694,7 @@ You can now get some insight on which parts of your recording use how much memor
 - Fix `RecordingStream` so it has a unique recording id when none is provided [eb14e16](https://github.com/rerun-io/rerun/commit/eb14e163c0d58df77244b69281b160cd6f47416f)
 - Do not assume top-level bindings in `RecordingStream.__del__` [201e7c3](https://github.com/rerun-io/rerun/commit/201e7c31680fcd69e8ab4d7625340a32e7133c94)
 - Fix rare deadlock in Python send/log API [7f72b23](https://github.com/rerun-io/rerun/commit/7f72b23203ce842dbfb3dd334c7cde6bfd70378e)
-- Catch keyboard interrupt in `rerun-sdk` CLI and return exit codes [#12496](https://github.com/rerun-io/rerun/pull/12496)
+- Catch keyboard interrupt in `dalaran-sdk` CLI and return exit codes [#12496](https://github.com/rerun-io/rerun/pull/12496)
 - Make `rr.experimental.ViewerClient.send_table` more flexible [ba733ad](https://github.com/rerun-io/rerun/commit/ba733ad9b1ec1677028fbd21a00634276a991871)
 
 #### 🦀 Rust API
@@ -1706,7 +1706,7 @@ You can now get some insight on which parts of your recording use how much memor
 - Update ply-rs-bw to 3.0.0 (corrected) [#12593](https://github.com/rerun-io/rerun/pull/12593) (thanks [@bourumir-wyngs](https://github.com/bourumir-wyngs)!)
 
 #### 🪳 Bug fixes
-- Fix bad error reporting when registering a (faulty) RRD URI built from a relative path [#12309](https://github.com/rerun-io/rerun/pull/12309)
+- Fix bad error reporting when registering a (faulty) DLR URI built from a relative path [#12309](https://github.com/rerun-io/rerun/pull/12309)
 - Only do `furthest_from` GC when we can download chunks again [#12363](https://github.com/rerun-io/rerun/pull/12363)
 - URDF loader: use `InstancePoses3D` for geometry scale [#12371](https://github.com/rerun-io/rerun/pull/12371)
 - Fix incorrect handling for cameras and depth images for 3D views that use target frames other than the scene root [#12361](https://github.com/rerun-io/rerun/pull/12361)
@@ -1766,13 +1766,13 @@ You can now get some insight on which parts of your recording use how much memor
 - Fix icon colors in light theme [edac1a1](https://github.com/rerun-io/rerun/commit/edac1a15d6aec2e344017bcf9b8148af8e6389bd)
 
 
-## [0.28.2](https://github.com/rerun-io/rerun/compare/0.28.1...0.28.2) - 2025-12-18 - Fix RRD compaction, plot panning, and Collada mesh loader
+## [0.28.2](https://github.com/rerun-io/rerun/compare/0.28.1...0.28.2) - 2025-12-18 - Fix DLR compaction, plot panning, and Collada mesh loader
 
 ### ✨ Overview & highlights
 
-**Fixes to `.rrd` Chunk handling.**
+**Fixes to `.dlr` Chunk handling.**
 
-We revised our Chunk slicing logic to prevent `.rrd` files ballooning in sizes. This also fixes the problem of broken `.rrd` files that contain tensors.
+We revised our Chunk slicing logic to prevent `.dlr` files ballooning in sizes. This also fixes the problem of broken `.dlr` files that contain tensors.
 
 **Collada (`.dae`) mesh support.**
 
@@ -1819,17 +1819,17 @@ This patch adds native support for Collada (`.dae`) meshes, a common format used
 - Add dataloader for encoded depth image (to allow `log_from_file` & dragdrop) [#12287](https://github.com/rerun-io/rerun/pull/12287)
 
 #### 🤷‍ Other
-- Improved error message when `rrd compare --unordered` fails [#12282](https://github.com/rerun-io/rerun/pull/12282)
+- Improved error message when `dlr compare --unordered` fails [#12282](https://github.com/rerun-io/rerun/pull/12282)
 
 ## [0.28.0](https://github.com/rerun-io/rerun/compare/0.27.2...0.28.0) - 2025-12-18 - Transforms, URDF, LeRobotV3, and Catalog API improvements
 
-🧳 [Migration guide](https://rerun.io/docs/reference/migration/migration-0-28)
+🧳 [Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-28)
 
 ### ✨ Overview & highlights
 
 **Transform system overhaul.** This release brings significant improvements to how transforms are handled, especially from ROS or MCAP-based systems. You can now decouple spatial relationships from entity paths by using `CoordinateFrame` to associate entities with named frames, and `Transform3D` with `child_frame`/`parent_frame` parameters to define relationships between frames — similar to ROS tf2. Pinhole cameras also support this system. Additionally, axis visualization has moved to its own `TransformAxes3D` archetype.
 
-Much more can be found at our revamped docs page [here](https://rerun.io/docs/concepts/transforms).
+Much more can be found at our revamped docs page [here](https://dalaran.dev/docs/concepts/transforms).
 
 **Improved URDF and MCAP Transform support.** Parent and child frame components are now available in the `Transform3D` archetype, meaning you can send transforms to a single entity instead of using the entity path to inform the structure (note, for URDFs this is required). Additionally, ROS2’s `tf2_msgs/TFMessage` and `PoseStamped` messages are automatically parsed as `Transform3D` and `InstancePoses3D` , respectively, from MCAP files.
 
@@ -1845,7 +1845,7 @@ Forward/back navigation is now available on native viewers as well.
 
 ## ⚠️ Breaking changes
 
-🧳 Migration guide: [https://rerun.io/docs/reference/migration/migration-0-28](https://rerun.io/docs/reference/migration/migration-0-28)
+🧳 Migration guide: [https://dalaran.dev/docs/reference/migration/migration-0-28](https://dalaran.dev/docs/reference/migration/migration-0-28)
 
 **Transactional transform behavior (important!):**
 Changes to `Transform3D`, `InstancePose3D`, or `Pinhole` transform properties are now treated transactionally. Updating any component resets all other transform components — the viewer no longer looks back in time for previously logged values. If you relied on partial updates (e.g., logging only rotation while keeping a previous translation), you must now re-log all components together. If you always logged the same components on every call or used the standard constructors, no changes are needed. [#11911](https://github.com/rerun-io/rerun/pull/11911)
@@ -1873,7 +1873,7 @@ MCAP timelines renamed from `log_time`/`publish_time` to `message_log_time`/`mes
 
 **Python Catalog API (breaking changes):**
 
-- The `rerun_partition_id` column is now `rerun_segment_id`
+- The `dalaran_partition_id` column is now `dalaran_segment_id`
 - `entries()`, `datasets()`, `tables()` now return lists of entry objects instead of DataFrames
 - `get_table()` returns a `TableEntry` object instead of a DataFrame — use `.reader()` to get the DataFrame
 - `DataframeQueryView` removed; use `filter_segments()`, `filter_contents()`, and `reader()` instead [#12151](https://github.com/rerun-io/rerun/pull/12151)
@@ -1885,7 +1885,7 @@ MCAP timelines renamed from `log_time`/`publish_time` to `message_log_time`/`mes
 - "Partition" renamed to "segment" throughout (e.g., `partition_table()` → `segment_table()`) [#12059](https://github.com/rerun-io/rerun/pull/12059)
 - Method renames: `get_dataset_entry` → `get_dataset`, `get_table_entry` → `get_table`, etc. [#12112](https://github.com/rerun-io/rerun/pull/12112)
 - Table writes moved from `CatalogClient` to `TableEntry` (`append()`, `overwrite()`, `upsert()`) [#12114](https://github.com/rerun-io/rerun/pull/12114)
-- `Schema` types moved from `rerun.dataframe` to `rerun.catalog` [#12135](https://github.com/rerun-io/rerun/pull/12135)
+- `Schema` types moved from `dalaran.dataframe` to `dalaran.catalog` [#12135](https://github.com/rerun-io/rerun/pull/12135)
 - Search index methods renamed: `create_fts_index()` → `create_fts_search_index()`, etc. [#12198](https://github.com/rerun-io/rerun/pull/12198)
 
 ### 🔎 Details
@@ -1895,19 +1895,19 @@ MCAP timelines renamed from `log_time`/`publish_time` to `message_log_time`/`mes
 - Move `Transform3D::axis_length` into its own `TransformAxes3D` archetype [#11925](https://github.com/rerun-io/rerun/pull/11925)
 - Add `show_frame` option on `TransformAxes3D` [#11977](https://github.com/rerun-io/rerun/pull/11977)
 - Rename `CoordinateFrame::frame_id` to `CoordinateFrame::frame` [#11991](https://github.com/rerun-io/rerun/pull/11991)
-- RRD footers 1: framing [#12044](https://github.com/rerun-io/rerun/pull/12044)
-- RRD footers 2: RRD manifests [#12047](https://github.com/rerun-io/rerun/pull/12047)
-- RRD footers 3: encoding/decoding manifests [#12048](https://github.com/rerun-io/rerun/pull/12048)
+- DLR footers 1: framing [#12044](https://github.com/rerun-io/rerun/pull/12044)
+- DLR footers 2: DLR manifests [#12047](https://github.com/rerun-io/rerun/pull/12047)
+- DLR footers 3: encoding/decoding manifests [#12048](https://github.com/rerun-io/rerun/pull/12048)
 - Add option to specify `target_frame` to `SpatialInformation` [#12040](https://github.com/rerun-io/rerun/pull/12040)
 - Remove redundant `Pose*` components [#11905](https://github.com/rerun-io/rerun/pull/11905)
 - Add `OutputMode` option to Lenses [#12107](https://github.com/rerun-io/rerun/pull/12107)
 - Load URDF with frame IDs and named transforms [#12005](https://github.com/rerun-io/rerun/pull/12005)
-- RRD manifests: implement `chunk_byte_size_uncompressed` support [#12194](https://github.com/rerun-io/rerun/pull/12194)
+- DLR manifests: implement `chunk_byte_size_uncompressed` support [#12194](https://github.com/rerun-io/rerun/pull/12194)
 - Disable merging compaction for video samples [#12270](https://github.com/rerun-io/rerun/pull/12270)
 
 #### 🌊 C++ API
 - Make component type registration thread-safe in C++ SDK [#11907](https://github.com/rerun-io/rerun/pull/11907)
-- Don't install signal handlers into rerun_c outside of DEBUG mode [#11956](https://github.com/rerun-io/rerun/pull/11956)
+- Don't install signal handlers into dalaran_c outside of DEBUG mode [#11956](https://github.com/rerun-io/rerun/pull/11956)
 
 #### 🐍 Python API
 - Fix dataframe queries failing on empty datasets [#11846](https://github.com/rerun-io/rerun/pull/11846)
@@ -1944,7 +1944,7 @@ MCAP timelines renamed from `log_time`/`publish_time` to `message_log_time`/`mes
 - Fix incorrect displayed transform for some cases of logging transforms at a previously shown time [#12088](https://github.com/rerun-io/rerun/pull/12088)
 - Fix links to time points [#12163](https://github.com/rerun-io/rerun/pull/12163)
 - Fix timepanel size being rounded down [#12208](https://github.com/rerun-io/rerun/pull/12208)
-- Fix missing data after saving a time slice as .rrd [#12239](https://github.com/rerun-io/rerun/pull/12239)
+- Fix missing data after saving a time slice as .dlr [#12239](https://github.com/rerun-io/rerun/pull/12239)
 
 #### 🌁 Viewer improvements
 - Add `av1` support to `VideoStream` [#11849](https://github.com/rerun-io/rerun/pull/11849)
@@ -1975,7 +1975,7 @@ MCAP timelines renamed from `log_time`/`publish_time` to `message_log_time`/`mes
 #### 🗄️ OSS server
 - Add static/temporal chunk query filtering to OSS server [#11984](https://github.com/rerun-io/rerun/pull/11984)
 - Expose `/version` from oss server [#12108](https://github.com/rerun-io/rerun/pull/12108)
-- Add support for creating dataset from list of RRDs to `rerun.server.Server` [#12225](https://github.com/rerun-io/rerun/pull/12225)
+- Add support for creating dataset from list of RRDs to `dalaran.server.Server` [#12225](https://github.com/rerun-io/rerun/pull/12225)
 
 #### 🚀 Performance improvements
 - JIT compaction in ChunkStore can now split chunks in addition to merging them [#11921](https://github.com/rerun-io/rerun/pull/11921)
@@ -2026,7 +2026,7 @@ MCAP timelines renamed from `log_time`/`publish_time` to `message_log_time`/`mes
 - Implement the search service [#11954](https://github.com/rerun-io/rerun/pull/11954)
 - Add `MapProvider::MapboxLight` [#12083](https://github.com/rerun-io/rerun/pull/12083) (thanks [@sectore](https://github.com/sectore)!)
 - Implement streaming for datafusion table [#12162](https://github.com/rerun-io/rerun/pull/12162)
-- Add Rerun Hub section to welcome page [#12051](https://github.com/rerun-io/rerun/pull/12051)
+- Add Dalaran Hub section to welcome page [#12051](https://github.com/rerun-io/rerun/pull/12051)
 - Add support for server side filtering of DataFusion DataFrames [#12147](https://github.com/rerun-io/rerun/pull/12147)
 - Fix compaction of recordings containing video streams [35810c74187c250925e958a8f095756915313ce7](https://github.com/rerun-io/rerun/commit/35810c74187c250925e958a8f095756915313ce7)
 - Python SDK: Add timeout_sec argument to flush [f69d249e5c6bc5225d8f2f0be384243ab9dacf03](https://github.com/rerun-io/rerun/commit/f69d249e5c6bc5225d8f2f0be384243ab9dacf03)
@@ -2086,7 +2086,7 @@ You can now also use just a keyboard to navigate in panels with trees (blueprint
 - Removed the option to specify the current time cursor via Blueprint.
 
 See the
-🧳 [Migration guide](https://rerun.io/docs/reference/migration/migration-0-27) for more details.
+🧳 [Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-27) for more details.
 
 ### 🔎 Details
 
@@ -2095,7 +2095,7 @@ See the
 
 #### 🌊 C++ API
 - CMake: Download Arrow from Tarball URL Instead of Git [#11558](https://github.com/rerun-io/rerun/pull/11558) (thanks [@threeal](https://github.com/threeal)!)
-- Fix in-repo CMake build not resolving builds of rerun_c that weren't made with pixi [#11751](https://github.com/rerun-io/rerun/pull/11751)
+- Fix in-repo CMake build not resolving builds of dalaran_c that weren't made with pixi [#11751](https://github.com/rerun-io/rerun/pull/11751)
 
 #### 🐍 Python API
 - Expose view container visibility in python blueprint api [#11602](https://github.com/rerun-io/rerun/pull/11602)
@@ -2151,7 +2151,7 @@ See the
 - Small performance improvement for many entities [#11720](https://github.com/rerun-io/rerun/pull/11720) (thanks [@joelreymont](https://github.com/joelreymont)!)
 
 #### 🧑‍🏫 Examples
-- Create and write tables in the Rerun server [#11694](https://github.com/rerun-io/rerun/pull/11694)
+- Create and write tables in the Dalaran server [#11694](https://github.com/rerun-io/rerun/pull/11694)
 
 #### 📚 Docs
 - Clarify that 0B memory limit for grpc server only makes sense if client/server are connected from the start [#11599](https://github.com/rerun-io/rerun/pull/11599)
@@ -2174,7 +2174,7 @@ See the
 
 #### 🤷‍ Other
 - Add client object table writing functions [#11657](https://github.com/rerun-io/rerun/pull/11657)
-- No longer providing official Intel Macs binaries for rerun [#11719](https://github.com/rerun-io/rerun/pull/11719)
+- No longer providing official Intel Macs binaries for dalaran [#11719](https://github.com/rerun-io/rerun/pull/11719)
 
 ## [0.26.2](https://github.com/rerun-io/rerun/compare/0.26.1...0.26.2) - 2025-10-27 - More bug fixes
 
@@ -2187,7 +2187,7 @@ See the
 
 ## [0.26.1](https://github.com/rerun-io/rerun/compare/0.26.0...0.26.1) - 2025-10-21 - Bug fixes
 
-- Fix `cargo install rerun-cli` requiring `protoc` on `PATH` [#11592](https://github.com/rerun-io/rerun/pull/11592)
+- Fix `cargo install dalaran-cli` requiring `protoc` on `PATH` [#11592](https://github.com/rerun-io/rerun/pull/11592)
 - Switch to newly received recordings even if `SetStoreInfo` message is missing [#11568](https://github.com/rerun-io/rerun/pull/11568)
 
 
@@ -2221,7 +2221,7 @@ Mostly you can just call `.flush()` with no arguments.
 We also have started using named arguments (kw-args) for more of our functions, this will make it easier for us to evolve our APIs in the future, when adding new arguments, or renaming old ones.
 
 See the
-🧳 [Migration guide](https://rerun.io/docs/reference/migration/migration-0-26) for more details.
+🧳 [Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-26) for more details.
 
 ### 🔎 Details
 
@@ -2314,7 +2314,7 @@ See the
 - Reflection-based ROS2 parser now only returns single component [#11480](https://github.com/rerun-io/rerun/pull/11480)
 
 #### 🧑‍💻 Dev-experience
-- Improve rrd loading errors by checking FourCC first [#11265](https://github.com/rerun-io/rerun/pull/11265)
+- Improve dlr loading errors by checking FourCC first [#11265](https://github.com/rerun-io/rerun/pull/11265)
 
 #### 📦 Dependencies
 - Update to wgpu 26 [#11300](https://github.com/rerun-io/rerun/pull/11300)
@@ -2331,7 +2331,7 @@ See the
 
 ## [0.25.0](https://github.com/rerun-io/rerun/compare/0.24.1...0.25.0) - 2025-09-16 - Syntax highlighting, table filtering, transparent objects
 
-🧳 [Migration guide](https://rerun.io/docs/reference/migration/migration-0-25)
+🧳 [Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-25)
 
 ### ✨ Overview & highlights
 
@@ -2343,7 +2343,7 @@ Our data frames and selection panel now feature prettier colors based on data ty
 
 #### Table filtering
 
-We are busy working on a powerful filtering feature for our arrow dataframe widget used for tables (sent with `ViewerClient.send_table()`) as well as the Rerun server browser (entry list, partition list, and remote tables). This release introduces support for filtering boolean, integer, floating point, and string columns, with more coming in future releases. (Note that the text log views and dataframe views are using a different widget which does not support filtering.)
+We are busy working on a powerful filtering feature for our arrow dataframe widget used for tables (sent with `ViewerClient.send_table()`) as well as the Dalaran server browser (entry list, partition list, and remote tables). This release introduces support for filtering boolean, integer, floating point, and string columns, with more coming in future releases. (Note that the text log views and dataframe views are using a different widget which does not support filtering.)
 
 ![table_filtering](https://github.com/user-attachments/assets/13775e9a-b564-4faa-91ac-2c36379e8140)
 
@@ -2362,7 +2362,7 @@ Naturally, there's still a lot of places missing where we'd like to add transpar
 
 #### Experimental MCAP support
 
-Rerun has experimental, partial support for importing data from MCAP files. We support a subset of ROS2/CDR and Protocol Buffers messages. Development is ongoing, feel free to share your use cases!
+Dalaran has experimental, partial support for importing data from MCAP files. We support a subset of ROS2/CDR and Protocol Buffers messages. Development is ongoing, feel free to share your use cases!
 
 ### ⚠️ Breaking changes
 
@@ -2371,7 +2371,7 @@ We removed the `--serve`, `--drop-at-latency` and `-o` CLI arguments, deprecated
 We also removed `flush_timeout_sec` parameter to out connect functions. Instead you can specify a maximum wait time in the calls to `flush`, but usually this isn't needed, as the new blocking behavior is also much smarter.
 
 See the
-🧳 [Migration guide](https://rerun.io/docs/reference/migration/migration-0-25) for more details.
+🧳 [Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-25) for more details.
 
 ### 🔎 Details
 
@@ -2463,7 +2463,7 @@ See the
 
 #### 🧑‍💻 Dev-experience
 -   Fix building Web Viewer on macOS [#10828](https://github.com/rerun-io/rerun/pull/10828)
--   Improve `rerun rrd print` [#10881](https://github.com/rerun-io/rerun/pull/10881)
+-   Improve `dalaran dlr print` [#10881](https://github.com/rerun-io/rerun/pull/10881)
 
 #### 🗣 Refactors
 -   Add `ApplicationId` in `StoreId` [#10742](https://github.com/rerun-io/rerun/pull/10742)
@@ -2472,20 +2472,20 @@ See the
 -   Use `jiff` date-time crate instead of `time`/`chrono` in more places [#9536](https://github.com/rerun-io/rerun/pull/9536) (thanks [@NiharP31](https://github.com/NiharP31)!)
 
 #### 🤷‍ Other
--   Introduce MCAP layers and `rerun mcap` CLI tools [#10856](https://github.com/rerun-io/rerun/pull/10856)
+-   Introduce MCAP layers and `dalaran mcap` CLI tools [#10856](https://github.com/rerun-io/rerun/pull/10856)
 -   Remove `--drop-at-latency` [#11025](https://github.com/rerun-io/rerun/pull/11025)
 
 
 ## [0.24.1](https://github.com/rerun-io/rerun/compare/0.24.0...0.24.1) - 2025-08-07 - Bug fixes
 
 #### 🌊 C++ API
-- Fix `rerun_cpp` CMake link errors [#10756](https://github.com/rerun-io/rerun/pull/10756) (thanks [@reinar](https://github.com/reinar)!)
+- Fix `dalaran_cpp` CMake link errors [#10756](https://github.com/rerun-io/rerun/pull/10756) (thanks [@reinar](https://github.com/reinar)!)
 - Fix C++ interface for `VideoStream` [#10745](https://github.com/rerun-io/rerun/pull/10745)
 - Fix C++ Arrow build [#10799](https://github.com/rerun-io/rerun/pull/10799)
 
 #### 🐍 Python API
 - Explicitly import `pyarrow.compute` in `url_generation.py` [#10690](https://github.com/rerun-io/rerun/pull/10690)
-- Add `rerun-sdk[datafusion]` and `rerun-sdk[all]` [#10696](https://github.com/rerun-io/rerun/pull/10696)
+- Add `dalaran-sdk[datafusion]` and `dalaran-sdk[all]` [#10696](https://github.com/rerun-io/rerun/pull/10696)
 
 #### 🦀 Rust API
 - Fix unnecessary `rfd` and wayland dependencies in SDK crate [#10802](https://github.com/rerun-io/rerun/pull/10802)
@@ -2494,7 +2494,7 @@ See the
 - Make `parking_lot` dependency version stricter to prevent import failure [#10732](https://github.com/rerun-io/rerun/pull/10732) (thanks [@sdd](https://github.com/sdd)!)
 - Use `ui.warning_label()` in more places [#10697](https://github.com/rerun-io/rerun/pull/10697)
 - Fix colors sometimes being wrong in plot view [#10713](https://github.com/rerun-io/rerun/pull/10713)
-- Fix breaking example in `rerun_notebook/example.ipynb` [#10706](https://github.com/rerun-io/rerun/pull/10706) (thanks [@glk0](https://github.com/glk0)!)
+- Fix breaking example in `dalaran_notebook/example.ipynb` [#10706](https://github.com/rerun-io/rerun/pull/10706) (thanks [@glk0](https://github.com/glk0)!)
 - Fix GUI hickup when starting native video player [#10797](https://github.com/rerun-io/rerun/pull/10797)
 - Improve command palette in light mode [#10825](https://github.com/rerun-io/rerun/pull/10825)
 
@@ -2513,14 +2513,14 @@ See the
 
 ## [0.24.0](https://github.com/rerun-io/rerun/compare/0.23.4...0.24.0) - 2025-07-16 - Tagged components, Video Stream, light mode and more
 
-* 📖 [Release blogpost](https://rerun.io/blog/release-0.24)
-* 🧳 [Migration guide](https://rerun.io/docs/reference/migration/migration-0-24)
+* 📖 [Release blogpost](https://dalaran.dev/blog/release-0.24)
+* 🧳 [Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-24)
 
 ### ✨ Overview & highlights
 
 #### 💽 Tagged components
 
-Starting with 0.22 Rerun began storing additional meta-information for each component,
+Starting with 0.22 Dalaran began storing additional meta-information for each component,
 identifying its field name (e.g. `vertex_colors`) and its archetype (e.g. `Mesh3D`).
 We finally concluded this effort and made all parts of the Viewer and API aware of this.
 
@@ -2544,9 +2544,9 @@ rr.log("path", rr.Mesh3D(vertex_positions=vertices, vertex_colors=[0x00FF00FF]))
 
 #### 🎥 Video streams
 
-Rerun previously supported video only in the form of MP4 files,
-so it was not possible to stream live encoded video to Rerun.
-The new [`VideoStream`](https://rerun.io/docs/reference/types/archetypes/video_stream) archetype remedies that!
+Dalaran previously supported video only in the form of MP4 files,
+so it was not possible to stream live encoded video to Dalaran.
+The new [`VideoStream`](https://dalaran.dev/docs/reference/types/archetypes/video_stream) archetype remedies that!
 
 [<img src="https://static.rerun.io/camera_video_stream/b2f8f61eb62424aa942bdb5183e49246cf417e60/480w.png">](https://static.rerun.io/camera_video_stream/b2f8f61eb62424aa942bdb5183e49246cf417e60/full.png)
 
@@ -2559,11 +2559,11 @@ rr.log("video_stream", rr.VideoStream(codec=rr.VideoCodec.H264, sample=bytes(pac
 ```
 
 For now, we only handle H.264, but support for more codecs is on the roadmap.
-Learn more on the updated [video reference page](https://rerun.io/docs/concepts/logging-and-ingestion/video).
+Learn more on the updated [video reference page](https://dalaran.dev/docs/concepts/logging-and-ingestion/video).
 
 #### 😎 Light mode
 
-Rerun finally has a light mode.
+Dalaran finally has a light mode.
 
 [<img src="https://static.rerun.io/theme-before-after/4160c066eab17a6982201687993be60ceb37c33e/480w.png">](https://static.rerun.io/theme-before-after/4160c066eab17a6982201687993be60ceb37c33e/full.png)
 
@@ -2581,24 +2581,24 @@ Here's what that looks like in Python (but the API is available in C++ & Rust as
 rr.set_sinks(
     # Connect to a local viewer using the default URL
     rr.GrpcSink(),
-    # Write data to a `data.rrd` file in the current directory
-    rr.FileSink("data.rrd"),
+    # Write data to a `data.dlr` file in the current directory
+    rr.FileSink("data.dlr"),
 )
 ```
 
 #### 🤖 Built-in URDF data loader
 
-You can now log URDF files directly to Rerun using the `log_file` API.
+You can now log URDF files directly to Dalaran using the `log_file` API.
 
 <img width="900" src="https://github.com/user-attachments/assets/e3206d26-e1cf-4161-b1d5-ecd58fe6d07b" />
 
 #### 👀 Other highlights in short
 
-* New [`Cylinder`](https://rerun.io/docs/reference/types/archetypes/cylinders3d) archetype
+* New [`Cylinder`](https://dalaran.dev/docs/reference/types/archetypes/cylinders3d) archetype
 * [`AnyValues`](https://github.com/rerun-io/rerun/blob/0.24.0/crates/store/dl_types/src/any_values.rs) utility for Rust
-* [`rerun rrd stats`](https://github.com/rerun-io/rerun/pull/10593) for retrieving statistics about rrd files
-* [`rerun rrd route`](https://github.com/rerun-io/rerun/pull/10607) command to manipulate .rrd files on transport level
-* Much faster & better compaction for both `rerun rrd compact` and automatic in-Viewer compaction
+* [`dalaran dlr stats`](https://github.com/rerun-io/rerun/pull/10593) for retrieving statistics about dlr files
+* [`dalaran dlr route`](https://github.com/rerun-io/rerun/pull/10607) command to manipulate .dlr files on transport level
+* Much faster & better compaction for both `dalaran dlr compact` and automatic in-Viewer compaction
 * Viewers started with `spawn` use now less memory since it no longer sets up an GRPC server for message forwarding
 * View3D's eye control type & speed can now be changed from blueprint (and as such is persisted over session!) more properties will follow in the future. (thanks to @jccampagne)
 
@@ -2612,13 +2612,13 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 - Rename `ComponentDescriptor` fields and use colons in Sorbet metadata [#10245](https://github.com/rerun-io/rerun/pull/10245)
 - Stop logging indicators and drop them during migration [#10521](https://github.com/rerun-io/rerun/pull/10521)
 - Make `SeriesPoints::markers` component required [#10572](https://github.com/rerun-io/rerun/pull/10572)
-- Remove indicators from codegen, `rerun_py`, and `rerun_cpp` [#10581](https://github.com/rerun-io/rerun/pull/10581)
+- Remove indicators from codegen, `dalaran_py`, and `dalaran_cpp` [#10581](https://github.com/rerun-io/rerun/pull/10581)
 - Removes remnants of indicators from dataframe queries and viewer [#10584](https://github.com/rerun-io/rerun/pull/10584)
-- `rerun rrd stats` [#10593](https://github.com/rerun-io/rerun/pull/10593)
+- `dalaran dlr stats` [#10593](https://github.com/rerun-io/rerun/pull/10593)
 - Source default batcher settings from sink [#10620](https://github.com/rerun-io/rerun/pull/10620)
 
 #### 🌊 C++ API
-- (CMake) download arrow inside the rerun build folder instead of general binary folder [#10141](https://github.com/rerun-io/rerun/pull/10141) (thanks [@jzubizarreta](https://github.com/jzubizarreta)!)
+- (CMake) download arrow inside the dalaran build folder instead of general binary folder [#10141](https://github.com/rerun-io/rerun/pull/10141) (thanks [@jzubizarreta](https://github.com/jzubizarreta)!)
 - Fix documentation wording on which arrow-cpp version to use [#10235](https://github.com/rerun-io/rerun/pull/10235)
 - Disable gRPC server history for Spawn/CLI [#10314](https://github.com/rerun-io/rerun/pull/10314)
 - Add `set_sinks` to C++ `RecordingStream` [#10359](https://github.com/rerun-io/rerun/pull/10359)
@@ -2630,7 +2630,7 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 - Add APIs to Dataset to query and update the associated blueprint [#10156](https://github.com/rerun-io/rerun/pull/10156)
 - Support for seconds-since-Epoch numpy arrays for constructing `TimeColumn` [#10168](https://github.com/rerun-io/rerun/pull/10168) (thanks [@MichaelGrupp](https://github.com/MichaelGrupp)!)
 - Fix initializing two recordings with the same recording id causing SDK hangs [#10201](https://github.com/rerun-io/rerun/pull/10201) (thanks [@AhmedMousa-ag](https://github.com/AhmedMousa-ag)!)
-- Improve `rerun_notebook` startup times [#10111](https://github.com/rerun-io/rerun/pull/10111)
+- Improve `dalaran_notebook` startup times [#10111](https://github.com/rerun-io/rerun/pull/10111)
 - New dataset API for just retrieving `chunk_ids` associated with a query [#10261](https://github.com/rerun-io/rerun/pull/10261)
 - Multi-sink / `tee` Python API [#10158](https://github.com/rerun-io/rerun/pull/10158)
 - Rename to `tee` to `set_sinks` [#10312](https://github.com/rerun-io/rerun/pull/10312)
@@ -2649,7 +2649,7 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 
 #### 🦀 Rust API
 - Update MSRV to 1.85 [#9798](https://github.com/rerun-io/rerun/pull/9798)
-- Improve `rerun` crate forwarding, removing need to depend on other `re_*` crates for viewer customization [#9825](https://github.com/rerun-io/rerun/pull/9825)
+- Improve `dalaran` crate forwarding, removing need to depend on other `re_*` crates for viewer customization [#9825](https://github.com/rerun-io/rerun/pull/9825)
 - Update glam to 0.30, and replace `re_math` with `macaw` [#10119](https://github.com/rerun-io/rerun/pull/10119)
 - Add `RecordingStream::set_timestamp_nanos_since_epoch` [#10200](https://github.com/rerun-io/rerun/pull/10200)
 - Add `set_sinks` to Rust `RecordingStream` [#10336](https://github.com/rerun-io/rerun/pull/10336)
@@ -2677,7 +2677,7 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 - Fix H.264 with b-frames not decoding last few frames on native [#10545](https://github.com/rerun-io/rerun/pull/10545)
 - Fix visible time range documentation on property inheritance [#10618](https://github.com/rerun-io/rerun/pull/10618)
 - Remove redundant ffmpeg install check [#10635](https://github.com/rerun-io/rerun/pull/10635)
-- Make rerun menu scrollable if there is not enough space [#10642](https://github.com/rerun-io/rerun/pull/10642)
+- Make dalaran menu scrollable if there is not enough space [#10642](https://github.com/rerun-io/rerun/pull/10642)
 
 #### 🌁 Viewer improvements
 - Basic ability to show components that only differ by archetype/field name on same entity [#9877](https://github.com/rerun-io/rerun/pull/9877)
@@ -2707,8 +2707,8 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 - Update tower http and tonic dependencies, improving `LogMsg` decode speed [#10209](https://github.com/rerun-io/rerun/pull/10209)
 - Free up memory of inactive recordings [#10537](https://github.com/rerun-io/rerun/pull/10537)
 - Compaction: performance & quality improvements [#10594](https://github.com/rerun-io/rerun/pull/10594)
-- `rrd stats`: add transport-layer only fast path [#10605](https://github.com/rerun-io/rerun/pull/10605)
-- `rrd stats`: parallelize decompression [#10606](https://github.com/rerun-io/rerun/pull/10606)
+- `dlr stats`: add transport-layer only fast path [#10605](https://github.com/rerun-io/rerun/pull/10605)
+- `dlr stats`: parallelize decompression [#10606](https://github.com/rerun-io/rerun/pull/10606)
 - Add documentation for all things compaction [#10674](https://github.com/rerun-io/rerun/pull/10674)
 
 #### 🧑‍🏫 Examples
@@ -2761,7 +2761,7 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 - Disambiguate component entries in selection panel [#10368](https://github.com/rerun-io/rerun/pull/10368)
 - Display the partition ID in recording selection panel [#10387](https://github.com/rerun-io/rerun/pull/10387)
 - Show average FPS of selected video [#10479](https://github.com/rerun-io/rerun/pull/10479)
-- Rename the 'Welcome screen' option to 'Rerun examples' [#10503](https://github.com/rerun-io/rerun/pull/10503)
+- Rename the 'Welcome screen' option to 'Dalaran examples' [#10503](https://github.com/rerun-io/rerun/pull/10503)
 - Show arrow data in header tooltips and ever more data when alt is down [#10526](https://github.com/rerun-io/rerun/pull/10526)
 - Add support for table entries in the redap browser [#10569](https://github.com/rerun-io/rerun/pull/10569)
 - Add a 'copy entry url' button next to the name of remote datasets and table [#10571](https://github.com/rerun-io/rerun/pull/10571)
@@ -2787,14 +2787,14 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 - Update egui to 0.32 [#10604](https://github.com/rerun-io/rerun/pull/10604)
 
 #### 🤷‍ Other
-- Add migration tool for legacy .rrd files [#9816](https://github.com/rerun-io/rerun/pull/9816)
+- Add migration tool for legacy .dlr files [#9816](https://github.com/rerun-io/rerun/pull/9816)
 - Add support for remote dataset blueprints [#10128](https://github.com/rerun-io/rerun/pull/10128)
 - Use new column name in `blueprint::datatypes::ComponentColumnSelector` [#10215](https://github.com/rerun-io/rerun/pull/10215)
-- Support u16/u32/u64 wide Rerun `enum` types in data definition [#10252](https://github.com/rerun-io/rerun/pull/10252)
-- `rerun rrd route` command to manipulate `.rrd`s on transport level [#10607](https://github.com/rerun-io/rerun/pull/10607)
+- Support u16/u32/u64 wide Dalaran `enum` types in data definition [#10252](https://github.com/rerun-io/rerun/pull/10252)
+- `dalaran dlr route` command to manipulate `.dlr`s on transport level [#10607](https://github.com/rerun-io/rerun/pull/10607)
 
 ## [0.23.4](https://github.com/rerun-io/rerun/compare/0.23.3..0.23.4) - 2025-06-26
-- Fix `rerun rrd migrate` tool [#10350](https://github.com/rerun-io/rerun/pull/10350)
+- Fix `dalaran dlr migrate` tool [#10350](https://github.com/rerun-io/rerun/pull/10350)
 
 
 ## [0.23.3](https://github.com/rerun-io/rerun/compare/0.23.2...0.23.3) - 2025-05-26
@@ -2828,29 +2828,29 @@ You can now log URDF files directly to Rerun using the `log_file` API.
 - LeRobot: Add support for List datatype [#9958](https://github.com/rerun-io/rerun/pull/9958)
 
 
-## [0.23.2](https://github.com/rerun-io/rerun/compare/0.23.1...0.23.2) - 2025-05-06 - RRD migration and bugfixes
+## [0.23.2](https://github.com/rerun-io/rerun/compare/0.23.1...0.23.2) - 2025-05-06 - DLR migration and bugfixes
 
 ### ✨ Overview & highlights
 
-- New CLI tool to migrate `.rrd` files
+- New CLI tool to migrate `.dlr` files
 - Various bugfixes
 
-#### `.rrd` migration tool
+#### `.dlr` migration tool
 
-With `0.23`, we made several breaking changes that resulted in older `.rrd` files not being able to load at all anymore.
-To help smoothen the migration to `0.23`, we're introducing a `migrate` command to the Rerun CLI:
+With `0.23`, we made several breaking changes that resulted in older `.dlr` files not being able to load at all anymore.
+To help smoothen the migration to `0.23`, we're introducing a `migrate` command to the Dalaran CLI:
 
 ```
-rerun rrd migrate colmap.rrd arkit.rrd rgbd.rrd
+dalaran dlr migrate colmap.dlr arkit.dlr rgbd.dlr
 ```
 
 The command will copy the contents into a `.backup` file, and then migrate the file.
 
-Due to the incompatibility between `.rrd` files from `0.23` and those from earlier versions, this command likely
+Due to the incompatibility between `.dlr` files from `0.23` and those from earlier versions, this command likely
 won't be able to migrate every recording perfectly. We expect the migration to work on files between `0.20` and `0.22`,
 simpler recordings may work as far back as `0.18`.
 
-We plan to use this command future `.rrd` migrations as a way to fulfill our N+1 compatibility guarantee:
+We plan to use this command future `.dlr` migrations as a way to fulfill our N+1 compatibility guarantee:
 * Viewers after `0.23` will always be able to load recordings from the previous version.
 * Recordings from `0.23` and beyond may be migrated to the next version.
 
@@ -2860,7 +2860,7 @@ We currently have no plans for compatibility or migrations across multiple versi
 - Improve and mitigate warnings around data loss when flushing [#9846](https://github.com/rerun-io/rerun/pull/9846)
 
 #### 🐍 Python API
-- Add `ViewerClient` to `rerun.experimental` [#9828](https://github.com/rerun-io/rerun/pull/9828)
+- Add `ViewerClient` to `dalaran.experimental` [#9828](https://github.com/rerun-io/rerun/pull/9828)
 - Improve `set_time` error handling for large Python integers [#9839](https://github.com/rerun-io/rerun/pull/9839)
 - Properly resolve component selectors in dataset index creation and search APIs [#9854](https://github.com/rerun-io/rerun/pull/9854)
 - Fix incorrectly advertised minimum supported `pyarrow` version (18.0.0 is required) [#9878](https://github.com/rerun-io/rerun/pull/9878)
@@ -2875,10 +2875,10 @@ We currently have no plans for compatibility or migrations across multiple versi
 ## [0.23.1](https://github.com/rerun-io/rerun/compare/0.23.0...0.23.1) - 2025-04-25 - Fix notebooks
 
 #### 🪳 Bug fixes
-- Use correct URL for `RERUN_NOTEBOOK_ASSET` [#9800](https://github.com/rerun-io/rerun/pull/9800)
+- Use correct URL for `DALARAN_NOTEBOOK_ASSET` [#9800](https://github.com/rerun-io/rerun/pull/9800)
 
 #### 🌊 C++ API
-- C++: Emit warnings when using deprecated Rerun types [#9801](https://github.com/rerun-io/rerun/pull/9801)
+- C++: Emit warnings when using deprecated Dalaran types [#9801](https://github.com/rerun-io/rerun/pull/9801)
 
 #### 🐍 Python API
 - Direct API for setting blueprint on a notebook-embedded viewer [#9804](https://github.com/rerun-io/rerun/pull/9804)
@@ -2893,20 +2893,20 @@ We currently have no plans for compatibility or migrations across multiple versi
 - Show image format (resolution etc) of image blobs [#9792](https://github.com/rerun-io/rerun/pull/9792)
 
 
-## [0.23.0](https://github.com/rerun-io/rerun/compare/0.22.1...0.23.0) - 2025-04-24 - Backwards compatible `.rrd` and multi-scalar logging
+## [0.23.0](https://github.com/rerun-io/rerun/compare/0.22.1...0.23.0) - 2025-04-24 - Backwards compatible `.dlr` and multi-scalar logging
 
-* 📖 [Release blogpost](https://rerun.io/blog/release-0.23)
-* 🧳 [Migration guide](https://rerun.io/docs/reference/migration/migration-0-23)
+* 📖 [Release blogpost](https://dalaran.dev/blog/release-0.23)
+* 🧳 [Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-23)
 
 ### ✨ Overview & highlights
 
 #### Viewer
 
-* ⏩ [New .rrd format that will be backwards compatible](https://rerun.io/blog/release-0.23)
+* ⏩ [New .dlr format that will be backwards compatible](https://dalaran.dev/blog/release-0.23)
 * 📈 Support for multiple scalars under a single entity
-* ↪️ [Callbacks API for notebooks and JavaScript](https://rerun.io/docs/howto/callbacks)
+* ↪️ [Callbacks API for notebooks and JavaScript](https://dalaran.dev/docs/howto/callbacks)
 * ⚙️ [New APIs for attaching properties (metadata) to recordings](https://github.com/rerun-io/rerun/blob/0.23.0/docs/snippets/all/concepts/recording_properties.py)
-* 🧮 [Experimental support for tables and dataframes](https://rerun.io/docs/howto/logging/send-table)
+* 🧮 [Experimental support for tables and dataframes](https://dalaran.dev/docs/howto/logging/send-table)
 
 #### Multiple scalars under a single entity
 
@@ -2950,7 +2950,7 @@ We've created an example for this using [Gradio](https://www.gradio.app/) at <ht
 
 #### Recording properties
 
-For this release, we have improved Rerun's logging capabilities. There is a new _recording properties_ concept in all of our APIs.
+For this release, we have improved Dalaran's logging capabilities. There is a new _recording properties_ concept in all of our APIs.
 Recording properties allow you to attach metadata to a recording.
 For example, you can now change the name of your recording via `.send_recording_name("My episode")`, which will show up in the recording panel of the viewer as well.
 You can also log arbitrary data via the general `.send_property()` method.
@@ -2971,7 +2971,7 @@ Our snippets now contain examples for recording properties in all SDKs:
 
 #### Experimental `send_table` API
 
-We are also working on better support for tables and dataframes in Rerun, a feature that has been requested several times by our community. With this release, there is now an _experimental_ API `send_table` that can be used to send arbitrary Arrow record batches via the Python SDK and from notebooks. For now, while we evolve this feature, this API is separate from the rest of our logging APIs. [This tutorial](https://rerun.io/docs/howto/logging/send-table) shows how to use this APIs and also provides more details on the current implementation. In future releases, we plan to improve support for the table representation in the viewer to facility more advanced analysis tasks such as filtering, or showing summary statistics.
+We are also working on better support for tables and dataframes in Dalaran, a feature that has been requested several times by our community. With this release, there is now an _experimental_ API `send_table` that can be used to send arbitrary Arrow record batches via the Python SDK and from notebooks. For now, while we evolve this feature, this API is separate from the rest of our logging APIs. [This tutorial](https://dalaran.dev/docs/howto/logging/send-table) shows how to use this APIs and also provides more details on the current implementation. In future releases, we plan to improve support for the table representation in the viewer to facility more advanced analysis tasks such as filtering, or showing summary statistics.
 
 Please note that this is distinct from our current `send_dataframe` API and dataframe query view.
 
@@ -2979,22 +2979,22 @@ Please note that this is distinct from our current `send_dataframe` API and data
 
 ### ⚠️ Breaking changes
 
-This release changes how the SDKs interact with the viewer, as Rerun now relies heavily on gRPC.
+This release changes how the SDKs interact with the viewer, as Dalaran now relies heavily on gRPC.
 Additionally, we have changed our file format and data model to be much more flexible in the future.
-These changes will improve our backwards-compatibility going forward, but this also means that this release introduces breaking changes to our `.rrd` format and how the SDKs communicate with the viewer.
+These changes will improve our backwards-compatibility going forward, but this also means that this release introduces breaking changes to our `.dlr` format and how the SDKs communicate with the viewer.
 
-- `.rrd` files from previous releases cannot be loaded anymore
+- `.dlr` files from previous releases cannot be loaded anymore
 - Removed unsupported connection methods from the SDKs
-- The connection URLs have changed and now require a `rerun://` (TLS) or `rerun+http://` (unencrypted) prefix
+- The connection URLs have changed and now require a `dalaran://` (TLS) or `dalaran+http://` (unencrypted) prefix
 - Several changes to our logging SDKs (timelines, time units, …)
 
-You can find more information in our 🧳 [migration guide](https://rerun.io/docs/reference/migration/migration-0-23)
+You can find more information in our 🧳 [migration guide](https://dalaran.dev/docs/reference/migration/migration-0-23)
 
 ### 🔎 Details
 
 #### 🪵 Log API
 - Migrate file format to protobuf [#8995](https://github.com/rerun-io/rerun/pull/8995)
-- Move `rerun.components.blueprint.Visible` to `rerun.components.Visible` [#9067](https://github.com/rerun-io/rerun/pull/9067)
+- Move `dalaran.components.blueprint.Visible` to `dalaran.components.Visible` [#9067](https://github.com/rerun-io/rerun/pull/9067)
 - Infer column partition size from shape in `Scalar.columns()` [#9068](https://github.com/rerun-io/rerun/pull/9068)
 - Infer partition size for FixedSizeList-backed components [#9210](https://github.com/rerun-io/rerun/pull/9210)
 - Recording properties for naming recordings and adding information [#9249](https://github.com/rerun-io/rerun/pull/9249)
@@ -3016,7 +3016,7 @@ You can find more information in our 🧳 [migration guide](https://rerun.io/doc
 - Consistent constructor naming of `Asset3D` across C++ and Rust [#9239](https://github.com/rerun-io/rerun/pull/9239) (thanks [@abhishek47kashyap](https://github.com/abhishek47kashyap)!)
 - Use consistent time unit names for our API [#9343](https://github.com/rerun-io/rerun/pull/9343)
 - CMake: Use `find_dependency` for Arrow [#9548](https://github.com/rerun-io/rerun/pull/9548) (thanks [@BillyONeal](https://github.com/BillyONeal)!)
-- Set `RERUN_ARROW_LINK_SHARED_DEFAULT` based on found Arrow build [#9550](https://github.com/rerun-io/rerun/pull/9550) (thanks [@BillyONeal](https://github.com/BillyONeal)!)
+- Set `DALARAN_ARROW_LINK_SHARED_DEFAULT` based on found Arrow build [#9550](https://github.com/rerun-io/rerun/pull/9550) (thanks [@BillyONeal](https://github.com/BillyONeal)!)
 
 #### 🐍 Python API
 - Migrate SDK comms to gRPC [#8838](https://github.com/rerun-io/rerun/pull/8838)
@@ -3039,9 +3039,9 @@ You can find more information in our 🧳 [migration guide](https://rerun.io/doc
 - Add `detach_process` option to `spawn` [#9400](https://github.com/rerun-io/rerun/pull/9400) (thanks [@imstevenpmwork](https://github.com/imstevenpmwork)!)
 - Use consistent time unit names for our API [#9343](https://github.com/rerun-io/rerun/pull/9343)
 - Allow passing url to notebook viewer [#9493](https://github.com/rerun-io/rerun/pull/9493)
-- Import `rerun.notebook` lazily [#9557](https://github.com/rerun-io/rerun/pull/9557)
+- Import `dalaran.notebook` lazily [#9557](https://github.com/rerun-io/rerun/pull/9557)
 - Fix `Mat3x3` shape inference in `.columns` api [#9569](https://github.com/rerun-io/rerun/pull/9569)
-- Cleanup `rerun.utilities` and remove unused utilities [#9759](https://github.com/rerun-io/rerun/pull/9759)
+- Cleanup `dalaran.utilities` and remove unused utilities [#9759](https://github.com/rerun-io/rerun/pull/9759)
 
 #### 🦀 Rust API
 - Migrate SDK comms to gRPC [#8838](https://github.com/rerun-io/rerun/pull/8838)
@@ -3053,7 +3053,7 @@ You can find more information in our 🧳 [migration guide](https://rerun.io/doc
 - Introduce `IndexCell` [#9226](https://github.com/rerun-io/rerun/pull/9226)
 - Add `RecordingStream::set_index` [#9236](https://github.com/rerun-io/rerun/pull/9236)
 - Add Rust Viewer Callbacks example [#9346](https://github.com/rerun-io/rerun/pull/9346)
-- Make `BinaryStream::read` produce full RRD files [#9352](https://github.com/rerun-io/rerun/pull/9352)
+- Make `BinaryStream::read` produce full DLR files [#9352](https://github.com/rerun-io/rerun/pull/9352)
 - Add `detach_process` option to `spawn` [#9400](https://github.com/rerun-io/rerun/pull/9400) (thanks [@imstevenpmwork](https://github.com/imstevenpmwork)!)
 - Consistent constructor naming of `Asset3D` across C++ and Rust [#9239](https://github.com/rerun-io/rerun/pull/9239) (thanks [@abhishek47kashyap](https://github.com/abhishek47kashyap)!)
 - Use consistent time unit names for our API [#9343](https://github.com/rerun-io/rerun/pull/9343)
@@ -3064,7 +3064,7 @@ You can find more information in our 🧳 [migration guide](https://rerun.io/doc
 - Fix setting visible time range from overrides [#9151](https://github.com/rerun-io/rerun/pull/9151)
 - Speed up 2d spawn heuristic for many entities & fix heuristic creating overlapping views for `EncodedImage` [#9308](https://github.com/rerun-io/rerun/pull/9308)
 - Fix time series display range being affected by invisible plots [#9353](https://github.com/rerun-io/rerun/pull/9353)
-- Improve `rerun.notebook.Viewer` constructor [#9495](https://github.com/rerun-io/rerun/pull/9495)
+- Improve `dalaran.notebook.Viewer` constructor [#9495](https://github.com/rerun-io/rerun/pull/9495)
 
 #### 🌁 Viewer improvements
 - Make `SeriesLine` visualizer work with several scalars per time [#9033](https://github.com/rerun-io/rerun/pull/9033)
@@ -3090,7 +3090,7 @@ You can find more information in our 🧳 [migration guide](https://rerun.io/doc
 
 #### 📚 Docs
 - Add link to Snap Store in Getting Started [#8972](https://github.com/rerun-io/rerun/pull/8972) (thanks [@artivis](https://github.com/artivis)!)
-- Document testing in Rerun [#8989](https://github.com/rerun-io/rerun/pull/8989)
+- Document testing in Dalaran [#8989](https://github.com/rerun-io/rerun/pull/8989)
 - Fix rustdocs for `dl_video` [#9295](https://github.com/rerun-io/rerun/pull/9295)
 - Callbacks: Update APIs, improve docs [#9312](https://github.com/rerun-io/rerun/pull/9312)
 - Update `__` as reserved entity path in docs [#9387](https://github.com/rerun-io/rerun/pull/9387)
@@ -3118,7 +3118,7 @@ You can find more information in our 🧳 [migration guide](https://rerun.io/doc
 
 #### 🧑‍💻 Dev-experience
 - Run `mypy` on the contents of `scripts/` [#9214](https://github.com/rerun-io/rerun/pull/9214)
-- Fix Bazel build: shader reloading only on in Rerun workspace [#9414](https://github.com/rerun-io/rerun/pull/9414)
+- Fix Bazel build: shader reloading only on in Dalaran workspace [#9414](https://github.com/rerun-io/rerun/pull/9414)
 
 #### 📦 Dependencies
 - Update egui to 0.31.1 [#9186](https://github.com/rerun-io/rerun/pull/9186)
@@ -3189,9 +3189,9 @@ New help texts for all our views:
 
 ![image](https://github.com/user-attachments/assets/8b2546c7-c54f-4c25-8b82-fd9abdc6c31e)
 
-📖 Release blogpost: https://rerun.io/blog/graphs
+📖 Release blogpost: https://dalaran.dev/blog/graphs
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-22
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-22
 
 ### ✨ Overview & highlights
 
@@ -3204,8 +3204,8 @@ New help texts for all our views:
 * 🧊 Faster 3D transforms
 
 #### APIs
-* 🔄 [Much easier partial updates of archetypes](https://rerun.io/docs/howto/logging/send-partial-updates)
-* 📊 [Greatly improved ease of use of `send_columns`](https://rerun.io/docs/howto/logging-and-ingestion/send-columns)
+* 🔄 [Much easier partial updates of archetypes](https://dalaran.dev/docs/howto/logging/send-partial-updates)
+* 📊 [Greatly improved ease of use of `send_columns`](https://dalaran.dev/docs/howto/logging-and-ingestion/send-columns)
 * ⏱️ Python notebooks & JS can now control the timeline and panel states (see last section of [this notebook](https://github.com/rerun-io/rerun/blob/0.22.0/examples/python/notebook/cube.ipynb))
 * 📝 Lots of [new snippets](https://github.com/rerun-io/rerun/blob/0.22.0/docs/snippets/INDEX.md) for demonstrating partial updates & custom data logging in Python/C++/Rust
 
@@ -3215,7 +3215,7 @@ Stay tuned!
 ### ⚠️ Breaking changes
 Passing raw batches of components is no longer supported. Instead, use the partial update APIs (or in rare cases, explicitly serialize the components).
 
-Check the [🧳 Migration guide](https://rerun.io/docs/reference/migration/migration-0-22) for before/after snippets for all languages for this and other smaller breaking changes.
+Check the [🧳 Migration guide](https://dalaran.dev/docs/reference/migration/migration-0-22) for before/after snippets for all languages for this and other smaller breaking changes.
 
 ### 🔎 Details
 
@@ -3236,7 +3236,7 @@ Check the [🧳 Migration guide](https://rerun.io/docs/reference/migration/migra
 - Deprecate C++ `TimeColumn::from_sequence_points` in favor of `TimeColumn::from_sequence` [#8882](https://github.com/rerun-io/rerun/pull/8882)
 - `AsComponents::serialize` is now `AsComponents::as_batches` and returns `Collection<ComponentBatch>` [#8884](https://github.com/rerun-io/rerun/pull/8884)
 - Make it easy to log custom arrow data in C++ [#8880](https://github.com/rerun-io/rerun/pull/8880)
-- Rerun CMake dependency now automatically ensures C++17 or newer [#8898](https://github.com/rerun-io/rerun/pull/8898)
+- Dalaran CMake dependency now automatically ensures C++17 or newer [#8898](https://github.com/rerun-io/rerun/pull/8898)
 
 #### 🐍 Python API
 - Autogenerated partial updates APIs for Python [#8671](https://github.com/rerun-io/rerun/pull/8671)
@@ -3328,15 +3328,15 @@ Check the [🧳 Migration guide](https://rerun.io/docs/reference/migration/migra
 
 ## [0.21.0](https://github.com/rerun-io/rerun/compare/0.20.3...0.21.0) - Graph view, 3D Grid & UI/UX improvements
 
-📖 Release blogpost: https://rerun.io/blog/graphs
+📖 Release blogpost: https://dalaran.dev/blog/graphs
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-21
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-21
 
 ### ✨ Overview & highlights
 
 #### Graph view
 
-We've added two new logging primitives: [`GraphNodes`](https://rerun.io/docs/reference/types/archetypes/graph_nodes) and [`GraphEdges`](https://rerun.io/docs/reference/types/archetypes/graph_edges) that can be used to visualize node-link diagrams. For this, we have implemented a new Graph View that uses force-based layouts to draw graphs.
+We've added two new logging primitives: [`GraphNodes`](https://dalaran.dev/docs/reference/types/archetypes/graph_nodes) and [`GraphEdges`](https://dalaran.dev/docs/reference/types/archetypes/graph_edges) that can be used to visualize node-link diagrams. For this, we have implemented a new Graph View that uses force-based layouts to draw graphs.
 
 This video demonstrates the main features of the new graph view:
 
@@ -3389,7 +3389,7 @@ But that's not the only thing that improved in the viewer:
 
 We now have a new [index for all our code snippets](./docs/snippets/INDEX.md).
 
-You can use it to quickly find copy-pastable snippets of code for any Rerun feature you're interested in (API, Archetypes, Components, etc).
+You can use it to quickly find copy-pastable snippets of code for any Dalaran feature you're interested in (API, Archetypes, Components, etc).
 No special tools required -- all you need is a keyword of interest, and plain old text search.
 
 It's still the early days so it is far from perfect, but we think it can already be quite helpful; feedback welcome.
@@ -3403,7 +3403,7 @@ Most of it is auto-generated, so it will never get out of sync!
 * `DisconnectedSpace` archetype/component is deprecated in favor of implicit invalid transforms (like zero scale or zero rotation matrix).
 * `RotationAxisAngle` with zero rotation axis is no longer treated as identity.
 
-Read our 🧳 migration guide for more detailed information: https://rerun.io/docs/reference/migration/migration-0-21.
+Read our 🧳 migration guide for more detailed information: https://dalaran.dev/docs/reference/migration/migration-0-21.
 
 ### 🔎 Details
 
@@ -3422,7 +3422,7 @@ Read our 🧳 migration guide for more detailed information: https://rerun.io/do
 - Rename space view to view everywhere [#8396](https://github.com/rerun-io/rerun/pull/8396)
 - Fix broken notebook loading on firefox by compressing the encoded wasm payload [#8426](https://github.com/rerun-io/rerun/pull/8426)
 - Add utility to `rr.components.Color` to generate colors from any string (and use it in the air traffic data example) [#8458](https://github.com/rerun-io/rerun/pull/8458)
-- Introduce new API to send a dataframe to Rerun [#8461](https://github.com/rerun-io/rerun/pull/8461)
+- Introduce new API to send a dataframe to Dalaran [#8461](https://github.com/rerun-io/rerun/pull/8461)
 
 #### 🦀 Rust API
 - Update MSRV to 1.80 [#8178](https://github.com/rerun-io/rerun/pull/8178)
@@ -3481,7 +3481,7 @@ Read our 🧳 migration guide for more detailed information: https://rerun.io/do
 - Update egui to latest, update wgpu to 23.0.0 [#8183](https://github.com/rerun-io/rerun/pull/8183)
 
 #### ✨ Other enhancement
-- Improve `rrd print`'s verbosity modes [#8392](https://github.com/rerun-io/rerun/pull/8392)
+- Improve `dlr print`'s verbosity modes [#8392](https://github.com/rerun-io/rerun/pull/8392)
 - Miscellaneous improvements to archetype reflection [#8432](https://github.com/rerun-io/rerun/pull/8432)
 - Migration kernel for the blueprint space-view-related breaking changes [#8439](https://github.com/rerun-io/rerun/pull/8439)
 
@@ -3534,27 +3534,27 @@ Read our 🧳 migration guide for more detailed information: https://rerun.io/do
 
 https://github.com/user-attachments/assets/553b6d88-143d-4cf9-a4bc-6b620534ab95
 
-📖 Release blogpost: https://rerun.io/blog/maps
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-20
+📖 Release blogpost: https://dalaran.dev/blog/maps
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-20
 
 ### ✨ Overview & highlights
 * 🗺️ There is now an map view!
 * 🎬 Native viewer now supports H.264 video if ffmpeg is installed.
 * 📽️ Videos now load a lot faster use less RAM.
 * 📂 Improvements to the existing `Open` (Viewer) & `log_file` (SDK) workflows, and addition of a new `Import` workflow.
-  * Blueprints can now easily be [re-used across different applications, recordings and SDKs](https://rerun.io/docs/concepts/visualization/blueprints)
+  * Blueprints can now easily be [re-used across different applications, recordings and SDKs](https://dalaran.dev/docs/concepts/visualization/blueprints)
   * The new `Import` feature allows you to drag-and-drop any data into an existing recording, directly in the viewer.
 * ☰ Dataframe queries are now streamed, reducing memory usage.
-* 💊 Add [capsule archetype](https://rerun.io/docs/reference/types/archetypes/capsules3d).
+* 💊 Add [capsule archetype](https://dalaran.dev/docs/reference/types/archetypes/capsules3d).
 * 📚 Doc improvements
   * Arrow schemas are now documented for all types.
-  * Better structure to the [how to](https://rerun.io/docs/howto) section and a few more pages
+  * Better structure to the [how to](https://dalaran.dev/docs/howto) section and a few more pages
 
 ### ⚠️ Breaking changes & deprecations
 * 🐍 Python 3.8 is being deprecated
 * 🔌 `connect` & `serve` got deprecated in favor of `connect_tcp` & `serve_web`
 * 🎨 In Python, lists of numbers without type information are now assumed to be packed integer color representations, unless the length is exactly 3 or 4
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-20
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-20
 
 ### 🔎 Details
 
@@ -3593,7 +3593,7 @@ https://github.com/user-attachments/assets/553b6d88-143d-4cf9-a4bc-6b620534ab95
 - Enable dataframe streaming across Python FFI [#7935](https://github.com/rerun-io/rerun/pull/7935)
 - Fix python SDK's shutdown unsafely dropping cross-FFI resources [#8038](https://github.com/rerun-io/rerun/pull/8038)
 - Improve edge-cases and warn on ambiguity for Rgba32 datatype [#8054](https://github.com/rerun-io/rerun/pull/8054)
-- Check rerun notebook version on first import [#8030](https://github.com/rerun-io/rerun/pull/8030)
+- Check dalaran notebook version on first import [#8030](https://github.com/rerun-io/rerun/pull/8030)
 
 #### 🦀 Rust API
 - Allow logging individual components directly (Impl `AsComponents` for all `ObjectKind::Component`) [#7756](https://github.com/rerun-io/rerun/pull/7756) (thanks [@oxkitsune](https://github.com/oxkitsune)!)
@@ -3609,7 +3609,7 @@ https://github.com/user-attachments/assets/553b6d88-143d-4cf9-a4bc-6b620534ab95
 - WebSocket server now indefinitely keeps track of non-data RPC commands [#8146](https://github.com/rerun-io/rerun/pull/8146)
 
 #### 🌁 Viewer improvements
-- A Rerun Viewer session now matches 1:1 to a Rerun TCP server [#6951](https://github.com/rerun-io/rerun/pull/6951) (thanks [@petertheprocess](https://github.com/petertheprocess)!)
+- A Dalaran Viewer session now matches 1:1 to a Dalaran TCP server [#6951](https://github.com/rerun-io/rerun/pull/6951) (thanks [@petertheprocess](https://github.com/petertheprocess)!)
 - Implement support for in-place drag-n-drop [#7880](https://github.com/rerun-io/rerun/pull/7880)
 - Implement `Menu > Import` and associated command [#7882](https://github.com/rerun-io/rerun/pull/7882)
 - Expose additional information about decoded frames in the viewer [#7932](https://github.com/rerun-io/rerun/pull/7932)
@@ -3647,7 +3647,7 @@ https://github.com/user-attachments/assets/553b6d88-143d-4cf9-a4bc-6b620534ab95
 - Much nicer looking error and warning messages [#8127](https://github.com/rerun-io/rerun/pull/8127)
 
 #### 🧑‍💻 Dev-experience
-- Show list of enabled features with `rerun --version` [#7885](https://github.com/rerun-io/rerun/pull/7885) [#8095](https://github.com/rerun-io/rerun/pull/8095)
+- Show list of enabled features with `dalaran --version` [#7885](https://github.com/rerun-io/rerun/pull/7885) [#8095](https://github.com/rerun-io/rerun/pull/8095)
 
 #### 📦 Dependencies
 - Bump numpy -> 0.23, pyo3 -> 0.22.5, and arrow -> 53.1 [#7834](https://github.com/rerun-io/rerun/pull/7834)
@@ -3672,34 +3672,34 @@ This release fixes an error thrown when the web viewer is closed.
 
 ## [0.19.0](https://github.com/rerun-io/rerun/compare/0.18.2...0.19.0) - Dataframes & Video support
 
-📖 Release blogpost: https://rerun.io/blog/dataframe
+📖 Release blogpost: https://dalaran.dev/blog/dataframe
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-19
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-19
 
 ### ✨ Overview & highlights
 This release introduces two powerful features: a dataframe API (and view), as well as video support.
 
 #### ☰ Dataframe API
-We now have an API for querying the contents of an .rrd file. This integrates with popular packages such as [Pandas](https://pandas.pydata.org), [Polars](https://pola.rs), and [DuckDB](https://duckdb.org).
+We now have an API for querying the contents of an .dlr file. This integrates with popular packages such as [Pandas](https://pandas.pydata.org), [Polars](https://pola.rs), and [DuckDB](https://duckdb.org).
 
-You can read more in [the Dataframe API how-to guide](https://rerun.io/docs/howto/query-and-transform/get-data-out).
+You can read more in [the Dataframe API how-to guide](https://dalaran.dev/docs/howto/query-and-transform/get-data-out).
 
-We have also added a matching dataframe view inside the Rerun Viewer.
-Read more [here](https://rerun.io/docs/reference/types/views/dataframe_view).
+We have also added a matching dataframe view inside the Dalaran Viewer.
+Read more [here](https://dalaran.dev/docs/reference/types/views/dataframe_view).
 
 #### 🎬 Video
-Rerun now supports logging MP4 videos using the new [`AssetVideo`](https://rerun.io/docs/reference/types/archetypes/asset_video) archetype.
+Dalaran now supports logging MP4 videos using the new [`AssetVideo`](https://dalaran.dev/docs/reference/types/archetypes/asset_video) archetype.
 This can greatly reduce bandwidth and storage requirements.
 
 While the web viewer supports a variety of codecs, the native viewer supports only the AV1 codec for the moment, but we plan to support H.264 in the near future as well.
-Read more about our video supports (and its limits) [in our video docs](https://rerun.io/docs/concepts/logging-and-ingestion/video).
+Read more about our video supports (and its limits) [in our video docs](https://dalaran.dev/docs/concepts/logging-and-ingestion/video).
 
 ### ⚠️ Breaking changes
-* 🗾 Blueprint files (.rbl) from previous Rerun versions will no longer load _automatically_
-* 🐧 Linux: Rerun now requires glibc 2.17+
+* 🗾 Blueprint files (.dbl) from previous Dalaran versions will no longer load _automatically_
+* 🐧 Linux: Dalaran now requires glibc 2.17+
 * 🦀 Rust: The minimum supported Rust version is now 1.79
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-19
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-19
 
 ### 🔎 Details
 
@@ -3734,7 +3734,7 @@ Read more about our video supports (and its limits) [in our video docs](https://
 - Fix image & video cache creating new entries when selecting data without explicit media type [#7590](https://github.com/rerun-io/rerun/pull/7590)
 
 #### 🌁 Viewer improvements
-- The viewer will tail an .rrd that's is being written to [#7475](https://github.com/rerun-io/rerun/pull/7475)
+- The viewer will tail an .dlr that's is being written to [#7475](https://github.com/rerun-io/rerun/pull/7475)
 - Native video support for AV1 [#7557](https://github.com/rerun-io/rerun/pull/7557)
 - Allow splitting entity path expressions with whitespace [#7782](https://github.com/rerun-io/rerun/pull/7782)
 
@@ -3752,7 +3752,7 @@ Read more about our video supports (and its limits) [in our video docs](https://
 
 #### 📚 Docs
 - Add video reference docs [#7533](https://github.com/rerun-io/rerun/pull/7533)
-- Document that Rerun does not support left-handed coords [#7690](https://github.com/rerun-io/rerun/pull/7690)
+- Document that Dalaran does not support left-handed coords [#7690](https://github.com/rerun-io/rerun/pull/7690)
 - Add a How-to guide for the dataframe API [#7727](https://github.com/rerun-io/rerun/pull/7727)
 - Docs: move "roadmap" down to "development" [#7775](https://github.com/rerun-io/rerun/pull/7775)
 - Add a "Getting started" guide for the dataframe API [#7643](https://github.com/rerun-io/rerun/pull/7643)
@@ -3783,13 +3783,13 @@ Read more about our video supports (and its limits) [in our video docs](https://
 ## [0.18.1](https://github.com/rerun-io/rerun/compare/0.18.0...0.18.1) - Bug fixes and performance improvements
 
 #### 🌊 C++ API
-- Install `sdk_info.h` even if `RERUN_INSTALL_RERUN_C` option is `OFF` [#7246](https://github.com/rerun-io/rerun/pull/7246) (thanks [@traversaro](https://github.com/traversaro)!)
+- Install `sdk_info.h` even if `DALARAN_INSTALL_DALARAN_C` option is `OFF` [#7246](https://github.com/rerun-io/rerun/pull/7246) (thanks [@traversaro](https://github.com/traversaro)!)
 
 #### 🐍 Python API
 - Fix `VisualizerOverrides` serializer and improved error handling [#7288](https://github.com/rerun-io/rerun/pull/7288)
 
 #### 🦀 Rust API
-- Add `rerun::external::ndarray` [#7259](https://github.com/rerun-io/rerun/pull/7259)
+- Add `dalaran::external::ndarray` [#7259](https://github.com/rerun-io/rerun/pull/7259)
 - Handle proper half-size splatting semantics in `from_mins_and_sizes` [#7291](https://github.com/rerun-io/rerun/pull/7291)
 
 #### 🪳 Bug fixes
@@ -3802,7 +3802,7 @@ Read more about our video supports (and its limits) [in our video docs](https://
 
 #### 🚀 Performance improvements
 - Speed up data density graph by rendering them more coarsly [#7229](https://github.com/rerun-io/rerun/pull/7229)
-- Default `RERUN_CHUNK_MAX_BYTES` to 384kiB instead of 4MiB [#7263](https://github.com/rerun-io/rerun/pull/7263)
+- Default `DALARAN_CHUNK_MAX_BYTES` to 384kiB instead of 4MiB [#7263](https://github.com/rerun-io/rerun/pull/7263)
 - Speed up handling of large numbers of transform entities [#7300](https://github.com/rerun-io/rerun/pull/7300)
 - Fix memory leak by updating to `re_arrow2 0.17.5` [#7262](https://github.com/rerun-io/rerun/pull/7262)
 
@@ -3818,17 +3818,17 @@ Read more about our video supports (and its limits) [in our video docs](https://
 
 https://github.com/user-attachments/assets/95380a64-df05-4f85-b40a-0c6b8ec8d5cf
 
-* 📖 Release blogpost: https://rerun.io/blog/column-chunks
-* 🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-18
+* 📖 Release blogpost: https://dalaran.dev/blog/column-chunks
+* 🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-18
 
 ### ✨ Overview & highlights
 
-Rerun 0.18 introduces new column-oriented APIs and internal storage datastructures (`Chunk` & `ChunkStore`) that can both simplify logging code as well as improve ingestion speeds and memory overhead by a couple orders of magnitude in many cases (timeseries-heavy workloads in particular).
+Dalaran 0.18 introduces new column-oriented APIs and internal storage datastructures (`Chunk` & `ChunkStore`) that can both simplify logging code as well as improve ingestion speeds and memory overhead by a couple orders of magnitude in many cases (timeseries-heavy workloads in particular).
 
 These improvements come in 3 broad categories:
 * a new `send` family of APIs, available in all 3 SDKs (Python, C++, Rust),
 * a new, configurable background compaction mechanism in the datastore,
-* new CLI tools to filter, prune and compact RRD files.
+* new CLI tools to filter, prune and compact DLR files.
 
 Furthermore, we started cleaning up our data schema, leading to various changes in the way represent transforms & images.
 
@@ -3839,9 +3839,9 @@ Unlike the regular row-oriented `log` APIs, the new `send` APIs let you submit d
 This can both greatly simplify logging code and drastically improve performance for some workloads, in particular timeseries, [although we have already seen it used for other purposes](https://github.com/rerun-io/rerun/pull/7155)!
 
 API documentation:
-* 🐍 [Python `send_columns` docs](https://ref.rerun.io/docs/python/stable/common/columnar_api/#rerun.send_columns)
-* 🌊 [C++ `send_columns` docs](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65)
-* 🦀 [Rust `send_columns` docs](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.send_columns)
+* 🐍 [Python `send_columns` docs](https://ref.dalaran.dev/docs/python/stable/common/columnar_api/#dalaran.send_columns)
+* 🌊 [C++ `send_columns` docs](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65)
+* 🦀 [Rust `send_columns` docs](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.send_columns)
 
 API usage examples:
 <details>
@@ -3849,7 +3849,7 @@ API usage examples:
 
   Using `log()` (slow, memory inefficient):
   ```python
-  rr.init("rerun_example_scalar", spawn=True)
+  rr.init("dalaran_example_scalar", spawn=True)
 
   for step in range(0, 64):
       rr.set_time_sequence("step", step)
@@ -3858,7 +3858,7 @@ API usage examples:
 
   Using `send()` (fast, memory efficient):
   ```python
-  rr.init("rerun_example_send_columns", spawn=True)
+  rr.init("dalaran_example_send_columns", spawn=True)
 
   rr.send_columns(
       "scalars",
@@ -3872,18 +3872,18 @@ API usage examples:
 
   Using `log()` (slow, memory inefficient):
   ```c++
-  const auto rec = rerun::RecordingStream("rerun_example_scalar");
+  const auto rec = dalaran::RecordingStream("dalaran_example_scalar");
   rec.spawn().exit_on_failure();
 
   for (int step = 0; step < 64; ++step) {
       rec.set_time_sequence("step", step);
-      rec.log("scalar", rerun::Scalar(std::sin(static_cast<double>(step) / 10.0)));
+      rec.log("scalar", dalaran::Scalar(std::sin(static_cast<double>(step) / 10.0)));
   }
   ```
 
   Using `send()` (fast, memory efficient):
   ```c++
-  const auto rec = rerun::RecordingStream("rerun_example_send_columns");
+  const auto rec = dalaran::RecordingStream("dalaran_example_send_columns");
   rec.spawn().exit_on_failure();
 
   std::vector<double> scalar_data(64);
@@ -3893,9 +3893,9 @@ API usage examples:
   std::vector<int64_t> times(64);
   std::iota(times.begin(), times.end(), 0);
 
-  auto time_column = rerun::TimeColumn::from_sequence_points("step", std::move(times));
+  auto time_column = dalaran::TimeColumn::from_sequence_points("step", std::move(times));
   auto scalar_data_collection =
-      rerun::Collection<rerun::components::Scalar>(std::move(scalar_data));
+      dalaran::Collection<dalaran::components::Scalar>(std::move(scalar_data));
 
   rec.send_columns("scalars", time_column, scalar_data_collection);
   ```
@@ -3905,17 +3905,17 @@ API usage examples:
 
   Using `log()` (slow, memory inefficient):
   ```rust
-  let rec = rerun::RecordingStreamBuilder::new("rerun_example_scalar").spawn()?;
+  let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_scalar").spawn()?;
 
   for step in 0..64 {
       rec.set_time_sequence("step", step);
-      rec.log("scalar", &rerun::Scalars::new((step as f64 / 10.0).sin()))?;
+      rec.log("scalar", &dalaran::Scalars::new((step as f64 / 10.0).sin()))?;
   }
   ```
 
   Using `send()` (fast, memory efficient):
   ```rust
-  let rec = rerun::RecordingStreamBuilder::new("rerun_example_send_columns").spawn()?;
+  let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_send_columns").spawn()?;
 
   let timeline_values = (0..64).collect::<Vec<_>>();
   let scalar_data: Vec<f64> = timeline_values
@@ -3932,45 +3932,45 @@ API usage examples:
 
 #### Background compaction
 
-The Rerun datastore now continuously compacts data as it comes in, in order find a sweet spot between ingestion speed, query performance and memory overhead.
+The Dalaran datastore now continuously compacts data as it comes in, in order find a sweet spot between ingestion speed, query performance and memory overhead.
 
-This is very similar to, and has many parallels with, the [micro-batching mechanism running on the SDK side](https://rerun.io/docs/reference/sdk/micro-batching).
+This is very similar to, and has many parallels with, the [micro-batching mechanism running on the SDK side](https://dalaran.dev/docs/reference/sdk/micro-batching).
 
-You can read more about this in the [dedicated documentation entry](https://rerun.io/docs/reference/store-compaction).
+You can read more about this in the [dedicated documentation entry](https://dalaran.dev/docs/reference/store-compaction).
 
-#### Post-processing of RRD files
+#### Post-processing of DLR files
 
-To help improve efficiency for completed recordings, Rerun 0.18 introduces some new commands for working with rrd files.
+To help improve efficiency for completed recordings, Dalaran 0.18 introduces some new commands for working with dlr files.
 
 Multiple files can be merged, whole entity paths can be dropped, and chunks can be compacted.
 
-You can read more about it [in the new CLI reference manual](https://rerun.io/docs/reference/cli), but to give a sense of how it works the below example merges all recordings in a folder and runs chunk compaction using the `max-rows` and `max-bytes` settings:
+You can read more about it [in the new CLI reference manual](https://dalaran.dev/docs/reference/cli), but to give a sense of how it works the below example merges all recordings in a folder and runs chunk compaction using the `max-rows` and `max-bytes` settings:
 ```sh
-rerun rrd compact --max-rows 4096 --max-bytes=1048576 /my/recordings/*.rrd > output.rrd
+dalaran dlr compact --max-rows 4096 --max-bytes=1048576 /my/recordings/*.dlr > output.dlr
 ```
 
 #### Overhauled 3D transforms & instancing
 As part of improving our arrow schema and in preparation for reading data back in the SDK, we've split up transforms into several parts.
 This makes it much more performant to log large number of transforms as it allows updating only the parts you're interested in, e.g. logging a translation is now as lightweight as logging a single position.
 
-There are now additionally [`InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) which allow you to do two things:
+There are now additionally [`InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) which allow you to do two things:
 * all 3D entities: apply a transform to the entity without affecting its children
-* [`Mesh3D`](https://rerun.io/docs/reference/types/archetypes/mesh3d)/[`Asset3D`](https://rerun.io/docs/reference/types/archetypes/asset3d)/[`Boxes3D`](https://rerun.io/docs/reference/types/archetypes/boxes3d)/[`Ellipsoids3D`](https://rerun.io/docs/reference/types/archetypes/ellipsoids3d): instantiate objects several times with different poses, known as "instancing"
+* [`Mesh3D`](https://dalaran.dev/docs/reference/types/archetypes/mesh3d)/[`Asset3D`](https://dalaran.dev/docs/reference/types/archetypes/asset3d)/[`Boxes3D`](https://dalaran.dev/docs/reference/types/archetypes/boxes3d)/[`Ellipsoids3D`](https://dalaran.dev/docs/reference/types/archetypes/ellipsoids3d): instantiate objects several times with different poses, known as "instancing"
   * Support for instancing of other archetypes is coming in the future!
 
 ![instancing in action](https://static.rerun.io/mesh3d_leaf_transforms3d/c2d0ee033129da53168f5705625a9b033f3a3d61/1200w.png)
-_All four tetrahedron meshes on this screen share the same vertices and are instanced using an [`InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) archetype with 4 different translations_
+_All four tetrahedron meshes on this screen share the same vertices and are instanced using an [`InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) archetype with 4 different translations_
 
 
 ### ⚠️ Breaking changes
-* `.rrd` files from older versions won't load correctly in Rerun 0.18
+* `.dlr` files from older versions won't load correctly in Dalaran 0.18
 * `mesh_material: Material` has been renamed to `albedo_factor: AlbedoFactor` [#6841](https://github.com/rerun-io/rerun/pull/6841)
-* [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d) is no longer a single component but split into its constituent parts. From this follow various smaller API changes
+* [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d) is no longer a single component but split into its constituent parts. From this follow various smaller API changes
 * Python: `NV12/YUY2` are now logged with `Image`
-* `ImageEncoded` is deprecated and replaced with [`EncodedImage`](https://rerun.io/docs/reference/types/archetypes/encoded_image) (JPEG, PNG, …) and  [`Image`](https://rerun.io/docs/reference/types/archetypes/image) (NV12, YUY2, …)
-* [`DepthImage`](https://rerun.io/docs/reference/types/archetypes/depth_image) and [`SegmentationImage`](https://rerun.io/docs/reference/types/archetypes/segmentation_image) are no longer encoded as a tensors, and expects its shape in `[width, height]` order
+* `ImageEncoded` is deprecated and replaced with [`EncodedImage`](https://dalaran.dev/docs/reference/types/archetypes/encoded_image) (JPEG, PNG, …) and  [`Image`](https://dalaran.dev/docs/reference/types/archetypes/image) (NV12, YUY2, …)
+* [`DepthImage`](https://dalaran.dev/docs/reference/types/archetypes/depth_image) and [`SegmentationImage`](https://dalaran.dev/docs/reference/types/archetypes/segmentation_image) are no longer encoded as a tensors, and expects its shape in `[width, height]` order
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-18
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-18
 
 ### 🔎 Details
 
@@ -3995,7 +3995,7 @@ _All four tetrahedron meshes on this screen share the same vertices and are inst
 
 #### 🌊 C++ API
 - Fix resetting time destroying recording stream [#6914](https://github.com/rerun-io/rerun/pull/6914)
-- Improve usability of `rerun::Collection` by providing free functions for `borrow` & `take_ownership` [#7055](https://github.com/rerun-io/rerun/pull/7055)
+- Improve usability of `dalaran::Collection` by providing free functions for `borrow` & `take_ownership` [#7055](https://github.com/rerun-io/rerun/pull/7055)
 - Fix crash on shutdown when using global recording stream variables in C++ [#7063](https://github.com/rerun-io/rerun/pull/7063)
 - C++ API for `send_columns` [#7103](https://github.com/rerun-io/rerun/pull/7103)
 - Add numeric SDK version macros to C/C++ [#7127](https://github.com/rerun-io/rerun/pull/7127)
@@ -4005,11 +4005,11 @@ _All four tetrahedron meshes on this screen share the same vertices and are inst
 - Python SDK: Rename `ImageEncoded` to `ImageEncodedHelper` [#6882](https://github.com/rerun-io/rerun/pull/6882)
 - Introduce `ImageChromaDownsampled` [#6883](https://github.com/rerun-io/rerun/pull/6883)
 - Allow logging batches of quaternions from numpy arrays [#7038](https://github.com/rerun-io/rerun/pull/7038)
-- Add `__version__` and `__version_info__` to rerun package [#7104](https://github.com/rerun-io/rerun/pull/7104)
+- Add `__version__` and `__version_info__` to dalaran package [#7104](https://github.com/rerun-io/rerun/pull/7104)
 - Restore support for the legacy notebook mechanism from 0.16 [#7122](https://github.com/rerun-io/rerun/pull/7122)
 
 #### 🦀 Rust API
-- Recommend install rerun-cli with `--locked` [#6868](https://github.com/rerun-io/rerun/pull/6868)
+- Recommend install dalaran-cli with `--locked` [#6868](https://github.com/rerun-io/rerun/pull/6868)
 - Remove `TensorBuffer::JPEG`, `DecodedTensor`, `TensorDecodeCache` [#6884](https://github.com/rerun-io/rerun/pull/6884)
 
 #### 🪳 Bug fixes
@@ -4018,7 +4018,7 @@ _All four tetrahedron meshes on this screen share the same vertices and are inst
 - Fix outdated use of view coordinates in `Spaces and Transforms` doc page [#6955](https://github.com/rerun-io/rerun/pull/6955)
 - Fix zero length transform axis having an effect bounding box used for heuristics etc [#6967](https://github.com/rerun-io/rerun/pull/6967)
 - Disambiguate plot labels with multiple entities ending with the same part [#7140](https://github.com/rerun-io/rerun/pull/7140)
-- `rerun rrd compact`: always put blueprints at the start of the recordings [#6998](https://github.com/rerun-io/rerun/pull/6998)
+- `dalaran dlr compact`: always put blueprints at the start of the recordings [#6998](https://github.com/rerun-io/rerun/pull/6998)
 - Fix 2D objects in 3D affecting bounding box and thus causing flickering of automatic pinhole plane distance [#7176](https://github.com/rerun-io/rerun/pull/7176)
 - Fix a UI issue where a visualiser would have both an override and default set for some component [#7206](https://github.com/rerun-io/rerun/pull/7206)
 
@@ -4094,10 +4094,10 @@ _All four tetrahedron meshes on this screen share the same vertices and are inst
 
 #### 🕸️ Web
 - Add missing props to React package [#6895](https://github.com/rerun-io/rerun/pull/6895)
-- Fix multi rrd on `app.rerun.io` [#6972](https://github.com/rerun-io/rerun/pull/6972)
+- Fix multi dlr on `app.dalaran.dev` [#6972](https://github.com/rerun-io/rerun/pull/6972)
 
 #### ✨ Other enhancement
-- Support decoding multiplexed RRD streams [#7091](https://github.com/rerun-io/rerun/pull/7091)
+- Support decoding multiplexed DLR streams [#7091](https://github.com/rerun-io/rerun/pull/7091)
 - Query-time clears (latest-at only) [#6586](https://github.com/rerun-io/rerun/pull/6586)
 - Introduce `ChunkStore::drop_entity_path` [#6588](https://github.com/rerun-io/rerun/pull/6588)
 - Implement `Chunk::cell` [#6875](https://github.com/rerun-io/rerun/pull/6875)
@@ -4108,16 +4108,16 @@ _All four tetrahedron meshes on this screen share the same vertices and are inst
 #### 🧑‍💻 Dev-experience
 - Introduce `Chunk` component-level helpers and `UnitChunk` [#6990](https://github.com/rerun-io/rerun/pull/6990)
 - Vastly improved support for deserialized iteration [#7024](https://github.com/rerun-io/rerun/pull/7024)
-- Improved CLI: support wildcard inputs for all relevant `rerun rrd` subcommands [#7060](https://github.com/rerun-io/rerun/pull/7060)
+- Improved CLI: support wildcard inputs for all relevant `dalaran dlr` subcommands [#7060](https://github.com/rerun-io/rerun/pull/7060)
 - Improved CLI: explicit CLI flags for compaction settings [#7061](https://github.com/rerun-io/rerun/pull/7061)
 - Improved CLI: stdin streaming support [#7092](https://github.com/rerun-io/rerun/pull/7092)
 - Improved CLI: stdout streaming support [#7094](https://github.com/rerun-io/rerun/pull/7094)
-- Improved CLI: implement `rerun rrd filter` [#7095](https://github.com/rerun-io/rerun/pull/7095)
-- Add support for `rerun rrd filter --drop-entity` [#7185](https://github.com/rerun-io/rerun/pull/7185)
+- Improved CLI: implement `dalaran dlr filter` [#7095](https://github.com/rerun-io/rerun/pull/7095)
+- Add support for `dalaran dlr filter --drop-entity` [#7185](https://github.com/rerun-io/rerun/pull/7185)
 
 #### 🗣 Refactors
 - Forward Rust (de-)serialization of transparent datatypes [#6793](https://github.com/rerun-io/rerun/pull/6793)
-- CLI refactor: introduce `rerun rrd <compare|print|compact>` subscommand [#6861](https://github.com/rerun-io/rerun/pull/6861)
+- CLI refactor: introduce `dalaran dlr <compare|print|compact>` subscommand [#6861](https://github.com/rerun-io/rerun/pull/6861)
 - Remove legacy query engine and promises [#7033](https://github.com/rerun-io/rerun/pull/7033)
 - Implement `RangeQueryOptions` directly within `RangeQuery` [#7131](https://github.com/rerun-io/rerun/pull/7131)
 
@@ -4134,9 +4134,9 @@ _All four tetrahedron meshes on this screen share the same vertices and are inst
 
 https://github.com/rerun-io/rerun/assets/49431240/1c75b816-7e3e-4882-9ee6-ba124c00d73c
 
-📖 Release blogpost: https://rerun.io/blog/blueprint-overrides
+📖 Release blogpost: https://dalaran.dev/blog/blueprint-overrides
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-17
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-17
 
 
 ### ✨ Overview & highlights
@@ -4152,24 +4152,24 @@ https://github.com/rerun-io/rerun/assets/49431240/1c75b816-7e3e-4882-9ee6-ba124c
   * Now you can stream data from the notebook cell to the embedded viewer.
   * Much improved support for having multiple viewers on the same web page.
   * More configuration options have been added to control the visibility of the Menu bar, time controls, etc.
-  * Note: Use `pip install "rerun-sdk[notebook]"` to include the better notebook support. This includes the new [`rerun-notebook`](https://pypi.org/project/rerun-notebook/) package, which is used internally by [`rerun-sdk`].
+  * Note: Use `pip install "dalaran-sdk[notebook]"` to include the better notebook support. This includes the new [`dalaran-notebook`](https://pypi.org/project/dalaran-notebook/) package, which is used internally by [`dalaran-sdk`].
 * 🧑‍🏫 New Examples
-  * [Paddle OCR](https://rerun.io/examples/video-image/ocr)
-  * [Vista driving world model](https://rerun.io/examples/generative-vision/vista)
-  * [Stereo Vision SLAM](https://rerun.io/examples/3d-reconstruction/stereo_vision_slam)
-  * [Neural field notebook](https://rerun.io/examples/integrations/notebook_neural_field_2d)
-* 🛠️ Improved the logging API with many new and updated archetypes and components (see [migration guide](https://rerun.io/docs/reference/migration/migration-0-17))
+  * [Paddle OCR](https://dalaran.dev/examples/video-image/ocr)
+  * [Vista driving world model](https://dalaran.dev/examples/generative-vision/vista)
+  * [Stereo Vision SLAM](https://dalaran.dev/examples/3d-reconstruction/stereo_vision_slam)
+  * [Neural field notebook](https://dalaran.dev/examples/integrations/notebook_neural_field_2d)
+* 🛠️ Improved the logging API with many new and updated archetypes and components (see [migration guide](https://dalaran.dev/docs/reference/migration/migration-0-17))
 * 🖼️ `TensorView` is now fully configurable from blueprint code
 * 🎛️ Revamped selection panel UI
 * 🚚 Much work is being done under-the-hood to migrate our data-store to "chunks" (aka units of batched data). More on this in the next release!
   * SDKs are already using chunks to transport data to the viewer, performance characteristics may have changed but should be largely the same for the moment.
 
 ### ⚠️ Breaking changes
-* `HalfSizes2D` has been renamed to [`HalfSize2D`](https://rerun.io/docs/reference/types/components/half_size2d)
-* `HalfSizes3D` has been renamed to [`HalfSize3D`](https://rerun.io/docs/reference/types/components/half_size3d)
-* `.rrd` files from older versions won't load in Rerun 0.17
+* `HalfSizes2D` has been renamed to [`HalfSize2D`](https://dalaran.dev/docs/reference/types/components/half_size2d)
+* `HalfSizes3D` has been renamed to [`HalfSize3D`](https://dalaran.dev/docs/reference/types/components/half_size3d)
+* `.dlr` files from older versions won't load in Dalaran 0.17
 
-🧳 Migration guide: https://rerun.io/docs/reference/migration/migration-0-17
+🧳 Migration guide: https://dalaran.dev/docs/reference/migration/migration-0-17
 
 ### 🔎 Details
 
@@ -4205,7 +4205,7 @@ https://github.com/rerun-io/rerun/assets/49431240/1c75b816-7e3e-4882-9ee6-ba124c
 - Python components now implement the `ComponentBatchLike` interface [#6543](https://github.com/rerun-io/rerun/pull/6543)
 - Allow streaming to the viewer from the cell where it's created [#6640](https://github.com/rerun-io/rerun/pull/6640)
 - Introduce new Python API for setting overrides [#6650](https://github.com/rerun-io/rerun/pull/6650)
-- Publish `rerun_notebook` in CI [#6641](https://github.com/rerun-io/rerun/pull/6641)
+- Publish `dalaran_notebook` in CI [#6641](https://github.com/rerun-io/rerun/pull/6641)
 
 #### 🦀 Rust API
 - All components implement the `Default` trait now in Rust [#6458](https://github.com/rerun-io/rerun/pull/6458)
@@ -4219,7 +4219,7 @@ https://github.com/rerun-io/rerun/assets/49431240/1c75b816-7e3e-4882-9ee6-ba124c
 - Fix annotation context labels not showing in views [#6742](https://github.com/rerun-io/rerun/pull/6742)
 - Quiet the 'not a mono-batch' log spam when selecting keypoint with a batch class-id [#6359](https://github.com/rerun-io/rerun/pull/6359)
 - Fix incorrect label placement for 3D arrows with origins [#6779](https://github.com/rerun-io/rerun/pull/6779)
-- Don't pass RRD paths to other data-loaders [#6617](https://github.com/rerun-io/rerun/pull/6617)
+- Don't pass DLR paths to other data-loaders [#6617](https://github.com/rerun-io/rerun/pull/6617)
 
 #### 🌁 Viewer improvements
 - Introduce a mechanism for blueprint-provided defaults [#6537](https://github.com/rerun-io/rerun/pull/6537)
@@ -4281,7 +4281,7 @@ https://github.com/rerun-io/rerun/assets/49431240/1c75b816-7e3e-4882-9ee6-ba124c
 #### 🕸️ Web
 - Allow overriding app blueprint from web [#6419](https://github.com/rerun-io/rerun/pull/6419)
 - Add fullscreen mode to web viewer [#6461](https://github.com/rerun-io/rerun/pull/6461)
-- Fix rerun-web canvas size [#6511](https://github.com/rerun-io/rerun/pull/6511)
+- Fix dalaran-web canvas size [#6511](https://github.com/rerun-io/rerun/pull/6511)
 - JS: Make LogChannel public [#6529](https://github.com/rerun-io/rerun/pull/6529)
 - New notebook API [#6573](https://github.com/rerun-io/rerun/pull/6573)
 - Add width/height properties to web viewer [#6636](https://github.com/rerun-io/rerun/pull/6636)
@@ -4314,19 +4314,19 @@ https://github.com/rerun-io/rerun/assets/3312232/475468bd-e012-4837-b2b4-b47fa97
 * 🟦 Customize views in code: We started exposing some view properties in the blueprint!
   * 📋 Included are:
     * Visible time ranges
-      * check [this new how-to guide](https://rerun.io/docs/howto/fixed-window-plot) & example that demonstrates this with plots
+      * check [this new how-to guide](https://dalaran.dev/docs/howto/fixed-window-plot) & example that demonstrates this with plots
     * Time Series legend & y-axis configuration
     * 2D & 3D View background color
     * 2D View bounds
-  * 📚 learn more on the [new view blueprint doc pages](https://rerun.io/docs/reference/types/views)
+  * 📚 learn more on the [new view blueprint doc pages](https://dalaran.dev/docs/reference/types/views)
   * 🚀 …more to come in the future!
 * 🕰️ Deprecated `timeless` in favor of new `static` logging
   * Except for the name change, they behave similarly in _most_ use cases. Unlike with timeless, static data…
     * …can't be mixed with non-static data on the same component.
     * …will override previous static data and not keep old data in memory.
-  * Check out our [migration guide](https://rerun.io/docs/reference/migration/migration-0-16).
+  * Check out our [migration guide](https://dalaran.dev/docs/reference/migration/migration-0-16).
 * 🖼️ 2D View's pan & zoom got redone, it's now a free canvas without any scroll bar
-* 🤖 Added [an example](https://rerun.io/examples/robotics/ros2_bridge) to use Rerun with ROS2.
+* 🤖 Added [an example](https://dalaran.dev/examples/robotics/ros2_bridge) to use Dalaran with ROS2.
 
 As always there's a lot going on under the hood:
 * 🚚 We streamlined our development processes & CI and examples.
@@ -4339,8 +4339,8 @@ As always there's a lot going on under the hood:
 
 #### 🪵 Log API
 - Sunset `MeshProperties`, introduce `TriangleIndices` and friends [#6169](https://github.com/rerun-io/rerun/pull/6169)
-- Add a new javascript API for submitting an RRD that is stored directly as bytes [#6189](https://github.com/rerun-io/rerun/pull/6189)
-- Keep Rerun viewer from dying on ctrl-c by setting `sid` on unix systems [#6260](https://github.com/rerun-io/rerun/pull/6260)
+- Add a new javascript API for submitting an DLR that is stored directly as bytes [#6189](https://github.com/rerun-io/rerun/pull/6189)
+- Keep Dalaran viewer from dying on ctrl-c by setting `sid` on unix systems [#6260](https://github.com/rerun-io/rerun/pull/6260)
 - Add a new CLI option / spawn options to hide the welcome screen [#6262](https://github.com/rerun-io/rerun/pull/6262)
 - Make sure all log messages are sent when using `.serve()` [#6335](https://github.com/rerun-io/rerun/pull/6335)
 
@@ -4350,7 +4350,7 @@ As always there's a lot going on under the hood:
 
 #### 🐍 Python API
 - Static-aware Python SDK [#5536](https://github.com/rerun-io/rerun/pull/5536)
-- Make rerun-py use an embedded rerun-cli executable [#5996](https://github.com/rerun-io/rerun/pull/5996)
+- Make dalaran-py use an embedded dalaran-cli executable [#5996](https://github.com/rerun-io/rerun/pull/5996)
 - Convert Python examples to proper packages [#5966](https://github.com/rerun-io/rerun/pull/5966)
 - Configurable background color from Python code (POC for space view properties from code) [#6068](https://github.com/rerun-io/rerun/pull/6068)
 - Codegen for space view Python blueprint classes [#6100](https://github.com/rerun-io/rerun/pull/6100)
@@ -4365,8 +4365,8 @@ As always there's a lot going on under the hood:
 - Improve new time_ranges property Python API & add snippet for time series view, explaining all its options [#6221](https://github.com/rerun-io/rerun/pull/6221)
 - Fix possible hang when using torch.multiprocessing [#6271](https://github.com/rerun-io/rerun/pull/6271)
 - Add code examples & screenshots for all blueprint view types [#6304](https://github.com/rerun-io/rerun/pull/6304)
-- Set a minimum version of pillow in `rerun_py/pyproject.toml` [#6327](https://github.com/rerun-io/rerun/pull/6327)
-- Respect the `RERUN_STRICT` environment variable if not specified in `rr.init` [#6341](https://github.com/rerun-io/rerun/pull/6341)
+- Set a minimum version of pillow in `dalaran_py/pyproject.toml` [#6327](https://github.com/rerun-io/rerun/pull/6327)
+- Respect the `DALARAN_STRICT` environment variable if not specified in `rr.init` [#6341](https://github.com/rerun-io/rerun/pull/6341)
 
 #### 🦀 Rust API
 - Static-aware Rust SDK [#5540](https://github.com/rerun-io/rerun/pull/5540)
@@ -4386,13 +4386,13 @@ As always there's a lot going on under the hood:
 - Don't automatically fall back to automatic port if web socket port is already in use, only recommend using 0 instead [#6296](https://github.com/rerun-io/rerun/pull/6296)
 
 #### 🌁 Viewer improvements
-- Request attention when Rerun Viewer is sent new recording in background [#5780](https://github.com/rerun-io/rerun/pull/5780)
+- Request attention when Dalaran Viewer is sent new recording in background [#5780](https://github.com/rerun-io/rerun/pull/5780)
 - New data APIs 11: port all range-only views (plots, logs…) [#5992](https://github.com/rerun-io/rerun/pull/5992)
 - New data APIs 12: port all spatial views [#5993](https://github.com/rerun-io/rerun/pull/5993)
 - New data APIs 14: port everything that used to be uncached [#6035](https://github.com/rerun-io/rerun/pull/6035)
 - Make visible time range UI aware of latest-at & `QueryRange` [#6176](https://github.com/rerun-io/rerun/pull/6176)
 - Visible time ranges are now specified per timeline, not per timeline type [#6204](https://github.com/rerun-io/rerun/pull/6204)
-- Send TCP protocol header to ignore non-rerun clients [#6253](https://github.com/rerun-io/rerun/pull/6253) (thanks [@gurry](https://github.com/gurry)!)
+- Send TCP protocol header to ignore non-dalaran clients [#6253](https://github.com/rerun-io/rerun/pull/6253) (thanks [@gurry](https://github.com/gurry)!)
 
 #### 🚀 Performance improvements
 - New data APIs 4: cached latest-at mono helpers everywhere [#5606](https://github.com/rerun-io/rerun/pull/5606)
@@ -4414,7 +4414,7 @@ As always there's a lot going on under the hood:
 - Fix various links in Rust, Python and toml files [#5986](https://github.com/rerun-io/rerun/pull/5986)
 - Improve type index pages, codegen now knows about doc categories [#5978](https://github.com/rerun-io/rerun/pull/5978)
 - Generate doc pages for blueprint views [#6121](https://github.com/rerun-io/rerun/pull/6121)
-- Clarify docs on GH release install & C++ source build, remove redundant rerun_cpp_sdk artifact [#6144](https://github.com/rerun-io/rerun/pull/6144)
+- Clarify docs on GH release install & C++ source build, remove redundant dalaran_cpp_sdk artifact [#6144](https://github.com/rerun-io/rerun/pull/6144)
 - Documentation for archetype and views references each other [#6319](https://github.com/rerun-io/rerun/pull/6319)
 
 #### 🖼 UI improvements
@@ -4441,8 +4441,8 @@ As always there's a lot going on under the hood:
 - Make it possible to open http-streamed RRDs in follow mode via JS API [#6326](https://github.com/rerun-io/rerun/pull/6326)
 
 #### 📈 Analytics
-- Transmit url analytics correctly for rerun.io domains [#6322](https://github.com/rerun-io/rerun/pull/6322)
-- Keep track of the RRD protocol version and display it where relevant [#6324](https://github.com/rerun-io/rerun/pull/6324)
+- Transmit url analytics correctly for dalaran.dev domains [#6322](https://github.com/rerun-io/rerun/pull/6322)
+- Keep track of the DLR protocol version and display it where relevant [#6324](https://github.com/rerun-io/rerun/pull/6324)
 
 #### 🧑‍💻 Dev-experience
 - New data APIs 6: cached archetype queries [#5673](https://github.com/rerun-io/rerun/pull/5673)
@@ -4477,15 +4477,15 @@ As always there's a lot going on under the hood:
 
 
 ## [0.15.1](https://github.com/rerun-io/rerun/compare/0.15.0...0.15.1) - Bug fix for notebooks - 2024-04-11
-- Fix timeout in notebooks by making the `app_url` correctly point to `app.rerun.io` [#5877](https://github.com/rerun-io/rerun/pull/5877)
-- CMake: Allow to call `find_package(rerun_sdk)` two or more times [#5886](https://github.com/rerun-io/rerun/pull/5886) (thanks [@traversaro](https://github.com/traversaro)!)
+- Fix timeout in notebooks by making the `app_url` correctly point to `app.dalaran.dev` [#5877](https://github.com/rerun-io/rerun/pull/5877)
+- CMake: Allow to call `find_package(dalaran_sdk)` two or more times [#5886](https://github.com/rerun-io/rerun/pull/5886) (thanks [@traversaro](https://github.com/traversaro)!)
 
 
 ## [0.15.0](https://github.com/rerun-io/rerun/compare/0.14.1...0.15.0) - Blueprints from Python - 2024-04-09
-The biggest news is the ability to create a _blueprint_ via the Python logging API. Check out our [associated blog post](https://rerun.io/blog/blueprint-part-one) for more information.
+The biggest news is the ability to create a _blueprint_ via the Python logging API. Check out our [associated blog post](https://dalaran.dev/blog/blueprint-part-one) for more information.
 
 ```py
-import rerun.blueprint as rrb
+import dalaran.blueprint as rrb
 
 blueprint = rrb.Blueprint(
     rrb.Vertical(
@@ -4510,7 +4510,7 @@ rr.send_blueprint(blueprint)
 
 Or stored to a file, and then later opened in the viewer:
 ```py
-blueprint.save("my_nice_dashboard.rbl")
+blueprint.save("my_nice_dashboard.dbl")
 ```
 
 In this case, the results looks something like this:
@@ -4527,15 +4527,15 @@ Blueprints are currently only supported in the Python API, with C++ and Rust sup
 
 
 ### ✨ Overview & highlights
-- 🟦 Configure the layout and content of space views from Python [(docs)](https://rerun.io/docs/howto/configure-viewer-through-code)
-- 🖧 More powerful and flexible data loaders [(docs)](https://rerun.io/docs/reference/data-loaders)
+- 🟦 Configure the layout and content of space views from Python [(docs)](https://dalaran.dev/docs/howto/configure-viewer-through-code)
+- 🖧 More powerful and flexible data loaders [(docs)](https://dalaran.dev/docs/reference/data-loaders)
 - 🖵 Improved UI for managing recordings and applications
 - 💾 Save and load blueprint files in the viewer
 - 🎨 Configurable background color for 3D Space Views [#5443](https://github.com/rerun-io/rerun/pull/5443)
 - 💪 Linux ARM64 support [#5489](https://github.com/rerun-io/rerun/pull/5489) [#5503](https://github.com/rerun-io/rerun/pull/5503) [#5511](https://github.com/rerun-io/rerun/pull/5511)
 - 🖼️ Show examples in the welcome page
 - 🖱️ Improve context-menu when right-clicking items in the blueprint panel and streams tree
-- ❌ Remove `InstanceKey` from our logging APIs [#5395](https://github.com/rerun-io/rerun/pull/5395) ([migration guide](https://rerun.io/docs/reference/migration/migration-0-15))
+- ❌ Remove `InstanceKey` from our logging APIs [#5395](https://github.com/rerun-io/rerun/pull/5395) ([migration guide](https://dalaran.dev/docs/reference/migration/migration-0-15))
 - ❌ Remove groups from blueprints panel [#5326](https://github.com/rerun-io/rerun/pull/5326)
 
 ### 🔎 Details
@@ -4550,17 +4550,17 @@ Blueprints are currently only supported in the Python API, with C++ and Rust sup
 
 #### 🌊 C++ API
 - Fix Arrow libraries from download & build not being found in some cases [#5366](https://github.com/rerun-io/rerun/pull/5366)
-- CMake: Add `RERUN_INSTALL_RERUN_C` option to disable installation of `rerun_c` library [#5374](https://github.com/rerun-io/rerun/pull/5374) (thanks [@traversaro](https://github.com/traversaro)!)
+- CMake: Add `DALARAN_INSTALL_DALARAN_C` option to disable installation of `dalaran_c` library [#5374](https://github.com/rerun-io/rerun/pull/5374) (thanks [@traversaro](https://github.com/traversaro)!)
 - CMake: Fix `install` not finding external `arrow` for dynamic linking [#5375](https://github.com/rerun-io/rerun/pull/5375) (thanks [@traversaro](https://github.com/traversaro)!)
 - Make `pinhole.hpp` robust against `min/max` preprocessor macros (typically from `windows.h`) [#5432](https://github.com/rerun-io/rerun/pull/5432)
 - Build C++ SDK for Linux ARM64 [#5489](https://github.com/rerun-io/rerun/pull/5489)
 - Generate fewer `.cpp` files: Inline forward serialization of transparent components to their respective datatypes [#5544](https://github.com/rerun-io/rerun/pull/5544)
-- Fix `RERUN_C_BUILD_ARTIFACT` path value if `CARGO_BUILD_TARGET` env variable is set [#5547](https://github.com/rerun-io/rerun/pull/5547) (thanks [@traversaro](https://github.com/traversaro)!)
+- Fix `DALARAN_C_BUILD_ARTIFACT` path value if `CARGO_BUILD_TARGET` env variable is set [#5547](https://github.com/rerun-io/rerun/pull/5547) (thanks [@traversaro](https://github.com/traversaro)!)
 
 #### 🐍 Python API
 - All Python components that wrap a `bool` now implement `__bool__` [#5400](https://github.com/rerun-io/rerun/pull/5400)
 - Add the remaining space views and name them consistently [#5498](https://github.com/rerun-io/rerun/pull/5498)
-- Add option to include blueprint in an `.rrd` when calling `.save(…)` [#5572](https://github.com/rerun-io/rerun/pull/5572)
+- Add option to include blueprint in an `.dlr` when calling `.save(…)` [#5572](https://github.com/rerun-io/rerun/pull/5572)
 - Allow naming space view containers [#5626](https://github.com/rerun-io/rerun/pull/5626)
 
 #### 🦀 Rust API
@@ -4584,7 +4584,7 @@ Blueprints are currently only supported in the Python API, with C++ and Rust sup
 - Improved tracking of which space views were generated by a heuristic [#5419](https://github.com/rerun-io/rerun/pull/5419)
 - Configurable background color for 3D Space Views [#5443](https://github.com/rerun-io/rerun/pull/5443)
 - Save recordings from web viewer [#5488](https://github.com/rerun-io/rerun/pull/5488)
-- Support loading `.rbl` blueprint files [#5513](https://github.com/rerun-io/rerun/pull/5513)
+- Support loading `.dbl` blueprint files [#5513](https://github.com/rerun-io/rerun/pull/5513)
 - Tensor space view can now show images [#5567](https://github.com/rerun-io/rerun/pull/5567)
 - Entity path query now shows simple statistics and warns if nothing is displayed [#5693](https://github.com/rerun-io/rerun/pull/5693)
 - Go back to example page with browser Back-button [#5750](https://github.com/rerun-io/rerun/pull/5750)
@@ -4608,7 +4608,7 @@ Blueprints are currently only supported in the Python API, with C++ and Rust sup
 - Add blueprint to the RGBD example [#5623](https://github.com/rerun-io/rerun/pull/5623)
 - ARFlow Example Page [#5320](https://github.com/rerun-io/rerun/pull/5320) (thanks [@YiqinZhao](https://github.com/YiqinZhao)!)
 - Fix controlnet example for current `controlnet` package version and add blueprint [#5634](https://github.com/rerun-io/rerun/pull/5634)
-- Fix RRT-Star example not showing up on website or rerun.io/viewer [#5628](https://github.com/rerun-io/rerun/pull/5628)
+- Fix RRT-Star example not showing up on website or dalaran.dev/viewer [#5628](https://github.com/rerun-io/rerun/pull/5628)
 - Fix not logging 3D gesture z component correctly in Gesture Detection example [#5630](https://github.com/rerun-io/rerun/pull/5630) (thanks [@andreasnaoum](https://github.com/andreasnaoum)!)
 - Updated READMEs for examples: LLM Embedding-Based Named Entity Recognition, nuScenes, Objectron, Open Photogrammetry Format, Raw Mesh [#5653](https://github.com/rerun-io/rerun/pull/5653) (thanks [@andreasnaoum](https://github.com/andreasnaoum)!)
 - Updated READMEs for the examples - Batch 1 [#5620](https://github.com/rerun-io/rerun/pull/5620) (thanks [@andreasnaoum](https://github.com/andreasnaoum)!)
@@ -4713,10 +4713,10 @@ We're still ramping up for programmable blueprints (soon!), but meanwhile enjoy 
 
 #### 🐍 Python API
 - Add missing Python docs for `disable_timeline` & `reset_time` [#5269](https://github.com/rerun-io/rerun/pull/5269)
-- Fix missing error message when passing `from_parent` + Rerun transform type to `rerun.Transform3D` [#5270](https://github.com/rerun-io/rerun/pull/5270)
+- Fix missing error message when passing `from_parent` + Dalaran transform type to `dalaran.Transform3D` [#5270](https://github.com/rerun-io/rerun/pull/5270)
 
 #### 🦀 Rust API
-- Fix using `rerun` crate as a dependency on CI [#5170](https://github.com/rerun-io/rerun/pull/5170)
+- Fix using `dalaran` crate as a dependency on CI [#5170](https://github.com/rerun-io/rerun/pull/5170)
 
 #### 🪳 Bug fixes
 - Enforce the rule: heuristics should never add a new view that would be completely covered by an existing view [#5164](https://github.com/rerun-io/rerun/pull/5164)
@@ -4779,12 +4779,12 @@ We're still ramping up for programmable blueprints (soon!), but meanwhile enjoy 
 ### ✨ Overview & highlights
 
 This release focuses on scalar time series -- both from a performance and UI perspectives.
-Check out our [associated blog post](https://rerun.io/blog/fast-plots) for more information.
+Check out our [associated blog post](https://dalaran.dev/blog/fast-plots) for more information.
 
-- 📈 Rerun can now visualize many time series in the kHz range in real-time:
+- 📈 Dalaran can now visualize many time series in the kHz range in real-time:
     - The new query cache optimizes data access, improving query performance by 20-50x
     - Sub-pixel aggregation prevents unnecessary overdraw when rendering plots, improving rendering time by 30-120x
-    - [Points](https://rerun.io/docs/reference/types/archetypes/points3d), [lines](https://rerun.io/docs/reference/types/archetypes/line_strips3d), [arrows](https://rerun.io/docs/reference/types/archetypes/arrows3d) and [boxes](https://rerun.io/docs/reference/types/archetypes/boxes3d) all benefit from query caching too to a lesser extent, yielding 2-5x performance improvements
+    - [Points](https://dalaran.dev/docs/reference/types/archetypes/points3d), [lines](https://dalaran.dev/docs/reference/types/archetypes/line_strips3d), [arrows](https://dalaran.dev/docs/reference/types/archetypes/arrows3d) and [boxes](https://dalaran.dev/docs/reference/types/archetypes/boxes3d) all benefit from query caching too to a lesser extent, yielding 2-5x performance improvements
 
 - 🖼 UI overrides:
     - The new `Scalar`, `SeriesLine` & `SeriesPoint` archetypes allow for customizing plots both at logging and visualization time
@@ -4805,13 +4805,13 @@ Check out our [associated blog post](https://rerun.io/blog/fast-plots) for more 
     - The container hierarchy can now be cleaned up with the new `Simplify Hierarchy` button in the Selection Panel for containers.
 
 - 🦀 The Rust SDK now exposes an optional integration with the `mint` crate
-- 🕸️ The web UI SDK now supports loading multiple `.rrd` URLs
+- 🕸️ The web UI SDK now supports loading multiple `.dlr` URLs
 - 🔺 The web viewer now renders using WebGPU by default (when available), leading to lower memory usage on Chrome.
   You can override this behavior using `?renderer=webgl`/`?renderer=webgpu` url parameter, or restart with WebGL/WebGPU respectively from the options menu.
 
 As well as a lot of miscellaneous bug fixes and usability improvements: see details below.
 
-Check out our [migration guide](https://rerun.io/docs/reference/migration/migration-0-13).
+Check out our [migration guide](https://dalaran.dev/docs/reference/migration/migration-0-13).
 
 ### 🔎 Details
 
@@ -4835,7 +4835,7 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 - Clear empty containers after tile drag-and-drop [#5044](https://github.com/rerun-io/rerun/pull/5044)
 - Allow for very large meshes & plots by always picking the largest available GPU buffer size [#5053](https://github.com/rerun-io/rerun/pull/5053)
 - Fix forever repaint of big scenes [#5071](https://github.com/rerun-io/rerun/pull/5071)
-- Fix `RERUN_FLUSH_NUM_BYTES` and data size estimations [#5086](https://github.com/rerun-io/rerun/pull/5086)
+- Fix `DALARAN_FLUSH_NUM_BYTES` and data size estimations [#5086](https://github.com/rerun-io/rerun/pull/5086)
 - Make `rectangle_fs.wgsl` compile on chrome despite angle/mesa bug (#3931) [#5074](https://github.com/rerun-io/rerun/pull/5074)
 
 #### 🌁 Viewer improvements
@@ -4924,7 +4924,7 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 - Paint closest labels on top of labels further away [#5124](https://github.com/rerun-io/rerun/pull/5124)
 
 #### 🕸️ Web
-- Web: Support multiple `.rrd` URLs [#4740](https://github.com/rerun-io/rerun/pull/4740)
+- Web: Support multiple `.dlr` URLs [#4740](https://github.com/rerun-io/rerun/pull/4740)
 - Unify `web_viewer/index.html` and `index_bundled.html` [#4720](https://github.com/rerun-io/rerun/pull/4720)
 - Allow forcing WebGPU/WebGL on the web player, new command line argument to force graphics backend [#4981](https://github.com/rerun-io/rerun/pull/4981)
 
@@ -4943,20 +4943,20 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 #### 📦 Dependencies
 - Remove `egui_plot` as dependency from `dl_sdk` [#5099](https://github.com/rerun-io/rerun/pull/5099)
 - Update to egui 0.25 and winit 0.29 [#4732](https://github.com/rerun-io/rerun/pull/4732)
-- Prune dependencies from `rerun` and `dl_sdk` [#4824](https://github.com/rerun-io/rerun/pull/4824)
+- Prune dependencies from `dalaran` and `dl_sdk` [#4824](https://github.com/rerun-io/rerun/pull/4824)
 - Relax pyarrow dependency to `>=14.0.2` [#5054](https://github.com/rerun-io/rerun/pull/5054)
 - Update egui_tiles to 0.7.2 [#5107](https://github.com/rerun-io/rerun/pull/5107)
 
 #### 🤷 Other
 #### 🤷 Other
-- Add `rerun --serve` and improve `--help` [#4834](https://github.com/rerun-io/rerun/pull/4834)
-- `rerun print`: print just summary, unless given `--verbose` [#5079](https://github.com/rerun-io/rerun/pull/5079)
+- Add `dalaran --serve` and improve `--help` [#4834](https://github.com/rerun-io/rerun/pull/4834)
+- `dalaran print`: print just summary, unless given `--verbose` [#5079](https://github.com/rerun-io/rerun/pull/5079)
 
 
 ## [0.12.1](https://github.com/rerun-io/rerun/compare/0.12.0...0.12.1) - Data loader bug fixes - 2024-01-17
 
 #### 🌊 C++ API
-- Fix CMake trying to pick up test folders outside of the Rerun project/zip [#4770](https://github.com/rerun-io/rerun/pull/4770) (thanks [@KevinGliewe](https://github.com/KevinGliewe)!)
+- Fix CMake trying to pick up test folders outside of the Dalaran project/zip [#4770](https://github.com/rerun-io/rerun/pull/4770) (thanks [@KevinGliewe](https://github.com/KevinGliewe)!)
 - Document that `Mat3x3` and `Mat4x4` constructors are column major [#4842](https://github.com/rerun-io/rerun/pull/4842)
 
 #### 🦀 Rust API
@@ -4972,7 +4972,7 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 
 #### 🤷 Other
 #### 🤷 Other
-- Include `Cargo.lock` in `rerun-cli` crate [#4750](https://github.com/rerun-io/rerun/pull/4750)
+- Include `Cargo.lock` in `dalaran-cli` crate [#4750](https://github.com/rerun-io/rerun/pull/4750)
 - Replace `atty` dependency with `std::io::IsTerminal` [#4790](https://github.com/rerun-io/rerun/pull/4790) (thanks [@kpreid](https://github.com/kpreid)!)
 
 
@@ -4983,12 +4983,12 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 </p>
 
 ### ✨ Overview & highlights
-- 🌁 The Rerun Viewer now supports a plugin system for creating [arbitrary external data loaders](https://rerun.io/docs/concepts/logging-and-ingestion/data-loaders/overview).
+- 🌁 The Dalaran Viewer now supports a plugin system for creating [arbitrary external data loaders](https://dalaran.dev/docs/concepts/logging-and-ingestion/data-loaders/overview).
 - 🕸️ More built-in examples are now available in the viewer.
 - 🐍 The Python SDK now works with Python-3.12.
 - 📘 Blueprint containers can now be selected and modified.
 - 🚀 In the native viewer, space views are now evaluated in parallel for improved performance.
-- 🧑‍🏫 Support and guide for [sharing a recording across multiple processes](https://rerun.io/docs/howto/shared-recordings).
+- 🧑‍🏫 Support and guide for [sharing a recording across multiple processes](https://dalaran.dev/docs/howto/shared-recordings).
 - 📁 Entity-paths allowed characters and escaping are now more file-like [#4476](https://github.com/rerun-io/rerun/pull/4476):
  - There is no need for " quotes around path parts, instead we now use \ to escape special characters.
  - You need to escape any character that isn't alphabetical, numeric, ., -, or _.
@@ -4997,7 +4997,7 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 
 #### 🌊 C++ API
 - Exposing `recording_id` in C and C++ SDKs [#4384](https://github.com/rerun-io/rerun/pull/4384)
-- All C++ preprocessor macros start now with RR_ (instead of a mix of RR_ and RERUN_) [#4371](https://github.com/rerun-io/rerun/pull/4371)
+- All C++ preprocessor macros start now with RR_ (instead of a mix of RR_ and DALARAN_) [#4371](https://github.com/rerun-io/rerun/pull/4371)
 - C++ & Python API: add helpers for constructing an entity path [#4595](https://github.com/rerun-io/rerun/pull/4595)
 
 #### 🐍 Python API
@@ -5022,8 +5022,8 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 
 #### 🌁 Viewer improvements
 - Make Viewer contexts's render context reference non-mutable [#4430](https://github.com/rerun-io/rerun/pull/4430)
-- The Rerun Viewer can now consume from stdin:
-  - Standard input/output support 1: stream RRD data from stdin [#4511](https://github.com/rerun-io/rerun/pull/4511)
+- The Dalaran Viewer can now consume from stdin:
+  - Standard input/output support 1: stream DLR data from stdin [#4511](https://github.com/rerun-io/rerun/pull/4511)
   - Standard input/output support 2: Rust SDK stdout impl/examples/docs [#4512](https://github.com/rerun-io/rerun/pull/4512)
   - Standard input/output support 3: Python SDK stdout impl/examples/docs [#4513](https://github.com/rerun-io/rerun/pull/4513)
   - Standard input/output support 4: C++ SDK stdout impl/examples/docs [#4514](https://github.com/rerun-io/rerun/pull/4514)
@@ -5073,14 +5073,14 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 - Improve entity size stats: include whole subtree [#4542](https://github.com/rerun-io/rerun/pull/4542)
 - Add support for modal Windows to `dl_ui` and use it for the Space View entity picker [#4577](https://github.com/rerun-io/rerun/pull/4577)
 - Show entity path parts (entity "folder" names) unescaped in UI [#4603](https://github.com/rerun-io/rerun/pull/4603)
-- Improve Rerun Menu with link to Rerun Discord [#4661](https://github.com/rerun-io/rerun/pull/4661)
+- Improve Dalaran Menu with link to Dalaran Discord [#4661](https://github.com/rerun-io/rerun/pull/4661)
 - Introduce container icons and update space views and UI icons [#4663](https://github.com/rerun-io/rerun/pull/4663)
 - Initial support for manually adding container and space view in the hierarchy [#4616](https://github.com/rerun-io/rerun/pull/4616)
 - Change modal position to a fixed vertical distance from the top of the window [#4700](https://github.com/rerun-io/rerun/pull/4700)
 
 #### 🕸️ Web
 - Load examples manifest via HTTP [#4391](https://github.com/rerun-io/rerun/pull/4391)
-- Remove builds and usage of `demo.rerun.io` [#4418](https://github.com/rerun-io/rerun/pull/4418)
+- Remove builds and usage of `demo.dalaran.dev` [#4418](https://github.com/rerun-io/rerun/pull/4418)
 - Open all links in a new tab [#4582](https://github.com/rerun-io/rerun/pull/4582)
 
 #### 🎨 Renderer improvements
@@ -5097,7 +5097,7 @@ Check out our [migration guide](https://rerun.io/docs/reference/migration/migrat
 - Auto format all the things [#4373](https://github.com/rerun-io/rerun/pull/4373)
 - Refactor naming of `SpaceViewClass` and changed `TextSpaceView` name to "Text Log" [#4386](https://github.com/rerun-io/rerun/pull/4386)
 - Local-first wheel publishing [#4454](https://github.com/rerun-io/rerun/pull/4454)
-- Remove backtraces on error when running `rerun` binary [#4746](https://github.com/rerun-io/rerun/pull/4746)
+- Remove backtraces on error when running `dalaran` binary [#4746](https://github.com/rerun-io/rerun/pull/4746)
 
 #### 🗣 Refactors
 - Selection state is now fully double buffered and has interior mutability [#4387](https://github.com/rerun-io/rerun/pull/4387)
@@ -5129,7 +5129,7 @@ https://github.com/rerun-io/rerun/assets/1220815/9099b81d-626f-4974-87d7-0e97436
 ### ✨ Overview & highlights
 
 - 🌊 C++ SDK improvements
-  - [Reference docs are live!](https://ref.rerun.io/docs/cpp/)
+  - [Reference docs are live!](https://ref.dalaran.dev/docs/cpp/)
   - 2x-5x faster logging
   - CMake install support and other CMake setup improvements
   - Support for custom components & archetypes
@@ -5150,28 +5150,28 @@ Special thanks to @dvad & @dangush for contributing!
 ### 🔎 Details
 
 #### 🌊 C++ SDK
-- Support std::chrono types for `set_time` on `rerun::RecordingStream` [#4134](https://github.com/rerun-io/rerun/pull/4134)
-- Improve rerun_cpp readme & CMakeLists.txt [#4126](https://github.com/rerun-io/rerun/pull/4126)
-- Replace the many parameters of  `rerun::spawn` / `rerun::RecordingStream::spawn` with a `struct` [#4149](https://github.com/rerun-io/rerun/pull/4149)
+- Support std::chrono types for `set_time` on `dalaran::RecordingStream` [#4134](https://github.com/rerun-io/rerun/pull/4134)
+- Improve dalaran_cpp readme & CMakeLists.txt [#4126](https://github.com/rerun-io/rerun/pull/4126)
+- Replace the many parameters of  `dalaran::spawn` / `dalaran::RecordingStream::spawn` with a `struct` [#4149](https://github.com/rerun-io/rerun/pull/4149)
 - Make on TextLogLevel PascalCase (instead of SCREAMING CASE) to avoid clashes with preprocessor defines [#4152](https://github.com/rerun-io/rerun/pull/4152)
-- Reduce rerun_c library size (by depending on fewer unnecessary crates) [#4147](https://github.com/rerun-io/rerun/pull/4147)
+- Reduce dalaran_c library size (by depending on fewer unnecessary crates) [#4147](https://github.com/rerun-io/rerun/pull/4147)
 - Fix unnecessary includes in code generated headers [#4132](https://github.com/rerun-io/rerun/pull/4132)
 - Doxygen documentation & many doc improvements [#4191](https://github.com/rerun-io/rerun/pull/4191)
-- Rename `rerun::ComponentBatch` to `rerun::Collection` (and related constructs) [#4236](https://github.com/rerun-io/rerun/pull/4236)
-- Use `rerun::Collection` almost everywhere we'd use `std::vector` before [#4247](https://github.com/rerun-io/rerun/pull/4247)
+- Rename `dalaran::ComponentBatch` to `dalaran::Collection` (and related constructs) [#4236](https://github.com/rerun-io/rerun/pull/4236)
+- Use `dalaran::Collection` almost everywhere we'd use `std::vector` before [#4247](https://github.com/rerun-io/rerun/pull/4247)
 - Significantly improve C++ logging performance by using C FFI instead of Arrow IPC [#4273](https://github.com/rerun-io/rerun/pull/4273)
 - Further improve C++ logging for many individual log calls by introducing a component type registry [#4296](https://github.com/rerun-io/rerun/pull/4296)
 - All C++ datatypes & components now implement a new Loggable trait [#4305](https://github.com/rerun-io/rerun/pull/4305)
 - Add C++ Custom Component example [#4309](https://github.com/rerun-io/rerun/pull/4309)
-- Expose Rerun source/include dir in CMakeLists.txt (`RERUN_CPP_SOURCE_DIR`) [#4313](https://github.com/rerun-io/rerun/pull/4313)
+- Expose Dalaran source/include dir in CMakeLists.txt (`DALARAN_CPP_SOURCE_DIR`) [#4313](https://github.com/rerun-io/rerun/pull/4313)
 - Support cmake install [#4326](https://github.com/rerun-io/rerun/pull/4326)
-- Export TensorBuffer & TensorDimension to Rerun namespace [#4331](https://github.com/rerun-io/rerun/pull/4331)
-- C++ SDK sanity checks now header/source version against rerun_c binary version [#4330](https://github.com/rerun-io/rerun/pull/4330)
+- Export TensorBuffer & TensorDimension to Dalaran namespace [#4331](https://github.com/rerun-io/rerun/pull/4331)
+- C++ SDK sanity checks now header/source version against dalaran_c binary version [#4330](https://github.com/rerun-io/rerun/pull/4330)
 - Allow creating Image/Tensor/DepthImage/SegmentationImage directly from shape & pointer [#4345](https://github.com/rerun-io/rerun/pull/4345)
 
 #### 🐍 Python SDK
 - Python: remove legacy APIs [#4037](https://github.com/rerun-io/rerun/pull/4037)
-- Remove deprecated `rerun_demo` package [#4293](https://github.com/rerun-io/rerun/pull/4293)
+- Remove deprecated `dalaran_demo` package [#4293](https://github.com/rerun-io/rerun/pull/4293)
 - Python: don't catch `KeyboardInterrupt` and `SystemExit` [#4333](https://github.com/rerun-io/rerun/pull/4333) (thanks [@Dvad](https://github.com/Dvad)!)
 
 #### 🪳 Bug fixes
@@ -5227,24 +5227,24 @@ This is a small release primarily to tie up some loose ends for our C++ SDK.
 
 ## [0.10.0](https://github.com/rerun-io/rerun/compare/0.9.1...0.10.0) - C++ SDK - 2023-10-30
 
-[Rerun](https://rerun.io/) is an easy-to-use visualization toolbox for computer vision and robotics.
+[Dalaran](https://dalaran.dev/) is an easy-to-use visualization toolbox for computer vision and robotics.
 
-* Python: `pip install rerun-sdk`
-* Rust: `cargo add rerun` and `cargo install rerun-cli --locked`
-* Online demo: <https://app.rerun.io/version/0.10.0/>
+* Python: `pip install dalaran-sdk`
+* Rust: `cargo add dalaran` and `cargo install dalaran-cli --locked`
+* Online demo: <https://app.dalaran.dev/version/0.10.0/>
 
-Release blog post: <https://rerun.io/blog/cpp-sdk>
+Release blog post: <https://dalaran.dev/blog/cpp-sdk>
 
 ### ✨ Overview & highlights
 * The C++ SDK is finally here!
   ```cpp
-  #include <rerun.hpp>
+  #include <dalaran.hpp>
 
   int main() {
-      const auto rec = rerun::RecordingStream("rerun_example_points3d_simple");
+      const auto rec = dalaran::RecordingStream("dalaran_example_points3d_simple");
       rec.spawn().exit_on_failure();
 
-      rec.log("points", rerun::Points3D({{0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}}));
+      rec.log("points", dalaran::Points3D({{0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}}));
   }
   ```
 
@@ -5258,13 +5258,13 @@ Release blog post: <https://rerun.io/blog/cpp-sdk>
 - Has all the features of the Python and C++ SDK:s
 
 #### 🐍 Python SDK
-- Add `RERUN_STRICT` environment variable [#3861](https://github.com/rerun-io/rerun/pull/3861)
+- Add `DALARAN_STRICT` environment variable [#3861](https://github.com/rerun-io/rerun/pull/3861)
 - Fix potential deadlock when saving to file after logging at the end of a Python program [#3920](https://github.com/rerun-io/rerun/pull/3920)
 - Warn if no resolution provided to Pinhole [#3923](https://github.com/rerun-io/rerun/pull/3923)
 - Python: remove unconditional sleep on `spawn` [#4010](https://github.com/rerun-io/rerun/pull/4010)
 - Support `pathlib.Path` for `rr.save` [#4036](https://github.com/rerun-io/rerun/pull/4036)
 - Add `disable_timeline` function [#4068](https://github.com/rerun-io/rerun/pull/4068)
-- Support fast install of the Rerun Viewer with `cargo binstall rerun-cli` thanks to [`cargo binstall`](https://github.com/cargo-bins/cargo-binstall)
+- Support fast install of the Dalaran Viewer with `cargo binstall dalaran-cli` thanks to [`cargo binstall`](https://github.com/cargo-bins/cargo-binstall)
 
 #### 🦀 Rust SDK
 - Introduce `dl_types_core` [#3878](https://github.com/rerun-io/rerun/pull/3878)
@@ -5280,7 +5280,7 @@ Release blog post: <https://rerun.io/blog/cpp-sdk>
 - Fix selection history right-click menu not working [#3819](https://github.com/rerun-io/rerun/pull/3819)
 
 #### 🌁 Viewer improvements
-- Replace `--strict` flag with `RERUN_PANIC_ON_WARN` env-var [#3872](https://github.com/rerun-io/rerun/pull/3872)
+- Replace `--strict` flag with `DALARAN_PANIC_ON_WARN` env-var [#3872](https://github.com/rerun-io/rerun/pull/3872)
 - Support NV12-encoded images [#3541](https://github.com/rerun-io/rerun/pull/3541) (thanks [@zrezke](https://github.com/zrezke)!)
 
 #### 🧑‍🏫 Examples
@@ -5304,33 +5304,33 @@ Release blog post: <https://rerun.io/blog/cpp-sdk>
 - Make codegen I/O-free and agnostic to output location [#3888](https://github.com/rerun-io/rerun/pull/3888)
 - Configure pytest to fail on warnings [#3903](https://github.com/rerun-io/rerun/pull/3903)
 - Improve `taplo` output on failure [#3909](https://github.com/rerun-io/rerun/pull/3909)
-- Automatically synchronize build.rerun.io & release assets [#3945](https://github.com/rerun-io/rerun/pull/3945)
+- Automatically synchronize build.dalaran.dev & release assets [#3945](https://github.com/rerun-io/rerun/pull/3945)
 - New helper script to run fast lints and pre-push hook that runs it [#3949](https://github.com/rerun-io/rerun/pull/3949)
-- CI: Rerun CLI as a release asset [#3959](https://github.com/rerun-io/rerun/pull/3959)
-- Add script to generate RRD vs. screenshots comparisons [#3946](https://github.com/rerun-io/rerun/pull/3946)
+- CI: Dalaran CLI as a release asset [#3959](https://github.com/rerun-io/rerun/pull/3959)
+- Add script to generate DLR vs. screenshots comparisons [#3946](https://github.com/rerun-io/rerun/pull/3946)
 - Add a new build Environment option for CondaBuild to improve conda-built artifacts [#4015](https://github.com/rerun-io/rerun/pull/4015)
 - Lock Python in CI to 3.11 [#4033](https://github.com/rerun-io/rerun/pull/4033)
-- Changed `spawn()` and the `rerun` script to call into `rerun_bindings` (12x startup time improvement) [#4053](https://github.com/rerun-io/rerun/pull/4053)
+- Changed `spawn()` and the `dalaran` script to call into `dalaran_bindings` (12x startup time improvement) [#4053](https://github.com/rerun-io/rerun/pull/4053)
 
 
 ## [0.9.1](https://github.com/rerun-io/rerun/compare/0.9.0...0.9.1) - Bug fixes and performance improvements - 2023-10-12
 
-[Rerun](https://rerun.io/) is an easy-to-use visualization toolbox for computer vision and robotics.
+[Dalaran](https://dalaran.dev/) is an easy-to-use visualization toolbox for computer vision and robotics.
 
-* Python: `pip install rerun-sdk`
-* Rust: `cargo add rerun` and `cargo install rerun-cli`
-* Online demo: <https://app.rerun.io/version/0.9.1/>
+* Python: `pip install dalaran-sdk`
+* Rust: `cargo add dalaran` and `cargo install dalaran-cli`
+* Online demo: <https://app.dalaran.dev/version/0.9.1/>
 
 ### ✨ Overview & highlights
 - A bunch of bug fixes
 - Fix big performance regression when hovering images
-- The Rerun Viewer should now be visible to the system accessibility system
+- The Dalaran Viewer should now be visible to the system accessibility system
 
 #### 🐍 Python SDK
 - Added support for PyTorch array to `Boxes2D`'s `array` convenience argument [#3719](https://github.com/rerun-io/rerun/pull/3719)
 - Fix default stroke width handling in `log_line_strip_Xd` and `log_obbs` [#3720](https://github.com/rerun-io/rerun/pull/3720)
 - Warn/raise when passing incompatible objects to `log` [#3727](https://github.com/rerun-io/rerun/pull/3727)
-- Refactor `rerun.AnyValues` to handle `None` input more gracefully [#3725](https://github.com/rerun-io/rerun/pull/3725)
+- Refactor `dalaran.AnyValues` to handle `None` input more gracefully [#3725](https://github.com/rerun-io/rerun/pull/3725)
 - Default `DisconnectedSpaces` boolean to `true` in Python [#3760](https://github.com/rerun-io/rerun/pull/3760)
 
 #### 🦀 Rust SDK
@@ -5358,7 +5358,7 @@ Release blog post: <https://rerun.io/blog/cpp-sdk>
 - Fix open photogrammetry example not working on Windows [#3705](https://github.com/rerun-io/rerun/pull/3705)
 
 #### 📚 Docs
-- Document that entity-path `rerun/` is reserved [#3747](https://github.com/rerun-io/rerun/pull/3747)
+- Document that entity-path `dalaran/` is reserved [#3747](https://github.com/rerun-io/rerun/pull/3747)
 
 #### 🖼 UI improvements
 - Show all entities/components in the Streams UI, even if empty for the selected timeline [#3779](https://github.com/rerun-io/rerun/pull/3779)
@@ -5376,20 +5376,20 @@ Release blog post: <https://rerun.io/blog/cpp-sdk>
 
 ## [0.9.0](https://github.com/rerun-io/rerun/compare/0.8.2...0.9.0) - New logging API - 2023-10-05
 
-[Rerun](https://rerun.io/) is an easy-to-use visualization toolbox for computer vision and robotics.
+[Dalaran](https://dalaran.dev/) is an easy-to-use visualization toolbox for computer vision and robotics.
 
-* Python: `pip install rerun-sdk`
-* Rust: `cargo add rerun` and `cargo install rerun-cli`
-* Online demo: <https://app.rerun.io/version/0.9.0/>
+* Python: `pip install dalaran-sdk`
+* Rust: `cargo add dalaran` and `cargo install dalaran-cli`
+* Online demo: <https://app.dalaran.dev/version/0.9.0/>
 
 
 ### ✨ Overview & highlights
-Rerun 0.9.0 is a big release, that introduces a brand new logging API.
+Dalaran 0.9.0 is a big release, that introduces a brand new logging API.
 This API is code-generated from a common definition, meaning the Python and Rust SDKs are very similar now.
 This will let us more easily extend and improve the API going forward.
-It is also the basis for our C++ API, which is coming in Rerun 0.10.0.
+It is also the basis for our C++ API, which is coming in Dalaran 0.10.0.
 
-Read [the migration guide](https://rerun.io/docs/reference/migration-0-9) for details!
+Read [the migration guide](https://dalaran.dev/docs/reference/migration-0-9) for details!
 
 <picture>
   <img src="https://static.rerun.io/0.9.0-start-screen/ee485acc4bf50519102180d01ae6338aef07e88e/full.png" alt="0.9.0 Welcome Screen">
@@ -5443,7 +5443,7 @@ Other highlights:
 #### 🌁 Viewer improvements
 - Open image and mesh files with drag-drop and File->Open [#3116](https://github.com/rerun-io/rerun/pull/3116)
 - Support loading images and meshes on web [#3131](https://github.com/rerun-io/rerun/pull/3131)
-- Add `rerun reset` command [#3145](https://github.com/rerun-io/rerun/pull/3145)
+- Add `dalaran reset` command [#3145](https://github.com/rerun-io/rerun/pull/3145)
 - Show picking position when hovering something in the spatial view [#3227](https://github.com/rerun-io/rerun/pull/3227)
 - Rethink view selection & filtering + make all views opt-in [#3323](https://github.com/rerun-io/rerun/pull/3323)
 - Markdown support in `TextDocument` [#3343](https://github.com/rerun-io/rerun/pull/3343)
@@ -5462,7 +5462,7 @@ Other highlights:
 - Optimize out unnecessary joins when querying archetypes [#3377](https://github.com/rerun-io/rerun/pull/3377)
 
 #### 🧑‍🏫 Examples
-- Add "rerun_example_" prefix to all our user-visible app-ids [#3112](https://github.com/rerun-io/rerun/pull/3112)
+- Add "dalaran_example_" prefix to all our user-visible app-ids [#3112](https://github.com/rerun-io/rerun/pull/3112)
 - Add paper visualizations to examples [#3020](https://github.com/rerun-io/rerun/pull/3020) (thanks [@roym899](https://github.com/roym899)!)
 - API examples overhaul & roundtrip tests [#3204](https://github.com/rerun-io/rerun/pull/3204)
 - Generate manifest for examples page in Viewer [#3332](https://github.com/rerun-io/rerun/pull/3332)
@@ -5477,7 +5477,7 @@ Other highlights:
 - Docs codegen [#3445](https://github.com/rerun-io/rerun/pull/3445)
 - Generate component/datatype docs [#3535](https://github.com/rerun-io/rerun/pull/3535)
 - Update the Python API docs site for the new APIs [#3565](https://github.com/rerun-io/rerun/pull/3565)
-- Add a how-to guide for using Rerun with custom data [#3634](https://github.com/rerun-io/rerun/pull/3634)
+- Add a how-to guide for using Dalaran with custom data [#3634](https://github.com/rerun-io/rerun/pull/3634)
 
 #### 🖼 UI improvements
 - Migrate to custom checkbox/radio_value UI [#2851](https://github.com/rerun-io/rerun/pull/2851)
@@ -5587,7 +5587,7 @@ Other highlights:
 ## [0.8.1](https://github.com/rerun-io/rerun/compare/0.8.0...0.8.1) - Bug fixes - 2023-08-17
 
 #### 🐍 Python SDK
-- Add a warning category and stacklevel to Rerun warnings.warn calls [#2985](https://github.com/rerun-io/rerun/pull/2985)
+- Add a warning category and stacklevel to Dalaran warnings.warn calls [#2985](https://github.com/rerun-io/rerun/pull/2985)
 
 #### 🪳 Bug fixes
 - Fix always redrawing in the presence of a 3D space view [#2900](https://github.com/rerun-io/rerun/pull/2900)
@@ -5598,7 +5598,7 @@ Other highlights:
 - Automatically select user timeline if no timeline was explicitly selected yet [#2986](https://github.com/rerun-io/rerun/pull/2986)
 
 #### 🧑‍🏫 Examples
-- Add `Helix` to `demo.rerun.io` [#2930](https://github.com/rerun-io/rerun/pull/2930)
+- Add `Helix` to `demo.dalaran.dev` [#2930](https://github.com/rerun-io/rerun/pull/2930)
 
 #### 📈 Analytics
 - Make sure `dl_analytics` never log higher than at `debug` level [#3014](https://github.com/rerun-io/rerun/pull/3014)
@@ -5606,11 +5606,11 @@ Other highlights:
 
 ## [0.8.0](https://github.com/rerun-io/rerun/compare/0.7.0...0.8.0) - Infrastructure investments and more transform improvements - 2023-07-27
 
-[Rerun](https://rerun.io/) is an easy-to-use visualization toolbox for computer vision and robotics.
+[Dalaran](https://dalaran.dev/) is an easy-to-use visualization toolbox for computer vision and robotics.
 
-* Python: `pip install rerun-sdk`
-* Rust: `cargo add rerun` and `cargo install rerun-cli`
-* Online demo: <https://demo.rerun.io/version/0.8.0/>
+* Python: `pip install dalaran-sdk`
+* Rust: `cargo add dalaran` and `cargo install dalaran-cli`
+* Online demo: <https://demo.dalaran.dev/version/0.8.0/>
 
 
 ### ✨ Overview & highlights
@@ -5622,20 +5622,20 @@ Other highlights:
  - The visualizer can now show coordinate arrows for all affine transforms within the view. [#2577](https://github.com/rerun-io/rerun/pull/2577)
  - Linestrips and oriented bounding boxes can now be logged via batch APIs in python.
    - See: `log_linestrips_2d`, `log_linestrips_3d`, [#2822](https://github.com/rerun-io/rerun/pull/2822) and `log_obbs` [#2823](https://github.com/rerun-io/rerun/pull/2823)
- - Rust users that build their own Viewer applications can now add fully custom Space Views. Find more information [here](https://rerun.io/docs/howto/extend/extend-ui#custom-space-views-classes).
- - New optional `flush_timeout` specifies how long Rerun will wait if a TCP stream is disconnected during a flush. [#2821](https://github.com/rerun-io/rerun/pull/2821)
+ - Rust users that build their own Viewer applications can now add fully custom Space Views. Find more information [here](https://dalaran.dev/docs/howto/extend/extend-ui#custom-space-views-classes).
+ - New optional `flush_timeout` specifies how long Dalaran will wait if a TCP stream is disconnected during a flush. [#2821](https://github.com/rerun-io/rerun/pull/2821)
    - In Rust, `RecordingStream::connect` now requires `flush_timeout` specified as an `Option<Duration>`.
-     - To keep default behavior, this can be specified using the `rerun::default_flush_time()` helper.
+     - To keep default behavior, this can be specified using the `dalaran::default_flush_time()` helper.
    - In Python `flush_init_sec` is now an optional argument to `rr.connect()`
  - In Rust, the `RecordingStream` now offers a stateful time API, similar to the Python APIs. [#2506](https://github.com/rerun-io/rerun/pull/2506)
    - You can now call `set_time_sequence`, `set_time_seconds`, and `set_time_nanos` directly on the `RecordingStream`,
      which will set the time for all subsequent logs using that stream.
    - This can be used as an alternative to the previous `MsgSender::with_time` APIs.
- - The Rerun SDK now defaults to 8ms long microbatches instead of 50ms. This makes the default behavior more suitable
+ - The Dalaran SDK now defaults to 8ms long microbatches instead of 50ms. This makes the default behavior more suitable
 for use-cases like real-time video feeds. [#2220](https://github.com/rerun-io/rerun/pull/2220)
-   - Check out [the microbatching docs](https://rerun.io/docs/reference/sdk/micro-batching) for more information
+   - Check out [the microbatching docs](https://dalaran.dev/docs/reference/sdk/micro-batching) for more information
    on fine-tuning the micro-batching behavior.
- - The web viewer now incremental loads `.rrd` files when streaming over HTTP. [#2412](https://github.com/rerun-io/rerun/pull/2412)
+ - The web viewer now incremental loads `.dlr` files when streaming over HTTP. [#2412](https://github.com/rerun-io/rerun/pull/2412)
 
 ![Open Photogrammetry Preview](https://static.rerun.io/9fa26e73a197690e0403cd35f29e31c2941dea36_release_080_photogrammetry_full.png)
 
@@ -5645,7 +5645,7 @@ for use-cases like real-time video feeds. [#2220](https://github.com/rerun-io/re
    changelog.
    - The layout of the Viewer is now controlled by a Blueprint datastore. In the future this will allow for direct API
     control of the layout and configuration of the Viewer. A very early prototype of this functionality is available
-    via the `rerun.experimental` module in Python.
+    via the `dalaran.experimental` module in Python.
    - An entirely new code-generation framework has been brought online for Rust, Python and C++. This will eventually enable
     new object-centric APIs with a more scalable, consistent, and ergonomic experience.
    - Bringup of C++ support is now underway and will eventually become our third officially supported SDK language.
@@ -5677,7 +5677,7 @@ for use-cases like real-time video feeds. [#2220](https://github.com/rerun-io/re
 - Add command to screenshot the application [#2293](https://github.com/rerun-io/rerun/pull/2293)
 - Show layout in blueprint tree view [#2465](https://github.com/rerun-io/rerun/pull/2465)
 - Double-click to select entity [#2504](https://github.com/rerun-io/rerun/pull/2504)
-- Add Rerun.io link/text in top bar [#2540](https://github.com/rerun-io/rerun/pull/2540)
+- Add Dalaran.io link/text in top bar [#2540](https://github.com/rerun-io/rerun/pull/2540)
 - New auto-layout of space views [#2558](https://github.com/rerun-io/rerun/pull/2558)
 - Add 'Dump datastore' command to palette [#2564](https://github.com/rerun-io/rerun/pull/2564)
 - Support any `dtype` for depth images [#2602](https://github.com/rerun-io/rerun/pull/2602)
@@ -5688,7 +5688,7 @@ for use-cases like real-time video feeds. [#2220](https://github.com/rerun-io/re
 #### 🚀 Performance improvements
 - Flush the batches every 8ms instead of 50 ms [#2220](https://github.com/rerun-io/rerun/pull/2220)
 - Replace `image` crate jpeg decoder with zune-jpeg [#2376](https://github.com/rerun-io/rerun/pull/2376)
-- Stream `.rrd` files when loading via http [#2412](https://github.com/rerun-io/rerun/pull/2412)
+- Stream `.dlr` files when loading via http [#2412](https://github.com/rerun-io/rerun/pull/2412)
 
 #### 🪳 Bug fixes
 - Fix deadlock when misusing the Caches [#2318](https://github.com/rerun-io/rerun/pull/2318)
@@ -5718,13 +5718,13 @@ for use-cases like real-time video feeds. [#2220](https://github.com/rerun-io/re
 
 #### 🧑‍🏫 Examples
 - Add example template [#2392](https://github.com/rerun-io/rerun/pull/2392)
-- Show hidden url search param in `app.rerun.io` [#2455](https://github.com/rerun-io/rerun/pull/2455)
+- Show hidden url search param in `app.dalaran.dev` [#2455](https://github.com/rerun-io/rerun/pull/2455)
 - Minimal example of running an intel realsense depth sensor live [#2541](https://github.com/rerun-io/rerun/pull/2541)
 - Add a simple example to display Open Photogrammetry Format datasets [#2512](https://github.com/rerun-io/rerun/pull/2512)
 - Move `examples/api_demo` -> `tests/test_api` [#2585](https://github.com/rerun-io/rerun/pull/2585)
 
 #### 📚 Docs
-- Docs: link to `rr.save` and suggest `rerun` instead of `python -m rerun` [#2586](https://github.com/rerun-io/rerun/pull/2586)
+- Docs: link to `rr.save` and suggest `dalaran` instead of `python -m dalaran` [#2586](https://github.com/rerun-io/rerun/pull/2586)
 - Update docs about transforms [#2496](https://github.com/rerun-io/rerun/pull/2496)
 - Fixup remaining usages of log_rigid3 in docs [#2831](https://github.com/rerun-io/rerun/pull/2831)
 
@@ -5827,7 +5827,7 @@ for use-cases like real-time video feeds. [#2220](https://github.com/rerun-io/re
 - Disable codegen on Windows [#2592](https://github.com/rerun-io/rerun/pull/2592)
 - Python codegen: big cleaning and paving the way towards transforms [#2603](https://github.com/rerun-io/rerun/pull/2603)
 - Automatically assume Arrow transparency for components [#2608](https://github.com/rerun-io/rerun/pull/2608)
-- Fix wrong path being `rerun_if_changed()` in `compute_dir_hash` [#2612](https://github.com/rerun-io/rerun/pull/2612)
+- Fix wrong path being `dalaran_if_changed()` in `compute_dir_hash` [#2612](https://github.com/rerun-io/rerun/pull/2612)
 - Support transparency at the semantic layer [#2611](https://github.com/rerun-io/rerun/pull/2611)
 - Don't use builtin `required` anymore, introduce `nullable` instead [#2619](https://github.com/rerun-io/rerun/pull/2619)
 - Rust codegen: generate proper docstrings [#2668](https://github.com/rerun-io/rerun/pull/2668)
@@ -5842,14 +5842,14 @@ for use-cases like real-time video feeds. [#2220](https://github.com/rerun-io/re
 - C++ codegen for reporting Arrow data type for structs [#2756](https://github.com/rerun-io/rerun/pull/2756)
 - Don't inline recursive datatypes in C++ backend [#2765](https://github.com/rerun-io/rerun/pull/2765)
 - C++ codegen to_arrow_data_type for unions [#2766](https://github.com/rerun-io/rerun/pull/2766)
-- C++ codegen Arrow serialize non-union components/datatypes without nested Rerun types [#2820](https://github.com/rerun-io/rerun/pull/2820)
+- C++ codegen Arrow serialize non-union components/datatypes without nested Dalaran types [#2820](https://github.com/rerun-io/rerun/pull/2820)
 - C++ codegen of structs and unions [#2707](https://github.com/rerun-io/rerun/pull/2707)
 - Fix cpp formatter differences [#2773](https://github.com/rerun-io/rerun/pull/2773)
 
 #### 🤷 Other
 #### 🤷 Other
 - test_api: set different app_id based on what test is run [#2599](https://github.com/rerun-io/rerun/pull/2599)
-- Introduce `rerun compare` to check whether 2 rrd files are functionally equivalent [#2597](https://github.com/rerun-io/rerun/pull/2597)
+- Introduce `dalaran compare` to check whether 2 dlr files are functionally equivalent [#2597](https://github.com/rerun-io/rerun/pull/2597)
 - Remove `files.exclude` in vscode settings [#2621](https://github.com/rerun-io/rerun/pull/2621)
 - Support feature-gated Rust attributes [#2813](https://github.com/rerun-io/rerun/pull/2813)
 
@@ -5896,7 +5896,7 @@ here's a smaller release packed with useful improvements 🎉
 - Optimization: avoid a memory allocation when padding RGB u8 to RGBA [#2345](https://github.com/rerun-io/rerun/pull/2345)
 
 #### 🧑‍🏫 Examples
-- Example of how to embed the Rerun Viewer inside your own GUI (+ ergonomic improvements) [#2250](https://github.com/rerun-io/rerun/pull/2250)
+- Example of how to embed the Dalaran Viewer inside your own GUI (+ ergonomic improvements) [#2250](https://github.com/rerun-io/rerun/pull/2250)
 - Objectron Rust example: install `protoc` for the user [#2280](https://github.com/rerun-io/rerun/pull/2280)
 - Remove weird-looking argument parsing in examples [#2398](https://github.com/rerun-io/rerun/pull/2398)
 - Fix `tracking_hf example`: put scaled thing under its own root entity [#2419](https://github.com/rerun-io/rerun/pull/2419)
@@ -5906,7 +5906,7 @@ here's a smaller release packed with useful improvements 🎉
 - Update titles and tags for examples with real data [#2416](https://github.com/rerun-io/rerun/pull/2416)
 
 #### 📚 Docs
-- Merge `rerun-docs` repository into this monorepo [#2284](https://github.com/rerun-io/rerun/pull/2284)
+- Merge `dalaran-docs` repository into this monorepo [#2284](https://github.com/rerun-io/rerun/pull/2284)
 - Add manifest + readmes to examples [#2309](https://github.com/rerun-io/rerun/pull/2309)
 - Fix and clean up BUILD.md [#2319](https://github.com/rerun-io/rerun/pull/2319)
 - Link to `/examples` in PR description [#2320](https://github.com/rerun-io/rerun/pull/2320)
@@ -5952,9 +5952,9 @@ here's a smaller release packed with useful improvements 🎉
 ### ✨ Overview & highlights
 
 - You can now show 3D objects in 2D views connected by Pinhole transforms [#2008](https://github.com/rerun-io/rerun/pull/2008)
-- You can quickly view images and meshes with `rerun mesh.obj image.png` [#2060](https://github.com/rerun-io/rerun/pull/2060)
-- The correct to install the `rerun` binary is now with `cargo install rerun-cli` [#2183](https://github.com/rerun-io/rerun/pull/2183)
-- `native_viewer` is now an opt-in feature of the `rerun` library, leading to faster compilation times [#2064](https://github.com/rerun-io/rerun/pull/2064)
+- You can quickly view images and meshes with `dalaran mesh.obj image.png` [#2060](https://github.com/rerun-io/rerun/pull/2060)
+- The correct to install the `dalaran` binary is now with `cargo install dalaran-cli` [#2183](https://github.com/rerun-io/rerun/pull/2183)
+- `native_viewer` is now an opt-in feature of the `dalaran` library, leading to faster compilation times [#2064](https://github.com/rerun-io/rerun/pull/2064)
 - Experimental WebGPU support [#1965](https://github.com/rerun-io/rerun/pull/1965)
 - SDK log calls are now batched on the wire, saving CPU time and bandwidth
 
@@ -5964,7 +5964,7 @@ here's a smaller release packed with useful improvements 🎉
 - ⚠️ BREAKING: You must now call `rr.init` if you want logging to work.
 - ⚠️ BREAKING: `set_enabled` has been removed.
   In order to disable logging at runtime, call `set_global_data_recording(None)`.
-  See also [the doc section on this topic](https://rerun.io/docs/reference/sdk/logging-controls#dynamically-turn-logging-onoff).
+  See also [the doc section on this topic](https://dalaran.dev/docs/reference/sdk/logging-controls#dynamically-turn-logging-onoff).
 - `log_mesh_file`: accept either path or bytes [#2098](https://github.com/rerun-io/rerun/pull/2098)
 - Add `draw_order` to 2D primitives [#2138](https://github.com/rerun-io/rerun/pull/2138)
 - Add `rr.version()` [#2084](https://github.com/rerun-io/rerun/pull/2084)
@@ -5977,9 +5977,9 @@ here's a smaller release packed with useful improvements 🎉
 #### 🦀 Rust SDK
 - ⚠️ BREAKING: `set_enabled` has been removed.
   In order to disable logging at runtime, create a no-op recording via `RecordingStream::disabled()`.
-  See also [the doc section on this topic](https://rerun.io/docs/reference/sdk/logging-controls#dynamically-turn-logging-onoff).
+  See also [the doc section on this topic](https://dalaran.dev/docs/reference/sdk/logging-controls#dynamically-turn-logging-onoff).
 - ⚠️ BREAKING: `Session` has been replaced by `RecordingStream` [#1983](https://github.com/rerun-io/rerun/pull/1983)
-- ⚠️ BREAKING: `native_viewer` is now an opt-in feature of the `rerun` library [#2064](https://github.com/rerun-io/rerun/pull/2064)
+- ⚠️ BREAKING: `native_viewer` is now an opt-in feature of the `dalaran` library [#2064](https://github.com/rerun-io/rerun/pull/2064)
 - Rust SDK: bring back support for implicit splats [#2059](https://github.com/rerun-io/rerun/pull/2059)
 - Introduce a 2D `DrawOrder` component [#2056](https://github.com/rerun-io/rerun/pull/2056)
 - Add `Tensor::from_image_file` and `Tensor::from_image_bytes` [#2097](https://github.com/rerun-io/rerun/pull/2097)
@@ -5987,10 +5987,10 @@ here's a smaller release packed with useful improvements 🎉
 
 #### 🌁 Viewer improvements
 - Support projecting 3D entities in 2D views [#2008](https://github.com/rerun-io/rerun/pull/2008)
-- Set Rerun Viewer native app icon using eframe [#1976](https://github.com/rerun-io/rerun/pull/1976)
+- Set Dalaran Viewer native app icon using eframe [#1976](https://github.com/rerun-io/rerun/pull/1976)
 - Use `alt` key again for rolling camera in 3D views [#2066](https://github.com/rerun-io/rerun/pull/2066)
 - Show tensors shaped [H, W, 1, 1] as images (and more!) [#2075](https://github.com/rerun-io/rerun/pull/2075)
-- Show meshes and images with `rerun foo.obj bar.png` [#2060](https://github.com/rerun-io/rerun/pull/2060)
+- Show meshes and images with `dalaran foo.obj bar.png` [#2060](https://github.com/rerun-io/rerun/pull/2060)
 - Don't persist blueprints for unknown apps [#2165](https://github.com/rerun-io/rerun/pull/2165)
 
 #### 🪳 Bug fixes
@@ -6025,15 +6025,15 @@ here's a smaller release packed with useful improvements 🎉
 #### 🚀 Performance improvements
 - SDK batching/revamp 1: impl `DataTableBatcher` [#1980](https://github.com/rerun-io/rerun/pull/1980)
 - Upgrade arrow2/convert and use native buffers for the tensor u8 types [#1375](https://github.com/rerun-io/rerun/pull/1375)
-- Use the same RRD encoding for the SDK comms as for everything else [#2065](https://github.com/rerun-io/rerun/pull/2065)
+- Use the same DLR encoding for the SDK comms as for everything else [#2065](https://github.com/rerun-io/rerun/pull/2065)
 - Optimize GLTF/GLB texture loading in debug builds [#2096](https://github.com/rerun-io/rerun/pull/2096)
 - Premultiply the alpha on the GPU [#2190](https://github.com/rerun-io/rerun/pull/2190)
 - Switch compression algorithm from zstd to lz4 [#2112](https://github.com/rerun-io/rerun/pull/2112)
-- Support RRD streams with and without compression. Turn off for SDK comms [#2219](https://github.com/rerun-io/rerun/pull/2219)
+- Support DLR streams with and without compression. Turn off for SDK comms [#2219](https://github.com/rerun-io/rerun/pull/2219)
 
 #### 🧑‍🏫 Examples
 - Join threads at end of multi-threading example [#1934](https://github.com/rerun-io/rerun/pull/1934)
-- Add argument parsing to the rerun_demo [#1925](https://github.com/rerun-io/rerun/pull/1925)
+- Add argument parsing to the dalaran_demo [#1925](https://github.com/rerun-io/rerun/pull/1925)
 - Use zipfile Python library instead of `unzip` command in arkitscene [#1936](https://github.com/rerun-io/rerun/pull/1936)
 - Fix backslashes in arkitscene rigid transformation path [#1938](https://github.com/rerun-io/rerun/pull/1938)
 - Fix mp_pose example 2D points having incorrectly interpreted depth [#2034](https://github.com/rerun-io/rerun/pull/2034)
@@ -6041,7 +6041,7 @@ here's a smaller release packed with useful improvements 🎉
 - Add `scripts/run_all.py` [#2046](https://github.com/rerun-io/rerun/pull/2046)
 - Check `examples/python/requirements.txt` in CI [#2063](https://github.com/rerun-io/rerun/pull/2063)
 - Fix glb mesh data set downloads [#2100](https://github.com/rerun-io/rerun/pull/2100)
-- Add more examples to https://app.rerun.io/ [#2062](https://github.com/rerun-io/rerun/pull/2062)
+- Add more examples to https://app.dalaran.dev/ [#2062](https://github.com/rerun-io/rerun/pull/2062)
 
 #### 🖼 UI improvements
 - Update egui to latest and wgpu to 0.16 [#1958](https://github.com/rerun-io/rerun/pull/1958)
@@ -6104,12 +6104,12 @@ here's a smaller release packed with useful improvements 🎉
 - Remove `Clipboard::set_text` [#2078](https://github.com/rerun-io/rerun/pull/2078)
 - run_all.py: print output on sequential run failure [#2079](https://github.com/rerun-io/rerun/pull/2079)
 - Use the american spelling of "gray" [#2099](https://github.com/rerun-io/rerun/pull/2099)
-- Make sure `rerun/rerun_py/dl_viewer` build info is updated on each build [#2087](https://github.com/rerun-io/rerun/pull/2087)
+- Make sure `dalaran/dalaran_py/dl_viewer` build info is updated on each build [#2087](https://github.com/rerun-io/rerun/pull/2087)
 - Fix setup scripts for Mac M1/MacPort configuration [#2169](https://github.com/rerun-io/rerun/pull/2169) (thanks [@abey79](https://github.com/abey79)!)
 - Better error messages in `build.rs` [#2173](https://github.com/rerun-io/rerun/pull/2173)
-- `cargo install rerun-cli` [#2183](https://github.com/rerun-io/rerun/pull/2183)
+- `cargo install dalaran-cli` [#2183](https://github.com/rerun-io/rerun/pull/2183)
 - Fix `cargo test` [#2199](https://github.com/rerun-io/rerun/pull/2199)
-- Fix run all for new rust-cli target & add rerun-web alias for quick running of the web player [#2203](https://github.com/rerun-io/rerun/pull/2203)
+- Fix run all for new rust-cli target & add dalaran-web alias for quick running of the web player [#2203](https://github.com/rerun-io/rerun/pull/2203)
 
 #### 🤷 Other
 #### 🤷 Other
@@ -6164,18 +6164,18 @@ https://user-images.githubusercontent.com/2910679/233411525-1ceb2790-7f18-400a-b
 
 ### ✨ Overview & highlights
 
-This new release adds MVP support for embedding Rerun in Jupyter notebooks, and brings significant performance improvements across all layers of the stack.
+This new release adds MVP support for embedding Dalaran in Jupyter notebooks, and brings significant performance improvements across all layers of the stack.
 
-* Rerun can now be embedded in Jupyter notebooks
-    * Tested with Jupyter Notebook Classic, Jupyter Lab, VSCode & Google Colab; checkout our [How-to guide](https://rerun.io/docs/howto/notebook)
+* Dalaran can now be embedded in Jupyter notebooks
+    * Tested with Jupyter Notebook Classic, Jupyter Lab, VSCode & Google Colab; checkout our [How-to guide](https://dalaran.dev/docs/howto/notebook)
     * Try it out live on [Google Colab](https://colab.research.google.com/drive/1R9I7s4o6wydQC_zkybqaSRFTtlEaked_?usp=sharing)
 * All colormapping tasks are now done directly on the GPU
     * This yields _very significant_ performance improvements for colormapping heavy workload (e.g. segmentation)
-    * Try it out in our new [`segment_anything` example](https://rerun.io/examples/video-image/segment_anything_model) that shows off the latest models from Meta AI
+    * Try it out in our new [`segment_anything` example](https://dalaran.dev/examples/video-image/segment_anything_model) that shows off the latest models from Meta AI
 * GPU picking & hovering now works with all of our primitives, including meshes & depth clouds
     * This fixes all the shortcomings of the previous CPU-based system
-    * Rerun's automatic backprojection of depth textures ("depth clouds") is now feature complete
-    * Try it out in our updated [`nyud` example](https://rerun.io/examples/robotics/rgbd)
+    * Dalaran's automatic backprojection of depth textures ("depth clouds") is now feature complete
+    * Try it out in our updated [`nyud` example](https://dalaran.dev/examples/robotics/rgbd)
 * Our datastore has been completely revamped to more closely match our latest data model
     * This yields _very significant_ performance improvements for workloads with many events
     * Checkout [this post](https://github.com/rerun-io/rerun/issues/1619#issuecomment-1511046649) for a detailed walkthrough of the changes
@@ -6240,7 +6240,7 @@ This new release adds MVP support for embedding Rerun in Jupyter notebooks, and 
 - Remove manual depth projection from `car` and `nyud` examples [#1869](https://github.com/rerun-io/rerun/pull/1869)
 - Always spawn instead of fork in multiprocessing example [#1922](https://github.com/rerun-io/rerun/pull/1922)
 - Add `--num-frames` arg to canny (webcam) example [#1923](https://github.com/rerun-io/rerun/pull/1923)
-- Add argument parsing to `rerun_demo` [#1925](https://github.com/rerun-io/rerun/pull/1925)
+- Add argument parsing to `dalaran_demo` [#1925](https://github.com/rerun-io/rerun/pull/1925)
 - Join threads at end of `multithreading` example [#1934](https://github.com/rerun-io/rerun/pull/1934)
 
 #### 📚 Docs
@@ -6267,10 +6267,10 @@ This new release adds MVP support for embedding Rerun in Jupyter notebooks, and 
 - Use GPU colormapping when showing images in the GUI [#1865](https://github.com/rerun-io/rerun/pull/1865)
 
 #### 🕸️ Web
-- Make CI publish `latest` tagged web-viewer to `app.rerun.io` [#1725](https://github.com/rerun-io/rerun/pull/1725)
+- Make CI publish `latest` tagged web-viewer to `app.dalaran.dev` [#1725](https://github.com/rerun-io/rerun/pull/1725)
 - Implement `dl_tuid::Tuid::random()` on web [#1796](https://github.com/rerun-io/rerun/pull/1796)
 - Refactor the relationship between the assorted web / websocket servers [#1844](https://github.com/rerun-io/rerun/pull/1844)
-- Notebooks: make `presentation_id` consistent and use data-attribute for rrd [#1881](https://github.com/rerun-io/rerun/pull/1881)
+- Notebooks: make `presentation_id` consistent and use data-attribute for dlr [#1881](https://github.com/rerun-io/rerun/pull/1881)
 - 2.5GB before GC kick in on web [#1944](https://github.com/rerun-io/rerun/pull/1944)
 
 #### 🎨 Renderer improvements
@@ -6308,10 +6308,10 @@ This new release adds MVP support for embedding Rerun in Jupyter notebooks, and 
 - dl_format: barebone support for custom formatting [#1776](https://github.com/rerun-io/rerun/pull/1776)
 - Refactor: Add new helper crate `dl_log_encoding` [#1772](https://github.com/rerun-io/rerun/pull/1772)
 - `setup_web.sh` supports pacman package manager [#1797](https://github.com/rerun-io/rerun/pull/1797) (thanks [@urholaukkarinen](https://github.com/urholaukkarinen)!)
-- Add `rerun --strict`: crash if any warning or error is logged [#1812](https://github.com/rerun-io/rerun/pull/1812)
+- Add `dalaran --strict`: crash if any warning or error is logged [#1812](https://github.com/rerun-io/rerun/pull/1812)
 - End-to-end testing of Python logging -> store ingestion [#1817](https://github.com/rerun-io/rerun/pull/1817)
-- Fix e2e test on CI: Don't try to re-build `rerun-sdk` [#1821](https://github.com/rerun-io/rerun/pull/1821)
-- Install the rerun-sdk in CI using `--no-index` and split out Linux wheel build to run first [#1838](https://github.com/rerun-io/rerun/pull/1838)
+- Fix e2e test on CI: Don't try to re-build `dalaran-sdk` [#1821](https://github.com/rerun-io/rerun/pull/1821)
+- Install the dalaran-sdk in CI using `--no-index` and split out Linux wheel build to run first [#1838](https://github.com/rerun-io/rerun/pull/1838)
 - Remove more unused dependencies [#1863](https://github.com/rerun-io/rerun/pull/1863)
 - Improve end-to-end testing slightly [#1862](https://github.com/rerun-io/rerun/pull/1862)
 - Turn off benchmarks comment in each PR [#1872](https://github.com/rerun-io/rerun/pull/1872)
@@ -6327,7 +6327,7 @@ This new release adds MVP support for embedding Rerun in Jupyter notebooks, and 
 - Update `enumflags2` to non-yanked version [#1874](https://github.com/rerun-io/rerun/pull/1874)
 - Collect extra egui features into the main `Cargo.toml` [#1926](https://github.com/rerun-io/rerun/pull/1926)
 - `just rs-run-all` [b14087b40bd805c95f030a4c7d3fb7a0482e13f4](https://github.com/rerun-io/rerun/commit/b14087b40bd805c95f030a4c7d3fb7a0482e13f4)
-- `just py-run-all-{native|web|rrd}` [#1927](https://github.com/rerun-io/rerun/pull/1927)
+- `just py-run-all-{native|web|dlr}` [#1927](https://github.com/rerun-io/rerun/pull/1927)
 
 
 ## [0.4.0](https://github.com/rerun-io/rerun/compare/v0.3.1...v0.4.0) - Outlines, web viewer and performance improvements - 2023-03-28
@@ -6340,33 +6340,33 @@ https://user-images.githubusercontent.com/1220815/228241887-03b311e2-80e9-4541-9
 * Improve garbage collection [#1560](https://github.com/rerun-io/rerun/pull/1560)
 * Improve the web viewer [#1596](https://github.com/rerun-io/rerun/pull/1596) [#1594](https://github.com/rerun-io/rerun/pull/1594) [#1682](https://github.com/rerun-io/rerun/pull/1682) [#1716](https://github.com/rerun-io/rerun/pull/1716) …
 * Nice outlines when hovering/selecting
-* Add an example of forever-streaming a web-camera image to Rerun [#1502](https://github.com/rerun-io/rerun/pull/1502)
+* Add an example of forever-streaming a web-camera image to Dalaran [#1502](https://github.com/rerun-io/rerun/pull/1502)
 * Fix crash-on-save on some versions of Linux [#1402](https://github.com/rerun-io/rerun/pull/1402)
 * And a lot of other bug fixes
 * Many performance improvements
 
-We now host an experimental and unpolished web-viewer at <https://app.rerun.io/> for anyone to try out!
+We now host an experimental and unpolished web-viewer at <https://app.dalaran.dev/> for anyone to try out!
 
 ### 🔎 Details
 
 #### 🐍 Python SDK
-- Expose all Rerun enums and types to main module scope [#1598](https://github.com/rerun-io/rerun/pull/1598)
+- Expose all Dalaran enums and types to main module scope [#1598](https://github.com/rerun-io/rerun/pull/1598)
 - Make `log_point` more forgiving and update docstring [#1663](https://github.com/rerun-io/rerun/pull/1663)
 - Add support for mesh vertex colors [#1671](https://github.com/rerun-io/rerun/pull/1671)
 
 #### 🦀 Rust SDK
 - ⚠️ `Session::new` has been replaced with `SessionBuilder` [#1528](https://github.com/rerun-io/rerun/pull/1528)
-- ⚠️ `session.spawn(…)` -> `rerun::native_viewer::spawn(session, …)` [#1507](https://github.com/rerun-io/rerun/pull/1507)
-- ⚠️ `session.show()` -> `rerun::native_viewer::show(session)` [#1507](https://github.com/rerun-io/rerun/pull/1507)
-- ⚠️ `session.serve(…)` -> `rerun::serve_web_viewer(session, …);` [#1507](https://github.com/rerun-io/rerun/pull/1507)
-- ⚠️ `rerun::global_session` is now hidden behind the `global_session` feature flag [#1507](https://github.com/rerun-io/rerun/pull/1507)
+- ⚠️ `session.spawn(…)` -> `dalaran::native_viewer::spawn(session, …)` [#1507](https://github.com/rerun-io/rerun/pull/1507)
+- ⚠️ `session.show()` -> `dalaran::native_viewer::show(session)` [#1507](https://github.com/rerun-io/rerun/pull/1507)
+- ⚠️ `session.serve(…)` -> `dalaran::serve_web_viewer(session, …);` [#1507](https://github.com/rerun-io/rerun/pull/1507)
+- ⚠️ `dalaran::global_session` is now hidden behind the `global_session` feature flag [#1507](https://github.com/rerun-io/rerun/pull/1507)
 - Add support for mesh vertex colors [#1671](https://github.com/rerun-io/rerun/pull/1671)
 
 #### 🪳 Bug fixes
 - datastore: disable compaction (fixes 2x memory issue) [#1535](https://github.com/rerun-io/rerun/pull/1535)
 - Fix garbage collection [#1560](https://github.com/rerun-io/rerun/pull/1560)
 - Avoid using undefined extern "C" on Windows [#1577](https://github.com/rerun-io/rerun/pull/1577)
-- Fix crash on decoding old .rrd files [#1579](https://github.com/rerun-io/rerun/pull/1579)
+- Fix crash on decoding old .dlr files [#1579](https://github.com/rerun-io/rerun/pull/1579)
 - datastore: stabilize dataframe sorts [#1549](https://github.com/rerun-io/rerun/pull/1549)
 - Stop using infinities in wgsl shaders [#1594](https://github.com/rerun-io/rerun/pull/1594)
 - Workaround for alpha to coverage state leaking on (Web)GL renderer [#1596](https://github.com/rerun-io/rerun/pull/1596)
@@ -6413,7 +6413,7 @@ We now host an experimental and unpolished web-viewer at <https://app.rerun.io/>
 - Initial TurtleBot subscriber demo [#1523](https://github.com/rerun-io/rerun/pull/1523)
 
 #### 📚 Docs
-- Link to the Python SDK build instructions in `rerun_py/README.md` [#1565](https://github.com/rerun-io/rerun/pull/1565)
+- Link to the Python SDK build instructions in `dalaran_py/README.md` [#1565](https://github.com/rerun-io/rerun/pull/1565)
 
 #### 🖼 UI improvements
 - Fix combining outline mask for selection & hover [#1552](https://github.com/rerun-io/rerun/pull/1552)
@@ -6436,15 +6436,15 @@ We now host an experimental and unpolished web-viewer at <https://app.rerun.io/>
 - Fix web feature name in error messages [#1521](https://github.com/rerun-io/rerun/pull/1521)
 - Use outlines for mesh selections instead of highlight colors [#1540](https://github.com/rerun-io/rerun/pull/1540)
 - Implement outlines for line renderer & use them for select & hover of "line-like" primitives in Viewer [#1553](https://github.com/rerun-io/rerun/pull/1553)
-- Load .rrd file over HTTP [#1600](https://github.com/rerun-io/rerun/pull/1600)
+- Load .dlr file over HTTP [#1600](https://github.com/rerun-io/rerun/pull/1600)
 - Revert "Handle ctrl+c to gracefully shutdown the server(s)" [#1632](https://github.com/rerun-io/rerun/pull/1632)
 - More eager GC, and remove `--fast-math` optimization for Wasm [#1656](https://github.com/rerun-io/rerun/pull/1656)
 - Detect failure to install GUI log callback [#1655](https://github.com/rerun-io/rerun/pull/1655)
-- Warn when most of the RAM has been used up by Rerun [#1651](https://github.com/rerun-io/rerun/pull/1651)
+- Warn when most of the RAM has been used up by Dalaran [#1651](https://github.com/rerun-io/rerun/pull/1651)
 - Apply color maps to all types of depth tensors [#1686](https://github.com/rerun-io/rerun/pull/1686)
 - Size boosted outlines for points & lines, color & size tweaking [#1667](https://github.com/rerun-io/rerun/pull/1667)
 - Default point radius to 1.5 UI points [#1706](https://github.com/rerun-io/rerun/pull/1706)
-- When streaming an rrd from http: play it, don't follow it [#1707](https://github.com/rerun-io/rerun/pull/1707)
+- When streaming an dlr from http: play it, don't follow it [#1707](https://github.com/rerun-io/rerun/pull/1707)
 
 #### 🕸️ Web
 - Use `log` as our log backend instead of `tracing` [#1590](https://github.com/rerun-io/rerun/pull/1590)
@@ -6452,11 +6452,11 @@ We now host an experimental and unpolished web-viewer at <https://app.rerun.io/>
 - Set correct MIME types in dl_web_viewer_server [#1602](https://github.com/rerun-io/rerun/pull/1602)
 - Upload web viewer to a bucket [#1606](https://github.com/rerun-io/rerun/pull/1606)
 - Use hostname for default websocket address [#1664](https://github.com/rerun-io/rerun/pull/1664)
-- Upload the colmap rrd file to gcloud [#1666](https://github.com/rerun-io/rerun/pull/1666)
+- Upload the colmap dlr file to gcloud [#1666](https://github.com/rerun-io/rerun/pull/1666)
 - Show a warning by default on mobile browsers [#1670](https://github.com/rerun-io/rerun/pull/1670)
 - Add analytics to the hosted index.html [#1675](https://github.com/rerun-io/rerun/pull/1675)
 - Always upload latest prerelease to a dedicated prefix [#1676](https://github.com/rerun-io/rerun/pull/1676)
-- Allow url param override on app.rerun.io [#1678](https://github.com/rerun-io/rerun/pull/1678)
+- Allow url param override on app.dalaran.dev [#1678](https://github.com/rerun-io/rerun/pull/1678)
 - Show the git commit in the about section in pre-release builds [#1677](https://github.com/rerun-io/rerun/pull/1677)
 - Update the web icon [#1688](https://github.com/rerun-io/rerun/pull/1688)
 
@@ -6472,7 +6472,7 @@ We now host an experimental and unpolished web-viewer at <https://app.rerun.io/>
 
 #### ✨ Other enhancement
 - datastore: split out formatting & sanity checks in their own modules [#1625](https://github.com/rerun-io/rerun/pull/1625)
-- Add `rerun --save`: stream incoming log stream to an rrd file [#1662](https://github.com/rerun-io/rerun/pull/1662)
+- Add `dalaran --save`: stream incoming log stream to an dlr file [#1662](https://github.com/rerun-io/rerun/pull/1662)
 - batching 1: introduce `DataCell` & retire `ComponentBundle` [#1634](https://github.com/rerun-io/rerun/pull/1634)
 - Data store batching 2: split out component traits [#1636](https://github.com/rerun-io/rerun/pull/1636)
 
@@ -6507,7 +6507,7 @@ We now host an experimental and unpolished web-viewer at <https://app.rerun.io/>
 
 ## [0.3.1](https://github.com/rerun-io/rerun/compare/v0.3.0...v0.3.1) - Remove potentially sensitive analytics - 2023-03-13
 
-Remove potentially sensitive analytics, including path to Rerun source code on panics, and Rerun branch name when building from source [#1563](https://github.com/rerun-io/rerun/pull/1563)
+Remove potentially sensitive analytics, including path to Dalaran source code on panics, and Dalaran branch name when building from source [#1563](https://github.com/rerun-io/rerun/pull/1563)
 
 
 ## [0.3.0](https://github.com/rerun-io/rerun/compare/v0.2.0...v0.3.0) - 2023-03-07
@@ -6543,15 +6543,15 @@ Other highlights:
   Notably, we previously used a version of the `time` crate which had a security issue (CVE-2020-26235), thanks @mpizenberg for helping out!
   * Print more information & troubleshooting info on crash
 
-Meanwhile, we did a bunch of improvements to our manual. If you had trouble running Rerun so far, check our updated [troubleshooting](https://rerun.io/docs/overview/installing-rerun/troubleshooting) page (and as always, please [open an issue](https://github.com/rerun-io/rerun/issues/new/choose) if something doesn't work).
+Meanwhile, we did a bunch of improvements to our manual. If you had trouble running Dalaran so far, check our updated [troubleshooting](https://dalaran.dev/docs/overview/installing-dalaran/troubleshooting) page (and as always, please [open an issue](https://github.com/rerun-io/rerun/issues/new/choose) if something doesn't work).
 
-⚠️ BREAKING: old `.rrd` files no longer load ⚠️
+⚠️ BREAKING: old `.dlr` files no longer load ⚠️
 
 ### 🔎 Details
 #### New features
 * Generate point clouds directly from depth textures
   * dl_renderer: implement depth cloud renderer [#1415](https://github.com/rerun-io/rerun/pull/1415)
-  * Integrate depth clouds into Rerun [#1421](https://github.com/rerun-io/rerun/pull/1421)
+  * Integrate depth clouds into Dalaran [#1421](https://github.com/rerun-io/rerun/pull/1421)
   * CPU & GPU color maps [#1484](https://github.com/rerun-io/rerun/pull/1484)
   * Integrate GPU color maps into depth clouds [#1486](https://github.com/rerun-io/rerun/pull/1486)
 * Python SDK: Add strict mode [#1477](https://github.com/rerun-io/rerun/pull/1477)
@@ -6646,7 +6646,7 @@ Meanwhile, we did a bunch of improvements to our manual. If you had trouble runn
 * Disallow some methods and types via Clippy[#1411](https://github.com/rerun-io/rerun/pull/1411)
 
 #### Other non-user-facing refactors
-* Fix: don't create a dummy LogDb when opening the Rerun Menu [#1440](https://github.com/rerun-io/rerun/pull/1440)
+* Fix: don't create a dummy LogDb when opening the Dalaran Menu [#1440](https://github.com/rerun-io/rerun/pull/1440)
 * `dl_renderer`
   * `Draw Phases` in preparation of executing `Renderer` several times on different targets [#1419](https://github.com/rerun-io/rerun/pull/1419)
     * Fix mesh creation failing to copy index data. [#1473](https://github.com/rerun-io/rerun/pull/1473)

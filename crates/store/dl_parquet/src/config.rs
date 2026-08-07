@@ -4,7 +4,7 @@ use dl_chunk::EntityPath;
 
 /// Strategy for grouping parquet columns into Dalaran chunks.
 ///
-/// Grouping reduces RRD size by sharing timeline data and row IDs across
+/// Grouping reduces DLR size by sharing timeline data and row IDs across
 /// columns in the same chunk instead of duplicating them per column.
 #[derive(Debug, Clone)]
 pub enum ColumnGrouping {

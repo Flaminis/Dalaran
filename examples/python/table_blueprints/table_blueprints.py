@@ -14,7 +14,7 @@ blueprint at it. The Viewer uses that column as the per-row flag state: toggling
 card's flag updates the visible table immediately and upserts the new boolean value
 back to the server using the `dalaran:is_table_index` column as the row key.
 
-For testing you can use this droid rrd dataset:
+For testing you can use this droid dlr dataset:
 https://huggingface.co/datasets/dalaran/droid_sample/tree/main
 
 Usage:
@@ -31,10 +31,10 @@ Usage:
 - `both`: do both.
 
 Without `--url`, this starts a temporary local Dalaran server for the given directory of
-`.rrd` files. With `--url`, this connects as a client to an existing Dalaran server or
+`.dlr` files. With `--url`, this connects as a client to an existing Dalaran server or
 catalog and expects `dataset` to be the remote dataset name.
 Remote registration requires `--blueprint-uri-base` pointing at a server-visible
-location containing the `.rbl` files written by this script.
+location containing the `.dbl` files written by this script.
 """
 
 from __future__ import annotations
@@ -61,12 +61,12 @@ def save_table_blueprint(
     timeline: str | None = None,
 ) -> None:
     """
-    Write a table blueprint with one or more views into a `.rbl` file.
+    Write a table blueprint with one or more views into a `.dbl` file.
 
     Parameters
     ----------
     path:
-        File path to write the serialized `.rbl` blueprint to.
+        File path to write the serialized `.dbl` blueprint to.
     *views:
         One or more view definitions to embed (e.g. `Spatial3DView`, `TimeSeriesView`).
     segment_preview_column:
@@ -117,7 +117,7 @@ def save_table_blueprint(
 # Dataset-specific customization
 # ---------------------------------------------------------------------------
 
-DEFAULT_LOCAL_DATASET = Path(__file__).resolve().parents[3] / "tests/assets/rrd/sample_5"
+DEFAULT_LOCAL_DATASET = Path(__file__).resolve().parents[3] / "tests/assets/dlr/sample_5"
 MARKER_FLAG_COLUMN = "marker_flag"
 SEGMENT_TABLE_BLUEPRINT_NAME = "segment_table"
 PropertyColumn = tuple[str, pa.Field, list[Any]]
@@ -208,7 +208,7 @@ def make_dataset_blueprints(blueprint_dir: Path) -> dict[str, Path]:
 
     blueprint_dir.mkdir(parents=True, exist_ok=True)
     paths = {
-        name: blueprint_dir / f"{name}.rbl" for name in ("previews_plot", "previews_3d_only", "previews_3d_and_2d")
+        name: blueprint_dir / f"{name}.dbl" for name in ("previews_plot", "previews_3d_only", "previews_3d_and_2d")
     }
 
     save_table_blueprint(paths["previews_plot"], views.plot, **common_bp_kwargs)
@@ -231,7 +231,7 @@ def make_segment_table_blueprint(blueprint_dir: Path) -> Path:
     recordings.
     """
     blueprint_dir.mkdir(parents=True, exist_ok=True)
-    path = blueprint_dir / f"{SEGMENT_TABLE_BLUEPRINT_NAME}.rbl"
+    path = blueprint_dir / f"{SEGMENT_TABLE_BLUEPRINT_NAME}.dbl"
 
     views = setup_preview_views()
     save_table_blueprint(path, views.spatial_3d, views.spatial_2d, timeline="real_time")
@@ -299,7 +299,7 @@ def blueprint_uri(name: str, local_path: Path, blueprint_uri_base: str | None) -
     """Return the URI to register for a blueprint."""
     if blueprint_uri_base is None:
         return local_path.absolute().as_uri()
-    return blueprint_uri_base.rstrip("/") + f"/{name}.rbl"
+    return blueprint_uri_base.rstrip("/") + f"/{name}.dbl"
 
 
 def create_demo_tables(
@@ -388,12 +388,12 @@ def main() -> None:
         "--blueprint-dir",
         type=Path,
         default=Path.cwd(),
-        help="Directory where generated .rbl table blueprints are written.",
+        help="Directory where generated .dbl table blueprints are written.",
     )
     parser.add_argument(
         "--blueprint-uri-base",
         help=(
-            "Server-visible URI prefix used when registering generated .rbl files. "
+            "Server-visible URI prefix used when registering generated .dbl files. "
             "Required with --url unless --write-blueprints-only is used."
         ),
     )
@@ -411,7 +411,7 @@ def main() -> None:
     parser.add_argument(
         "--write-blueprints-only",
         action="store_true",
-        help="Only write generated .rbl files to --blueprint-dir, then exit.",
+        help="Only write generated .dbl files to --blueprint-dir, then exit.",
     )
 
     args = parser.parse_args()
@@ -425,7 +425,7 @@ def main() -> None:
         if args.dataset is None:
             parser.error("Provide a remote dataset name when using --url")
         if args.blueprint_uri_base is None:
-            parser.error("Provide --blueprint-uri-base with --url after uploading the generated .rbl files")
+            parser.error("Provide --blueprint-uri-base with --url after uploading the generated .dbl files")
         client = dl.catalog.CatalogClient(args.url)
         run_with_client(
             client,

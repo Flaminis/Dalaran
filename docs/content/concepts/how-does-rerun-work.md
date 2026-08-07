@@ -12,7 +12,7 @@ Dalaran has several components manage multimodal data across its lifetime. This 
 
 The Logging SDK is how you get data into Dalaran. Available for Python, Rust, and C++, it runs inside your application and logs data using [archetypes](logging-and-ingestion/entity-component.md) — structured types like `Points3D`, `Image`, or `Transform3D`.
 
-Data can be streamed directly to the Viewer, saved to `.rrd` files, or both.
+Data can be streamed directly to the Viewer, saved to `.dlr` files, or both.
 
 ### Viewer
 
@@ -32,7 +32,7 @@ Both viewers can be extended: the Native Viewer through its [Rust API](../howto/
 The catalog server provides persistent storage and indexing for large-scale data. It organizes data into:
 
 - **Datasets**: Named collections of related recordings
-- **Segments**: Individual `.rrd` files registered to a dataset
+- **Segments**: Individual `.dlr` files registered to a dataset
 
 Data is served via the **redap** protocol (**Re**run **Da**ta **P**rotocol).
 
@@ -65,7 +65,7 @@ It's a great place to start exploring the examples.
 The `dalaran` binary bundles multiple tools in one:
 - **Native Viewer** for visualization
 - **OSS catalog server** (via `dalaran server`)
-- **RRD tools** for file manipulation
+- **DLR tools** for file manipulation
 - **Web Viewer** (via `dalaran --serve-web`)
 
 
@@ -120,9 +120,9 @@ Best for: development, debugging, real-time monitoring.
 
 
 
-### Save to RRD, view later
+### Save to DLR, view later
 
-Log data to `.rrd` files, then open them in the Viewer whenever needed. Files can be loaded from disk or URLs.
+Log data to `.dlr` files, then open them in the Viewer whenever needed. Files can be loaded from disk or URLs.
 
 <div class="d2-diagram">
   <img class="d2-dark" src="https://static.rerun.io/f7a409bc10f2836d5e3e7b87720170a6e5bd4e46_d2.svg" alt="">
@@ -131,12 +131,12 @@ Log data to `.rrd` files, then open them in the Viewer whenever needed. Files ca
 
 Minimal example:
 
-snippet: concepts/how-does-dalaran-work/log-to-rrd
+snippet: concepts/how-does-dalaran-work/log-to-dlr
 
 And later:
 
 ```sh
-$ dalaran /tmp/my_recording.rrd
+$ dalaran /tmp/my_recording.dlr
 ```
 
 Best for: sharing recordings, offline analysis, archiving.
@@ -145,7 +145,7 @@ Best for: sharing recordings, offline analysis, archiving.
 
 ### Store on a catalog server
 
-Register `.rrd` files with a catalog server for persistent, indexed storage. Query and visualize on demand.
+Register `.dlr` files with a catalog server for persistent, indexed storage. Query and visualize on demand.
 
 <div class="d2-diagram">
   <img class="d2-dark" src="https://static.rerun.io/18348c4200f019117478a602f6413d2603e29cbb_d2.svg" alt="">
@@ -159,7 +159,7 @@ import dalaran as dl
 
 client = dl.catalog.CatalogClient("dalaran://example.cloud.dalaran.dev")
 dataset = client.create_dataset("my_data")
-dataset.register(["s3://my-rrd-files/recording1.rrd", "s3://my-rrd-files/recording2.rrd"])
+dataset.register(["s3://my-dlr-files/recording1.dlr", "s3://my-dlr-files/recording2.dlr"])
 ```
 
 

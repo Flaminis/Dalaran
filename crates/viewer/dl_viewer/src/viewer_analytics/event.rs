@@ -151,7 +151,7 @@ pub fn open_recording(
     });
 
     let data_source = entity_db.data_source.as_ref().map(|v| match v {
-        dl_log_channel::LogSource::File { .. } => Some("file"), // .rrd, .png, .glb, …
+        dl_log_channel::LogSource::File { .. } => Some("file"), // .dlr, .png, .glb, …
         dl_log_channel::LogSource::HttpStream { .. } => Some("http"),
         dl_log_channel::LogSource::RedapGrpcStream { .. } => None,
         dl_log_channel::LogSource::MessageProxy { .. } => Some("grpc"),

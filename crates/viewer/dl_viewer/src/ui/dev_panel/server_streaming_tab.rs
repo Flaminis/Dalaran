@@ -65,7 +65,7 @@ fn recording_ui(
     hub: &dl_viewer_context::StoreHub,
 ) {
     let store_id = recording.store_id();
-    let chunk_requests = recording.rrd_manifest_index().chunk_requests();
+    let chunk_requests = recording.dlr_manifest_index().chunk_requests();
     let is_active = chunk_requests.has_pending();
 
     let header = list_item::LabelContent::new(store_id.recording_id().to_string()).with_icon_fn(
@@ -155,7 +155,7 @@ impl Progress {
 }
 
 fn progress_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb) {
-    let manifest_index = recording.rrd_manifest_index();
+    let manifest_index = recording.dlr_manifest_index();
 
     if let Some(manifest) = manifest_index.manifest() {
         let uncompressed_sizes = manifest.col_chunk_byte_size_uncompressed();
@@ -242,7 +242,7 @@ fn chunks_removed_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb) {
 }
 
 fn manifest_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb) {
-    let manifest_index = recording.rrd_manifest_index();
+    let manifest_index = recording.dlr_manifest_index();
     let Some(manifest) = manifest_index.manifest() else {
         return;
     };
@@ -312,7 +312,7 @@ fn manifest_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb) {
 }
 
 fn prioritization_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb, is_preview: bool) {
-    let manifest_index = recording.rrd_manifest_index();
+    let manifest_index = recording.dlr_manifest_index();
 
     ui.list_item_collapsible_noninteractive_label("Prioritization", false, |ui| {
         ui.list_item_flat_noninteractive(
@@ -411,7 +411,7 @@ fn prioritization_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb, is_p
 }
 
 fn pending_requests_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb) {
-    let chunk_requests = recording.rrd_manifest_index().chunk_requests();
+    let chunk_requests = recording.dlr_manifest_index().chunk_requests();
     let pending = chunk_requests.pending_requests();
     let num_chunks: usize = pending.iter().map(|r| r.row_indices.len()).sum();
     let recently_canceled: usize = chunk_requests
@@ -440,7 +440,7 @@ fn pending_requests_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb) {
 }
 
 fn in_flight_entities_ui(ui: &mut egui::Ui, recording: &dl_entity_db::EntityDb) {
-    let manifest_index = recording.rrd_manifest_index();
+    let manifest_index = recording.dlr_manifest_index();
     let pending = manifest_index.chunk_requests().pending_requests();
 
     let mut entities = BTreeSet::<EntityPath>::new();

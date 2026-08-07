@@ -266,7 +266,7 @@ impl ChunkPredicateView for ManifestRow<'_> {
 /// Pulls chunks from the underlying [`ChunkProvider`][dl_log_encoding::ChunkProvider] in
 /// byte-budgeted batches so resident memory stays bounded regardless of total recording size.
 //TODO(RR-4545): this is hardly an optimal strategy. We need the ChunkProvider to expose a streaming
-// API so that specific optimizations can be applied (e.g. adjacency for RRD, parallelism for
+// API so that specific optimizations can be applied (e.g. adjacency for DLR, parallelism for
 // segments, etc.)
 struct IndexedChunkStream {
     lazy: Arc<LazyStore>,
@@ -393,7 +393,7 @@ mod pushdown_tests {
 
     pub(crate) fn build_test_store(specs: &[ChunkSpec<'_>]) -> (Arc<LazyStore>, tempfile::TempDir) {
         let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("test.rrd");
+        let path = dir.path().join("test.dlr");
         let store = build_test_store_at(&path, specs);
         (store, dir)
     }
@@ -487,7 +487,7 @@ mod pushdown_tests {
         encoder.finish().unwrap();
 
         let reader = File::open(path).unwrap();
-        let footer = futures::executor::block_on(dl_log_encoding::read_rrd_footer(&reader))
+        let footer = futures::executor::block_on(dl_log_encoding::read_dlr_footer(&reader))
             .unwrap()
             .unwrap();
         let raw = Arc::new(footer.manifests[&store_id].clone());

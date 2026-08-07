@@ -49,9 +49,9 @@ def test_datafusion_error_surfaces_to_python_with_trace_id(grpc_method: str, exp
     """Verify scan-path gRPC errors surface as typed messages with trace-id."""
 
     with tempfile.TemporaryDirectory() as tmp_dir:
-        rrd_path = Path(tmp_dir) / "test.rrd"
+        dlr_path = Path(tmp_dir) / "test.dlr"
         with dl.RecordingStream("dalaran_example_test_scan_error", recording_id="test_scan_error_rec") as rec:
-            rec.save(rrd_path)
+            rec.save(dlr_path)
             for i in range(3):
                 rec.set_time("my_index", sequence=i)
                 rec.log("points", dl.Points2D([[float(i), float(i)]]))
@@ -61,7 +61,7 @@ def test_datafusion_error_surfaces_to_python_with_trace_id(grpc_method: str, exp
             client = server.client()
 
             ds = client.create_dataset(f"scan_error_test_{grpc_method}")
-            handle = ds.register([rrd_path.absolute().as_uri()])
+            handle = ds.register([dlr_path.absolute().as_uri()])
             handle.wait(timeout_secs=10)
 
             # Verify the normal query path works before injecting the error.

@@ -16,22 +16,22 @@ For Rust, C++, see [Install Dalaran](./getting-started/install-dalaran.md) and [
 Pass a file to open it directly:
 
 ```bash
-dalaran path/to/recording.rrd
+dalaran path/to/recording.dlr
 ```
 
-Supports `.rrd`, `.mcap`, and [more](./getting-started/data-in/open-any-file.md).
+Supports `.dlr`, `.mcap`, and [more](./getting-started/data-in/open-any-file.md).
 Also available in-browser at [dalaran.dev/viewer](https://dalaran.dev/viewer).
 
 
 ## Scale across many recordings
 
 Dalaran's catalog organizes recordings as queryable [**segments**](./concepts/query-and-transform/catalog-object-model.md).
-The workflow: log (or convert) data to an `.rrd`, start a catalog server (or connect to an existing one if using the commercial Dalaran Hub), register the `.rrd` as a segment, then visualize and query across recordings.
+The workflow: log (or convert) data to an `.dlr`, start a catalog server (or connect to an existing one if using the commercial Dalaran Hub), register the `.dlr` as a segment, then visualize and query across recordings.
 
 ### Log
 
-Save data to an `.rrd` see [Log and Ingest](./getting-started/data-in.md) for more details.
-If you already have data in another format see our [how-to](https://dalaran.dev/docs/howto/logging-and-ingestion) for various examples converting to `.rrd`.
+Save data to an `.dlr` see [Log and Ingest](./getting-started/data-in.md) for more details.
+If you already have data in another format see our [how-to](https://dalaran.dev/docs/howto/logging-and-ingestion) for various examples converting to `.dlr`.
 
 snippet: tutorials/getting_started_log
 ### Start a catalog server
@@ -46,7 +46,7 @@ snippet: tutorials/getting_started[setup]
 
 ### Ingest
 
-Register an `.rrd` with a dataset so it shows up as a queryable segment.
+Register an `.dlr` with a dataset so it shows up as a queryable segment.
 
 snippet: tutorials/getting_started[ingest]
 

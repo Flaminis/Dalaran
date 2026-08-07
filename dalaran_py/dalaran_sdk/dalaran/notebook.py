@@ -389,7 +389,7 @@ class Viewer:
         self.display()
 
     def _flush_hook(self, data: bytes) -> None:
-        self._viewer.send_rrd(data)
+        self._viewer.send_dlr(data)
 
     def update_panels(
         self,

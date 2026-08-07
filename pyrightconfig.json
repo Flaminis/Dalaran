@@ -1,7 +1,7 @@
 {
   "extraPaths": [
-    "rerun_py/rerun_sdk",
-    "rerun_py/tests/api_sandbox"
+    "dalaran_py/dalaran_sdk",
+    "dalaran_py/tests/api_sandbox"
   ],
   "exclude": [
     "**/node_modules",
@@ -12,7 +12,7 @@
     "build"
   ],
   "ignore": [
-    "rerun_py/rerun"
+    "dalaran_py/dalaran"
   ],
   "defineConstant": {
     "DEBUG": true

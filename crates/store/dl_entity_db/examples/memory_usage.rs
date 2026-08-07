@@ -68,7 +68,7 @@ fn log_messages() {
 
     fn encode_log_msg(log_msg: &LogMsg) -> Vec<u8> {
         let mut bytes = vec![];
-        let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+        let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
         dl_log_encoding::Encoder::encode_into(
             dl_build_info::CrateVersion::LOCAL,
             encoding_options,

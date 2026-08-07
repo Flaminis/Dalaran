@@ -277,7 +277,7 @@ def run_web(examples: list[str], parallel: bool) -> None:
 def run_save(examples: list[str]) -> None:
     for path in examples:
         if path not in HAS_NO_DALARAN_ARGS:
-            process = run_py_example(path, save=os.path.join(path, "out.rrd"))
+            process = run_py_example(path, save=os.path.join(path, "out.dlr"))
             print(f"{output_from_process(process)}\n")
 
 
@@ -286,7 +286,7 @@ def run_saved_example(path: str, *, wait: bool) -> Any:
         [
             "cargo",
             "dalaran",
-            os.path.join(path, "out.rrd"),
+            os.path.join(path, "out.dlr"),
         ],
         wait=wait,
     )
@@ -354,12 +354,12 @@ def main() -> None:
     parser.add_argument(
         "--save",
         action="store_true",
-        help="Run examples and save them to disk as rrd.",
+        help="Run examples and save them to disk as dlr.",
     )
     parser.add_argument(
         "--load",
         action="store_true",
-        help="Run examples using rrd files previously saved via `--save`.",
+        help="Run examples using dlr files previously saved via `--save`.",
     )
     parser.add_argument("--fast", action="store_true", help="Run only examples which complete quickly.")
     parser.add_argument("--parallel", action="store_true", help="Run all examples in parallel.")

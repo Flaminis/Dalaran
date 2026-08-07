@@ -1,6 +1,6 @@
 # Releases and versioning
 
-This document describes the current release and versioning strategy. This strategy is likely to change as Rerun matures.
+This document describes the current release and versioning strategy. This strategy is likely to change as Dalaran matures.
 
 ## See also
 
@@ -12,11 +12,11 @@ This document describes the current release and versioning strategy. This strate
 
 ## Repository
 
-:warning: The steps & workflows in this document are targeting the open-source Rerun repository (https://github.com/rerun-io/rerun), not our internal monorepo.
+:warning: The steps & workflows in this document are targeting the open-source Dalaran repository (https://github.com/rerun-io/rerun), not our internal monorepo.
 
 ## Release cadence
 
-New Rerun versions are released every two weeks. Sometimes we do out-of-schedule patch releases.
+New Dalaran versions are released every two weeks. Sometimes we do out-of-schedule patch releases.
 We do not block a release on a PR. Incomplete work should be hidden behind a feature flag.
 
 ## Library versioning and release cadence
@@ -50,7 +50,7 @@ Our Minimum Supported Rust Version (MSRV) is always _at least_ one minor release
 
 We have not yet committed to any backwards or forwards compatibility.
 
-We tag all data files (`.rrd` files) and communication protocols with the Rerun version number. If there is a version mismatch, a warning is logged, but an attempt is still made to load the older or newer data.
+We tag all data files (`.dlr` files) and communication protocols with the Dalaran version number. If there is a version mismatch, a warning is logged, but an attempt is still made to load the older or newer data.
 As of 0.23, we automatically migrate data from older versions, with an N-1 compatibility policy. That means `0.24` supports migrating `0.23` data, `0.25` supports migrating `0.24` data, etc.
 
 # Release process
@@ -137,7 +137,7 @@ Remove all the `attr.docs.unreleased` attributes in all `.fbs` files, followed b
 
 Remove the speculative link markers (`?speculative-link`).
 
-Update the [python support table](./rerun_py/docs/gen_common_index.py) for the major release.
+Update the [python support table](./dalaran_py/docs/gen_common_index.py) for the major release.
 
 Point the `redirect:` in [`docs/content/changelog.md`](./docs/content/changelog.md) at this release's changeset.
 
@@ -177,7 +177,7 @@ The pull request description will tell you what to do next.
 For `rc` and `final` releases it also creates a **draft** [GitHub release](https://github.com/rerun-io/rerun/releases) (in the `tag-release` job) and attaches a comment to the release PR pointing at it.
 
 Once the `Release` workflow has finished successfully and you've sanity-checked the artifacts, edit the GitHub release draft (changelog, header media) and click `Publish release`.
-Publishing the release triggers the [`GitHub Release` workflow](https://github.com/rerun-io/rerun/actions/workflows/on_gh_release.yml), which syncs the binary assets from `build.rerun.io` onto the published GitHub release.
+Publishing the release triggers the [`GitHub Release` workflow](https://github.com/rerun-io/rerun/actions/workflows/on_gh_release.yml), which syncs the binary assets from `build.dalaran.dev` onto the published GitHub release.
 **Make sure that workflow also finishes successfully** so the release ends up with all of its assets attached.
 
 ### 8. Merge changes to `main`
@@ -200,7 +200,7 @@ Make sure the `consider-patch` label on GitHub is up-to-date. For a full release
 
 ### 9. Optional: write a post mortem about the release
 
-Summarize your experience with the release process to our [Release Postmortems](https://www.notion.so/rerunio/Release-Postmortems-271b24554b1980589770df810d2e4ed5) Notion page.
+Summarize your experience with the release process to our [Release Postmortems](https://www.notion.so/dalaranio/Release-Postmortems-271b24554b1980589770df810d2e4ed5) Notion page.
 
 Create tickets if you think we can improve the process, put them into the `Actionable items` section.
 

@@ -19,7 +19,7 @@ mod no_blueprint_test;
 mod origin_heuristics_test;
 mod preview_table;
 mod redap_catalog_select;
-mod rrd_bw_compat_test;
+mod dlr_bw_compat_test;
 mod source_component_test;
 mod spatial_cross_view_interaction;
 mod state_timeline_hover_highlight;

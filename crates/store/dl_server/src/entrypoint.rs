@@ -26,12 +26,12 @@ pub struct Args {
     // TODO(ab): expose this to the CLI
     /// Load a set of RRDs as a dataset (can be specified multiple times).
     ///
-    /// All the paths in the path collections must point at RRD files. Directories are not
+    /// All the paths in the path collections must point at DLR files. Directories are not
     /// supported.
     #[clap(skip)]
     pub datasets: Vec<NamedPathCollection>,
 
-    /// Load a directory of RRD as dataset (can be specified multiple times).
+    /// Load a directory of DLR as dataset (can be specified multiple times).
     /// You can specify only a path or provide a name such as
     /// `-d my_dataset=./path/to/files`
     #[clap(long = "dataset", short = 'd', value_name = "[NAME=]DIR_PATH")]

@@ -8,21 +8,21 @@ import argparse
 import dalaran as dl
 
 DESCRIPTION = """
-Usage: python dataframe_query.py <path_to_rrd> [entity_path_filter]
+Usage: python dataframe_query.py <path_to_dlr> [entity_path_filter]
 
 This example will query for the first 10 rows of data in your recording of choice,
 and display the results as a table in your terminal.
 
 You can use one of your recordings, or grab one from our hosted examples, e.g.:
-  curl 'https://app.dalaran.dev/version/latest/examples/dna.rrd' -o - > /tmp/dna.rrd
+  curl 'https://app.dalaran.dev/version/latest/examples/dna.dlr' -o - > /tmp/dna.dlr
 
 The results can be filtered further by specifying an entity filter expression:
-  {bin_name} my_recording.rrd /helix/structure/**
+  {bin_name} my_recording.dlr /helix/structure/**
 """.strip()
 
 
-def query(path_to_rrd: str, entity_path_filter: str) -> None:
-    with dl.server.Server(datasets={"recording": [path_to_rrd]}) as server:
+def query(path_to_dlr: str, entity_path_filter: str) -> None:
+    with dl.server.Server(datasets={"recording": [path_to_dlr]}) as server:
         dataset = server.client().get_dataset("recording")
 
         # Query the data
@@ -36,7 +36,7 @@ def query(path_to_rrd: str, entity_path_filter: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=DESCRIPTION)
-    parser.add_argument("path_to_rrd", type=str, help="Path to the .rrd file")
+    parser.add_argument("path_to_dlr", type=str, help="Path to the .dlr file")
     parser.add_argument(
         "entity_path_filter",
         type=str,
@@ -46,7 +46,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    query(args.path_to_rrd, args.entity_path_filter)
+    query(args.path_to_dlr, args.entity_path_filter)
 
 
 if __name__ == "__main__":

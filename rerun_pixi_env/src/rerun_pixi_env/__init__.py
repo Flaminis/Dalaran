@@ -1,4 +1,4 @@
-"""Pixi environment setup utilities for Rerun."""
+"""Pixi environment setup utilities for Dalaran."""
 
 from __future__ import annotations
 
@@ -97,14 +97,14 @@ def ensure_pyo3_build_cfg() -> None:
     from .pyo3_config import generate_config_file
 
     pixi_root = get_pixi_project_root()
-    config_file = pixi_root / "rerun_py" / "pyo3-build.cfg"
+    config_file = pixi_root / "dalaran_py" / "pyo3-build.cfg"
 
     generate_config_file(config_file)
     print(f"Generated {config_file}")
 
 
 def main() -> None:
-    """Entry point for ensure-rerun-env command."""
+    """Entry point for ensure-dalaran-env command."""
     ensure_uv_shim()
     ensure_uvpy_shim()
     ensure_pyo3_build_cfg()

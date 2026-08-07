@@ -50,7 +50,7 @@ See our [mcp docs](https://dalaran.dev/docs/reference/viewer/mcp) to get started
 https://dalaran.dev/learn is a great way to learn how the Dalaran data model covers the full physical AI experiment loop.
 It is a short, hands-on course for robotics ML engineers who want the full robot learning data loop in one place:
 ```
-raw data -> RRD -> derived layers -> dataset queries -> training -> evaluation
+raw data -> DLR -> derived layers -> dataset queries -> training -> evaluation
 ```
 
 ### Dalaran agent skills
@@ -136,7 +136,7 @@ See the [0.32 migration guide](../reference/migration/migration-0-32.md#dalaranr
 ### Remove embedded base64-encoded table blueprints & replace with blueprint registration
 
 Table blueprints are no longer read from the Arrow schema metadata key `dalaran:table_blueprint`.
-If you previously stored `base64:…` encoded `.rbl` bytes in table metadata, export that blueprint as a regular `.rbl` file and register it with `TableEntry.register_blueprint(...)` instead.
+If you previously stored `base64:…` encoded `.dbl` bytes in table metadata, export that blueprint as a regular `.dbl` file and register it with `TableEntry.register_blueprint(...)` instead.
 Tables without a registered blueprint fall back to Arrow field metadata and viewer heuristics.
 
 > [!NOTE]

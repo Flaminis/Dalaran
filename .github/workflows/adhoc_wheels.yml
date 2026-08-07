@@ -24,35 +24,35 @@ permissions:
 
 jobs:
   # -----------------------------------------------------------------------------------
-  # Build rerun-cli (rerun binaries):
+  # Build dalaran-cli (dalaran binaries):
 
-  build-rerun-cli-and-upload-linux-arm64:
-    name: "Linux-arm64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+  build-dalaran-cli-and-upload-linux-arm64:
+    name: "Linux-arm64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: adhoc-wheels-linux-arm64
       PLATFORM: linux-arm64
     secrets: inherit
 
-  build-rerun-cli-and-upload-linux-x64:
-    name: "Linux-x64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+  build-dalaran-cli-and-upload-linux-x64:
+    name: "Linux-x64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: adhoc-wheels-linux-x64
       PLATFORM: linux-x64
     secrets: inherit
 
-  build-rerun-cli-and-upload-macos-arm64:
-    name: "Mac-arm64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+  build-dalaran-cli-and-upload-macos-arm64:
+    name: "Mac-arm64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: adhoc-wheels-macos-arm64
       PLATFORM: macos-arm64
     secrets: inherit
 
-  build-rerun-cli-and-upload-windows-x64:
-    name: "Windows-x64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+  build-dalaran-cli-and-upload-windows-x64:
+    name: "Windows-x64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: adhoc-wheels-windows-x64
       PLATFORM: windows-x64
@@ -62,7 +62,7 @@ jobs:
   # Build wheels:
 
   build-wheel-linux-arm64:
-    needs: [build-rerun-cli-and-upload-linux-arm64]
+    needs: [build-dalaran-cli-and-upload-linux-arm64]
     name: "Linux-arm64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
@@ -73,7 +73,7 @@ jobs:
     secrets: inherit
 
   build-wheel-linux-x64:
-    needs: [build-rerun-cli-and-upload-linux-x64]
+    needs: [build-dalaran-cli-and-upload-linux-x64]
     name: "Linux-x64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
@@ -84,7 +84,7 @@ jobs:
     secrets: inherit
 
   build-wheel-macos-arm64:
-    needs: [build-rerun-cli-and-upload-macos-arm64]
+    needs: [build-dalaran-cli-and-upload-macos-arm64]
     name: "Macos-arm64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
@@ -95,7 +95,7 @@ jobs:
     secrets: inherit
 
   build-wheel-windows-x64:
-    needs: [build-rerun-cli-and-upload-windows-x64]
+    needs: [build-dalaran-cli-and-upload-windows-x64]
     name: "Windows-x64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:

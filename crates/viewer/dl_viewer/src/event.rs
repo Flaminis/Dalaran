@@ -93,7 +93,7 @@ pub enum ViewerEventKind {
 
     /// Fired when a new recording is opened in the Viewer.
     ///
-    /// For `rrd` file or stream, a recording is considered "open" after
+    /// For `dlr` file or stream, a recording is considered "open" after
     /// enough information about the recording, such as its ID and source,
     /// is received.
     // NOTE: App ID and store ID are already in `ViewerEvent`.

@@ -8,8 +8,8 @@ from pathlib import Path
 import dalaran.blueprint as dlb
 
 BLUEPRINTS = {
-    "table_blueprint.rbl": [-1, 2],
-    "table_blueprint2.rbl": [-2, 3],
+    "table_blueprint.dbl": [-1, 2],
+    "table_blueprint2.dbl": [-2, 3],
 }
 
 

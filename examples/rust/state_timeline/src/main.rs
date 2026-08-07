@@ -5,22 +5,22 @@ use std::sync::Arc;
 /// Build a `StateChange` whose state array can contain nulls.
 ///
 /// A null entry resets that instance's state, showing a gap in its lane.
-fn multi_state(states: &[Option<&str>]) -> rerun::StateChange {
-    rerun::StateChange::new().with_state_opt(states.iter().copied())
+fn multi_state(states: &[Option<&str>]) -> dalaran::StateChange {
+    dalaran::StateChange::new().with_state_opt(states.iter().copied())
 }
 
 fn main() -> anyhow::Result<()> {
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_state_timeline").spawn()?;
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_state_timeline").spawn()?;
 
     // An example of a static annotation context. An edge case for the state timeline view.
     rec.log_static(
         "/",
-        &rerun::AnnotationContext::new([
-            (1, "person", rerun::Rgba32::from_rgb(220, 20, 60)),
-            (2, "bicycle", rerun::Rgba32::from_rgb(119, 11, 32)),
-            (3, "car", rerun::Rgba32::from_rgb(0, 0, 142)),
-            (4, "motorcycle", rerun::Rgba32::from_rgb(0, 0, 230)),
-            (5, "airplane", rerun::Rgba32::from_rgb(106, 0, 228)),
+        &dalaran::AnnotationContext::new([
+            (1, "person", dalaran::Rgba32::from_rgb(220, 20, 60)),
+            (2, "bicycle", dalaran::Rgba32::from_rgb(119, 11, 32)),
+            (3, "car", dalaran::Rgba32::from_rgb(0, 0, 142)),
+            (4, "motorcycle", dalaran::Rgba32::from_rgb(0, 0, 230)),
+            (5, "airplane", dalaran::Rgba32::from_rgb(106, 0, 228)),
         ]),
     )?;
 
@@ -45,7 +45,7 @@ fn main() -> anyhow::Result<()> {
     for (tick, entity, label) in &states {
         rec.set_time_sequence("tick", *tick);
         rec.set_timestamp_secs_since_epoch("timestamp", base_ts + *tick as f64 * step_secs);
-        rec.log(*entity, &rerun::StateChange::single(*label))?;
+        rec.log(*entity, &dalaran::StateChange::single(*label))?;
     }
 
     // Multi-instance state: a gamepad's buttons logged as one state array, in the spirit of
@@ -71,11 +71,11 @@ fn main() -> anyhow::Result<()> {
     // One shared configuration styles every instance lane of the group.
     rec.log_static(
         "state/gamepad_buttons",
-        &rerun::StateConfiguration::new()
+        &dalaran::StateConfiguration::new()
             .with_values(["Pressed", "Released"])
             .with_colors([
-                rerun::Rgba32::from_rgb(239, 83, 80),
-                rerun::Rgba32::from_rgb(76, 175, 80),
+                dalaran::Rgba32::from_rgb(239, 83, 80),
+                dalaran::Rgba32::from_rgb(76, 175, 80),
             ]),
     )?;
 
@@ -88,7 +88,7 @@ fn main() -> anyhow::Result<()> {
         rec.set_timestamp_secs_since_epoch("timestamp", base_ts + 2.0 * *tick as f64 * step_secs);
         rec.log(
             "state/robot_mode",
-            &rerun::DynamicArchetype::new("sensor_data").with_component_from_data(
+            &dalaran::DynamicArchetype::new("sensor_data").with_component_from_data(
                 "state",
                 Arc::new(arrow::array::StringArray::from(vec![*state])),
             ),
@@ -112,7 +112,7 @@ fn main() -> anyhow::Result<()> {
         rec.set_timestamp_secs_since_epoch("timestamp", base_ts + *tick as f64 * step_secs);
         rec.log(
             "state/heartbeat",
-            &rerun::DynamicArchetype::new("heartbeat_signal").with_component_from_data(
+            &dalaran::DynamicArchetype::new("heartbeat_signal").with_component_from_data(
                 "alive",
                 Arc::new(arrow::array::BooleanArray::from(vec![*state])),
             ),
@@ -124,14 +124,14 @@ fn main() -> anyhow::Result<()> {
         let t = tick as f64;
         rec.set_time_sequence("tick", tick);
         rec.set_timestamp_secs_since_epoch("timestamp", base_ts + t * step_secs);
-        rec.log("scalar/sine", &rerun::Scalars::new([f64::sin(t * 0.3)]))?;
+        rec.log("scalar/sine", &dalaran::Scalars::new([f64::sin(t * 0.3)]))?;
     }
 
     // Bad data: changes component type from string to boolean.
     rec.set_time_sequence("tick", 1);
     rec.log(
         "foo",
-        &rerun::DynamicArchetype::new("bar").with_component_from_data(
+        &dalaran::DynamicArchetype::new("bar").with_component_from_data(
             "state",
             Arc::new(arrow::array::StringArray::from(vec!["ponies"])),
         ),
@@ -139,7 +139,7 @@ fn main() -> anyhow::Result<()> {
     rec.set_time_sequence("tick", 2);
     rec.log(
         "foo",
-        &rerun::DynamicArchetype::new("bar").with_component_from_data(
+        &dalaran::DynamicArchetype::new("bar").with_component_from_data(
             "state",
             Arc::new(arrow::array::BooleanArray::from(vec![true])),
         ),

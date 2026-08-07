@@ -9,11 +9,11 @@ use rayon::prelude::{IntoParallelIterator as _, ParallelIterator as _};
 
 use super::wait_for_output;
 
-/// Collect code snippets from `docs/snippets` in the repository and run them to produce `.rrd` files.
+/// Collect code snippets from `docs/snippets` in the repository and run them to produce `.dlr` files.
 #[derive(argh::FromArgs)]
 #[argh(subcommand, name = "snippets")]
 pub struct Snippets {
-    #[argh(positional, description = "directory to output `rrd` files into")]
+    #[argh(positional, description = "directory to output `dlr` files into")]
     output_dir: PathBuf,
 }
 
@@ -73,21 +73,21 @@ impl Snippets {
         let mut num_failed = 0;
         for result in results {
             match result {
-                Ok(Some(rrd_path)) => {
-                    if let Ok(metadata) = std::fs::metadata(&rrd_path) {
+                Ok(Some(dlr_path)) => {
+                    if let Ok(metadata) = std::fs::metadata(&dlr_path) {
                         println!(
                             "Output: {} ({})",
-                            rrd_path.display(),
+                            dlr_path.display(),
                             dl_format::format_bytes(metadata.len() as _)
                         );
                     } else {
-                        eprintln!("Missing rrd at {}", rrd_path.display());
+                        eprintln!("Missing dlr at {}", dlr_path.display());
                         num_failed += 1;
                     }
                 }
                 Ok(None) => {
-                    // Backwards check opted out - no RRD expected
-                    println!("Completed (no RRD output required)");
+                    // Backwards check opted out - no DLR expected
+                    println!("Completed (no DLR output required)");
                 }
                 Err(err) => {
                     eprintln!("{err}");
@@ -120,8 +120,8 @@ fn collect_snippets_recursively(
             continue;
         }
 
-        // Compare snippet outputs sometimes leaves orphaned rrd files.
-        if path.extension().is_some_and(|p| p == "rrd") {
+        // Compare snippet outputs sometimes leaves orphaned dlr files.
+        if path.extension().is_some_and(|p| p == "dlr") {
             continue;
         }
 
@@ -196,9 +196,9 @@ struct Snippet {
 
 impl Snippet {
     fn build(self, progress: &MultiProgress, output_dir: &Path) -> anyhow::Result<Option<PathBuf>> {
-        let rrd_path = output_dir.join(&self.name).with_extension("rrd");
+        let dlr_path = output_dir.join(&self.name).with_extension("dlr");
 
-        if let Some(dir) = rrd_path.parent() {
+        if let Some(dir) = dlr_path.parent() {
             std::fs::create_dir_all(dir)?;
         }
 
@@ -213,11 +213,11 @@ impl Snippet {
             ("DALARAN_PANIC_ON_WARN", "1"),
         ]);
 
-        // Only set _DALARAN_TEST_FORCE_SAVE if we expect an RRD output
+        // Only set _DALARAN_TEST_FORCE_SAVE if we expect an DLR output
         if !self.backwards_check_opted_out {
             cmd.env(
                 "_DALARAN_TEST_FORCE_SAVE",
-                rrd_path.to_string_lossy().as_ref(),
+                dlr_path.to_string_lossy().as_ref(),
             );
         }
 
@@ -226,7 +226,7 @@ impl Snippet {
         if self.backwards_check_opted_out {
             Ok(None)
         } else {
-            Ok(Some(rrd_path))
+            Ok(Some(dlr_path))
         }
     }
 }

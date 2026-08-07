@@ -247,8 +247,8 @@ SCENARIO("RecordingStream can log to file", TEST_TAG) {
     const char* test_path = "build/test_output";
     fs::create_directories(test_path);
 
-    std::string test_rrd0 = std::string(test_path) + "test-file-0.rrd";
-    std::string test_rrd1 = std::string(test_path) + "test-file-1.rrd";
+    std::string test_rrd0 = std::string(test_path) + "test-file-0.dlr";
+    std::string test_rrd1 = std::string(test_path) + "test-file-1.dlr";
 
     fs::remove(test_rrd0);
     fs::remove(test_rrd1);
@@ -359,7 +359,7 @@ SCENARIO("RecordingStream can construct LogSinks", TEST_TAG) {
     const char* test_path = "build/test_output";
     fs::create_directories(test_path);
 
-    std::string test_rrd0 = std::string(test_path) + "test-file-log-sink-0.rrd";
+    std::string test_rrd0 = std::string(test_path) + "test-file-log-sink-0.dlr";
 
     fs::remove_all(test_rrd0);
 
@@ -434,7 +434,7 @@ SCENARIO("RecordingStream can set a grpc server sink", TEST_TAG) {
         {"https://*.example.com"}
     };
     CHECK(
-        stream.set_sinks(sink, dalaran::FileSink{"build/test_output/server-sink.rrd"}).code ==
+        stream.set_sinks(sink, dalaran::FileSink{"build/test_output/server-sink.dlr"}).code ==
         dalaran::ErrorCode::Ok
     );
 }

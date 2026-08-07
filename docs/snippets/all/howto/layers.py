@@ -17,7 +17,7 @@ from pathlib import Path
 import dalaran as dl
 
 sample_5_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "sample_5"
 )
 
 server = dl.server.Server(datasets={"sample_dataset": sample_5_path})
@@ -49,7 +49,7 @@ joints = dataset.filter_contents([
 segment_ids = pa.table(joints.select("dalaran_segment_id").distinct())[
     "dalaran_segment_id"
 ].to_numpy()
-rrd_paths = []
+dlr_paths = []
 
 for seg_id in segment_ids:
     # Filter to this segment and collect as a PyArrow table for efficient
@@ -74,14 +74,14 @@ for seg_id in segment_ids:
     # Compute L2 tracking error per timestep
     tracking_error = np.linalg.norm(actions - observations, axis=1)
 
-    # Create derived RRD with tracking error timeline
-    rrd_path = TMP_DIR / f"{seg_id}_tracking_error.rrd"
-    rrd_paths.append(rrd_path)
+    # Create derived DLR with tracking error timeline
+    dlr_path = TMP_DIR / f"{seg_id}_tracking_error.dlr"
+    dlr_paths.append(dlr_path)
 
     with dl.RecordingStream(
         application_id="dalaran_example_tracking_error", recording_id=seg_id
     ) as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
         dl.send_columns(
             "/derived/tracking_error",
             indexes=[dl.TimeColumn("real_time", timestamp=timestamps)],
@@ -91,7 +91,7 @@ for seg_id in segment_ids:
 
 # Register derived RRDs as a new layer
 dataset.register(
-    [p.as_uri() for p in rrd_paths], layer_name="tracking_error"
+    [p.as_uri() for p in dlr_paths], layer_name="tracking_error"
 ).wait()
 # endregion: add_tracking_error
 
@@ -130,21 +130,21 @@ quality_stats = pa.table(
 )
 
 # Create RRDs with just the property
-rrd_paths = []
+dlr_paths = []
 for seg_id, tracking_good in zip(
     quality_stats["dalaran_segment_id"], quality_stats["tracking_good"]
 ):
-    rrd_path = TMP_DIR / f"{seg_id}_quality.rrd"
-    rrd_paths.append(rrd_path)
+    dlr_path = TMP_DIR / f"{seg_id}_quality.dlr"
+    dlr_paths.append(dlr_path)
 
     with dl.RecordingStream(
         application_id="dalaran_example_quality", recording_id=seg_id
     ) as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
         rec.send_property("quality", dl.AnyValues(tracking_good=tracking_good))
 
 # Register as a separate layer
-dataset.register([p.as_uri() for p in rrd_paths], layer_name="quality").wait()
+dataset.register([p.as_uri() for p in dlr_paths], layer_name="quality").wait()
 # endregion: add_quality_property
 
 # region: verify

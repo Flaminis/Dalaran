@@ -16,17 +16,17 @@ import dalaran as dl
 # Dalaran's tokio runtime is not fork-safe; DataLoader workers must use `spawn`.
 torch.multiprocessing.set_start_method("spawn", force=True)
 
-# Run from a fresh temp dir so the .rrd files this snippet writes don't
+# Run from a fresh temp dir so the .dlr files this snippet writes don't
 # collide with other snippets executing in parallel from the same cwd.
 os.chdir(tempfile.mkdtemp())
 
-# Materialize the .rrd that the catalog regions below register against.
+# Materialize the .dlr that the catalog regions below register against.
 # Same code as the Log step's three-language snippet, repeated here so this
 # file runs end-to-end.
 with dl.RecordingStream(
     "dalaran_example_getting_started", recording_id="run-1"
 ) as _rec:
-    _rec.save("run-1.rrd")
+    _rec.save("run-1.dlr")
     for _t in range(10):
         _rec.set_time("step", sequence=_t)
         _rec.log("/arm/shoulder", dl.Scalars(math.sin(_t * 0.5)))
@@ -48,7 +48,7 @@ client = dl.catalog.CatalogClient(server_url)
 
 # region: ingest
 dataset = client.create_dataset("demo", exist_ok=True)
-dataset.register([Path("run-1.rrd").absolute().as_uri()]).wait()
+dataset.register([Path("run-1.dlr").absolute().as_uri()]).wait()
 # endregion: ingest
 
 
@@ -56,13 +56,13 @@ dataset.register([Path("run-1.rrd").absolute().as_uri()]).wait()
 with dl.RecordingStream(
     "dalaran_example_getting_started", recording_id="run-1"
 ) as ann:
-    ann.save("run-1-properties.rrd")
+    ann.save("run-1-properties.dlr")
     ann.send_property(
         "episode", dl.AnyValues(success=True, task="pick_and_place")
     )
 
 dataset.register(
-    [Path("run-1-properties.rrd").absolute().as_uri()], layer_name="properties"
+    [Path("run-1-properties.dlr").absolute().as_uri()], layer_name="properties"
 ).wait()
 # endregion: annotate
 

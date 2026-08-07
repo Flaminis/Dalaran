@@ -3,14 +3,14 @@ and display the results as a table in your terminal.
 
 You can use one of your recordings, or grab one from our hosted examples, e.g.:
 ```bash
-curl 'https://app.dalaran.dev/version/latest/examples/dna.rrd' -o - > /tmp/dna.rrd
+curl 'https://app.dalaran.dev/version/latest/examples/dna.dlr' -o - > /tmp/dna.dlr
 ```
 
 The results can be filtered further by specifying an entity filter expression:
 ```bash
-python dataframe_query.py my_recording.rrd /helix/structure/**\
+python dataframe_query.py my_recording.dlr /helix/structure/**\
 ```
 
 ```bash
-python dataframe_query.py <path_to_rrd> [entity_path_filter]
+python dataframe_query.py <path_to_dlr> [entity_path_filter]
 ```

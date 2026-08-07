@@ -19,18 +19,18 @@ use dl_viewer::viewer_test_utils;
 // TODO(RR-4929): We should properly show the application id,
 // and maybe even the recording id.
 
-const RRD_RECORDING_ID: &str = "test_recording";
-const RRD_APP_ID: &str = "test_app";
-const RRD_FILE_NAME: &str = "internal_catalog_test.rrd";
+const DLR_RECORDING_ID: &str = "test_recording";
+const DLR_APP_ID: &str = "test_app";
+const DLR_FILE_NAME: &str = "internal_catalog_test.dlr";
 
-fn test_rrd() -> (tempfile::TempDir, PathBuf) {
-    let dir = tempfile::tempdir().expect("failed to create .rrd temp dir");
-    let path = dir.path().join(RRD_FILE_NAME);
+fn test_dlr() -> (tempfile::TempDir, PathBuf) {
+    let dir = tempfile::tempdir().expect("failed to create .dlr temp dir");
+    let path = dir.path().join(DLR_FILE_NAME);
 
-    let rec = RecordingStreamBuilder::new(RRD_APP_ID)
-        .recording_id(RRD_RECORDING_ID)
+    let rec = RecordingStreamBuilder::new(DLR_APP_ID)
+        .recording_id(DLR_RECORDING_ID)
         .save(&path)
-        .expect("failed to create .rrd recording stream");
+        .expect("failed to create .dlr recording stream");
     rec.set_time_sequence("frame", 0);
     rec.log(
         "points",
@@ -53,7 +53,7 @@ fn test_rrd() -> (tempfile::TempDir, PathBuf) {
     .expect("failed to log blueprint");
 
     rec.flush_with_timeout(Duration::from_mins(1))
-        .expect("failed to flush .rrd");
+        .expect("failed to flush .dlr");
 
     (dir, path)
 }
@@ -107,11 +107,11 @@ async fn internal_catalog_revealed_by_catalog_api() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
-async fn internal_catalog_load_rrd() {
+async fn internal_catalog_load_dlr() {
     let mut snapshot_results = SnapshotResults::new();
 
     fn run_with_catalog(snapshot_results: &mut SnapshotResults, use_internal_catalog: bool) {
-        let (dir, rrd_path) = test_rrd();
+        let (dir, dlr_path) = test_dlr();
         let mut harness = viewer_test_utils::viewer_harness(&viewer_test_utils::HarnessOptions {
             app_options_editor: Some(Box::new(move |app_options| {
                 app_options.experimental.use_internal_catalog = use_internal_catalog;
@@ -121,7 +121,7 @@ async fn internal_catalog_load_rrd() {
 
         harness
             .state()
-            .open_url_or_file(&rrd_path.display().to_string());
+            .open_url_or_file(&dlr_path.display().to_string());
 
         let points = EntityPath::from("points");
         let frame = TimelineName::from("frame");
@@ -132,7 +132,7 @@ async fn internal_catalog_load_rrd() {
                 let Some(store_id) = harness.state().active_recording_id().cloned() else {
                     return false;
                 };
-                if store_id.recording_id().as_str() != RRD_RECORDING_ID {
+                if store_id.recording_id().as_str() != DLR_RECORDING_ID {
                     return false;
                 }
 
@@ -156,13 +156,13 @@ async fn internal_catalog_load_rrd() {
             Duration::from_secs(10),
         );
 
-        let loading_rrd_toast = format!("Loading {rrd_path:?}…");
+        let loading_dlr_toast = format!("Loading {dlr_path:?}…");
         viewer_test_utils::step_until(
             "loading toasts gone",
             &mut harness,
             |harness| {
                 harness
-                    .query_all_by_label_contains(&loading_rrd_toast)
+                    .query_all_by_label_contains(&loading_dlr_toast)
                     .next()
                     .is_none()
             },
@@ -249,7 +249,7 @@ async fn internal_catalog_load_rrd() {
             "recording"
         };
 
-        harness.snapshot(format!("internal_catalog_load_rrd_{suffix}"));
+        harness.snapshot(format!("internal_catalog_load_dlr_{suffix}"));
         snapshot_results.extend_harness(&mut harness);
     }
 

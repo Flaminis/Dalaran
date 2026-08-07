@@ -16,13 +16,13 @@ TEST_RECORDING_ID = "fixed-recording-id-for-integration-tests"
 
 
 @pytest.fixture(scope="session")
-def test_rrd_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """Session-scoped RRD with known entity paths, timelines, and component structure."""
+def test_dlr_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Session-scoped DLR with known entity paths, timelines, and component structure."""
 
-    rrd_path = tmp_path_factory.mktemp("integration") / "test.rrd"
+    dlr_path = tmp_path_factory.mktemp("integration") / "test.dlr"
 
     with dl.RecordingStream(TEST_APP_ID, recording_id=TEST_RECORDING_ID) as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
 
         # Temporal: two timelines, Points3D with positions + colors
         rec.send_columns(
@@ -70,4 +70,4 @@ def test_rrd_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
             ),
         )
 
-    return rrd_path
+    return dlr_path

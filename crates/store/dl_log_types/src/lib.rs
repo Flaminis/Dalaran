@@ -481,7 +481,7 @@ impl BlueprintActivationCommand {
 ///
 /// Note: this does not contain tables sent via [`TableMsg`], as these concepts are fundamentally
 /// different and should not be handled uniformly. For example, we don't want to store tables in
-/// `.rrd` files.
+/// `.dlr` files.
 #[must_use]
 #[derive(Clone, Debug, PartialEq, dl_byte_size::SizeBytes)] // `PartialEq` used for tests in another crate
 // TODO(#8631): Remove `LogMsg`
@@ -587,9 +587,9 @@ pub struct StoreInfo {
 
     pub store_source: StoreSource,
 
-    /// The Dalaran version used to encoded the RRD data.
+    /// The Dalaran version used to encoded the DLR data.
     ///
-    // NOTE: The version comes directly from the decoded RRD stream's header, duplicating it here
+    // NOTE: The version comes directly from the decoded DLR stream's header, duplicating it here
     // would probably only lead to more issues down the line.
     pub store_version: Option<CrateVersion>,
 }
@@ -871,7 +871,7 @@ impl std::fmt::Display for StoreSource {
 ///
 /// It's important to note that tables are not sent via the smart channel of [`LogMsg`], but use a separate `crossbeam`
 /// channel. The reasoning behind this is that tables are fundamentally different from recordings. For example,
-/// we don't want to store tables in `.rrd` files, as there are much better formats out there.
+/// we don't want to store tables in `.dlr` files, as there are much better formats out there.
 #[must_use]
 #[derive(Clone, Debug, PartialEq, dl_byte_size::SizeBytes)]
 pub struct TableMsg {

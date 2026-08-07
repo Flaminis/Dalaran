@@ -41,24 +41,24 @@ impl QueryEngine<StorageEngine> {
         Self::new(store.clone(), QueryCache::new_handle(store))
     }
 
-    /// Loads an RRD file and instantiates [`QueryEngine`]s with new empty [`QueryCache`]s.
+    /// Loads an DLR file and instantiates [`QueryEngine`]s with new empty [`QueryCache`]s.
     #[cfg(not(target_arch = "wasm32"))]
     #[inline]
-    pub fn from_rrd_filepath(
+    pub fn from_dlr_filepath(
         store_config: &dl_chunk_store::ChunkStoreConfig,
-        path_to_rrd: impl AsRef<std::path::Path>,
+        path_to_dlr: impl AsRef<std::path::Path>,
     ) -> anyhow::Result<std::collections::BTreeMap<dl_log_types::StoreId, Self>> {
         use anyhow::Context as _;
 
-        let path_to_rrd = path_to_rrd.as_ref();
-        dl_tracing::profile_function!(path_to_rrd.to_string_lossy());
+        let path_to_dlr = path_to_dlr.as_ref();
+        dl_tracing::profile_function!(path_to_dlr.to_string_lossy());
 
-        let rrd_file = std::fs::File::open(path_to_rrd)
-            .with_context(|| format!("couldn't open RRD file\nFile path: {path_to_rrd:?}"))?;
+        let dlr_file = std::fs::File::open(path_to_dlr)
+            .with_context(|| format!("couldn't open DLR file\nFile path: {path_to_dlr:?}"))?;
 
         Ok(
-            dl_chunk_store::ChunkStore::handle_from_rrd_reader(store_config, rrd_file)
-                .with_context(|| format!("couldn't decode RRD file\nFile path: {path_to_rrd:?}"))?
+            dl_chunk_store::ChunkStore::handle_from_dlr_reader(store_config, dlr_file)
+                .with_context(|| format!("couldn't decode DLR file\nFile path: {path_to_dlr:?}"))?
                 .into_iter()
                 .map(|(store_id, store)| (store_id, Self::from_store(store)))
                 .collect(),

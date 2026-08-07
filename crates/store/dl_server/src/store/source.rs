@@ -26,7 +26,7 @@ pub struct Source {
 
     registration_time: jiff::Timestamp,
 
-    /// .rrd, .mcap, …
+    /// .dlr, .mcap, …
     data_source_kind: DataSourceKind,
 
     /// All sources in the same layer share the same [`LayerInfo`].
@@ -86,7 +86,7 @@ impl Source {
     /// The unit differs by backing store and the two values are **not directly comparable**:
     ///
     /// - **Eager** layers report the in-memory heap size of the materialized chunks.
-    /// - **Lazy** layers report the RRD-encoded IPC byte length from the manifest, including
+    /// - **Lazy** layers report the DLR-encoded IPC byte length from the manifest, including
     ///   each chunk's message header. Chunks are not materialized.
     ///
     /// Treat this as a rough load indicator, not a precise accounting.
@@ -133,20 +133,20 @@ impl Source {
 
     /// Produce a [`RawRrdManifest`] for this layer, with a `chunk_key` column already populated.
     ///
-    /// - **Lazy** layers clone the cached RRD footer manifest — no chunk materialization.
+    /// - **Lazy** layers clone the cached DLR footer manifest — no chunk materialization.
     /// - **Eager** layers rebuild the manifest by iterating every physical chunk.
     ///
     /// The `store_id` on the returned manifest is the layer's own store id; callers merging
     /// multiple layer manifests into a segment-scoped manifest should override it afterwards
     /// (see [`dl_log_encoding::RawRrdManifest::merge`]).
-    pub fn rrd_manifest(&self) -> Result<RawRrdManifest, super::Error> {
+    pub fn dlr_manifest(&self) -> Result<RawRrdManifest, super::Error> {
         match &self.resolved {
-            ResolvedStore::Lazy(lazy) => self.rrd_manifest_from_lazy_cache(lazy),
-            ResolvedStore::Eager(handle) => self.rrd_manifest_from_chunks(handle),
+            ResolvedStore::Lazy(lazy) => self.dlr_manifest_from_lazy_cache(lazy),
+            ResolvedStore::Eager(handle) => self.dlr_manifest_from_chunks(handle),
         }
     }
 
-    fn rrd_manifest_from_lazy_cache(
+    fn dlr_manifest_from_lazy_cache(
         &self,
         lazy: &Arc<dl_chunk_store::LazyStore>,
     ) -> Result<RawRrdManifest, super::Error> {
@@ -168,7 +168,7 @@ impl Source {
         Ok(manifest)
     }
 
-    fn rrd_manifest_from_chunks(
+    fn dlr_manifest_from_chunks(
         &self,
         handle: &dl_chunk_store::ChunkStoreHandle,
     ) -> Result<RawRrdManifest, super::Error> {
@@ -325,18 +325,18 @@ mod tests {
         (store_id, chunks)
     }
 
-    fn write_rrd(path: &Path, store_id: &StoreId, chunks: &[Arc<Chunk>]) {
+    fn write_dlr(path: &Path, store_id: &StoreId, chunks: &[Arc<Chunk>]) {
         let set_store_info = LogMsg::SetStoreInfo(SetStoreInfo {
             row_id: *dl_chunk::RowId::ZERO,
             info: StoreInfo::new(store_id.clone(), StoreSource::Unknown),
         });
-        let mut file = std::fs::File::create(path).expect("failed to create test RRD file");
+        let mut file = std::fs::File::create(path).expect("failed to create test DLR file");
         let mut encoder = dl_log_encoding::Encoder::new_eager(
             dl_log_encoding::CrateVersion::LOCAL,
             EncodingOptions::PROTOBUF_COMPRESSED,
             &mut file,
         )
-        .expect("failed to create test RRD encoder");
+        .expect("failed to create test DLR encoder");
         encoder
             .append(&set_store_info)
             .expect("failed to write test store info");
@@ -347,7 +347,7 @@ mod tests {
             let msg = LogMsg::ArrowMsg(store_id.clone(), arrow_msg);
             encoder.append(&msg).expect("failed to write test chunk");
         }
-        encoder.finish().expect("failed to finish test RRD");
+        encoder.finish().expect("failed to finish test DLR");
     }
 
     /// Single-layer equivalence: a Lazy-backed layer and an Eager-backed layer holding the same
@@ -355,9 +355,9 @@ mod tests {
     /// IDs, entity paths, staticness, row counts, schema shape, decodable `chunk_key`s).
     ///
     /// Byte-size/offset columns are intentionally NOT compared: per the `RawRrdManifest`
-    /// docstring, Lazy reports RRD-encoded IPC sizes while Eager reports heap sizes.
+    /// docstring, Lazy reports DLR-encoded IPC sizes while Eager reports heap sizes.
     #[tokio::test]
-    async fn rrd_manifest_lazy_and_eager_produce_equivalent_output() {
+    async fn dlr_manifest_lazy_and_eager_produce_equivalent_output() {
         let (store_id, chunks) = build_chunks();
 
         // Eager backend: in-memory `ChunkStore`. `ALL_DISABLED` matches `LazyStore`'s internal
@@ -375,39 +375,39 @@ mod tests {
         let eager_layer = Source::new(
             StoreSlotId::new(),
             ResolvedStore::Eager(ChunkStoreHandle::new(eager_store)),
-            DataSourceKind::Rrd,
+            DataSourceKind::Dlr,
             test_layer_info.clone(),
         );
 
-        // Lazy backend: same chunks, written to an RRD file with footer, then loaded lazily.
+        // Lazy backend: same chunks, written to an DLR file with footer, then loaded lazily.
         let dir = tempfile::tempdir().expect("failed to create temp dir");
-        let rrd_path = dir.path().join("test.rrd");
-        write_rrd(&rrd_path, &store_id, &chunks);
+        let dlr_path = dir.path().join("test.dlr");
+        write_dlr(&dlr_path, &store_id, &chunks);
 
-        let footer_file = std::fs::File::open(&rrd_path).expect("failed to open test RRD");
-        let footer = dl_log_encoding::read_rrd_footer(&footer_file)
+        let footer_file = std::fs::File::open(&dlr_path).expect("failed to open test DLR");
+        let footer = dl_log_encoding::read_dlr_footer(&footer_file)
             .await
-            .expect("failed to read test RRD footer")
-            .expect("test RRD should have a footer");
+            .expect("failed to read test DLR footer")
+            .expect("test DLR should have a footer");
         let raw_manifest = Arc::new(footer.manifests[&store_id].clone());
-        let store_file = std::fs::File::open(&rrd_path).expect("failed to open test RRD");
+        let store_file = std::fs::File::open(&dlr_path).expect("failed to open test DLR");
         let provider = Arc::new(
-            RrdChunkProvider::from_reader(store_file, rrd_path.display().to_string(), raw_manifest)
-                .expect("failed to create test RRD chunk provider"),
+            RrdChunkProvider::from_reader(store_file, dlr_path.display().to_string(), raw_manifest)
+                .expect("failed to create test DLR chunk provider"),
         );
         let lazy = Arc::new(LazyStore::new(provider));
         let lazy_layer = Source::new(
             StoreSlotId::new(),
             ResolvedStore::Lazy(lazy),
-            DataSourceKind::Rrd,
+            DataSourceKind::Dlr,
             test_layer_info,
         );
 
         let lazy_manifest = lazy_layer
-            .rrd_manifest()
+            .dlr_manifest()
             .expect("lazy layer should produce a manifest");
         let eager_manifest = eager_layer
-            .rrd_manifest()
+            .dlr_manifest()
             .expect("eager layer should produce a manifest");
 
         // Row counts match.

@@ -1,7 +1,7 @@
 <!--[metadata]
 title = "MCAP"
-description = "Load, convert, and post-process MCAP files in Dalaran, including conversion of older ROS 1/2 bags into MCAP and RRD."
-tags = ["MCAP", "RRD", "ROS", "ROS 2", "Rosbag", "Tutorial"]
+description = "Load, convert, and post-process MCAP files in Dalaran, including conversion of older ROS 1/2 bags into MCAP and DLR."
+tags = ["MCAP", "DLR", "ROS", "ROS 2", "Rosbag", "Tutorial"]
 source = "https://github.com/rerun-io/mcap_example"
 thumbnail = "https://static.rerun.io/mcap_example/7a3207652fa411979a96d5c5a25a43be29f1fdfb/480w.png"
 thumbnail_dimensions = [480, 305]
@@ -22,11 +22,11 @@ MCAP is the default bag format in ROS 2 and is rapidly gaining adoption. You can
 In this guide, you will learn:
 
 1. How to **load MCAP files** directly into the Dalaran viewer.
-2. How to **convert MCAP files** into native Dalaran data files (**RRD**).
+2. How to **convert MCAP files** into native Dalaran data files (**DLR**).
 3. How to **convert older ROS bags** (ROS 1 and ROS 2 SQLite3) into MCAP.
-4. How to read and deserialize MCAP/RRD data in Python for programmatic processing and advanced visualization in Dalaran.
+4. How to read and deserialize MCAP/DLR data in Python for programmatic processing and advanced visualization in Dalaran.
 
-We will use a dataset from the [JKK Research Center](https://jkk-research.github.io/dataset/jkk_dataset_01/) containing LiDAR, images, GPS, and IMU data. The workflow involves converting the original ROS 1 bag → MCAP → RRD, and then using Python to log the RRD data with specific Dalaran components for optimal visualization.
+We will use a dataset from the [JKK Research Center](https://jkk-research.github.io/dataset/jkk_dataset_01/) containing LiDAR, images, GPS, and IMU data. The workflow involves converting the original ROS 1 bag → MCAP → DLR, and then using Python to log the DLR data with specific Dalaran components for optimal visualization.
 
 ## Follow the tutorial and run the code
 

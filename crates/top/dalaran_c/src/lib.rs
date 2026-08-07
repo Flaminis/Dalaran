@@ -988,13 +988,13 @@ pub extern "C" fn dl_recording_stream_spawn(
 #[expect(clippy::result_large_err)]
 fn dl_recording_stream_save_impl(
     stream: CRecordingStream,
-    rrd_filepath: CStringView,
+    dlr_filepath: CStringView,
 ) -> Result<(), CError> {
-    let rrd_filepath = rrd_filepath.as_nonempty_str("path")?;
-    recording_stream(stream)?.save(rrd_filepath).map_err(|err| {
+    let dlr_filepath = dlr_filepath.as_nonempty_str("path")?;
+    recording_stream(stream)?.save(dlr_filepath).map_err(|err| {
         CError::new(
             CErrorCode::RecordingStreamSaveFailure,
-            &format!("Failed to save recording stream to {rrd_filepath:?}: {err}"),
+            &format!("Failed to save recording stream to {dlr_filepath:?}: {err}"),
         )
     })
 }

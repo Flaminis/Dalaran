@@ -74,12 +74,12 @@ snippet: howto/serve_web_viewer
 
 ### `save`
 
-Streams all logging data into an `.rrd` file on disk, which can then be loaded into a stand-alone viewer.
+Streams all logging data into an `.dlr` file on disk, which can then be loaded into a stand-alone viewer.
 
-To view the saved file, use `dalaran path/to/file.rrd`.
+To view the saved file, use `dalaran path/to/file.dlr`.
 
 > [!NOTE]
-> RRD files saved with Dalaran 0.23 or later can be opened with a newer Dalaran version.
+> DLR files saved with Dalaran 0.23 or later can be opened with a newer Dalaran version.
 > For more details and potential limitations, please refer to [our blog post](https://dalaran.dev/blog/release-0.23).
 
 > [!WARNING]

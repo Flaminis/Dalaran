@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Runs all our snippets, for all our languages, and compares the .rrd they output."""
+"""Runs all our snippets, for all our languages, and compares the .dlr they output."""
 
 from __future__ import annotations
 
@@ -59,7 +59,7 @@ class Example:
         return []
 
     def output_path(self, language: str) -> str:
-        return f"docs/snippets/all/{self.subdir}/{self.name}_{language}.rrd"
+        return f"docs/snippets/all/{self.subdir}/{self.name}_{language}.dlr"
 
     def backwards_compatibility_path(self) -> Path:
         """
@@ -68,7 +68,7 @@ class Example:
         We use this path as a source for comparison ("are old files correctly migrated?")
         and as a destination when these files need updating using --write-missing-backward-assets.
         """
-        return Path(f"tests/assets/rrd/snippets/{self.subdir}/{self.name}.rrd")
+        return Path(f"tests/assets/dlr/snippets/{self.subdir}/{self.name}.dlr")
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Example):
@@ -107,7 +107,7 @@ def main() -> None:
         action="store_true",
         help="Skip cmake configure and ahead of time build for dalaran_c & dalaran_prebuilt_cpp",
     )
-    parser.add_argument("--full-dump", action="store_true", help="Dump both rrd files as tables")
+    parser.add_argument("--full-dump", action="store_true", help="Dump both dlr files as tables")
     parser.add_argument(
         "--release",
         action="store_true",
@@ -128,7 +128,7 @@ def main() -> None:
     parser.add_argument(
         "--write-missing-backward-assets",
         action="store_true",
-        help="Add any missing asset files to tests/assets/rrd/snippets",
+        help="Add any missing asset files to tests/assets/dlr/snippets",
     )
     parser.add_argument(
         "example",
@@ -274,7 +274,7 @@ def main() -> None:
                         f"Missing {backwards_path}. Run compare_snippet_output.py --write-missing-backward-assets to create it"
                     )
             except Exception as e:
-                errors.append((example, "old-rrd-files", e))
+                errors.append((example, "old-dlr-files", e))
 
         if "cpp" in active_languages:
             if "cpp" in example_opt_out_entirely:
@@ -454,7 +454,7 @@ def run_prebuilt_cpp(example: Example) -> str:
     return output_path
 
 
-def check_non_empty_rrd(path: str) -> None:
+def check_non_empty_dlr(path: str) -> None:
     from pathlib import Path
 
     assert Path(path).stat().st_size > 0

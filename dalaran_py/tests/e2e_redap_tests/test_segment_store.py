@@ -26,7 +26,7 @@ def first_segment_store(readonly_test_dataset: DatasetEntry) -> LazyStore:
 def single_segment_store(entry_factory: EntryFactory, resource_prefix: str) -> LazyStore:
     """A `LazyStore` over a freshly-registered dataset containing exactly one segment."""
     ds = entry_factory.create_dataset("single_segment")
-    handle = ds.register([resource_prefix + "dataset/file1.rrd"])
+    handle = ds.register([resource_prefix + "dataset/file1.dlr"])
     handle.wait(timeout_secs=50)
     segment_ids = ds.segment_ids()
     assert len(segment_ids) == 1
@@ -54,11 +54,11 @@ def test_segment_store_stream_to_chunks(first_segment_store: LazyStore) -> None:
         assert chunk.num_rows > 0
 
 
-def test_segment_store_write_rrd_roundtrip(single_segment_store: LazyStore, tmp_path: Path) -> None:
-    """Round-trip a single segment through `write_rrd`: schema and chunk count are preserved."""
-    out = tmp_path / "out.rrd"
+def test_segment_store_write_dlr_roundtrip(single_segment_store: LazyStore, tmp_path: Path) -> None:
+    """Round-trip a single segment through `write_dlr`: schema and chunk count are preserved."""
+    out = tmp_path / "out.dlr"
 
-    single_segment_store.stream().write_rrd(out, application_id="dalaran_example_test", recording_id="rec")
+    single_segment_store.stream().write_dlr(out, application_id="dalaran_example_test", recording_id="rec")
 
     roundtripped = RrdReader(out).store()
     assert roundtripped.schema() == single_segment_store.schema()

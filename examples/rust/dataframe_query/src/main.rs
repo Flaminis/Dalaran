@@ -1,10 +1,10 @@
 //! Demonstrates basic usage of the dataframe APIs.
 
 use itertools::Itertools;
-use rerun::ChunkStoreConfig;
-use rerun::dataframe::{QueryEngine, QueryExpression, SparseFillStrategy, TimelineName};
-use rerun::external::arrow;
-use rerun::external::dl_arrow_util::format_record_batch;
+use dalaran::ChunkStoreConfig;
+use dalaran::dataframe::{QueryEngine, QueryExpression, SparseFillStrategy, TimelineName};
+use dalaran::external::arrow;
+use dalaran::external::dl_arrow_util::format_record_batch;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().collect_vec();
@@ -16,16 +16,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "{}",
                 unindent::unindent(&format!(
                     "\
-                    Usage: {bin_name} <path_to_rrd> [entity_path_filter]
+                    Usage: {bin_name} <path_to_dlr> [entity_path_filter]
 
                     This example will query for the first 10 rows of data in your recording of choice,
                     and display the results as a table in your terminal.
 
                     You can use one of your recordings, or grab one from our hosted examples, e.g.:
-                    curl 'https://app.rerun.io/version/latest/examples/dna.rrd' -o - > /tmp/dna.rrd
+                    curl 'https://app.dalaran.dev/version/latest/examples/dna.dlr' -o - > /tmp/dna.dlr
 
                     The results can be filtered further by specifying an entity filter expression:
-                    {bin_name} my_recording.rrd /helix/structure/**\
+                    {bin_name} my_recording.dlr /helix/structure/**\
                     ",
                 )),
             );
@@ -34,11 +34,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         value
     };
 
-    let path_to_rrd = get_arg(1);
+    let path_to_dlr = get_arg(1);
     let entity_path_filter = args.get(2).map_or("/**", |s| s.as_str()).parse()?;
     let timeline = TimelineName::log_time();
 
-    let engines = QueryEngine::from_rrd_filepath(&ChunkStoreConfig::DEFAULT, path_to_rrd)?;
+    let engines = QueryEngine::from_dlr_filepath(&ChunkStoreConfig::DEFAULT, path_to_dlr)?;
 
     for (store_id, engine) in engines {
         if !store_id.is_recording() {

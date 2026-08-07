@@ -148,7 +148,7 @@ fn main() -> anyhow::Result<()> {
         let msgs: Vec<_> = storage
             .take()
             .into_iter()
-            .map(|msg| anyhow::Ok(msg.to_transport(dl_log_encoding::rrd::Compression::LZ4)?))
+            .map(|msg| anyhow::Ok(msg.to_transport(dl_log_encoding::dlr::Compression::LZ4)?))
             .try_collect()?;
 
         use dalaran::external::dl_log_encoding::ToApplication as _;

@@ -69,12 +69,12 @@ fn load_blueprint_from_file(test_context: &mut TestContext, path: &Path) {
     let file = std::fs::File::open(path).expect("Failed to open blueprint file.");
     let reader = std::io::BufReader::new(file);
     let data_source = dl_log_channel::LogSource::File { path: path.into() };
-    let rbl_store = dl_entity_db::StoreBundle::from_rrd(reader, &data_source)
+    let dbl_store = dl_entity_db::StoreBundle::from_dlr(reader, &data_source)
         .expect("Failed to load blueprint store");
     {
         let mut lock = test_context.store_hub.lock();
         let app_id = test_context.application_id.clone();
-        lock.load_blueprint_store(rbl_store, &app_id)
+        lock.load_blueprint_store(dbl_store, &app_id)
             .expect("Failed to load blueprint store");
     }
 
@@ -110,11 +110,11 @@ fn take_snapshot(
 fn test_blueprint_change_and_restore() {
     let mut test_context = TestContext::new();
     log_test_data_and_register_views(&mut test_context, 16);
-    let rbl_file = tempfile::NamedTempFile::new().unwrap();
-    let rbl_path = rbl_file.path();
+    let dbl_file = tempfile::NamedTempFile::new().unwrap();
+    let dbl_path = dbl_file.path();
 
     setup_viewport(&mut test_context);
-    save_blueprint_to_file(&test_context, rbl_path);
+    save_blueprint_to_file(&test_context, dbl_path);
 
     // Remove the first view and add 3 new ones.
     test_context.setup_viewport_blueprint(|_ctx, blueprint| {
@@ -127,7 +127,7 @@ fn test_blueprint_change_and_restore() {
         ].into_iter(), None, None);
     });
 
-    load_blueprint_from_file(&mut test_context, rbl_path);
+    load_blueprint_from_file(&mut test_context, dbl_path);
     let mut snapshot_results = egui_kittest::SnapshotResults::new();
     take_snapshot(
         &test_context,
@@ -142,11 +142,11 @@ fn test_blueprint_load_into_new_context() {
     let mut test_context = TestContext::new();
     log_test_data_and_register_views(&mut test_context, 10);
 
-    let rbl_file = tempfile::NamedTempFile::new().unwrap();
-    let rbl_path = rbl_file.path();
+    let dbl_file = tempfile::NamedTempFile::new().unwrap();
+    let dbl_path = dbl_file.path();
 
     setup_viewport(&mut test_context);
-    save_blueprint_to_file(&test_context, rbl_path);
+    save_blueprint_to_file(&test_context, dbl_path);
     take_snapshot(
         &test_context,
         "blueprint_load_into_new_context_1",
@@ -156,7 +156,7 @@ fn test_blueprint_load_into_new_context() {
     let mut test_context_2 = TestContext::new();
     log_test_data_and_register_views(&mut test_context_2, 20);
 
-    load_blueprint_from_file(&mut test_context_2, rbl_path);
+    load_blueprint_from_file(&mut test_context_2, dbl_path);
     take_snapshot(
         &test_context_2,
         "blueprint_load_into_new_context_2",

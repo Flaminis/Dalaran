@@ -45,7 +45,7 @@ pub struct InMemoryStore {
 
     /// Config applied to eager (in-memory) chunk stores created by this server.
     ///
-    /// Lazy stores load their config from their RRD manifest and ignore this
+    /// Lazy stores load their config from their DLR manifest and ignore this
     /// value. Exposed via the builder as a testing hook so integration tests can
     /// tune eager chunk-store knobs without relying on global env vars.
     eager_chunk_store_config: ChunkStoreConfig,
@@ -77,7 +77,7 @@ impl InMemoryStore {
     }
 
     /// Default eager `ChunkStoreConfig` for callsites that can't take a `&self`
-    /// (e.g. the static `ResolvedStore::load_rrd_file` eager-load fallback).
+    /// (e.g. the static `ResolvedStore::load_dlr_file` eager-load fallback).
     pub fn default_eager_chunk_store_config() -> ChunkStoreConfig {
         ChunkStoreConfig::CHANGELOG_DISABLED
             .apply_env()
@@ -197,9 +197,9 @@ impl InMemoryStore {
         Ok(result)
     }
 
-    /// Load a single RRD into an existing dataset, registering stores in the pool.
+    /// Load a single DLR into an existing dataset, registering stores in the pool.
     #[cfg(not(target_arch = "wasm32"))]
-    pub async fn register_rrd_to_dataset(
+    pub async fn register_dlr_to_dataset(
         &mut self,
         dataset_id: EntryId,
         path: &std::path::Path,
@@ -212,7 +212,7 @@ impl InMemoryStore {
             .get_mut(&dataset_id)
             .ok_or(Error::EntryIdNotFound(dataset_id))?;
         dataset
-            .register_rrd(
+            .register_dlr(
                 &mut self.store_pool,
                 path,
                 layer_name,
@@ -223,7 +223,7 @@ impl InMemoryStore {
     }
 
     /// Load a directory of RRDs.
-    //TODO(ab): maybe we could be smart with .rbl and auto-setup a blueprint dataset?
+    //TODO(ab): maybe we could be smart with .dbl and auto-setup a blueprint dataset?
     #[cfg(not(target_arch = "wasm32"))]
     pub async fn load_directory_as_dataset(
         &mut self,
@@ -257,14 +257,14 @@ impl InMemoryStore {
         let mut entries = tokio::fs::read_dir(&directory).await?;
         while let Some(entry) = entries.next_entry().await? {
             if entry.file_type().await?.is_file() {
-                let is_rrd = entry
+                let is_dlr = entry
                     .file_name()
                     .to_str()
-                    .is_some_and(|s| s.to_lowercase().ends_with(".rrd"));
+                    .is_some_and(|s| s.to_lowercase().ends_with(".dlr"));
 
-                if is_rrd {
+                if is_dlr {
                     let load_result = self
-                        .register_rrd_to_dataset(
+                        .register_dlr_to_dataset(
                             dataset_id,
                             &entry.path(),
                             None,

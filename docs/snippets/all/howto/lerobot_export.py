@@ -23,10 +23,10 @@ from dalaran_lerobot.types import LeRobotConversionConfig, VideoSpec
 
 import dalaran as dl
 
-# Start a server with RRD recordings
-# In practice, you would point this to your directory of RRD files
+# Start a server with DLR recordings
+# In practice, you would point this to your directory of DLR files
 sample_5_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "sample_5"
 )
 
 server = dl.server.Server(datasets={"robot_dataset": sample_5_path})

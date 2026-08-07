@@ -346,8 +346,8 @@ impl fmt::Debug for BufferedSink {
 /// Although very similar to `BufferedSink` this sink is a real-endpoint. When creating
 /// a new sink the logged messages stay with the `MemorySink` (`drain_backlog` does nothing).
 ///
-/// Additionally the raw storage can be accessed and used to create an in-memory RRD.
-/// This is useful for things like the inline rrd-viewer in Jupyter notebooks.
+/// Additionally the raw storage can be accessed and used to create an in-memory DLR.
+/// This is useful for things like the inline dlr-viewer in Jupyter notebooks.
 pub struct MemorySink(MemorySinkStorage);
 
 impl MemorySink {
@@ -487,7 +487,7 @@ impl MemorySinkStorage {
         encoder.into_inner()
     }
 
-    /// Drain the stored messages and return them as an in-memory RRD.
+    /// Drain the stored messages and return them as an in-memory DLR.
     ///
     /// This automatically takes care of flushing the underlying [`crate::RecordingStream`].
     #[inline]

@@ -631,7 +631,7 @@ impl From<dl_log_types::StoreKind> for crate::common::v1alpha1::StoreKind {
 
 /// The store id failed to deserialize due to missing application id.
 ///
-/// This may happen when migrating older RRD (before application ID was moved to `StoreId`). This
+/// This may happen when migrating older DLR (before application ID was moved to `StoreId`). This
 /// error can be recovered from if the application ID is known.
 //TODO(#10730): this is specifically for 0.24 back compat. Switch to `TypeConversionError` when cleaning up.
 #[derive(Debug, Clone)]

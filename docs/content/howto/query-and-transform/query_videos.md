@@ -58,7 +58,7 @@ This preprocessing approach:
 
 - Decodes the video once to detect which packets are keyframes using `packet.is_keyframe`
 - Creates sparse data containing only keyframe timestamps
-- Writes the keyframe data to a separate RRD file
+- Writes the keyframe data to a separate DLR file
 - Registers it as a layer on the dataset
 
 Once registered, the layer data appears as additional columns when querying the dataset (see [catalog object model](../../concepts/query-and-transform/catalog-object-model.md#datasets) for details on datasets and layers).

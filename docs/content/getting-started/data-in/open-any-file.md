@@ -18,14 +18,14 @@ All these file loading methods support loading a single file, many files at once
 
 The following data types have built-in support in the Dalaran Viewer and SDK:
 
--   Native Dalaran files: `rrd`
+-   Native Dalaran files: `dlr`
 -   3D models: `gltf`, `glb`, `obj`, `stl`
 -   Images: `avif`, `bmp`, `dds`, `exr`, `farbfeld`, `ff`, `gif`, `hdr`, `ico`, `jpeg`, `jpg`, `pam`, `pbm`, `pgm`, `png`, `ppm`, `tga`, `tif`, `tiff`, `webp`
 -   Point clouds: `ply`
 -   Text files: `md`, `txt`
 -   [LeRobot](https://huggingface.co/docs/lerobot/index) datasets: `directory`
 
-With the exception of `rrd` files that can be streamed from an HTTP URL (e.g. `dalaran https://demo.dalaran.dev/version/latest/examples/dna/data.rrd`), we only support loading files from the local filesystem for now, with [plans to make this generic over any URI and protocol in the future](https://github.com/rerun-io/rerun/issues/4525).
+With the exception of `dlr` files that can be streamed from an HTTP URL (e.g. `dalaran https://demo.dalaran.dev/version/latest/examples/dna/data.dlr`), we only support loading files from the local filesystem for now, with [plans to make this generic over any URI and protocol in the future](https://github.com/rerun-io/rerun/issues/4525).
 
 ## Logging file contents from the SDK
 

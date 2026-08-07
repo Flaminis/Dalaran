@@ -91,7 +91,7 @@ For this we also provide a new `AnyValues.with_field` method.
 ### Changes
 
 When logging data to Dalaran using the builtin archetypes no changes to user code should be required.
-There is also migration code in place so that you can open `.rrd` files that were created with `v0.23`.
+There is also migration code in place so that you can open `.dlr` files that were created with `v0.23`.
 Recordings from `v0.22` can also be loaded, but need to be migrated using the migration tool from `v0.23` first.
 
 These changes are reflected in various parts of the Dalaran viewer:
@@ -117,7 +117,7 @@ In practice this means that component defaults are now limited to a single arche
 
 * In some cases, it is not possible to migrate previous blueprints, _but only if they were saved from the viewer via the UI_.
 * Currently, only Dalaran-builtin components are picked up by the visualizers and therefore shown in the views (except for the dataframe view which shows all components).
-* In `v0.23`, the LeRobot dataloader logged incomplete `ComponentDescriptors` for robot observations and actions. To fix this, load the dataset in `v0.24` and resave your episodes to `.rrd` (`v0.24` now supports saving all selected recordings).
+* In `v0.23`, the LeRobot dataloader logged incomplete `ComponentDescriptors` for robot observations and actions. To fix this, load the dataset in `v0.24` and resave your episodes to `.dlr` (`v0.24` now supports saving all selected recordings).
 * Overriding visualizers to reinterpret data (e.g. show a point-cloud for mesh vertices) is no longer possible, since visualizers now match for <archetype>:<field> instead of component type name. This will be addressed in the future with blueprint-driven overrides that will allow to remap data to arbitrary archetypes.
 * `VisualizerOverrides` are now limited to time series views, and _stop to be supported for general views_, such as the spatial views.
 * The `markers` component on `SeriesPoints` is now marked as _required_, to avoid accidentally logging an archetype without any associated data. In Python, when no component is supplied we automatically set the `markers` shape to `Circle` to avoid breaking user code.

@@ -111,10 +111,10 @@ class ViewerWidget {
 
   on_custom_message = (msg: any, buffers: DataView[]) => {
     switch (msg?.type) {
-      case "rrd": {
+      case "dlr": {
         if (!this.channel)
           throw new Error("on_custom_message called before channel init");
-        this.channel.send_rrd(new Uint8Array(buffers[0].buffer));
+        this.channel.send_dlr(new Uint8Array(buffers[0].buffer));
         break;
       }
       case "table": {

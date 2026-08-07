@@ -39,7 +39,7 @@ fn validity_checks() {
 /// The buffer-slice fast path used by fixed-size-list deserializers must reject malformed data
 /// rather than panic inside `bytemuck`.
 ///
-/// Deserializers run on arbitrary `.rrd` payloads, so a wrong list width is untrusted input,
+/// Deserializers run on arbitrary `.dlr` payloads, so a wrong list width is untrusted input,
 /// not a programming error.
 #[test]
 fn nested_fixed_size_list_of_the_wrong_width_errors() {

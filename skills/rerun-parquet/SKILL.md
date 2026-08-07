@@ -1,21 +1,21 @@
 ---
-name: rerun-parquet
-description: Ingest tabular Parquet files into Rerun chunk streams with rerun.experimental.ParquetReader. Read when converting trajectory or sensor tables (LeRobot-style parquet, exported logs) into entities and components — column grouping, timeline/index columns, static columns, and lenses (DeriveLens) that assemble the typed components (Transform3D, Scalars) from the reader's grouped struct/scalar output. Builds on rerun-chunk-processing and rerun-data-model.
+name: dalaran-parquet
+description: Ingest tabular Parquet files into Dalaran chunk streams with dalaran.experimental.ParquetReader. Read when converting trajectory or sensor tables (LeRobot-style parquet, exported logs) into entities and components — column grouping, timeline/index columns, static columns, and lenses (DeriveLens) that assemble the typed components (Transform3D, Scalars) from the reader's grouped struct/scalar output. Builds on dalaran-chunk-processing and dalaran-data-model.
 user_invocable: true
 allowed-tools: Read, Grep, Bash, WebFetch
 ---
 
-# Rerun parquet ingestion
+# Dalaran parquet ingestion
 
-`ParquetReader` is a **pure reader**: it maps a flat table onto the Rerun
+`ParquetReader` is a **pure reader**: it maps a flat table onto the Dalaran
 model by turning raw columns into grouped, time-indexed chunks of struct and
 scalar components. Column-name prefixes become entities, grouped columns
 become a single struct component, designated columns become timelines. The
 reader does **not** assemble archetypes anymore — mapping struct fields into
-typed Rerun components (Transform3D, Scalars, Points3D) is done with lenses on
+typed Dalaran components (Transform3D, Scalars, Points3D) is done with lenses on
 the reader's `.stream()`. The whole reader job is configuration; fill in the
-`rerun-data-model` mapping table first, then express it through `stream()`.
-Stream mechanics after `.stream()` are in `rerun-chunk-processing`.
+`dalaran-data-model` mapping table first, then express it through `stream()`.
+Stream mechanics after `.stream()` are in `dalaran-chunk-processing`.
 
 **The whole table is configuration, not code.** If you find yourself building
 `Chunk.from_columns` from a parquet, or munging it in pandas first, stop —
@@ -27,7 +27,7 @@ columnar.
 ## The API
 
 ```python
-from rerun.experimental import ParquetReader, DeriveLens, IndexColumn
+from dalaran.experimental import ParquetReader, DeriveLens, IndexColumn
 
 reader = ParquetReader(table_path)  # a lightweight handle over the file
 stream = reader.stream(
@@ -93,12 +93,12 @@ queries see as separate columns).
 Each entry is built with `IndexColumn`: `IndexColumn.timestamp(name, input_unit=...)` (since epoch), `IndexColumn.duration(name, input_unit=...)` (elapsed), or `IndexColumn.sequence(name)` (ordinal int).
 
 - `input_unit` describes what the raw integers in the column *are* (`"ns"` default,
-  `"us"`, `"ms"`, `"s"`); Rerun rescales to ns internally. Sequences take no unit.
+  `"us"`, `"ms"`, `"s"`); Dalaran rescales to ns internally. Sequences take no unit.
 
 **If omitted, a synthetic `row_index` sequence timeline is generated.** That
 is almost never the timeline you want to query or align against; always name
 the real time columns. Stamp both a timestamp and a sequence timeline when the
-table has both (multi-rate alignment, see `rerun-data-model`).
+table has both (multi-rate alignment, see `dalaran-data-model`).
 
 ## Static columns: `static_columns`
 
@@ -110,7 +110,7 @@ data-quality signal, not a reason to drop the static declaration.
 ## Typed components via lenses
 
 The reader's grouped output is generic struct (`data`) and scalar data. A
-`DeriveLens` reads that struct's fields, packs and casts them into real Rerun
+`DeriveLens` reads that struct's fields, packs and casts them into real Dalaran
 components, and writes them to an output entity — this is what the old
 `column_rules` API used to do, now done downstream on the stream.
 
@@ -155,7 +155,7 @@ struct at `/A`; the lens reads the prefix-stripped field names (`pos_x`,
 `quat_w`), packs and casts them, and writes a full `Transform3D` to `/pose`:
 
 ```python
-from rerun.experimental import DeriveLens, IndexColumn, ParquetReader
+from dalaran.experimental import DeriveLens, IndexColumn, ParquetReader
 
 lens = (
     DeriveLens("data", output_entity="/pose")
@@ -178,8 +178,8 @@ above, both `Transform3D:translation` and `Transform3D:quaternion` land on
 component, pass the descriptor to `to_packed_component`:
 
 ```python
-import rerun as rr
-from rerun.experimental import DeriveLens, ParquetReader
+import dalaran as rr
+from dalaran.experimental import DeriveLens, ParquetReader
 
 lens = DeriveLens("data", output_entity="/points").to_packed_component(
     rr.Points3D.descriptor_positions(), "x", "y", "z"
@@ -220,23 +220,23 @@ when you need a custom field path. Field paths reference the
    parquet's double columns.
 9. Anything the reader cannot express (per-row entity routing, derived values,
    unit conversion) belongs in lenses downstream, not in pre-pandas munging;
-   keep the pipeline columnar (`rerun-chunk-processing`).
+   keep the pipeline columnar (`dalaran-chunk-processing`).
 
 ## References
 
-- Lens builder source with full docstrings: `rerun/experimental/_lens.py` in
-  the installed `rerun-sdk` package (`to_translation`, `to_quaternion`,
+- Lens builder source with full docstrings: `dalaran/experimental/_lens.py` in
+  the installed `dalaran-sdk` package (`to_translation`, `to_quaternion`,
   `to_scale`, `to_rotation_axis_angle`, `to_scalars`, `to_packed_component`,
   `to_component`, `to_timeline`).
-- Reader source: `rerun/experimental/_parquet_reader.py`, or
-  `python -c "from rerun.experimental import ParquetReader; help(ParquetReader)"`
+- Reader source: `dalaran/experimental/_parquet_reader.py`, or
+  `python -c "from dalaran.experimental import ParquetReader; help(ParquetReader)"`
 - Canonical worked examples: the integration tests
-  `rerun_py/tests/integration/test_parquet_reader.py` (grouping, index/static
+  `dalaran_py/tests/integration/test_parquet_reader.py` (grouping, index/static
   columns, and the Transform3D / Points3D / Scalars lens flows) and
-  `rerun_py/tests/integration/test_lazy_chunk_stream.py` (lens application,
+  `dalaran_py/tests/integration/test_lazy_chunk_stream.py` (lens application,
   `content`/`output_mode`, selectors).
-- `rerun-lerobot` — LeRobot datasets store episodes as parquet; that skill
+- `dalaran-lerobot` — LeRobot datasets store episodes as parquet; that skill
   covers the built-in importer route vs reading the parquet directly with
   this reader.
-- `rerun-data-model` (mapping decisions), `rerun-chunk-processing` (stream
+- `dalaran-data-model` (mapping decisions), `dalaran-chunk-processing` (stream
   mechanics after `.stream()`)

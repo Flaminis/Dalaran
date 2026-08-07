@@ -11,7 +11,7 @@ mod query_filter;
 mod query_index_values;
 mod register_asset;
 mod register_segment;
-mod rrd_manifest;
+mod dlr_manifest;
 mod scan_filter;
 mod unregister_segment;
 mod update_entry;
@@ -169,11 +169,11 @@ define_redap_tests! {
     register_segment::register_with_prefix,
     scan_filter::scan_segment_table_filter,
     scan_filter::scan_dataset_manifest_filter,
-    rrd_manifest::segment_id_not_found,
-    rrd_manifest::simple_dataset_rrd_manifest,
-    rrd_manifest::unregistered_segment,
-    rrd_manifest::layered_segment,
-    rrd_manifest::layered_segment_stress,
+    dlr_manifest::segment_id_not_found,
+    dlr_manifest::simple_dataset_dlr_manifest,
+    dlr_manifest::unregistered_segment,
+    dlr_manifest::layered_segment,
+    dlr_manifest::layered_segment_stress,
     unregister_segment::unregister_invalid_args,
     unregister_segment::unregister_missing_dataset,
     unregister_segment::unregister_missing_segment,

@@ -121,7 +121,7 @@ pub struct RegisterWithDatasetDataframe {
     /// The layer the data source was registered as.
     pub dalaran_segment_layer: quiver::Column<LayerName>,
 
-    /// The kind of data source, e.g. `rrd`.
+    /// The kind of data source, e.g. `dlr`.
     pub dalaran_segment_type: quiver::Column<quiver::Utf8>,
 
     /// Where the data source's data is stored.
@@ -185,7 +185,7 @@ pub struct ScanDatasetManifestDataframe {
     /// Where the data of this row's source is stored.
     pub dalaran_storage_url: quiver::Column<quiver::Utf8>,
 
-    /// The kind of data source backing this row, e.g. `rrd`
+    /// The kind of data source backing this row, e.g. `dlr`
     /// (see [`DataSourceKind`](crate::cloud::v1alpha1::ext::DataSourceKind)).
     pub dalaran_layer_type: quiver::Column<quiver::Utf8>,
 

@@ -28,7 +28,7 @@ pub struct RegisterWithDatasetResult {
     /// Layer name for each registered source.
     pub segment_layers: Vec<LayerName>,
 
-    /// File format of each source (e.g. `"rrd"`).
+    /// File format of each source (e.g. `"dlr"`).
     pub segment_types: Vec<ext::DataSourceKind>,
 
     /// Storage URL for each source.
@@ -43,7 +43,7 @@ pub struct RegisterWithDatasetResult {
 /// but not yet loaded into memory.
 enum ValidatedSource {
     File {
-        rrd_path: PathBuf,
+        dlr_path: PathBuf,
         layer_info: Arc<LayerInfo>,
         storage_url: url::Url,
     },
@@ -113,7 +113,7 @@ async fn validate_sources(
         }
 
         match kind {
-            ext::DataSourceKind::Rrd => {}
+            ext::DataSourceKind::Dlr => {}
         }
 
         let layer_name = if layer.is_empty() {
@@ -184,24 +184,24 @@ async fn validate_file_source(
     layer_info: Arc<LayerInfo>,
     seen: &mut BTreeMap<(LayerName, SegmentId), Vec<url::Url>>,
 ) -> tonic::Result<Option<ValidatedSource>> {
-    let rrd_path = rrd_path_from_url(storage_url)?;
-    let metadata = fs::metadata(&rrd_path)
+    let dlr_path = dlr_path_from_url(storage_url)?;
+    let metadata = fs::metadata(&dlr_path)
         .await
         .map_err(|err| match err.kind() {
             std::io::ErrorKind::NotFound => tonic::Status::not_found(format!(
-                "RRD file not found, file does not exist: {rrd_path:?}"
+                "DLR file not found, file does not exist: {dlr_path:?}"
             )),
             _ => tonic::Status::internal(format!(
-                "Failed to check whether RRD file exists: {err:#}\nFile path: {rrd_path:?}"
+                "Failed to check whether DLR file exists: {err:#}\nFile path: {dlr_path:?}"
             )),
         })?;
     if !metadata.is_file() {
         return Err(tonic::Status::not_found(format!(
-            "RRD file not found, path is not a file: {rrd_path:?}"
+            "DLR file not found, path is not a file: {dlr_path:?}"
         )));
     }
 
-    let store_ids = load_store_ids(&rrd_path).await?;
+    let store_ids = load_store_ids(&dlr_path).await?;
 
     let mut matched = false;
     for store_id in store_ids {
@@ -222,14 +222,14 @@ async fn validate_file_source(
     }
 
     Ok(Some(ValidatedSource::File {
-        rrd_path,
+        dlr_path,
         layer_info,
         storage_url: storage_url.clone(),
     }))
 }
 
-fn rrd_path_from_url(storage_url: &url::Url) -> tonic::Result<PathBuf> {
-    let rrd_path = cfg_select! {
+fn dlr_path_from_url(storage_url: &url::Url) -> tonic::Result<PathBuf> {
+    let dlr_path = cfg_select! {
         target_arch = "wasm32" => {
             // NOTE: `Url::to_file_path` is not available on browser Wasm targets, so keep the
             // Wasm conversion here in sync with native file-URL semantics.
@@ -254,20 +254,20 @@ fn rrd_path_from_url(storage_url: &url::Url) -> tonic::Result<PathBuf> {
         _ => { storage_url.to_file_path() }
     };
 
-    let Ok(rrd_path) = rrd_path else {
+    let Ok(dlr_path) = dlr_path else {
         return if storage_url.scheme() == "file" && storage_url.host().is_some() {
             Err(tonic::Status::not_found(format!(
-                "RRD file not found, file URI should not have a host: {storage_url} \
+                "DLR file not found, file URI should not have a host: {storage_url} \
                  (this may be caused by invalid relative-path URI)"
             )))
         } else {
             Err(tonic::Status::not_found(format!(
-                "RRD file not found, could not load URI: {storage_url}"
+                "DLR file not found, could not load URI: {storage_url}"
             )))
         };
     };
 
-    Ok(rrd_path)
+    Ok(dlr_path)
 }
 
 fn check_intra_request_duplicates(
@@ -327,13 +327,13 @@ async fn load_sources(
             }
 
             ValidatedSource::File {
-                rrd_path,
+                dlr_path,
                 layer_info,
                 storage_url,
             } => {
-                dl_log::info!("Loading {rrd_path:?}…");
+                dl_log::info!("Loading {dlr_path:?}…");
 
-                let stores = ResolvedStore::load_rrd_file(&rrd_path, store_kind).await?;
+                let stores = ResolvedStore::load_dlr_file(&dlr_path, store_kind).await?;
 
                 for (store_id, resolved) in stores {
                     ready.push(ReadySource {
@@ -385,7 +385,7 @@ async fn register_sources(
                 Ok(()) => {
                     result.segment_ids.push(source.segment_id);
                     result.segment_layers.push(source.layer_info.name.clone());
-                    result.segment_types.push(ext::DataSourceKind::Rrd);
+                    result.segment_types.push(ext::DataSourceKind::Dlr);
                     result.storage_urls.push(source.storage_url);
                     result.task_ids.push(TaskId {
                         id: TASK_ID_SUCCESS.to_owned(),
@@ -397,7 +397,7 @@ async fn register_sources(
                 Err(Error::SchemaConflict(msg) | Error::SegmentRejected(msg)) => {
                     result.segment_ids.push(SegmentId::new(String::new()));
                     result.segment_layers.push(source.layer_info.name.clone());
-                    result.segment_types.push(ext::DataSourceKind::Rrd);
+                    result.segment_types.push(ext::DataSourceKind::Dlr);
                     result.storage_urls.push(source.storage_url);
 
                     let task_id = TaskId::new();
@@ -423,34 +423,34 @@ async fn register_sources(
 
 // ---
 
-/// Extracts unique store IDs from an RRD file without loading chunk data.
+/// Extracts unique store IDs from an DLR file without loading chunk data.
 ///
-/// Returns a deduplicated set because a single RRD can contain duplicate
+/// Returns a deduplicated set because a single DLR can contain duplicate
 /// `SetStoreInfo` messages for the same store.
-async fn load_store_ids(rrd_path: &Path) -> tonic::Result<BTreeSet<StoreId>> {
+async fn load_store_ids(dlr_path: &Path) -> tonic::Result<BTreeSet<StoreId>> {
     let file = cfg_select! {
         target_arch = "wasm32" => {
-            dl_web::fs::File::open(rrd_path).await.map_err(|err| {
+            dl_web::fs::File::open(dlr_path).await.map_err(|err| {
                 tonic::Status::internal(format!(
-                    "Failed to open RRD file: {err:#}\nFile path: {rrd_path:?}"
+                    "Failed to open DLR file: {err:#}\nFile path: {dlr_path:?}"
                 ))
             })?
         }
         _ => {
             // TODO(tokio-rs/tokio#1529): positional reads block the reactor; use `std::fs::File`
             // until an async positional file API lands (or push reads to `spawn_blocking`).
-            std::fs::File::open(rrd_path).map_err(|err| {
+            std::fs::File::open(dlr_path).map_err(|err| {
                 tonic::Status::internal(format!(
-                    "Failed to open RRD file: {err:#}\nFile path: {rrd_path:?}"
+                    "Failed to open DLR file: {err:#}\nFile path: {dlr_path:?}"
                 ))
             })?
         }
     };
 
-    let store_ids = dl_log_encoding::enumerate_rrd_stores(&file)
+    let store_ids = dl_log_encoding::enumerate_dlr_stores(&file)
         .await
         .map_err(|err| {
-            tonic::Status::internal(format!("Failed to enumerate RRD stores: {err:#}"))
+            tonic::Status::internal(format!("Failed to enumerate DLR stores: {err:#}"))
         })?;
 
     Ok(store_ids.into_iter().collect())

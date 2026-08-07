@@ -314,7 +314,7 @@ def test_filter_on_index_column_does_not_expand_fetch_set(readonly_test_dataset:
 
 
 # -----------------------------------------------------------------------------
-# Snapshot tests (regression guard for exact output against the committed .rrd fixture).
+# Snapshot tests (regression guard for exact output against the committed .dlr fixture).
 # -----------------------------------------------------------------------------
 
 

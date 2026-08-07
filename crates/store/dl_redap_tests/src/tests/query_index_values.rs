@@ -153,7 +153,7 @@ async fn per_segment_chunk_id_set<T: DalaranCloudService>(
 ///
 /// Returns the [`DataSourcesDefinition`] so the caller can hold its temp
 /// files alive for the full duration of the test — some backends (the Dalaran
-/// Dalaran Hub manifest registry) re-read the RRD files lazily during
+/// Dalaran Hub manifest registry) re-read the DLR files lazily during
 /// `query_dataset`, so dropping the temp dir before that completes results
 /// in `NotFound` errors.
 async fn register_per_segment_dataset(
@@ -464,7 +464,7 @@ async fn query_dataset_emits_per_segment_pushdown_by_time_type<T: DalaranCloudSe
     service
         .register_with_dataset_name_blocking(&dataset_name, data_sources_def.to_data_sources())
         .await;
-    // Keep the temp RRD files alive: some backends re-read them during `query_dataset`.
+    // Keep the temp DLR files alive: some backends re-read them during `query_dataset`.
     let _data_sources = data_sources_def;
 
     let segment_ids = ["seg1", "seg2", "seg3"];

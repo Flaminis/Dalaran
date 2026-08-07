@@ -82,7 +82,7 @@ pub fn create_simple_recording_in(
         return Err(anyhow::anyhow!("Expected `in_dir` to be a directory"));
     }
 
-    let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
+    let tmp_path = in_dir.join(format!("{segment_id}.dlr"));
 
     let rec = RecordingStreamBuilder::new(
         dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
@@ -215,7 +215,7 @@ pub fn create_simple_recording_one_chunk_per_frame_in(
         return Err(anyhow::anyhow!("Expected `in_dir` to be a directory"));
     }
 
-    let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
+    let tmp_path = in_dir.join(format!("{segment_id}.dlr"));
 
     let rec = RecordingStreamBuilder::new(
         dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
@@ -280,7 +280,7 @@ pub fn create_simple_blueprint(
 
     let tmp_path = {
         let dir = tempfile::tempdir()?;
-        let path = dir.path().join(format!("{segment_id}.rbl"));
+        let path = dir.path().join(format!("{segment_id}.dbl"));
         TempPath::new(dir, path)
     };
 
@@ -325,7 +325,7 @@ pub fn create_nasty_recording(
 
     let tmp_path = {
         let dir = tempfile::tempdir()?;
-        let path = dir.path().join(format!("{segment_id}.rrd"));
+        let path = dir.path().join(format!("{segment_id}.dlr"));
         TempPath::new(dir, path)
     };
 
@@ -603,7 +603,7 @@ pub fn create_divergent_component_ranges_recording(
 
     let tmp_path = {
         let dir = tempfile::tempdir()?;
-        let path = dir.path().join(format!("{segment_id}.rrd"));
+        let path = dir.path().join(format!("{segment_id}.dlr"));
         TempPath::new(dir, path)
     };
 
@@ -693,7 +693,7 @@ pub fn create_divergent_component_ranges_recording(
     Ok(tmp_path)
 }
 
-/// Create an rrd recording with embeddings with 256 floats each. Total number of embeddings (rows)
+/// Create an dlr recording with embeddings with 256 floats each. Total number of embeddings (rows)
 /// and number of embeddings per row can be specified.
 ///
 /// Note that creating a Lance vector index requires at least 256 embeddings, but our index creation
@@ -711,7 +711,7 @@ pub fn create_recording_with_embeddings(
 
     let tmp_path = {
         let dir = tempfile::tempdir()?;
-        let path = dir.path().join(format!("{segment_id}.rrd"));
+        let path = dir.path().join(format!("{segment_id}.dlr"));
         TempPath::new(dir, path)
     };
 
@@ -838,7 +838,7 @@ pub fn create_recording_with_scalars(
 
     let tmp_path = {
         let dir = tempfile::tempdir()?;
-        let path = dir.path().join(format!("{segment_id}.rrd"));
+        let path = dir.path().join(format!("{segment_id}.dlr"));
         TempPath::new(dir, path)
     };
 
@@ -887,7 +887,7 @@ pub fn create_recording_with_text(
 
     let tmp_path = {
         let dir = tempfile::tempdir()?;
-        let path = dir.path().join(format!("{segment_id}.rrd"));
+        let path = dir.path().join(format!("{segment_id}.dlr"));
         TempPath::new(dir, path)
     };
 
@@ -956,7 +956,7 @@ pub fn create_recording_with_properties(
 
     let tmp_path = {
         let dir = tempfile::tempdir()?;
-        let path = dir.path().join(format!("{segment_id}.rrd"));
+        let path = dir.path().join(format!("{segment_id}.dlr"));
         TempPath::new(dir, path)
     };
 
@@ -1027,8 +1027,8 @@ fn create_store_with_static_components(
     use dl_chunk::Chunk;
 
     let extension = match store_kind {
-        dl_log_types::StoreKind::Recording => "rrd",
-        dl_log_types::StoreKind::Blueprint => "rbl",
+        dl_log_types::StoreKind::Recording => "dlr",
+        dl_log_types::StoreKind::Blueprint => "dbl",
     };
     let tmp_path = {
         let dir = tempfile::tempdir()?;
@@ -1099,7 +1099,7 @@ pub fn create_minimal_binary_recording_in(
         return Err(anyhow::anyhow!("Expected `in_dir` to be a directory"));
     }
 
-    let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
+    let tmp_path = in_dir.join(format!("{segment_id}.dlr"));
 
     let rec = dl_sdk::RecordingStreamBuilder::new(
         dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
@@ -1143,7 +1143,7 @@ pub fn create_minimal_binary_recording_in(
 
 /// Creates a recording that can be split into multiple chunks.
 ///
-/// This function creates an intentionally unsorted RRD. Each entity will have 9
+/// This function creates an intentionally unsorted DLR. Each entity will have 9
 /// rows of unsorted data. When combined with the environment variable
 /// `DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED=3` it will produce 3 chunks of 3 rows each.
 /// The middle chunk will have nulls in some of the data.
@@ -1163,7 +1163,7 @@ pub fn multi_chunked_entities_recording(
         return Err(anyhow::anyhow!("Expected `in_dir` to be a directory"));
     }
 
-    let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
+    let tmp_path = in_dir.join(format!("{segment_id}.dlr"));
 
     let rec = RecordingStreamBuilder::new(
         dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),

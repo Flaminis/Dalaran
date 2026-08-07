@@ -22,7 +22,7 @@ mod meta {
 ///
 /// The version numbers (`N`) aren't allowed to be very large (current max: 63).
 /// This limited subset is chosen so that we can encode the version in 32 bits
-/// in our `.rrd` files and on the wire.
+/// in our `.dlr` files and on the wire.
 ///
 /// Here is the current binary format:
 /// ```text,ignore

@@ -1,1 +1,1 @@
-rerun-sdk[notebook]
+dalaran-sdk[notebook]

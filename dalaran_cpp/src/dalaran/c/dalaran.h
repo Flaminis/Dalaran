@@ -596,7 +596,7 @@ extern void dl_recording_stream_spawn(
     dl_recording_stream stream, const dl_spawn_options* spawn_opts, dl_error* error
 );
 
-/// Stream all log-data to a given `.rrd` file.
+/// Stream all log-data to a given `.dlr` file.
 ///
 /// This function returns immediately.
 extern void dl_recording_stream_save(dl_recording_stream stream, dl_string path, dl_error* error);

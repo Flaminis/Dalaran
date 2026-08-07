@@ -1,15 +1,15 @@
 //! Custom blueprint configuration for the color coordinates view.
 //!
 //! Built-in views get this from `.fbs` + codegen. This example does it manually:
-//! define a component, make it [`rerun::Loggable`], group it in an [`rerun::Archetype`], provide
+//! define a component, make it [`dalaran::Loggable`], group it in an [`dalaran::Archetype`], provide
 //! reflection, and register an editor UI.
 
-use rerun::external::egui;
-use rerun::external::dl_sdk_types::reflection::{
+use dalaran::external::egui;
+use dalaran::external::dl_sdk_types::reflection::{
     ArchetypeFieldFlags, ArchetypeFieldReflection, ArchetypeReflection,
 };
-use rerun::external::dl_sdk_types::{ArchetypeName, ComponentDescriptor};
-use rerun::external::dl_viewer_context::MaybeMutRef;
+use dalaran::external::dl_sdk_types::{ArchetypeName, ComponentDescriptor};
+use dalaran::external::dl_viewer_context::MaybeMutRef;
 
 /// Blueprint properties for the color coordinates view.
 pub struct ColorCoordinatesConfiguration;
@@ -17,9 +17,9 @@ pub struct ColorCoordinatesConfiguration;
 impl ColorCoordinatesConfiguration {
     pub fn descriptor_mode() -> ComponentDescriptor {
         ComponentDescriptor {
-            archetype: Some(<Self as rerun::Archetype>::name()),
+            archetype: Some(<Self as dalaran::Archetype>::name()),
             component: "ColorCoordinates:mode".into(),
-            component_type: Some(<ColorCoordinatesMode as rerun::Component>::name()),
+            component_type: Some(<ColorCoordinatesMode as dalaran::Component>::name()),
         }
     }
 
@@ -28,7 +28,7 @@ impl ColorCoordinatesConfiguration {
         ArchetypeFieldReflection {
             name: "mode",
             display_name: "Coordinates mode",
-            component_type: <ColorCoordinatesMode as rerun::Component>::name(),
+            component_type: <ColorCoordinatesMode as dalaran::Component>::name(),
             docstring_md: "The color channels to use as 2D coordinates.",
             flags: ArchetypeFieldFlags::UI_EDITABLE,
         }
@@ -36,11 +36,11 @@ impl ColorCoordinatesConfiguration {
 
     /// Reflection metadata for the custom archetype.
     ///
-    /// Register once with [`rerun::external::dl_viewer::App::add_archetype_reflection`] to enable
+    /// Register once with [`dalaran::external::dl_viewer::App::add_archetype_reflection`] to enable
     /// `dl_view::view_property_ui::<ColorCoordinatesConfiguration>`.
     pub fn reflection() -> ArchetypeReflection {
         ArchetypeReflection {
-            display_name: <Self as rerun::Archetype>::display_name(),
+            display_name: <Self as dalaran::Archetype>::display_name(),
             deprecation_summary: None,
             view_types: &[],
             scope: Some("blueprint"),
@@ -49,9 +49,9 @@ impl ColorCoordinatesConfiguration {
     }
 }
 
-impl rerun::Archetype for ColorCoordinatesConfiguration {
+impl dalaran::Archetype for ColorCoordinatesConfiguration {
     fn name() -> ArchetypeName {
-        "rerun.blueprint.archetypes.ColorCoordinates".into()
+        "dalaran.blueprint.archetypes.ColorCoordinates".into()
     }
 
     fn display_name() -> &'static str {
@@ -67,12 +67,12 @@ impl rerun::Archetype for ColorCoordinatesConfiguration {
     }
 }
 
-impl rerun::external::dl_sdk_types::ArchetypeReflectionMarker for ColorCoordinatesConfiguration {}
+impl dalaran::external::dl_sdk_types::ArchetypeReflectionMarker for ColorCoordinatesConfiguration {}
 
 /// The different modes for displaying color coordinates in the custom view.
 ///
 /// This blueprint component is manually encoded as a `UInt32` below.
-#[derive(Default, Debug, PartialEq, Eq, Clone, Copy, rerun::SizeBytes)]
+#[derive(Default, Debug, PartialEq, Eq, Clone, Copy, dalaran::SizeBytes)]
 pub enum ColorCoordinatesMode {
     #[default]
     Hs,
@@ -95,50 +95,50 @@ impl ColorCoordinatesMode {
         }
     }
 
-    fn from_u32(value: u32) -> rerun::DeserializationResult<Self> {
+    fn from_u32(value: u32) -> dalaran::DeserializationResult<Self> {
         match value {
             0 => Ok(Self::Hs),
             1 => Ok(Self::Hv),
             2 => Ok(Self::Rg),
-            _ => Err(rerun::DeserializationError::ValidationError(format!(
+            _ => Err(dalaran::DeserializationError::ValidationError(format!(
                 "invalid color coordinates mode: {value}"
             ))),
         }
     }
 }
 
-impl rerun::Loggable for ColorCoordinatesMode {
+impl dalaran::Loggable for ColorCoordinatesMode {
     // Components are stored as Arrow arrays; encode the enum as stable `UInt32` values.
-    fn arrow_datatype() -> rerun::external::arrow::datatypes::DataType {
-        <rerun::datatypes::UInt32 as rerun::Loggable>::arrow_datatype()
+    fn arrow_datatype() -> dalaran::external::arrow::datatypes::DataType {
+        <dalaran::datatypes::UInt32 as dalaran::Loggable>::arrow_datatype()
     }
 
     fn to_arrow_opt<'a>(
         data: impl IntoIterator<Item = Option<impl Into<std::borrow::Cow<'a, Self>>>>,
-    ) -> rerun::SerializationResult<rerun::external::arrow::array::ArrayRef>
+    ) -> dalaran::SerializationResult<dalaran::external::arrow::array::ArrayRef>
     where
         Self: 'a,
     {
-        <rerun::datatypes::UInt32 as rerun::Loggable>::to_arrow_opt(
+        <dalaran::datatypes::UInt32 as dalaran::Loggable>::to_arrow_opt(
             data.into_iter()
-                .map(|mode| mode.map(|mode| rerun::datatypes::UInt32(mode.into().as_u32()))),
+                .map(|mode| mode.map(|mode| dalaran::datatypes::UInt32(mode.into().as_u32()))),
         )
     }
 
     fn from_arrow_opt(
-        data: &dyn rerun::external::arrow::array::Array,
-    ) -> rerun::DeserializationResult<Vec<Option<Self>>> {
-        <rerun::datatypes::UInt32 as rerun::Loggable>::from_arrow_opt(data)?
+        data: &dyn dalaran::external::arrow::array::Array,
+    ) -> dalaran::DeserializationResult<Vec<Option<Self>>> {
+        <dalaran::datatypes::UInt32 as dalaran::Loggable>::from_arrow_opt(data)?
             .into_iter()
             .map(|mode| mode.map(|mode| Self::from_u32(mode.0)).transpose())
             .collect()
     }
 }
 
-impl rerun::Component for ColorCoordinatesMode {
+impl dalaran::Component for ColorCoordinatesMode {
     // Pick a stable fully-qualified component type name.
-    fn name() -> rerun::ComponentType {
-        "rerun.blueprint.components.ColorCoordinatesMode".into()
+    fn name() -> dalaran::ComponentType {
+        "dalaran.blueprint.components.ColorCoordinatesMode".into()
     }
 }
 

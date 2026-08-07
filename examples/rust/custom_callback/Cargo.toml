@@ -17,11 +17,11 @@ path = "src/app.rs"
 [features]
 default = []
 
-# Turn on if you want to share analytics with Rerun (e.g. callstacks on crashes).
-analytics = ["rerun/analytics"]
+# Turn on if you want to share analytics with Dalaran (e.g. callstacks on crashes).
+analytics = ["dalaran/analytics"]
 
 [dependencies]
-rerun = { path = "../../../crates/top/rerun", default-features = false, features = [
+dalaran = { path = "../../../crates/top/dalaran", default-features = false, features = [
   "native_viewer",
   "run",
   "server",

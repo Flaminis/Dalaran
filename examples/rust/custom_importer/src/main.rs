@@ -1,26 +1,26 @@
 //! This example demonstrates how to implement and register a [`dl_importer::Importer`] into
-//! the Rerun Viewer in order to add support for loading arbitrary files.
+//! the Dalaran Viewer in order to add support for loading arbitrary files.
 //!
 //! Usage:
 //! ```sh
 //! $ cargo r -p custom_importer -- path/to/some/file
 //! ```
 
-use rerun::external::{anyhow, dl_build_info, dl_importer, dl_log};
-use rerun::log::{Chunk, RowId};
-use rerun::{EntityPath, ImportedData, Importer as _, TimePoint};
+use dalaran::external::{anyhow, dl_build_info, dl_importer, dl_log};
+use dalaran::log::{Chunk, RowId};
+use dalaran::{EntityPath, ImportedData, Importer as _, TimePoint};
 
 fn main() -> anyhow::Result<std::process::ExitCode> {
-    let main_thread_token = rerun::MainThreadToken::i_promise_i_am_on_the_main_thread();
+    let main_thread_token = dalaran::MainThreadToken::i_promise_i_am_on_the_main_thread();
     dl_log::setup_logging();
 
     dl_importer::register_custom_importer(HashLoader);
 
     let build_info = dl_build_info::build_info!();
-    rerun::run(
+    dalaran::run(
         main_thread_token,
         build_info,
-        rerun::CallSource::Cli,
+        dalaran::CallSource::Cli,
         std::env::args(),
     )
     .map(std::process::ExitCode::from)
@@ -28,17 +28,17 @@ fn main() -> anyhow::Result<std::process::ExitCode> {
 
 // ---
 
-/// A custom [`dl_importer::Importer`] that logs the hash of file as a [`rerun::TextDocument`].
+/// A custom [`dl_importer::Importer`] that logs the hash of file as a [`dalaran::TextDocument`].
 struct HashLoader;
 
 impl dl_importer::Importer for HashLoader {
     fn name(&self) -> String {
-        "rerun.importers.HashLoader".into()
+        "dalaran.importers.HashLoader".into()
     }
 
     fn import_from_path(
         &self,
-        settings: &rerun::external::dl_importer::ImporterSettings,
+        settings: &dalaran::external::dl_importer::ImporterSettings,
         path: std::path::PathBuf,
         tx: crossbeam::channel::Sender<dl_importer::ImportedData>,
     ) -> Result<(), dl_importer::ImporterError> {
@@ -51,7 +51,7 @@ impl dl_importer::Importer for HashLoader {
 
     fn import_from_file_contents(
         &self,
-        settings: &rerun::external::dl_importer::ImporterSettings,
+        settings: &dalaran::external::dl_importer::ImporterSettings,
         filepath: std::path::PathBuf,
         contents: std::borrow::Cow<'_, [u8]>,
         tx: crossbeam::channel::Sender<dl_importer::ImportedData>,
@@ -61,7 +61,7 @@ impl dl_importer::Importer for HashLoader {
 }
 
 fn hash_and_log(
-    settings: &rerun::external::dl_importer::ImporterSettings,
+    settings: &dalaran::external::dl_importer::ImporterSettings,
     tx: &crossbeam::channel::Sender<dl_importer::ImportedData>,
     filepath: &std::path::Path,
     contents: &[u8],
@@ -72,8 +72,8 @@ fn hash_and_log(
     let mut h = DefaultHasher::new();
     contents.hash(&mut h);
 
-    let doc = rerun::TextDocument::new(format!("{:08X}", h.finish()))
-        .with_media_type(rerun::MediaType::TEXT);
+    let doc = dalaran::TextDocument::new(format!("{:08X}", h.finish()))
+        .with_media_type(dalaran::MediaType::TEXT);
 
     let entity_path = EntityPath::from_file_path(filepath);
     let entity_path = format!("{entity_path}/hashed");

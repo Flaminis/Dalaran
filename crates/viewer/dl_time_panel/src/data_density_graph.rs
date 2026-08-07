@@ -417,7 +417,7 @@ fn smooth(buckets: &[Bucket]) -> Vec<Bucket> {
 /// If the time cursor is over unloaded chunks, this paints a dashed line as a
 /// loading indicator.
 ///
-/// `paint_fully_loaded_ranges` indicates if fully loaded ranges from the rrd
+/// `paint_fully_loaded_ranges` indicates if fully loaded ranges from the dlr
 /// manifest should be filled in.
 pub fn paint_loaded_indicator_bar(
     ctx: &StoreViewContext<'_>,
@@ -488,7 +488,7 @@ pub fn paint_loaded_indicator_bar(
 
     if paint_fully_loaded_ranges {
         let loaded_ranges_on_timeline = db
-            .rrd_manifest_index()
+            .dlr_manifest_index()
             .loaded_ranges_on_timeline(timeline.name());
 
         for range in loaded_ranges_on_timeline {
@@ -595,7 +595,7 @@ pub fn build_density_graph<'a>(
 
     {
         dl_tracing::profile_scope!("unloaded chunks");
-        let entries = db.rrd_manifest_index().unloaded_temporal_entries_for(
+        let entries = db.dlr_manifest_index().unloaded_temporal_entries_for(
             timeline,
             &item.entity_path,
             item.component,

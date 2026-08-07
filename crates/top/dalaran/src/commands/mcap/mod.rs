@@ -44,8 +44,8 @@ pub struct ConvertCommand {
     path_to_input_mcap: String,
 
     /// Path to write to. Writes to standard output if unspecified.
-    #[arg(short = 'o', long = "output", value_name = "dst.rrd")]
-    path_to_output_rrd: Option<String>,
+    #[arg(short = 'o', long = "output", value_name = "dst.dlr")]
+    path_to_output_dlr: Option<String>,
 
     /// If set, specifies the application id of the output.
     #[clap(long = "application-id")]
@@ -188,7 +188,7 @@ impl ConvertCommand {
     fn run(&self) -> anyhow::Result<()> {
         let Self {
             path_to_input_mcap,
-            path_to_output_rrd,
+            path_to_output_dlr,
             application_id,
             recording_id,
             selected_decoders,
@@ -248,7 +248,7 @@ impl ConvertCommand {
             tx,
         )?;
 
-        if let Some(path) = path_to_output_rrd {
+        if let Some(path) = path_to_output_dlr {
             let writer = BufWriter::new(File::create(path)?);
             process_mcap(writer, &rx)?;
         } else {
@@ -267,7 +267,7 @@ impl ConvertCommand {
 /// Manipulate the contents of .mcap files.
 #[derive(Debug, Clone, Subcommand)]
 pub enum McapCommands {
-    /// Convert an .mcap file to an .rrd
+    /// Convert an .mcap file to an .dlr
     Convert(ConvertCommand),
 
     /// Print recording, channel, and compression information for an .mcap file
@@ -296,7 +296,7 @@ fn process_mcap<W: std::io::Write>(
 ) -> anyhow::Result<()> {
     let mut num_total_msgs = 0;
     let mut topics = BTreeSet::new();
-    let options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
     let version = dl_build_info::CrateVersion::LOCAL;
     let mut encoder = Encoder::new_eager(version, options, writer)?;
 

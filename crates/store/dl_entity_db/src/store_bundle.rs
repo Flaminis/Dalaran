@@ -24,9 +24,9 @@ pub struct StoreBundle {
 }
 
 impl StoreBundle {
-    /// Decode an rrd stream.
+    /// Decode an dlr stream.
     /// It can theoretically contain multiple recordings, and blueprints.
-    pub fn from_rrd<R: std::io::Read>(
+    pub fn from_dlr<R: std::io::Read>(
         reader: std::io::BufReader<R>,
         data_source: &dl_log_channel::LogSource,
     ) -> Result<Self, StoreLoadError> {

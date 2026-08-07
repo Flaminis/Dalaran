@@ -42,7 +42,7 @@ def send_chunks_and_read(tmp_path: Path) -> SendChunksAndRead:
     ) -> RrdReader:
         nonlocal counter
         counter += 1
-        out_path = tmp_path / f"out_{counter}.rrd"
+        out_path = tmp_path / f"out_{counter}.dlr"
         with dl.RecordingStream(
             "dalaran_example_dest_app",
             recording_id="dest_rec",
@@ -99,36 +99,36 @@ def test_send_generator(send_chunks_and_read: SendChunksAndRead) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_send_lazy_chunk_stream(send_chunks_and_read: SendChunksAndRead, test_rrd_path: Path) -> None:
-    src_paths = set(RrdReader(test_rrd_path).store().schema().entity_paths())
+def test_send_lazy_chunk_stream(send_chunks_and_read: SendChunksAndRead, test_dlr_path: Path) -> None:
+    src_paths = set(RrdReader(test_dlr_path).store().schema().entity_paths())
 
-    stream = RrdReader(test_rrd_path).stream()
+    stream = RrdReader(test_dlr_path).stream()
     reader = send_chunks_and_read(stream)
 
     dest_paths = set(reader.store().schema().entity_paths())
     assert dest_paths == src_paths
 
 
-def test_send_lazy_chunk_stream_filtered(send_chunks_and_read: SendChunksAndRead, test_rrd_path: Path) -> None:
-    stream = RrdReader(test_rrd_path).stream().filter(content="/robots/**")
+def test_send_lazy_chunk_stream_filtered(send_chunks_and_read: SendChunksAndRead, test_dlr_path: Path) -> None:
+    stream = RrdReader(test_dlr_path).stream().filter(content="/robots/**")
     reader = send_chunks_and_read(stream)
 
     dest_paths = set(reader.store().schema().entity_paths())
     assert dest_paths == {"/robots/arm"}
 
 
-def test_send_lazy_store(send_chunks_and_read: SendChunksAndRead, test_rrd_path: Path) -> None:
-    via_store_reader = send_chunks_and_read(RrdReader(test_rrd_path).store())
-    via_stream_reader = send_chunks_and_read(RrdReader(test_rrd_path).store().stream())
+def test_send_lazy_store(send_chunks_and_read: SendChunksAndRead, test_dlr_path: Path) -> None:
+    via_store_reader = send_chunks_and_read(RrdReader(test_dlr_path).store())
+    via_stream_reader = send_chunks_and_read(RrdReader(test_dlr_path).store().stream())
 
     via_store_paths = set(via_store_reader.store().schema().entity_paths())
     via_stream_paths = set(via_stream_reader.store().schema().entity_paths())
     assert via_store_paths == via_stream_paths
 
 
-def test_send_chunk_store(send_chunks_and_read: SendChunksAndRead, test_rrd_path: Path) -> None:
-    via_store_reader = send_chunks_and_read(RrdReader(test_rrd_path).stream().collect())
-    via_stream_reader = send_chunks_and_read(RrdReader(test_rrd_path).stream().collect().stream())
+def test_send_chunk_store(send_chunks_and_read: SendChunksAndRead, test_dlr_path: Path) -> None:
+    via_store_reader = send_chunks_and_read(RrdReader(test_dlr_path).stream().collect())
+    via_stream_reader = send_chunks_and_read(RrdReader(test_dlr_path).stream().collect().stream())
 
     via_store_paths = set(via_store_reader.store().schema().entity_paths())
     via_stream_paths = set(via_stream_reader.store().schema().entity_paths())
@@ -142,19 +142,19 @@ def test_send_chunk_store(send_chunks_and_read: SendChunksAndRead, test_rrd_path
 
 def test_send_chunks_iterable_type_error(tmp_path: Path) -> None:
     """Non-Chunk items in an iterable raise TypeError when drained."""
-    out = tmp_path / "out.rrd"
+    out = tmp_path / "out.dlr"
     with dl.RecordingStream("dalaran_example_dest_app", recording_id="dest_rec") as rec:
         rec.save(out)
         with pytest.raises(TypeError, match="Chunk"):
             rec.send_chunks(["not a chunk"])  # type: ignore[list-item]
 
 
-def test_send_chunks_consumed_lazy_stream(tmp_path: Path, test_rrd_path: Path) -> None:
+def test_send_chunks_consumed_lazy_stream(tmp_path: Path, test_dlr_path: Path) -> None:
     """A LazyChunkStream consumed by a builder cannot be re-sent."""
-    stream = RrdReader(test_rrd_path).stream()
+    stream = RrdReader(test_dlr_path).stream()
     stream.filter(content="/robots/**")  # consumes `stream`
 
-    out = tmp_path / "out.rrd"
+    out = tmp_path / "out.dlr"
     with dl.RecordingStream("dalaran_example_dest_app", recording_id="dest_rec") as rec:
         rec.save(out)
         with pytest.raises(ValueError):

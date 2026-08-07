@@ -1,5 +1,5 @@
 [package]
-name = "rerun-importer-rust-file"
+name = "dalaran-importer-rust-file"
 version = "0.36.0-alpha.1+dev"
 edition = "2024"
 rust-version = "1.95"
@@ -7,7 +7,7 @@ license = "Apache-2.0"
 publish = false
 
 [dependencies]
-rerun = { path = "../../../crates/top/rerun", default-features = false, features = ["sdk"] }
+dalaran = { path = "../../../crates/top/dalaran", default-features = false, features = ["sdk"] }
 
 anyhow.workspace = true
 argh.workspace = true

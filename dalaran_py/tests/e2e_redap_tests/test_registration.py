@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 
 @pytest.fixture(scope="function")
 def temp_empty_file() -> Iterator[str]:
-    fd, tmp_path = tempfile.mkstemp(suffix=".rrd")
+    fd, tmp_path = tempfile.mkstemp(suffix=".dlr")
     os.close(fd)
     yield f"file://{tmp_path}"
     os.unlink(tmp_path)
@@ -46,7 +46,7 @@ def test_registration_invalidargs(
     try:
         with pytest.raises(ValueError, match="no data sources to register"):
             ds.register([])
-        with pytest.raises(ValueError, match="no rrd files found in"):
+        with pytest.raises(ValueError, match="no dlr files found in"):
             ds.register_prefix(temp_empty_directory)
         with pytest.raises(ValueError, match="expected prefix / directory but got an object"):
             ds.register_prefix(temp_empty_file)
@@ -326,8 +326,8 @@ def test_register_conflicting_schema(entry_factory: EntryFactory, tmp_path: Path
 
     import pyarrow as pa
 
-    seg_1_path = tmp_path / "segment1.rrd"
-    seg_2_path = tmp_path / "segment2.rrd"
+    seg_1_path = tmp_path / "segment1.dlr"
+    seg_2_path = tmp_path / "segment2.dlr"
 
     with dl.RecordingStream("dalaran_example_conflicting_schema", recording_id="segment1") as rec:
         rec.save(seg_1_path)
@@ -349,8 +349,8 @@ def test_register_conflicting_property_schema(entry_factory: EntryFactory, tmp_p
 
     import pyarrow as pa
 
-    seg_1_path = tmp_path / "segment1.rrd"
-    seg_2_path = tmp_path / "segment2.rrd"
+    seg_1_path = tmp_path / "segment1.dlr"
+    seg_2_path = tmp_path / "segment2.dlr"
 
     with dl.RecordingStream("dalaran_example_conflicting_schema", recording_id="segment1") as rec:
         rec.save(seg_1_path)
@@ -372,8 +372,8 @@ def test_failed_registration_not_in_segment_table(entry_factory: EntryFactory, t
 
     import pyarrow as pa
 
-    seg_1_path = tmp_path / "segment1.rrd"
-    seg_2_path = tmp_path / "segment2.rrd"
+    seg_1_path = tmp_path / "segment1.dlr"
+    seg_2_path = tmp_path / "segment2.dlr"
 
     with dl.RecordingStream("dalaran_example_conflicting_schema", recording_id="segment1") as rec:
         rec.save(seg_1_path)
@@ -401,8 +401,8 @@ def test_failed_layer_registration_not_in_segment_table(entry_factory: EntryFact
 
     import pyarrow as pa
 
-    base_path = tmp_path / "base.rrd"
-    extra_path = tmp_path / "extra.rrd"
+    base_path = tmp_path / "base.dlr"
+    extra_path = tmp_path / "extra.dlr"
 
     # Both use the same recording_id (segment1) but different layer names
     with dl.RecordingStream("dalaran_example_conflicting_schema", recording_id="segment1") as rec:
@@ -591,7 +591,7 @@ def test_registration_footerless(catalog_client: CatalogClient) -> None:
     """Tests whether registration of footerless datasets fails as expected on Dalaran Hub."""
 
     dataset_url = "s3://dalaran-redap-datasets-pdx/test-resources/dataset-footerless/"
-    expected_msg = "try running `dalaran rrd migrate`"
+    expected_msg = "try running `dalaran dlr migrate`"
 
     ds = catalog_client.create_dataset(
         name="test_registration_footerless",
@@ -637,8 +637,8 @@ def _get_points_data(ds: DatasetEntry) -> list[list[float]]:
 #
 
 
-def _write_rrd(path: Path, recording_id: str, column_type: object) -> None:
-    """Write a single-row RRD at `path` whose `/data.value` column has the given arrow type."""
+def _write_dlr(path: Path, recording_id: str, column_type: object) -> None:
+    """Write a single-row DLR at `path` whose `/data.value` column has the given arrow type."""
     import pyarrow as pa
 
     # Planted a 3-element array of the target type; exact values don't matter for
@@ -655,11 +655,11 @@ def _register_rrds_with_types(
     dataset_name: str,
     column_types: Sequence[object],
 ) -> DatasetEntry:
-    """Register one RRD per column-type into a fresh dataset. Raises on registration failure."""
+    """Register one DLR per column-type into a fresh dataset. Raises on registration failure."""
     uris: list[str] = []
     for i, ty in enumerate(column_types):
-        p = tmp_path / f"segment{i}.rrd"
-        _write_rrd(p, f"segment{i}", ty)
+        p = tmp_path / f"segment{i}.dlr"
+        _write_dlr(p, f"segment{i}", ty)
         uris.append(p.as_uri())
     dataset = entry_factory.create_dataset(dataset_name)
     dataset.register(uris).wait()

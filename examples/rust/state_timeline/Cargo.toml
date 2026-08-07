@@ -9,4 +9,4 @@ publish = false
 [dependencies]
 anyhow.workspace = true
 arrow.workspace = true
-rerun = { path = "../../../crates/top/rerun", default-features = false, features = ["sdk"] }
+dalaran = { path = "../../../crates/top/dalaran", default-features = false, features = ["sdk"] }

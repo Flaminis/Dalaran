@@ -1,27 +1,27 @@
 ---
-name: rerun-urdf
-description: Drive the Rerun URDF API (rerun.urdf.UrdfTree) to ingest a URDF as a Transform3D layer on a robot recording. Read when logging a robot model, running forward kinematics from joint states, composing a fixed chain for sensor extrinsics, or when the transform tree will not connect from the data alone. Builds on rerun-chunk-processing (stream/lens mechanics) and rerun-data-model (entity paths, timeline, base-vs-layer).
+name: dalaran-urdf
+description: Drive the Dalaran URDF API (dalaran.urdf.UrdfTree) to ingest a URDF as a Transform3D layer on a robot recording. Read when logging a robot model, running forward kinematics from joint states, composing a fixed chain for sensor extrinsics, or when the transform tree will not connect from the data alone. Builds on dalaran-chunk-processing (stream/lens mechanics) and dalaran-data-model (entity paths, timeline, base-vs-layer).
 user_invocable: true
 allowed-tools: Read, Grep, Bash, WebFetch
 ---
 
-# Rerun URDF ingestion
+# Dalaran URDF ingestion
 
 A URDF gives you a robot's geometry and its kinematic tree.
-Ingesting it means two API calls on one `rerun.urdf.UrdfTree`: stream the static model, then drive it with forward kinematics from joint states. The transforms it produces are derived, so they are a **layer**, never base (the `URDF + joints (computed)` row of the `rerun-data-model` table).
+Ingesting it means two API calls on one `dalaran.urdf.UrdfTree`: stream the static model, then drive it with forward kinematics from joint states. The transforms it produces are derived, so they are a **layer**, never base (the `URDF + joints (computed)` row of the `dalaran-data-model` table).
 
 This skill is the `UrdfTree` API and the two judgment calls it cannot make for
 you: how your joint values map to URDF joints, and how the disconnected frames
 in the scene connect to one root. The stream/lens plumbing (`LazyChunkStream`,
 `DeriveLens`, `Selector`, writing and optimizing RRDs) is in
-`rerun-chunk-processing`; reach for it, do not re-derive it. Nothing below is
+`dalaran-chunk-processing`; reach for it, do not re-derive it. Nothing below is
 tied to a data format: where your joint names, joint values, and calibration
 come from is yours to wire in.
 
 ## The API
 
 ```python
-from rerun.urdf import UrdfTree
+from dalaran.urdf import UrdfTree
 
 urdf = UrdfTree.from_file_path(
     urdf_path,
@@ -54,9 +54,9 @@ model = (
 )
 ```
 
-Recolor a robot's meshes with a `MutateLens` on `Asset3D:albedo_factor` (see `rerun-chunk-processing`).
+Recolor a robot's meshes with a `MutateLens` on `Asset3D:albedo_factor` (see `dalaran-chunk-processing`).
 
-**2. Solve forward kinematics.** Given joint names and the matching joint values, it returns one `rerun.urdf.JointTransformBatch` per input row. Each batch is a list of per-joint entries with `parent_frame`, `child_frame`, `translation`, and
+**2. Solve forward kinematics.** Given joint names and the matching joint values, it returns one `dalaran.urdf.JointTransformBatch` per input row. Each batch is a list of per-joint entries with `parent_frame`, `child_frame`, `translation`, and
 `quaternion`:
 
 ```python
@@ -71,10 +71,10 @@ via the two-lens pattern: derive the batch, then `scatter=True` it into
 full shape is the "Minimal shape" section below; the `robot_data_preprocessing`
 example (References) is a complete working instance. The only URDF-specific
 part is the `compute_joint_transform_batches` call inside the first lens;
-everything else is generic stream mechanics (`rerun-chunk-processing`).
+everything else is generic stream mechanics (`dalaran-chunk-processing`).
 
 Merge the model stream and the FK stream, `collect(optimize=OBJECT_STORE)`, and
-`write_rrd(..., recording_id=<segment_id>)`. The `recording_id` must equal the
+`write_dlr(..., recording_id=<segment_id>)`. The `recording_id` must equal the
 base segment id or the layer never attaches; `application_id` is discarded on
 registration.
 
@@ -108,7 +108,7 @@ own empty-stream failure modes.
 
 ## How transforms compose (reason about this before logging anything)
 
-Rerun resolves a pose by chaining transforms from a frame up to a root. There
+Dalaran resolves a pose by chaining transforms from a frame up to a root. There
 are two ways an edge in that chain gets defined, and a URDF ingest mixes both:
 
 - **By entity-path hierarchy.** A `Transform3D` on `/a/b` with no frame names is
@@ -137,7 +137,7 @@ deliberately:
 1. **Enumerate every frame.** Iterate `urdf.joints()` and collect the
    `parent_link`/`child_link` pairs (the in-tree edges, frame-prefixed);
    `urdf.root_link()` is that URDF's root. Add every sensor/world frame the
-   scene needs (from the `rerun-data-model` table). Decide the one intended
+   scene needs (from the `dalaran-data-model` table). Decide the one intended
    root.
 2. **Classify each edge by source.** In-URDF edges (FK joints, `fixed` joints)
    come from the URDF plus joint values. Inter-root edges (root to each robot
@@ -154,7 +154,7 @@ deliberately:
 child_frame` pair you will log (URDF + calibration). Walk parents from each
    frame; any frame that does not reach the intended root is an unconnected root
    and names a **missing edge**. This is a pure graph check you can run before
-   writing the RRD.
+   writing the DLR.
 5. **Resolve every missing edge, or fail loudly.** For each one:
     - If calibration supplies the transform, log it (next section).
     - If the data does not, the tree is unsolvable. Do **not** leave the frame
@@ -178,8 +178,8 @@ no reader or FK lens can produce; do not generalize it to transforms a reader
 emits (a `frame_transforms` topic → `Transform3D`) or that FK derives:
 
 ```python
-import rerun as rr
-from rerun.experimental import Chunk, LazyChunkStream
+import dalaran as rr
+from dalaran.experimental import Chunk, LazyChunkStream
 
 # world -> this robot's base, from your calibration (translation + xyzw quaternion)
 edge = Chunk.from_columns(
@@ -202,9 +202,9 @@ into the same recording as the model and FK streams so they share the graph.
 ## Minimal shape (one robot, generic joint source)
 
 ```python
-import rerun as rr
-from rerun.experimental import DeriveLens, LazyChunkStream, OptimizationProfile, Selector
-from rerun.urdf import UrdfTree
+import dalaran as rr
+from dalaran.experimental import DeriveLens, LazyChunkStream, OptimizationProfile, Selector
+from dalaran.urdf import UrdfTree
 
 urdf = UrdfTree.from_file_path(urdf_path, entity_path_prefix="robot", static_transform_entity_path="robot/tf_static")
 model = urdf.stream(include_joint_transforms=True).drop(content="/robot/**/collision_geometries/**")
@@ -214,14 +214,14 @@ fk = (
     joints
     .lenses(
         DeriveLens(JOINT_MSG_COMPONENT, output_entity="/tmp/batches").to_component(
-            "rerun.urdf.JointTransformBatch",
+            "dalaran.urdf.JointTransformBatch",
             Selector(".").pipe(lambda msgs: urdf.compute_joint_transform_batches(read_names(msgs), read_values(msgs))),
         ),
         content=JOINT_SOURCE_PATH,
         output_mode="forward_all",
     )
     .lenses(
-        DeriveLens("rerun.urdf.JointTransformBatch", output_entity="/robot/transforms", scatter=True)
+        DeriveLens("dalaran.urdf.JointTransformBatch", output_entity="/robot/transforms", scatter=True)
         .to_component(rr.Transform3D.descriptor_translation(), Selector("[].translation"))
         .to_component(rr.Transform3D.descriptor_quaternion(), Selector("[].quaternion"))
         .to_component(rr.Transform3D.descriptor_parent_frame(), Selector("[].parent_frame"))
@@ -232,7 +232,7 @@ fk = (
     .filter(content="/robot/transforms")
 )
 
-LazyChunkStream.merge(model, fk).collect(optimize=OptimizationProfile.OBJECT_STORE).write_rrd(
+LazyChunkStream.merge(model, fk).collect(optimize=OptimizationProfile.OBJECT_STORE).write_dlr(
     out_path,
     application_id="urdf",
     recording_id=segment_id,
@@ -259,6 +259,6 @@ correct.
   calibration offsets)
 - `https://github.com/rerun-io/rerun/tree/main/examples/python/animated_urdf`
   (classic logging API: `log_urdf_to_recording`, per-joint `compute_transform`)
-- `rerun-data-model` (the mapping table this skill consumes)
+- `dalaran-data-model` (the mapping table this skill consumes)
 - the importer skill for your joint-state source format (making the source readable)
-- `rerun-chunk-processing` (lens/stream, write/optimize mechanics)
+- `dalaran-chunk-processing` (lens/stream, write/optimize mechanics)

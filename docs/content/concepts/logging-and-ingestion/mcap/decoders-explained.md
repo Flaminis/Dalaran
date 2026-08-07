@@ -59,13 +59,13 @@ By default, Dalaran processes MCAP files with all decoders active. You can contr
 
 ```bash
 # Use only specific decoders
-dalaran mcap convert input.mcap -d protobuf -d stats -o output.rrd
+dalaran mcap convert input.mcap -d protobuf -d stats -o output.dlr
 
 # Use multiple decoders for different perspectives
-dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.dlr
 
 # Add robot geometry from ROS robot_description topics
-dalaran mcap convert input.mcap -d ros2msg -d urdf -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -d urdf -o output.dlr
 ```
 
 ## Accessing decoder data

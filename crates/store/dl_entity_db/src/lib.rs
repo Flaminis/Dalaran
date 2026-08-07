@@ -11,7 +11,7 @@ mod data_meta_per_timeline;
 pub mod entity_db;
 mod ingestion_statistics;
 mod instance_path;
-mod rrd_manifest_index;
+mod dlr_manifest_index;
 mod sorted_range_map;
 mod store_bundle;
 mod versioned_instance_path;
@@ -22,7 +22,7 @@ pub use dl_log_types::{EntityPath, EntityPathPart, TimeInt, Timeline};
 pub use self::entity_db::{DEFAULT_GC_TIME_BUDGET, EntityDb};
 pub use self::ingestion_statistics::{IngestionStatistics, LatencySnapshot, LatencyStats};
 pub use self::instance_path::{InstancePath, InstancePathHash};
-pub use self::rrd_manifest_index::{
+pub use self::dlr_manifest_index::{
     ChunkFetcher, ChunkPrefetchOptions, ChunkPromise, ChunkRequests, FetchStage, PrefetchError,
     PrefetchTimeCursor, PrioritizationState, ProtectedChunks, RemainingByteBudget, RequestInfo,
     RrdManifestIndex,

@@ -9,12 +9,12 @@ from datafusion import functions as F
 
 import dalaran as dl
 
-TMP_FILE = tempfile.NamedTemporaryFile(suffix=".rrd")
-RRD_PATH = TMP_FILE.name
+TMP_FILE = tempfile.NamedTemporaryFile(suffix=".dlr")
+DLR_PATH = TMP_FILE.name
 
 # region: get_df
 sample_video_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "video_sample"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "video_sample"
 )
 server = dl.server.Server(datasets={"video_dataset": sample_video_path})
 # Using OSS server for demonstration but in practice replace with
@@ -49,11 +49,11 @@ cache_df.count()  # basically free
 segment_id = dataset.segment_ids()[0]
 second_to_last_timestamp = pa.table(df)["log_time"].to_numpy()[-2]
 with dl.RecordingStream("dalaran_example_layer", recording_id=segment_id) as rec:
-    rec.save(RRD_PATH)
+    rec.save(DLR_PATH)
     rec.set_time("log_time", timestamp=second_to_last_timestamp)
     rec.log("/events", dl.AnyValues(flag=True))
 
-dataset.register([Path(RRD_PATH).as_uri()], layer_name="event_layer")
+dataset.register([Path(DLR_PATH).as_uri()], layer_name="event_layer")
 
 # Read dataframe including new sparse layer
 df_with_flag = dataset.filter_contents([

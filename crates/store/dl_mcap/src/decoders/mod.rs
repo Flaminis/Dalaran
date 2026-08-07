@@ -31,7 +31,7 @@ use crate::parsers::{ChannelId, MessageParser, ParserContext};
 use crate::util::collect_empty_channels;
 
 // Write MCAP file info & stats to a dedicated static entity.
-// This keeps the general RRD `__properties` clean for user-specific property layers.
+// This keeps the general DLR `__properties` clean for user-specific property layers.
 const MCAP_PROPERTIES_ENTITY_PATH: &str = "__mcap_properties";
 
 /// Globally unique identifier for a decoder.
@@ -409,7 +409,7 @@ impl MessageDecoderRunner {
                 if let Ok(chunk) = &mut chunk {
                     chunk.sort_by_row_ids_if_needed();
 
-                    // If we hit this warning, we may be producing unnecessarily slow .rrd files.
+                    // If we hit this warning, we may be producing unnecessarily slow .dlr files.
                     // See RR-4658 for details.
                     chunk.warn_if_out_of_order();
                 }

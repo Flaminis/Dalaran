@@ -35,7 +35,7 @@ This design allows for keeping chunks within a target size range, even for recor
 </picture>
 
 
-Here's an excerpt from a real-world chunk (taken from the [Helix example](https://app.dalaran.dev/?url=https%3A%2F%2Fapp.dalaran.dev%2Fversion%2Flatest%2Fexamples%2Fdna.rrd)) (you might want to open [this image](https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/full.png) in a new tab):
+Here's an excerpt from a real-world chunk (taken from the [Helix example](https://app.dalaran.dev/?url=https%3A%2F%2Fapp.dalaran.dev%2Fversion%2Flatest%2Fexamples%2Fdna.dlr)) (you might want to open [this image](https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/full.png) in a new tab):
 
 <picture>
   <img src="https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/full.png" alt="A real-world Dalaran chunk">
@@ -147,7 +147,7 @@ Alternatively, chunks can be created from an existing Arrow [`RecordBatch`](http
 snippet: concepts/build_chunk_from_record_batch[body]
 
 `send_chunks` also accepts iterables of chunks, as well as instances of [`LazyChunkStream`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyChunkStream), [`ChunkStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.ChunkStore), and [`LazyStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyStore).
-For example, to forward every chunk of an existing RRD into a new recording stream:
+For example, to forward every chunk of an existing DLR into a new recording stream:
 
 snippet: concepts/send_chunks
 

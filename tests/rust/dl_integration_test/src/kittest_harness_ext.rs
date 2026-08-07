@@ -590,7 +590,7 @@ impl<'h> HarnessExt<'h> for egui_kittest::Harness<'h, dl_viewer::App> {
             .expect("No active recording");
         let messages = recording_entity_db.to_messages(None);
 
-        let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+        let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
         dl_log_encoding::Encoder::encode_into(
             dl_build_info::CrateVersion::LOCAL,
             encoding_options,
@@ -612,7 +612,7 @@ impl<'h> HarnessExt<'h> for egui_kittest::Harness<'h, dl_viewer::App> {
             .expect("No active blueprint");
         let messages = blueprint_entity_db.to_messages(None);
 
-        let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+        let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
         dl_log_encoding::Encoder::encode_into(
             dl_build_info::CrateVersion::LOCAL,
             encoding_options,

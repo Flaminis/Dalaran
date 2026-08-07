@@ -101,7 +101,7 @@ Each of the three sides has a button in the upper-right corner. Click these to s
 </picture>
 
 There are several ways to rearrange the viewer layout to your liking: through the Viewer [user interface](configure-the-viewer/navigating-the-viewer.md#interactive-configuration),
-via the [Blueprint API](configure-the-viewer/navigating-the-viewer.md#programmatic-blueprints), or by [loading an .rbl file](configure-the-viewer/navigating-the-viewer.md#save-and-load-blueprint-files).
+via the [Blueprint API](configure-the-viewer/navigating-the-viewer.md#programmatic-blueprints), or by [loading an .dbl file](configure-the-viewer/navigating-the-viewer.md#save-and-load-blueprint-files).
 
 ## Exploring data
 

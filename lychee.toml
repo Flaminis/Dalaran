@@ -53,14 +53,14 @@ exclude_path = [
   ".pixi",
   "build",
   "docs/python/",
-  "rerun_cpp/_deps",
-  "rerun_cpp/docs/html",
-  "rerun_cpp/docs/xml",
-  "rerun_cpp/src/rerun/third_party/",
-  "rerun_cpp/tmp/",
-  "rerun_js/node_modules/",
-  "rerun_notebook/node_modules/",
-  "rerun_py/site/",
+  "dalaran_cpp/_deps",
+  "dalaran_cpp/docs/html",
+  "dalaran_cpp/docs/xml",
+  "dalaran_cpp/src/dalaran/third_party/",
+  "dalaran_cpp/tmp/",
+  "dalaran_js/node_modules/",
+  "dalaran_notebook/node_modules/",
+  "dalaran_py/site/",
   "target_ra",
   "target_wasm",
   "target",
@@ -75,7 +75,7 @@ exclude_path = [
   "crates/store/dl_uri/src/redap_uri.rs", # Same as above.
   "crates/store/dl_grpc_server/src/lib.rs", # Contains CORS tests with fake origin URLs
   "crates/utils/dl_analytics/src/event.rs", # Contains test with malformed urls
-  "crates/utils/dl_perf_telemetry/src/telemetry.rs", # Contains `parse_rerun_endpoint` docs/tests with fake `rerun://host…` URLs
+  "crates/utils/dl_perf_telemetry/src/telemetry.rs", # Contains `parse_dalaran_endpoint` docs/tests with fake `dalaran://host…` URLs
   "crates/viewer/dl_viewer/src/reflection/mod.rs", # Checker struggles how links from examples are escaped here. They are all checked elsewhere, so not an issue.
   "docs/content/changelog/upcoming", # Transient per-PR changeset entries; their relative links resolve from changelog/ once merged at release, and the merged changeset is link-checked then.
   "docs/snippets/INDEX.md", # The snippet index is guaranteed should be correct by design.
@@ -94,12 +94,12 @@ exclude = [
   '\$$', # URL ending in `$`: stripped template variable (e.g. `${{ inputs.X }}`).
   '/GIT_HASH/', # Replacement variable GIT_HASH.
   '\{\}', # Ignore links with string interpolation.
-  '\$relpath\^', # Relative paths as used by rerun_cpp's doc header.
+  '\$relpath\^', # Relative paths as used by dalaran_cpp's doc header.
   '%7B.+%7D', # Ignore strings that look like ready to use links but contain a replacement strings. The URL escaping is for '{.+}' (this seems to be needed for html embedded urls since lychee assumes they use this encoding).
   '%7B%7D', # Ignore links with string interpolation, escaped variant.
 
   # Ignore storage-node example links
-  'rerun:/.*',
+  'dalaran:/.*',
 
   # Local links that require further setup.
   '/examples', # Relative link to our examples gallery.
@@ -108,13 +108,13 @@ exclude = [
   'http://127.0.0.2',
   'http://localhost',
   'dl_viewer.js', # Build artifact that html is linking to.
-  'recording:/', # rrd recording link.
+  'recording:/', # dlr recording link.
   'ws:/',
 
   # API endpoints.
   'https://fonts.googleapis.com/', # Font API entrypoint, not a link.
   'https://fonts.gstatic.com/', # Font API entrypoint, not a link.
-  'https://tel.rerun.io/', # Analytics endpoint.
+  'https://tel.dalaran.dev/', # Analytics endpoint.
   'https://docs-assets.developer.apple.com/ml-research/datasets/arkitscenes/v1', # Used by arkit_scenes.
   'https://overpass-api.de/api/interpreter', # Used by openstreetmap_data example
 
@@ -125,46 +125,46 @@ exclude = [
   'https://github.com/rerun-io/rerun/issues/\.*', # Ignore links to our own issues.
 
   # Intentionally faked links.
-  'file:///does/not/exist.rrd',
+  'file:///does/not/exist.dlr',
   'file:///path/to/file',
-  'file:///tmp/droidnano/Fri_Aug_18_09:46:43_2023.rrd',
+  'file:///tmp/droidnano/Fri_Aug_18_09:46:43_2023.dlr',
   'file://cors.json', # AWS CLI `--cors-configuration file://…` syntax in BUCKET_CORS.md, not a real link.
   'file://foo',
-  'file://path/to/file.rrd',
-  'file://somehost/file/path.rrd',
+  'file://path/to/file.dlr',
+  'file://somehost/file/path.dlr',
   'http://foo.*',
   'http://x/',
   'https://x/',
   'https://foo.*',
   'https://link.to',
-  'https://rerun.rs',
+  'https://dalaran.rs',
   'https://static.rerun.io/my_screenshot/',
   'https://your-hosted-asset-url.com/re_viewer_bg.wasm',
   'https://your-hosted-asset-url.com/widget.js',
-  'rerun://localhost:51234/recording/some-recording-id',
+  'dalaran://localhost:51234/recording/some-recording-id',
 
-  'https://customer.cloud.rerun.io/.*',
-  'https://redap.rerun.io',
+  'https://customer.cloud.dalaran.dev/.*',
+  'https://redap.dalaran.dev',
   'http://wrong-scheme',
-  'rerun\+http://localhost:\{grpc_port\}/proxy',
+  'dalaran\+http://localhost:\{grpc_port\}/proxy',
   '.*scheme:/.*',
   'http(s)?://example.com/.*',
-  'file:///uri1.rrd',
-  'file:///uri2.rrd',
-  'file:///recordings/data.rrd', # Example URL in the url-pill tests.
+  'file:///uri1.dlr',
+  'file:///uri2.dlr',
+  'file:///recordings/data.dlr', # Example URL in the url-pill tests.
 
   # Link fragments and data links in examples.
   'https://raw.githubusercontent.com/googlefonts/noto-emoji/', # URL fragment.
   'https://static.rerun.io/rgbd_dataset', # Base data link for rgbd dataset.
   'https://storage.googleapis.com/', # Storage API entrypoint, not a link.
-  'https://ref\.rerun\.io/prose/?$', # GCS bucket prefix, no directory index.
-  'https://build\.rerun\.io/mirror/mozilla/sccache/?$', # GCS bucket prefix, no directory index.
+  'https://ref\.dalaran\.io/prose/?$', # GCS bucket prefix, no directory index.
+  'https://build\.dalaran\.io/mirror/mozilla/sccache/?$', # GCS bucket prefix, no directory index.
 
   # Not accessible from CI.
   '.github/workflows/.*.yml', # GitHub action workflows cause issues on CI.
   'https://9p.io/sys/doc/lexnames.html', # Works locally but on CI we get: `Failed: Network error: error:0A000152:SSL routines:final_renegotiate:unsafe legacy renegotiation disabled:ssl/statem/extensions.c:946:`
   'https://claude.site/artifacts/*', # Giving a 500, but only from CI
-  'https://fifteen-thirtyeight.rerun.io/script.js', # Gives 403 forbidden on CI.
+  'https://fifteen-thirtyeight.dalaran.dev/script.js', # Gives 403 forbidden on CI.
   'https://github.com/user-attachments/assets/.*', # Gives Not Found on CI, but works locally.
   'https://git.sr.ht/*', # Bot protection returns 418 I'm a teapot on CI.
   'https://lib.rs/*', # Gives 403 forbidden on CI.
@@ -183,7 +183,7 @@ exclude = [
 
   # `CHANGELOG.md` links to a release's changeset page, which only goes live with the docs deploy
   # that follows the release — so the newest links 404 until then.
-  'https://rerun.io/docs/changelog/changeset-.*',
+  'https://dalaran.dev/docs/changelog/changeset-.*',
 
   # Need GitHub login.
   'https://github.com/rerun-io/landing',
@@ -193,7 +193,7 @@ exclude = [
   # Needs authentication
   'https://.*\.eks\.amazonaws\.com/', # EKS API server endpoints in CI workflows.
   'https://.*\.blob\.core\.windows\.net/', # Azure blob storage, requires auth.
-  'https://rerun\.grafana\.net/api/datasources/.*', # Grafana API endpoints, requires auth.
+  'https://dalaran\.grafana\.net/api/datasources/.*', # Grafana API endpoints, requires auth.
   'https://ms-b22605aed932-7275.fra.meilisearch.io',
   'https://eu.posthog.com/project/', # Requires to be logged in on PostHog.
   'https://github.com/rerun-io/internal-test-assets/\.*',
@@ -219,8 +219,8 @@ exclude = [
   'https://api.linear.app/graphql',
   'https://api.rootly.com/.*',
   'https://api.workos.com/.*',
-  'https://rerun.io/api',
-  'https://rerun.io/login',
+  'https://dalaran.dev/api',
+  'https://dalaran.dev/login',
 
   # '^file:///',                                  # Ignore local file links. They need to be tested, but it's useful for external links we have to ping.
 ]

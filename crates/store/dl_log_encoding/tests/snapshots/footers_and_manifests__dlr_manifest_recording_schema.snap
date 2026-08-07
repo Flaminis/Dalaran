@@ -1,0 +1,155 @@
+---
+source: crates/store/dl_log_encoding/tests/footers_and_manifests.rs
+expression: dlr_manifest_recording_sequential.data.format_schema_snapshot()
+---
+chunk_byte_offset: non-null UInt64
+chunk_byte_size: non-null UInt64
+chunk_byte_size_uncompressed: non-null UInt64
+chunk_entity_path: non-null Utf8
+chunk_id: non-null FixedSizeBinary(16)
+chunk_is_static: non-null Boolean
+chunk_num_rows: non-null UInt64
+elapsed_time:end: Duration(ns) [
+    dalaran:index: "elapsed time"
+]
+elapsed_time:example_MyPoints:colors:end: Duration(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "elapsed time"
+]
+elapsed_time:example_MyPoints:colors:num_rows: UInt64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "elapsed time"
+]
+elapsed_time:example_MyPoints:colors:start: Duration(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "elapsed time"
+]
+elapsed_time:example_MyPoints:points:end: Duration(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "elapsed time"
+]
+elapsed_time:example_MyPoints:points:num_rows: UInt64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "elapsed time"
+]
+elapsed_time:example_MyPoints:points:start: Duration(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "elapsed time"
+]
+elapsed_time:start: Duration(ns) [
+    dalaran:index: "elapsed time"
+]
+example_MyPoints:colors:has_static_data: non-null Boolean [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "dalaran:static"
+]
+example_MyPoints:labels:has_static_data: non-null Boolean [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:labels"
+    dalaran:component_type: "example.MyLabel"
+    dalaran:index: "dalaran:static"
+]
+example_MyPoints:points:has_static_data: non-null Boolean [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "dalaran:static"
+]
+frame_nr:end: Int64 [
+    dalaran:index: "frame_nr"
+]
+frame_nr:example_MyPoints:colors:end: Int64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "frame_nr"
+]
+frame_nr:example_MyPoints:colors:num_rows: UInt64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "frame_nr"
+]
+frame_nr:example_MyPoints:colors:start: Int64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "frame_nr"
+]
+frame_nr:example_MyPoints:points:end: Int64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "frame_nr"
+]
+frame_nr:example_MyPoints:points:num_rows: UInt64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "frame_nr"
+]
+frame_nr:example_MyPoints:points:start: Int64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "frame_nr"
+]
+frame_nr:start: Int64 [
+    dalaran:index: "frame_nr"
+]
+log_time:end: Timestamp(ns) [
+    dalaran:index: "log_time"
+]
+log_time:example_MyPoints:colors:end: Timestamp(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "log_time"
+]
+log_time:example_MyPoints:colors:num_rows: UInt64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "log_time"
+]
+log_time:example_MyPoints:colors:start: Timestamp(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "log_time"
+]
+log_time:example_MyPoints:points:end: Timestamp(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "log_time"
+]
+log_time:example_MyPoints:points:num_rows: UInt64 [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "log_time"
+]
+log_time:example_MyPoints:points:start: Timestamp(ns) [
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "log_time"
+]
+log_time:start: Timestamp(ns) [
+    dalaran:index: "log_time"
+]

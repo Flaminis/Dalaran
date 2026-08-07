@@ -46,7 +46,7 @@ def binary_stream(recording: RecordingStream | None = None) -> BinaryStream:
     """
     Sends all log-data to a [`dalaran.BinaryStream`] object that can be read from.
 
-    The contents of this stream are encoded in the Dalaran Record Data format (rrd).
+    The contents of this stream are encoded in the Dalaran Record Data format (dlr).
 
     This stream has no mechanism of limiting memory or creating back-pressure. If you do not
     read from it, it will buffer all messages that you have logged.
@@ -58,7 +58,7 @@ def binary_stream(recording: RecordingStream | None = None) -> BinaryStream:
 
     dl.log("stream", dl.TextLog("Hello world"))
 
-    with open("output.rrd", "wb") as f:
+    with open("output.dlr", "wb") as f:
         f.write(stream.read())
     ```
 
@@ -182,7 +182,7 @@ class RecordingStream:
     but other threads may still have data in flight.
 
     On context manager exit, file-like sinks (e.g. those created by [`dalaran.RecordingStream.save`][])
-    are also finalized so the resulting `.rrd` is consumable immediately — without this, the file's
+    are also finalized so the resulting `.dlr` is consumable immediately — without this, the file's
     footer would only be written when the `RecordingStream` is garbage-collected. Streaming sinks
     (e.g. [`dalaran.RecordingStream.connect_grpc`][], [`dalaran.RecordingStream.serve_grpc`][]) are left
     intact and continue to receive data after the `with`-block exits. After a file-like sink has
@@ -371,7 +371,7 @@ class RecordingStream:
     ) -> None:
         self.flush()
 
-        # Finalize file-like sinks (e.g. `save()`) so the resulting `.rrd` is consumable as soon as
+        # Finalize file-like sinks (e.g. `save()`) so the resulting `.dlr` is consumable as soon as
         # the `with`-block exits. Streaming sinks like gRPC are left untouched.
         bindings.finalize_deferred_sinks(recording=self.to_native())
 
@@ -486,7 +486,7 @@ class RecordingStream:
         rec = dl.RecordingStream("dalaran_example_tee")
         rec.set_sinks(
             dl.GrpcSink(),
-            dl.FileSink("data.rrd")
+            dl.FileSink("data.dlr")
         )
         rec.log("my/point", dl.Points3D(position=[1.0, 2.0, 3.0]))
         ```
@@ -541,7 +541,7 @@ class RecordingStream:
 
         Call this _before_ you log any data!
 
-        The Dalaran Viewer is able to read continuously from the resulting rrd file while it is being written.
+        The Dalaran Viewer is able to read continuously from the resulting dlr file while it is being written.
         However, depending on your OS and configuration, changes may not be immediately visible due to file caching.
         This is a common issue on Windows and (to a lesser extent) on MacOS.
 
@@ -555,7 +555,7 @@ class RecordingStream:
             clicks the "reset blueprint" button. If you want to activate the new blueprint
             immediately, instead use the [`dalaran.send_blueprint`][] API.
         write_footer:
-            Whether to emit a complete RRD footer (including a manifest of every chunk) at the
+            Whether to emit a complete DLR footer (including a manifest of every chunk) at the
             end of the stream. Defaults to `True`. See [`dalaran.save`][] for details and
             trade-offs (notably memory usage in long-running streaming sessions).
 
@@ -592,7 +592,7 @@ class RecordingStream:
             clicks the "reset blueprint" button. If you want to activate the new blueprint
             immediately, instead use the [`dalaran.send_blueprint`][] API.
         write_footer:
-            Whether to emit a complete RRD footer (including a manifest of every chunk) at the
+            Whether to emit a complete DLR footer (including a manifest of every chunk) at the
             end of the stream. Defaults to `True`. See [`dalaran.save`][] for details.
 
             *Warning*: lack of footer will significantly hurt random-access performance and some
@@ -608,7 +608,7 @@ class RecordingStream:
         """
         Streams all log-data to a memory buffer.
 
-        This can be used to display the RRD to alternative formats such as html.
+        This can be used to display the DLR to alternative formats such as html.
         See: [dalaran.notebook_show][].
 
         Returns
@@ -1324,7 +1324,7 @@ class RecordingStream:
 
 
 class BinaryStream:
-    """An encoded stream of bytes that can be saved as an rrd or sent to the viewer."""
+    """An encoded stream of bytes that can be saved as an dlr or sent to the viewer."""
 
     def __init__(self, storage: bindings.PyBinarySinkStorage) -> None:
         self.storage = storage
@@ -1471,7 +1471,7 @@ def thread_local_stream(application_id: str) -> Callable[[_TFunc], _TFunc]:
     ```python
     @dl.thread_local_stream("dalaran_example_job")
     def job(name: str) -> None:
-        dl.save(f"job_{name}.rrd")
+        dl.save(f"job_{name}.dlr")
         for i in range(5):
             time.sleep(0.2)
             dl.log("hello", dl.TextLog(f"Hello {i) from Job {name}"))
@@ -1479,7 +1479,7 @@ def thread_local_stream(application_id: str) -> Callable[[_TFunc], _TFunc]:
     threading.Thread(target=job, args=("A",)).start()
     threading.Thread(target=job, args=("B",)).start()
     ```
-    This will produce 2 separate rrd files, each only containing the logs from the respective threads.
+    This will produce 2 separate dlr files, each only containing the logs from the respective threads.
 
     Parameters
     ----------
@@ -1549,7 +1549,7 @@ def recording_stream_generator_ctx(func: _TFunc) -> _TFunc:
     @dl.recording_stream.recording_stream_generator_ctx
     def my_generator(name: str) -> Iterator[None]:
         with dl.RecordingStream(name):
-            dl.save(f"{name}.rrd")
+            dl.save(f"{name}.dlr")
             for i in range(10):
                 dl.log("stream", dl.TextLog(f"{name} {i}"))
                 yield i

@@ -9,7 +9,7 @@ publish = false
 [dependencies]
 crossbeam.workspace = true
 dl_quota_channel = { path = "../../../crates/utils/dl_quota_channel" }
-rerun = { path = "../../../crates/top/rerun", features = ["native_viewer", "run"] }
+dalaran = { path = "../../../crates/top/dalaran", features = ["native_viewer", "run"] }
 
 [build-dependencies]
 dl_build_tools = { path = "../../../crates/build/dl_build_tools" }

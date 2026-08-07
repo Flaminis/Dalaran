@@ -4,10 +4,10 @@ use arrow::array::{
     ArrayBuilder, Float32Array, Float64Array, Int64Builder, ListBuilder, StringBuilder, StructArray,
 };
 use arrow::datatypes::{DataType, Field};
-use rerun::external::dl_log;
-use rerun::lenses::{CastTo, Lens, Lenses, LensesSink, OutputMode, Selector};
-use rerun::sink::GrpcSink;
-use rerun::{
+use dalaran::external::dl_log;
+use dalaran::lenses::{CastTo, Lens, Lenses, LensesSink, OutputMode, Selector};
+use dalaran::sink::GrpcSink;
+use dalaran::{
     ComponentDescriptor, DynamicArchetype, RecordingStream, Scalars, SerializedComponentColumn,
     TextDocument, TimeCell,
 };
@@ -36,7 +36,7 @@ fn main() -> anyhow::Result<()> {
     let time = Lens::derive("my_timestamp")
         .to_timeline(
             "my_timeline",
-            rerun::time::TimeType::Sequence,
+            dalaran::time::TimeType::Sequence,
             Selector::parse(".")?,
         )
         .to_component(ComponentDescriptor::partial("value"), Selector::parse(".")?)
@@ -50,7 +50,7 @@ fn main() -> anyhow::Result<()> {
 
     let lenses_sink = LensesSink::new(GrpcSink::default(), lenses);
 
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_lenses").spawn()?;
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_lenses").spawn()?;
     rec.set_sink(Box::new(lenses_sink));
 
     log_instructions(&rec)?;
@@ -130,11 +130,11 @@ fn log_timestamps(rec: &RecordingStream) -> anyhow::Result<()> {
         [],
         [
             SerializedComponentColumn {
-                descriptor: rerun::ComponentDescriptor::partial("my_timestamp"),
+                descriptor: dalaran::ComponentDescriptor::partial("my_timestamp"),
                 list_array: timestamp_list_builder.finish(),
             },
             SerializedComponentColumn {
-                descriptor: rerun::ComponentDescriptor::partial("value"),
+                descriptor: dalaran::ComponentDescriptor::partial("value"),
                 list_array: string_list_builder.finish(),
             },
         ],

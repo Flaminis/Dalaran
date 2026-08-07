@@ -53,16 +53,16 @@ Examples:
         dalaran
 
     Load some files and show them in the Dalaran Viewer:
-        dalaran recording.rrd mesh.obj image.png https://example.com/recording.rrd
+        dalaran recording.dlr mesh.obj image.png https://example.com/recording.dlr
 
-    Open an .rrd file and stream it to a Web Viewer:
-        dalaran recording.rrd --web-viewer
+    Open an .dlr file and stream it to a Web Viewer:
+        dalaran recording.dlr --web-viewer
 
     Host a Dalaran gRPC server which listens for incoming connections from the logging SDK, buffer the log messages, and serve the results:
         dalaran --serve-web
 
     Host a Dalaran Server which serves a recording from a file over gRPC to any connecting Dalaran Viewers:
-        dalaran --serve-web recording.rrd
+        dalaran --serve-web recording.dlr
 
     Host a Dalaran gRPC server without spawning a Viewer:
         dalaran --serve-grpc
@@ -74,7 +74,7 @@ Examples:
         dalaran dalaran+http://localhost:9877/proxy
 
     Listen for incoming gRPC connections from the logging SDK and stream the results to disk:
-        dalaran --save new_recording.rrd
+        dalaran --save new_recording.dlr
 "#;
 
 /// Port argument that accepts either a port number or `auto`.
@@ -207,7 +207,7 @@ When persisted, the state will be stored at the following locations:
     #[clap(long)]
     profile: bool,
 
-    /// Stream incoming log events to an .rrd file at the given path.
+    /// Stream incoming log events to an .dlr file at the given path.
     #[clap(long)]
     save: Option<String>,
 
@@ -272,9 +272,9 @@ When persisted, the state will be stored at the following locations:
 
     #[clap(long_help = r"Any combination of:
 - A gRPC url to a Dalaran server
-- A path to a Dalaran .rrd recording
-- A path to a Dalaran .rbl blueprint
-- An HTTP(S) URL to an .rrd or .rbl file to load
+- A path to a Dalaran .dlr recording
+- A path to a Dalaran .dbl blueprint
+- An HTTP(S) URL to an .dlr or .dbl file to load
 - A path to an image or mesh, or any other file that Dalaran can load (see https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview)
 
 If no arguments are given, a server will be hosted which a Dalaran SDK can connect to.")]
@@ -504,7 +504,7 @@ impl Args {
             // **Commands**
             //
             // * `analytics`: Configure the behavior of our analytics
-            // * `rrd`: Manipulate the contents of .rrd and .rbl files
+            // * `dlr`: Manipulate the contents of .dlr and .dbl files
             // * `reset`: Reset the memory of the Dalaran Viewer
             // """
             let commands = any_subcommands.then(|| {
@@ -531,9 +531,9 @@ impl Args {
             // `[URL_OR_PATHS]…`
             // > Any combination of:
             // > - A gRPC url to a Dalaran server
-            // > - A path to a Dalaran .rrd recording
-            // > - A path to a Dalaran .rbl blueprint
-            // > - An HTTP(S) URL to an .rrd or .rbl file to load
+            // > - A path to a Dalaran .dlr recording
+            // > - A path to a Dalaran .dbl blueprint
+            // > - An HTTP(S) URL to an .dlr or .dbl file to load
             // > - A path to an image or mesh, or any other file that Dalaran can load (see https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview)
             // >
             // > If no arguments are given, a server will be hosted which a Dalaran SDK can connect to.
@@ -606,7 +606,7 @@ enum Command {
     #[command(subcommand)]
     Auth(AuthCommands),
 
-    /// Download recordings and save them as .rrd files.
+    /// Download recordings and save them as .dlr files.
     ///
     /// Supports downloading from Dalaran Hub as well as any other supported URI.
     Download(DownloadCommand),
@@ -655,7 +655,7 @@ enum Command {
     Reset,
 
     #[command(subcommand)]
-    Rrd(RrdCommands),
+    Dlr(RrdCommands),
 
     /// In-memory Dalaran data server
     #[cfg(feature = "oss_server")]
@@ -783,7 +783,7 @@ where
             #[cfg(feature = "native_viewer")]
             Command::Reset => dl_viewer::reset_viewer_persistence(),
 
-            Command::Rrd(rrd) => rrd.run(),
+            Command::Dlr(dlr) => dlr.run(),
 
             #[cfg(feature = "oss_server")]
             Command::Server(server) => tokio_runtime.block_on(server.run_async()),
@@ -1493,8 +1493,8 @@ fn save_or_test_receive(
 
     let receive_set = LogReceiverSet::new(log_receivers);
 
-    if let Some(rrd_path) = save {
-        Ok(stream_to_rrd_on_disk(&receive_set, &rrd_path.into())?)
+    if let Some(dlr_path) = save {
+        Ok(stream_to_dlr_on_disk(&receive_set, &dlr_path.into())?)
     } else {
         assert_receive_into_entity_db(&receive_set).map(|_db| ())
     }
@@ -1553,7 +1553,7 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<dl_entit
                                 }),
                             };
 
-                            mut_db.add_rrd_manifest_message(manifest);
+                            mut_db.add_dlr_manifest_message(manifest);
                         }
 
                         DataSourceMessage::RrdManifestComplete(store_id) => {
@@ -1568,7 +1568,7 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<dl_entit
                                 }),
                             };
 
-                            mut_db.mark_rrd_manifest_complete();
+                            mut_db.mark_dlr_manifest_complete();
                         }
 
                         DataSourceMessage::LogMsg(msg) => {
@@ -1723,7 +1723,7 @@ fn parse_size(size: &str) -> anyhow::Result<[f32; 2]> {
 
 // TODO(cmc): dedicated module for io utils, especially stdio streaming in and out.
 
-fn stream_to_rrd_on_disk(
+fn stream_to_dlr_on_disk(
     rx: &dl_log_channel::LogReceiverSet,
     path: &std::path::PathBuf,
 ) -> Result<(), dl_log_encoding::FileSinkError> {
@@ -1735,7 +1735,7 @@ fn stream_to_rrd_on_disk(
 
     dl_log::info!("Saving incoming log stream to {path:?}. Abort with Ctrl-C.");
 
-    let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
     let file = std::fs::File::create(path).map_err(|err| FileSinkError::CreateFile {
         path: path.clone(),
         source: err,
@@ -1997,8 +1997,8 @@ fn record_cli_command_analytics(args: &Args) {
         #[cfg(feature = "native_viewer")]
         Some(Command::Reset) => ("reset", None),
 
-        Some(Command::Rrd(_cmd)) => {
-            // TODO(RR-4073): Re-enable analytics for RRD commands.
+        Some(Command::Dlr(_cmd)) => {
+            // TODO(RR-4073): Re-enable analytics for DLR commands.
             return;
         }
 
@@ -2037,7 +2037,7 @@ mod tests {
     fn detach_relaunches_a_native_viewer_exactly_once() {
         for cli_args in [
             &["dalaran", "--detach-process"][..],
-            &["dalaran", "--detach-process", "recording.rrd"],
+            &["dalaran", "--detach-process", "recording.dlr"],
             &["dalaran", "--detach-process", "--headless"],
             &[
                 "dalaran",
@@ -2074,7 +2074,7 @@ mod tests {
     #[test]
     fn detach_child_marker_precedes_end_of_options_separator() {
         let raw_args =
-            ["dalaran", "--detach-process", "--", "recording.rrd"].map(std::ffi::OsString::from);
+            ["dalaran", "--detach-process", "--", "recording.dlr"].map(std::ffi::OsString::from);
         let parent = Args::try_parse_from(raw_args.iter()).unwrap();
         assert!(should_relaunch_detached(&parent));
 
@@ -2086,7 +2086,7 @@ mod tests {
                 std::ffi::OsStr::new("--detach-process"),
                 std::ffi::OsStr::new("--detached-process-child"),
                 std::ffi::OsStr::new("--"),
-                std::ffi::OsStr::new("recording.rrd"),
+                std::ffi::OsStr::new("recording.dlr"),
             ]
         );
 
@@ -2097,7 +2097,7 @@ mod tests {
         .unwrap();
         assert!(child.detached_process_child);
         assert!(!should_relaunch_detached(&child));
-        assert_eq!(child.url_or_paths, ["recording.rrd"]);
+        assert_eq!(child.url_or_paths, ["recording.dlr"]);
     }
 
     #[test]
@@ -2106,7 +2106,7 @@ mod tests {
             &["dalaran", "--detach-process", "--serve-grpc"][..],
             &["dalaran", "--detach-process", "--serve-web"],
             &["dalaran", "--detach-process", "--web-viewer"],
-            &["dalaran", "--detach-process", "--save", "output.rrd"],
+            &["dalaran", "--detach-process", "--save", "output.dlr"],
             &["dalaran", "--detach-process", "--test-receive"],
             &["dalaran", "--detach-process", "--version"],
             &["dalaran", "--detach-process", "reset"],

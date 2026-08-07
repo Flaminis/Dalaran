@@ -30,7 +30,7 @@ jobs:
     name: Run notebook
     runs-on: ubuntu-latest-16-cores # Note that as of writing we need the additional storage page (14 gb of the ubuntu-latest runner is not enough).
     container:
-      image: ghcr.io/rerun-io/ci_docker:0.18.0 # Required to run the wheel or we get "No matching distribution found for attrs>=23.1.0" during `pip install rerun-sdk`
+      image: ghcr.io/rerun-io/ci_docker:0.18.0 # Required to run the wheel or we get "No matching distribution found for attrs>=23.1.0" during `pip install dalaran-sdk`
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
       - name: Download Notebook Wheel
         uses: actions/download-artifact@v8
         with:
-          name: rerun_notebook_wheel
+          name: dalaran_notebook_wheel
           path: wheel
 
       - name: Get version
@@ -62,8 +62,8 @@ jobs:
 
       - name: Install built wheel
         run: |
-          pixi run python scripts/ci/uv_install_wheel.py --package rerun-sdk --dir wheel
-          pixi run python scripts/ci/uv_install_wheel.py --package rerun-notebook --dir wheel --platform-independent
+          pixi run python scripts/ci/uv_install_wheel.py --package dalaran-sdk --dir wheel
+          pixi run python scripts/ci/uv_install_wheel.py --package dalaran-notebook --dir wheel --platform-independent
 
       - name: Install Deps
         run: pixi run uv pip install -r examples/python/notebook/requirements.txt
@@ -87,6 +87,6 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "/tmp/cube.html"
-          destination: "rerun-builds/commit/${{ steps.get-sha.outputs.sha }}/notebooks"
+          destination: "dalaran-builds/commit/${{ steps.get-sha.outputs.sha }}/notebooks"
           parent: false
           process_gcloudignore: false

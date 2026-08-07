@@ -5,13 +5,13 @@ thumbnail = "https://static.rerun.io/raw-mesh/7731418dda47e15dbfc0f9a2c326739090
 thumbnail_dimensions = [480, 480]
 -->
 
-This example demonstrates two ways to log the same GLB scene: converting it to raw [`Mesh3D`](https://rerun.io/docs/reference/types/archetypes/mesh3d) data or sending the original file as an [`Asset3D`](https://rerun.io/docs/reference/types/archetypes/asset3d).
+This example demonstrates two ways to log the same GLB scene: converting it to raw [`Mesh3D`](https://dalaran.dev/docs/reference/types/archetypes/mesh3d) data or sending the original file as an [`Asset3D`](https://dalaran.dev/docs/reference/types/archetypes/asset3d).
 The example uses `Mesh3D` by default and switches to `Asset3D` when you pass `--asset3d`.
 
 ## Choosing between `Mesh3D` and `Asset3D`
 
 Use `Asset3D` for assets in a supported format such as GLB, glTF, OBJ, or STL when you don't care about the details of the encoded data.
-Rerun stores the file and loads its meshes, embedded materials, and transform hierarchy in the viewer.
+Dalaran stores the file and loads its meshes, embedded materials, and transform hierarchy in the viewer.
 Prefer self-contained assets such as GLB because referenced files are not included automatically.
 
 Use `Mesh3D` for generated meshes, unsupported formats, or explicit control over vertex data.
@@ -22,7 +22,7 @@ Logging primitives and transforms as separate entities lets you query and update
 By default, the example parses the GLB file and logs each mesh primitive and transform separately.
 
 ```rust
-let mesh: rerun::Mesh3D = primitive.into();
+let mesh: dalaran::Mesh3D = primitive.into();
 rec.log(format!("{}/{}", node.name, i), &mesh)?;
 ```
 
@@ -33,7 +33,7 @@ With `--asset3d`, the scene file is stored in the recording as a single `Asset3D
 ```rust
 rec.log(
     "world/asset",
-    &rerun::Asset3D::from_file_path(scene_path)?,
+    &dalaran::Asset3D::from_file_path(scene_path)?,
 )?;
 ```
 

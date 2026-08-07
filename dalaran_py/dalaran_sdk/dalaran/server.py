@@ -37,7 +37,7 @@ class Server:
     import dalaran as dl
 
     # Start a server with some datasets
-    with dl.server.Server(port=9876, datasets={"my_data": ["path/to/data.rrd"]}) as server:
+    with dl.server.Server(port=9876, datasets={"my_data": ["path/to/data.dlr"]}) as server:
         client = server.client()
 
         # Use the client to interact with the catalog
@@ -73,7 +73,7 @@ class Server:
             Optional dictionary specifying dataset to load in the server at startup. Values in the dictionary may be
             either of:
             - a single path: must be a directory, all the RRDs it contains will be registered
-            - a sequence of paths: each path must be a RRD file, which will all be registered
+            - a sequence of paths: each path must be a DLR file, which will all be registered
         tables:
             Optional dictionary mapping table names to lance file paths which will be loaded and made available when the
             server starts.
@@ -115,7 +115,7 @@ class Server:
                     paths = [Path(p) for p in path]
                     for p in paths:
                         if not p.is_file():
-                            raise ValueError(f"Path '{p}' for dataset '{name}' must be a RRD file.")
+                            raise ValueError(f"Path '{p}' for dataset '{name}' must be a DLR file.")
 
                     all_datasets[name] = [str(p.absolute()) for p in paths]
 

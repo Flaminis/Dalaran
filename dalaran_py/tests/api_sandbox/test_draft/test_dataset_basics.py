@@ -15,10 +15,10 @@ if TYPE_CHECKING:
 
 
 @pytest.fixture
-def rrd_paths(complex_dataset_prefix: Path) -> Generator[list[Path], None, None]:
-    """Paths to some rrd files."""
+def dlr_paths(complex_dataset_prefix: Path) -> Generator[list[Path], None, None]:
+    """Paths to some dlr files."""
 
-    yield sorted(complex_dataset_prefix.glob("*.rrd"), key=lambda p: p.stem)
+    yield sorted(complex_dataset_prefix.glob("*.dlr"), key=lambda p: p.stem)
 
 
 def test_dataset_basics(complex_dataset_prefix: Path) -> None:
@@ -86,26 +86,26 @@ sorbet:version: '0.1.3'\
 """)
 
 
-def test_dataset_register(rrd_paths: list[Path]) -> None:
+def test_dataset_register(dlr_paths: list[Path]) -> None:
     with dl.server.Server() as server:
         client = server.client()
 
         ds = client.create_dataset("dataset")
 
-        # Single RRD, default layer name
-        ds.register([rrd_paths[0].as_uri()]).wait()
+        # Single DLR, default layer name
+        ds.register([dlr_paths[0].as_uri()]).wait()
 
-        # Single RRD, override layer name
-        ds.register([rrd_paths[1].as_uri()], layer_name="extra").wait()
+        # Single DLR, override layer name
+        ds.register([dlr_paths[1].as_uri()], layer_name="extra").wait()
 
         # Multiple RRDs, multiple layer names
-        ds.register([p.as_uri() for p in rrd_paths[2:4]], layer_name=["fiz", "fuz"]).wait()
+        ds.register([p.as_uri() for p in dlr_paths[2:4]], layer_name=["fiz", "fuz"]).wait()
 
         # Multiple RRDs, single layer name
-        ds.register([p.as_uri() for p in rrd_paths], layer_name="more").wait()
+        ds.register([p.as_uri() for p in dlr_paths], layer_name="more").wait()
 
         with pytest.raises(ValueError):
-            ds.register([p.as_uri() for p in rrd_paths], layer_name=["not", "enough"]).wait()
+            ds.register([p.as_uri() for p in dlr_paths], layer_name=["not", "enough"]).wait()
 
         df = ds._manifest().select("dalaran_layer_name", "dalaran_segment_id").sort("dalaran_layer_name", "dalaran_segment_id")
         df_schema = df.schema()

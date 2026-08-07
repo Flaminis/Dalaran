@@ -1,0 +1,489 @@
+//! Encoding of [`LogMsg`]es as a binary stream, e.g. to store in an `.dlr` file, or send over network.
+
+use std::borrow::Borrow;
+use std::collections::HashMap;
+
+use itertools::Itertools as _;
+use dl_build_info::CrateVersion;
+use dl_chunk::{ChunkError, ChunkResult};
+use dl_log_types::{LogMsg, StoreId};
+use dl_sorbet::SorbetError;
+
+use crate::{
+    CodecError, Compression, Encodable as _, EncodingOptions, MessageHeader, MessageKind,
+    RrdManifestBuilder, Serializer, StreamFooter, StreamHeader, ToTransport as _,
+};
+
+// ----------------------------------------------------------------------------
+
+/// On failure to encode or serialize a [`LogMsg`].
+#[derive(thiserror::Error, Debug)]
+pub enum EncodeError {
+    #[error("Called append on already finished encoder")]
+    AlreadyFinished,
+
+    #[error("Called append on already unwrapped encoder")]
+    AlreadyUnwrapped,
+
+    #[error("Failed to write: {0}")]
+    Write(#[from] std::io::Error),
+
+    #[error("{0}")]
+    Codec(Box<crate::dlr::CodecError>),
+
+    #[error("Chunk error: {0}")]
+    Chunk(Box<ChunkError>),
+
+    #[error("Sorbet error: {0}")]
+    Sorbet(Box<SorbetError>),
+}
+
+const _: () = assert!(
+    std::mem::size_of::<EncodeError>() <= 48,
+    "Error type is too large. Try to reduce its size by boxing some of its variants.",
+);
+
+impl From<CodecError> for EncodeError {
+    fn from(err: CodecError) -> Self {
+        Self::Codec(Box::new(err))
+    }
+}
+
+impl From<ChunkError> for EncodeError {
+    fn from(err: ChunkError) -> Self {
+        Self::Chunk(Box::new(err))
+    }
+}
+
+impl From<SorbetError> for EncodeError {
+    fn from(err: SorbetError) -> Self {
+        Self::Sorbet(Box::new(err))
+    }
+}
+
+// ----------------------------------------------------------------------------
+
+/// Encode a stream of [`LogMsg`] into an `.dlr` file.
+///
+/// When dropped, it will automatically insert an end-of-stream marker, if that wasn't already done manually.
+//
+// TODO(cmc): I hate not having a `BufWrite` trait. This is just asking for trouble.
+pub struct Encoder<W: std::io::Write> {
+    serializer: Serializer,
+    compression: Compression,
+
+    /// Optional so that we can `take()` it in `into_inner`, while still being allowed to implement `Drop`.
+    write: Option<W>,
+
+    /// How many bytes written out so far?
+    num_written: u64,
+
+    /// * So we don't ever successfully write partial messages.
+    /// * Because `prost` only supports buffers, not IO traits.
+    scratch: Vec<u8>,
+
+    /// Tracks the state required to build the DLR footer for this stream.
+    ///
+    /// If set to `None`, the footer will not be computed.
+    ///
+    /// Calling [`Self::append_transport_without_footer`] will automatically disable footers.
+    footer_state: Option<FooterState>,
+
+    /// Tracks whether the end-of-stream marker, and optionally the associated footer, have been
+    /// written out already.
+    is_finished: bool,
+}
+
+/// The accumulated state used to build the footer when closing the [`Encoder`].
+///
+/// This is automatically updated when calling [`Encoder::append`].
+#[derive(Default)]
+struct FooterState {
+    manifests: HashMap<dl_log_types::StoreId, ManifestState>,
+}
+
+/// The accumulated state for a specific DLR manifest.
+#[derive(Default)]
+struct ManifestState {
+    /// The state of the DLR manifest currently being built.
+    manifest: RrdManifestBuilder,
+}
+
+impl FooterState {
+    fn append(
+        &mut self,
+        msg: &dl_log_types::LogMsg,
+        byte_span_excluding_header: dl_span::Span<u64>,
+        byte_size_uncompressed: u64,
+    ) -> Result<(), EncodeError> {
+        match msg {
+            LogMsg::ArrowMsg(store_id, msg) => {
+                // NOTE(1): The fact that this parses the `RecordBatch` back into an actual `Chunk`
+                // is a bit unfortunate, but really it's nowhere near as bad as one might think:
+                // the real costly work is to parse the IPC payload into a `RecordBatch` in the
+                // first place, but thankfully we don't have to repay that cost here.
+                // Not only that: keep in mind that this entire codepath is only taken when writing
+                // actual DLR files, so performance is generally IO bound anyway.
+                //
+                // NOTE(2): The fact that we also perform a Sorbet migration in the process is a
+                // bit weirder on the other hand, but then again this is generally not a new a
+                // problem: we tend to perform Sorbet migrations a bit too aggressively all over
+                // the place. We really need a layer that sits between the transport and
+                // application layer where one can accessed the parsed, unmigrated data.
+                let chunk_batch = dl_sorbet::ChunkBatch::try_from(&msg.batch)?;
+
+                // This line is important: it implies that if a recording doesn't have any data
+                // chunks at all, we do not even reserve an DLR manifest for it in the footer.
+                let ManifestState { manifest } =
+                    self.manifests.entry(store_id.clone()).or_default();
+
+                manifest.append(
+                    &chunk_batch,
+                    byte_span_excluding_header,
+                    byte_size_uncompressed,
+                )?;
+            }
+
+            LogMsg::SetStoreInfo(_) | LogMsg::BlueprintActivationCommand(_) => {}
+        }
+
+        Ok(())
+    }
+
+    fn finish(self) -> Result<crate::RrdFooter, EncodeError> {
+        let manifests: HashMap<StoreId, crate::RawRrdManifest> = self
+            .manifests
+            .into_iter()
+            .map(|(store_id, state)| {
+                state
+                    .manifest
+                    .build(store_id.clone())
+                    .map(|m| (store_id, m))
+            })
+            .try_collect()?;
+
+        Ok(crate::RrdFooter { manifests })
+    }
+}
+
+impl Encoder<Vec<u8>> {
+    pub fn local() -> Result<Self, EncodeError> {
+        Self::new_eager(
+            CrateVersion::LOCAL,
+            EncodingOptions::PROTOBUF_COMPRESSED,
+            Vec::new(),
+        )
+    }
+
+    /// All-in-one helper to encode a stream of [`LogMsg`]s into an actual DLR stream.
+    ///
+    /// This always uses the local version and its default encoding options.
+    ///
+    /// Returns the encoded data in a newly allocated vector.
+    pub fn encode(
+        messages: impl IntoIterator<Item = ChunkResult<impl Borrow<LogMsg>>>,
+    ) -> Result<Vec<u8>, EncodeError> {
+        dl_tracing::profile_function!();
+        let mut encoder = Self::local()?;
+        encoder.extend(messages)?;
+        encoder.finish()?;
+        encoder.into_inner()
+    }
+}
+
+impl<W: std::io::Write> Encoder<W> {
+    /// Creates a new [`Encoder`].
+    ///
+    /// This will immediately write the [`StreamHeader`] to the output stream as part of
+    /// initialization (hence `_eager`).
+    ///
+    /// There is no `_lazy` version. Make one if you need one.
+    pub fn new_eager(
+        version: CrateVersion,
+        options: EncodingOptions,
+        mut write: W,
+    ) -> Result<Self, EncodeError> {
+        // TODO(cmc): the extra heap-alloc and copy could be easily avoided with the
+        // introduction of an InMemoryWriter trait or similar. In practice it makes no
+        // difference and the cognitive overhead of this crate is already through the roof.
+        let mut out = Vec::new();
+        StreamHeader {
+            fourcc: crate::dlr::DLR_FOURCC,
+            version: version.to_bytes(),
+            options,
+        }
+        .to_dlr_bytes(&mut out)?;
+        write.write_all(&out)?;
+
+        Ok(Self {
+            serializer: options.serializer,
+            compression: options.compression,
+            write: Some(write),
+            num_written: out.len() as u64,
+            scratch: Vec::new(),
+            footer_state: Some(FooterState::default()),
+            is_finished: false,
+        })
+    }
+
+    /// Returns the size in bytes of the encoded data.
+    pub fn append(&mut self, message: &dl_log_types::LogMsg) -> Result<u64, EncodeError> {
+        dl_tracing::profile_function!();
+
+        let transport = message.to_transport(self.compression)?;
+
+        let (n, byte_span_excluding_header) = self.write_encodable(&transport)?;
+
+        if let Some(footer_state) = self.footer_state.as_mut() {
+            footer_state.append(
+                message,
+                byte_span_excluding_header,
+                transport.byte_size_uncompressed(),
+            )?;
+        }
+
+        Ok(n)
+    }
+
+    /// Returns the size in bytes of the encoded data.
+    pub fn extend(
+        &mut self,
+        messages: impl IntoIterator<Item = ChunkResult<impl Borrow<LogMsg>>>,
+    ) -> Result<u64, EncodeError> {
+        dl_tracing::profile_function!();
+
+        let mut size_bytes = 0;
+        // TODO(emilk): call `.to_transport` in parallel.
+        for message in messages {
+            size_bytes += self.append(message?.borrow())?;
+        }
+        Ok(size_bytes)
+    }
+
+    /// Instructs the encoder to _not_ emit a footer at the end of the stream.
+    ///
+    /// This cannot be reverted.
+    pub fn do_not_emit_footer(&mut self) {
+        self.footer_state = None;
+    }
+
+    /// Returns the span and uncompressed size in bytes of the encoded data.
+    ///
+    /// ⚠️ This implies [`Self::do_not_emit_footer`]. ⚠️
+    ///
+    /// ## Safety
+    ///
+    /// `message` must respect the global settings of the encoder (e.g. the compression used),
+    /// otherwise the resulting DLR stream will be corrupt and unreadable.
+    #[expect(unsafe_code)]
+    pub unsafe fn append_transport_without_footer(
+        &mut self,
+        message: &dl_protos::log_msg::v1alpha1::log_msg::Msg,
+    ) -> Result<(dl_span::Span<u64>, u64), EncodeError> {
+        // We cannot update the DLR manifest without decoding the message, which would defeat the
+        // entire purposes of using this method in the first place.
+        // Therefore, we disable footers if and when this method is used.
+        self.do_not_emit_footer();
+
+        let (_, byte_span_excluding_header) = self.write_encodable(message)?;
+
+        Ok((byte_span_excluding_header, message.byte_size_uncompressed()))
+    }
+
+    /// Encode and write a message, returning `(total_bytes_written, byte_span_excluding_header)`.
+    fn write_encodable(
+        &mut self,
+        encodable: &dyn crate::Encodable,
+    ) -> Result<(u64, dl_span::Span<u64>), EncodeError> {
+        dl_tracing::profile_function!();
+
+        if self.is_finished {
+            return Err(EncodeError::AlreadyFinished);
+        }
+
+        let Some(w) = self.write.as_mut() else {
+            return Err(EncodeError::AlreadyUnwrapped);
+        };
+
+        let byte_offset_excluding_header =
+            self.num_written + crate::MessageHeader::ENCODED_SIZE_BYTES as u64;
+
+        self.scratch.clear();
+        let n = match self.serializer {
+            Serializer::Protobuf => {
+                encodable.to_dlr_bytes(&mut self.scratch)?;
+                let n = w
+                    .write_all(&self.scratch)
+                    .map(|()| self.scratch.len() as u64)
+                    .map_err(EncodeError::Write)?;
+                self.num_written += n;
+                n
+            }
+        };
+
+        let byte_size_excluding_header = n - crate::MessageHeader::ENCODED_SIZE_BYTES as u64;
+
+        let byte_span_excluding_header =
+            dl_span::Span::from_start_len(byte_offset_excluding_header, byte_size_excluding_header);
+
+        Ok((n, byte_span_excluding_header))
+    }
+
+    /// Like [`Self::finish`], but appends the specified, custom DLR footer.
+    ///
+    /// # Safety
+    ///
+    /// This is extremely unsafe and only makes sense if you know exactly what you are doing.
+    /// This is generally only useful when manipulating existing footers and manifests directly,
+    /// like e.g. `dalaran dlr route` does.
+    ///
+    /// You can verify that the footer you produced is still deserializable using `dalaran dlr verify`.
+    ///
+    /// [DLR footer]: crate::RrdFooter
+    #[inline]
+    #[expect(unsafe_code)]
+    pub unsafe fn finish_with_custom_footer(
+        &mut self,
+        dlr_footer: &crate::RrdFooter,
+    ) -> Result<(), EncodeError> {
+        if self.is_finished {
+            return Ok(());
+        }
+
+        let Some(w) = self.write.as_mut() else {
+            return Err(EncodeError::AlreadyUnwrapped);
+        };
+
+        self.is_finished = true;
+
+        dl_log::debug_assert!(
+            self.footer_state.is_none(),
+            "using a custom footer in addition to a builtin one is a very bad idea",
+        );
+
+        Self::finish_impl(w, &mut self.num_written, dlr_footer)
+    }
+
+    /// Appends an end-of-stream marker to the encoded bytes. Does not flush.
+    ///
+    /// This is idempotent. This is called automatically on drop.
+    ///
+    /// This end-of-stream marker is currently (seemingly?) relied on for:
+    /// * Tail mode (where the Viewer continuously poll reads from a file on disk).
+    /// * Concatenated DLR file streams (e.g. `cat *.dlr | dalaran -`).
+    #[inline]
+    pub fn finish(&mut self) -> Result<(), EncodeError> {
+        if self.is_finished {
+            return Ok(());
+        }
+
+        let Some(w) = self.write.as_mut() else {
+            return Err(EncodeError::AlreadyUnwrapped);
+        };
+
+        self.is_finished = true;
+
+        let Some(footer_state) = self.footer_state.take() else {
+            return Ok(());
+        };
+
+        let dlr_footer = footer_state.finish()?;
+
+        Self::finish_impl(w, &mut self.num_written, &dlr_footer)
+    }
+
+    fn finish_impl(
+        w: &mut W,
+        num_written: &mut u64,
+        dlr_footer: &crate::RrdFooter,
+    ) -> Result<(), EncodeError> {
+        // TODO(cmc): the extra heap-allocs and copies could be easily avoided with the
+        // introduction of an InMemoryWriter trait or similar. In practice it makes no
+        // difference and the cognitive overhead of this crate is already through the roof.
+
+        use dl_protos::external::prost::Message as _;
+
+        // Message Header (::End)
+
+        let dlr_footer = dlr_footer.to_transport(())?;
+
+        let mut out_header = Vec::new();
+        MessageHeader {
+            kind: MessageKind::End,
+            len: dlr_footer.encoded_len() as u64,
+        }
+        .to_dlr_bytes(&mut out_header)?;
+        w.write_all(&out_header).map_err(EncodeError::Write)?;
+        *num_written += out_header.len() as u64;
+
+        let end_msg_byte_offset_from_start_excluding_header = *num_written;
+
+        // Message payload (dl_protos::RrdFooter)
+
+        let mut out_dlr_footer = Vec::new();
+        dlr_footer.to_dlr_bytes(&mut out_dlr_footer)?;
+        w.write_all(&out_dlr_footer).map_err(EncodeError::Write)?;
+        *num_written += out_dlr_footer.len() as u64;
+
+        // StreamFooter
+
+        let mut out_stream_footer = Vec::new();
+        StreamFooter::from_dlr_footer_bytes(
+            end_msg_byte_offset_from_start_excluding_header,
+            &out_dlr_footer,
+        )
+        .to_dlr_bytes(&mut out_stream_footer)?;
+        w.write_all(&out_stream_footer)
+            .map_err(EncodeError::Write)?;
+        *num_written += out_stream_footer.len() as u64;
+
+        Ok(())
+    }
+
+    #[inline]
+    pub fn flush_blocking(&mut self) -> Result<(), EncodeError> {
+        let Some(w) = self.write.as_mut() else {
+            return Err(EncodeError::AlreadyUnwrapped);
+        };
+
+        Ok(w.flush()?)
+    }
+
+    #[inline]
+    pub fn into_inner(mut self) -> Result<W, EncodeError> {
+        self.write.take().ok_or(EncodeError::AlreadyUnwrapped)
+    }
+}
+
+impl<W: std::io::Write> Encoder<W> {
+    /// All-in-one helper to encode a stream of [`LogMsg`]s into an actual DLR stream.
+    ///
+    /// Returns the size in bytes of the encoded data.
+    pub fn encode_into(
+        version: CrateVersion,
+        options: EncodingOptions,
+        messages: impl IntoIterator<Item = ChunkResult<impl Borrow<LogMsg>>>,
+        write: &mut W,
+    ) -> Result<u64, EncodeError> {
+        dl_tracing::profile_function!();
+        let mut encoder = Encoder::new_eager(version, options, write)?;
+        encoder.extend(messages)
+    }
+}
+
+impl<W: std::io::Write> std::ops::Drop for Encoder<W> {
+    fn drop(&mut self) {
+        if self.write.is_none() {
+            // Already unwrapped: nothing to see here.
+            return;
+        }
+
+        if let Err(err) = self.finish() {
+            dl_log::warn!("encoder couldn't be finished: {err}");
+        }
+
+        if let Err(err) = self.flush_blocking() {
+            dl_log::warn!("encoder couldn't be flushed: {err}");
+        }
+    }
+}

@@ -9,9 +9,9 @@ thumbnail_dimensions = [480, 385]
 
 https://vimeo.com/989548054?autoplay=1&loop=1&autopause=0&background=1&muted=1&ratio=1920:1080
 
-## Used Rerun types
+## Used Dalaran types
 
-[`Transform3D`](https://www.rerun.io/docs/reference/types/archetypes/transform3d), [`Points2D`](https://www.rerun.io/docs/reference/types/archetypes/points2d), [`Boxes3D`](https://www.rerun.io/docs/reference/types/archetypes/boxes3d), [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole), [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`Mesh3D`](https://www.rerun.io/docs/reference/types/archetypes/mesh3d), [`LineStrips3D`](https://www.rerun.io/docs/reference/types/archetypes/line_strips3d),
+[`Transform3D`](https://www.dalaran.dev/docs/reference/types/archetypes/transform3d), [`Points2D`](https://www.dalaran.dev/docs/reference/types/archetypes/points2d), [`Boxes3D`](https://www.dalaran.dev/docs/reference/types/archetypes/boxes3d), [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole), [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`Mesh3D`](https://www.dalaran.dev/docs/reference/types/archetypes/mesh3d), [`LineStrips3D`](https://www.dalaran.dev/docs/reference/types/archetypes/line_strips3d),
 
 ## Background
 
@@ -19,7 +19,7 @@ Robby Fischer is an autonomous robot arm that you can play chess against, create
 
 To find out if a piece stands on a square we must determine what part of the image may only contain the piece that stands on that square. This is necessary to deal with the fact that some pieces are tall and block part of adjacent squares, e.g. if a king stands on `e2`, its head will block part of the `e1` square in the image. The mask that determines this is logged to `images/mask` and is shown in the bottom left corner along with the detected pieces.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
 ### Create recording
 
@@ -29,22 +29,22 @@ First we create the recording and store it as the thread local recording in each
 
 let app_id = "RobbyFischer";
 let rec_id = uuid::Uuid::new_v4().to_string();
-let rec = rerun::RecordingStreamBuilder::new(app_id)
+let rec = dalaran::RecordingStreamBuilder::new(app_id)
     .recording_id(&rec_id)
     .connect_grpc()
     .unwrap();
 
 // …
 
-// Will be retrieved later using `rerun::RecordingStream::thread_local`
-RecordingStream::set_thread_local(rerun::StoreKind::Recording, Some(rec.clone()));
+// Will be retrieved later using `dalaran::RecordingStream::thread_local`
+RecordingStream::set_thread_local(dalaran::StoreKind::Recording, Some(rec.clone()));
 
 // …
 
 // Thread that does all the image processing.
 let to_be_moved_rec = rec.clone();
 let _vision_handle = std::thread::spawn(move || {
-    RecordingStream::set_thread_local(rerun::StoreKind::Recording, Some(to_be_moved_rec));
+    RecordingStream::set_thread_local(dalaran::StoreKind::Recording, Some(to_be_moved_rec));
     // …
 });
 ```
@@ -54,13 +54,13 @@ let _vision_handle = std::thread::spawn(move || {
 Then, we install the official [URDF importer](https://github.com/rerun-io/rerun-loader-python-example-urdf) and use it to log the URDF model.
 
 ```rust
-// Rerun will find the importer in the `PATH` and use it to log `arm.urdf`.
+// Dalaran will find the importer in the `PATH` and use it to log `arm.urdf`.
 rec.log_file_from_path("arm.urdf", None, false).unwrap();
 
 // Sets the position of the arm and rotates it 180 degrees.
 rec.log(
     "arm.urdf",
-    &rerun::Transform3D::from_translation_rotation(
+    &dalaran::Transform3D::from_translation_rotation(
         [-0.185, 0.130, 0.04],
         Rotation3D::AxisAngle(RotationAxisAngle::new([0., 0., 1.], Angle::Degrees(180.0))),
     ),
@@ -85,7 +85,7 @@ for link_name in chain.iter_links().map(|link| link.name.clone()) {
 
     rec.log(
         entity_path,
-        &rerun::Transform3D::from_translation_rotation(
+        &dalaran::Transform3D::from_translation_rotation(
             Vec3D::new(translation[0], translation[1], translation[2]),
             Rotation3D::Quaternion(Quaternion(quat.coords.as_slice().try_into().unwrap())),
         ),
@@ -93,20 +93,20 @@ for link_name in chain.iter_links().map(|link| link.name.clone()) {
 }
 ```
 
-It's planned trajectory is visualized using [LineStrips3D](https://rerun.io/docs/reference/types/archetypes/line_strips3d).
+It's planned trajectory is visualized using [LineStrips3D](https://dalaran.dev/docs/reference/types/archetypes/line_strips3d).
 
 ```rust
 let strip: Vec<Vec3> = // …
 rec.log(
     "a8origin/trajectory",
-    &rerun::LineStrips3D::new([strip])
-        .with_radii([rerun::Radius::new_scene_units(0.002)]),
+    &dalaran::LineStrips3D::new([strip])
+        .with_radii([dalaran::Radius::new_scene_units(0.002)]),
 ).unwrap();
 
 // Move arm along trajectory …
 
 // Remove trajectory after we've moved along it.
-rec.log("a8origin/trajectory", &rerun::Clear::flat())
+rec.log("a8origin/trajectory", &dalaran::Clear::flat())
     .unwrap();
 
 ```
@@ -123,13 +123,13 @@ log_node(rec, "a8origin/board", self.board_scene.clone()).unwrap();
 // Henceforth any positions logged to a8origin/ will be relative to the center of the a8 square.
 rec.log(
     "a8origin/board",
-    &rerun::Transform3D::from_translation(Into::<[f32; 3]>::into(board_center)),
+    &dalaran::Transform3D::from_translation(Into::<[f32; 3]>::into(board_center)),
 ).unwrap();
 
 // `holder` refers to the adjacent white board that holds captured pieces.
 rec.log(
     "a8origin/holder",
-    &rerun::Transform3D::from_translation(Into::<[f32; 3]>::into(
+    &dalaran::Transform3D::from_translation(Into::<[f32; 3]>::into(
         board_center + board_center_to_holder_center,
     )),
 ).unwrap();
@@ -144,9 +144,9 @@ for file in 0..14 { // The holder board has 6 files
         let cord = board_to_real_cord(Square::new(file, rank));
         rec.log(
             format!("a8origin/pieces/{file}/{rank}/"),
-            &rerun::Transform3D::from_translation_rotation_scale(
+            &dalaran::Transform3D::from_translation_rotation_scale(
                 cord,
-                rerun::Rotation3D::IDENTITY,
+                dalaran::Rotation3D::IDENTITY,
 
                 // The models for the pieces are stored in millimeters but
                 // the rest in meters, so we must scale the models down.
@@ -157,19 +157,19 @@ for file in 0..14 { // The holder board has 6 files
 }
 ```
 
-To log the piece models we convert them from `.stl` files to [`rerun::Mesh3D`](https://www.rerun.io/docs/reference/types/archetypes/mesh3d) by first reading the `.stl` files using [stl_io](https://docs.rs/stl_io/latest/stl_io/) and then convert them to [`rerun::Mesh3D`](https://www.rerun.io/docs/reference/types/archetypes/mesh3d) using the function below.
+To log the piece models we convert them from `.stl` files to [`dalaran::Mesh3D`](https://www.dalaran.dev/docs/reference/types/archetypes/mesh3d) by first reading the `.stl` files using [stl_io](https://docs.rs/stl_io/latest/stl_io/) and then convert them to [`dalaran::Mesh3D`](https://www.dalaran.dev/docs/reference/types/archetypes/mesh3d) using the function below.
 
 ```rust
-fn stl_to_mesh3d(mesh: &IndexedMesh, color: impl Into<rerun::Color> + Clone) -> Mesh3D {
+fn stl_to_mesh3d(mesh: &IndexedMesh, color: impl Into<dalaran::Color> + Clone) -> Mesh3D {
     // The normals are not included in the stl files so we have to compute them
     // ourselves here. It's not strictly necessary to pass the normals
     // to Mesh3D but makes it the models look so much better.
 
     // calculate normals …
 
-    rerun::Mesh3D::new(vertices)
+    dalaran::Mesh3D::new(vertices)
         .with_triangle_indices(mesh.faces.iter().map(|face| {
-            rerun::TriangleIndices(UVec3D::new(
+            dalaran::TriangleIndices(UVec3D::new(
                 face.vertices[0] as u32,
                 face.vertices[1] as u32,
                 face.vertices[2] as u32,
@@ -184,7 +184,7 @@ Every time we make a move we log the changes to like this:
 
 ```rust
 pub fn log_piece_positions(&self, board: &Board) {
-    let rec = rerun::RecordingStream::thread_local(rerun::StoreKind::Recording).unwrap();
+    let rec = dalaran::RecordingStream::thread_local(dalaran::StoreKind::Recording).unwrap();
     for file in 0..14 {
         for rank in 0..8 {
             if let Some(piece) = board.position[file][rank] {
@@ -196,16 +196,16 @@ pub fn log_piece_positions(&self, board: &Board) {
                 }
             } else {
                 // To remove the bounding box/mesh from the square we moved the piece from.
-                // You could clear both in one call using rerun::Clear::recursive but that
+                // You could clear both in one call using dalaran::Clear::recursive but that
                 // would clear the transformation logged to "a8origin/pieces/{file}/{rank}"
                 // which is why it isn't done here.
                 rec.log(
                     format!("a8origin/pieces/{file}/{rank}/mesh"),
-                    &rerun::Clear::flat(),
+                    &dalaran::Clear::flat(),
                 ).unwrap();
                 rec.log(
                     format!("a8origin/pieces/{file}/{rank}/bounding_box"),
-                    &rerun::Clear::flat(),
+                    &dalaran::Clear::flat(),
                 ).unwrap();
             }
         }
@@ -215,7 +215,7 @@ pub fn log_piece_positions(&self, board: &Board) {
 // …
 
 impl PieceModelInfo {
-    pub fn log(&self, rec: &rerun::RecordingStream, entity_path: &str) {
+    pub fn log(&self, rec: &dalaran::RecordingStream, entity_path: &str) {
         self.bounding_box
             .log(rec, &format!("{entity_path}/bounding_box"));
         rec.log(format!("{entity_path}/mesh"), &self.model).unwrap();
@@ -234,11 +234,11 @@ To see the image projection in the 3D view we must log the cameras transformatio
 let (_scale, rotation, translation) = camera_to_a8.to_scale_rotation_translation();
 rec.log(
     "a8origin/pinhole",
-    &rerun::Transform3D::from_translation_rotation(translation, rotation),
+    &dalaran::Transform3D::from_translation_rotation(translation, rotation),
 ).unwrap();
 rec.log(
     "a8origin/pinhole",
-    &rerun::Pinhole::from_focal_length_and_resolution(
+    &dalaran::Pinhole::from_focal_length_and_resolution(
         [color_param.row(0)[0], color_param.row(1)[1]],
         [640.0, 480.0],
     ),
@@ -250,14 +250,14 @@ Then we can log the image to this path and it will be shown in the 3D view.
 ```rust
 rec.log(
     "a8origin/pinhole/image",
-    &rerun::Image::try_from(color_img.clone()).unwrap(),
+    &dalaran::Image::try_from(color_img.clone()).unwrap(),
 ).unwrap();
 ```
 
 Logs the mask along with the detected pieces.
 
 ```rust
-rec.log("images/mask", &rerun::Image::try_from(mask).unwrap())
+rec.log("images/mask", &dalaran::Image::try_from(mask).unwrap())
                 .unwrap();
 rec.log(
     "images/points",
@@ -276,8 +276,8 @@ This was done by creating a script called "blueprint.py"
 ```py
 #!/usr/bin/env python3
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as rr
+import dalaran.blueprint as rrb
 import argparse
 
 view_defaults = [

@@ -7,16 +7,16 @@ use crate::RrdManifestIndex;
 
 #[derive(Default, Clone, Copy, dl_byte_size::SizeBytes)]
 struct RowCount {
-    /// Row count from a rrd manifest.
-    from_rrd_manifest: u64,
+    /// Row count from a dlr manifest.
+    from_dlr_manifest: u64,
 
-    /// Row counts from volatile chunks, i.e chunks that aren't in a rrd manifest.
+    /// Row counts from volatile chunks, i.e chunks that aren't in a dlr manifest.
     from_volatile_chunks: u64,
 }
 
 impl RowCount {
     fn is_empty(&self) -> bool {
-        self.from_rrd_manifest == 0 && self.from_volatile_chunks == 0
+        self.from_dlr_manifest == 0 && self.from_volatile_chunks == 0
     }
 }
 
@@ -32,9 +32,9 @@ impl DataMetaPerTimeline {
             .get(timeline)
             .map(
                 |RowCount {
-                     from_rrd_manifest,
+                     from_dlr_manifest,
                      from_volatile_chunks,
-                 }| from_rrd_manifest + from_volatile_chunks,
+                 }| from_dlr_manifest + from_volatile_chunks,
             )
             .unwrap_or(0)
     }
@@ -47,7 +47,7 @@ impl DataMetaPerTimeline {
     ) {
         match &event.diff {
             ChunkStoreDiff::Addition(addition) => {
-                // If this addition comes from a root chunk in the rrd manifest,
+                // If this addition comes from a root chunk in the dlr manifest,
                 // then don't count it since we've already counted that with a virtual
                 // addition.
                 if store
@@ -62,7 +62,7 @@ impl DataMetaPerTimeline {
                 }
             }
             ChunkStoreDiff::VirtualAddition(addition) => {
-                for per_timeline in addition.rrd_manifest.temporal_map().values() {
+                for per_timeline in addition.dlr_manifest.temporal_map().values() {
                     for (timeline, per_component) in per_timeline {
                         let row_count = self
                             .row_count_per_timeline
@@ -71,21 +71,21 @@ impl DataMetaPerTimeline {
 
                         for chunks in per_component.values() {
                             for entry in chunks.values() {
-                                row_count.from_rrd_manifest += entry.num_rows;
+                                row_count.from_dlr_manifest += entry.num_rows;
                             }
                         }
                     }
                 }
             }
             ChunkStoreDiff::Deletion(deletion) => {
-                let mut rrd_manifest_row_counts = BTreeMap::new();
+                let mut dlr_manifest_row_counts = BTreeMap::new();
 
-                // We don't want to subtract rows that were in the rrd manifest
+                // We don't want to subtract rows that were in the dlr manifest
                 // since those are tracked separately and never deleted.
                 //
-                // So we collect the count of all root chunks in the rrd manifest
+                // So we collect the count of all root chunks in the dlr manifest
                 // for the deleted chunk.
-                let rrd_manifest_row_counts_iter = store
+                let dlr_manifest_row_counts_iter = store
                     .find_root_manifest_chunks(&deletion.chunk.id())
                     .into_iter()
                     .filter_map(|c| manifest_index.root_chunk_info(&c))
@@ -95,15 +95,15 @@ impl DataMetaPerTimeline {
                         })
                     });
 
-                for (timeline, row_count) in rrd_manifest_row_counts_iter {
-                    *rrd_manifest_row_counts.entry(timeline).or_insert(0) += row_count;
+                for (timeline, row_count) in dlr_manifest_row_counts_iter {
+                    *dlr_manifest_row_counts.entry(timeline).or_insert(0) += row_count;
                 }
 
                 for (timeline, col) in deletion.chunk.timelines() {
                     let row_count = self.row_count_per_timeline.entry(*timeline).or_default();
 
                     let chunk_volatile_chunk_count = (col.num_rows() as u64).saturating_sub(
-                        rrd_manifest_row_counts.get(timeline).copied().unwrap_or(0),
+                        dlr_manifest_row_counts.get(timeline).copied().unwrap_or(0),
                     );
 
                     row_count.from_volatile_chunks = row_count
@@ -300,7 +300,7 @@ mod tests {
         assert_eq!(meta.row_count_for_timeline(tl.name()), 3);
     }
 
-    /// Build chunks at given times, create an RRD manifest from them, and return both.
+    /// Build chunks at given times, create an DLR manifest from them, and return both.
     fn build_manifest_chunks(
         entity: &EntityPath,
         timeline: Timeline,
@@ -346,12 +346,12 @@ mod tests {
         let entity: EntityPath = "entity".into();
         let tl = Timeline::new_sequence("frame");
 
-        let (_, rrd_manifest) = build_manifest_chunks(&entity, tl, &[10, 20, 30], &store_id);
+        let (_, dlr_manifest) = build_manifest_chunks(&entity, tl, &[10, 20, 30], &store_id);
 
         // Insert the manifest virtually.
-        let events = store.insert_rrd_manifest(rrd_manifest.clone());
+        let events = store.insert_dlr_manifest(dlr_manifest.clone());
         manifest_index
-            .append(rrd_manifest, store.entity_tree())
+            .append(dlr_manifest, store.entity_tree())
             .unwrap();
         meta.on_events(&manifest_index, &store, &events);
 
@@ -369,12 +369,12 @@ mod tests {
         let entity: EntityPath = "entity".into();
         let tl = Timeline::new_sequence("frame");
 
-        let (chunks, rrd_manifest) = build_manifest_chunks(&entity, tl, &[10, 20, 30], &store_id);
+        let (chunks, dlr_manifest) = build_manifest_chunks(&entity, tl, &[10, 20, 30], &store_id);
 
         // Load virtually first.
-        let events = store.insert_rrd_manifest(rrd_manifest.clone());
+        let events = store.insert_dlr_manifest(dlr_manifest.clone());
         manifest_index
-            .append(rrd_manifest, store.entity_tree())
+            .append(dlr_manifest, store.entity_tree())
             .unwrap();
         manifest_index.on_events(&store, &events);
         meta.on_events(&manifest_index, &store, &events);
@@ -429,15 +429,15 @@ mod tests {
         })
         .collect();
 
-        let rrd_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
+        let dlr_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
             store_id.clone(),
             chunks.iter().map(|c| &**c),
         )
         .unwrap();
 
-        let events = store.insert_rrd_manifest(rrd_manifest.clone());
+        let events = store.insert_dlr_manifest(dlr_manifest.clone());
         manifest_index
-            .append(rrd_manifest, store.entity_tree())
+            .append(dlr_manifest, store.entity_tree())
             .unwrap();
         meta.on_events(&manifest_index, &store, &events);
 

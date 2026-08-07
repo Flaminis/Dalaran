@@ -10,16 +10,16 @@ from datafusion import col
 
 import dalaran as dl
 
-RRD_DIR = Path(tempfile.mkdtemp())
+DLR_DIR = Path(tempfile.mkdtemp())
 atexit.register(
-    lambda: shutil.rmtree(RRD_DIR) if os.path.exists(RRD_DIR) else None
+    lambda: shutil.rmtree(DLR_DIR) if os.path.exists(DLR_DIR) else None
 )
 
 # region: setup
-rrd_paths = [RRD_DIR / f"recording_{i}.rrd" for i in range(5)]
-for i, rrd_path in enumerate(rrd_paths):
+dlr_paths = [DLR_DIR / f"recording_{i}.dlr" for i in range(5)]
+for i, dlr_path in enumerate(dlr_paths):
     with dl.RecordingStream("dalaran_example_property") as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
         rec.log("data", dl.Points2D(positions=[[i, i]]))
 
         # properties can be any dalaran data
@@ -41,7 +41,7 @@ for i, rrd_path in enumerate(rrd_paths):
 
 # region: segment_table
 # load the demo recording in a temporary catalog
-with dl.server.Server(datasets={"dataset": rrd_paths}) as server:
+with dl.server.Server(datasets={"dataset": dlr_paths}) as server:
     # obtain a dataset from the catalog
     dataset = server.client().get_dataset("dataset")
 

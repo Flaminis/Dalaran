@@ -1,8 +1,8 @@
-//! Example of an external importer executable plugin for the Rerun Viewer.
+//! Example of an external importer executable plugin for the Dalaran Viewer.
 
-use rerun::EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE;
+use dalaran::EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE;
 
-// The Rerun Viewer will always pass at least these two pieces of information:
+// The Dalaran Viewer will always pass at least these two pieces of information:
 // 1. The path to be loaded, as a positional arg.
 // 2. A shared recording ID, via the `--recording-id` flag.
 //
@@ -13,17 +13,17 @@ use rerun::EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE;
 // Check out `dl_importer::ImporterSettings` documentation for an exhaustive listing of
 // the available CLI parameters.
 
-/// This is an example executable importer plugin for the Rerun Viewer.
-/// Any executable on your `$PATH` with a name that starts with [`rerun-importer-`] will be
+/// This is an example executable importer plugin for the Dalaran Viewer.
+/// Any executable on your `$PATH` with a name that starts with [`dalaran-importer-`] will be
 /// treated as an external importer.
 ///
 /// This particular one will log Rust source code files as markdown documents, and return a
 /// special exit code to indicate that it doesn't support anything else.
 ///
 /// To try it out, install it in your $PATH (`cargo install --path . -f`), then open a
-/// Rust source file with Rerun (`rerun file.rs`).
+/// Rust source file with Dalaran (`dalaran file.rs`).
 ///
-/// [`rerun-importer-`]: `rerun::EXTERNAL_IMPORTER_PREFIX`
+/// [`dalaran-importer-`]: `dalaran::EXTERNAL_IMPORTER_PREFIX`
 #[derive(argh::FromArgs, Debug)]
 struct Args {
     #[argh(positional)]
@@ -72,7 +72,7 @@ fn main() -> anyhow::Result<()> {
     let is_file = args.filepath.is_file();
     let is_rust_file = extension(&args.filepath) == "rs";
 
-    // Inform the Rerun Viewer that we do not support that kind of file.
+    // Inform the Dalaran Viewer that we do not support that kind of file.
     if !is_file || !is_rust_file {
         std::process::exit(EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE);
     }
@@ -82,15 +82,15 @@ fn main() -> anyhow::Result<()> {
 
     let rec = {
         let application_id = match &args.application_id {
-            Some(application_id) => rerun::ApplicationId::try_new(application_id.clone())?,
-            None => rerun::ApplicationId::from("rerun_example_external_importer"),
+            Some(application_id) => dalaran::ApplicationId::try_new(application_id.clone())?,
+            None => dalaran::ApplicationId::from("dalaran_example_external_importer"),
         };
-        let mut rec = rerun::RecordingStreamBuilder::new(application_id);
+        let mut rec = dalaran::RecordingStreamBuilder::new(application_id);
         if let Some(recording_id) = args.recording_id.as_deref() {
             rec = rec.recording_id(recording_id);
         };
 
-        // The most important part of this: log to standard output so the Rerun Viewer can ingest it!
+        // The most important part of this: log to standard output so the Dalaran Viewer can ingest it!
         rec.stdout()?
     };
 
@@ -100,27 +100,27 @@ fn main() -> anyhow::Result<()> {
 
     let entity_path_prefix = args
         .entity_path_prefix
-        .map_or_else(|| rerun::EntityPath::new(vec![]), rerun::EntityPath::from);
+        .map_or_else(|| dalaran::EntityPath::new(vec![]), dalaran::EntityPath::from);
 
     rec.log_with_static(
-        entity_path_prefix.join(&rerun::EntityPath::from_file_path(&args.filepath)),
+        entity_path_prefix.join(&dalaran::EntityPath::from_file_path(&args.filepath)),
         args.static_,
-        &rerun::TextDocument::from_markdown(text),
+        &dalaran::TextDocument::from_markdown(text),
     )?;
 
     Ok::<_, anyhow::Error>(())
 }
 
-fn timepoint_from_args(args: &Args) -> anyhow::Result<rerun::TimePoint> {
-    let mut timepoint = rerun::TimePoint::default();
+fn timepoint_from_args(args: &Args) -> anyhow::Result<dalaran::TimePoint> {
+    let mut timepoint = dalaran::TimePoint::default();
 
     for seq_str in &args.time_sequence {
         let Some((seqline_name, seq)) = seq_str.split_once('=') else {
             continue;
         };
         timepoint.insert_cell(
-            rerun::TimelineName::try_new(seqline_name)?,
-            rerun::TimeCell::from_sequence(seq.parse::<i64>()?),
+            dalaran::TimelineName::try_new(seqline_name)?,
+            dalaran::TimeCell::from_sequence(seq.parse::<i64>()?),
         );
     }
 
@@ -129,8 +129,8 @@ fn timepoint_from_args(args: &Args) -> anyhow::Result<rerun::TimePoint> {
             continue;
         };
         timepoint.insert_cell(
-            rerun::TimelineName::try_new(seqline_name)?,
-            rerun::TimeCell::from_duration_nanos(duration_nd.parse::<i64>()?),
+            dalaran::TimelineName::try_new(seqline_name)?,
+            dalaran::TimeCell::from_duration_nanos(duration_nd.parse::<i64>()?),
         );
     }
 
@@ -139,8 +139,8 @@ fn timepoint_from_args(args: &Args) -> anyhow::Result<rerun::TimePoint> {
             continue;
         };
         timepoint.insert_cell(
-            rerun::TimelineName::try_new(seqline_name)?,
-            rerun::TimeCell::from_timestamp_nanos_since_epoch(timestamp_nd.parse::<i64>()?),
+            dalaran::TimelineName::try_new(seqline_name)?,
+            dalaran::TimeCell::from_timestamp_nanos_since_epoch(timestamp_nd.parse::<i64>()?),
         );
     }
 

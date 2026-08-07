@@ -38,7 +38,7 @@ static std::vector<uint8_t> create_image() {
 [[maybe_unused]] static void streaming() {
     /// [Streaming]
     dalaran::RecordingStream rec("dalaran_example_app");
-    rec.save("example.rrd").exit_on_failure();
+    rec.save("example.dlr").exit_on_failure();
     /// [Streaming]
 }
 

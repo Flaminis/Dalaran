@@ -4,7 +4,7 @@ set -eux
 VERSION=0.18.0 # Bump on each new version. Remember to update the version in the Dockerfile too.
 
 # The build needs to run from top of repo to access the requirements.txt
-cd "$(git rev-parse --show-toplevel)/rerun"
+cd "$(git rev-parse --show-toplevel)/dalaran"
 
 # Build and push the image to GitHub Container Registry
 # buildx wants to do all of this in one step

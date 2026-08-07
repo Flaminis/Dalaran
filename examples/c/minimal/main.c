@@ -1,8 +1,8 @@
-#include <rerun.h>
+#include <dalaran.h>
 #include <stdio.h>
 
 int main(void) {
-    printf("Rerun C SDK Version: %s\n", dl_version_string());
+    printf("Dalaran C SDK Version: %s\n", dl_version_string());
 
     dl_error error = {0};
     const dl_store_info store_info = {
@@ -13,7 +13,7 @@ int main(void) {
     dl_recording_stream rec = dl_recording_stream_new(&store_info, true, &error);
 
     // Connect to running viewer:
-    //dl_recording_stream_connect_grpc(rec, dl_make_string("rerun+http://127.0.0.1:9876"), &error);
+    //dl_recording_stream_connect_grpc(rec, dl_make_string("dalaran+http://127.0.0.1:9876"), &error);
 
     // Spawn and connect:
     dl_recording_stream_spawn(rec, NULL, &error);

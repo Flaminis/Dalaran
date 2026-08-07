@@ -7,7 +7,7 @@ thumbnail_dimensions = [480, 480]
 build_args = ["--frames=100"]
 -->
 
-Example of using the Rerun SDK to log the [Objectron](https://github.com/google-research-datasets/Objectron) dataset.
+Example of using the Dalaran SDK to log the [Objectron](https://github.com/google-research-datasets/Objectron) dataset.
 
 <picture>
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/objectron/8ea3a37e6b4af2e06f8e2ea5e70c1951af67fea8/480w.png">

@@ -5,10 +5,10 @@ use dl_chunk::{Chunk, ChunkId};
 use crate::{RawRrdManifest, RrdManifest};
 
 #[cfg(feature = "decoder")]
-mod rrd;
+mod dlr;
 
 #[cfg(feature = "decoder")]
-pub use self::rrd::RrdChunkProvider;
+pub use self::dlr::RrdChunkProvider;
 
 /// Backend that exposes an indexed chunk source.
 ///
@@ -32,7 +32,7 @@ pub trait ChunkProvider: Send + Sync {
     fn raw_manifest(&self) -> &Arc<RawRrdManifest>;
 
     /// Human-readable identifier for this provider's backing source, used in diagnostic messages
-    /// (e.g. an RRD path or a segment id). Not parsed; format is purely for display.
+    /// (e.g. an DLR path or a segment id). Not parsed; format is purely for display.
     fn source(&self) -> String;
 
     /// Load chunks by id.

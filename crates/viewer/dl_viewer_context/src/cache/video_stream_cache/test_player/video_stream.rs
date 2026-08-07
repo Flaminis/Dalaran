@@ -9,7 +9,7 @@ use crate::VideoStreamCache;
 
 use super::{
     STREAM_ENTITY, TIMELINE_NAME, TestVideoPlayer, assert_loading, assert_splits_happened,
-    codec_chunk, load_chunks, load_into_rrd_manifest, playable_stream, unload_chunks, video_chunk,
+    codec_chunk, load_chunks, load_into_dlr_manifest, playable_stream, unload_chunks, video_chunk,
 };
 
 #[test]
@@ -25,7 +25,7 @@ fn cache_with_manifest() {
     .map(Arc::new)
     .collect();
 
-    load_into_rrd_manifest(&mut store, &chunks);
+    load_into_dlr_manifest(&mut store, &chunks);
 
     // load codec chunk
     load_chunks(&mut store, &mut cache, &chunks[chunks.len() - 1..]);
@@ -130,7 +130,7 @@ fn cache_with_manifest_and_streaming() {
     .collect();
 
     // Load first 5 chunks into the manifest.
-    load_into_rrd_manifest(&mut store, &chunks[..5]);
+    load_into_dlr_manifest(&mut store, &chunks[..5]);
 
     // load codec chunk
     load_chunks(&mut store, &mut cache, &chunks[..1]);
@@ -262,7 +262,7 @@ fn cache_with_manifest_splits() {
     .map(Arc::new)
     .collect();
 
-    load_into_rrd_manifest(&mut store, &chunks);
+    load_into_dlr_manifest(&mut store, &chunks);
 
     // load codec chunk
     load_chunks(&mut store, &mut cache, &chunks[chunks.len() - 1..]);
@@ -647,7 +647,7 @@ fn cache_with_manifest_load_resulting_in_incomplete_gop() {
         .map(Arc::new)
         .collect();
 
-    load_into_rrd_manifest(&mut store, &chunks);
+    load_into_dlr_manifest(&mut store, &chunks);
 
     // Load codec.
     load_chunks(&mut store, &mut cache, &chunks[2..3]);
@@ -708,7 +708,7 @@ fn cache_with_manifest_skips_conflicting_chunk_keyframe() {
         .map(Arc::new)
         .collect();
 
-    load_into_rrd_manifest(&mut store, &chunks);
+    load_into_dlr_manifest(&mut store, &chunks);
 
     // Load codec.
     load_chunks(&mut store, &mut cache, &chunks[3..4]);

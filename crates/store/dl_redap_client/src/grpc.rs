@@ -584,7 +584,7 @@ impl Default for SegmentDownload {
 #[derive(Clone, Default)]
 pub struct StreamingOptions {
     /// If `true`, download all chunks eagerly instead of relying on
-    /// on-demand streaming via the RRD manifest.
+    /// on-demand streaming via the DLR manifest.
     ///
     /// This is useful for downloading a full recording to disk.
     pub force_full_download: bool,
@@ -664,7 +664,7 @@ pub fn table_blueprint_log_channel(
     })
 }
 
-/// Stream a registered `.rbl` blueprint segment into an existing log channel.
+/// Stream a registered `.dbl` blueprint segment into an existing log channel.
 ///
 /// This streams the blueprint data and then sends a successful quit marker on the same channel.
 /// The viewer uses the channel's [`dl_log_channel::LogSource`] metadata to register the blueprint
@@ -700,7 +700,7 @@ pub async fn stream_table_blueprint_segment_from_server(
 
 /// Stream a recording segment from a catalog server, including its registered default blueprint.
 ///
-/// If the dataset has a default blueprint, this first streams that `.rbl` segment and emits a
+/// If the dataset has a default blueprint, this first streams that `.dbl` segment and emits a
 /// [`LogMsg::BlueprintActivationCommand`] with `make_default = true` for the recording's
 /// application id.
 /// It then streams the requested recording segment.
@@ -850,7 +850,7 @@ async fn stream_segment_from_server(
 
     let start_time = web_time::Instant::now();
     let manifest_stream_result = client
-        .get_rrd_manifest_stream(dataset_id, segment_id.clone())
+        .get_dlr_manifest_stream(dataset_id, segment_id.clone())
         .await;
     let trace_id = manifest_stream_result
         .as_ref()
@@ -860,34 +860,34 @@ async fn stream_segment_from_server(
         Ok(manifest_stream) => {
             let mut manifest_stream = std::pin::pin!(manifest_stream);
 
-            let mut raw_rrd_manifest_parts = Vec::new();
-            let mut rrd_manifest_parts: Vec<Arc<dl_log_encoding::RrdManifest>> = Vec::new();
+            let mut raw_dlr_manifest_parts = Vec::new();
+            let mut dlr_manifest_parts: Vec<Arc<dl_log_encoding::RrdManifest>> = Vec::new();
 
             while let Some(part_result) = manifest_stream.next().await {
-                let raw_rrd_manifest_part = part_result?;
+                let raw_dlr_manifest_part = part_result?;
 
-                let part_nr = rrd_manifest_parts.len() + 1;
+                let part_nr = dlr_manifest_parts.len() + 1;
                 dl_log::debug!(
-                    "Received RRD manifest part #{part_nr}/? ({} deflated, {:.1}s elapsed)",
-                    dl_format::format_bytes(raw_rrd_manifest_part.total_size_bytes() as _),
+                    "Received DLR manifest part #{part_nr}/? ({} deflated, {:.1}s elapsed)",
+                    dl_format::format_bytes(raw_dlr_manifest_part.total_size_bytes() as _),
                     start_time.elapsed().as_secs_f32(),
                 );
 
-                let rrd_manifest = dl_log_encoding::RrdManifest::try_new(&raw_rrd_manifest_part)
+                let dlr_manifest = dl_log_encoding::RrdManifest::try_new(&raw_dlr_manifest_part)
                     .map_err(|err| {
                         ApiError::invalid_arguments_with_source(
                             trace_id,
                             err,
-                            "Invalid RRD manifest part",
+                            "Invalid DLR manifest part",
                         )
                     })?;
 
-                let rrd_manifest = Arc::new(rrd_manifest);
+                let dlr_manifest = Arc::new(dlr_manifest);
 
                 if tx
                     .send(DataSourceMessage::RrdManifest(
                         store_id.clone(),
-                        rrd_manifest.clone(),
+                        dlr_manifest.clone(),
                     ))
                     .is_err()
                 {
@@ -895,20 +895,20 @@ async fn stream_segment_from_server(
                     return Ok(ControlFlow::Break(()));
                 }
 
-                raw_rrd_manifest_parts.push(raw_rrd_manifest_part);
-                rrd_manifest_parts.push(rrd_manifest);
+                raw_dlr_manifest_parts.push(raw_dlr_manifest_part);
+                dlr_manifest_parts.push(dlr_manifest);
             }
 
-            if rrd_manifest_parts.is_empty() {
+            if dlr_manifest_parts.is_empty() {
                 return Err(ApiError::deserialization(
                     trace_id,
                     "failed to parse the response for /GetRrdManifest (no data)",
                 ));
             }
 
-            let part_nr = rrd_manifest_parts.len();
+            let part_nr = dlr_manifest_parts.len();
             dl_log::debug!(
-                "Full RRD manifest loaded in {:.1}s in {}",
+                "Full DLR manifest loaded in {:.1}s in {}",
                 start_time.elapsed().as_secs_f32(),
                 dl_format::format_plural_s(part_nr, "part")
             );
@@ -930,13 +930,13 @@ async fn stream_segment_from_server(
                     dl_log::debug!("Loading all of the chunks in one go; most important first");
                     let combined = dl_log_encoding::RawRrdManifest::merge(
                         store_id.clone(),
-                        raw_rrd_manifest_parts,
+                        raw_dlr_manifest_parts,
                     )
                     .map_err(|err| {
                         ApiError::invalid_arguments_with_source(
                             trace_id,
                             err,
-                            "Failed to merge RRD manifest parts",
+                            "Failed to merge DLR manifest parts",
                         )
                     })?;
                     let combined =
@@ -944,7 +944,7 @@ async fn stream_segment_from_server(
                             ApiError::invalid_arguments_with_source(
                                 trace_id,
                                 err,
-                                "Invalid merged RRD manifest",
+                                "Invalid merged DLR manifest",
                             )
                         })?;
                     let batch = sort_batch(combined.chunk_fetcher_rb()).map_err(|err| {
@@ -962,12 +962,12 @@ async fn stream_segment_from_server(
             if err.kind == ApiErrorKind::Unimplemented {
                 dl_log::debug_once!("The server does not support on-demand streaming"); // Legacy server
             } else {
-                dl_log::warn!("Failed to load RRD manifest: {err}");
+                dl_log::warn!("Failed to load DLR manifest: {err}");
             }
         }
     }
 
-    // Fallback for servers that does not support the RRD manifests:
+    // Fallback for servers that does not support the DLR manifests:
 
     let mut already_loaded_chunk_ids: ahash::HashSet<ChunkId> = Default::default();
 
@@ -1129,7 +1129,7 @@ async fn load_chunks(
     );
     if 25_000 < num_chunks {
         dl_log::debug_warn!(
-            "There are {} chunks in this recording. Consider running `dalaran rrd optimize` on it!",
+            "There are {} chunks in this recording. Consider running `dalaran dlr optimize` on it!",
             dl_format::format_uint(num_chunks)
         );
     }

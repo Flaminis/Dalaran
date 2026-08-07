@@ -51,7 +51,7 @@ In Dalaran's internal CI, this suite runs in several OSS↔Hub compatibility con
 
 The oldest-supported hub version and per-leg test deselections are pinned in a compat file next to the hub sources (internal, `compat/e2e-compat.json`).
 
-Tests marked `@pytest.mark.local_only` are skipped in both CI profiles (they require writing local `.rrd` files).
+Tests marked `@pytest.mark.local_only` are skipped in both CI profiles (they require writing local `.dlr` files).
 Tests marked `@pytest.mark.cloud_only` only run against cloud stacks (`dpf-stack`).
 
 ## Version compatibility gating

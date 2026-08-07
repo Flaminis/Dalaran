@@ -14,7 +14,7 @@ use dl_log_types::{EntityPath, StoreId, StoreKind};
 /// Both variants are `Arc`-based, so `Clone` is cheap.
 #[derive(Clone)]
 pub enum ResolvedStore {
-    /// Fully in-memory store (e.g. from `write_chunks` or legacy RRD without footer).
+    /// Fully in-memory store (e.g. from `write_chunks` or legacy DLR without footer).
     Eager(ChunkStoreHandle),
 
     /// Provider-backed store with on-demand chunk loading.
@@ -111,12 +111,12 @@ impl ResolvedStore {
         }
     }
 
-    /// Load an RRD file as one or more [`ResolvedStore`]s, one per store found in the file.
+    /// Load an DLR file as one or more [`ResolvedStore`]s, one per store found in the file.
     ///
-    /// Uses the lazy path (chunks loaded on demand) when the RRD has a footer and eager loading
+    /// Uses the lazy path (chunks loaded on demand) when the DLR has a footer and eager loading
     /// (whole file read into memory) when the footer is missing.
     /// Stores whose kind does not match `store_kind` are filtered out.
-    pub async fn load_rrd_file(
+    pub async fn load_dlr_file(
         path: &Path,
         store_kind: StoreKind,
     ) -> Result<Vec<(StoreId, Self)>, super::Error> {
@@ -129,7 +129,7 @@ impl ResolvedStore {
             }
         };
 
-        if let Some(footer) = dl_log_encoding::read_rrd_footer(&file)
+        if let Some(footer) = dl_log_encoding::read_dlr_footer(&file)
             .await
             .map_err(|err| super::Error::RrdLoadingError(err.into()))?
         {
@@ -168,7 +168,7 @@ impl ResolvedStore {
             }
         }
 
-        Ok(dl_chunk_store::ChunkStore::handle_from_rrd_reader_async(
+        Ok(dl_chunk_store::ChunkStore::handle_from_dlr_reader_async(
             &super::InMemoryStore::default_eager_chunk_store_config(),
             reader,
         )
@@ -209,9 +209,9 @@ mod tests {
 
     use super::ResolvedStore;
 
-    /// Authors a minimal RRD (one `SetStoreInfo` + a few chunks) at `path`, with or without a
+    /// Authors a minimal DLR (one `SetStoreInfo` + a few chunks) at `path`, with or without a
     /// footer, and returns the `StoreId` that was written.
-    fn write_rrd(path: &std::path::Path, store_id: &StoreId, with_footer: bool) {
+    fn write_dlr(path: &std::path::Path, store_id: &StoreId, with_footer: bool) {
         let entity_path = EntityPath::from("/test/entity");
         let timeline = Timeline::new_sequence("frame");
         let chunks: Vec<Arc<Chunk>> = (0..3)
@@ -230,13 +230,13 @@ mod tests {
             })
             .collect();
 
-        let mut file = std::fs::File::create(path).expect("failed to create test RRD file");
+        let mut file = std::fs::File::create(path).expect("failed to create test DLR file");
         let mut encoder = dl_log_encoding::Encoder::new_eager(
             dl_build_info::CrateVersion::LOCAL,
             dl_log_encoding::EncodingOptions::PROTOBUF_COMPRESSED,
             &mut file,
         )
-        .expect("failed to create test RRD encoder");
+        .expect("failed to create test DLR encoder");
         if !with_footer {
             encoder.do_not_emit_footer();
         }
@@ -256,35 +256,35 @@ mod tests {
                 ))
                 .expect("failed to write test chunk");
         }
-        encoder.finish().expect("failed to finish test RRD");
+        encoder.finish().expect("failed to finish test DLR");
     }
 
     /// The register VALIDATION phase enumerates store IDs via
-    /// [`dl_log_encoding::enumerate_rrd_stores`], while the LOAD phase derives them from
-    /// [`ResolvedStore::load_rrd_file`]. These run different code (footer-keys vs lazy load, and
+    /// [`dl_log_encoding::enumerate_dlr_stores`], while the LOAD phase derives them from
+    /// [`ResolvedStore::load_dlr_file`]. These run different code (footer-keys vs lazy load, and
     /// frame-scan vs eager decode for legacy RRDs) and MUST agree, or registration would validate
     /// a different set of segments than it ends up loading. This pins that invariant for both the
     /// modern (footer) and legacy (no-footer) representations.
     #[tokio::test]
     async fn enumerate_and_load_agree_on_store_ids() {
         for with_footer in [true, false] {
-            let file = tempfile::NamedTempFile::new().expect("failed to create temp RRD file");
+            let file = tempfile::NamedTempFile::new().expect("failed to create temp DLR file");
             let path = file.path();
             let store_id = StoreId::random(StoreKind::Recording, "test");
-            write_rrd(path, &store_id, with_footer);
+            write_dlr(path, &store_id, with_footer);
 
-            let file = std::fs::File::open(path).expect("failed to open test RRD file");
-            let validated: BTreeSet<StoreId> = dl_log_encoding::enumerate_rrd_stores(&file)
+            let file = std::fs::File::open(path).expect("failed to open test DLR file");
+            let validated: BTreeSet<StoreId> = dl_log_encoding::enumerate_dlr_stores(&file)
                 .await
-                .expect("failed to enumerate test RRD stores")
+                .expect("failed to enumerate test DLR stores")
                 .into_iter()
                 .filter(|id| id.kind() == StoreKind::Recording)
                 .collect();
 
             let loaded: BTreeSet<StoreId> =
-                ResolvedStore::load_rrd_file(path, StoreKind::Recording)
+                ResolvedStore::load_dlr_file(path, StoreKind::Recording)
                     .await
-                    .expect("failed to load test RRD file")
+                    .expect("failed to load test DLR file")
                     .into_iter()
                     .map(|(id, _)| id)
                     .collect();

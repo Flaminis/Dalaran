@@ -150,19 +150,19 @@ man = "DALARAN_DISABLE_WEB_VIEWER_SERVER=1 cargo run --package dalaran-cli --all
 
 # Compile and run the dalaran viewer.
 #
-# You can also give an argument for what to view (e.g. an .rrd file).
+# You can also give an argument for what to view (e.g. an .dlr file).
 dalaran = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer --"
 
 # Compile and run the dalaran cli tool, without any viewer.
 #
 # This avoid recompiling the viewer when you just want to run a quick command.
 #
-# You can also give an argument for what to view (e.g. an .rrd file).
+# You can also give an argument for what to view (e.g. an .dlr file).
 dalaran-cli = "cargo run --package dalaran-cli --no-default-features --"
 
 # Compile and run the dalaran viewer, with performance telemetry including Tracy profiler.
 #
-# You can also give an argument for what to view (e.g. an .rrd file).
+# You can also give an argument for what to view (e.g. an .dlr file).
 dalaran-perf-debug = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer,dalaran/perf_telemetry_tracy --"
 
 # Compile `dalaran-cli` without the web-viewer.
@@ -174,12 +174,12 @@ dalaran-build-release = "cargo build --package dalaran-cli --release --no-defaul
 
 # Compile and run the dalaran viewer with --release.
 #
-# You can also give an argument for what to view (e.g. an .rrd file).
+# You can also give an argument for what to view (e.g. an .dlr file).
 dalaran-release = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer --release --"
 
 # Compile and run the dalaran viewer in release mode, with performance telemetry including Tracy profiler.
 #
-# You can also give an argument for what to view (e.g. an .rrd file).
+# You can also give an argument for what to view (e.g. an .dlr file).
 dalaran-perf = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer,dalaran/perf_telemetry_tracy --release --"
 
 # Compile `dalaran-cli` with the same feature set as we build for releases.
@@ -197,7 +197,7 @@ dalaran-build-native-and-pending-web-release-zig = { cmd = "cargo zigbuild --loc
 
 # Compile and run the web-viewer via dalaran-cli.
 #
-# You can also give an argument for what to view (e.g. an .rrd file).
+# You can also give an argument for what to view (e.g. an .dlr file).
 dalaran-web = { cmd = "cargo run --package dalaran-cli --no-default-features --features web_viewer -- --web-viewer", depends-on = [
   "dalaran-build-web",
 ] }
@@ -210,7 +210,7 @@ dalaran-build-web-cli = "cargo run -p dl_dev_tools -- build-web-viewer --no-defa
 
 # Compile and run the web-viewer in release mode via dalaran-cli.
 #
-# You can also give an argument for what to view (e.g. an .rrd file).
+# You can also give an argument for what to view (e.g. an .dlr file).
 dalaran-web-release = { cmd = "cargo run --package dalaran-cli --no-default-features --features map_view,web_viewer --release -- --web-viewer", depends-on = [
   "dalaran-build-web-release",
 ] }
@@ -220,10 +220,10 @@ dalaran-build-web-release = "cargo run -p dl_dev_tools -- build-web-viewer --no-
 
 rs-check = "python scripts/ci/rust_checks.py"
 
-# Check that old .rrd files can still be read and understood.
-# See tests/assets/rrd/README.md for more.
+# Check that old .dlr files can still be read and understood.
+# See tests/assets/dlr/README.md for more.
 # Note that we run with `--check-footers=false`: it is expected that these RRDs do not have proper footers (they predate them).
-check-backwards-compatibility = { cmd = "find tests/assets/rrd -name '*.rrd' -type f -print0 | xargs -0 cargo run --package dalaran-cli --no-default-features rrd verify --check-footers=false" }
+check-backwards-compatibility = { cmd = "find tests/assets/dlr -name '*.dlr' -type f -print0 | xargs -0 cargo run --package dalaran-cli --no-default-features dlr verify --check-footers=false" }
 web-test = "cargo run --package dl_web_tests --"
 
 # `cargo fmt --all` only sees files reachable from each crate's lib.rs/main.rs.
@@ -371,8 +371,8 @@ update-snapshot-tests = { depends-on = ["rs-update-snapshot-tests", "py-update-s
 # Upload image to gcloud storage.
 upload-image = "python scripts/upload_image.py"
 
-# Upload .rrd to gcloud storage.
-upload-rrd = "python scripts/upload_rrd.py"
+# Upload .dlr to gcloud storage.
+upload-dlr = "python scripts/upload_dlr.py"
 
 # Check whether there's too large files in the repository.
 check-large-files = "python scripts/ci/check_large_files.py"

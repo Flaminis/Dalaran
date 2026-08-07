@@ -138,7 +138,7 @@ def main() -> None:
     Path(args.save).touch()
 
     root_path = Path(__file__).parent.parent.parent.parent.resolve()
-    path_to_dataset = root_path / "tests/assets/rrd/dataset"
+    path_to_dataset = root_path / "tests/assets/dlr/dataset"
 
     query_with_scalar_index_values(path_to_dataset)
     query_with_per_segment_index_values(path_to_dataset)

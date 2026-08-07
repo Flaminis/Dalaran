@@ -6,7 +6,7 @@
 //!
 //! There is also a `dalaran` binary.
 //! The binary is required in order to stream log data
-//! over the networks, and to open our `.rrd` data files.
+//! over the networks, and to open our `.dlr` data files.
 //! If you need it, install the `dalaran` binary with `cargo install dalaran-cli --locked`.
 //!
 //!
@@ -33,7 +33,7 @@
 //!
 //! ## Using the `dalaran` binary
 //! The `dalaran` binary is required in order to stream log data
-//! over the networks, and to open our `.rrd` data files.
+//! over the networks, and to open our `.dlr` data files.
 //!
 //! The binary can act either as a server, a viewer, or both,
 //! depending on which options you use when you start it.
@@ -71,10 +71,10 @@
 //! ```
 //!
 //! #### Streaming to disk
-//! Streaming data to a file on disk using the `.rrd` format:
+//! Streaming data to a file on disk using the `.dlr` format:
 //!
 //! ```no_run
-//! let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_app").save("my_data.rrd")?;
+//! let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_app").save("my_data.dlr")?;
 //!
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```

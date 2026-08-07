@@ -219,7 +219,7 @@ pub async fn deleting_dataset_deletes_asset_dataset(service: impl DalaranCloudSe
     );
 }
 
-/// Register an RRD into the asset dataset, returning the gRPC result without waiting for tasks.
+/// Register an DLR into the asset dataset, returning the gRPC result without waiting for tasks.
 async fn try_register_into_asset_dataset(
     service: &impl DalaranCloudService,
     asset_dataset_name: &str,
@@ -237,9 +237,9 @@ async fn try_register_into_asset_dataset(
         .map(|_| ())
 }
 
-fn rrd_data_source(path: &TempPath) -> DataSource {
+fn dlr_data_source(path: &TempPath) -> DataSource {
     let url = Url::from_file_path(path.as_path()).expect("valid file path");
-    DataSourceExt::new_rrd_url(url).into()
+    DataSourceExt::new_dlr_url(url).into()
 }
 
 /// Assert that at least one registration task failed with a message containing `expected_substring`.
@@ -313,7 +313,7 @@ pub async fn asset_dataset_enforces_segment_limit(service: impl DalaranCloudServ
         let path = create_minimal_static_recording(100 + i, &format!("asset_{i}")).unwrap();
         // Wait for completion so the segment is committed before the next registration's count check.
         service
-            .register_with_dataset_name_blocking(&asset_dataset_name, vec![rrd_data_source(&path)])
+            .register_with_dataset_name_blocking(&asset_dataset_name, vec![dlr_data_source(&path)])
             .await;
         recordings.push(path);
     }
@@ -322,7 +322,7 @@ pub async fn asset_dataset_enforces_segment_limit(service: impl DalaranCloudServ
     let status = try_register_into_asset_dataset(
         &service,
         &asset_dataset_name,
-        vec![rrd_data_source(&overflow)],
+        vec![dlr_data_source(&overflow)],
     )
     .await
     .expect_err("registering past the segment limit should fail");
@@ -420,7 +420,7 @@ pub async fn asset_dataset_enforces_segment_size_limit(service: impl DalaranClou
         usize::try_from(limit - margin).unwrap(),
     );
     service
-        .register_with_dataset_name_blocking(&asset_dataset_name, vec![rrd_data_source(&under)])
+        .register_with_dataset_name_blocking(&asset_dataset_name, vec![dlr_data_source(&under)])
         .await;
     recordings.push(under);
 
@@ -430,7 +430,7 @@ pub async fn asset_dataset_enforces_segment_size_limit(service: impl DalaranClou
         usize::try_from(limit + margin).unwrap(),
     );
     let request = tonic::Request::new(RegisterWithDatasetRequest {
-        data_sources: vec![rrd_data_source(&over)],
+        data_sources: vec![dlr_data_source(&over)],
         on_duplicate: IfDuplicateBehavior::Error as i32,
     })
     .with_entry_name(entry_name(&asset_dataset_name));
@@ -471,7 +471,7 @@ pub async fn blueprint_dataset_enforces_segment_size_limit(service: impl Dalaran
         usize::try_from(limit - margin).unwrap(),
     );
     service
-        .register_with_dataset_name_blocking(&blueprint_dataset_name, vec![rrd_data_source(&under)])
+        .register_with_dataset_name_blocking(&blueprint_dataset_name, vec![dlr_data_source(&under)])
         .await;
     blueprints.push(under);
 
@@ -481,7 +481,7 @@ pub async fn blueprint_dataset_enforces_segment_size_limit(service: impl Dalaran
         usize::try_from(limit + margin).unwrap(),
     );
     let request = tonic::Request::new(RegisterWithDatasetRequest {
-        data_sources: vec![rrd_data_source(&over)],
+        data_sources: vec![dlr_data_source(&over)],
         on_duplicate: IfDuplicateBehavior::Error as i32,
     })
     .with_entry_name(entry_name(&blueprint_dataset_name));

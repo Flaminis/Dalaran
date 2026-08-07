@@ -580,11 +580,11 @@ impl TestContext {
         }
     }
 
-    pub fn add_rrd_manifest(&mut self, rrd_manifest: Arc<dl_log_encoding::RrdManifest>) {
+    pub fn add_dlr_manifest(&mut self, dlr_manifest: Arc<dl_log_encoding::RrdManifest>) {
         let store_hub = self.store_hub.get_mut();
         let active_recording = store_hub.entity_db_mut(&self.recording_store_id).unwrap();
-        active_recording.add_rrd_manifest_message(rrd_manifest);
-        active_recording.mark_rrd_manifest_complete();
+        active_recording.add_dlr_manifest_message(dlr_manifest);
+        active_recording.mark_dlr_manifest_complete();
 
         // Pretend like we are connected to a real redap server:
         active_recording.data_source = Some(dl_log_channel::LogSource::RedapGrpcStream {
@@ -633,12 +633,12 @@ impl TestContext {
 
         let db = store_hub.entity_db_mut(&self.recording_store_id).unwrap();
         if db.can_fetch_chunks_from_redap() {
-            let (rrd_manifest, storage_engine) = db.rrd_manifest_index_mut_and_storage_engine();
+            let (dlr_manifest, storage_engine) = db.dlr_manifest_index_mut_and_storage_engine();
             let options = dl_entity_db::ChunkPrefetchOptions::default();
             // Budget of 0 bytes so that we don't try to load anything.
             let mut budget =
                 dl_entity_db::RemainingByteBudget::new(0, options.max_bytes_on_wire_at_once);
-            let _err = rrd_manifest.prefetch_chunks(
+            let _err = dlr_manifest.prefetch_chunks(
                 storage_engine.store(),
                 &options,
                 self.time_ctrl.read().time_cursor(),
@@ -1012,7 +1012,7 @@ impl TestContext {
         };
         let messages = recording_entity_db.to_messages(None);
 
-        let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+        let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
         dl_log_encoding::Encoder::encode_into(
             dl_build_info::CrateVersion::LOCAL,
             encoding_options,
@@ -1034,7 +1034,7 @@ impl TestContext {
         };
         let messages = blueprint_entity_db.to_messages(None);
 
-        let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+        let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
         dl_log_encoding::Encoder::encode_into(
             dl_build_info::CrateVersion::LOCAL,
             encoding_options,

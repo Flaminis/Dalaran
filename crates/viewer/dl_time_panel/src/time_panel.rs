@@ -1249,7 +1249,7 @@ impl TimePanel {
             // flickering back and forth because the specific chunk didn't have data where
             // the root chunk was hovered when it wasn't loaded.
             let mut descendents_scratch = Vec::new();
-            for info in ctx.db.rrd_manifest_index().temporal_entries_for(
+            for info in ctx.db.dlr_manifest_index().temporal_entries_for(
                 ctx.time_ctrl.timeline_name(),
                 &item.entity_path,
                 item.component,
@@ -1434,12 +1434,12 @@ impl TimePanel {
                 help_button(ui);
 
                 let freshness = db
-                    .rrd_manifest_index()
+                    .dlr_manifest_index()
                     .chunk_requests()
                     .bandwidth_data_freshness(ui.time());
                 if store_ctx.app_options.show_metrics && freshness > 0.0 {
                     let mut rate = db
-                        .rrd_manifest_index()
+                        .dlr_manifest_index()
                         .chunk_requests()
                         .bandwidth()
                         .unwrap_or(0.0);

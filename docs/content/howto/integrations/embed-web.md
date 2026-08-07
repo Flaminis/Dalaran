@@ -10,19 +10,19 @@ Integrating the Dalaran Viewer into your web application can be accomplished eit
 This approach is straightforward and requires minimal setup. However, the drawback is that it lacks programmable control over the web viewer.
 
 ```html
-<iframe src="https://app.dalaran.dev/version/{DALARAN_VERSION}/index.html?url={RRD_URL}"></iframe>
+<iframe src="https://app.dalaran.dev/version/{DALARAN_VERSION}/index.html?url={DLR_URL}"></iframe>
 ```
 
 To implement this, fill in the placeholders:
-- `RRD_URL` - The URL of the recording to display in the viewer.
+- `DLR_URL` - The URL of the recording to display in the viewer.
 - `DALARAN_VERSION` - The version of the Dalaran SDK used to generate the recording.
 
-The `RRD_URL` can be a file served over `http` (e.g. `https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.rrd`), or a connection to an SDK using our [serve](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API (e.g. `dalaran+http://localhost:4321/proxy`).
+The `DLR_URL` can be a file served over `http` (e.g. `https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.dlr`), or a connection to an SDK using our [serve](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API (e.g. `dalaran+http://localhost:4321/proxy`).
 
 For instance:
 
 ```html
-<iframe src="https://app.dalaran.dev/version/0.20.3/?url=https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.rrd"></iframe>
+<iframe src="https://app.dalaran.dev/version/0.20.3/?url=https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.dlr"></iframe>
 ```
 
 ### Matching the host page's theme
@@ -30,7 +30,7 @@ For instance:
 By default, the embedded viewer follows the user's OS theme (`prefers-color-scheme`). If your host page has its own theme toggle, you can pin the viewer to match by passing `theme=dark`, `theme=light`, or `theme=system`:
 
 ```html
-<iframe src="https://app.dalaran.dev/version/{DALARAN_VERSION}/?url={RRD_URL}&theme=dark"></iframe>
+<iframe src="https://app.dalaran.dev/version/{DALARAN_VERSION}/?url={DLR_URL}&theme=dark"></iframe>
 ```
 
 This is useful for sites whose theme can differ from the OS preference — without it, a user on a light-mode OS visiting your dark-mode page would see a bright viewer panel against a dark background.
@@ -44,7 +44,7 @@ Various packages are available:
 - [@dalaran/web-viewer-react](https://www.npmjs.com/package/@dalaran/web-viewer-react): Designed specifically for React apps.
 
 > [!NOTE]
-> The stability of the `rrd` format is still evolving, so the package version corresponds to the supported Dalaran SDK version. Therefore, `@dalaran/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) originating from a Dalaran SDK with version `0.10.0`!
+> The stability of the `dlr` format is still evolving, so the package version corresponds to the supported Dalaran SDK version. Therefore, `@dalaran/web-viewer@0.10.0` can only connect to a data source (`.dlr` file, gRPC connection, etc.) originating from a Dalaran SDK with version `0.10.0`!
 
 ### Basic example
 
@@ -108,7 +108,7 @@ await viewer.start(null, parentElement);
 The Viewer API supports adding and removing recordings:
 
 ```js,id=embed-web-viewer-api-js-open-close
-const rrdUrl = "https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.rrd";
+const rrdUrl = "https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.dlr";
 
 // Open a recording:
 viewer.open(rrdUrl);

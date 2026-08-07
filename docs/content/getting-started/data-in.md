@@ -209,17 +209,17 @@ snippet: tutorials/dna_connect_grpc
 
 Run `dalaran --help` for more options.
 
-### Saving & loading to/from RRD files
+### Saving & loading to/from DLR files
 
 Sometimes, sending data over the network is not an option. Maybe you'd like to share the data, attach it to a bug report, etc.
 
-Dalaran has you covered: each SDK exposes a `save` method (Python: [`dl.save`](https://ref.dalaran.dev/docs/python/stable/common/initialization_functions/#dalaran.save), Rust: [`RecordingStream::save`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.save), C++: [`RecordingStream::save`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#a555a7940a076c93d951de5b139d14918)) that streams all logged data to disk. View the resulting file with `dalaran path/to/recording.rrd`.
+Dalaran has you covered: each SDK exposes a `save` method (Python: [`dl.save`](https://ref.dalaran.dev/docs/python/stable/common/initialization_functions/#dalaran.save), Rust: [`RecordingStream::save`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.save), C++: [`RecordingStream::save`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#a555a7940a076c93d951de5b139d14918)) that streams all logged data to disk. View the resulting file with `dalaran path/to/recording.dlr`.
 
 You can also save a recording (or a portion of it) as you're visualizing it, directly from the viewer.
 
-### RRD file backwards compatibility
+### DLR file backwards compatibility
 
-RRD files saved with Dalaran 0.23 or later can be opened with a newer Dalaran version.
+DLR files saved with Dalaran 0.23 or later can be opened with a newer Dalaran version.
 For more details and potential limitations, please refer to [our blog post](https://dalaran.dev/blog/release-0.23).
 
 > [!WARNING]
@@ -237,4 +237,4 @@ As a next step, browse through our [example gallery](https://dalaran.dev/example
 
 ## Opening files
 
-You can also open existing files (RRD, MCAP, images, video, point clouds, etc.) directly with the Viewer — see [Opening files](data-in/open-any-file.md).
+You can also open existing files (DLR, MCAP, images, video, point clouds, etc.) directly with the Viewer — see [Opening files](data-in/open-any-file.md).

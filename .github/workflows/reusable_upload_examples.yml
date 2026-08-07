@@ -71,7 +71,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "example_data"
-          destination: "rerun-web-viewer/commit/${{ steps.get-sha.outputs.sha }}/examples"
+          destination: "dalaran-web-viewer/commit/${{ steps.get-sha.outputs.sha }}/examples"
           parent: false
           process_gcloudignore: false
 
@@ -80,7 +80,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "example_data"
-          destination: "rerun-web-viewer/version/${{ inputs.RELEASE_VERSION }}/examples"
+          destination: "dalaran-web-viewer/version/${{ inputs.RELEASE_VERSION }}/examples"
           parent: false
           process_gcloudignore: false
 
@@ -89,7 +89,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "example_data"
-          destination: "rerun-web-viewer/adhoc/${{ inputs.ADHOC_NAME }}/examples"
+          destination: "dalaran-web-viewer/adhoc/${{ inputs.ADHOC_NAME }}/examples"
           parent: false
           process_gcloudignore: false
 
@@ -98,7 +98,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "example_data"
-          destination: "rerun-web-viewer/prerelease/examples"
+          destination: "dalaran-web-viewer/prerelease/examples"
           parent: false
           process_gcloudignore: false
           headers: |-
@@ -109,7 +109,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "example_data"
-          destination: "rerun-web-viewer/version/main/examples"
+          destination: "dalaran-web-viewer/version/main/examples"
           parent: false
           process_gcloudignore: false
           headers: |-
@@ -120,7 +120,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "example_data"
-          destination: "rerun-web-viewer/pr/${{ inputs.PR_NUMBER }}/examples"
+          destination: "dalaran-web-viewer/pr/${{ inputs.PR_NUMBER }}/examples"
           parent: false
           process_gcloudignore: false
           headers: |-
@@ -131,7 +131,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "example_data"
-          destination: "rerun-web-viewer/version/nightly/examples"
+          destination: "dalaran-web-viewer/version/nightly/examples"
           parent: false
           process_gcloudignore: false
           headers: |-

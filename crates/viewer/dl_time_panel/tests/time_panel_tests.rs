@@ -47,13 +47,13 @@ pub fn time_panel_two_sections() {
 
     let chunks = create_sparse_chunks();
 
-    let rrd_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
+    let dlr_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
         test_context.active_store_id(),
         chunks.iter(),
     )
     .unwrap();
 
-    test_context.add_rrd_manifest(rrd_manifest);
+    test_context.add_dlr_manifest(dlr_manifest);
     test_context.add_chunks(chunks.into_iter());
     test_context.set_active_timeline("frame_nr");
 
@@ -271,13 +271,13 @@ fn with_unloaded_chunks() {
 
     let mut chunks = create_chunks();
 
-    let rrd_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
+    let dlr_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
         test_context.active_store_id(),
         chunks.iter(),
     )
     .unwrap();
 
-    test_context.add_rrd_manifest(rrd_manifest);
+    test_context.add_dlr_manifest(dlr_manifest);
 
     test_context.set_active_timeline("timeline_a");
 
@@ -446,7 +446,7 @@ struct RunOptions {
 
     /// Marks the given chunks as missing, to cause the time-panel to
     /// indicate that something is loading. This has to be a chunk coming
-    /// with a root in the rrd manifest.
+    /// with a root in the dlr manifest.
     mark_chunks_used_or_missing: Vec<dl_chunk::ChunkId>,
 }
 

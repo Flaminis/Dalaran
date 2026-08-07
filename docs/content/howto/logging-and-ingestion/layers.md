@@ -42,7 +42,7 @@ Output:
 └───────────────────────────────────────┴───────────────────┘
 ```
 
-It is possible to append data to existing segments by creating new `.rrd` files with matching recording IDs, and registering them to the dataset under new layer names.
+It is possible to append data to existing segments by creating new `.dlr` files with matching recording IDs, and registering them to the dataset under new layer names.
 A common workflow is to query existing segment data, compute derived values (such as metrics or embeddings), and add them as new layers.
 
 As an example, we use the dataset registered previously and compute the tracking error (L2 norm between commanded and actual joint positions) of the robotic arm:
@@ -52,9 +52,9 @@ snippet: howto/layers[add_tracking_error]
 The key steps are:
 1. Query action (commanded) and observation (actual) joint positions from the dataset
 2. For each segment, compute the L2 norm of the difference as tracking error
-3. Create a new `.rrd` file with the same `recording_id` as the original segment
+3. Create a new `.dlr` file with the same `recording_id` as the original segment
 4. Log the derived data using `send_columns()` for efficient columnar logging
-5. Register all derived `.rrd` files to the dataset with a `"tracking_error"` layer name
+5. Register all derived `.dlr` files to the dataset with a `"tracking_error"` layer name
 
 The `"dalaran_layer_names"` column of the segment table confirms the new layer was added:
 
@@ -97,7 +97,7 @@ The key steps are:
 1. Query the derived tracking error data we just added
 2. Use DataFusion's `aggregate()` to compute the mean error per segment
 3. Threshold the mean to create a boolean `tracking_good` property
-4. Create new `.rrd` files with `send_property()` to log the property
+4. Create new `.dlr` files with `send_property()` to log the property
 5. Register under a separate `"quality"` layer
 
 The property now appears in the segment table:
@@ -139,7 +139,7 @@ Layers are immutable.
 
 ### What happens if I register to an existing layer name?
 
-Registering a `.rrd` file with a `recording_id` and `layer_name` that already exists will result in an error.
+Registering a `.dlr` file with a `recording_id` and `layer_name` that already exists will result in an error.
 
 ### How can I replace an existing layer?
 

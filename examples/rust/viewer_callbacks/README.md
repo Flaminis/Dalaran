@@ -5,7 +5,7 @@ thumbnail_dimensions = [480, 290]
 -->
 
 
-Example showing how to wrap the Rerun Viewer in your own UI, and register callbacks to the Viewer.
+Example showing how to wrap the Dalaran Viewer in your own UI, and register callbacks to the Viewer.
 
 You create your own [`eframe`](https://github.com/emilk/egui/tree/master/crates/eframe) app and write your own GUI using [`egui`](https://github.com/emilk/egui).
 
@@ -23,7 +23,7 @@ The example starts an SDK server which the Python or Rust logging SDK can connec
 
 [#2337](https://github.com/rerun-io/rerun/issues/2337): Note that in order to spawn a web viewer with these customizations applied,
 you have to build the web viewer of the version yourself.
-This is currently not supported outside of the Rerun repository.
+This is currently not supported outside of the Dalaran repository.
 
 ## Usage
 Start it with `cargo run -p viewer_callbacks`.

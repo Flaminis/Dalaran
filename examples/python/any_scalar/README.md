@@ -104,10 +104,10 @@ What you should see when running `python -m any_scalar --demo market`:
 
 **Goal:** Plot values from dataset files without writing any code.
 
-Because Dalaran can now plot **Any Scalar**, you can drag an `.mcap` or `.rrd` file into the viewer and create a `Time Series` view. Use the UI in the viewer to drill into nested ROS messages or telemetry logs and start plotting immediately.
+Because Dalaran can now plot **Any Scalar**, you can drag an `.mcap` or `.dlr` file into the viewer and create a `Time Series` view. Use the UI in the viewer to drill into nested ROS messages or telemetry logs and start plotting immediately.
 
 > [!TIP]
-> **Watch the video at the top of this page** to see a step-by-step walkthrough of how to use the UI to plot any field from an MCAP/RRD file.
+> **Watch the video at the top of this page** to see a step-by-step walkthrough of how to use the UI to plot any field from an MCAP/DLR file.
 
 ---
 

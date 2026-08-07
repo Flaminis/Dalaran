@@ -33,10 +33,10 @@ It's fine to combine `🪳 bug` with `exclude from changelog` for a fix to a bug
 released (e.g. introduced earlier in the same release cycle) — users never saw it, so it doesn't
 belong in the changelog.
 
-We track various metrics at <https://build.rerun.io>.
+We track various metrics at <https://build.dalaran.dev>.
 
 For maintainers:
-* To run all checks from `main`, comment on the PR with `@rerun-bot full-check`.
+* To run all checks from `main`, comment on the PR with `@dalaran-bot full-check`.
 * To deploy documentation changes immediately after merging this PR, add the `deploy docs` label.
 
 For more details check the PR section on <https://github.com/rerun-io/rerun/blob/main/CONTRIBUTING.md>.

@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 use std::sync::Arc;
 use std::time::Duration;
 
-use rerun::external::{dl_error, dl_log};
+use dalaran::external::{dl_error, dl_log};
 use tokio::io::{AsyncReadExt, AsyncWriteExt, ReadHalf, WriteHalf};
 use tokio::net::TcpStream;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
@@ -10,7 +10,7 @@ use tokio::sync::{Mutex, Notify};
 
 use super::protocol::Message;
 
-/// A client for handling connections to an external application from within the Rerun viewer.
+/// A client for handling connections to an external application from within the Dalaran viewer.
 ///
 /// This client manages a gRPC connection to the external application and provides bidirectional
 /// message communication through separate read and write tasks.

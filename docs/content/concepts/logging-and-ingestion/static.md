@@ -75,13 +75,13 @@ How these semantics actually translate to physical storage depends on the contex
 
 ### In recordings
 
-Dalaran recordings (`.rrd` files) are just streams of binary messages: they have no semantics whatsoever, therefore they don't know what static means and can't do anything about it.
+Dalaran recordings (`.dlr` files) are just streams of binary messages: they have no semantics whatsoever, therefore they don't know what static means and can't do anything about it.
 
 If you were to log the snippet above to a file (using e.g. `dl.save()`), you'd find that the recording does in fact contains your 10 images.
 
 If you wanted the recording file itself to only contain a single static value, you would need to either:
 * Stream the data to the viewer, and then save the recording directly out of the viewer using `Menu > Save recording` (or the equivalent palette command).
-* Manually recompact your recording using the [Dalaran CLI](../../reference/cli.md#dalaran-rrd-optimize) so that the data overwrite semantics can get appropriately applied, e.g.: `dalaran rrd optimize -o compacted.rrd myrecording.rrd`.
+* Manually recompact your recording using the [Dalaran CLI](../../reference/cli.md#dalaran-dlr-optimize) so that the data overwrite semantics can get appropriately applied, e.g.: `dalaran dlr optimize -o compacted.dlr myrecording.dlr`.
 
 
 ### In the viewer

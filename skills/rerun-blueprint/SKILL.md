@@ -1,22 +1,22 @@
 ---
-name: rerun-blueprint
-description: Design a Rerun blueprint from the data, then iterate on it from headless screenshots. Read this when laying out a recording or dataset in the viewer, designing a default blueprint, or deciding which views show which entities. Covers archetype-to-view mapping, layout reasoning, the rrb construction API, the contents grammar, and the screenshot loop.
+name: dalaran-blueprint
+description: Design a Dalaran blueprint from the data, then iterate on it from headless screenshots. Read this when laying out a recording or dataset in the viewer, designing a default blueprint, or deciding which views show which entities. Covers archetype-to-view mapping, layout reasoning, the rrb construction API, the contents grammar, and the screenshot loop.
 user_invocable: true
 allowed-tools: Read, Grep, Bash, WebFetch
 ---
 
-# Rerun blueprint
+# Dalaran blueprint
 
 A blueprint decides how a recording is shown; the recording decides what exists.
 Read the data, design a first layout, then **iterate from screenshots** until it
 reads at a glance. The constructors are discoverable (`dir(rrb)`,
 `help(rrb.Spatial3DView)`); this skill covers what you can't guess. Import as
-`import rerun.blueprint as rrb`.
+`import dalaran.blueprint as rrb`.
 
 ## 1. Read the data
 
 Enumerate every `(entity_path, archetype)` pair first — the archetype picks the
-view, the entity path scopes it. For a dataset (see `rerun-catalog-queries`):
+view, the entity path scopes it. For a dataset (see `dalaran-catalog-queries`):
 
 ```python
 for c in dataset.schema().component_columns():
@@ -24,7 +24,7 @@ for c in dataset.schema().component_columns():
 ```
 
 For a local recording, stream it with `RrdReader` and read `entity_path` and
-the archetype off each chunk (see `rerun-chunk-processing`).
+the archetype off each chunk (see `dalaran-chunk-processing`).
 
 ## 2. Map archetype to view
 
@@ -99,23 +99,23 @@ Spawn the viewer and load the recording once, then re-send blueprints into the
 same viewer; each send + screenshot is one cheap iteration. Render, look, revise.
 
 The blueprint binds to the data by store identity, **both application id and
-recording id**. A loaded `.rrd` keeps its own identity, so build the stream from
-the rrd's values (set both; `recording_id` otherwise defaults to a random one).
+recording id**. A loaded `.dlr` keeps its own identity, so build the stream from
+the dlr's values (set both; `recording_id` otherwise defaults to a random one).
 Mismatch either and the viewer keeps blueprint and data as separate recordings
 and never applies the blueprint.
 
 ```python
 import time
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.experimental import ViewerClient, RrdReader
+import dalaran as rr
+import dalaran.blueprint as rrb
+from dalaran.experimental import ViewerClient, RrdReader
 
-store = RrdReader("segment.rrd").recordings()[0]  # the rrd's application id + recording id
+store = RrdReader("segment.dlr").recordings()[0]  # the dlr's application id + recording id
 
 with ViewerClient.spawn(headless=True, port=9879) as viewer:
     rec = rr.RecordingStream(store.application_id, recording_id=store.recording_id)
     rec.connect_grpc(url=viewer.url)
-    rec.log_file_from_path("segment.rrd")
+    rec.log_file_from_path("segment.dlr")
 
     def shot(blueprint, path):
         rec.send_blueprint(blueprint, make_active=True, make_default=True)
@@ -136,10 +136,10 @@ To bake a finished blueprint in instead, pass `default_blueprint=` to `rr.init` 
   `query=rrb.archetypes.DataframeQuery(timeline="<timeline>", apply_latest_at=True)`.
 - A view back blank? The importer may not have finished (bump the settle) or the
   cursor sits before the data (add `rrb.TimePanel(play_state=rrb.components.PlayState.Following)`).
-- `rrb` views and `ViewerClient` (`rerun.experimental`) are unstable. Check
+- `rrb` views and `ViewerClient` (`dalaran.experimental`) are unstable. Check
   `help()` if a constructor argument is rejected.
 
 ## See also
 
-- `rerun-data-model` — entities, archetypes, timelines.
-- `rerun-catalog-queries` — enumerate entities in a dataset.
+- `dalaran-data-model` — entities, archetypes, timelines.
+- `dalaran-catalog-queries` — enumerate entities in a dataset.

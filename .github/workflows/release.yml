@@ -91,7 +91,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.RERUN_BOT_TOKEN }}
+          token: ${{ secrets.DALARAN_BOT_TOKEN }}
 
       - uses: actions/setup-node@v5
         with:
@@ -163,17 +163,17 @@ jobs:
           fi
           echo "git_tag=$git_tag" >> "$GITHUB_OUTPUT"
 
-      - name: Update rerun_py & rerun_c version
+      - name: Update dalaran_py & dalaran_c version
         run: |
-          pixi run python scripts/ci/update_rerun_py_and_c_version.py "${{ steps.versioning.outputs.current }}"
+          pixi run python scripts/ci/update_dalaran_py_and_c_version.py "${{ steps.versioning.outputs.current }}"
 
-      - name: Update rerun_notebook package version
+      - name: Update dalaran_notebook package version
         run: |
-          pixi run python scripts/ci/update_rerun_notebook_version.py "${{ steps.versioning.outputs.current }}"
+          pixi run python scripts/ci/update_dalaran_notebook_version.py "${{ steps.versioning.outputs.current }}"
 
       - name: Update JS package versions
         run: |
-          pixi run node rerun_js/scripts/version.mjs "${{ steps.versioning.outputs.current }}"
+          pixi run node dalaran_js/scripts/version.mjs "${{ steps.versioning.outputs.current }}"
 
       - run: pixi run toml-fmt
 
@@ -185,15 +185,15 @@ jobs:
         if: steps.versioning.outputs.previous != steps.versioning.outputs.current
         run: |
           git pull
-          git config --global user.name "rerun-bot"
-          git config --global user.email "bot@rerun.io"
+          git config --global user.name "dalaran-bot"
+          git config --global user.email "bot@dalaran.dev"
           git commit -am "Bump versions to ${{ steps.versioning.outputs.current }}"
           git push
           echo "version_bump_commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Create pull request
         env:
-          GH_TOKEN: ${{ secrets.RERUN_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.DALARAN_BOT_TOKEN }}
         run: |
           pr=$(gh pr view --json headRefName 2>/dev/null || echo "{}")
           if echo "$pr" | jq -e '.headRefName' >/dev/null 2>&1; then
@@ -207,7 +207,7 @@ jobs:
           ### Next steps
           - Test the release
           - For alpha releases:
-            - [ ] If a GH release should be published for this alpha (give extra love to alphas deployed to Rerun Hub or when external testing is required):
+            - [ ] If a GH release should be published for this alpha (give extra love to alphas deployed to Dalaran Hub or when external testing is required):
                 - [ ] Create the GitHub release manually from the UI
                 - [ ] Stretch goal: generate a raw changelog and add it to the GH release with this disclaimer:
                       **DISCLAIMER**: This is an unreviewed, automatically generated changelog. We only provide fully reviewed changelogs for final releases.
@@ -221,7 +221,7 @@ jobs:
               - [ ] Sanity check the build artifacts:
                 - [ ] pip install: does it install and run?
                 - [ ] cargo install of cli tool: does it install and run?
-                - [ ] Web Viewer: does it run and connect to Rerun Hub servers?
+                - [ ] Web Viewer: does it run and connect to Dalaran Hub servers?
               - [ ] Edit and publish the GitHub release:
                 - Do NOT create a GitHub release draft yourself! Let the release job do it.
                 - Populate the release with the changelog and a nice header video/picture
@@ -229,9 +229,9 @@ jobs:
                 - Click `Publish release`
                 - Once published, the release assets will sync to it automatically.
               - [ ] Update the [google colab notebooks](https://colab.research.google.com/drive/1R9I7s4o6wydQC_zkybqaSRFTtlEaked_) to install this version and re-execute the notebook.
-              - [ ] Verify the auto-triggered [gradio-rerun-viewer release workflow](https://github.com/rerun-io/gradio-rerun-viewer/actions/workflows/auto_release_on_rerun.yml) succeeded (dispatched from `on_gh_release.yml` for final releases)
+              - [ ] Verify the auto-triggered [gradio-dalaran-viewer release workflow](https://github.com/rerun-io/gradio-rerun-viewer/actions/workflows/auto_release_on_rerun.yml) succeeded (dispatched from `on_gh_release.yml` for final releases)
               - [ ] Create a new branch from the prepare-release branch, rebase that one on main and sync it to reality so it can be merged.
-              - [ ] (A few hours later) Check on the [conda feedstock PR](https://github.com/conda-forge/rerun-sdk-feedstock/pulls) (ping Antoine and/or Nick if necessary)
+              - [ ] (A few hours later) Check on the [conda feedstock PR](https://github.com/conda-forge/dalaran-sdk-feedstock/pulls) (ping Antoine and/or Nick if necessary)
 
           - [ ] Tests
             - [ ] Windows
@@ -290,20 +290,20 @@ jobs:
       RELEASE_COMMIT: ${{ needs.version.outputs.release-commit }}
     secrets: inherit
 
-  publish-rerun_c:
+  publish-dalaran_c:
     name: "Build and Publish C/C++ SDKs"
     needs: [version, uv-lock-check]
-    uses: ./.github/workflows/reusable_publish_rerun_c.yml
+    uses: ./.github/workflows/reusable_publish_dalaran_c.yml
     with:
       release-version: ${{ needs.version.outputs.current }}
       release-commit: ${{ needs.version.outputs.release-commit }}
       concurrency: ${{ github.ref_name }}
     secrets: inherit
 
-  publish-rerun-cli:
-    name: "Publish rerun-cli"
+  publish-dalaran-cli:
+    name: "Publish dalaran-cli"
     needs: [version, uv-lock-check]
-    uses: ./.github/workflows/reusable_publish_rerun_cli.yml
+    uses: ./.github/workflows/reusable_publish_dalaran_cli.yml
     with:
       release-version: ${{ needs.version.outputs.current }}
       release-commit: ${{ needs.version.outputs.release-commit }}
@@ -312,7 +312,7 @@ jobs:
 
   publish-wheels:
     name: "Build and Publish Wheels"
-    needs: [version, publish-rerun-cli]
+    needs: [version, publish-dalaran-cli]
     uses: ./.github/workflows/reusable_publish_wheels.yml
     with:
       release-version: ${{ needs.version.outputs.current }}
@@ -352,7 +352,7 @@ jobs:
     secrets: inherit
 
   # Force-pushes `latest` and `docs-latest` to the contents of the release branch.
-  # The push to `docs-latest` also triggers a re-deploy of `rerun.io`.
+  # The push to `docs-latest` also triggers a re-deploy of `dalaran.dev`.
   update-latest-branch:
     name: "Update Latest Branch"
     if: inputs.release-type == 'final' && !cancelled() && !failure()
@@ -363,8 +363,8 @@ jobs:
         publish-crates,
         publish-wheels,
         publish-web,
-        publish-rerun_c,
-        publish-rerun-cli,
+        publish-dalaran_c,
+        publish-dalaran-cli,
         publish-js,
       ]
     runs-on: ubuntu-latest
@@ -373,13 +373,13 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.RERUN_BOT_TOKEN }}
+          token: ${{ secrets.DALARAN_BOT_TOKEN }}
           ref: ${{ needs.version.outputs.release-commit }}
 
       - name: Update latest branch
         run: |
-          git config --global user.name "rerun-bot"
-          git config --global user.email "bot@rerun.io"
+          git config --global user.name "dalaran-bot"
+          git config --global user.email "bot@dalaran.dev"
           git fetch
           git checkout ${{ github.ref_name }}
           git push --force origin refs/heads/${{ github.ref_name }}:refs/heads/latest
@@ -395,8 +395,8 @@ jobs:
         publish-crates,
         publish-wheels,
         publish-web,
-        publish-rerun_c,
-        publish-rerun-cli,
+        publish-dalaran_c,
+        publish-dalaran-cli,
         publish-js,
       ]
     runs-on: ubuntu-latest
@@ -405,11 +405,11 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.RERUN_BOT_TOKEN }}
+          token: ${{ secrets.DALARAN_BOT_TOKEN }}
 
       - name: Release tag
         env:
-          GH_TOKEN: ${{ secrets.RERUN_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.DALARAN_BOT_TOKEN }}
         run: |
           version="${{ needs.version.outputs.git_tag }}"
           commit="${{ needs.version.outputs.release-commit }}"
@@ -420,7 +420,7 @@ jobs:
       - name: Create GH release
         if: inputs.release-type == 'rc' || inputs.release-type == 'final'
         env:
-          GH_TOKEN: ${{ secrets.RERUN_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.DALARAN_BOT_TOKEN }}
         run: |
           version="${{ needs.version.outputs.git_tag }}"
           commit="${{ needs.version.outputs.release-commit }}"
@@ -438,7 +438,7 @@ jobs:
         # GitHub API is very unreliable. We don't want to fail the entire workflow just because we couldn't post a comment.
         continue-on-error: true
         env:
-          GH_TOKEN: ${{ secrets.RERUN_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.DALARAN_BOT_TOKEN }}
         run: |
           pr_number=$(gh pr view --json number | jq '.number')
           version="${{ needs.version.outputs.final }}"
@@ -464,8 +464,8 @@ jobs:
         publish-crates,
         publish-wheels,
         publish-web,
-        publish-rerun_c,
-        publish-rerun-cli,
+        publish-dalaran_c,
+        publish-dalaran-cli,
         publish-js,
       ]
     runs-on: ubuntu-latest
@@ -474,7 +474,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.RERUN_BOT_TOKEN }}
+          token: ${{ secrets.DALARAN_BOT_TOKEN }}
 
       - uses: actions/setup-node@v5
         with:
@@ -486,8 +486,8 @@ jobs:
 
       - name: git config
         run: |
-          git config --global user.name "rerun-bot"
-          git config --global user.email "bot@rerun.io"
+          git config --global user.name "dalaran-bot"
+          git config --global user.email "bot@dalaran.dev"
           git checkout ${{ github.ref_name }}
           git pull --rebase
 
@@ -498,17 +498,17 @@ jobs:
           version="$(pixi run python scripts/ci/crates.py get-version)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-      - name: Update rerun_notebook package version
+      - name: Update dalaran_notebook package version
         run: |
-          pixi run python scripts/ci/update_rerun_notebook_version.py "${{ steps.crates.outputs.version }}"
+          pixi run python scripts/ci/update_dalaran_notebook_version.py "${{ steps.crates.outputs.version }}"
 
       - name: Update JS package versions
         run: |
-          pixi run node rerun_js/scripts/version.mjs "${{ steps.crates.outputs.version }}"
+          pixi run node dalaran_js/scripts/version.mjs "${{ steps.crates.outputs.version }}"
 
-      - name: Update rerun_py & rerun_c version
+      - name: Update dalaran_py & dalaran_c version
         run: |
-          pixi run python scripts/ci/update_rerun_py_and_c_version.py "${{ steps.crates.outputs.version }}"
+          pixi run python scripts/ci/update_dalaran_py_and_c_version.py "${{ steps.crates.outputs.version }}"
 
       - run: pixi run toml-fmt
 
@@ -530,8 +530,8 @@ jobs:
         publish-crates,
         publish-wheels,
         publish-web,
-        publish-rerun_c,
-        publish-rerun-cli,
+        publish-dalaran_c,
+        publish-dalaran-cli,
         publish-js,
       ]
     runs-on: ubuntu-latest
@@ -540,35 +540,35 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.RERUN_BOT_TOKEN }}
+          token: ${{ secrets.DALARAN_BOT_TOKEN }}
 
       - name: Create comment
         # GitHub API is very unreliable. We don't want to fail the entire workflow just because we couldn't post a comment.
         continue-on-error: true
         env:
-          GH_TOKEN: ${{ secrets.RERUN_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.DALARAN_BOT_TOKEN }}
         run: |
           pr_number=$(gh pr view --json number | jq '.number')
           echo "pr_number: $pr_number"
           short_commit_hash=$(echo ${{ needs.version.outputs.release-commit }} | cut -c1-7)
 
           if [ ${{ inputs.release-type }} = "final" ]; then
-            web_app_link="https://rerun.io/viewer/version/${{ needs.version.outputs.final }}"
-            rerun_io_docs_link="https://rerun.io/docs"
-            py_docs_link="https://ref.rerun.io/docs/python/${{ needs.version.outputs.final }}"
+            web_app_link="https://dalaran.dev/viewer/version/${{ needs.version.outputs.final }}"
+            dalaran_io_docs_link="https://dalaran.dev/docs"
+            py_docs_link="https://ref.dalaran.dev/docs/python/${{ needs.version.outputs.final }}"
           else
-            web_app_link="https://rerun.io/viewer/commit/$short_commit_hash"
-            rerun_io_docs_link="https://rerun.io/preview/$short_commit_hash/docs"
-            py_docs_link="https://ref.rerun.io/docs/python/dev"
+            web_app_link="https://dalaran.dev/viewer/commit/$short_commit_hash"
+            dalaran_io_docs_link="https://dalaran.dev/preview/$short_commit_hash/docs"
+            py_docs_link="https://ref.dalaran.dev/docs/python/dev"
           fi
-          wheels_link="https://pypi.org/project/rerun-sdk/${{ needs.version.outputs.current }}"
-          crates_link="https://crates.io/crates/rerun/${{ needs.version.outputs.current }}"
+          wheels_link="https://pypi.org/project/dalaran-sdk/${{ needs.version.outputs.current }}"
+          crates_link="https://crates.io/crates/dalaran/${{ needs.version.outputs.current }}"
           npm_link="https://www.npmjs.com/package/@dalaran/web-viewer/v/${{ needs.version.outputs.current }}"
-          rs_docs_link="https://docs.rs/rerun/${{ needs.version.outputs.current }}"
-          cpp_sdk_zip_link="https://build.rerun.io/commit/$short_commit_hash/rerun_cpp_sdk.zip"
+          rs_docs_link="https://docs.rs/dalaran/${{ needs.version.outputs.current }}"
+          cpp_sdk_zip_link="https://build.dalaran.dev/commit/$short_commit_hash/dalaran_cpp_sdk.zip"
 
-          pip_install="pip install rerun-sdk==${{ needs.version.outputs.current }}"
-          cargo_install="cargo install rerun-cli@${{ needs.version.outputs.current }} --locked"
+          pip_install="pip install dalaran-sdk==${{ needs.version.outputs.current }}"
+          cargo_install="cargo install dalaran-cli@${{ needs.version.outputs.current }} --locked"
           npm_install="npm install @dalaran/web-viewer@${{ needs.version.outputs.current }}"
 
           cat <<EOF > comment-body.txt
@@ -580,7 +580,7 @@ jobs:
           | [wheels]($wheels_link)            | $pip_install   |
           | [crates]($crates_link)            | $cargo_install |
           | [npm]($npm_link)                  | $npm_install   |
-          | [docs]($rerun_io_docs_link)       |                |
+          | [docs]($dalaran_io_docs_link)       |                |
           | [py docs]($py_docs_link)          |                |
           | [rs docs]($rs_docs_link)          |                |
           | [cpp_sdk zip]($cpp_sdk_zip_link)  |                |

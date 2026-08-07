@@ -34,7 +34,7 @@ pub async fn load_test_data_with_name(
     dataset_id_str: &str,
     recording_id: &str,
 ) -> Result<SegmentId, Box<dyn Error>> {
-    let path = recording_rrd(recording_id, |stream| {
+    let path = recording_dlr(recording_id, |stream| {
         for x in 0..20 {
             stream.set_time("test_time", TimeCell::new(TimeType::Sequence, x));
             stream
@@ -77,7 +77,7 @@ pub async fn load_static_preview_data(
     let mut paths = Vec::with_capacity(count);
     for i in 0..count {
         let color = preview_segment_color(i);
-        let path = recording_rrd(&format!("{recording_id_prefix}_{i}"), |stream| {
+        let path = recording_dlr(&format!("{recording_id_prefix}_{i}"), |stream| {
             stream
                 .log_static(
                     "test_entity",
@@ -113,8 +113,8 @@ fn preview_segment_color(index: usize) -> Color {
     Color::from_rgb(r, g, b)
 }
 
-/// Build an `.rrd` file from a recording, running `log_data` to populate it.
-fn recording_rrd(
+/// Build an `.dlr` file from a recording, running `log_data` to populate it.
+fn recording_dlr(
     recording_id: &str,
     log_data: impl FnOnce(&dl_sdk::RecordingStream),
 ) -> Result<tempfile::NamedTempFile, Box<dyn Error>> {
@@ -130,7 +130,7 @@ fn recording_rrd(
     Ok(path)
 }
 
-/// Create a dataset entry and register the `.rrd`s at `paths`, waiting for registration to finish.
+/// Create a dataset entry and register the `.dlr`s at `paths`, waiting for registration to finish.
 ///
 /// Returns the segment ids in the same order as `paths`.
 async fn register_rrds(
@@ -147,7 +147,7 @@ async fn register_rrds(
 
     let mut data_sources = Vec::with_capacity(paths.len());
     for path in paths {
-        data_sources.push(DataSource::new_rrd(format!(
+        data_sources.push(DataSource::new_dlr(format!(
             "file://{}",
             path.to_str()
                 .ok_or_else(|| "Failed to convert path to str".to_owned())?
@@ -178,7 +178,7 @@ async fn register_rrds(
     Ok(segment_ids)
 }
 
-/// Register a `.rbl` blueprint file with `table`'s implicit blueprint dataset and set it as the
+/// Register a `.dbl` blueprint file with `table`'s implicit blueprint dataset and set it as the
 /// table's default blueprint, mirroring `TableEntry.register_blueprint` in the Python SDK.
 ///
 /// The viewer fetches this registered blueprint when the table entry is opened, which is what
@@ -186,16 +186,16 @@ async fn register_rrds(
 pub async fn register_table_blueprint(
     client: &mut ConnectionClient,
     table: &TableEntry,
-    blueprint_rbl: &std::path::Path,
+    blueprint_dbl: &std::path::Path,
 ) -> Result<SegmentId, Box<dyn Error>> {
     let blueprint_dataset = table
         .table_details
         .blueprint_dataset
         .ok_or("table is missing its implicit blueprint dataset")?;
 
-    let data_source = DataSource::new_rrd(format!(
+    let data_source = DataSource::new_dlr(format!(
         "file://{}",
-        blueprint_rbl
+        blueprint_dbl
             .to_str()
             .ok_or_else(|| "Failed to convert blueprint path to str".to_owned())?
     ))?;

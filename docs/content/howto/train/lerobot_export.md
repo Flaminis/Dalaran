@@ -109,7 +109,7 @@ The `dalaran-lerobot` package includes a CLI that implements this workflow for b
 
 ```bash
 dalaran-lerobot \
-  --rrd-dir ./tests/assets/rrd/sample_5 \
+  --dlr-dir ./tests/assets/dlr/sample_5 \
   --output ./lerobot_dataset \
   --dataset-name rerun-example-droid \
   --fps 15 \

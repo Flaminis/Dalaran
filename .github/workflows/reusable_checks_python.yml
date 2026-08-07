@@ -64,4 +64,4 @@ jobs:
 
       - name: Build via mkdocs
         run: |
-          pixi run uv run --group docs mkdocs build --strict -f rerun_py/mkdocs.yml
+          pixi run uv run --group docs mkdocs build --strict -f dalaran_py/mkdocs.yml

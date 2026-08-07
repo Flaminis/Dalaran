@@ -1,4 +1,4 @@
-//! Example of using the Rerun SDK to log [the Objectron dataset](https://github.com/google-research-datasets/Objectron).
+//! Example of using the Dalaran SDK to log [the Objectron dataset](https://github.com/google-research-datasets/Objectron).
 //!
 //! Usage:
 //! ```sh
@@ -15,23 +15,23 @@ use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use anyhow::Context as _;
-use rerun::TimeCell;
-use rerun::external::dl_log;
+use dalaran::TimeCell;
+use dalaran::external::dl_log;
 
-// --- Rerun logging ---
+// --- Dalaran logging ---
 
 struct ArFrame {
     dir: PathBuf,
     data: objectron::ArFrame,
     index: usize,
-    timepoint: rerun::TimePoint,
+    timepoint: dalaran::TimePoint,
 }
 
 impl ArFrame {
     fn from_raw(
         dir: PathBuf,
         index: usize,
-        timepoint: rerun::TimePoint,
+        timepoint: dalaran::TimePoint,
         ar_frame: objectron::ArFrame,
     ) -> Self {
         Self {
@@ -43,7 +43,7 @@ impl ArFrame {
     }
 }
 
-fn timepoint(frame: usize, time: f64) -> rerun::TimePoint {
+fn timepoint(frame: usize, time: f64) -> dalaran::TimePoint {
     [
         ("time", TimeCell::from_timestamp_secs_since_epoch(time)),
         ("frame", TimeCell::from_sequence(frame as i64)),
@@ -64,7 +64,7 @@ impl<'a> From<&'a [objectron::FrameAnnotation]> for AnnotationsPerFrame<'a> {
 }
 
 fn log_ar_frame(
-    rec: &rerun::RecordingStream,
+    rec: &dalaran::RecordingStream,
     annotations: &AnnotationsPerFrame<'_>,
     ar_frame: &ArFrame,
 ) -> anyhow::Result<()> {
@@ -86,7 +86,7 @@ fn log_ar_frame(
 }
 
 fn log_baseline_objects(
-    rec: &rerun::RecordingStream,
+    rec: &dalaran::RecordingStream,
     objects: &[objectron::Object],
 ) -> anyhow::Result<()> {
     let boxes = objects.iter().filter_map(|object| {
@@ -96,13 +96,13 @@ fn log_baseline_objects(
                 return None;
             }
 
-            let box_half_size: rerun::HalfSize3D =
+            let box_half_size: dalaran::HalfSize3D =
                 (glam::Vec3::from_slice(&object.scale) * 0.5).into();
             let transform = {
                 let translation = glam::Vec3::from_slice(&object.translation);
                 // NOTE: the dataset is all row-major, transpose those matrices!
                 let rotation = glam::Mat3::from_cols_slice(&object.rotation).transpose();
-                rerun::Transform3D::from_translation_mat3x3(translation, rotation)
+                dalaran::Transform3D::from_translation_mat3x3(translation, rotation)
             };
             let label = object.category.as_str();
 
@@ -114,9 +114,9 @@ fn log_baseline_objects(
         let path = format!("world/annotations/box-{id}");
         rec.log_static(
             path.clone(),
-            &rerun::Boxes3D::from_half_sizes([bbox_half_size])
+            &dalaran::Boxes3D::from_half_sizes([bbox_half_size])
                 .with_labels([label])
-                .with_colors([rerun::Color::from_rgb(160, 230, 130)]),
+                .with_colors([dalaran::Color::from_rgb(160, 230, 130)]),
         )?;
         rec.log_static(path, &transform)?;
     }
@@ -124,17 +124,17 @@ fn log_baseline_objects(
     Ok(())
 }
 
-fn log_video_frame(rec: &rerun::RecordingStream, ar_frame: &ArFrame) -> anyhow::Result<()> {
+fn log_video_frame(rec: &dalaran::RecordingStream, ar_frame: &ArFrame) -> anyhow::Result<()> {
     let image_path = ar_frame.dir.join(format!("video/{}.jpg", ar_frame.index));
 
     rec.set_timepoint(ar_frame.timepoint.clone());
-    rec.log("world/camera", &rerun::EncodedImage::from_file(image_path)?)
+    rec.log("world/camera", &dalaran::EncodedImage::from_file(image_path)?)
         .map_err(Into::into)
 }
 
 fn log_ar_camera(
-    rec: &rerun::RecordingStream,
-    timepoint: rerun::TimePoint,
+    rec: &dalaran::RecordingStream,
+    timepoint: dalaran::TimePoint,
     ar_camera: &objectron::ArCamera,
 ) -> anyhow::Result<()> {
     // NOTE: the dataset is all row-major, transpose those matrices!
@@ -164,14 +164,14 @@ fn log_ar_camera(
 
     rec.log(
         "world/camera",
-        &rerun::Transform3D::from_translation_rotation(translation, rot),
+        &dalaran::Transform3D::from_translation_rotation(translation, rot),
     )?;
 
     rec.log(
         "world/camera",
-        &rerun::Pinhole::new(intrinsics)
+        &dalaran::Pinhole::new(intrinsics)
             // See https://github.com/google-research-datasets/Objectron/issues/39 for coordinate systems
-            .with_camera_xyz(rerun::components::ViewCoordinates::RDF)
+            .with_camera_xyz(dalaran::components::ViewCoordinates::RDF)
             .with_resolution(resolution),
     )?;
 
@@ -179,8 +179,8 @@ fn log_ar_camera(
 }
 
 fn log_feature_points(
-    rec: &rerun::RecordingStream,
-    timepoint: rerun::TimePoint,
+    rec: &dalaran::RecordingStream,
+    timepoint: dalaran::TimePoint,
     points: &objectron::ArPointCloud,
 ) -> anyhow::Result<()> {
     let points = points.point.iter();
@@ -188,26 +188,26 @@ fn log_feature_points(
     rec.set_timepoint(timepoint);
     rec.log(
         "world/points",
-        &rerun::Points3D::new(points.map(|p| {
+        &dalaran::Points3D::new(points.map(|p| {
             (
                 p.x.unwrap_or_default(),
                 p.y.unwrap_or_default(),
                 p.z.unwrap_or_default(),
             )
         }))
-        .with_colors([rerun::Color::from_rgb(255, 255, 255)]),
+        .with_colors([dalaran::Color::from_rgb(255, 255, 255)]),
     )?;
 
     Ok(())
 }
 
 fn log_frame_annotations(
-    rec: &rerun::RecordingStream,
-    timepoint: &rerun::TimePoint,
+    rec: &dalaran::RecordingStream,
+    timepoint: &dalaran::TimePoint,
     annotations: &objectron::FrameAnnotation,
 ) -> anyhow::Result<()> {
     for ann in &annotations.annotations {
-        // TODO(cmc): we shouldn't be using those preprojected 2D points to begin with, Rerun is
+        // TODO(cmc): we shouldn't be using those preprojected 2D points to begin with, Dalaran is
         // capable of projecting the actual 3D points in real time now.
         let points: Vec<_> = ann
             .keypoints
@@ -251,13 +251,13 @@ fn log_frame_annotations(
             }
             rec.log(
                 ent_path,
-                &rerun::LineStrips2D::new(linestrips(&points))
-                    .with_colors([rerun::Color::from_rgb(130, 160, 250)]),
+                &dalaran::LineStrips2D::new(linestrips(&points))
+                    .with_colors([dalaran::Color::from_rgb(130, 160, 250)]),
             )?;
         } else {
             rec.log(
                 ent_path,
-                &rerun::Points2D::new(points).with_colors([rerun::Color::from_rgb(130, 160, 250)]),
+                &dalaran::Points2D::new(points).with_colors([dalaran::Color::from_rgb(130, 160, 250)]),
             )?;
         }
     }
@@ -285,7 +285,7 @@ enum Recording {
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 
     /// Specifies the recording to replay.
     #[clap(long, value_enum, default_value = "book")]
@@ -313,7 +313,7 @@ fn parse_duration(arg: &str) -> anyhow::Result<std::time::Duration> {
     Ok(std::time::Duration::try_from_secs_f64(seconds)?)
 }
 
-fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
+fn run(rec: &dalaran::RecordingStream, args: &Args) -> anyhow::Result<()> {
     // Parse protobuf dataset
     let store_info = args.recording.info().with_context(|| {
         use clap::ValueEnum as _;
@@ -327,7 +327,7 @@ fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
     let annotations = read_annotations(&store_info.path_annotations)?;
 
     // See https://github.com/google-research-datasets/Objectron/issues/39 for coordinate systems
-    rec.log_static("world", &rerun::ViewCoordinates::RUB())?;
+    rec.log_static("world", &dalaran::ViewCoordinates::RUB())?;
 
     log_baseline_objects(rec, &annotations.objects)?;
 
@@ -338,7 +338,7 @@ fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
         let mut frame_offset = 0;
         let mut time_offset = 0.0;
 
-        // Iterate through the parsed dataset and log Rerun primitives
+        // Iterate through the parsed dataset and log Dalaran primitives
         let ar_frames = read_ar_frames(&store_info.path_ar_frames);
         for (idx, ar_frame) in ar_frames.enumerate() {
             if idx + global_frame_offset >= args.frames.unwrap_or(usize::MAX) {
@@ -383,7 +383,7 @@ fn main() -> anyhow::Result<()> {
     use clap::Parser as _;
     let args = Args::parse();
 
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_objectron")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_objectron")?;
     run(&rec, &args)
 }
 

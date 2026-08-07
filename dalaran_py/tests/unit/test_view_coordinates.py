@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 import dalaran.components as rrc
-import dalaran.datatypes as rrd
+import dalaran.datatypes as dlr
 from dalaran.archetypes import ViewCoordinates
 
 from .common_arrays import none_empty_or_value
@@ -15,25 +15,25 @@ if TYPE_CHECKING:
 def view_coordinates_expected(obj: Any) -> rrc.ViewCoordinatesBatch:
     expected = none_empty_or_value(
         obj,
-        [rrd.ViewDir.Right, rrd.ViewDir.Down, rrd.ViewDir.Forward],
+        [dlr.ViewDir.Right, dlr.ViewDir.Down, dlr.ViewDir.Forward],
     )
 
     return rrc.ViewCoordinatesBatch(expected)
 
 
-assert rrc.ViewCoordinates.ViewDir is rrd.ViewDir
+assert rrc.ViewCoordinates.ViewDir is dlr.ViewDir
 
 
 VIEW_COORDINATES_INPUTS: list[ViewCoordinatesArrayLike] = [
     rrc.ViewCoordinates([
-        rrd.ViewDir.Right,
-        rrd.ViewDir.Down,
-        rrd.ViewDir.Forward,
+        dlr.ViewDir.Right,
+        dlr.ViewDir.Down,
+        dlr.ViewDir.Forward,
     ]),
     [
-        rrd.ViewDir.Right,
-        rrd.ViewDir.Down,
-        rrd.ViewDir.Forward,
+        dlr.ViewDir.Right,
+        dlr.ViewDir.Down,
+        dlr.ViewDir.Forward,
     ],
     rrc.ViewCoordinates.RDF,
     [rrc.ViewCoordinates.RDF],

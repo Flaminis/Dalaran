@@ -18,7 +18,7 @@ use dl_protos::external::prost::Message as _;
 
 #[test]
 fn simple_manifest() {
-    let rrd_manifest = {
+    let dlr_manifest = {
         let mut builder = RrdManifestBuilder::default();
         let mut byte_offset_excluding_header = 0;
         for msg in generate_recording_chunks(1) {
@@ -56,9 +56,9 @@ fn simple_manifest() {
         builder.build(StoreId::empty_recording()).unwrap()
     };
 
-    let rrd_manifest_batch = &rrd_manifest.data;
+    let dlr_manifest_batch = &dlr_manifest.data;
 
-    let static_map = rrd_manifest
+    let static_map = dlr_manifest
         .calc_static_map()
         .unwrap()
         .clone()
@@ -66,7 +66,7 @@ fn simple_manifest() {
         .map(|(k, v)| (k, v.into_iter().collect::<BTreeMap<_, _>>()))
         .collect::<BTreeMap<_, _>>();
 
-    let temporal_map = rrd_manifest
+    let temporal_map = dlr_manifest
         .calc_temporal_map()
         .unwrap()
         .clone()
@@ -92,11 +92,11 @@ fn simple_manifest() {
 
     insta::assert_snapshot!(
         "simple_manifest_batch",
-        rrd_manifest_batch.format_snapshot(true),
+        dlr_manifest_batch.format_snapshot(true),
     );
     insta::assert_snapshot!(
         "simple_manifest_batch_schema",
-        rrd_manifest_batch.format_schema_snapshot(),
+        dlr_manifest_batch.format_schema_snapshot(),
     );
 }
 
@@ -138,38 +138,38 @@ fn footer_roundtrip() {
         .checked_sub(dl_log_encoding::StreamFooter::ENCODED_SIZE_BYTES)
         .unwrap();
     let stream_footer =
-        dl_log_encoding::StreamFooter::from_rrd_bytes(&msgs_encoded[stream_footer_start..])
+        dl_log_encoding::StreamFooter::from_dlr_bytes(&msgs_encoded[stream_footer_start..])
             .unwrap();
 
     let StreamFooterEntry {
-        rrd_footer_byte_span_from_start_excluding_header,
+        dlr_footer_byte_span_from_start_excluding_header,
         crc_excluding_header,
     } = stream_footer.entries[0];
 
-    let rrd_footer_range = rrd_footer_byte_span_from_start_excluding_header
+    let dlr_footer_range = dlr_footer_byte_span_from_start_excluding_header
         .try_cast::<usize>()
         .unwrap()
         .range();
-    let rrd_footer_bytes = &msgs_encoded[rrd_footer_range];
+    let dlr_footer_bytes = &msgs_encoded[dlr_footer_range];
 
     similar_asserts::assert_eq!(
         crc_excluding_header,
-        StreamFooter::compute_crc(rrd_footer_bytes)
+        StreamFooter::compute_crc(dlr_footer_bytes)
     );
 
-    let rrd_footer =
-        dl_protos::log_msg::v1alpha1::RrdFooter::from_rrd_bytes(rrd_footer_bytes).unwrap();
-    let mut rrd_footer = rrd_footer.to_application(()).unwrap();
+    let dlr_footer =
+        dl_protos::log_msg::v1alpha1::RrdFooter::from_dlr_bytes(dlr_footer_bytes).unwrap();
+    let mut dlr_footer = dlr_footer.to_application(()).unwrap();
 
-    let raw_manifest_recording = rrd_footer.manifests.remove(&store_id_recording).unwrap();
-    let raw_manifest_blueprint = rrd_footer.manifests.remove(&store_id_blueprint).unwrap();
-    let rrd_manifest_recording = RrdManifest::try_new(&raw_manifest_recording).unwrap();
-    let rrd_manifest_blueprint = RrdManifest::try_new(&raw_manifest_blueprint).unwrap();
+    let raw_manifest_recording = dlr_footer.manifests.remove(&store_id_recording).unwrap();
+    let raw_manifest_blueprint = dlr_footer.manifests.remove(&store_id_blueprint).unwrap();
+    let dlr_manifest_recording = RrdManifest::try_new(&raw_manifest_recording).unwrap();
+    let dlr_manifest_blueprint = RrdManifest::try_new(&raw_manifest_blueprint).unwrap();
 
-    fn decode_messages(msgs_encoded: &[u8], rrd_manifest: &RrdManifest) -> Vec<ArrowMsg> {
+    fn decode_messages(msgs_encoded: &[u8], dlr_manifest: &RrdManifest) -> Vec<ArrowMsg> {
         itertools::izip!(
-            rrd_manifest.col_chunk_byte_offset(),
-            rrd_manifest.col_chunk_byte_size(),
+            dlr_manifest.col_chunk_byte_offset(),
+            dlr_manifest.col_chunk_byte_size(),
         )
         .map(|(&offset, &size)| {
             let chunk_start_excluding_header = offset as usize;
@@ -182,41 +182,41 @@ fn footer_roundtrip() {
     }
 
     let (msgs_decoded_recording_from_footer, msgs_decoded_blueprint_from_footer) = (
-        decode_messages(&msgs_encoded, &rrd_manifest_recording),
-        decode_messages(&msgs_encoded, &rrd_manifest_blueprint),
+        decode_messages(&msgs_encoded, &dlr_manifest_recording),
+        decode_messages(&msgs_encoded, &dlr_manifest_blueprint),
     );
 
-    // Check that the RRD manifests decoded "traditionally" match those obtained via random access / footer.
+    // Check that the DLR manifests decoded "traditionally" match those obtained via random access / footer.
 
-    let sequential_manifests = decoder.rrd_manifests().unwrap();
-    let rrd_manifest_blueprint_sequential = sequential_manifests
+    let sequential_manifests = decoder.dlr_manifests().unwrap();
+    let dlr_manifest_blueprint_sequential = sequential_manifests
         .iter()
         .find(|m| m.store_id.kind() == StoreKind::Blueprint)
         .cloned()
         .unwrap();
-    let rrd_manifest_recording_sequential = sequential_manifests
+    let dlr_manifest_recording_sequential = sequential_manifests
         .iter()
         .find(|m| m.store_id.kind() == StoreKind::Recording)
         .cloned()
         .unwrap();
 
     insta::assert_snapshot!(
-        "rrd_manifest_blueprint",
-        rrd_manifest_blueprint_sequential.data.format_snapshot(true),
+        "dlr_manifest_blueprint",
+        dlr_manifest_blueprint_sequential.data.format_snapshot(true),
     );
     insta::assert_snapshot!(
-        "rrd_manifest_blueprint_schema",
-        rrd_manifest_blueprint_sequential
+        "dlr_manifest_blueprint_schema",
+        dlr_manifest_blueprint_sequential
             .data
             .format_schema_snapshot(),
     );
     insta::assert_snapshot!(
-        "rrd_manifest_recording",
-        rrd_manifest_recording_sequential.data.format_snapshot(true),
+        "dlr_manifest_recording",
+        dlr_manifest_recording_sequential.data.format_snapshot(true),
     );
     insta::assert_snapshot!(
-        "rrd_manifest_recording_schema",
-        rrd_manifest_recording_sequential
+        "dlr_manifest_recording_schema",
+        dlr_manifest_recording_sequential
             .data
             .format_schema_snapshot(),
     );
@@ -225,35 +225,35 @@ fn footer_roundtrip() {
     // prunes sparse columns from the RecordBatch for memory efficiency. The sequential decoder
     // returns the full unpruned `RawRrdManifest`, so raw data comparison would fail.
     similar_asserts::assert_eq!(
-        rrd_manifest_recording_sequential.store_id,
+        dlr_manifest_recording_sequential.store_id,
         raw_manifest_recording.store_id,
-        "RRD manifest decoded sequentially should have the same store_id as the one decoded via the footer",
+        "DLR manifest decoded sequentially should have the same store_id as the one decoded via the footer",
     );
     similar_asserts::assert_eq!(
-        rrd_manifest_recording_sequential.sorbet_schema,
-        *rrd_manifest_recording.sorbet_schema(),
-        "RRD manifest decoded sequentially should have the same sorbet_schema as the one decoded via the footer",
+        dlr_manifest_recording_sequential.sorbet_schema,
+        *dlr_manifest_recording.sorbet_schema(),
+        "DLR manifest decoded sequentially should have the same sorbet_schema as the one decoded via the footer",
     );
     similar_asserts::assert_eq!(
-        rrd_manifest_recording_sequential.sorbet_schema_sha256,
+        dlr_manifest_recording_sequential.sorbet_schema_sha256,
         raw_manifest_recording.sorbet_schema_sha256,
-        "RRD manifest decoded sequentially should have the same sorbet_schema_sha256 as the one decoded via the footer",
+        "DLR manifest decoded sequentially should have the same sorbet_schema_sha256 as the one decoded via the footer",
     );
 
     similar_asserts::assert_eq!(
-        rrd_manifest_blueprint_sequential.store_id,
+        dlr_manifest_blueprint_sequential.store_id,
         raw_manifest_blueprint.store_id,
-        "RRD manifest decoded sequentially should have the same store_id as the one decoded via the footer",
+        "DLR manifest decoded sequentially should have the same store_id as the one decoded via the footer",
     );
     similar_asserts::assert_eq!(
-        rrd_manifest_blueprint_sequential.sorbet_schema,
-        *rrd_manifest_blueprint.sorbet_schema(),
-        "RRD manifest decoded sequentially should have the same sorbet_schema as the one decoded via the footer",
+        dlr_manifest_blueprint_sequential.sorbet_schema,
+        *dlr_manifest_blueprint.sorbet_schema(),
+        "DLR manifest decoded sequentially should have the same sorbet_schema as the one decoded via the footer",
     );
     similar_asserts::assert_eq!(
-        rrd_manifest_blueprint_sequential.sorbet_schema_sha256,
+        dlr_manifest_blueprint_sequential.sorbet_schema_sha256,
         raw_manifest_blueprint.sorbet_schema_sha256,
-        "RRD manifest decoded sequentially should have the same sorbet_schema_sha256 as the one decoded via the footer",
+        "DLR manifest decoded sequentially should have the same sorbet_schema_sha256 as the one decoded via the footer",
     );
 
     // Check that the data decoded "traditionally" matches the data decoded via random access / footer.
@@ -261,13 +261,13 @@ fn footer_roundtrip() {
     similar_asserts::assert_eq!(
         msgs_decoded_recording,
         msgs_decoded_recording_from_footer,
-        "chunks decoded sequentially should be identical to those decoded by jumping around using the RRD manifest in the footer",
+        "chunks decoded sequentially should be identical to those decoded by jumping around using the DLR manifest in the footer",
     );
 
     similar_asserts::assert_eq!(
         msgs_decoded_blueprint,
         msgs_decoded_blueprint_from_footer,
-        "chunks decoded sequentially should be identical to those decoded by jumping around using the RRD manifest in the footer",
+        "chunks decoded sequentially should be identical to those decoded by jumping around using the DLR manifest in the footer",
     );
 
     let msgs_reencoded = Encoder::encode(
@@ -279,81 +279,81 @@ fn footer_roundtrip() {
     )
     .unwrap();
 
-    // And finally, let's reencode all the messages we decoded back into an RRD stream
+    // And finally, let's reencode all the messages we decoded back into an DLR stream
     {
         let reencoded_stream_footer_start = msgs_reencoded
             .len()
             .checked_sub(dl_log_encoding::StreamFooter::ENCODED_SIZE_BYTES)
             .unwrap();
-        let reencoded_stream_footer = dl_log_encoding::StreamFooter::from_rrd_bytes(
+        let reencoded_stream_footer = dl_log_encoding::StreamFooter::from_dlr_bytes(
             &msgs_reencoded[reencoded_stream_footer_start..],
         )
         .unwrap();
 
         let StreamFooterEntry {
-            rrd_footer_byte_span_from_start_excluding_header,
+            dlr_footer_byte_span_from_start_excluding_header,
             crc_excluding_header,
         } = reencoded_stream_footer.entries[0];
 
-        let reencoded_rrd_footer_range = rrd_footer_byte_span_from_start_excluding_header
+        let reencoded_dlr_footer_range = dlr_footer_byte_span_from_start_excluding_header
             .try_cast::<usize>()
             .unwrap()
             .range();
-        let reencoded_rrd_footer_bytes = &msgs_reencoded[reencoded_rrd_footer_range];
+        let reencoded_dlr_footer_bytes = &msgs_reencoded[reencoded_dlr_footer_range];
 
         similar_asserts::assert_eq!(
             crc_excluding_header,
-            StreamFooter::compute_crc(reencoded_rrd_footer_bytes)
+            StreamFooter::compute_crc(reencoded_dlr_footer_bytes)
         );
 
-        let reencoded_rrd_footer =
-            dl_protos::log_msg::v1alpha1::RrdFooter::from_rrd_bytes(reencoded_rrd_footer_bytes)
+        let reencoded_dlr_footer =
+            dl_protos::log_msg::v1alpha1::RrdFooter::from_dlr_bytes(reencoded_dlr_footer_bytes)
                 .unwrap();
-        let mut reencoded_rrd_footer = reencoded_rrd_footer.to_application(()).unwrap();
+        let mut reencoded_dlr_footer = reencoded_dlr_footer.to_application(()).unwrap();
 
-        let reencoded_raw_recording = reencoded_rrd_footer
+        let reencoded_raw_recording = reencoded_dlr_footer
             .manifests
             .remove(&store_id_recording)
             .unwrap();
-        let reencoded_raw_blueprint = reencoded_rrd_footer
+        let reencoded_raw_blueprint = reencoded_dlr_footer
             .manifests
             .remove(&store_id_blueprint)
             .unwrap();
-        let reencoded_rrd_manifest_recording =
+        let reencoded_dlr_manifest_recording =
             RrdManifest::try_new(&reencoded_raw_recording).unwrap();
-        let reencoded_rrd_manifest_blueprint =
+        let reencoded_dlr_manifest_blueprint =
             RrdManifest::try_new(&reencoded_raw_blueprint).unwrap();
 
         similar_asserts::assert_eq!(
-            rrd_manifest_recording
+            dlr_manifest_recording
                 .chunk_fetcher_rb()
                 .format_snapshot(true),
-            reencoded_rrd_manifest_recording
+            reencoded_dlr_manifest_recording
                 .chunk_fetcher_rb()
                 .format_snapshot(true),
-            "Reencoded RRD manifest should be identical to the original one",
+            "Reencoded DLR manifest should be identical to the original one",
         );
         // Same test but check everything, not just the manifest data (we do both cause we want a nice diff for the manifest data)
         similar_asserts::assert_eq!(
-            &rrd_manifest_recording,
-            &reencoded_rrd_manifest_recording,
-            "Reencoded RRD manifest should be identical to the original one",
+            &dlr_manifest_recording,
+            &reencoded_dlr_manifest_recording,
+            "Reencoded DLR manifest should be identical to the original one",
         );
 
         similar_asserts::assert_eq!(
-            rrd_manifest_blueprint
+            dlr_manifest_blueprint
                 .chunk_fetcher_rb()
                 .format_snapshot(true),
-            reencoded_rrd_manifest_blueprint
+            reencoded_dlr_manifest_blueprint
                 .chunk_fetcher_rb()
                 .format_snapshot(true),
-            "Reencoded RRD manifest should be identical to the original one",
+            "Reencoded DLR manifest should be identical to the original one",
         );
         // Same test but check everything, not just the manifest data (we do both cause we want a nice diff for the manifest data)
         similar_asserts::assert_eq!(
-            &rrd_manifest_blueprint,
-            &reencoded_rrd_manifest_blueprint,
-            "Reencoded RRD manifest should be identical to the original one",
+            &dlr_manifest_blueprint,
+            &reencoded_dlr_manifest_blueprint,
+            "Reencoded DLR manifest should be identical to the original one",
         );
     }
 }
@@ -400,7 +400,7 @@ fn footer_interleaved_stores_without_set_store_info() {
 
     let msgs_encoded = Encoder::encode(msgs.map(Ok)).unwrap();
 
-    let store_ids = futures::executor::block_on(dl_log_encoding::enumerate_rrd_stores(
+    let store_ids = futures::executor::block_on(dl_log_encoding::enumerate_dlr_stores(
         &bytes::Bytes::from(msgs_encoded.clone()),
     ))
     .unwrap();
@@ -416,35 +416,35 @@ fn footer_interleaved_stores_without_set_store_info() {
         .checked_sub(dl_log_encoding::StreamFooter::ENCODED_SIZE_BYTES)
         .unwrap();
     let stream_footer =
-        dl_log_encoding::StreamFooter::from_rrd_bytes(&msgs_encoded[stream_footer_start..])
+        dl_log_encoding::StreamFooter::from_dlr_bytes(&msgs_encoded[stream_footer_start..])
             .unwrap();
 
     let StreamFooterEntry {
-        rrd_footer_byte_span_from_start_excluding_header,
+        dlr_footer_byte_span_from_start_excluding_header,
         ..
     } = stream_footer.entries[0];
-    let rrd_footer_range = rrd_footer_byte_span_from_start_excluding_header
+    let dlr_footer_range = dlr_footer_byte_span_from_start_excluding_header
         .try_cast::<usize>()
         .unwrap()
         .range();
-    let rrd_footer_bytes = &msgs_encoded[rrd_footer_range];
+    let dlr_footer_bytes = &msgs_encoded[dlr_footer_range];
 
-    let rrd_footer =
-        dl_protos::log_msg::v1alpha1::RrdFooter::from_rrd_bytes(rrd_footer_bytes).unwrap();
-    let rrd_footer = rrd_footer.to_application(()).unwrap();
+    let dlr_footer =
+        dl_protos::log_msg::v1alpha1::RrdFooter::from_dlr_bytes(dlr_footer_bytes).unwrap();
+    let dlr_footer = dlr_footer.to_application(()).unwrap();
 
     assert_eq!(
-        rrd_footer.manifests.len(),
+        dlr_footer.manifests.len(),
         2,
         "expected one manifest per store_id, got {:?}",
-        rrd_footer.manifests.keys().collect_vec()
+        dlr_footer.manifests.keys().collect_vec()
     );
 
-    let raw_manifest_recording = rrd_footer
+    let raw_manifest_recording = dlr_footer
         .manifests
         .get(&store_id_recording)
         .expect("recording manifest must be keyed by the recording's own store_id");
-    let raw_manifest_blueprint = rrd_footer.manifests.get(&store_id_blueprint).expect(
+    let raw_manifest_blueprint = dlr_footer.manifests.get(&store_id_blueprint).expect(
         "blueprint manifest must be keyed by the blueprint's own store_id, \
              not folded into the recording's manifest",
     );
@@ -488,40 +488,40 @@ fn footer_empty() {
         .checked_sub(dl_log_encoding::StreamFooter::ENCODED_SIZE_BYTES)
         .unwrap();
     let stream_footer =
-        dl_log_encoding::StreamFooter::from_rrd_bytes(&msgs_encoded[stream_footer_start..])
+        dl_log_encoding::StreamFooter::from_dlr_bytes(&msgs_encoded[stream_footer_start..])
             .unwrap();
 
     assert_eq!(
         1,
         stream_footer.entries.len(),
-        "Stream footers always point to exactly 1 RRD footer at the moment"
+        "Stream footers always point to exactly 1 DLR footer at the moment"
     );
 
     let StreamFooterEntry {
-        rrd_footer_byte_span_from_start_excluding_header,
+        dlr_footer_byte_span_from_start_excluding_header,
         crc_excluding_header,
     } = stream_footer.entries[0];
 
-    let rrd_footer_range = rrd_footer_byte_span_from_start_excluding_header
+    let dlr_footer_range = dlr_footer_byte_span_from_start_excluding_header
         .try_cast::<usize>()
         .unwrap()
         .range();
-    let rrd_footer_bytes = &msgs_encoded[rrd_footer_range];
+    let dlr_footer_bytes = &msgs_encoded[dlr_footer_range];
 
     similar_asserts::assert_eq!(
         crc_excluding_header,
-        StreamFooter::compute_crc(rrd_footer_bytes)
+        StreamFooter::compute_crc(dlr_footer_bytes)
     );
 
-    let rrd_footer =
-        dl_protos::log_msg::v1alpha1::RrdFooter::from_rrd_bytes(rrd_footer_bytes).unwrap();
-    let rrd_footer = rrd_footer.to_application(()).unwrap();
+    let dlr_footer =
+        dl_protos::log_msg::v1alpha1::RrdFooter::from_dlr_bytes(dlr_footer_bytes).unwrap();
+    let dlr_footer = dlr_footer.to_application(()).unwrap();
 
     // Right now, the implemented behavior is that we end up with an empty footer, i.e. there are
     // no manifests in it.
     // Whether that's the correct behavior is another question, but at least it is defined for now
     // and can be changed.
-    assert!(rrd_footer.manifests.is_empty());
+    assert!(dlr_footer.manifests.is_empty());
 }
 
 // ---

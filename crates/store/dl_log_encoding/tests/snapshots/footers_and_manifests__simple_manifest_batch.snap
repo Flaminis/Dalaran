@@ -1,6 +1,6 @@
 ---
 source: crates/store/dl_log_encoding/tests/footers_and_manifests.rs
-expression: rrd_manifest_batch.format_snapshot(true)
+expression: dlr_manifest_batch.format_snapshot(true)
 ---
 ┌───────────────────────────────────────────────┬──────────────────────────────────┬──────────────────────────────────┬──────────────────────────────────┐
 │ chunk_entity_path                             ┆ /my_entity1                      ┆ /my_entity1                      ┆ /my_entity2                      │

@@ -700,8 +700,8 @@ impl DataSourcesDefinition {
             .map(|(layer_name, path)| {
                 let url = Url::from_file_path(path.as_path()).unwrap();
                 match layer_name {
-                    None => cloud_ext::DataSource::new_rrd_url(url),
-                    Some(layer) => cloud_ext::DataSource::new_rrd_layer(
+                    None => cloud_ext::DataSource::new_dlr_url(url),
+                    Some(layer) => cloud_ext::DataSource::new_dlr_layer(
                         LayerName::try_new(layer).unwrap(),
                         url.as_str(),
                     )

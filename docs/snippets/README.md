@@ -24,7 +24,7 @@ Both `build.rs` (Rust) and `CMakeLists.txt` (C++) auto-copy snippet sources from
 
 ## Comparison tests
 
-`compare_snippet_output.py` runs the same logging commands from all 3 SDKs, saves to distinct rrd files, and compares them. CI runs these automatically.
+`compare_snippet_output.py` runs the same logging commands from all 3 SDKs, saves to distinct dlr files, and compares them. CI runs these automatically.
 
 These tests verify:
 - All SDKs yield identical data when used the same way

@@ -63,7 +63,7 @@ In the viewer we would see two `component_name` entries under different archetyp
 ```python
 from dalaran.dataframe import load_recording
 
-rec = load_recording("<path_to_logs_above>.rrd")
+rec = load_recording("<path_to_logs_above>.dlr")
 rec.view(index="log_time", contents="/path").select().schema
 # Only shows one `component_name` component
 ```
@@ -89,7 +89,7 @@ dl.log("/path", another_example)
 ```python
 from dalaran.dataframe import load_recording
 
-rec = load_recording("<path_to_logs_above>.rrd")
+rec = load_recording("<path_to_logs_above>.dlr")
 rec.view(index="log_time", contents="/path").select().schema
 # Only shows two `component_name` components deduplicated by archetype!
 ```

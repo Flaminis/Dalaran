@@ -1,12 +1,12 @@
-//! This example shows how to add custom visualizers to the Rerun Viewer.
+//! This example shows how to add custom visualizers to the Dalaran Viewer.
 //!
 //! It defines a `HeightField` archetype that stores a 2D grid of height values
 //! as an image buffer, and a custom visualizer + GPU renderer that dynamically
 //! generates a 3D triangle mesh from the heightfield data each frame, with
 //! GPU-side colormap application.
 
-use rerun::external::dl_sdk_types::{self, View as _};
-use rerun::external::{
+use dalaran::external::dl_sdk_types::{self, View as _};
+use dalaran::external::{
     glam, dl_crash_handler, dl_grpc_server, dl_log, dl_log_channel, dl_memory, dl_viewer, tokio,
 };
 
@@ -16,7 +16,7 @@ mod height_field_visualizer;
 
 use height_field_visualizer::HeightFieldVisualizer;
 
-// By using `dl_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
+// By using `dl_memory::AccountingAllocator` Dalaran can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.
 // By using `mimalloc` we get faster allocations.
 #[global_allocator]
@@ -31,10 +31,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dl_log::setup_logging();
 
     // Install handlers for panics and crashes that prints to stderr and send
-    // them to Rerun analytics (if the `analytics` feature is on in `Cargo.toml`).
+    // them to Dalaran analytics (if the `analytics` feature is on in `Cargo.toml`).
     dl_crash_handler::install_crash_handlers(dl_viewer::build_info());
 
-    // Listen for gRPC connections from Rerun's logging SDKs.
+    // Listen for gRPC connections from Dalaran's logging SDKs.
     // There are other ways of "feeding" the viewer though - all you need is a `dl_log_channel::LogReceiver`.
     let (grpc_rx, _grpc_server_handle) = dl_grpc_server::spawn_with_recv(
         "0.0.0.0:9876".parse()?,
@@ -48,9 +48,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let startup_options = dl_viewer::StartupOptions::default();
 
     // This is used for analytics, if the `analytics` feature is on in `Cargo.toml`
-    let app_env = dl_viewer::AppEnvironment::Custom("My extended Rerun Viewer".to_owned());
+    let app_env = dl_viewer::AppEnvironment::Custom("My extended Dalaran Viewer".to_owned());
 
-    println!("This example starts a custom Rerun Viewer with a built-in recording.");
+    println!("This example starts a custom Dalaran Viewer with a built-in recording.");
     println!(
         "You can also connect through the SDK, e.g.: `cargo run -p minimal_options -- --connect`"
     );
@@ -97,18 +97,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn builtin_recording() -> Result<dl_log_channel::LogReceiver, rerun::RecordingStreamError> {
+fn builtin_recording() -> Result<dl_log_channel::LogReceiver, dalaran::RecordingStreamError> {
     let (rec, memory_sink) =
-        rerun::RecordingStreamBuilder::new("rerun_example_custom_visualizer").memory()?;
+        dalaran::RecordingStreamBuilder::new("dalaran_example_custom_visualizer").memory()?;
 
     // Generate animated 512x512 heightfield spanning 10x10 metres with rippling terrain.
     let cols = 512u32;
     let rows = 512u32;
     let num_terrain_frames = 60;
-    let format = rerun::components::ImageFormat(rerun::datatypes::ImageFormat::from_color_model(
+    let format = dalaran::components::ImageFormat(dalaran::datatypes::ImageFormat::from_color_model(
         [cols, rows],
-        rerun::datatypes::ColorModel::L,
-        rerun::datatypes::ChannelDatatype::F32,
+        dalaran::datatypes::ColorModel::L,
+        dalaran::datatypes::ChannelDatatype::F32,
     ));
 
     for frame in 0..num_terrain_frames {
@@ -143,7 +143,7 @@ fn builtin_recording() -> Result<dl_log_channel::LogReceiver, rerun::RecordingSt
         }
 
         let height_bytes: &[u8] = bytemuck::cast_slice(&heights);
-        let buffer = rerun::components::ImageBuffer(height_bytes.to_vec().into());
+        let buffer = dalaran::components::ImageBuffer(height_bytes.to_vec().into());
         rec.log(
             "terrain",
             &height_field_archetype::HeightField::new(buffer, format),
@@ -153,16 +153,16 @@ fn builtin_recording() -> Result<dl_log_channel::LogReceiver, rerun::RecordingSt
     // Log a solid box that orbits the terrain for reference.
     rec.log_static(
         "box",
-        &rerun::Boxes3D::from_half_sizes([[0.1, 0.3, 0.1]])
-            .with_fill_mode(rerun::FillMode::Solid)
-            .with_colors([rerun::Color::from_rgb(255, 100, 50)]),
+        &dalaran::Boxes3D::from_half_sizes([[0.1, 0.3, 0.1]])
+            .with_fill_mode(dalaran::FillMode::Solid)
+            .with_colors([dalaran::Color::from_rgb(255, 100, 50)]),
     )?;
 
     for i in 0..(std::f32::consts::TAU * 100.0) as i32 {
         rec.set_duration_secs("time", i as f32 / 100.0);
         rec.log(
             "box",
-            &rerun::Transform3D::from_rotation(glam::Quat::from_rotation_z(i as f32 / 100.0))
+            &dalaran::Transform3D::from_rotation(glam::Quat::from_rotation_z(i as f32 / 100.0))
                 .with_translation([5.0, 5.0, 1.0]),
         )?;
     }

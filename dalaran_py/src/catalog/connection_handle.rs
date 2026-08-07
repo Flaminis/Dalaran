@@ -325,7 +325,7 @@ impl ConnectionHandle {
                 std::iter::repeat_with(|| last_layer.clone()),
             ),
         )
-        .map(|(url, layer)| DataSource::new_rrd_layer(layer, url))
+        .map(|(url, layer)| DataSource::new_dlr_layer(layer, url))
         .try_collect()
         .map_err(to_py_err)?;
 
@@ -384,7 +384,7 @@ impl ConnectionHandle {
         recordings_layer: LayerName,
         on_duplicate: IfDuplicateBehavior,
     ) -> PyResult<(Option<TraceId>, Vec<RegisterWithDatasetTaskDescriptor>)> {
-        let data_source = DataSource::new_rrd_layer_prefix(recordings_layer, recordings_prefix)
+        let data_source = DataSource::new_dlr_layer_prefix(recordings_layer, recordings_prefix)
             .map_err(to_py_err)?;
         let data_sources = vec![data_source];
 

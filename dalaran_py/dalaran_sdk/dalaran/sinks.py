@@ -72,7 +72,7 @@ def set_sinks(
     dl.init("dalaran_example_tee")
     dl.set_sinks(
         dl.GrpcSink(),
-        dl.FileSink("data.rrd")
+        dl.FileSink("data.dlr")
     )
     dl.log("my/point", dl.Points3D(position=[1.0, 2.0, 3.0]))
     ```
@@ -185,7 +185,7 @@ def save(
 
     Call this _before_ you log any data!
 
-    The Dalaran Viewer is able to read continuously from the resulting rrd file while it is being written.
+    The Dalaran Viewer is able to read continuously from the resulting dlr file while it is being written.
     However, depending on your OS and configuration, changes may not be immediately visible due to file caching.
     This is a common issue on Windows and (to a lesser extent) on MacOS.
 
@@ -203,13 +203,13 @@ def save(
         If left unspecified, defaults to the current active data recording, if there is one.
         See also: [`dalaran.init`][], [`dalaran.set_global_data_recording`][].
     write_footer:
-        Whether to emit a complete RRD footer (including a manifest of every chunk) at the
+        Whether to emit a complete DLR footer (including a manifest of every chunk) at the
         end of the stream. Defaults to `True`.
 
         Producing a footer keeps per-chunk metadata in memory for the lifetime of the sink,
         which grows linearly with the number of chunks logged. Pass `write_footer=False` for
-        long-running streaming sessions; the resulting file is still a valid RRD and a footer
-        can be added after the fact via `dalaran rrd optimize`.
+        long-running streaming sessions; the resulting file is still a valid DLR and a footer
+        can be added after the fact via `dalaran dlr optimize`.
 
         *Warning*: lack of footer will significantly hurt random-access performance and some
         tools (e.g. LazyStore) may not work properly.
@@ -272,7 +272,7 @@ def stdout(
         If left unspecified, defaults to the current active data recording, if there is one.
         See also: [`dalaran.init`][], [`dalaran.set_global_data_recording`][].
     write_footer:
-        Whether to emit a complete RRD footer (including a manifest of every chunk) at the
+        Whether to emit a complete DLR footer (including a manifest of every chunk) at the
         end of the stream. Defaults to `True`. See [`dalaran.save`][] for details and trade-offs.
 
         *Warning*: lack of footer will significantly hurt random-access performance and some

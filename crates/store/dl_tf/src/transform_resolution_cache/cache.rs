@@ -72,7 +72,7 @@ impl TransformResolutionCache {
 
         let mut cache = Self::default();
 
-        if let Some(manifest) = entity_db.rrd_manifest_index().manifest() {
+        if let Some(manifest) = entity_db.dlr_manifest_index().manifest() {
             cache.register_manifest(manifest);
         }
 
@@ -223,7 +223,7 @@ impl TransformResolutionCache {
                 }
 
                 dl_chunk_store::ChunkStoreDiff::VirtualAddition(addition) => {
-                    self.register_manifest(&addition.rrd_manifest);
+                    self.register_manifest(&addition.dlr_manifest);
                 }
 
                 dl_chunk_store::ChunkStoreDiff::Deletion(deletion) => {

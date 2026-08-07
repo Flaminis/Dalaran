@@ -9,11 +9,11 @@
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 }
 
-use rerun::external::dl_importer::UrdfTree;
-use rerun::external::{dl_log, urdf_rs};
+use dalaran::external::dl_importer::UrdfTree;
+use dalaran::external::{dl_log, urdf_rs};
 
 fn main() -> anyhow::Result<()> {
     dl_log::setup_logging();
@@ -21,11 +21,11 @@ fn main() -> anyhow::Result<()> {
     use clap::Parser as _;
     let args = Args::parse();
 
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_animated_urdf")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_animated_urdf")?;
     run(&rec, &args)
 }
 
-fn run(rec: &rerun::RecordingStream, _args: &Args) -> anyhow::Result<()> {
+fn run(rec: &dalaran::RecordingStream, _args: &Args) -> anyhow::Result<()> {
     let urdf_path = "examples/rust/animated_urdf/data/so100.urdf";
 
     // Log the URDF file one, as a static resource:
@@ -46,7 +46,7 @@ fn run(rec: &rerun::RecordingStream, _args: &Args) -> anyhow::Result<()> {
                     joint.limit.lower..=joint.limit.upper,
                 );
 
-                // Rerun loads the URDF transforms with child/parent frame relations.
+                // Dalaran loads the URDF transforms with child/parent frame relations.
                 // In order to move a joint, we just need to log a new transform between two of those frames.
                 //
                 // `compute_joint_transform` handles origin + axis-angle rotation and sets the

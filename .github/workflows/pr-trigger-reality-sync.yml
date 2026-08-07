@@ -11,8 +11,8 @@ jobs:
       github.event_name == 'issue_comment' &&
       github.event.issue.pull_request &&
       (
-        contains(github.event.comment.body, '@rerun-bot reality-sync') ||
-        contains(github.event.comment.body, '@rerun-bot sync-reality')
+        contains(github.event.comment.body, '@dalaran-bot reality-sync') ||
+        contains(github.event.comment.body, '@dalaran-bot sync-reality')
       ) &&
       github.event.comment.user.type != 'Bot' &&
       github.event.comment.author_association != 'OWNER' &&
@@ -25,8 +25,8 @@ jobs:
         with:
           app-id: ${{ vars.SYNC_APP_ID }}
           private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
-          owner: rerun-io
-          repositories: rerun
+          owner: dalaran-io
+          repositories: dalaran
 
       - name: Post unauthorized message
         env:
@@ -41,8 +41,8 @@ jobs:
     if: |
       github.event.issue.pull_request &&
       (
-        contains(github.event.comment.body, '@rerun-bot reality-sync') ||
-        contains(github.event.comment.body, '@rerun-bot sync-reality')
+        contains(github.event.comment.body, '@dalaran-bot reality-sync') ||
+        contains(github.event.comment.body, '@dalaran-bot sync-reality')
       ) &&
       github.event.comment.user.type != 'Bot' &&
       (
@@ -60,10 +60,10 @@ jobs:
         with:
           app-id: ${{ vars.SYNC_APP_ID }}
           private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
-          owner: rerun-io
+          owner: dalaran-io
           repositories: |
             reality
-            rerun
+            dalaran
 
       - name: Acknowledge command (eyes reaction)
         env:

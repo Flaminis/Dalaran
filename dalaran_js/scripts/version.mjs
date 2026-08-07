@@ -49,14 +49,14 @@ for (const pkg_path of root_package_json.workspaces) {
 
   // we use `+dev` as a marker for "this version is unreleased",
   // which also means this link won't pass the link checker, so
-  // skip the RRD link version bump here in that case.
+  // skip the DLR link version bump here in that case.
   // this will be bumped only at the start of the release process,
   // when the `+dev` is removed. at that point the new version will
   // be uploaded, so the links will work, and this is safe to bump.
   if (!version.includes("+dev")) {
     readme = readme.replace(
-      /<https:\/\/app\.dalaran\.io\/version\/.*\/examples\/dna\.rrd>/,
-      `<https://app.dalaran.dev/version/${version}/examples/dna.rrd>`,
+      /<https:\/\/app\.dalaran\.io\/version\/.*\/examples\/dna\.dlr>/,
+      `<https://app.dalaran.dev/version/${version}/examples/dna.dlr>`,
     );
     readme = readme.replace(
       /https:\/\/ref\.dalaran\.io\/docs\/js\/.*\/web-viewer/,
@@ -64,8 +64,8 @@ for (const pkg_path of root_package_json.workspaces) {
     )
     if (index_ts) {
       index_ts = index_ts.replace(
-        /https:\/\/app\.dalaran\.io\/version\/.*\/examples\/dna\.rrd/,
-        `https://app.dalaran.dev/version/${version}/examples/dna.rrd`,
+        /https:\/\/app\.dalaran\.io\/version\/.*\/examples\/dna\.dlr/,
+        `https://app.dalaran.dev/version/${version}/examples/dna.dlr`,
       )
 
     }

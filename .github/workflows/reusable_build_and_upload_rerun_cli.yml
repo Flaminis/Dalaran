@@ -1,4 +1,4 @@
-name: Reusable Rerun CLI build & upload
+name: Reusable Dalaran CLI build & upload
 
 on:
   workflow_call:
@@ -41,7 +41,7 @@ on:
         description: "Concurrency group to use"
 
 concurrency:
-  group: ${{ inputs.CONCURRENCY }}-build-rerun-cli
+  group: ${{ inputs.CONCURRENCY }}-build-dalaran-cli
   cancel-in-progress: true
 
 env:
@@ -77,25 +77,25 @@ jobs:
               runner="ubuntu-arm-16-core"
               target="aarch64-unknown-linux-gnu"
               container="'ghcr.io/rerun-io/ci_docker:0.18.0'"
-              bin_name="rerun"
+              bin_name="dalaran"
               ;;
             linux-x64)
               runner="ubuntu-latest-16-cores"
               target="x86_64-unknown-linux-gnu"
               container="'ghcr.io/rerun-io/ci_docker:0.18.0'"
-              bin_name="rerun"
+              bin_name="dalaran"
               ;;
             windows-x64)
               runner="windows-latest-16-cores"
               target="x86_64-pc-windows-msvc"
               container="null"
-              bin_name="rerun.exe"
+              bin_name="dalaran.exe"
               ;;
             macos-arm64)
               runner="macos-26-xlarge" # See https://github.blog/2023-10-02-introducing-the-new-apple-silicon-powered-m1-macos-larger-runner-for-github-actions/
               target="aarch64-apple-darwin"
               container="null"
-              bin_name="rerun"
+              bin_name="dalaran"
               ;;
             *) echo "Invalid platform" && exit 1 ;;
           esac
@@ -104,8 +104,8 @@ jobs:
           echo "container=$container" >> "$GITHUB_OUTPUT"
           echo "bin_name=$bin_name" >> "$GITHUB_OUTPUT"
 
-  build-rerun-cli:
-    name: Build rerun-cli (${{ needs.set-config.outputs.RUNNER }})
+  build-dalaran-cli:
+    name: Build dalaran-cli (${{ needs.set-config.outputs.RUNNER }})
     timeout-minutes: 60
 
     needs: [set-config]
@@ -148,15 +148,15 @@ jobs:
           pixi-version: v0.71.3
 
       - name: Build web-viewer (release)
-        run: pixi run rerun-build-web-release
+        run: pixi run dalaran-build-web-release
 
       # This does not run in the pixi environment, doing so
       # causes it to select the wrong compiler on macos-arm64
-      - name: Build rerun-cli
+      - name: Build dalaran-cli
         run: |
           pixi run cargo build \
             --locked \
-            -p rerun-cli \
+            -p dalaran-cli \
             --no-default-features \
             --features release_full \
             --release \
@@ -166,7 +166,7 @@ jobs:
       - name: Compare man page to CLI docs
         if: runner.os == 'Linux'
         run: |
-          pixi run ./scripts/ci/check_cli_docs.py --rerun-exe "./target/${{ needs.set-config.outputs.TARGET }}/release/${{ needs.set-config.outputs.BIN_NAME }}"
+          pixi run ./scripts/ci/check_cli_docs.py --dalaran-exe "./target/${{ needs.set-config.outputs.TARGET }}/release/${{ needs.set-config.outputs.BIN_NAME }}"
 
       - name: Get sha
         id: get-sha
@@ -174,9 +174,9 @@ jobs:
           full_commit="${{ inputs.RELEASE_COMMIT || ((github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha) }}"
           echo "sha=$(echo $full_commit | cut -c1-7)" >> "$GITHUB_OUTPUT"
 
-      # Wrap the macOS binary in a Rerun.app bundle so macOS uses "Rerun" as the
+      # Wrap the macOS binary in a Dalaran.app bundle so macOS uses "Dalaran" as the
       # dock label / "About" name instead of falling back to the binary filename.
-      - name: Bundle Rerun.app (macOS)
+      - name: Bundle Dalaran.app (macOS)
         if: inputs.PLATFORM == 'macos-arm64'
         run: |
           version=$(pixi run python scripts/ci/crates.py get-version)
@@ -187,22 +187,22 @@ jobs:
             --info-plist scripts/ci/macos/Info.plist \
             --version "$version" \
             --output-dir bundle-out
-          tar -czf bundle-out/Rerun.app.tar.gz -C bundle-out Rerun.app
+          tar -czf bundle-out/Dalaran.app.tar.gz -C bundle-out Dalaran.app
 
-      - name: "Upload rerun-cli (commit)"
+      - name: "Upload dalaran-cli (commit)"
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "./target/${{ needs.set-config.outputs.TARGET }}/release/${{ needs.set-config.outputs.BIN_NAME }}"
-          destination: "rerun-builds/commit/${{ steps.get-sha.outputs.sha }}/rerun-cli/${{ inputs.PLATFORM }}"
+          destination: "dalaran-builds/commit/${{ steps.get-sha.outputs.sha }}/dalaran-cli/${{ inputs.PLATFORM }}"
           parent: false
           process_gcloudignore: false
 
-      - name: "Upload Rerun.app (commit, macOS)"
+      - name: "Upload Dalaran.app (commit, macOS)"
         if: inputs.PLATFORM == 'macos-arm64'
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "bundle-out/Rerun.app.tar.gz"
-          destination: "rerun-builds/commit/${{ steps.get-sha.outputs.sha }}/rerun-cli/${{ inputs.PLATFORM }}"
+          path: "bundle-out/Dalaran.app.tar.gz"
+          destination: "dalaran-builds/commit/${{ steps.get-sha.outputs.sha }}/dalaran-cli/${{ inputs.PLATFORM }}"
           parent: false
           process_gcloudignore: false
           # The tarball is already gzip-compressed. Uploading with the action's default
@@ -211,21 +211,21 @@ jobs:
           # still-compressed stored hash — a guaranteed checksum mismatch.
           gzip: false
 
-      - name: "Upload rerun-cli (adhoc)"
+      - name: "Upload dalaran-cli (adhoc)"
         if: ${{ inputs.ADHOC_NAME != '' }}
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "./target/${{ needs.set-config.outputs.TARGET }}/release/${{ needs.set-config.outputs.BIN_NAME }}"
-          destination: "rerun-builds/adhoc/${{inputs.ADHOC_NAME}}/rerun-cli/${{ inputs.PLATFORM }}"
+          destination: "dalaran-builds/adhoc/${{inputs.ADHOC_NAME}}/dalaran-cli/${{ inputs.PLATFORM }}"
           parent: false
           process_gcloudignore: false
 
-      - name: "Upload Rerun.app (adhoc, macOS)"
+      - name: "Upload Dalaran.app (adhoc, macOS)"
         if: ${{ inputs.ADHOC_NAME != '' && inputs.PLATFORM == 'macos-arm64' }}
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "bundle-out/Rerun.app.tar.gz"
-          destination: "rerun-builds/adhoc/${{inputs.ADHOC_NAME}}/rerun-cli/${{ inputs.PLATFORM }}"
+          path: "bundle-out/Dalaran.app.tar.gz"
+          destination: "dalaran-builds/adhoc/${{inputs.ADHOC_NAME}}/dalaran-cli/${{ inputs.PLATFORM }}"
           parent: false
           process_gcloudignore: false
           # See the note on the commit upload above: keep the already-gzipped tarball raw.

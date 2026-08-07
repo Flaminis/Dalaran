@@ -1782,14 +1782,14 @@ fn blueprint_loader(component_reflection: Arc<ComponentReflectionMap>) -> Bluepr
         let blueprint_path = crate::saving::default_blueprint_path(app_id)?;
 
         let messages = blueprint.to_messages(None);
-        let rrd_version = blueprint
+        let dlr_version = blueprint
             .store_info()
             .and_then(|info| info.store_version)
             .unwrap_or(dl_build_info::CrateVersion::LOCAL);
 
         // TODO(jleibs): Should we push this into a background thread? Blueprints should generally
         // be small & fast to save, but maybe not once we start adding big pieces of user data?
-        crate::saving::encode_to_file(rrd_version, &blueprint_path, messages)?;
+        crate::saving::encode_to_file(dlr_version, &blueprint_path, messages)?;
 
         dl_log::debug!("Saved blueprint for {app_id} to {blueprint_path:?}");
 

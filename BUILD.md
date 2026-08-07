@@ -1,9 +1,9 @@
-# Building Rerun
-This is a guide to how to build Rerun.
+# Building Dalaran
+This is a guide to how to build Dalaran.
 
 
 ## See also
-* [`rerun_py/README.md`](rerun_py/README.md) - build instructions for Python SDK
+* [`dalaran_py/README.md`](dalaran_py/README.md) - build instructions for Python SDK
 * [`ARCHITECTURE.md`](ARCHITECTURE.md)
 * [`TESTING.md`](TESTING.md)
 * [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
@@ -19,7 +19,7 @@ First, install the Rust toolchain using the installer from <https://rustup.rs/>.
 Then, clone the repository:
 ```sh
 git clone git@github.com:rerun-io/rerun.git
-cd rerun
+cd dalaran
 ```
 
 Now install the `pixi` package manager: <https://github.com/prefix-dev/pixi?tab=readme-ov-file#installation>
@@ -35,7 +35,7 @@ dependency on `pyo3-build-config`, which requires a configuration file to be pre
 ```
 error: failed to parse contents of PYO3_CONFIG_FILE
 caused by:
-  - 0: failed to open PyO3 config file at /path/to/rerun/rerun_py/pyo3-build.cfg
+  - 0: failed to open PyO3 config file at /path/to/dalaran/dalaran_py/pyo3-build.cfg
   - 1: No such file or directory (os error 2)
 ```
 
@@ -45,7 +45,7 @@ This file is normally generated automatically by pixi activation scripts, but if
 `cargo` directly outside of pixi, you'll need to generate it first. The configuration is
 referenced in `.cargo/config.toml`:
 ```toml
-PYO3_CONFIG_FILE = { value = "rerun_py/pyo3-build.cfg", relative = true }
+PYO3_CONFIG_FILE = { value = "dalaran_py/pyo3-build.cfg", relative = true }
 ```
 
 For more details, see [Python build configuration](#python-build-configuration-automatic) below.
@@ -104,7 +104,7 @@ pixi run check-env
 Use this command for building and running the viewer:
 
 ```sh
-pixi run rerun
+pixi run dalaran
 ```
 
 
@@ -116,13 +116,13 @@ All Rust examples are set up as separate executables, so they can be run by spec
 cargo run -p dna
 ```
 
-They will either connect to an already running rerun viewer, or spawn a new one.
-In debug builds, it will spawn `target/debug/rerun` if it exists, otherwise look for `rerun` on `PATH`.
+They will either connect to an already running dalaran viewer, or spawn a new one.
+In debug builds, it will spawn `target/debug/dalaran` if it exists, otherwise look for `dalaran` on `PATH`.
 
 
-## Building and installing the Rerun Python SDK
+## Building and installing the Dalaran Python SDK
 
-Rerun is available as a package on PyPi and can be installed with `pip install rerun-sdk`.
+Dalaran is available as a package on PyPi and can be installed with `pip install dalaran-sdk`.
 
 Additionally, nightly dev wheels from head of `main` are available at <https://github.com/rerun-io/rerun/releases/tag/prerelease>.
 
@@ -138,13 +138,13 @@ Or to create a wheel:
 pixi run py-build-wheel
 ```
 
-You can run scripts that depend on rerun within the uv environment. For example:
+You can run scripts that depend on dalaran within the uv environment. For example:
 ```sh
 pixi run uv run examples/python/minimal/minimal.py`
 ```
 
 ### Running the Python examples
-You can also install all rerun example and their dependencies into the same uv environment using:
+You can also install all dalaran example and their dependencies into the same uv environment using:
 ```sh
 pixi run py-build-examples
 ```
@@ -181,7 +181,7 @@ pip install ./dist/CURRENT_ARCHITECTURE/*.whl
 
 **IMPORTANT**: unlike the official wheels, wheels produced by this method do _not_ contain the viewer, so they may only be used for logging purposes.
 
-## Building and installing the Rerun C++ SDK
+## Building and installing the Dalaran C++ SDK
 
 On Windows you have to have a system install of Visual Studio 2022 in order to compile the SDK and samples.
 
@@ -199,19 +199,19 @@ This can be useful for developer tools, e.g. for [setting up IntelliSense in VSC
 
 ## Building the docs
 
-High-level documentation for Rerun can be found at [https://rerun.io/docs](https://rerun.io/docs). It is built from the separate repository [rerun-docs](https://github.com/rerun-io/rerun-docs).
+High-level documentation for Dalaran can be found at [https://dalaran.dev/docs](https://dalaran.dev/docs). It is built from the separate repository [dalaran-docs](https://github.com/rerun-io/rerun-docs).
 
-- 🌊 [C++ API docs](https://ref.rerun.io/docs/cpp) are built with `doxygen` and hosted on GitHub. Use `pixi run -e cpp cpp-docs` to build them locally. For details on the C++ doc-system, see [Writing Docs](rerun_cpp/docs/writing_docs.md).
-- 🐍 [Python API docs](https://ref.rerun.io/docs/python) are built via `mkdocs` and hosted on GitHub. For details on the Python doc-system, see [Writing Docs](rerun_py/docs/writing_docs.md).
-- 🦀 [Rust API docs](https://docs.rs/rerun/) are hosted on  <https://docs.rs/rerun/>. You can build them locally with: `cargo doc --all-features --no-deps --open`.
+- 🌊 [C++ API docs](https://ref.dalaran.dev/docs/cpp) are built with `doxygen` and hosted on GitHub. Use `pixi run -e cpp cpp-docs` to build them locally. For details on the C++ doc-system, see [Writing Docs](dalaran_cpp/docs/writing_docs.md).
+- 🐍 [Python API docs](https://ref.dalaran.dev/docs/python) are built via `mkdocs` and hosted on GitHub. For details on the Python doc-system, see [Writing Docs](dalaran_py/docs/writing_docs.md).
+- 🦀 [Rust API docs](https://docs.rs/dalaran/) are hosted on  <https://docs.rs/dalaran/>. You can build them locally with: `cargo doc --all-features --no-deps --open`.
 
 ## Building for the web
 
-If you want to build a standalone Rerun executable that contains the web-viewer and a gRPC server,
-you need to install the `wasm32-unknown-unknown` Rust target and ensure the `web_viewer` feature flag is set when building rerun.
+If you want to build a standalone Dalaran executable that contains the web-viewer and a gRPC server,
+you need to install the `wasm32-unknown-unknown` Rust target and ensure the `web_viewer` feature flag is set when building dalaran.
 This is automatically done by this shortcut which builds & runs the web viewer:
 ```
-pixi run rerun-web
+pixi run dalaran-web
 ```
 
 If you're on Windows you have to make sure that your git client creates symlinks,
@@ -299,13 +299,13 @@ rustflags = [
 ### Python build configuration (automatic)
 
 The repository is configured to automatically generate a `PYO3_CONFIG_FILE` for stable
-Python builds. This file (`rerun_py/pyo3-build.cfg`) is automatically created when you
+Python builds. This file (`dalaran_py/pyo3-build.cfg`) is automatically created when you
 first run any `pixi run` command, and ensures consistent cargo caching whether you build
-via `pixi run py-build`, `uv sync --package rerun-sdk`, or other methods.
+via `pixi run py-build`, `uv sync --package dalaran-sdk`, or other methods.
 
 The configuration is referenced in `.cargo/config.toml`:
 ```toml
-PYO3_CONFIG_FILE = { value = "rerun_py/pyo3-build.cfg", relative = true }
+PYO3_CONFIG_FILE = { value = "dalaran_py/pyo3-build.cfg", relative = true }
 ```
 
 If you need to regenerate this file (e.g., after changing Python versions), run:

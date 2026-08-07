@@ -45,7 +45,7 @@ pub struct DalaranArgs {
     #[clap(long, default_value = "true")]
     spawn: bool,
 
-    /// Saves the data to an rrd file rather than visualizing it immediately.
+    /// Saves the data to an dlr file rather than visualizing it immediately.
     #[clap(long)]
     save: Option<PathBuf>,
 

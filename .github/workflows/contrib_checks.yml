@@ -75,7 +75,7 @@ jobs:
 
       - name: Build via mkdocs
         run: |
-          pixi run uv run --group docs mkdocs build --strict -f rerun_py/mkdocs.yml
+          pixi run uv run --group docs mkdocs build --strict -f dalaran_py/mkdocs.yml
 
   no-codegen-changes:
     name: Check if running codegen would produce any changes
@@ -113,7 +113,7 @@ jobs:
       # Install the Vulkan SDK, so we can use the software rasterizer.
       # TODO(andreas): It would be nice if `setup_software_rasterizer.py` could do that for us as well (note though that this action here is very fast when cached!)
       - name: Install Vulkan SDK
-        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-rerun
+        uses: rerun-io/install-vulkan-sdk-action@v1.6.0-dalaran
         with:
           vulkan_version: ${{ env.VULKAN_SDK_VERSION }}
           install_runtime: true
@@ -148,8 +148,8 @@ jobs:
             **/tests/failures
           if-no-files-found: ignore
 
-  rerun-lints:
-    name: Rerun lints
+  dalaran-lints:
+    name: Dalaran lints
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -164,8 +164,8 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Rerun lints
-        run: pixi run lint-rerun
+      - name: Dalaran lints
+        run: pixi run lint-dalaran
 
   toml-format-check:
     name: Toml format check
@@ -276,16 +276,16 @@ jobs:
           environments: cpp
 
       # TODO(emilk): make this work somehow. Right now this just results in
-      # > Compiler: GNU 12.3.0 (/__w/rerun/rerun/.pixi/env/bin/x86_64-conda-linux-gnu-c++)
+      # > Compiler: GNU 12.3.0 (/__w/dalaran/dalaran/.pixi/env/bin/x86_64-conda-linux-gnu-c++)
       # 😭
       # - name: Build and run C++ tests with clang++
       #   run: |
       #     pixi run -e cpp cpp-clean
-      #     RERUN_WERROR=ON RERUN_USE_ASAN=ON CXX=clang++ pixi run -e cpp cpp-build-all
-      #     RERUN_WERROR=ON RERUN_USE_ASAN=ON CXX=clang++ pixi run -e cpp cpp-test
+      #     DALARAN_WERROR=ON DALARAN_USE_ASAN=ON CXX=clang++ pixi run -e cpp cpp-build-all
+      #     DALARAN_WERROR=ON DALARAN_USE_ASAN=ON CXX=clang++ pixi run -e cpp cpp-test
 
       - name: Build and run C++ tests with g++
         run: |
           pixi run -e cpp cpp-clean
-          RERUN_WERROR=ON RERUN_USE_ASAN=ON LSAN_OPTIONS=suppressions=.github/workflows/lsan_suppressions.supp CXX=g++ pixi run -e cpp cpp-build-all
-          RERUN_WERROR=ON RERUN_USE_ASAN=ON LSAN_OPTIONS=suppressions=.github/workflows/lsan_suppressions.supp CXX=g++ pixi run -e cpp cpp-test
+          DALARAN_WERROR=ON DALARAN_USE_ASAN=ON LSAN_OPTIONS=suppressions=.github/workflows/lsan_suppressions.supp CXX=g++ pixi run -e cpp cpp-build-all
+          DALARAN_WERROR=ON DALARAN_USE_ASAN=ON LSAN_OPTIONS=suppressions=.github/workflows/lsan_suppressions.supp CXX=g++ pixi run -e cpp cpp-test

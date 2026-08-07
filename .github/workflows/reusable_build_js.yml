@@ -1,4 +1,4 @@
-name: Reusable Build rerun_js
+name: Reusable Build dalaran_js
 
 on:
   workflow_call:
@@ -25,7 +25,7 @@ permissions:
 
 jobs:
   build:
-    name: Build rerun_js
+    name: Build dalaran_js
     timeout-minutes: 60
     runs-on: ubuntu-latest-16-cores
     steps:
@@ -54,20 +54,20 @@ jobs:
           pixi-version: v0.71.3
 
       - name: Install yarn dependencies
-        run: pixi run yarn --cwd rerun_js install
+        run: pixi run yarn --cwd dalaran_js install
 
-      - name: Build rerun_js package
-        run: pixi run yarn --cwd rerun_js workspaces run build
+      - name: Build dalaran_js package
+        run: pixi run yarn --cwd dalaran_js workspaces run build
 
-      - name: Package rerun_js
+      - name: Package dalaran_js
         run: |
-          pixi run yarn --cwd rerun_js workspaces run pack
-          mkdir rerun_js_package
-          cp rerun_js/*/*.tar.gz rerun_js_package/
+          pixi run yarn --cwd dalaran_js workspaces run pack
+          mkdir dalaran_js_package
+          cp dalaran_js/*/*.tar.gz dalaran_js_package/
 
-      - name: Upload rerun_js
+      - name: Upload dalaran_js
         uses: actions/upload-artifact@v7
         with:
-          name: rerun_js
-          path: rerun_js_package
+          name: dalaran_js
+          path: dalaran_js_package
           compression-level: 0 # already compressed

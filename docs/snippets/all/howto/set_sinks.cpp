@@ -10,8 +10,8 @@ int main(int argc, char* argv[]) {
            dalaran::GrpcSink{},
            // To host a gRPC server instead, replace the sink above with:
            // dalaran::GrpcServerSink{},
-           // Write data to a `data.rrd` file in the current directory.
-           dalaran::FileSink{"data.rrd"}
+           // Write data to a `data.dlr` file in the current directory.
+           dalaran::FileSink{"data.dlr"}
     )
         .exit_on_failure();
 

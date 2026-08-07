@@ -20,9 +20,9 @@ class LazyStore:
     requested.
 
     Example:
-        lazy = RrdReader("recording.rrd").store()
+        lazy = RrdReader("recording.dlr").store()
 
-    Use `stream()` to process chunks through the lazy pipeline, or `write_rrd()`
+    Use `stream()` to process chunks through the lazy pipeline, or `write_dlr()`
     to persist to disk. To fully materialize into a
     [`ChunkStore`][dalaran.experimental.ChunkStore], call `lazy.stream().collect()`.
 
@@ -66,7 +66,7 @@ class LazyStore:
         """
         return self._internal._chunks_loaded
 
-    def write_rrd(
+    def write_dlr(
         self,
         path: str | Path,
         *,
@@ -74,11 +74,11 @@ class LazyStore:
         recording_id: str,
     ) -> None:
         """
-        Write all chunks to an RRD file.
+        Write all chunks to an DLR file.
 
         The caller must provide application_id and recording_id explicitly.
         """
-        self.stream().write_rrd(
+        self.stream().write_dlr(
             path,
             application_id=application_id,
             recording_id=recording_id,

@@ -438,7 +438,7 @@ pub async fn register_with_prefix(fe: impl DalaranCloudService) {
 
     fe.register_with_dataset_name_blocking(
         dataset_name,
-        vec![cloud_ext::DataSource::new_rrd_prefix_url(root_url).into()],
+        vec![cloud_ext::DataSource::new_dlr_prefix_url(root_url).into()],
     )
     .await;
 
@@ -464,14 +464,14 @@ pub async fn register_and_scan_empty_dataset(service: impl DalaranCloudService) 
 /// - URI has a host name
 ///
 /// The latter can be caused by attempting to build a `file://` with a relative path, leading to
-/// `file://path/to/file.rrd`. This is valid URI, but here `path` is the hostname.
+/// `file://path/to/file.dlr`. This is valid URI, but here `path` is the hostname.
 pub async fn register_bad_file_uri_should_error(service: impl DalaranCloudService) {
     let temp_dir = tempfile::tempdir().expect("creating temp dir");
     let temp_dir_uri = format!("file://{}/", temp_dir.path().display());
 
     let test_cases = vec![
-        ("file doesn't exist", "file:///does/not/exist.rrd"),
-        ("URI has a host name", "file://somehost/file/path.rrd"),
+        ("file doesn't exist", "file:///does/not/exist.dlr"),
+        ("URI has a host name", "file://somehost/file/path.dlr"),
         ("URI points to a directory", &temp_dir_uri),
     ];
 
@@ -480,7 +480,7 @@ pub async fn register_bad_file_uri_should_error(service: impl DalaranCloudServic
 
     for (test_name, bad_uri) in test_cases {
         let request = RegisterWithDatasetRequest {
-            data_sources: vec![cloud_ext::DataSource::new_rrd_url(
+            data_sources: vec![cloud_ext::DataSource::new_dlr_url(
                 url::Url::parse(bad_uri).unwrap(),
             )],
             on_duplicate: Default::default(),
@@ -777,7 +777,7 @@ pub async fn register_intra_request_duplicates(service: impl DalaranCloudService
         let dataset_name = format!("intra_request_dup_{on_duplicate:?}_test");
         service.create_dataset_entry_with_name(&dataset_name).await;
 
-        // Create two RRD files that will have the same partition ID
+        // Create two DLR files that will have the same partition ID
         let data_source_def = DataSourcesDefinition::new_with_tuid_prefix(
             1,
             [

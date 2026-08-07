@@ -152,7 +152,7 @@ pub struct WebViewerConfig {
 
     /// The urls to which any spawned webviewer should connect.
     ///
-    /// This url is a redap uri or a hosted RRD file that we retrieve via the message proxy.
+    /// This url is a redap uri or a hosted DLR file that we retrieve via the message proxy.
     /// Has no effect if [`Self::open_browser`] is false.
     pub connect_to: Vec<String>,
 

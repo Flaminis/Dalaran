@@ -221,7 +221,7 @@ pub struct StoreInfo {
     /// Where data is being logged.
     pub store_source: String,
 
-    /// The Dalaran version that was used to encode the RRD data.
+    /// The Dalaran version that was used to encode the DLR data.
     pub store_version: String,
 
     // Various versions of the host environment.
@@ -475,7 +475,7 @@ pub struct LoadDataSource {
     /// The type of data source being loaded (e.g., "file", "http" etc.).
     pub source_type: &'static str,
 
-    /// The file extension if applicable (e.g., "rrd", "png", "glb").
+    /// The file extension if applicable (e.g., "dlr", "png", "glb").
     /// None for non-file sources like stdin or gRPC streams.
     pub file_extension: Option<String>,
 
@@ -519,7 +519,7 @@ impl Properties for LoadDataSource {
 /// This is sent when a user runs the Dalaran CLI with any command.
 #[derive(Default)]
 pub struct CliCommandInvoked {
-    /// The main command (e.g., "rrd", "auth", "mcap").
+    /// The main command (e.g., "dlr", "auth", "mcap").
     /// "viewer" is used when no subcommand is specified.
     pub command: &'static str,
 
@@ -654,7 +654,7 @@ mod tests {
         );
         assert_eq!(
             extract_root_domain(
-                "https://www.dalaran.dev/viewer?url=https://app.dalaran.dev/version/0.15.1/examples/detect_and_track_objects.rrd"
+                "https://www.dalaran.dev/viewer?url=https://app.dalaran.dev/version/0.15.1/examples/detect_and_track_objects.dlr"
             ),
             Some("dalaran.dev".to_owned())
         );

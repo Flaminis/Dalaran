@@ -131,14 +131,14 @@ service DalaranCloudService {
   // This endpoint requires the standard dataset headers.
   rpc GetDatasetSchema(GetDatasetSchemaRequest) returns (GetDatasetSchemaResponse) {}
 
-  // Get the RRD Footer manifest.
+  // Get the DLR Footer manifest.
   //
   // This includes details about what chunks there are, and what kind of data they contain.
   //
   // The manifest might be returned in multiple parts, at the discretion of the server.
   // When that happens, it is guaranteed that all parts have the same exact Sorbet schemas (and therefore
   // identical Sorbet schema hashes too).
-  // That means it is always semantically valid to concatenate the data from these RRD manifests.
+  // That means it is always semantically valid to concatenate the data from these DLR manifests.
   //
   // If the client sets `generate_direct_urls`, the server may instead return keys pointing at
   // encoded `dalaran.log_msg.v1alpha1.RrdFooter` payloads for the client to fetch and decode.
@@ -374,7 +374,7 @@ message DataSource {
   // considered part of this data source.
   bool prefix = 4;
 
-  // What kind of data is it (e.g. rrd, mcap, Lance, etc)?
+  // What kind of data is it (e.g. dlr, mcap, Lance, etc)?
   DataSourceKind typ = 2;
 
   // Removed experimental field.
@@ -384,7 +384,7 @@ message DataSource {
 
 enum DataSourceKind {
   DATA_SOURCE_KIND_UNSPECIFIED = 0;
-  DATA_SOURCE_KIND_RRD = 1;
+  DATA_SOURCE_KIND_DLR = 1;
 }
 
 message RegisterWithDatasetRequest {
@@ -542,10 +542,10 @@ message GetRrdManifestRequest {
 }
 
 message GetRrdManifestResponse {
-  // Exactly one of `rrd_manifest` and `manifest_key` is set per response.
+  // Exactly one of `dlr_manifest` and `manifest_key` is set per response.
 
   // The manifest, inlined.
-  dalaran.log_msg.v1alpha1.RrdManifest rrd_manifest = 1;
+  dalaran.log_msg.v1alpha1.RrdManifest dlr_manifest = 1;
 
   // Points at an encoded `dalaran.log_msg.v1alpha1.RrdFooter` payload for the client to fetch and decode.
   RrdManifestKey manifest_key = 2;
@@ -1223,12 +1223,12 @@ message DebugInfo {
 //
 // Returned by `QueryDataset` (in the `chunk_key` Arrow column) and forwarded
 // back to the server on `FetchChunks`. The `location` payload is opaque and
-// interpreted per `data_source_kind` (e.g. `RrdChunkLocation` for RRD).
+// interpreted per `data_source_kind` (e.g. `RrdChunkLocation` for DLR).
 message ChunkKey {
   // Chunk unique identifier
   dalaran.common.v1alpha1.Tuid chunk_id = 1;
 
-  // What type of partition is this, rrd, mcap, etc.
+  // What type of partition is this, dlr, mcap, etc.
   // This information determines how to interpret the `location` payload.
   DataSourceKind data_source_kind = 2;
 
@@ -1252,7 +1252,7 @@ message ChunkKey {
   optional int64 registration_time_nanos = 5;
 }
 
-// RRD-specific decoding of `ChunkKey.location`.
+// DLR-specific decoding of `ChunkKey.location`.
 message RrdChunkLocation {
   // Where the chunk is stored (e.g. s3://bucket/file, file:///path/to/file).
   optional string url = 1;
@@ -1272,7 +1272,7 @@ message RrdManifestKey {
   // The segment layer whose manifest is stored in this footer.
   optional string layer = 2;
 
-  // ETag of the source object (the layer's RRD file) as observed at registration time.
+  // ETag of the source object (the layer's DLR file) as observed at registration time.
   //
   // Clients should pass this as an `If-Match` precondition when fetching, so that a concurrent
   // re-registration results in a clean failure (HTTP 412) instead of decoding garbage from a

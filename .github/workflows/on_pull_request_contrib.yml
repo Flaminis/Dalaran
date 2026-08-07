@@ -1,9 +1,9 @@
 # Jobs that only run for external contributors.
 # These have to be carefully sanitized, we don't want to leak secrets.
 # - We can't use caching, outside of really rare scenarios, because our caching largely depends on GCS
-# - We have to ensure that these jobs _only_ run for PRs outside of the `rerun-io` organization
+# - We have to ensure that these jobs _only_ run for PRs outside of the `dalaran-io` organization
 #   this is done using the following check, added to every job:
-#     if: github.event.pull_request.head.repo.owner.login != 'rerun-io'
+#     if: github.event.pull_request.head.repo.owner.login != 'dalaran-io'
 
 name: Pull-Request (Contrib)
 
@@ -20,7 +20,7 @@ permissions:
 jobs:
   checks:
     name: "Checks"
-    if: github.event.pull_request.head.repo.owner.login != 'rerun-io'
+    if: github.event.pull_request.head.repo.owner.login != 'dalaran-io'
     uses: ./.github/workflows/contrib_checks.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -28,15 +28,15 @@ jobs:
 
   python:
     name: "Python"
-    if: github.event.pull_request.head.repo.owner.login != 'rerun-io'
-    uses: ./.github/workflows/contrib_rerun_py.yml
+    if: github.event.pull_request.head.repo.owner.login != 'dalaran-io'
+    uses: ./.github/workflows/contrib_dalaran_py.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
       MATURIN_FEATURE_FLAGS: "--no-default-features --features extension-module"
 
   check-doc-redirects:
     name: "Check Doc Redirects"
-    if: github.event.pull_request.head.repo.owner.login != 'rerun-io'
+    if: github.event.pull_request.head.repo.owner.login != 'dalaran-io'
     uses: ./.github/workflows/reusable_checks_doc_redirects.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}

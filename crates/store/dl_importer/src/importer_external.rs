@@ -124,7 +124,7 @@ pub fn iter_external_importers() -> impl ExactSizeIterator<Item = PathBuf> {
 /// the user's `PATH` with a name that starts with [`EXTERNAL_IMPORTER_PREFIX`]
 /// (or the legacy `dalaran-loader-` prefix).
 ///
-/// The external importers are expected to log rrd data to their standard output.
+/// The external importers are expected to log dlr data to their standard output.
 ///
 /// Refer to our `external_importer` example for more information.
 ///
@@ -320,7 +320,7 @@ impl crate::Importer for ExternalImporter {
         _contents: std::borrow::Cow<'_, [u8]>,
         _tx: crossbeam::channel::Sender<crate::ImportedData>,
     ) -> Result<(), crate::ImporterError> {
-        // TODO(#5324): You could imagine a world where plugins can be streamed rrd data via their
+        // TODO(#5324): You could imagine a world where plugins can be streamed dlr data via their
         // standard input… but today is not world.
         Err(crate::ImporterError::Incompatible(path))
     }

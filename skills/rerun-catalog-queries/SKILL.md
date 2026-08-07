@@ -1,14 +1,14 @@
 ---
-name: rerun-catalog-queries
-description: Performance patterns and gotchas for querying a Rerun catalog from Python. Reach for this when a CatalogClient/dataset query is unexpectedly slow, or when shaping a per-segment / per-episode pipeline that hits the catalog from many places.
+name: dalaran-catalog-queries
+description: Performance patterns and gotchas for querying a Dalaran catalog from Python. Reach for this when a CatalogClient/dataset query is unexpectedly slow, or when shaping a per-segment / per-episode pipeline that hits the catalog from many places.
 user_invocable: true
 allowed-tools: Read, Grep, Bash
 ---
 
-# Rerun catalog queries
+# Dalaran catalog queries
 
-Practical performance patterns for querying a Rerun catalog
-from Python (`rerun.catalog.CatalogClient` →
+Practical performance patterns for querying a Dalaran catalog
+from Python (`dalaran.catalog.CatalogClient` →
 `dataset.reader(...)` → DataFusion `DataFrame`). The DataFusion side of
 the stack is covered by the **`datafusion-python`** skill — load that
 for `DataFrame` / `SessionContext` / expression-API references. This
@@ -90,22 +90,22 @@ not when they're another lazy `DataFrame`.
 
 ---
 
-## Cross-segment batching: drop `filter_segments`, group by `rerun_segment_id`
+## Cross-segment batching: drop `filter_segments`, group by `dalaran_segment_id`
 
 For pipelines that need the same query on many segments, omit
 `filter_segments(...)` entirely and pull a single cross-segment table.
-Every reader row carries a `rerun_segment_id` column — group locally:
+Every reader row carries a `dalaran_segment_id` column — group locally:
 
 ```python
 df = dataset.filter_contents(entities).reader(index=index_col)
 cached = df.select(
-    "rerun_segment_id",
+    "dalaran_segment_id",
     col(index_col).cast(pa.int64()).alias(index_col),
     value.alias("v"),
 ).cache()
 
 # Now N filter/aggregate calls are local, not network.
-starts = cached.filter(col("v") == start_val).select("rerun_segment_id", index_col).to_arrow_table()
+starts = cached.filter(col("v") == start_val).select("dalaran_segment_id", index_col).to_arrow_table()
 ```
 
 Trigger / event columns are tiny enough that pulling all segments at
@@ -227,9 +227,9 @@ Every row from `dataset.<filters>.reader(...)` corresponds to a single
 event on a single entity. Other entities' columns are null on that
 row. Implications:
 
-- `select("rerun_segment_id", "<entity>:<archetype>:<component>")`
+- `select("dalaran_segment_id", "<entity>:<archetype>:<component>")`
   works — quote the entity column when using SQL.
-- There is **no** `rerun_entity_path` row attribute. To attribute rows
+- There is **no** `dalaran_entity_path` row attribute. To attribute rows
   to entities you either filter to one entity at a time, or pick a
   per-entity column (e.g. `:McapChannel:id`) whose non-null pattern
   identifies the source.
@@ -285,7 +285,7 @@ When a query stage is slower than expected:
    push down.
 4. **Cross-segment first, then cross-entity.** If the per-segment query
    is fundamentally the same (just scoped by id), drop `filter_segments`
-   and group by `rerun_segment_id` locally. If you also have a
+   and group by `dalaran_segment_id` locally. If you also have a
    per-entity loop within a segment, collapse it the same way (one
    `filter_contents([all])` reader, per-entity `is_not_null()` filters
    downstream).

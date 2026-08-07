@@ -448,14 +448,14 @@ mod tests {
             assert!(results.is_empty());
         }
 
-        // Back the chunks with an RRD manifest so they stay recoverable after removal, and keep
+        // Back the chunks with an DLR manifest so they stay recoverable after removal, and keep
         // being reported as missing (partial results) rather than vanishing from the virtual indices.
-        let rrd_manifest = RrdManifest::build_in_memory_from_chunks(
+        let dlr_manifest = RrdManifest::build_in_memory_from_chunks(
             store_id,
             [&chunk1, &chunk2, &chunk3].into_iter(),
         )
         .unwrap();
-        _ = store.write().insert_rrd_manifest(rrd_manifest);
+        _ = store.write().insert_dlr_manifest(dlr_manifest);
 
         // Reminder: the store events are irrelevant here, since the range cache still always unconditionally
         // performs the underlying query regardless (only the sorting/slicing is cached).

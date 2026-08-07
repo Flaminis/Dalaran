@@ -35,7 +35,7 @@ Internally, such readers typically parse the source file, convert data to chunks
 
 Some readers, called [`IndexedReader`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.IndexedReader), can also provide indexed, random access to chunks via a [`LazyStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyStore).
 This is typically implemented on top of an existing chunk index, and is currently available for the following readers:
-- `RrdReader` (relies on the RRD footer index) <!-- TODO(ab) link doc page about that when we have it -->
+- `RrdReader` (relies on the DLR footer index) <!-- TODO(ab) link doc page about that when we have it -->
 - `DatasetEntry.segment_store()` (relies on the chunk index maintained by the catalog server)
 
 Processing chunks through a `LazyStore` is beneficial for pipelines where only a subset of chunks is needed, avoiding the I/O cost of loading unnecessary ones.
@@ -101,7 +101,7 @@ This happens when a terminal operation is called, for example:
 
 snippet: concepts/chunk_processing_intro[terminal]
 
-This exact call triggers the pipeline execution, including reading the source MCAP, performing the filter operation, and writing the output RRD.
+This exact call triggers the pipeline execution, including reading the source MCAP, performing the filter operation, and writing the output DLR.
 
 #### Pipeline execution
 
@@ -109,7 +109,7 @@ To recap:
 
 - A pipeline is a DAG rooted at one or more readers or stores and ending at a leaf node represented by a lazy stream.
 - Composition is cheap: building the DAG is metadata only, regardless of input size. This is done through `LazyChunkStream`'s APIs.
-- The actual execution of the pipeline is triggered by calling a terminal method of the lazy stream, for example `.write_rrd()`. Terminal calls are blocking, but execution is multithreaded and essentially GIL-free.
+- The actual execution of the pipeline is triggered by calling a terminal method of the lazy stream, for example `.write_dlr()`. Terminal calls are blocking, but execution is multithreaded and essentially GIL-free.
 - Memory cost is bounded by what flows through a chunk at a time, not by the total recording size.
 
 #### Move semantics
@@ -124,14 +124,14 @@ Terminal calls, however, do not consume the stream — a lazy stream can be exec
 
 ```python
 chunk_list = stream.to_chunks()
-stream.write_rrd(path=..., application_id=..., recording_id=...)
+stream.write_dlr(path=..., application_id=..., recording_id=...)
 ```
 
 Note that doing so executes the entire pipeline twice, which may not be desirable for complex pipelines. In that case, collect the stream to an intermediate `ChunkStore` to trade memory for re-computation.
 
 ## Complete example
 
-The rest of this page walks through a single end-to-end pipeline that reads a robot-arm MCAP recording, fans the protobuf joint-state column out into per-joint `Scalars` series in degrees, tags the result with a static `/metadata` chunk built from scratch, and writes a new `.rrd`.
+The rest of this page walks through a single end-to-end pipeline that reads a robot-arm MCAP recording, fans the protobuf joint-state column out into per-joint `Scalars` series in degrees, tags the result with a static `/metadata` chunk built from scratch, and writes a new `.dlr`.
 
 Full source: [Python](https://github.com/rerun-io/rerun/blob/main/docs/snippets/all/concepts/chunk_processing.py).
 
@@ -169,7 +169,7 @@ snippet: concepts/chunk_processing[merging]
 
 snippet: concepts/chunk_processing[write]
 
-- `write_rrd(...)` is the terminal: this is where the DAG actually executes. The whole pipeline runs in a single streaming pass.
+- `write_dlr(...)` is the terminal: this is where the DAG actually executes. The whole pipeline runs in a single streaming pass.
 - `application_id` and `recording_id` identify the resulting recording; a fresh `uuid.uuid4()` makes each invocation produce a distinct recording.
 
 ## Relationship to the logging APIs
@@ -185,7 +185,7 @@ Both the logging APIs (`dl.log`, `dl.send_columns`, `RecordingStream`) and the C
 | Typical use            | realtime data logging                    | ingestion, conversion, post-processing pipelines                                                        |
 
 The two are interoperable:
-- **Logging → chunk processing:** save a `RecordingStream` to an `.rrd`, then re-open it with `RrdReader` to get a `LazyChunkStream`.
+- **Logging → chunk processing:** save a `RecordingStream` to an `.dlr`, then re-open it with `RrdReader` to get a `LazyChunkStream`.
 
   > [!NOTE]
   > This roundtrip-via-file will be smoothed out in the future for better ergonomics and performance.

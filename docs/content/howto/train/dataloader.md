@@ -41,7 +41,7 @@ The dataloader reads from a Dalaran catalog, so you must first register [RRDs](h
 dalaran server
 ```
 
-Then register your recordings. Each registered RRD becomes a *segment* in the dataset, typically one episode or trajectory per RRD:
+Then register your recordings. Each registered DLR becomes a *segment* in the dataset, typically one episode or trajectory per DLR:
 
 snippet: howto/dataloader[register]
 

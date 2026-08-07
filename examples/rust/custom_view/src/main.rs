@@ -1,12 +1,12 @@
-//! This example shows how to add custom Views to the Rerun Viewer.
+//! This example shows how to add custom Views to the Dalaran Viewer.
 
-use rerun::external::{dl_crash_handler, dl_grpc_server, dl_log, dl_memory, dl_viewer, tokio};
+use dalaran::external::{dl_crash_handler, dl_grpc_server, dl_log, dl_memory, dl_viewer, tokio};
 
 mod color_coordinate_config;
 mod points3d_color_view;
 mod points3d_color_visualizer;
 
-// By using `dl_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
+// By using `dl_memory::AccountingAllocator` Dalaran can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.
 // By using `mimalloc` we get faster allocations.
 #[global_allocator]
@@ -15,16 +15,16 @@ static GLOBAL: dl_memory::AccountingAllocator<mimalloc::MiMalloc> =
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let main_thread_token = rerun::MainThreadToken::i_promise_i_am_on_the_main_thread();
+    let main_thread_token = dalaran::MainThreadToken::i_promise_i_am_on_the_main_thread();
 
     // Direct calls using the `log` crate to stderr. Control with `RUST_LOG=debug` etc.
     dl_log::setup_logging();
 
     // Install handlers for panics and crashes that prints to stderr and send
-    // them to Rerun analytics (if the `analytics` feature is on in `Cargo.toml`).
+    // them to Dalaran analytics (if the `analytics` feature is on in `Cargo.toml`).
     dl_crash_handler::install_crash_handlers(dl_viewer::build_info());
 
-    // Listen for gRPC connections from Rerun's logging SDKs.
+    // Listen for gRPC connections from Dalaran's logging SDKs.
     // There are other ways of "feeding" the viewer though - all you need is a `dl_log_channel::LogReceiver`.
     let (rx, _grpc_server_handle) = dl_grpc_server::spawn_with_recv(
         "0.0.0.0:9876".parse()?,
@@ -35,10 +35,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let startup_options = dl_viewer::StartupOptions::default();
 
     // This is used for analytics, if the `analytics` feature is on in `Cargo.toml`
-    let app_env = dl_viewer::AppEnvironment::Custom("My extended Rerun Viewer".to_owned());
+    let app_env = dl_viewer::AppEnvironment::Custom("My extended Dalaran Viewer".to_owned());
 
     println!(
-        "This example starts a custom Rerun Viewer that is ready to accept data… you have to give it some!"
+        "This example starts a custom Dalaran Viewer that is ready to accept data… you have to give it some!"
     );
     println!(
         "Try for example to run: `cargo run -p minimal_options -- --connect` in another terminal instance."
@@ -62,7 +62,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             // Register reflection + component UI for our hand-written blueprint property.
             let color_coordinates_archetype =
-                <color_coordinate_config::ColorCoordinatesConfiguration as rerun::Archetype>::name(
+                <color_coordinate_config::ColorCoordinatesConfiguration as dalaran::Archetype>::name(
                 );
             app.add_archetype_reflection(
                 color_coordinates_archetype,

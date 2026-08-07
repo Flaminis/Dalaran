@@ -1,4 +1,4 @@
-use rerun::{
+use dalaran::{
     blueprint::{
         Blueprint, BlueprintPanel, ContainerLike, Grid, SelectionPanel, Spatial2DView, TimePanel,
     },
@@ -12,7 +12,7 @@ use rerun::{
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 
     /// Don't send the blueprint
     #[clap(long)]
@@ -41,10 +41,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     Spatial2DView::new("Rect 1")
                         .with_origin("/")
                         .with_contents(["/**"])
-                        .with_defaults(&rerun::Boxes2D::update_fields().with_radii([2.0]))
+                        .with_defaults(&dalaran::Boxes2D::update_fields().with_radii([2.0]))
                         .with_override(
                             "rect/0",
-                            &rerun::Boxes2D::update_fields().with_radii([1.0]),
+                            &dalaran::Boxes2D::update_fields().with_radii([1.0]),
                         ),
                 ),
             ]))
@@ -64,9 +64,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let (rec, _) = match blueprint {
         Some(blueprint) => args
-            .rerun
-            .init_with_blueprint("rerun_example_blueprint", blueprint)?,
-        None => args.rerun.init("rerun_example_blueprint")?,
+            .dalaran
+            .init_with_blueprint("dalaran_example_blueprint", blueprint)?,
+        None => args.dalaran.init("dalaran_example_blueprint")?,
     };
 
     rec.set_time_sequence("custom", 0);
@@ -80,23 +80,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
     }
-    rec.log("image", &rerun::Image::from_rgb24(img, [128, 128]))?;
+    rec.log("image", &dalaran::Image::from_rgb24(img, [128, 128]))?;
 
     // Log rectangles at different times
     rec.set_time_sequence("custom", 10);
     rec.log(
         "rect/0",
-        &rerun::Boxes2D::from_mins_and_sizes([(16.0, 16.0)], [(64.0, 64.0)])
+        &dalaran::Boxes2D::from_mins_and_sizes([(16.0, 16.0)], [(64.0, 64.0)])
             .with_labels(["Rect0"])
-            .with_colors([rerun::Color::from_rgb(255, 0, 0)]),
+            .with_colors([dalaran::Color::from_rgb(255, 0, 0)]),
     )?;
 
     rec.set_time_sequence("custom", 20);
     rec.log(
         "rect/1",
-        &rerun::Boxes2D::from_mins_and_sizes([(48.0, 48.0)], [(64.0, 64.0)])
+        &dalaran::Boxes2D::from_mins_and_sizes([(48.0, 48.0)], [(64.0, 64.0)])
             .with_labels(["Rect1"])
-            .with_colors([rerun::Color::from_rgb(0, 255, 0)]),
+            .with_colors([dalaran::Color::from_rgb(0, 255, 0)]),
     )?;
 
     Ok(())

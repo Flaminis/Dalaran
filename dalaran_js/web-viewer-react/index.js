@@ -6,7 +6,7 @@ import * as dalaran from "@dalaran/web-viewer";
 //       so in React where all normal behavior of web APIs goes out of the window.
 /**
  * @typedef BaseProps
- * @property {string | string[]} rrd URL(s) of the `.rrd` file(s) to load.
+ * @property {string | string[]} dlr URL(s) of the `.dlr` file(s) to load.
  *                                   Changing this prop will open any new unique URLs as recordings,
  *                                   and close any URLs which are not present.
  * @property {string} [width] CSS width of the viewer's parent div
@@ -77,8 +77,8 @@ export default class WebViewer extends React.Component {
 
       syncRecordings(
         this.#handle,
-        toArray(prevProps.rrd),
-        toArray(this.props.rrd),
+        toArray(prevProps.dlr),
+        toArray(this.props.dlr),
       );
     }
   }
@@ -124,7 +124,7 @@ function pascalToSnake(str) {
  */
 function startViewer(handle, parent, getProps) {
   const props = getProps();
-  const initial = toArray(props.rrd);
+  const initial = toArray(props.dlr);
   handle
     .start(initial, parent, {
       manifest_url: props.manifest_url,
@@ -142,8 +142,8 @@ function startViewer(handle, parent, getProps) {
         return;
       }
 
-      const { rrd } = getProps();
-      syncRecordings(handle, initial, toArray(rrd));
+      const { dlr } = getProps();
+      syncRecordings(handle, initial, toArray(dlr));
     })
     .catch(() => {});
 

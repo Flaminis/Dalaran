@@ -334,7 +334,7 @@ export type SelectionChangeEvent = ViewerEventBase & {
 /**
  * Fired when a new recording is opened in the Viewer.
  *
- * For `rrd` file or stream, a recording is considered "open" after
+ * For `dlr` file or stream, a recording is considered "open" after
  * enough information about the recording, such as its ID and source,
  * is received.
  *
@@ -452,7 +452,7 @@ function resolveAbsoluteUrl(url: string): string {
  * ```
  *
  * Data may be provided to the Viewer as:
- * - An HTTP file URL, e.g. `viewer.start("https://app.dalaran.dev/version/0.35.0/examples/dna.rrd")`
+ * - An HTTP file URL, e.g. `viewer.start("https://app.dalaran.dev/version/0.35.0/examples/dna.dlr")`
  * - A Dalaran gRPC URL, e.g. `viewer.start("dalaran+http://127.0.0.1:9876/proxy")`
  * - A stream of log messages, via {@link WebViewer.open_channel}.
  *
@@ -483,12 +483,12 @@ export class WebViewer {
   /**
    * Start the viewer.
    *
-   * @param rrd URLs to `.rrd` files or gRPC connections to our SDK.
+   * @param dlr URLs to `.dlr` files or gRPC connections to our SDK.
    * @param parent The element to attach the canvas onto.
    * @param options Web Viewer configuration.
    */
   async start(
-    rrd: string | string[] | null,
+    dlr: string | string[] | null,
     parent: HTMLElement | null,
     options: WebViewerOptions | null,
   ): Promise<void> {
@@ -611,8 +611,8 @@ export class WebViewer {
     this.#state = "ready";
     this.#dispatch_event("ready");
 
-    if (rrd) {
-      this.open(rrd);
+    if (dlr) {
+      this.open(dlr);
     }
 
     let self = this;
@@ -763,14 +763,14 @@ export class WebViewer {
    *
    * The viewer must have been started via {@link WebViewer.start}.
    *
-   * @param rrd URLs to `.rrd` files or gRPC connections to our SDK.
+   * @param dlr URLs to `.dlr` files or gRPC connections to our SDK.
    */
-  open(rrd: string | string[]) {
+  open(dlr: string | string[]) {
     if (!this.#handle) {
-      throw new Error(`attempted to open \`${rrd}\` in a stopped viewer`);
+      throw new Error(`attempted to open \`${dlr}\` in a stopped viewer`);
     }
 
-    const urls = Array.isArray(rrd) ? rrd : [rrd];
+    const urls = Array.isArray(dlr) ? dlr : [dlr];
     for (const url of urls) {
       try {
         this.#handle.add_receiver(url);
@@ -786,14 +786,14 @@ export class WebViewer {
    *
    * The viewer must have been started via {@link WebViewer.start}.
    *
-   * @param rrd URLs to `.rrd` files or gRPC connections to our SDK.
+   * @param dlr URLs to `.dlr` files or gRPC connections to our SDK.
    */
-  close(rrd: string | string[]) {
+  close(dlr: string | string[]) {
     if (!this.#handle) {
-      throw new Error(`attempted to close \`${rrd}\` in a stopped viewer`);
+      throw new Error(`attempted to close \`${dlr}\` in a stopped viewer`);
     }
 
-    const urls = Array.isArray(rrd) ? rrd : [rrd];
+    const urls = Array.isArray(dlr) ? dlr : [dlr];
     for (const url of urls) {
       try {
         this.#handle.remove_receiver(url);
@@ -876,7 +876,7 @@ export class WebViewer {
   /**
    * Opens a new channel for sending log messages.
    *
-   * The channel can be used to incrementally push `rrd` chunks into the viewer.
+   * The channel can be used to incrementally push `dlr` chunks into the viewer.
    *
    * @param channel_name used to identify the channel.
    */
@@ -904,7 +904,7 @@ export class WebViewer {
       }
 
       try {
-        this.#handle.send_rrd_to_channel(id, data);
+        this.#handle.send_dlr_to_channel(id, data);
       } catch (e) {
         this.#fail("Failed to send data", String(e));
         throw e;
@@ -1260,15 +1260,15 @@ export class LogChannel {
   }
 
   /**
-   * Send an `rrd` containing log messages to the viewer.
+   * Send an `dlr` containing log messages to the viewer.
    *
    * Does nothing if `!this.ready`.
    *
-   * @param rrd_bytes Is an rrd file stored in a byte array, received via some other side channel.
+   * @param dlr_bytes Is an dlr file stored in a byte array, received via some other side channel.
    */
-  send_rrd(rrd_bytes: Uint8Array) {
+  send_dlr(dlr_bytes: Uint8Array) {
     if (!this.ready) return;
-    this.#on_send(rrd_bytes);
+    this.#on_send(dlr_bytes);
   }
 
   send_table(table_bytes: Uint8Array) {

@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
       // Dalaran
       ("spawn", "Start a new Dalaran Viewer process and feed it data in real-time")
       ("connect", "Connects and sends the logged data to a remote Dalaran viewer")
-      ("save", "Log data to an rrd file", cxxopts::value<std::string>())
+      ("save", "Log data to an dlr file", cxxopts::value<std::string>())
       ("stdout", "Log data to standard output, to be piped into a Dalaran Viewer")
       // Example
       ("from-contents", "Log the contents of the file directly (files only -- not supported by external loaders)", cxxopts::value<bool>()->default_value("false"))

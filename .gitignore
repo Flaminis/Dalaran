@@ -15,8 +15,8 @@ __MACOSX
 **/cmake_install.cmake
 _deps
 **/.cache/
-**/rerun_cpp/docs/html
-**/rerun_cpp/docs/xml
+**/dalaran_cpp/docs/html
+**/dalaran_cpp/docs/xml
 *.tgz
 
 # User-specific VSCode C++ extension config:
@@ -50,7 +50,7 @@ __pycache__
 # Pixi environment
 .pixi
 
-# Generated shims (created by ensure-rerun-env)
+# Generated shims (created by ensure-dalaran-env)
 scripts/pixi/uv
 scripts/pixi/uv.exe
 scripts/pixi/uvpy
@@ -68,7 +68,7 @@ perf.data*
 # Screenshots from samples etc.
 screenshot*.png
 
-# Saved example `.rrd` files
+# Saved example `.dlr` files
 example_data
 
 # Various builds
@@ -90,8 +90,8 @@ mesa.7z
 mesa.tar.xz
 icd.json
 
-# Temporary RRD files. Don't blanket ignore them since we check in some for backwards compatibility tests.
-docs/snippets/**/*.rrd
+# Temporary DLR files. Don't blanket ignore them since we check in some for backwards compatibility tests.
+docs/snippets/**/*.dlr
 
 /meilisearch
 

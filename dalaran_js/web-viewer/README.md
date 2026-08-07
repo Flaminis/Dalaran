@@ -21,9 +21,9 @@ npm i @dalaran/web-viewer
 ```
 
 ℹ️ Note:
-The package version is equal to the supported Dalaran SDK version, and [RRD files are only partially stable across different versions](https://dalaran.dev/blog/release-0.23).
+The package version is equal to the supported Dalaran SDK version, and [DLR files are only partially stable across different versions](https://dalaran.dev/blog/release-0.23).
 This means that:
-- `@dalaran/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) that originates from a Dalaran SDK with version `0.10.0`!
+- `@dalaran/web-viewer@0.10.0` can only connect to a data source (`.dlr` file, gRPC connection, etc.) that originates from a Dalaran SDK with version `0.10.0`!
 - For versions after `@dalaran/web-viewer@0.23.0`, the Viewer can load data from the previous _minor_ version of Dalaran, e.g. `0.24` can load `0.23` files.
 
 ## Usage
@@ -34,20 +34,20 @@ The web viewer is an object which manages a canvas element:
 ```js
 import { WebViewer } from "@dalaran/web-viewer";
 
-const rrd = "…";
+const dlr = "…";
 const parentElement = document.body;
 
 const viewer = new WebViewer();
-await viewer.start(rrd, parentElement, { width: "800px", height: "600px" });
+await viewer.start(dlr, parentElement, { width: "800px", height: "600px" });
 // …
 viewer.stop();
 ```
 
-The `rrd` in the snippet above should be a URL pointing to either:
-- A hosted `.rrd` file, such as <https://app.dalaran.dev/version/0.35.0/examples/dna.rrd>
+The `dlr` in the snippet above should be a URL pointing to either:
+- A hosted `.dlr` file, such as <https://app.dalaran.dev/version/0.35.0/examples/dna.dlr>
 - A gRPC connection to the SDK opened via the [`serve`](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API
 
-If `rrd` is not set, the Viewer will display the same welcome screen as <https://app.dalaran.dev>.
+If `dlr` is not set, the Viewer will display the same welcome screen as <https://app.dalaran.dev>.
 This can be disabled by setting `hide_welcome_screen` to `true` in the options object of `viewer.start`.
 
 ⚠ It's important to set the viewer's width and height, as without it the viewer may not display correctly.

@@ -809,14 +809,14 @@ pub(super) fn playable_stream(
         .unwrap()
 }
 
-pub(super) fn load_into_rrd_manifest(store: &mut EntityDb, chunks: &[Arc<Chunk>]) {
+pub(super) fn load_into_dlr_manifest(store: &mut EntityDb, chunks: &[Arc<Chunk>]) {
     let manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
         store.store_id().clone(),
         chunks.iter().map(|c| &**c),
     )
     .unwrap();
 
-    store.add_rrd_manifest_message(manifest);
+    store.add_dlr_manifest_message(manifest);
 }
 
 #[track_caller]

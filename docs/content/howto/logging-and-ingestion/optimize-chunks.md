@@ -57,11 +57,11 @@ Constraints:
 
 ## Inspecting and compacting chunks with the Dalaran CLI
 
-Dalaran offers CLI tools to inspect and optimize .rrd recordings or streamed data files.
+Dalaran offers CLI tools to inspect and optimize .dlr recordings or streamed data files.
 
-Use [`dalaran rrd stats`](../../reference/cli.md#dalaran-rrd-stats) to view stats like chunk counts, sizes, and row distributions. This helps you determine if compaction is needed. For example:
+Use [`dalaran dlr stats`](../../reference/cli.md#dalaran-dlr-stats) to view stats like chunk counts, sizes, and row distributions. This helps you determine if compaction is needed. For example:
 ```sh
-$ dalaran rrd stats <(curl 'https://app.dalaran.dev/version/latest/examples/nuscenes_dataset.rrd')
+$ dalaran dlr stats <(curl 'https://app.dalaran.dev/version/latest/examples/nuscenes_dataset.dlr')
 
 Overview
 ----------
@@ -95,12 +95,12 @@ ipc_size_bytes_p999 = 568 KiB
 # … truncated …
 ```
 
-If a file contains many small chunks, run [`dalaran rrd optimize`](../../reference/cli.md#dalaran-rrd-optimize) to rewrite it with fewer, larger chunks. For example:
+If a file contains many small chunks, run [`dalaran dlr optimize`](../../reference/cli.md#dalaran-dlr-optimize) to rewrite it with fewer, larger chunks. For example:
 ```sh
-$ dalaran rrd optimize --max-size 2MiB -o nuscenes_compacted.rrd <(curl 'https://app.dalaran.dev/version/latest/examples/nuscenes_dataset.rrd')
+$ dalaran dlr optimize --max-size 2MiB -o nuscenes_compacted.dlr <(curl 'https://app.dalaran.dev/version/latest/examples/nuscenes_dataset.dlr')
 merge/compaction finished srcs=["/dev/fd/63"] time=2.51217062s num_chunks_before=576 num_chunks_after=217 num_chunks_reduction="-62.326%" srcs_size_bytes=90.0 MiB dst_size_bytes=89.6 MiB size_reduction="-0.474%"
 
-$ rrd stats nuscenes_compacted.rrd
+$ dlr stats nuscenes_compacted.dlr
 Overview
 ----------
 num_chunks = 278
@@ -138,9 +138,9 @@ This produces a new file where chunks have been merged up to the size and row th
 Because it runs offline, the CLI compactor has full access to the dataset and no real-time constraints, making it the most effective tool for optimal compaction. It's a good idea to compact files ahead of time if they’ll be queried or visualized repeatedly.
 
 > [!WARNING]
-> `dalaran rrd optimize` will automatically migrate the data to the latest version of the RRD protocol, if needed.
+> `dalaran dlr optimize` will automatically migrate the data to the latest version of the DLR protocol, if needed.
 
-Note that `dalaran rrd optimize` ships two preset profiles, selected with `--profile`, that set sensible thresholds for two common targets:
+Note that `dalaran dlr optimize` ships two preset profiles, selected with `--profile`, that set sensible thresholds for two common targets:
 
 * `object-store` *(default)* — large chunks (up to ~65k rows, ~2 MiB), tuned for object-store-backed datasets stored on catalog servers, where query throughput and network streaming matter most.
 * `live` — small chunks (up to ~4096 rows, ~384 KiB), tuned for the live-Viewer workflow where the time panel benefits from finer-grained resolution.
@@ -155,7 +155,7 @@ Constraints:
 
 ## Compacting chunks with the chunk processing API
 
-The same compaction logic that powers `dalaran rrd optimize` is exposed in the [Chunk Processing API](../../concepts/logging-and-ingestion/chunk-processing-api.md), so you can fold optimization into a Python ingestion or conversion pipeline rather than running it as a separate CLI step:
+The same compaction logic that powers `dalaran dlr optimize` is exposed in the [Chunk Processing API](../../concepts/logging-and-ingestion/chunk-processing-api.md), so you can fold optimization into a Python ingestion or conversion pipeline rather than running it as a separate CLI step:
 
 snippet: howto/optimize_chunks[optimize]
 
@@ -173,5 +173,5 @@ snippet: howto/optimize_chunks[optimize]
 * Dalaran applies micro-batching and compaction by default, but optimal settings vary per use case.
 * Compaction can (and should) happen at multiple stages, each with different tradeoffs, operating under very different constraints.
 * Once data has been recorded, two complementary tools let you preemptively optimize it for downstream use:
-    * The Dalaran CLI: `dalaran rrd stats` to diagnose, `dalaran rrd optimize` for one-shot offline compaction.
+    * The Dalaran CLI: `dalaran dlr stats` to diagnose, `dalaran dlr optimize` for one-shot offline compaction.
     * The [Chunk Processing API](../../concepts/logging-and-ingestion/chunk-processing-api.md): same compaction logic, exposed in-process so you can fold it into a Python ingestion or conversion pipeline via `collect(optimize=OptimizationProfile.…)`.

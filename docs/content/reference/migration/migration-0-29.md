@@ -81,7 +81,7 @@ If you still need to use any functionality directly you can still find them in t
 
 ## Overrides in blueprint files can't be imported
 
-Dalaran 0.29 cannot currently load component overrides from `.rbl` files created in previous versions. Support for legacy overrides is coming soon.
+Dalaran 0.29 cannot currently load component overrides from `.dbl` files created in previous versions. Support for legacy overrides is coming soon.
 
 ## Dataset re-registration required to fix missing `name` and `start_time` in segment table
 

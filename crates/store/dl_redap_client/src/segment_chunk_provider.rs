@@ -40,7 +40,7 @@ impl SegmentChunkProvider {
     ) -> Result<Self, ApiError> {
         let mut client = connection_registry.client(origin.clone()).await?;
         let raw_manifest = client
-            .get_rrd_manifest(dataset_id, segment_id.clone())
+            .get_dlr_manifest(dataset_id, segment_id.clone())
             .await?;
         let raw_manifest = Arc::new(raw_manifest);
 

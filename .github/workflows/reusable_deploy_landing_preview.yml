@@ -54,15 +54,15 @@ jobs:
         env:
           ISR_BYPASS_TOKEN: ${{ secrets.ISR_BYPASS_TOKEN }}
           PR_NUMBER: ${{ inputs.PR_NUMBER }}
-          RERUN_COMMIT: ${{ steps.get-sha.outputs.sha }}
+          DALARAN_COMMIT: ${{ steps.get-sha.outputs.sha }}
         run: |
-          # PR previews live under `gs://rerun-docs/prose/pr-{N}/` and
+          # PR previews live under `gs://dalaran-docs/prose/pr-{N}/` and
           # are not advertised in versions.json. The production website
           # reads them directly via `/docs/pr-{N}/…`, so re-uploads
           # must purge that subtree from the edge ISR cache.
           pixi run uv run scripts/ci/upload_docs.py upload \
             --version "pr-${PR_NUMBER}" \
-            --rerun-commit "$RERUN_COMMIT" \
+            --dalaran-commit "$DALARAN_COMMIT" \
             --purge-token "$ISR_BYPASS_TOKEN"
 
       - name: Create PR comment
@@ -78,7 +78,7 @@ jobs:
 
             | Result | Commit  | Link  |
             | ------ | ------- | ----- |
-            | ✅ | ${{ steps.get-sha.outputs.sha }} | https://rerun.io/docs/pr-${{ inputs.PR_NUMBER }} |
+            | ✅ | ${{ steps.get-sha.outputs.sha }} | https://dalaran.dev/docs/pr-${{ inputs.PR_NUMBER }} |
 
             <sup>Note: This comment is updated whenever you push a commit.</sup>
 

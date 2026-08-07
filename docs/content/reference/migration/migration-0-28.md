@@ -48,20 +48,20 @@ The following component types have been removed in favor of their more general c
 * `components.PoseRotationAxisAngle` → `components.RotationAxisAngle`
 * `components.PoseScale3D` →  `components.Scale3D`
 
-Existing `.rrd` files will be automatically migrated when opened.
+Existing `.dlr` files will be automatically migrated when opened.
 
 ## `Transform3D` no longer supports `axis_length` for visualizing coordinate axes
 
 The `axis_length` parameter/method has been moved from `Transform3D` to a new `TransformAxes3D` archetype, which you can log alongside of `Transform3D`.
 This new archetype also works with the `CoordinateFrame` archetype.
 
-Existing `.rrd` recordings will be automatically migrated when opened (the migration converts `Transform3D:axis_length` components to `TransformAxes3D:axis_length`).
+Existing `.dlr` recordings will be automatically migrated when opened (the migration converts `Transform3D:axis_length` components to `TransformAxes3D:axis_length`).
 
 ## `CoordinateFrame::frame_id` has been renamed to `CoordinateFrame::frame`
 
 The `frame_id` component of `CoordinateFrame` has been renamed to just `frame`, because the component type `TransformFrameId` already conveys the information that this is an id.
 
-Existing `.rrd` recordings will be automatically migrated when opened (the migration renames the `frame_id` component).
+Existing `.dlr` recordings will be automatically migrated when opened (the migration renames the `frame_id` component).
 
 ## Changes to `Transform3D`/`InstancePose3D` and `Pinhole`'s transform properties are now treated transactionally by the Viewer
 
@@ -233,10 +233,10 @@ The dataset segment registration APIs have been consolidated, and return a `Regi
 
 ```python
 # Single registration
-segment_id = dataset.register("s3://bucket/recording.rrd").wait().segment_ids[0]
+segment_id = dataset.register("s3://bucket/recording.dlr").wait().segment_ids[0]
 
 # Batch registration
-handle = dataset.register(["file:///uri1.rrd", "file:///uri2.rrd"], layer_name="base")
+handle = dataset.register(["file:///uri1.dlr", "file:///uri2.dlr"], layer_name="base")
 segment_ids = handle.wait().segment_ids
 
 # Progress tracking
@@ -309,7 +309,7 @@ The `RecordingView` class, along with `Recording.view()` and the ability to run 
 import dalaran as dl
 
 # Load a recording file
-recording = dl.dataframe.load_recording("recording.rrd")
+recording = dl.dataframe.load_recording("recording.dlr")
 
 # Create a view and query
 view = recording.view(index="frame_nr", contents="/world/**")
@@ -329,7 +329,7 @@ import dalaran as dl
 from datafusion import col
 
 # Start a local server with the recording
-with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.dlr"]}) as server:
     client = server.client()
     dataset = client.get_dataset("my_dataset")
 
@@ -390,9 +390,9 @@ def create_recording(data, filename):
 def my_app():
     ...
 
-    create_recording(data1, "data1.rrd")
-    create_recording(data2, "data2.rrd")
-    create_recording(data3, "data3.rrd")
+    create_recording(data1, "data1.dlr")
+    create_recording(data2, "data2.dlr")
+    create_recording(data3, "data3.dlr")
 ```
 
 **Before**

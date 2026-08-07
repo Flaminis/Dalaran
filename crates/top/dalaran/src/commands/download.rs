@@ -6,17 +6,17 @@ use parking_lot::Mutex;
 use dl_data_source::{FromUriOptions, LogDataSource};
 use dl_log_channel::DataSourceMessage;
 
-/// Download recordings and save them as `.rrd` files.
+/// Download recordings and save them as `.dlr` files.
 ///
 /// Supports any URI that Dalaran can load: gRPC dataset segment URLs,
-/// HTTP URLs to `.rrd` files, local file paths, etc.
+/// HTTP URLs to `.dlr` files, local file paths, etc.
 #[derive(Debug, Clone, clap::Parser)]
 pub struct DownloadCommand {
     /// One or more URIs to download.
     #[clap(required = true)]
     urls: Vec<String>,
 
-    /// Override the output directory for the downloaded `.rrd` files.
+    /// Override the output directory for the downloaded `.dlr` files.
     ///
     /// Defaults to the current working directory.
     #[clap(short, long)]
@@ -105,7 +105,7 @@ impl DownloadCommand {
 
             eprintln!("Downloading {readable_url}…");
 
-            save_to_rrd(&rx, &output_path)?;
+            save_to_dlr(&rx, &output_path)?;
 
             // Check if the async streaming task encountered an auth error.
             if let Some(auth_err_msg) = auth_error.lock().take() {
@@ -210,42 +210,42 @@ fn ensure_credentials(
     Ok(())
 }
 
-/// Derive an output `.rrd` filename from the data source.
+/// Derive an output `.dlr` filename from the data source.
 fn output_filename(data_source: &LogDataSource, original_url: &str) -> std::path::PathBuf {
     match data_source {
-        LogDataSource::RedapDatasetSegment { uri, .. } => format!("{}.rrd", uri.segment_id).into(),
+        LogDataSource::RedapDatasetSegment { uri, .. } => format!("{}.dlr", uri.segment_id).into(),
 
         #[cfg(not(target_arch = "wasm32"))]
         LogDataSource::FilePath { path, .. } => path
             .file_name()
             .map(Into::into)
-            .unwrap_or_else(|| "output.rrd".into()),
+            .unwrap_or_else(|| "output.dlr".into()),
 
         LogDataSource::HttpUrl { url, .. } => {
             let path = url.path();
-            let filename = path.rsplit('/').next().unwrap_or("output.rrd");
+            let filename = path.rsplit('/').next().unwrap_or("output.dlr");
             if filename.is_empty() {
-                "output.rrd".into()
-            } else if filename.ends_with(".rrd") || filename.ends_with(".rbl") {
+                "output.dlr".into()
+            } else if filename.ends_with(".dlr") || filename.ends_with(".dbl") {
                 filename.into()
             } else {
-                format!("{filename}.rrd").into()
+                format!("{filename}.dlr").into()
             }
         }
 
         _ => {
             dl_log::warn!("Cannot derive filename from {original_url:?}, using fallback");
-            "output.rrd".into()
+            "output.dlr".into()
         }
     }
 }
 
-/// Receive all messages from the channel and write them to an `.rrd` file.
-fn save_to_rrd(
+/// Receive all messages from the channel and write them to an `.dlr` file.
+fn save_to_dlr(
     rx: &dl_log_channel::LogReceiver,
     output_path: &std::path::Path,
 ) -> anyhow::Result<()> {
-    let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let encoding_options = dl_log_encoding::dlr::EncodingOptions::PROTOBUF_COMPRESSED;
     let file = std::fs::File::create(output_path)?;
     let mut encoder = dl_log_encoding::Encoder::new_eager(
         dl_build_info::CrateVersion::LOCAL,
@@ -260,7 +260,7 @@ fn save_to_rrd(
                     encoder.append(&log_msg)?;
                 }
                 other => {
-                    dl_log::trace!("Skipping {} (not storable in .rrd)", other.variant_name());
+                    dl_log::trace!("Skipping {} (not storable in .dlr)", other.variant_name());
                 }
             }
         }

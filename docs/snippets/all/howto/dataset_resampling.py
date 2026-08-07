@@ -8,12 +8,12 @@ from datafusion import col
 
 import dalaran as dl
 
-TMP_FILE = tempfile.NamedTemporaryFile(suffix=".rrd")
-RRD_PATH = TMP_FILE.name
+TMP_FILE = tempfile.NamedTemporaryFile(suffix=".dlr")
+DLR_PATH = TMP_FILE.name
 
 # region: get_dataset
 sample_dataset_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "dataset"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "dataset"
 )
 server = dl.server.Server(datasets={"dataset": sample_dataset_path})
 # Using OSS server for demonstration but in practice replace with

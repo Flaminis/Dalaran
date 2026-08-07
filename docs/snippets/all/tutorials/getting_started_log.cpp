@@ -5,7 +5,7 @@
 int main(int argc, char* argv[]) {
     const auto rec =
         dalaran::RecordingStream("dalaran_example_getting_started", "run-1");
-    rec.save("run-1.rrd").exit_on_failure();
+    rec.save("run-1.dlr").exit_on_failure();
 
     for (int t = 0; t < 10; ++t) {
         rec.set_time_sequence("step", t);

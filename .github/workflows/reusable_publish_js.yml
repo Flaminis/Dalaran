@@ -73,13 +73,13 @@ jobs:
 
       - name: Publish packages
         run: |
-          pixi run node rerun_js/scripts/publish.mjs
+          pixi run node dalaran_js/scripts/publish.mjs
 
-      - name: "Upload rerun_js to GCS (version)"
+      - name: "Upload dalaran_js to GCS (version)"
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "rerun_js_package"
-          destination: "rerun-builds/version/${{ inputs.release-version }}/rerun_js"
+          path: "dalaran_js_package"
+          destination: "dalaran-builds/version/${{ inputs.release-version }}/dalaran_js"
           parent: false
           process_gcloudignore: false
           headers: |-
@@ -87,11 +87,11 @@ jobs:
           gzip: false
 
       # TODO(#11625): we need this for asset sync, in case the PR workflow fails (or doesn't run). See issue for details.
-      - name: "Upload rerun_js to GCS (commit)"
+      - name: "Upload dalaran_js to GCS (commit)"
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "rerun_js_package"
-          destination: "rerun-builds/commit/${{ needs.get-commit-sha.outputs.short-sha }}/rerun_js"
+          path: "dalaran_js_package"
+          destination: "dalaran-builds/commit/${{ needs.get-commit-sha.outputs.short-sha }}/dalaran_js"
           parent: false
           process_gcloudignore: false
           headers: |-

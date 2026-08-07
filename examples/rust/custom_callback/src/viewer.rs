@@ -1,8 +1,8 @@
 use custom_callback::comms::viewer::ControlViewer;
 use custom_callback::panel::Control;
-use rerun::external::{eframe, dl_crash_handler, dl_grpc_server, dl_log, dl_memory, dl_viewer};
+use dalaran::external::{eframe, dl_crash_handler, dl_grpc_server, dl_log, dl_memory, dl_viewer};
 
-// By using `dl_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
+// By using `dl_memory::AccountingAllocator` Dalaran can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.
 // By using `mimalloc` we get faster allocations.
 #[global_allocator]
@@ -19,10 +19,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dl_log::setup_logging();
 
     // Install handlers for panics and crashes that prints to stderr and send
-    // them to Rerun analytics (if the `analytics` feature is on in `Cargo.toml`).
+    // them to Dalaran analytics (if the `analytics` feature is on in `Cargo.toml`).
     dl_crash_handler::install_crash_handlers(dl_viewer::build_info());
 
-    // Listen for gRPC connections from Rerun's logging SDKs.
+    // Listen for gRPC connections from Dalaran's logging SDKs.
     // There are other ways of "feeding" the viewer though - all you need is a `dl_log_channel::LogReceiver`.
     let (rx_log, _grpc_server_handle) = dl_grpc_server::spawn_with_recv(
         "0.0.0.0:9877".parse()?,
@@ -39,24 +39,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         viewer.run().await;
     });
 
-    // Then we start the Rerun viewer
+    // Then we start the Dalaran viewer
     let mut native_options = dl_viewer::native::eframe_options(None);
     native_options.viewport = native_options
         .viewport
-        .with_app_id("rerun_example_custom_callback");
+        .with_app_id("dalaran_example_custom_callback");
 
     // This is used for analytics, if the `analytics` feature is on in `Cargo.toml`
     let app_env = dl_viewer::AppEnvironment::Custom("My Custom Callback".to_owned());
 
     let startup_options = dl_viewer::StartupOptions::default();
-    let window_title = "Rerun Control Panel";
+    let window_title = "Dalaran Control Panel";
     eframe::run_native(
         window_title,
         native_options,
         Box::new(move |cc| {
             dl_viewer::customize_eframe_and_setup_renderer(cc)?;
 
-            let mut rerun_app = dl_viewer::App::new(
+            let mut dalaran_app = dl_viewer::App::new(
                 main_thread_token,
                 dl_viewer::build_info(),
                 app_env,
@@ -66,9 +66,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 dl_viewer::AsyncRuntimeHandle::from_current_tokio_runtime_or_wasmbindgen()?,
             );
 
-            rerun_app.add_log_receiver(rx_log);
+            dalaran_app.add_log_receiver(rx_log);
 
-            Ok(Box::new(Control::new(rerun_app, handle)))
+            Ok(Box::new(Control::new(dalaran_app, handle)))
         }),
     )?;
 

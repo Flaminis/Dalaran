@@ -17,18 +17,18 @@ if TYPE_CHECKING:
 
     from syrupy.assertion import SnapshotAssertion
 
-LAZY_RRD_APPLICATION_ID = "dalaran_example_lazy_test_app"
-LAZY_RRD_RECORDING_ID = "lazy-rrd-rec-id"
+LAZY_DLR_APPLICATION_ID = "dalaran_example_lazy_test_app"
+LAZY_DLR_RECORDING_ID = "lazy-dlr-rec-id"
 
 
 @pytest.fixture(scope="session")
-def lazy_rrd_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """RRD with known structure, suitable for lazy loading tests."""
+def lazy_dlr_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """DLR with known structure, suitable for lazy loading tests."""
 
-    rrd_path = tmp_path_factory.mktemp("lazy") / "test.rrd"
+    dlr_path = tmp_path_factory.mktemp("lazy") / "test.dlr"
 
-    with dl.RecordingStream(LAZY_RRD_APPLICATION_ID, recording_id=LAZY_RRD_RECORDING_ID) as rec:
-        rec.save(rrd_path)
+    with dl.RecordingStream(LAZY_DLR_APPLICATION_ID, recording_id=LAZY_DLR_RECORDING_ID) as rec:
+        rec.save(dlr_path)
 
         for i in range(5):
             rec.send_columns(
@@ -37,25 +37,25 @@ def lazy_rrd_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
                 columns=dl.Scalars.columns(scalars=[float(j) for j in range(10)]),
             )
 
-    return rrd_path
+    return dlr_path
 
 
-def test_store_returns_lazy_store(lazy_rrd_path: Path) -> None:
+def test_store_returns_lazy_store(lazy_dlr_path: Path) -> None:
     """RrdReader.store() returns a LazyStore."""
-    store = RrdReader(lazy_rrd_path).store()
+    store = RrdReader(lazy_dlr_path).store()
     assert isinstance(store, LazyStore)
 
 
-def test_lazy_store_has_schema(lazy_rrd_path: Path) -> None:
+def test_lazy_store_has_schema(lazy_dlr_path: Path) -> None:
     """Lazy store should have a schema even before loading chunk data."""
-    store = RrdReader(lazy_rrd_path).store()
+    store = RrdReader(lazy_dlr_path).store()
     schema = store.schema()
     assert schema is not None
 
 
-def test_lazy_store_stream_to_chunks(lazy_rrd_path: Path) -> None:
+def test_lazy_store_stream_to_chunks(lazy_dlr_path: Path) -> None:
     """Lazy store's stream should produce the same chunks as direct streaming."""
-    reader = RrdReader(lazy_rrd_path)
+    reader = RrdReader(lazy_dlr_path)
 
     store_chunks = reader.store().stream().to_chunks()
     stream_chunks = reader.stream().to_chunks()
@@ -69,13 +69,13 @@ def test_lazy_store_stream_to_chunks(lazy_rrd_path: Path) -> None:
     assert store_entities == stream_entities
 
 
-def test_lazy_store_roundtrip(lazy_rrd_path: Path, tmp_path: Path) -> None:
-    """Write a lazily-loaded store to a new RRD and reload it."""
-    store = RrdReader(lazy_rrd_path).store()
+def test_lazy_store_roundtrip(lazy_dlr_path: Path, tmp_path: Path) -> None:
+    """Write a lazily-loaded store to a new DLR and reload it."""
+    store = RrdReader(lazy_dlr_path).store()
     original_chunks = store.stream().to_chunks()
 
-    out_path = tmp_path / "roundtrip.rrd"
-    store.stream().write_rrd(
+    out_path = tmp_path / "roundtrip.dlr"
+    store.stream().write_dlr(
         str(out_path),
         application_id="roundtrip_test",
         recording_id="roundtrip-id",
@@ -85,9 +85,9 @@ def test_lazy_store_roundtrip(lazy_rrd_path: Path, tmp_path: Path) -> None:
     assert len(reloaded_chunks) == len(original_chunks)
 
 
-def test_lazy_store_filter(lazy_rrd_path: Path) -> None:
+def test_lazy_store_filter(lazy_dlr_path: Path) -> None:
     """Filtering on a lazy store's stream should work."""
-    store = RrdReader(lazy_rrd_path).store()
+    store = RrdReader(lazy_dlr_path).store()
     filtered = store.stream().filter(content="/entity_0").to_chunks()
 
     assert len(filtered) > 0
@@ -95,7 +95,7 @@ def test_lazy_store_filter(lazy_rrd_path: Path) -> None:
         assert str(chunk.entity_path) == "/entity_0"
 
 
-def test_lazy_store_filter_only_loads_matching(lazy_rrd_path: Path) -> None:
+def test_lazy_store_filter_only_loads_matching(lazy_dlr_path: Path) -> None:
     """
     Filter pushdown must actually skip non-matching chunks at the I/O layer.
 
@@ -104,7 +104,7 @@ def test_lazy_store_filter_only_loads_matching(lazy_rrd_path: Path) -> None:
     (correct chunks returned), but every chunk paid I/O. The `_chunks_loaded` counter on
     `LazyStore` distinguishes the two: pushdown means `_chunks_loaded == len(filtered)`.
     """
-    store = RrdReader(lazy_rrd_path).store()
+    store = RrdReader(lazy_dlr_path).store()
     total = len(store)
 
     # Nothing loaded yet — manifest is in memory but no chunk data has been read.
@@ -120,52 +120,52 @@ def test_lazy_store_filter_only_loads_matching(lazy_rrd_path: Path) -> None:
     )
 
 
-def test_lazy_store_filter_is_static(test_rrd_path: Path) -> None:
+def test_lazy_store_filter_is_static(test_dlr_path: Path) -> None:
     """
     `is_static=True` on a lazy store's stream returns only static chunks.
 
-    Uses `test_rrd_path` (from `conftest.py`) because it includes a static `/config` entity;
-    `lazy_rrd_path` is temporal-only.
+    Uses `test_dlr_path` (from `conftest.py`) because it includes a static `/config` entity;
+    `lazy_dlr_path` is temporal-only.
     """
-    chunks = RrdReader(test_rrd_path).store().stream().filter(is_static=True).to_chunks()
+    chunks = RrdReader(test_dlr_path).store().stream().filter(is_static=True).to_chunks()
 
     assert chunks, "expected at least one static chunk (e.g. /config)"
     for chunk in chunks:
         assert chunk.is_static, f"unexpected non-static chunk at {chunk.entity_path}"
 
 
-def test_lazy_store_collect_optimize(lazy_rrd_path: Path) -> None:
+def test_lazy_store_collect_optimize(lazy_dlr_path: Path) -> None:
     """Collecting a lazy store with optimization settings produces a materialized store."""
-    store = RrdReader(lazy_rrd_path).store()
+    store = RrdReader(lazy_dlr_path).store()
     optimized = store.stream().collect(optimize=OptimizationProfile())
 
     chunks = optimized.stream().to_chunks()
     assert len(chunks) > 0
 
 
-def test_summary_round_trip(lazy_rrd_path: Path) -> None:
+def test_summary_round_trip(lazy_dlr_path: Path) -> None:
     """
     `lazy.summary()` matches `lazy.stream().collect().summary()` byte-for-byte.
 
     Caveat: `collect()` runs single-pass insert-time compaction at default config,
-    so this only holds when the source RRD is already optimized (no chunks
-    mergeable under default `ChunkStoreConfig`). The `lazy_rrd_path` fixture
+    so this only holds when the source DLR is already optimized (no chunks
+    mergeable under default `ChunkStoreConfig`). The `lazy_dlr_path` fixture
     uses one `send_columns` call per entity, producing exactly one chunk each
     — already as merged as collect can make them.
     """
-    lazy = RrdReader(lazy_rrd_path).store()
+    lazy = RrdReader(lazy_dlr_path).store()
     assert lazy.summary() == lazy.stream().collect().summary()
 
 
-def test_summary_format(lazy_rrd_path: Path, snapshot: SnapshotAssertion) -> None:
+def test_summary_format(lazy_dlr_path: Path, snapshot: SnapshotAssertion) -> None:
     """Snapshot the manifest-derived summary so the format stays stable."""
-    lazy = RrdReader(lazy_rrd_path).store()
+    lazy = RrdReader(lazy_dlr_path).store()
     assert lazy.summary() == snapshot
 
 
-def test_multiple_store_calls(lazy_rrd_path: Path) -> None:
+def test_multiple_store_calls(lazy_dlr_path: Path) -> None:
     """Multiple .store() calls should return independent stores."""
-    reader = RrdReader(lazy_rrd_path)
+    reader = RrdReader(lazy_dlr_path)
     store1 = reader.store()
     store2 = reader.store()
 
@@ -175,13 +175,13 @@ def test_multiple_store_calls(lazy_rrd_path: Path) -> None:
     assert len(chunks1) == len(chunks2)
 
 
-def test_store_properties(lazy_rrd_path: Path) -> None:
+def test_store_properties(lazy_dlr_path: Path) -> None:
     """Application and recording IDs should be accessible."""
-    reader = RrdReader(lazy_rrd_path)
+    reader = RrdReader(lazy_dlr_path)
     recs = reader.recordings()
     assert len(recs) == 1
-    assert recs[0].application_id == LAZY_RRD_APPLICATION_ID
-    assert recs[0].recording_id == LAZY_RRD_RECORDING_ID
+    assert recs[0].application_id == LAZY_DLR_APPLICATION_ID
+    assert recs[0].recording_id == LAZY_DLR_RECORDING_ID
 
     # Store should also work.
     store = reader.store()

@@ -56,7 +56,7 @@ fn schema_component_key(descr: &ComponentColumnDescriptor) -> SchemaComponentKey
 /// Incrementally maintained store schema.
 ///
 /// Contains [`ChunkColumnDescriptors`], per-entity component sets, and the entity tree.
-/// Updated via [`Self::on_events`] when chunks are inserted or RRD manifests are ingested.
+/// Updated via [`Self::on_events`] when chunks are inserted or DLR manifests are ingested.
 /// The schema itself is purely additive, but the entity tree is pruned on deletions.
 #[derive(Debug, Clone, Default, dl_byte_size::SizeBytes)]
 pub struct StoreSchema {
@@ -305,7 +305,7 @@ impl StoreSchema {
                     }
                 }
                 crate::ChunkStoreDiff::VirtualAddition(vadd) => {
-                    for (entity_path, new_cols) in self.on_rrd_manifest(&vadd.rrd_manifest) {
+                    for (entity_path, new_cols) in self.on_dlr_manifest(&vadd.dlr_manifest) {
                         all_new.entry(entity_path).or_default().extend(new_cols);
                     }
                 }
@@ -381,11 +381,11 @@ impl StoreSchema {
     }
 
     /// Returns newly inserted columns grouped by entity path.
-    fn on_rrd_manifest(
+    fn on_dlr_manifest(
         &mut self,
-        rrd_manifest: &dl_log_encoding::RrdManifest,
+        dlr_manifest: &dl_log_encoding::RrdManifest,
     ) -> Vec<(EntityPath, Vec<ChunkComponentMeta>)> {
-        let sorbet_schema = rrd_manifest.recording_schema();
+        let sorbet_schema = dlr_manifest.recording_schema();
 
         // Update time type registry
         for descr in sorbet_schema.columns.index_columns() {

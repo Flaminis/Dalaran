@@ -34,5 +34,5 @@ Run `dalaran --help` for more.
 
 ### Running a web viewer
 ```sh
-dalaran --web-viewer path/to/file.rrd
+dalaran --web-viewer path/to/file.dlr
 ```

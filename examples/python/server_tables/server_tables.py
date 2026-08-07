@@ -149,7 +149,7 @@ def main() -> None:
 
 def run_example(temp_path: Path) -> None:
     root_path = Path(__file__).parent.parent.parent.parent.resolve()
-    with Server(datasets={DATASET_NAME: root_path / "tests/assets/rrd/dataset"}) as srv:
+    with Server(datasets={DATASET_NAME: root_path / "tests/assets/dlr/dataset"}) as srv:
         client = srv.client()
         dataset = client.get_dataset(name=DATASET_NAME)
 

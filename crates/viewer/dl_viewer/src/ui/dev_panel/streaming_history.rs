@@ -53,7 +53,7 @@ impl StreamingHistory {
                 continue;
             }
 
-            let manifest_index = recording.rrd_manifest_index();
+            let manifest_index = recording.dlr_manifest_index();
             let chunk_requests = manifest_index.chunk_requests();
 
             let bw = chunk_requests.bandwidth().unwrap_or(0.0);

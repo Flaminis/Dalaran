@@ -22,7 +22,7 @@ npm i @dalaran/web-viewer-react
 
 ℹ️ Note:
 The package version is equal to the supported Dalaran SDK version.
-This means that `@dalaran/web-viewer-react@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) that originates from a Dalaran SDK with version `0.10.0`!
+This means that `@dalaran/web-viewer-react@0.10.0` can only connect to a data source (`.dlr` file, gRPC connection, etc.) that originates from a Dalaran SDK with version `0.10.0`!
 
 ## Usage
 
@@ -30,15 +30,15 @@ This means that `@dalaran/web-viewer-react@0.10.0` can only connect to a data so
 import WebViewer from "@dalaran/web-viewer-react";
 
 export default function App() {
-  return <WebViewer width="800px" height="600px" rrd="…"/>
+  return <WebViewer width="800px" height="600px" dlr="…"/>
 }
 ```
 
-The `rrd` in the snippet above should be a URL pointing to either:
-- A hosted `.rrd` file, such as <https://app.dalaran.dev/version/0.35.0/examples/dna.rrd>
+The `dlr` in the snippet above should be a URL pointing to either:
+- A hosted `.dlr` file, such as <https://app.dalaran.dev/version/0.35.0/examples/dna.dlr>
 - A gRPC connection to the SDK opened via the [`serve`](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API
 
-If `rrd` is not set, the Viewer will display the same welcome screen as <https://app.dalaran.dev>.
+If `dlr` is not set, the Viewer will display the same welcome screen as <https://app.dalaran.dev>.
 This can be disabled by setting the `hide_welcome_screen` prop to `true`.
 
 ⚠ It's important to set the viewer's width and height, as without it the viewer may not display correctly.

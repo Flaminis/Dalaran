@@ -33,8 +33,8 @@ Steps to reproduce the behavior:
 **Desktop (please complete the following information):**
  - OS: <!-- e.g. macOS Monterey 12.6 -->
 
-**Rerun version**
-<!-- Paste the output of `rerun --version` here. -->
+**Dalaran version**
+<!-- Paste the output of `dalaran --version` here. -->
 
 **Additional context**
 <!-- Add any other context about the problem here. -->

@@ -4,7 +4,7 @@ These RRDs are an example dataset for testing gRPC calls between dalaran and the
 
 ## Structure
 
-- 20 .rrd files (file1.rrd through file20.rrd)
+- 20 .dlr files (file1.dlr through file20.dlr)
 - Odd-numbered files: 25 rows of data
 - Even-numbered files: 50 rows of data
 - Each file contains:

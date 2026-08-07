@@ -558,7 +558,7 @@ pub struct ChunkStore {
     /// The lineage tree always ends in one of two ways:
     /// * A reference to volatile memory, from which the chunk came from, and that cannot ever be
     ///   reached again.
-    /// * A reference to an RRD manifest, from which the chunk was virtually loaded from, and where
+    /// * A reference to an DLR manifest, from which the chunk was virtually loaded from, and where
     ///   it can still be reached, provided that the associated Redap server still exists.
     ///
     /// For non-manifest chunk lineages this is internally ref counted, and lineages are dropped
@@ -803,7 +803,7 @@ impl ChunkStore {
     ///
     /// See also:
     /// * [`ChunkStore::new`]
-    /// * [`ChunkStore::from_rrd_reader`]
+    /// * [`ChunkStore::from_dlr_reader`]
     #[inline]
     pub fn new(id: StoreId, config: ChunkStoreConfig) -> Self {
         Self {
@@ -1150,22 +1150,22 @@ impl ChunkStore {
 impl ChunkStore {
     /// Instantiate a new `ChunkStore` with the given [`ChunkStoreConfig`].
     ///
-    /// The stores will be prefilled with the data from the given RRD reader.
+    /// The stores will be prefilled with the data from the given DLR reader.
     ///
     /// See also:
     /// * [`ChunkStore::new`]
-    pub fn from_rrd_reader(
+    pub fn from_dlr_reader(
         store_config: &ChunkStoreConfig,
         reader: &mut dyn std::io::Read,
     ) -> anyhow::Result<BTreeMap<StoreId, Self>> {
         use anyhow::Context as _;
 
         let decoder = dl_log_encoding::Decoder::decode_eager(std::io::BufReader::new(reader))
-            .with_context(|| "couldn't decode RRD stream".to_owned())?;
+            .with_context(|| "couldn't decode DLR stream".to_owned())?;
 
         let mut stores = BTreeMap::new();
         for res in decoder {
-            let msg = res.with_context(|| "couldn't decode message from RRD stream".to_owned())?;
+            let msg = res.with_context(|| "couldn't decode message from DLR stream".to_owned())?;
             Self::insert_log_msg(store_config, &mut stores, msg)?;
         }
 
@@ -1174,11 +1174,11 @@ impl ChunkStore {
 
     /// Instantiate a new `ChunkStore` with the given [`ChunkStoreConfig`].
     ///
-    /// The stores will be prefilled with the data from the given RRD reader.
+    /// The stores will be prefilled with the data from the given DLR reader.
     ///
     /// See also:
     /// * [`ChunkStore::new`]
-    pub async fn from_rrd_reader_async(
+    pub async fn from_dlr_reader_async(
         store_config: &ChunkStoreConfig,
         reader: &mut (dyn AsyncRead + Unpin + Send),
     ) -> anyhow::Result<BTreeMap<StoreId, Self>> {
@@ -1187,11 +1187,11 @@ impl ChunkStore {
         let mut decoder =
             dl_log_encoding::Decoder::decode_eager_async(futures::io::BufReader::new(reader))
                 .await
-                .with_context(|| "couldn't decode RRD stream".to_owned())?;
+                .with_context(|| "couldn't decode DLR stream".to_owned())?;
 
         let mut stores = BTreeMap::new();
         while let Some(res) = decoder.next().await {
-            let msg = res.with_context(|| "couldn't decode message from RRD stream".to_owned())?;
+            let msg = res.with_context(|| "couldn't decode message from DLR stream".to_owned())?;
             Self::insert_log_msg(store_config, &mut stores, msg)?;
         }
 
@@ -1258,15 +1258,15 @@ impl ChunkStore {
     /// Wraps the results in [`ChunkStoreHandle`]s.
     ///
     ///
-    /// The stores will be prefilled with the data from the given RRD reader.
+    /// The stores will be prefilled with the data from the given DLR reader.
     ///
     /// See also:
     /// * [`ChunkStore::new_handle`]
-    pub fn handle_from_rrd_reader(
+    pub fn handle_from_dlr_reader(
         store_config: &ChunkStoreConfig,
         mut reader: impl std::io::Read,
     ) -> anyhow::Result<BTreeMap<StoreId, ChunkStoreHandle>> {
-        Ok(Self::from_rrd_reader(store_config, &mut reader)?
+        Ok(Self::from_dlr_reader(store_config, &mut reader)?
             .into_iter()
             .map(|(store_id, store)| (store_id, ChunkStoreHandle::new(store)))
             .collect())
@@ -1274,15 +1274,15 @@ impl ChunkStore {
 
     /// Instantiate new [`ChunkStoreHandle`]s with the given [`ChunkStoreConfig`].
     ///
-    /// The stores will be prefilled with the data from the given RRD reader.
+    /// The stores will be prefilled with the data from the given DLR reader.
     ///
     /// See also:
     /// * [`ChunkStore::new_handle`]
-    pub async fn handle_from_rrd_reader_async<R: AsyncRead + Unpin + Send>(
+    pub async fn handle_from_dlr_reader_async<R: AsyncRead + Unpin + Send>(
         store_config: &ChunkStoreConfig,
         mut reader: R,
     ) -> anyhow::Result<BTreeMap<StoreId, ChunkStoreHandle>> {
-        Ok(Self::from_rrd_reader_async(store_config, &mut reader)
+        Ok(Self::from_dlr_reader_async(store_config, &mut reader)
             .await?
             .into_iter()
             .map(|(store_id, store)| (store_id, ChunkStoreHandle::new(store)))

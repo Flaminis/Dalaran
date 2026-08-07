@@ -7,7 +7,7 @@ if TYPE_CHECKING:
 
 
 class StoreEntry:
-    """Describes a store found in an RRD file."""
+    """Describes a store found in an DLR file."""
 
     _internal: StoreEntryInternal
 

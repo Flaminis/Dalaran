@@ -21,16 +21,16 @@ torch.multiprocessing.set_start_method("spawn", force=True)
 # a short-lived in-process server and the DROID sample dataset shipped with
 # the repo.
 sample_5_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "sample_5"
 )
 server = dl.server.Server()
-rrd_paths = list(sample_5_path.glob("*.rrd"))
+dlr_paths = list(sample_5_path.glob("*.dlr"))
 
 # region: register
 client = dl.catalog.CatalogClient(server.url())
 dataset = client.create_dataset("my_robot_data", exist_ok=True)
 
-uris = [f"file://{p.resolve()}" for p in rrd_paths]
+uris = [f"file://{p.resolve()}" for p in dlr_paths]
 dataset.register(uris).wait()
 # endregion: register
 

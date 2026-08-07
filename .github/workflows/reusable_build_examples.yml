@@ -52,28 +52,28 @@ jobs:
         with:
           pixi-version: v0.71.3
 
-      - name: Download Rerun Wheel
+      - name: Download Dalaran Wheel
         uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.WHEEL_ARTIFACT_NAME }}
           path: wheel
 
-      - name: Download Rerun Notebook Wheel
+      - name: Download Dalaran Notebook Wheel
         uses: actions/download-artifact@v8
         with:
-          name: rerun_notebook_wheel
+          name: dalaran_notebook_wheel
           path: wheel
 
       - name: Install built wheel
         run: |
-          pixi run python scripts/ci/uv_install_wheel.py --package rerun-sdk --dir wheel
-          pixi run python scripts/ci/uv_install_wheel.py --package rerun-notebook --dir wheel --platform-independent
+          pixi run python scripts/ci/uv_install_wheel.py --package dalaran-sdk --dir wheel
+          pixi run python scripts/ci/uv_install_wheel.py --package dalaran-notebook --dir wheel --platform-independent
 
       - name: Print wheel version
         run: |
-          pixi run uv pip show rerun-sdk
-          pixi run uv pip show rerun-notebook
-          pixi run uvpy -m rerun --version
+          pixi run uv pip show dalaran-sdk
+          pixi run uv pip show dalaran-notebook
+          pixi run uvpy -m dalaran --version
 
       - name: Get sha
         id: get-sha
@@ -83,7 +83,7 @@ jobs:
 
       - name: Build examples
         run: |
-          pixi run build-examples rrd --install \
+          pixi run build-examples dlr --install \
             --channel ${{ inputs.CHANNEL }} \
             example_data
 

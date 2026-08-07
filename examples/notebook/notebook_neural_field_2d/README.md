@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Notebook: 2D neural fields"
-description = "Train a small neural field to fit a 2D image inside Jupyter, with the live training progress logged into Rerun."
+description = "Train a small neural field to fit a 2D image inside Jupyter, with the live training progress logged into Dalaran."
 tags = ["Notebook", "Neural Field", "2D"]
 thumbnail = "https://static.rerun.io/tiger/b38c93f0efe8c5e7bd15270d8bc885128debcbae/480w.png"
 thumbnail_dimensions = [480, 480]
@@ -11,17 +11,17 @@ https://vimeo.com/976650243?autoplay=1&loop=1&autopause=0&background=1&muted=1&r
 
 ## Overview
 
-Rerun can be used directly within [Jupyter](https://jupyter.org/) notebooks.
+Dalaran can be used directly within [Jupyter](https://jupyter.org/) notebooks.
 Many additional environments beyond Jupyter are supported such as [Google Colab](https://colab.research.google.com/)
 or [VSCode](https://code.visualstudio.com/blogs/2021/08/05/notebooks).
 
-You need the separate support package [`rerun-notebook`](https://pypi.org/project/rerun-notebook/) to use this feature. Typically this is installed using:
+You need the separate support package [`dalaran-notebook`](https://pypi.org/project/dalaran-notebook/) to use this feature. Typically this is installed using:
 
 ```bash
-pip install "rerun-sdk[notebook]"
+pip install "dalaran-sdk[notebook]"
 ```
 
-Check out the [minimal notebook example](https://rerun.io/examples/integrations/notebook) for a quick start.
+Check out the [minimal notebook example](https://dalaran.dev/examples/integrations/notebook) for a quick start.
 
 ## Background
 
@@ -33,7 +33,7 @@ Using the notebook we can interactively try different learning rates, losses, an
 
 The easiest way to try out the notebook is to use Jupyter.
 
-First, install the requirements (this includes Jupyter, the Rerun SDK, and the notebook support package)
+First, install the requirements (this includes Jupyter, the Dalaran SDK, and the notebook support package)
 
 ```
 pip install -r requirements.txt

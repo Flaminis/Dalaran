@@ -229,10 +229,10 @@ class Viewer(anywidget.AnyWidget):  # type: ignore[misc]
 
         super().send(content, buffers)
 
-    def send_rrd(self, data: bytes) -> None:
+    def send_dlr(self, data: bytes) -> None:
         """Send a recording to the viewer."""
 
-        self.send({"type": "rrd"}, buffers=[data])
+        self.send({"type": "dlr"}, buffers=[data])
 
     def send_table(self, data: bytes) -> None:
         self.send({"type": "table"}, buffers=[data])

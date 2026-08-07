@@ -81,7 +81,7 @@ def pytest_configure(config: pytest.Config) -> None:
 
     config.addinivalue_line(
         "markers",
-        "local_only: mark test as requiring local resources (e.g., uses RecordingStream to generate .rrd files on-the-fly)",
+        "local_only: mark test as requiring local resources (e.g., uses RecordingStream to generate .dlr files on-the-fly)",
     )
 
     config.addinivalue_line(
@@ -374,14 +374,14 @@ def recording_factory(tmp_path: Path) -> Callable[[Sequence[str]], list[str]]:
     def create_recordings(recording_ids: Sequence[str]) -> list[str]:
         uris = []
         for i, recording_id in enumerate(recording_ids):
-            rrd_path = tmp_path / f"recording_{i}.rrd"
+            dlr_path = tmp_path / f"recording_{i}.dlr"
             with dl.RecordingStream(f"test_recording_{i}", recording_id=recording_id) as rec:
                 # log_tick is opt-in; enable it for a deterministic index column.
                 rec.set_log_tick_enabled(True)
-                rec.save(rrd_path)
+                rec.save(dlr_path)
                 rec.log("points", dl.Points2D([[i, i]]))
                 rec.flush()
-            uris.append(rrd_path.absolute().as_uri())
+            uris.append(dlr_path.absolute().as_uri())
         return uris
 
     return create_recordings
@@ -398,12 +398,12 @@ def static_recording_factory(tmp_path: Path) -> Callable[[Sequence[str]], list[s
     def create_recordings(recording_ids: Sequence[str]) -> list[str]:
         uris = []
         for i, recording_id in enumerate(recording_ids):
-            rrd_path = tmp_path / f"static_recording_{i}.rrd"
+            dlr_path = tmp_path / f"static_recording_{i}.dlr"
             with dl.RecordingStream(f"test_recording_{i}", recording_id=recording_id) as rec:
-                rec.save(rrd_path)
+                rec.save(dlr_path)
                 rec.log("points", dl.Points2D([[i, i]]), static=True)
                 rec.flush()
-            uris.append(rrd_path.absolute().as_uri())
+            uris.append(dlr_path.absolute().as_uri())
         return uris
 
     return create_recordings

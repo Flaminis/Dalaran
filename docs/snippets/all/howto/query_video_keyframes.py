@@ -25,7 +25,7 @@ from datafusion import functions as F
 import dalaran as dl
 
 sample_video_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "video_sample"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "video_sample"
 )
 
 server = dl.server.Server(datasets={"video_dataset": sample_video_path})
@@ -80,7 +80,7 @@ content = dl.DynamicArchetype.columns(
 )
 
 # Write to a new file as a layer
-layer_path = TMP_DIR / "keyframe_layer.rrd"
+layer_path = TMP_DIR / "keyframe_layer.dlr"
 with dl.RecordingStream(
     application_id="keyframes",
     recording_id=first_segment_id,  # Match original recording_id

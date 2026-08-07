@@ -22,8 +22,8 @@ def test_send_queues_before_ready(viewer: Viewer) -> None:
 
 
 def test_send_queues_with_buffers(viewer: Viewer) -> None:
-    viewer.send({"type": "rrd"}, buffers=[b"some_data"])
-    assert viewer._event_queue[0] == ({"type": "rrd"}, [b"some_data"])
+    viewer.send({"type": "dlr"}, buffers=[b"some_data"])
+    assert viewer._event_queue[0] == ({"type": "dlr"}, [b"some_data"])
 
 
 def test_on_ready_flushes_queue(viewer: Viewer) -> None:
@@ -50,11 +50,11 @@ def test_send_after_ready(ready_viewer: Viewer) -> None:
 # --- Message shapes ---
 
 
-def test_send_rrd_shape(ready_viewer: Viewer) -> None:
+def test_send_dlr_shape(ready_viewer: Viewer) -> None:
     with patch.object(anywidget.AnyWidget, "send") as mock_send:
-        ready_viewer.send_rrd(b"rrd_bytes")
+        ready_viewer.send_dlr(b"dlr_bytes")
 
-    mock_send.assert_called_once_with({"type": "rrd"}, [b"rrd_bytes"])
+    mock_send.assert_called_once_with({"type": "dlr"}, [b"dlr_bytes"])
 
 
 def test_send_table_shape(ready_viewer: Viewer) -> None:

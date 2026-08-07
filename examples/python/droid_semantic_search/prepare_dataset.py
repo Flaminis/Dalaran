@@ -2,7 +2,7 @@
 
 Two sources, auto-selected (override with `--source`):
 
-* **Bundled** — the `tests/assets/rrd/sample_5` episodes shipped in the Dalaran repo (via git-LFS).
+* **Bundled** — the `tests/assets/dlr/sample_5` episodes shipped in the Dalaran repo (via git-LFS).
   Used automatically in a monorepo checkout: no download, works offline.
 * **Hugging Face** — a few episodes from the [`dalaran/droid_sample`](https://huggingface.co/datasets/dalaran/droid_sample)
   dataset, downloaded into `./data`. Used when the bundled episodes aren't available
@@ -31,8 +31,8 @@ from tqdm import tqdm
 import dalaran as dl
 from dalaran.experimental import OptimizationProfile, RrdReader
 
-# `tests/assets/rrd/sample_5`, relative to this file at `examples/python/droid_semantic_search/`.
-BUNDLED_SAMPLE_DIR = Path(__file__).resolve().parents[3] / "tests" / "assets" / "rrd" / "sample_5"
+# `tests/assets/dlr/sample_5`, relative to this file at `examples/python/droid_semantic_search/`.
+BUNDLED_SAMPLE_DIR = Path(__file__).resolve().parents[3] / "tests" / "assets" / "dlr" / "sample_5"
 DEFAULT_REPO_ID = "dalaran/droid_sample"
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent / "data"
 DEFAULT_OPTIMIZED_DIR = Path(__file__).resolve().parent / "optimized"
@@ -43,7 +43,7 @@ _LFS_POINTER_PREFIX = b"version https://git-lfs.github.com/spec/v1"
 
 
 def _is_lfs_pointer(path: Path) -> bool:
-    """True if *path* is an un-pulled git-LFS pointer file rather than the real RRD."""
+    """True if *path* is an un-pulled git-LFS pointer file rather than the real DLR."""
     with path.open("rb") as f:
         return f.read(len(_LFS_POINTER_PREFIX)) == _LFS_POINTER_PREFIX
 
@@ -56,7 +56,7 @@ def bundled_episode_paths() -> list[Path]:
     """
     if not BUNDLED_SAMPLE_DIR.is_dir():
         return []
-    rrds = sorted(BUNDLED_SAMPLE_DIR.glob("*.rrd"))
+    rrds = sorted(BUNDLED_SAMPLE_DIR.glob("*.dlr"))
     if not rrds:
         return []
     if any(_is_lfs_pointer(p) for p in rrds):
@@ -68,15 +68,15 @@ def bundled_episode_paths() -> list[Path]:
 
 
 def download_episodes(repo_id: str, num_episodes: int, dest: Path) -> list[Path]:
-    """Download the first *num_episodes* (0 for all) `.rrd` files from *repo_id* into *dest*.
+    """Download the first *num_episodes* (0 for all) `.dlr` files from *repo_id* into *dest*.
 
     `snapshot_download` renders its own per-file progress bars, so the user sees the download advance.
     """
     from huggingface_hub import HfApi, snapshot_download
 
-    files = sorted(f for f in HfApi().list_repo_files(repo_id, repo_type="dataset") if f.endswith(".rrd"))
+    files = sorted(f for f in HfApi().list_repo_files(repo_id, repo_type="dataset") if f.endswith(".dlr"))
     if not files:
-        raise SystemExit(f"No .rrd files found in '{repo_id}'.")
+        raise SystemExit(f"No .dlr files found in '{repo_id}'.")
     files = files if num_episodes == 0 else files[:num_episodes]
 
     print(f"Downloading {len(files)} episode(s) from '{repo_id}' to {dest} …")
@@ -99,7 +99,7 @@ def resolve_episodes(source: str, *, num_episodes: int, repo_id: str, output_dir
     return download_episodes(repo_id, num_episodes, output_dir)
 
 
-def optimize_episodes(rrd_paths: list[Path], dest_dir: Path) -> list[Path]:
+def optimize_episodes(dlr_paths: list[Path], dest_dir: Path) -> list[Path]:
     """Derive `VideoStream:is_keyframe` markers (DROID doesn't log them) so the decoder can seek.
 
     Writes a fixed copy of each episode to *dest_dir* and returns the new paths. IDs are
@@ -109,7 +109,7 @@ def optimize_episodes(rrd_paths: list[Path], dest_dir: Path) -> list[Path]:
     profile = replace(OptimizationProfile.OBJECT_STORE, fix_keyframe=True)
 
     optimized: list[Path] = []
-    for src in tqdm(rrd_paths, desc="Optimizing", unit="episode"):
+    for src in tqdm(dlr_paths, desc="Optimizing", unit="episode"):
         reader = RrdReader(src)
         recordings = reader.recordings()
         if len(recordings) != 1:
@@ -118,24 +118,24 @@ def optimize_episodes(rrd_paths: list[Path], dest_dir: Path) -> list[Path]:
 
         store = reader.stream(store=entry).collect(optimize=profile)
         dst = dest_dir / src.name
-        store.write_rrd(dst, application_id=entry.application_id, recording_id=entry.recording_id)
+        store.write_dlr(dst, application_id=entry.application_id, recording_id=entry.recording_id)
         optimized.append(dst)
 
     return optimized
 
 
-def register_to_catalog(rrd_paths: list[Path], *, catalog_url: str, dataset_name: str) -> None:
+def register_to_catalog(dlr_paths: list[Path], *, catalog_url: str, dataset_name: str) -> None:
     """Register per-episode RRDs to a catalog server instance.
 
     Uses absolute `file://` URIs so the catalog can read the RRDs directly from the local filesystem.
     Streams `iter_results()` so a progress bar advances as each segment finishes, rather than blocking
     silently on `wait()`.
     """
-    print(f"\nRegistering {len(rrd_paths)} episode(s) to {catalog_url} as dataset '{dataset_name}' …")
+    print(f"\nRegistering {len(dlr_paths)} episode(s) to {catalog_url} as dataset '{dataset_name}' …")
     client = dl.catalog.CatalogClient(catalog_url)
     dataset = client.create_dataset(dataset_name, exist_ok=True)
 
-    uris = [f"file://{p.resolve()}" for p in rrd_paths]
+    uris = [f"file://{p.resolve()}" for p in dlr_paths]
     on_duplicate = dl.catalog.OnDuplicateSegmentLayer(dl.catalog.OnDuplicateSegmentLayer.REPLACE)
     handle = dataset.register(uris, on_duplicate=on_duplicate)
 
@@ -201,7 +201,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    rrd_paths = resolve_episodes(
+    dlr_paths = resolve_episodes(
         args.source,
         num_episodes=args.num_episodes,
         repo_id=args.repo_id,
@@ -209,13 +209,13 @@ def main() -> None:
     )
 
     if args.optimize:
-        print(f"\nOptimizing {len(rrd_paths)} episode(s) into {args.optimized_dir} …")
-        rrd_paths = optimize_episodes(rrd_paths, args.optimized_dir)
+        print(f"\nOptimizing {len(dlr_paths)} episode(s) into {args.optimized_dir} …")
+        dlr_paths = optimize_episodes(dlr_paths, args.optimized_dir)
 
     if args.catalog_url:
-        register_to_catalog(rrd_paths, catalog_url=args.catalog_url, dataset_name=args.dataset_name)
+        register_to_catalog(dlr_paths, catalog_url=args.catalog_url, dataset_name=args.dataset_name)
     else:
-        print(f"Skipping registration (empty --catalog-url). Episodes: {[str(p) for p in rrd_paths]}")
+        print(f"Skipping registration (empty --catalog-url). Episodes: {[str(p) for p in dlr_paths]}")
 
 
 if __name__ == "__main__":

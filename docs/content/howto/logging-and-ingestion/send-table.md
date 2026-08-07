@@ -117,7 +117,7 @@ client = ViewerClient.connect(url="dalaran+http://127.0.0.1:9876/proxy")
 As this is an experimental API, there are several limitations to be aware of:
 
 - Only a single record batch is supported per table
-- Tables can't be saved/loaded from files yet (unlike `.rrd` files for recordings)
+- Tables can't be saved/loaded from files yet (unlike `.dlr` files for recordings)
 - Integration with the rest of the Dalaran API is still in progress
 - Rust and C++ support will be added after the API stabilizes
 - The API may undergo significant changes as we iterate based on user feedback

@@ -6,7 +6,7 @@ use rayon::prelude::{IntoParallelIterator as _, ParallelIterator as _};
 
 use super::{Channel, Example, wait_for_output};
 
-/// Collect examples in the repository and run them to produce `.rrd` files.
+/// Collect examples in the repository and run them to produce `.dlr` files.
 #[derive(argh::FromArgs)]
 #[argh(subcommand, name = "notebook")]
 pub struct Notebook {

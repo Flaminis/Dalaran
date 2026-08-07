@@ -63,22 +63,22 @@ Dataset entries model a collection of Dalaran data organized in episodes such as
 These episodes within datasets are called _segments_, which are identified by a segment ID.
 
 Segments are added to datasets by the process of _registering_ a [recording](../logging-and-ingestion/recordings.md) (typically stored in some object store such as S3) to the dataset using the Catalog SDK.
-The recording ID of the `.rrd` file is used as its segment ID.
+The recording ID of the `.dlr` file is used as its segment ID.
 
 Recordings registered to a given segment are organized by layers, identified by a layer name.
 By default, the `"base"` layer name is used.
-Registering two `.rrd` files with the same recording ID (that is, with the same segment ID) to the same dataset, and using the same layer name, will result in the second `.rrd` overwriting the first.
-Additive registration can be achieved by using different layer names for different `.rrd`s with the same recording ID/segment ID.
+Registering two `.dlr` files with the same recording ID (that is, with the same segment ID) to the same dataset, and using the same layer name, will result in the second `.dlr` overwriting the first.
+Additive registration can be achieved by using different layer names for different `.dlr`s with the same recording ID/segment ID.
 
 <div class="d2-diagram">
   <img class="d2-dark" src="https://static.rerun.io/6a9690740962bcda73b78a847c04862ba646461a_d2.svg" alt="">
   <img class="d2-light" src="https://static.rerun.io/97520fa2e99046614f595be752eec7c48c405e51_d2-light.svg" alt="">
 </div>
 
-Layers are immutable and can only be overwritten by registering a new `.rrd` file. In other words, datasets support the following mutation operations:
-- _create segment_: by registering a `.rrd` with a "new" recording ID
-- _append to segment_: by registering a `.rrd` with a matching recording ID to a new layer name
-- _overwrite segment layer_: by registering a `.rrd` with a matching recording ID to an existing layer name
+Layers are immutable and can only be overwritten by registering a new `.dlr` file. In other words, datasets support the following mutation operations:
+- _create segment_: by registering a `.dlr` with a "new" recording ID
+- _append to segment_: by registering a `.dlr` with a matching recording ID to a new layer name
+- _overwrite segment layer_: by registering a `.dlr` with a matching recording ID to an existing layer name
 
 
 ### Schema
@@ -97,14 +97,14 @@ In this context, the schema of a dataset is the union of schemas of its segments
 </div>
 
 Datasets maintain a minimal level of schema self-consistency.
-Registering a `.rrd` whose schema is incompatible with the current dataset schema will result in an error.
-In this context, _incompatible_ means that the schema of the new `.rrd` contains a column for the same entity, archetype, and component, but with a different Arrow type.
+Registering a `.dlr` whose schema is incompatible with the current dataset schema will result in an error.
+In this context, _incompatible_ means that the schema of the new `.dlr` contains a column for the same entity, archetype, and component, but with a different Arrow type.
 Such an occurrence is rare, and practically impossible when using standard Dalaran archetypes.
 
 
 ### Blueprints
 
 A dataset can be assigned a blueprint.
-This is done by registering a `.rbl` blueprint file typically stored in object storage to the dataset.
+This is done by registering a `.dbl` blueprint file typically stored in object storage to the dataset.
 A dedicated API exists for this in the Catalog SDK: [`DatasetEntry.register_blueprint()`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetEntry.register_blueprint).
 In that case, the blueprint is applied to all segments of the dataset when visualized in the Dalaran Viewer.

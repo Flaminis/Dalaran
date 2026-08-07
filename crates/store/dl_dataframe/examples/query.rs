@@ -13,7 +13,7 @@ fn main() -> anyhow::Result<()> {
     let get_arg = |i| {
         let Some(value) = args.get(i) else {
             eprintln!(
-                "Usage: {} <path_to_rrd> [timeline] [from] [to] [entity_path_filter]",
+                "Usage: {} <path_to_dlr> [timeline] [from] [to] [entity_path_filter]",
                 args.first().map_or("$BIN", |s| s.as_str())
             );
             std::process::exit(1);
@@ -21,7 +21,7 @@ fn main() -> anyhow::Result<()> {
         value
     };
 
-    let path_to_rrd = get_arg(1);
+    let path_to_dlr = get_arg(1);
     let timeline_name = args.get(2).map_or_else(TimelineName::log_time, |s| {
         TimelineName::try_new(s).expect("invalid timeline name")
     });
@@ -34,7 +34,7 @@ fn main() -> anyhow::Result<()> {
     let entity_path_filter =
         EntityPathFilter::parse_strict(args.get(5).map_or("/**", |s| s.as_str()))?;
 
-    let engines = QueryEngine::from_rrd_filepath(&ChunkStoreConfig::DEFAULT, path_to_rrd)?;
+    let engines = QueryEngine::from_dlr_filepath(&ChunkStoreConfig::DEFAULT, path_to_dlr)?;
 
     for (store_id, engine) in &engines {
         if !store_id.is_recording() {

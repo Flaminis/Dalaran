@@ -14,11 +14,11 @@ thumbnail: https://static.rerun.io/external_data_loader_rs/74eecea3b16fee7fab010
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/external_data_loader_rs/74eecea3b16fee7fab01045e3bfdd90ba6c59bc9/1200w.png">
 </picture>
 
-This is an example executable importer plugin for the Rerun Viewer.
+This is an example executable importer plugin for the Dalaran Viewer.
 
 It will log Rust source code files as markdown documents.
-To try it out, install it in your $PATH (`cargo install --path . -f`), then open a Rust source file with Rerun (`rerun file.rs`).
+To try it out, install it in your $PATH (`cargo install --path . -f`), then open a Rust source file with Dalaran (`dalaran file.rs`).
 
-Consider using the [`send_columns`](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.send_columns) API for importers that ingest time series data from a file.
+Consider using the [`send_columns`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.send_columns) API for importers that ingest time series data from a file.
 This can be much more efficient that the stateful `log` API as it allows bundling
 component data over time into a single call consuming a continuous block of memory.

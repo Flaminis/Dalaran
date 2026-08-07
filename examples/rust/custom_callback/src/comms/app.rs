@@ -3,7 +3,7 @@ use std::result::Result;
 use std::sync::Arc;
 
 use parking_lot::RwLock;
-use rerun::external::{dl_error, dl_log};
+use dalaran::external::{dl_error, dl_log};
 use tokio::io::{AsyncReadExt, AsyncWriteExt, ReadHalf, WriteHalf};
 use tokio::net::{TcpListener, TcpSocket, TcpStream};
 use tokio::sync::Mutex;

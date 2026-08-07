@@ -12,7 +12,7 @@ thumbnail_dimensions = [480, 354]
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/custom_visualizer/80562de16618a7f9f4e35fd9502ae61d7bb1d187/1200w.png">
 </picture>
 
-Example showing how to add a custom visualizer with a custom GPU renderer to the Rerun Viewer.
+Example showing how to add a custom visualizer with a custom GPU renderer to the Dalaran Viewer.
 
 A custom visualizer has three parts:
 

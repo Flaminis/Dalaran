@@ -4,7 +4,7 @@ import sys
 
 import dalaran.blueprint as dlb
 
-path_to_rbl = sys.argv[1]
+path_to_dbl = sys.argv[1]
 
 dlb.Blueprint(
     dlb.Horizontal(
@@ -20,4 +20,4 @@ dlb.Blueprint(
     ),
     dlb.SelectionPanel(state="collapsed"),
     dlb.TimePanel(state="collapsed"),
-).save("your_blueprint_name", path_to_rbl)
+).save("your_blueprint_name", path_to_dbl)

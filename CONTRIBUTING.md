@@ -1,10 +1,10 @@
-# Contributing to Rerun
-This guide is for anyone who wants to contribute to the Rerun repository, for employees and outside contributors alike.
+# Contributing to Dalaran
+This guide is for anyone who wants to contribute to the Dalaran repository, for employees and outside contributors alike.
 
 ## See also
 * [`ARCHITECTURE.md`](ARCHITECTURE.md)
 * [`BUILD.md`](BUILD.md)
-* [`rerun_py/README.md`](rerun_py/README.md) - build instructions for Python SDK
+* [`dalaran_py/README.md`](dalaran_py/README.md) - build instructions for Python SDK
 * [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
 * [`CODE_STYLE.md`](CODE_STYLE.md)
 * [`RELEASES.md`](RELEASES.md)
@@ -25,7 +25,7 @@ You can discuss these changes by:
 
 * Commenting on an existing issue,
 * Creating a new issue, or
-* Pinging one of the Rerun maintainers on our [Discord](https://discord.gg/PXtCgFBSmH)
+* Pinging one of the Dalaran maintainers on our [Discord](https://discord.gg/PXtCgFBSmH)
 
 > [!NOTE]
 > PRs containing large undiscussed changes may be closed without comment.
@@ -72,15 +72,15 @@ LLMs make it easy to produce code quickly, while understanding takes longer.
 Please disclose the level of confidence that you have in your solution.
 
 ### Other
-Our CI will [record binary sizes](https://build.rerun.io/graphs/sizes.html) and run [benchmarks](https://build.rerun.io/graphs/crates.html) on each merged PR.
+Our CI will [record binary sizes](https://build.dalaran.dev/graphs/sizes.html) and run [benchmarks](https://build.dalaran.dev/graphs/crates.html) on each merged PR.
 
 Pull requests from external contributors require approval for CI runs. Click the `Approve and run` button:
 
 ![Image showing the approve and run button](https://github.com/rerun-io/rerun/assets/1665677/ead5c04f-df02-4f20-9093-37cfce097b44)
 
-Members of the `rerun-io` organization can enable auto-approval for a single PR by commenting with `@rerun-bot approve`:
+Members of the `dalaran-io` organization can enable auto-approval for a single PR by commenting with `@dalaran-bot approve`:
 
-![PR comment with the text `@rerun-bot approve`](https://github.com/rerun-io/rerun/assets/1665677/b5f07f3f-ea95-44a4-8eb7-f07c905f96c3)
+![PR comment with the text `@dalaran-bot approve`](https://github.com/rerun-io/rerun/assets/1665677/b5f07f3f-ea95-44a4-8eb7-f07c905f96c3)
 
 
 ### Labeling of PRs & changelog generation
@@ -112,7 +112,7 @@ Be generous with external contributions — credit where credit is due!
 #### Other special labels
 
 * `deploy docs`:
-  Cherry-picked to `docs-latest`, triggering a rebuild of the [doc page](https://www.rerun.io/docs).
+  Cherry-picked to `docs-latest`, triggering a rebuild of the [doc page](https://www.dalaran.dev/docs).
   Use this for doc fixes relevant to the latest release.
 * `do-not-merge`:
   Fails CI unconditionally. Useful for PRs targeting non-`main` branches or awaiting test results.
@@ -177,7 +177,7 @@ cargo doc --no-deps --open
 To learn about the viewer, run:
 
 ```
-cargo run -p rerun -- --help
+cargo run -p dalaran -- --help
 ```
 
 ## Tests
@@ -218,9 +218,9 @@ Each test run produces new images (typically at `<your-test.rs>/snapshots`).
 On failure, a `diff.png` is added highlighting all differences.
 To update references, run with `UPDATE_SNAPSHOTS=1`.
 
-Use `pixi run snapshots` to compare results of all failed tests visually in Rerun.
+Use `pixi run snapshots` to compare results of all failed tests visually in Dalaran.
 You can also update from a failed CI run using `./scripts/update_snapshots_from_ci.sh`.
-Inspect PR diffs (including failed comparisons) via https://rerun-io.github.io/kitdiff/?url=<link to GitHub PR>.
+Inspect PR diffs (including failed comparisons) via https://dalaran-io.github.io/kitdiff/?url=<link to GitHub PR>.
 
 For best practices and unexpected sources of image differences, see the [egui_kittest README](https://github.com/emilk/egui/tree/master/crates/egui_kittest#snapshot-testing).
 
@@ -239,7 +239,7 @@ For setup details, see the [CI workflow](./.github/workflows/reusable_checks_rus
 pixi run py-test
 ```
 
-Uses [`pytest`](https://docs.pytest.org/). Tests are in [./rerun_py/tests/](./rerun_py/tests/).
+Uses [`pytest`](https://docs.pytest.org/). Tests are in [./dalaran_py/tests/](./dalaran_py/tests/).
 
 ### C++ tests
 
@@ -247,7 +247,7 @@ Uses [`pytest`](https://docs.pytest.org/). Tests are in [./rerun_py/tests/](./re
 pixi run cpp-test
 ```
 
-Uses [`catch2`](https://github.com/catchorg/Catch2). Tests are in [./rerun_cpp/tests/](./rerun_cpp/tests/).
+Uses [`catch2`](https://github.com/catchorg/Catch2). Tests are in [./dalaran_cpp/tests/](./dalaran_cpp/tests/).
 
 
 ### Snippet comparison tests
@@ -287,7 +287,7 @@ We recommend [`cargo nextest`](https://nexte.st/) for running Rust tests — it'
 Before pushing, always run `pixi run fast-lint`. It takes seconds on repeated runs and catches trivial issues before wasting CI time.
 
 ### Hooks
-We recommend installing the Rerun pre-push hook, which runs `pixi run fast-lint` for you.
+We recommend installing the Dalaran pre-push hook, which runs `pixi run fast-lint` for you.
 
 Copy it into your local `.git/hooks`:
 ```
@@ -305,4 +305,4 @@ git config core.hooksPath hooks
 
 ### Other
 View higher log levels with `export RUST_LOG=trace`.
-Debug logging is automatically enabled for the viewer when running inside the `rerun` checkout.
+Debug logging is automatically enabled for the viewer when running inside the `dalaran` checkout.

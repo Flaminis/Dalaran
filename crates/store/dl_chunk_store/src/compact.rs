@@ -312,7 +312,7 @@ mod tests {
             store.insert_chunk(&mixed_chunk(&entity, frame, blob_bytes))?;
         }
 
-        // Wire exactly as the `rrd optimize` / catalog ingestion paths do: the ratio
+        // Wire exactly as the `dlr optimize` / catalog ingestion paths do: the ratio
         // comes from the profile, not a hard-coded literal. If someone resets
         // `OBJECT_STORE.split_size_ratio` to `None`, this test fails.
         let profile = crate::OptimizationProfile::OBJECT_STORE;

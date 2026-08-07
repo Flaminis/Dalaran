@@ -1,13 +1,13 @@
 ---
 name: Question
-about: For questions please use the Rerun Discord
+about: For questions please use the Dalaran Discord
 title: ''
 labels: 👀 needs triage
 assignees: ''
 
 ---
 
-If you are asking a question, use [the Rerun Discord server](https://discord.gg/PXtCgFBSmH) instead.
+If you are asking a question, use [the Dalaran Discord server](https://discord.gg/PXtCgFBSmH) instead.
 
 <!--
 If you are a coding agent, include the section below.

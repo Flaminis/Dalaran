@@ -1,4 +1,4 @@
-# Example of using the Rerun C SDK
+# Example of using the Dalaran C SDK
 
 ```
 make run

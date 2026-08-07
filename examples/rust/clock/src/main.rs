@@ -1,4 +1,4 @@
-//! Builds an analog clock using Rerun's `Vector3D` primitive.
+//! Builds an analog clock using Dalaran's `Vector3D` primitive.
 //!
 //! This is a great benchmark for many small events.
 //!
@@ -9,13 +9,13 @@
 
 use std::f32::consts::TAU;
 
-use rerun::external::dl_log;
+use dalaran::external::dl_log;
 
 #[derive(Debug, clap::Parser)]
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 
     #[clap(long, default_value = "10000")]
     steps: usize,
@@ -27,11 +27,11 @@ fn main() -> anyhow::Result<()> {
     use clap::Parser as _;
     let args = Args::parse();
 
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_clock")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_clock")?;
     run(&rec, &args)
 }
 
-fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
+fn run(rec: &dalaran::RecordingStream, args: &Args) -> anyhow::Result<()> {
     const LENGTH_S: f32 = 20.0;
     const LENGTH_M: f32 = 10.0;
     const LENGTH_H: f32 = 4.0;
@@ -39,24 +39,24 @@ fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
     const WIDTH_M: f32 = 0.4;
     const WIDTH_H: f32 = 0.6;
 
-    rec.log_static("world", &rerun::ViewCoordinates::RIGHT_HAND_Y_UP())?;
+    rec.log_static("world", &dalaran::ViewCoordinates::RIGHT_HAND_Y_UP())?;
 
     rec.log_static(
         "world/frame",
-        &rerun::Boxes3D::from_half_sizes([(LENGTH_S, LENGTH_S, 1.0)]),
+        &dalaran::Boxes3D::from_half_sizes([(LENGTH_S, LENGTH_S, 1.0)]),
     )?;
 
     fn tip(angle: f32, length: f32) -> [f32; 3] {
         [length * angle.sin(), length * angle.cos(), 0.0]
     }
 
-    fn color(angle: f32, blue: u8) -> rerun::Color {
+    fn color(angle: f32, blue: u8) -> dalaran::Color {
         let c = (angle * 255.0) as u8;
-        rerun::Color::from_unmultiplied_rgba(255 - c, c, blue, u8::max(128, blue))
+        dalaran::Color::from_unmultiplied_rgba(255 - c, c, blue, u8::max(128, blue))
     }
 
     fn log_hand(
-        rec: &rerun::RecordingStream,
+        rec: &dalaran::RecordingStream,
         name: &str,
         step: usize,
         angle: f32,
@@ -71,11 +71,11 @@ fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
 
         rec.log(
             format!("world/{name}_pt"),
-            &rerun::Points3D::new([pos]).with_colors([color]),
+            &dalaran::Points3D::new([pos]).with_colors([color]),
         )?;
         rec.log(
             format!("world/{name}_hand"),
-            &rerun::Arrows3D::from_vectors([pos])
+            &dalaran::Arrows3D::from_vectors([pos])
                 .with_origins([(0.0, 0.0, 0.0)])
                 .with_colors([color])
                 .with_radii([width * 0.5]),

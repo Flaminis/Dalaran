@@ -68,7 +68,7 @@ jobs:
           # 1. From the index file
           # 2. From the latest commit in the base branch of the PR
           # 3. From the latest commit in the current branch
-          index_path="gs://rerun-builds/sizes/index"
+          index_path="gs://dalaran-builds/sizes/index"
           if [ "$(gsutil -q stat $index_path ; echo $?)" = 0 ]; then
             gsutil cp $index_path "/tmp/base_index"
             base_commit=$(cat /tmp/base_index)
@@ -82,7 +82,7 @@ jobs:
           echo "base commit: $base_commit"
 
           # Download data for base commit, or default to empty file
-          data_path="gs://rerun-builds/sizes/commit/$base_commit/data.json"
+          data_path="gs://dalaran-builds/sizes/commit/$base_commit/data.json"
           if [ "$(gsutil -q stat $data_path ; echo $?)" = 0 ]; then
             gsutil cp $data_path "/tmp/prev.json"
           else
@@ -98,7 +98,7 @@ jobs:
           entries+=("JS:crates/viewer/dl_web_viewer_server/web_viewer/dl_viewer.js:kiB")
 
           if [ ${{ inputs.WITH_EXAMPLES }} = "true" ]; then
-            for file in example_data/*.rrd; do
+            for file in example_data/*.dlr; do
               name=$(basename "$file")
               entries+=("$name:$file:MiB")
             done
@@ -108,7 +108,7 @@ jobs:
 
           python3 scripts/ci/count_dependencies.py -p dl_sdk    --no-default-features > /tmp/deps1.json
           python3 scripts/ci/count_dependencies.py -p dl_viewer --all-features        > /tmp/deps2.json
-          python3 scripts/ci/count_dependencies.py -p rerun     --all-features        > /tmp/deps3.json
+          python3 scripts/ci/count_dependencies.py -p dalaran     --all-features        > /tmp/deps3.json
 
           # Merge the results, putting dependencies first (on top):
           jq -s '.[0] + .[1] + .[2] + .[3]' /tmp/deps1.json /tmp/deps2.json /tmp/deps3.json /tmp/sizes.json > /tmp/data.json
@@ -143,7 +143,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: /tmp/data.json
-          destination: "rerun-builds/sizes/commit/${{ steps.context.outputs.short_sha }}"
+          destination: "dalaran-builds/sizes/commit/${{ steps.context.outputs.short_sha }}"
           process_gcloudignore: false
 
       - name: Create index file
@@ -156,7 +156,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: /tmp/index
-          destination: "rerun-builds/sizes"
+          destination: "dalaran-builds/sizes"
           process_gcloudignore: false
 
       - name: Create PR comment
@@ -181,4 +181,4 @@ jobs:
         run: |
           pixi run python scripts/ci/render_bench.py sizes \
             --after $(date -d"180 days ago" +%Y-%m-%d) \
-            --output "gs://rerun-builds/graphs"
+            --output "gs://dalaran-builds/graphs"

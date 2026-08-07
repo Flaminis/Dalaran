@@ -60,7 +60,7 @@ The Viewer provides two types of blueprint reset, accessible from the blueprint 
 This generates a new blueprint automatically based on your current data. The Viewer analyzes what you've logged and creates an appropriate layout using built-in heuristics. This is useful when you want to start fresh and let Dalaran figure out a reasonable layout.
 
 ### Reset to default blueprint
-This returns to your programmatically specified blueprint (sent from code) or a saved blueprint file (`.rbl`). If you've sent a blueprint using `dl.send_blueprint()` or loaded a `.rbl` file, this becomes your "default." The reset button in the blueprint panel will restore this default whenever you need it.
+This returns to your programmatically specified blueprint (sent from code) or a saved blueprint file (`.dbl`). If you've sent a blueprint using `dl.send_blueprint()` or loaded a `.dbl` file, this becomes your "default." The reset button in the blueprint panel will restore this default whenever you need it.
 
 When no default blueprint has been set, the reset button will use the heuristic blueprint instead.
 
@@ -85,9 +85,9 @@ Modify blueprints directly in the Viewer UI:
 This is the fastest way to experiment with layouts. See [Configure the Viewer](../../getting-started/configure-the-viewer.md) for a complete guide.
 
 ### 2. Save and load files
-Save your blueprint configuration to `.rbl` files:
+Save your blueprint configuration to `.dbl` files:
 -   Use "Save blueprint…" from the file menu to save your current layout
--   Load blueprints with "Open…" or by dragging `.rbl` files into the Viewer
+-   Load blueprints with "Open…" or by dragging `.dbl` files into the Viewer
 -   Share blueprint files with teammates to ensure everyone sees data the same way
 -   Reuse blueprints across sessions and different recordings (with the same Application ID)
 

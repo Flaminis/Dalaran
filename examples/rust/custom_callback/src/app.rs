@@ -5,16 +5,16 @@ use std::f32::consts::{PI, TAU};
 
 use custom_callback::comms::app::ControlApp;
 use custom_callback::comms::protocol::Message;
-use rerun::RecordingStream;
-use rerun::external::glam::Vec3;
-use rerun::external::{dl_log, tokio};
+use dalaran::RecordingStream;
+use dalaran::external::glam::Vec3;
+use dalaran::external::{dl_log, tokio};
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut app = ControlApp::bind("127.0.0.1:8888").await?.run();
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_custom_callback")
-        .connect_grpc_opts("rerun+http://127.0.0.1:9877/proxy")?;
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_custom_callback")
+        .connect_grpc_opts("dalaran+http://127.0.0.1:9877/proxy")?;
 
     // Add a handler for incoming messages
     let add_rec = rec.clone();
@@ -52,7 +52,7 @@ fn handle_message(rec: &RecordingStream, message: &Message) {
             radius,
         } => rec.log(
             path.to_string(),
-            &rerun::Points3D::new([position]).with_radii([*radius]),
+            &dalaran::Points3D::new([position]).with_radii([*radius]),
         ),
         Message::Box3d {
             path,
@@ -60,7 +60,7 @@ fn handle_message(rec: &RecordingStream, message: &Message) {
             position,
         } => rec.log(
             path.to_string(),
-            &rerun::Boxes3D::from_half_sizes([half_size]).with_centers([position]),
+            &dalaran::Boxes3D::from_half_sizes([half_size]).with_centers([position]),
         ),
         Message::Disconnect => {
             dl_log::info!("Client disconnected");
@@ -104,7 +104,7 @@ async fn animated_snake(mut rx: UnboundedReceiver<Message>, rec: RecordingStream
         // log the point
         rec.log(
             "dynamic".to_string(),
-            &rerun::Points3D::new(points).with_radii(vec![current_radius; num_spheres as usize]),
+            &dalaran::Points3D::new(points).with_radii(vec![current_radius; num_spheres as usize]),
         )
         .expect("failed to log dynamic");
 

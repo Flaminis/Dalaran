@@ -80,10 +80,10 @@ def test_server_with_dataset_prefix() -> None:
 
 def test_server_with_dataset_files() -> None:
     """Test that the server can be started with explicit dataset files."""
-    rrd_files = list(DATASET_DIR.glob("*.rrd"))[:3]
-    assert len(rrd_files) == 3
+    dlr_files = list(DATASET_DIR.glob("*.dlr"))[:3]
+    assert len(dlr_files) == 3
 
-    with Server(datasets={"my_dataset": rrd_files}) as server:
+    with Server(datasets={"my_dataset": dlr_files}) as server:
         assert server.is_running()
 
         client = server.client()
@@ -93,12 +93,12 @@ def test_server_with_dataset_files() -> None:
 
 def test_server_with_multiple_datasets() -> None:
     """Test that the server can be started with multiple datasets."""
-    rrd_files = list(DATASET_DIR.glob("*.rrd"))[:2]
+    dlr_files = list(DATASET_DIR.glob("*.dlr"))[:2]
 
     with Server(
         datasets={
             "prefix_dataset": DATASET_DIR,
-            "files_dataset": rrd_files,
+            "files_dataset": dlr_files,
         }
     ) as server:
         assert server.is_running()
@@ -114,21 +114,21 @@ def test_server_with_multiple_datasets() -> None:
 
 def test_server_dataset_prefix_must_be_directory() -> None:
     """Test that dataset prefix paths must be directories."""
-    rrd_file = next(DATASET_DIR.glob("*.rrd"))
+    dlr_file = next(DATASET_DIR.glob("*.dlr"))
 
     with pytest.raises(ValueError, match="must be a directory"):
-        Server(datasets={"bad_dataset": rrd_file})
+        Server(datasets={"bad_dataset": dlr_file})
 
 
 def test_server_dataset_files_must_exist() -> None:
     """Test that dataset file paths must exist."""
-    with pytest.raises(ValueError, match="must be a RRD file"):
-        Server(datasets={"bad_dataset": [Path("/nonexistent/file.rrd")]})
+    with pytest.raises(ValueError, match="must be a DLR file"):
+        Server(datasets={"bad_dataset": [Path("/nonexistent/file.dlr")]})
 
 
 def test_server_dataset_files_must_be_files() -> None:
     """Test that dataset file paths must be files, not directories."""
-    with pytest.raises(ValueError, match="must be a RRD file"):
+    with pytest.raises(ValueError, match="must be a DLR file"):
         Server(datasets={"bad_dataset": [DATASET_DIR]})
 
 

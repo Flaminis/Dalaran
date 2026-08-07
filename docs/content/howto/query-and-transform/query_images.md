@@ -25,6 +25,6 @@ snippet: howto/query_images[compressed_image]
 ## Raw image
 
 Raw images are stored in a flattened layout, so we need to reshape them.
-These format details are written to the RRD when images are logged.
+These format details are written to the DLR when images are logged.
 
 snippet: howto/query_images[raw_image]

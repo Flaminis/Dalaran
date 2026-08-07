@@ -24,7 +24,7 @@ from datafusion import col
 import dalaran as dl
 
 sample_video_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "video_sample"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "video_sample"
 )
 
 server = dl.server.Server(datasets={"video_dataset": sample_video_path})

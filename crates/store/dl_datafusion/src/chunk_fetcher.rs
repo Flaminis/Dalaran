@@ -333,7 +333,7 @@ impl DirectFetchFailureReason {
         } else if msg.contains("connection") || msg.contains("dns") || msg.contains("connect") {
             Self::Connection
         } else if msg.contains("decode")
-            || msg.contains("from_rrd_bytes")
+            || msg.contains("from_dlr_bytes")
             || msg.contains("from_record_batch")
         {
             Self::Decode
@@ -452,7 +452,7 @@ impl From<reqwest::Error> for DirectFetchError {
     }
 }
 
-// --- Range merging helpers (ported from rrd_mapper.rs) ---
+// --- Range merging helpers (ported from dlr_mapper.rs) ---
 
 /// Returns the optimal gap size for merging adjacent byte ranges.
 /// Uses 25% of average chunk size — merging across a gap "wastes" at most 25% extra bandwidth.
@@ -580,15 +580,15 @@ fn calculate_adaptive_concurrency(ranges: &[(u64, u64)]) -> usize {
     base_concurrency.min(memory_limit)
 }
 
-/// Decode a single chunk from raw RRD bytes (protobuf-encoded `ArrowMsg`).
+/// Decode a single chunk from raw DLR bytes (protobuf-encoded `ArrowMsg`).
 #[tracing::instrument(level = "debug", skip_all)]
 fn decode_chunk_from_bytes(bytes: &[u8]) -> Result<(Chunk, Option<SegmentId>), DirectFetchError> {
     dl_tracing::profile_function!();
     use dl_log_encoding::Decodable;
     let raw_msg =
-        <Option<dl_protos::log_msg::v1alpha1::log_msg::Msg> as Decodable>::from_rrd_bytes(bytes)
+        <Option<dl_protos::log_msg::v1alpha1::log_msg::Msg> as Decodable>::from_dlr_bytes(bytes)
             .map_err(|err| {
-                DirectFetchError::new(format!("Msg::from_rrd_bytes failed: {err}"), false)
+                DirectFetchError::new(format!("Msg::from_dlr_bytes failed: {err}"), false)
             })?
             .ok_or_else(|| DirectFetchError::new("empty msg".to_owned(), false))?;
     let dl_protos::log_msg::v1alpha1::log_msg::Msg::ArrowMsg(arrow_msg) = raw_msg else {
@@ -690,7 +690,7 @@ async fn fetch_batch_via_direct_urls(
                 false,
             )
         })?;
-        let rrd_location =
+        let dlr_location =
             RrdChunkLocation::try_from(chunk_key.location.as_slice()).map_err(|err| {
                 DirectFetchError::new(
                     format!("failed to decode RrdChunkLocation at row {i}: {err}"),
@@ -699,8 +699,8 @@ async fn fetch_batch_via_direct_urls(
             })?;
 
         let url = direct_urls.value(i).to_owned();
-        let offset = rrd_location.offset;
-        let length = rrd_location.length;
+        let offset = dlr_location.offset;
+        let length = dlr_location.length;
 
         url_groups
             .entry(url)

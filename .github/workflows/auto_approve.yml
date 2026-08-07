@@ -18,7 +18,7 @@ jobs:
     name: "Check for approval"
     runs-on: ubuntu-latest
     if: |
-      github.event.pull_request.head.repo.owner.login != 'rerun-io' &&
+      github.event.pull_request.head.repo.owner.login != 'dalaran-io' &&
       (github.event_name == 'pull_request_target' || github.event.issue.pull_request)
     steps:
       - name: Checkout

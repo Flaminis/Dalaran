@@ -54,7 +54,7 @@ impl ChunkStore {
     ///
     /// All queries will return partial results until the missing physical data gets loaded in.
     #[must_use = "The chunk store events should be handled"]
-    pub fn insert_rrd_manifest(&mut self, rrd_manifest: Arc<RrdManifest>) -> Vec<ChunkStoreEvent> {
+    pub fn insert_dlr_manifest(&mut self, dlr_manifest: Arc<RrdManifest>) -> Vec<ChunkStoreEvent> {
         dl_tracing::profile_function!();
 
         let Self {
@@ -78,7 +78,7 @@ impl ChunkStore {
             event_id: _,
         } = self;
 
-        let native_static_map = rrd_manifest.static_map();
+        let native_static_map = dlr_manifest.static_map();
         chunks_lineage.extend(
             native_static_map
                 .values()
@@ -101,7 +101,7 @@ impl ChunkStore {
                 .extend(per_component.iter().map(|(&k, &v)| (k, v)));
         }
 
-        let native_temporal_map = rrd_manifest.temporal_map();
+        let native_temporal_map = dlr_manifest.temporal_map();
         chunks_lineage.extend(
             native_temporal_map
                 .values()
@@ -182,7 +182,7 @@ impl ChunkStore {
             event_id: self
                 .event_id
                 .fetch_add(1, std::sync::atomic::Ordering::Relaxed),
-            diff: ChunkStoreDiff::virtual_addition(rrd_manifest),
+            diff: ChunkStoreDiff::virtual_addition(dlr_manifest),
         };
 
         let new_columns = self.schema.on_events(std::slice::from_ref(&event));
@@ -349,7 +349,7 @@ impl ChunkStore {
             self.direct_lineage(&chunk.id()),
             Some(&ChunkDirectLineage::RootFromManifest { .. })
         ) {
-            // If we reach here, then a chunk that was previously virtually inserted using `insert_rrd_manifest`
+            // If we reach here, then a chunk that was previously virtually inserted using `insert_dlr_manifest`
             // is about to be physically inserted for real.
             //
             // We don't know what's gonna to happen to this chunk during its insertion: it might be
@@ -395,7 +395,7 @@ impl ChunkStore {
             );
         }
 
-        // "if missing" because we don't want to lose the RRD manifest lineage if there is one.
+        // "if missing" because we don't want to lose the DLR manifest lineage if there is one.
         self.insert_lineage_if_missing(chunk.id(), &lineage);
 
         // Splitting a static chunk just seems like a terrible idea in general.
@@ -1623,7 +1623,7 @@ mod tests {
         Ok(())
     }
 
-    /// Regression test for RR-4880: `rrd optimize` / `.collect(optimize=…)` lose static transforms.
+    /// Regression test for RR-4880: `dlr optimize` / `.collect(optimize=…)` lose static transforms.
     ///
     /// Both optimize paths route every chunk through `ChunkStore::insert_chunk`, which applies
     /// auto-delete shadowed static chunk semantics. See [`is_transform_archetype`] and RR-4887 for
@@ -1780,7 +1780,7 @@ mod tests {
         Ok(())
     }
 
-    /// `insert_rrd_manifest` should emit a `SchemaAddition` with the manifest's columns.
+    /// `insert_dlr_manifest` should emit a `SchemaAddition` with the manifest's columns.
     #[test]
     fn schema_addition_from_manifest() -> anyhow::Result<()> {
         dl_log::setup_logging();
@@ -1809,12 +1809,12 @@ mod tests {
             })
             .collect();
 
-        let rrd_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
+        let dlr_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
             store_id,
             chunks.iter().map(|c| &**c),
         )?;
 
-        let events = store.insert_rrd_manifest(rrd_manifest);
+        let events = store.insert_dlr_manifest(dlr_manifest);
         assert_eq!(events.len(), 2);
         assert!(events[0].is_virtual_addition());
         let schema_add = match &events[1].diff {
@@ -1826,11 +1826,11 @@ mod tests {
         assert!(!schema_add.new_columns[0].components.is_empty());
 
         // Inserting the same manifest again should NOT emit a second SchemaAddition.
-        let rrd_manifest2 = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
+        let dlr_manifest2 = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
             dl_log_types::StoreId::random(dl_log_types::StoreKind::Recording, "test_app"),
             chunks.iter().map(|c| &**c),
         )?;
-        let events2 = store.insert_rrd_manifest(rrd_manifest2);
+        let events2 = store.insert_dlr_manifest(dlr_manifest2);
         assert!(
             !events2.iter().any(|e| e.is_schema_addition()),
             "re-inserting a manifest with the same columns should not emit SchemaAddition"
@@ -1868,7 +1868,7 @@ mod tests {
             std::iter::once(&*temporal_chunk),
         )?;
 
-        let events = store.insert_rrd_manifest(manifest_temporal);
+        let events = store.insert_dlr_manifest(manifest_temporal);
         assert_eq!(events.len(), 2);
         assert!(events[0].is_virtual_addition());
         let schema_add = match &events[1].diff {
@@ -1895,7 +1895,7 @@ mod tests {
             std::iter::once(&*static_chunk),
         )?;
 
-        let events = store.insert_rrd_manifest(manifest_static);
+        let events = store.insert_dlr_manifest(manifest_static);
         assert_eq!(events.len(), 2);
         assert!(events[0].is_virtual_addition());
         let schema_add = match &events[1].diff {

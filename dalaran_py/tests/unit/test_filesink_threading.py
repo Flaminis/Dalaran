@@ -23,11 +23,11 @@ def _worker(rec: dl.RecordingStream, thread_id: int) -> None:
 
 
 def test_multithreaded_filesink_in_context_manager(tmp_path: Path) -> None:
-    rrd_path = tmp_path / "multithread.rrd"
+    dlr_path = tmp_path / "multithread.dlr"
 
     def run() -> None:
         with dl.RecordingStream("dalaran_example_multithread_filesink") as rec:
-            rec.save(rrd_path)
+            rec.save(dlr_path)
 
             threads = [threading.Thread(target=_worker, args=(rec, tid)) for tid in range(NUM_THREADS)]
             for t in threads:
@@ -39,7 +39,7 @@ def test_multithreaded_filesink_in_context_manager(tmp_path: Path) -> None:
 
     # `RrdReader.store()` rejects footer-less files, so a successful call here implicitly
     # verifies the file was finalized.
-    reader = RrdReader(rrd_path)
+    reader = RrdReader(dlr_path)
     reader.store()
 
     seen = dict.fromkeys(range(NUM_THREADS), 0)

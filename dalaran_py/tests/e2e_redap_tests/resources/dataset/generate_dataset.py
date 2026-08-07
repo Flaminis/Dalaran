@@ -1,7 +1,7 @@
 """
 Generate test dataset for e2e_redap_tests.
 
-This script generates 20 .rrd files with test data containing:
+This script generates 20 .dlr files with test data containing:
 - Three timelines (timestamp, duration, sequence) with intentionally unordered data
 - Three objects with Points3D data
 - Static text documents
@@ -35,7 +35,7 @@ def generate_nanosecond_time(base_time: np.datetime64, minute_delta: int) -> np.
 
 
 def generate_data(filename: str, n_rows: int) -> None:
-    """Generate a single .rrd file with test data."""
+    """Generate a single .dlr file with test data."""
     # Intentionally create a timestamp that has values all the way down to nanosecond
     base_time = np.datetime64("2024-01-15T10:30:45.123456789")
     timestamps = [maybe_val(generate_nanosecond_time(base_time, i * 2)) for i in range(n_rows)]
@@ -60,7 +60,7 @@ def generate_data(filename: str, n_rows: int) -> None:
     random.shuffle(obj3_indices)
 
     dl.init(filename, spawn=True)
-    dl.save(f"{filename}.rrd")
+    dl.save(f"{filename}.dlr")
 
     dl.log("/text1", dl.TextDocument("Before text"), static=True)
 

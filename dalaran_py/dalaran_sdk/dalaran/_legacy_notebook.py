@@ -22,7 +22,7 @@ def render_html_template(*, base64_data: str, app_url: str, timeout_ms: int, wid
     # Use a random presentation ID to avoid collisions when multiple recordings are shown in the same notebook.
     presentation_id = "_" + uuid.uuid4().hex
 
-    return f"""<div id="{presentation_id}_rrd" style="display: none;" data-rrd="{base64_data}"></div>
+    return f"""<div id="{presentation_id}_dlr" style="display: none;" data-dlr="{base64_data}"></div>
 <div id="{presentation_id}_error" style="display: none;"><p>Timed out waiting for {app_url} to load.</p>
 <p>Consider using <code>dl.start_web_viewer_server()</code></p></div>
 <script>
@@ -30,7 +30,7 @@ def render_html_template(*, base64_data: str, app_url: str, timeout_ms: int, wid
         document.getElementById("{presentation_id}_error").style.display = 'block';
     }}, {timeout_ms});
 
-    window.addEventListener("message", function(rrd) {{
+    window.addEventListener("message", function(dlr) {{
         return async function {presentation_id}_onIframeReady(event) {{
             var iframe = document.getElementById("{presentation_id}_iframe");
             if (event.source === iframe.contentWindow) {{
@@ -38,13 +38,13 @@ def render_html_template(*, base64_data: str, app_url: str, timeout_ms: int, wid
                 document.getElementById("{presentation_id}_error").style.display = 'none';
                 iframe.style.display = 'inline';
                 window.removeEventListener("message", {presentation_id}_onIframeReady);
-                iframe.contentWindow.postMessage((await rrd), "*");
+                iframe.contentWindow.postMessage((await dlr), "*");
             }}
         }}
     }}(async function() {{
         await new Promise(r => setTimeout(r, 0));
-        var div = document.getElementById("{presentation_id}_rrd");
-        var base64Data = div.dataset.rrd;
+        var div = document.getElementById("{presentation_id}_dlr");
+        var base64Data = div.dataset.dlr;
         var intermediate = atob(base64Data);
         var buff = new Uint8Array(intermediate.length);
         for (var i = 0; i < intermediate.length; i++) {{
@@ -141,7 +141,7 @@ def legacy_notebook_show(
     """
     Output the Dalaran viewer in a notebook using IPython [IPython.core.display.HTML][].
 
-    This is a legacy function that uses a limited mechanism of inlining an RRD into a self-contained
+    This is a legacy function that uses a limited mechanism of inlining an DLR into a self-contained
     HTML template that loads the viewer in an iframe.
 
     In general, [dalaran.notebook_show][] should be preferred. However, this function can be useful

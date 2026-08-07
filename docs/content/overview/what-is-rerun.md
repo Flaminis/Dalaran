@@ -33,7 +33,7 @@ If you're working with robots, drones, autonomous vehicles, spatial AI, or any s
 ## How do you use it?
 
 ### Log and ingest
-Use the [logging API](../getting-started/data-in.md) to log multimodal data from your code, or [the chunk processing API](../concepts/logging-and-ingestion/chunk-processing-api.md) to convert your existing data to the [.rrd](../concepts/logging-and-ingestion/rrd-format.md) file format to later visualize or query.
+Use the [logging API](../getting-started/data-in.md) to log multimodal data from your code, or [the chunk processing API](../concepts/logging-and-ingestion/chunk-processing-api.md) to convert your existing data to the [.dlr](../concepts/logging-and-ingestion/dlr-format.md) file format to later visualize or query.
 <div class="d2-diagram">
   <img class="d2-dark" src="https://static.rerun.io/d1c242b745000b3dbba0dc42a861e2e6b760d614_d2.svg" alt="">
   <img class="d2-light" src="https://static.rerun.io/0aa33c2c86855ee06122e761562ca31e82486ad6_d2-light.svg" alt="">

@@ -11,12 +11,12 @@ from dalaran.experimental import (
 
 
 @pytest.mark.local_only
-def test_rrd_reader_is_streaming_reader() -> None:
+def test_dlr_reader_is_streaming_reader() -> None:
     assert issubclass(RrdReader, StreamingReader)
 
 
 @pytest.mark.local_only
-def test_rrd_reader_is_indexed_reader() -> None:
+def test_dlr_reader_is_indexed_reader() -> None:
     assert issubclass(RrdReader, IndexedReader)
 
 

@@ -405,7 +405,7 @@ pub async fn serve_from_channel(
 
             match msg {
                 DataSourceMessage::LogMsg(msg) => {
-                    let msg = match msg.to_transport(dl_log_encoding::rrd::Compression::LZ4) {
+                    let msg = match msg.to_transport(dl_log_encoding::dlr::Compression::LZ4) {
                         Ok(msg) => msg,
                         Err(err) => {
                             dl_log::error!("failed to encode message: {err}");
@@ -510,7 +510,7 @@ pub fn spawn_from_rx_set(
 
             match msg {
                 DataSourceMessage::LogMsg(msg) => {
-                    let msg = match msg.to_transport(dl_log_encoding::rrd::Compression::LZ4) {
+                    let msg = match msg.to_transport(dl_log_encoding::dlr::Compression::LZ4) {
                         Ok(msg) => msg,
                         Err(err) => {
                             dl_log::error!("failed to encode message: {err}");
@@ -1332,7 +1332,7 @@ mod tests {
 
     use itertools::{Itertools as _, chain};
     use dl_chunk::RowId;
-    use dl_log_encoding::rrd::Compression;
+    use dl_log_encoding::dlr::Compression;
     use dl_log_types::{LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind, StoreSource};
     use dl_protos::sdk_comms::v1alpha1::message_proxy_service_client::MessageProxyServiceClient;
     use dl_protos::sdk_comms::v1alpha1::message_proxy_service_server::MessageProxyServiceServer;

@@ -56,16 +56,16 @@ The newly introduced arguments `time_range_start`, `time_range_end`, and `select
 
 ## CLI
 
-### `.rrd` files are no longer tailed by default
+### `.dlr` files are no longer tailed by default
 
-Previously, when opening an `.rrd` file from the command line, the viewer would keep watching the file
+Previously, when opening an `.dlr` file from the command line, the viewer would keep watching the file
 for new data past EOF (tailing), which is useful when a writer process is still appending to the file.
 
-Starting with 0.30, `.rrd` files are read once and loading stops at EOF.
+Starting with 0.30, `.dlr` files are read once and loading stops at EOF.
 To restore the old tailing behavior, pass the `--follow` flag:
 
 ```sh
-dalaran --follow recording.rrd
+dalaran --follow recording.dlr
 ```
 
 ### `SeriesVisible` component type has been removed

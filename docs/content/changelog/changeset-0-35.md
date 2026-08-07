@@ -25,7 +25,7 @@ catalog or dataset.
 
 The Viewer now includes an experimental built-in catalog for working with local recordings without starting a separate catalog server.
 For now, it has to be activated through the settings menu since there's still some rough edges.
-The main advantage of this is that it allows you to stream arbitrary large rrd files from disk with ease!
+The main advantage of this is that it allows you to stream arbitrary large dlr files from disk with ease!
 
 The internal Viewer catalog implements the entire functionality of the OSS redap server protocol and can be connected to via the Python SDK.
 For security reasons, we limit this to connections from the same machine.
@@ -60,7 +60,7 @@ store = reader.stream(index_column=IndexColumn.timestamp("/time", input_unit="s"
 `Mp4Reader` (Rust & Python) can now plumb data through FFmpeg to remove unsupported B-frames, transcode to different output formats, adjust gop size, and take advantage of some GPU accelerated codecs.
 Also added improvements around reporting unsupported codecs more clearly, and handles large MP4 offsets without crashing.
 
-This is experimental so we are still iterating on how to make it as seamless as possible to go from mp4 to RRD.
+This is experimental so we are still iterating on how to make it as seamless as possible to go from mp4 to DLR.
 
 Feedback is welcome!
 
@@ -140,8 +140,8 @@ ParquetReader(path, index_columns=[IndexColumn.sequence("frame"), IndexColumn.ti
 
 ### `--follow` has been removed
 
-Dalaran no longer supports tailing `.rrd`.
-If you previously used this for live workflows, tee the data to multiple sinks instead, e.g. log to both the viewer and an `.rrd` file from the producing process.
+Dalaran no longer supports tailing `.dlr`.
+If you previously used this for live workflows, tee the data to multiple sinks instead, e.g. log to both the viewer and an `.dlr` file from the producing process.
 
 See [the sink documentation page](../concepts/logging-and-ingestion/sinks.md#multiple-sinks-tee-pattern) for more information on how to set up teeing.
 

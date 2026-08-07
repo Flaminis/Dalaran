@@ -14,7 +14,7 @@ use dl_log_types::{ArrowMsg, EntityPath, LogMsg, RecordingId, StoreId, TimePoint
 mod import_file;
 mod importer_archetype;
 mod importer_directory;
-mod importer_rrd;
+mod importer_dlr;
 mod importer_urdf;
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -36,7 +36,7 @@ pub use self::import_file::{import_from_file_contents, prepare_store_info};
 pub use self::importer_archetype::ArchetypeImporter;
 pub use self::importer_directory::DirectoryImporter;
 pub use self::importer_mcap::McapImporter;
-pub use self::importer_rrd::RrdImporter;
+pub use self::importer_dlr::RrdImporter;
 pub use self::importer_urdf::{UrdfImporter, UrdfTree, joint_transform as urdf_joint_transform};
 #[cfg(not(target_arch = "wasm32"))]
 pub use self::{
@@ -323,7 +323,7 @@ pub trait Importer: Send + Sync {
     ///
     /// The passed-in `store_id` is a shared recording created by the file importing machinery:
     /// implementers can decide to use it or not (e.g. it might make sense to log all images with a
-    /// similar name in a shared recording, while an rrd file is already its own recording).
+    /// similar name in a shared recording, while an dlr file is already its own recording).
     ///
     /// `path` isn't necessarily a _file_ path, but can be a directory as well: implementers are
     /// free to handle that however they decide.
@@ -352,7 +352,7 @@ pub trait Importer: Send + Sync {
     ///
     /// The passed-in `store_id` is a shared recording created by the file importing machinery:
     /// implementers can decide to use it or not (e.g. it might make sense to log all images with a
-    /// similar name in a shared recording, while an rrd file is already its own recording).
+    /// similar name in a shared recording, while an dlr file is already its own recording).
     ///
     /// The `path` of the file is given for informational purposes (e.g. to extract the file's
     /// extension): implementers should _not_ try to read from disk as there is likely isn't a
@@ -572,7 +572,7 @@ pub const SUPPORTED_MESH_EXTENSIONS: &[&str] = &["glb", "gltf", "obj", "stl", "d
 // TODO(#4532): `.ply` importer should support 2D point cloud & meshes
 pub const SUPPORTED_POINT_CLOUD_EXTENSIONS: &[&str] = &["ply"];
 
-pub const SUPPORTED_DALARAN_EXTENSIONS: &[&str] = &["rbl", "rrd"];
+pub const SUPPORTED_DALARAN_EXTENSIONS: &[&str] = &["dbl", "dlr"];
 
 /// 3rd party formats with built-in support.
 pub const SUPPORTED_THIRD_PARTY_FORMATS: &[&str] = &["mcap", "urdf"];
@@ -610,10 +610,10 @@ pub fn is_supported_file_extension(extension: &str) -> bool {
 
 /// Detect the file format from the first bytes of a file (magic bytes).
 ///
-/// Returns the file extension (e.g., `"rrd"`, `"mcap"`, `"png"`) if the format is recognized.
+/// Returns the file extension (e.g., `"dlr"`, `"mcap"`, `"png"`) if the format is recognized.
 ///
 /// Delegates to [`dl_sdk_types::components::MediaType::guess_from_data`] which handles
-/// Robotics-specific formats (RRD, MCAP, PLY) and standard formats (PNG, JPEG, GLB, MP4, etc.).
+/// Robotics-specific formats (DLR, MCAP, PLY) and standard formats (PNG, JPEG, GLB, MP4, etc.).
 pub fn detect_format_from_bytes(bytes: &[u8]) -> Option<String> {
     let media_type = dl_sdk_types::components::MediaType::guess_from_data(bytes)?;
     media_type.file_extension().map(|e| e.to_owned())
@@ -640,7 +640,7 @@ pub fn content_type_to_extension(content_type: &str) -> Option<String> {
 
 #[test]
 fn test_supported_extensions() {
-    assert!(is_supported_file_extension("rrd"));
+    assert!(is_supported_file_extension("dlr"));
     assert!(is_supported_file_extension("mcap"));
     assert!(is_supported_file_extension("png"));
     assert!(is_supported_file_extension("urdf"));
@@ -671,11 +671,11 @@ fn test_supported_mcap_decoder_identifiers() {
 fn test_detect_format_from_bytes() {
     assert_eq!(
         detect_format_from_bytes(b"RRF2xxxxx").as_deref(),
-        Some("rrd")
+        Some("dlr")
     );
     assert_eq!(
         detect_format_from_bytes(b"RRF0xxxxx").as_deref(),
-        Some("rrd")
+        Some("dlr")
     );
     assert_eq!(
         detect_format_from_bytes(&[0x89, 0x4D, 0x43, 0x41, 0x50, 0x30, 0x0D, 0x0A]).as_deref(),
@@ -725,7 +725,7 @@ fn test_content_type_to_extension() {
     );
     assert_eq!(
         content_type_to_extension("application/x-dalaran").as_deref(),
-        Some("rrd")
+        Some("dlr")
     );
     assert_eq!(
         content_type_to_extension("application/octet-stream").as_deref(),

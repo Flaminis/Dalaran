@@ -57,7 +57,7 @@ pub enum FlushError {
 #[cfg_attr(not(target_arch = "wasm32"), expect(clippy::large_enum_variant))]
 pub enum LogSource {
     /// The sender is a background thread reading data from a file on disk
-    /// (could be `.rrd` files, or `.glb`, `.png`, …).
+    /// (could be `.dlr` files, or `.glb`, `.png`, …).
     File { path: std::path::PathBuf },
 
     /// The sender is a background thread fetching data from an HTTP file server.
@@ -67,14 +67,14 @@ pub enum LogSource {
         url: String,
     },
 
-    /// The channel was created in the context of loading an `.rrd` file from a `postMessage`
+    /// The channel was created in the context of loading an `.dlr` file from a `postMessage`
     /// javascript event.
     ///
     /// Only applicable to web browser iframes.
     /// Used for the inline web viewer in a notebook.
     RrdWebEvent,
 
-    /// The channel was created in the context of a javascript client submitting an RRD directly as bytes.
+    /// The channel was created in the context of a javascript client submitting an DLR directly as bytes.
     JsChannel {
         /// The name of the channel reported by the javascript client.
         channel_name: String,
@@ -339,14 +339,14 @@ mod tests {
 
     #[test]
     fn url_display_name_keeps_short_urls() {
-        let url = "https://example.com/data.rrd";
+        let url = "https://example.com/data.dlr";
         assert_eq!(url_display_name(url), url);
     }
 
     #[test]
     fn url_display_name_keeps_long_real_urls() {
         // Presigned links and redap URIs are legitimately long — render them in full.
-        let url = format!("https://example.com/data.rrd?token={}", "x".repeat(1000));
+        let url = format!("https://example.com/data.dlr?token={}", "x".repeat(1000));
         assert_eq!(url_display_name(&url), url);
     }
 

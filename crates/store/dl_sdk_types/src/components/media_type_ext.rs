@@ -76,7 +76,7 @@ impl MediaType {
     ///
     /// This is not a standardized format and mostly exists here to accommodate file type detection
     /// in the data loader.
-    pub const RRD: &'static str = "application/x-dalaran";
+    pub const DLR: &'static str = "application/x-dalaran";
 
     /// [MCAP](https://mcap.dev/) recording: `application/x-mcap`.
     ///
@@ -181,8 +181,8 @@ impl MediaType {
     /// This is not a standardized format and mostly exists here to accommodate file type detection
     /// in the data loader.
     #[inline]
-    pub fn rrd() -> Self {
-        Self(Self::RRD.into())
+    pub fn dlr() -> Self {
+        Self(Self::DLR.into())
     }
 
     /// `application/x-mcap`
@@ -289,7 +289,7 @@ impl MediaType {
                 && metadata.height <= MAX_REASONABLE_DIMENSION
         }
 
-        fn rrd_matcher(buf: &[u8]) -> bool {
+        fn dlr_matcher(buf: &[u8]) -> bool {
             // "RRF2" (current) or "RRF1"/"RRF0" (legacy)
             buf.starts_with(b"RRF2") || buf.starts_with(b"RRF1") || buf.starts_with(b"RRF0")
         }
@@ -310,7 +310,7 @@ impl MediaType {
         // - obj is simply text, so no magic byte
 
         let mut inferer = infer::Infer::new();
-        inferer.add(Self::RRD, "rrd", rrd_matcher);
+        inferer.add(Self::DLR, "dlr", dlr_matcher);
         inferer.add(Self::MCAP, "mcap", mcap_matcher);
         inferer.add(Self::PLY, "ply", ply_matcher);
         inferer.add(Self::GLB, "glb", glb_matcher);
@@ -352,7 +352,7 @@ impl MediaType {
             Self::TEXT => Some("txt"),
 
             // Custom MIME types not known to mime_guess2:
-            Self::RRD => Some("rrd"),
+            Self::DLR => Some("dlr"),
             Self::MCAP => Some("mcap"),
             Self::PLY => Some("ply"),
 

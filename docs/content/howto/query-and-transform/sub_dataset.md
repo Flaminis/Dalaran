@@ -5,7 +5,7 @@ description: Reference a subset of an existing dataset without copying
 ---
 
 When experimenting with new features it's often practical to work with a subset of data without modifying the original.
-A sub-dataset references the same underlying RRD files so no data is copied.
+A sub-dataset references the same underlying DLR files so no data is copied.
 
 The dependencies in this example are contained in `dalaran-sdk[all]`.
 
@@ -39,6 +39,6 @@ snippet: howto/sub_dataset[verify]
 ## Cleanup
 
 Delete the sub-dataset when it is no longer needed.
-This only removes the dataset entry from the catalog. The underlying RRD storage is not affected.
+This only removes the dataset entry from the catalog. The underlying DLR storage is not affected.
 
 snippet: howto/sub_dataset[cleanup]

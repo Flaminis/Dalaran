@@ -1,7 +1,7 @@
-# Jobs that only run for developers on the `rerun` team.
-# We have to ensure that these jobs _only_ run for PRs inside the `rerun-io` organization
+# Jobs that only run for developers on the `dalaran` team.
+# We have to ensure that these jobs _only_ run for PRs inside the `dalaran-io` organization
 # this is done using the following check, added to every job:
-#     if: github.event.pull_request.head.repo.owner.login == 'rerun-io'
+#     if: github.event.pull_request.head.repo.owner.login == 'dalaran-io'
 # (unfortunately this does not work on the trigger or the entire `jobs` category)
 
 name: Pull-Request
@@ -18,7 +18,7 @@ permissions: write-all
 jobs:
   checks:
     name: Checks
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io'
     uses: ./.github/workflows/reusable_checks.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -26,7 +26,7 @@ jobs:
     secrets: inherit
 
   paths-filter:
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io'
     runs-on: ubuntu-latest
     outputs:
       cpp_changes: ${{ steps.filter.outputs.cpp_changes }}
@@ -45,11 +45,11 @@ jobs:
           filters: |
             cpp_changes:
               # - .github/**/*.yml  -  this is tempting, but leads to constant rebuilds
-              - crates/top/rerun_c/**/*
+              - crates/top/dalaran_c/**/*
               - pixi.lock # maybe our build commands have changed
               - pixi.toml # maybe our build commands have changed
               - scripts/ci/**/*
-              - rerun_cpp/.clang-tidy
+              - dalaran_cpp/.clang-tidy
               - '**/*.cpp'
               - '**/*.hpp'
               - '**/*cmake'
@@ -85,7 +85,7 @@ jobs:
               - pixi.toml # maybe our build commands have changed
               - "**/*.rs"
               # wgsl is embedded into Rust binaries and should trigger tests.
-              - "rerun/**/*.wgsl"
+              - "dalaran/**/*.wgsl"
               - "**/*.toml"
               - "crates/**/*.png"
               - "tests/rust/**/*.png"
@@ -116,7 +116,7 @@ jobs:
   protobuf-checks:
     name: "Protobuf Checks"
     needs: [paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.protobuf_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.protobuf_changes == 'true'
     uses: ./.github/workflows/reusable_checks_protobuf.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -125,7 +125,7 @@ jobs:
   rust-checks:
     name: "Rust Checks"
     needs: [paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.rust_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.rust_changes == 'true'
     uses: ./.github/workflows/reusable_checks_rust.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -135,7 +135,7 @@ jobs:
   python-checks:
     name: "Python Checks"
     needs: [paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.python_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.python_changes == 'true'
     uses: ./.github/workflows/reusable_checks_python.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -152,10 +152,10 @@ jobs:
     secrets: inherit
 
   cli-build:
-    name: "Rerun CLI Build"
+    name: "Dalaran CLI Build"
     needs: [paths-filter]
     if: needs.paths-filter.outputs.python_changes == 'true' || needs.paths-filter.outputs.rust_changes == 'true'
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
       PLATFORM: linux-x64
@@ -166,7 +166,7 @@ jobs:
   min-wheel-build:
     name: "Minimum Wheel Build"
     needs: [cli-build, paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && (needs.paths-filter.outputs.python_changes == 'true' || needs.paths-filter.outputs.rust_changes == 'true')
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && (needs.paths-filter.outputs.python_changes == 'true' || needs.paths-filter.outputs.rust_changes == 'true')
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -178,7 +178,7 @@ jobs:
   min-wheel-test:
     name: "Minimum Wheel Test"
     needs: [min-wheel-build, paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && (needs.paths-filter.outputs.python_changes == 'true' || needs.paths-filter.outputs.rust_changes == 'true')
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && (needs.paths-filter.outputs.python_changes == 'true' || needs.paths-filter.outputs.rust_changes == 'true')
     uses: ./.github/workflows/reusable_test_wheels.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -188,9 +188,9 @@ jobs:
     secrets: inherit
 
   build-js:
-    name: "Build rerun_js"
+    name: "Build dalaran_js"
     needs: [paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.web_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.web_changes == 'true'
     uses: ./.github/workflows/reusable_build_js.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -198,7 +198,7 @@ jobs:
 
   build-web:
     name: "Build web viewer"
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.web_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.web_changes == 'true'
     needs: [paths-filter]
     uses: ./.github/workflows/reusable_build_web.yml
     with:
@@ -209,7 +209,7 @@ jobs:
   web-test:
     name: "Web tests"
     needs: [paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.web_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.web_changes == 'true'
     uses: ./.github/workflows/reusable_web_test.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -218,7 +218,7 @@ jobs:
   upload-web:
     name: "Upload Web"
     needs: [build-web]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io'
     uses: ./.github/workflows/reusable_upload_web.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -228,7 +228,7 @@ jobs:
   upload-js:
     name: "Upload JS"
     needs: [build-js]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io'
     uses: ./.github/workflows/reusable_upload_js.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -238,7 +238,7 @@ jobs:
   deploy-landing-preview:
     name: "Deploy Landing Preview"
     needs: [paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.docs_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.docs_changes == 'true'
     uses: ./.github/workflows/reusable_deploy_landing_preview.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}
@@ -248,7 +248,7 @@ jobs:
   check-doc-redirects:
     name: "Check Doc Redirects"
     needs: [paths-filter]
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && needs.paths-filter.outputs.docs_changes == 'true'
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && needs.paths-filter.outputs.docs_changes == 'true'
     uses: ./.github/workflows/reusable_checks_doc_redirects.yml
     with:
       CONCURRENCY: pr-${{ github.event.pull_request.number }}

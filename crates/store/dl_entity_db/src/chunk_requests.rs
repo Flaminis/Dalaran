@@ -16,7 +16,7 @@ pub struct RequestInfo {
     /// What chunks are included in this batch.
     pub root_chunk_ids: ahash::HashSet<ChunkId>,
 
-    /// Row indices in the RRD manifest.
+    /// Row indices in the DLR manifest.
     pub row_indices: BTreeSet<usize>,
 
     /// Total uncompressed size of all chunks in bytes.

@@ -26,9 +26,9 @@ FRAGMENTED_NUM_ROWS = 4_200
 
 
 @pytest.fixture(scope="session")
-def fragmented_rrd_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
+def fragmented_dlr_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """
-    RRD with `FRAGMENTED_NUM_ROWS` sorted scalar rows on /sensor, one chunk per row.
+    DLR with `FRAGMENTED_NUM_ROWS` sorted scalar rows on /sensor, one chunk per row.
 
     Row count is sized to be larger than LIVE's `max_rows=4096` ceiling and
     smaller than OBJECT_STORE's `max_rows=65_536`, so the splitter behaves
@@ -37,33 +37,33 @@ def fragmented_rrd_path(tmp_path_factory: pytest.TempPathFactory) -> Path:
     Uses `ChunkBatcherConfig.ALWAYS_TEST_ONLY()` so the microbatcher cannot coalesce
     sends behind our back: each `send_columns` becomes its own chunk.
     """
-    rrd_path = tmp_path_factory.mktemp("compact") / "fragmented.rrd"
+    dlr_path = tmp_path_factory.mktemp("compact") / "fragmented.dlr"
     with dl.RecordingStream(
         "dalaran_example_compact_test",
         recording_id="compact-test-id",
         batcher_config=dl.ChunkBatcherConfig.ALWAYS_TEST_ONLY(),
     ) as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
         for i in range(FRAGMENTED_NUM_ROWS):
             rec.send_columns(
                 "/sensor",
                 indexes=[dl.TimeColumn("frame", sequence=[i])],
                 columns=dl.Scalars.columns(scalars=[float(i)]),
             )
-    return rrd_path
+    return dlr_path
 
 
-# Session-scoped collected stores: each `collect()` over the fragmented RRD takes
+# Session-scoped collected stores: each `collect()` over the fragmented DLR takes
 # ~0.5s, and several tests below need the same outputs. Compute once, share across
 # tests — they only read from the resulting `ChunkStore`.
 @pytest.fixture(scope="session")
-def fragmented_default_store(fragmented_rrd_path: Path) -> ChunkStore:
-    return RrdReader(fragmented_rrd_path).stream().collect()
+def fragmented_default_store(fragmented_dlr_path: Path) -> ChunkStore:
+    return RrdReader(fragmented_dlr_path).stream().collect()
 
 
 @pytest.fixture(scope="session")
-def fragmented_optimized_store(fragmented_rrd_path: Path) -> ChunkStore:
-    return RrdReader(fragmented_rrd_path).stream().collect(optimize=OptimizationProfile())
+def fragmented_optimized_store(fragmented_dlr_path: Path) -> ChunkStore:
+    return RrdReader(fragmented_dlr_path).stream().collect(optimize=OptimizationProfile())
 
 
 VIDEO_ASSETS_DIR = pathlib.Path(__file__).parents[3] / "tests" / "assets" / "video"
@@ -76,18 +76,18 @@ VIDEO_CASES = [
 ]
 
 
-def _build_video_stream_rrd(tmp_dir: Path, filename: str, codec: dl.VideoCodec) -> tuple[Path, int]:
+def _build_video_stream_dlr(tmp_dir: Path, filename: str, codec: dl.VideoCodec) -> tuple[Path, int]:
     """
-    Build an RRD with one VideoStream sample chunk per demuxed mp4 packet.
+    Build an DLR with one VideoStream sample chunk per demuxed mp4 packet.
 
-    Returns `(rrd_path, num_gops)` where `num_gops` is the number of
+    Returns `(dlr_path, num_gops)` where `num_gops` is the number of
     keyframes (I-frames) in the source video.
     """
     import av
     from av.bitstream import BitStreamFilterContext
 
     video_path = VIDEO_ASSETS_DIR / filename
-    rrd_path = tmp_dir / f"{video_path.stem}.rrd"
+    dlr_path = tmp_dir / f"{video_path.stem}.dlr"
 
     container = av.open(str(video_path))
     num_gops = 0
@@ -106,7 +106,7 @@ def _build_video_stream_rrd(tmp_dir: Path, filename: str, codec: dl.VideoCodec) 
         bsf = BitStreamFilterContext(filter_name, video_stream) if filter_name else None
 
         with dl.RecordingStream("dalaran_example_video_compact", recording_id=f"video-compact-{video_path.stem}") as rec:
-            rec.save(rrd_path)
+            rec.save(dlr_path)
             rec.log("/video", dl.VideoStream(codec=codec), static=True)
 
             def log_packet(packet: av.Packet) -> None:
@@ -131,7 +131,7 @@ def _build_video_stream_rrd(tmp_dir: Path, filename: str, codec: dl.VideoCodec) 
     finally:
         container.close()
 
-    return rrd_path, num_gops
+    return dlr_path, num_gops
 
 
 # ---------------------------------------------------------------------------
@@ -139,14 +139,14 @@ def _build_video_stream_rrd(tmp_dir: Path, filename: str, codec: dl.VideoCodec) 
 # ---------------------------------------------------------------------------
 
 
-def test_collect_from_rrd_reader(test_rrd_path: Path) -> None:
+def test_collect_from_dlr_reader(test_dlr_path: Path) -> None:
     """`reader.stream().collect()` returns a fully-materialized ChunkStore."""
-    store = RrdReader(test_rrd_path).stream().collect()
+    store = RrdReader(test_dlr_path).stream().collect()
     assert isinstance(store, ChunkStore)
 
 
-def test_repr(test_rrd_path: Path) -> None:
-    store = RrdReader(test_rrd_path).stream().collect()
+def test_repr(test_dlr_path: Path) -> None:
+    store = RrdReader(test_dlr_path).stream().collect()
     assert "ChunkStore" in repr(store)
 
 
@@ -155,14 +155,14 @@ def test_repr(test_rrd_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_schema(test_rrd_path: Path, snapshot: SnapshotAssertion) -> None:
+def test_schema(test_dlr_path: Path, snapshot: SnapshotAssertion) -> None:
     """schema() returns a Schema matching the stored data."""
-    store = RrdReader(test_rrd_path).stream().collect()
+    store = RrdReader(test_dlr_path).stream().collect()
     assert repr(store.schema()) == snapshot
 
 
-def test_schema_entity_paths(test_rrd_path: Path) -> None:
-    store = RrdReader(test_rrd_path).stream().collect()
+def test_schema_entity_paths(test_dlr_path: Path) -> None:
+    store = RrdReader(test_dlr_path).stream().collect()
     paths = store.schema().entity_paths()
     assert "/robots/arm" in paths
     assert "/cameras/front" in paths
@@ -174,22 +174,22 @@ def test_schema_entity_paths(test_rrd_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_stream_returns_lazy_chunk_stream(test_rrd_path: Path) -> None:
-    store = RrdReader(test_rrd_path).stream().collect()
+def test_stream_returns_lazy_chunk_stream(test_dlr_path: Path) -> None:
+    store = RrdReader(test_dlr_path).stream().collect()
     assert isinstance(store.stream(), LazyChunkStream)
 
 
-def test_stream_is_repeatable(test_rrd_path: Path) -> None:
+def test_stream_is_repeatable(test_dlr_path: Path) -> None:
     """stream() can be called multiple times; each produces the same schema."""
-    store = RrdReader(test_rrd_path).stream().collect()
+    store = RrdReader(test_dlr_path).stream().collect()
     first = store.stream().collect()
     second = store.stream().collect()
     assert first.schema() == second.schema()
 
 
-def test_stream_supports_pipeline_ops(test_rrd_path: Path) -> None:
+def test_stream_supports_pipeline_ops(test_dlr_path: Path) -> None:
     """Chunks from load().stream() work with filter/collect."""
-    store = RrdReader(test_rrd_path).stream().collect()
+    store = RrdReader(test_dlr_path).stream().collect()
     filtered = store.stream().filter(is_static=True).collect()
     assert filtered.schema().entity_paths() == ["/config"]
 
@@ -199,34 +199,34 @@ def test_stream_supports_pipeline_ops(test_rrd_path: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_same_schema(test_rrd_path: Path) -> None:
+def test_same_schema(test_dlr_path: Path) -> None:
     """store().stream().collect() and reader.stream().collect() produce the same schema."""
-    reader = RrdReader(test_rrd_path)
+    reader = RrdReader(test_dlr_path)
     from_streaming = reader.stream().collect()
     from_store = reader.store().stream().collect()
     assert from_streaming.schema() == from_store.schema()
 
 
 # ---------------------------------------------------------------------------
-# ChunkStore.write_rrd()
+# ChunkStore.write_dlr()
 # ---------------------------------------------------------------------------
 
 
-def test_write_rrd_roundtrip(test_rrd_path: Path, tmp_path: Path) -> None:
-    """write_rrd() -> RrdReader().stream().collect() preserves schema."""
-    store1 = RrdReader(test_rrd_path).stream().collect()
-    out = tmp_path / "roundtrip.rrd"
-    store1.write_rrd(out, application_id=APP_ID, recording_id=RECORDING_ID)
+def test_write_dlr_roundtrip(test_dlr_path: Path, tmp_path: Path) -> None:
+    """write_dlr() -> RrdReader().stream().collect() preserves schema."""
+    store1 = RrdReader(test_dlr_path).stream().collect()
+    out = tmp_path / "roundtrip.dlr"
+    store1.write_dlr(out, application_id=APP_ID, recording_id=RECORDING_ID)
 
     store2 = RrdReader(out).stream().collect()
     assert store1.schema() == store2.schema()
 
 
-def test_write_rrd_metadata(test_rrd_path: Path, tmp_path: Path) -> None:
-    """write_rrd() writes the provided application_id and recording_id."""
-    store = RrdReader(test_rrd_path).stream().collect()
-    out = tmp_path / "meta.rrd"
-    store.write_rrd(out, application_id="dalaran_example_my_app", recording_id="my-rec")
+def test_write_dlr_metadata(test_dlr_path: Path, tmp_path: Path) -> None:
+    """write_dlr() writes the provided application_id and recording_id."""
+    store = RrdReader(test_dlr_path).stream().collect()
+    out = tmp_path / "meta.dlr"
+    store.write_dlr(out, application_id="dalaran_example_my_app", recording_id="my-rec")
 
     reader = RrdReader(out)
     recs = reader.recordings()
@@ -274,7 +274,7 @@ def test_collect_preserves_row_count(
 
 
 def test_collect_with_object_store_profile_uses_object_store_thresholds(
-    fragmented_rrd_path: Path,
+    fragmented_dlr_path: Path,
 ) -> None:
     """
     End-to-end plumbing: OBJECT_STORE's larger thresholds reach the resulting ChunkStore.
@@ -292,8 +292,8 @@ def test_collect_with_object_store_profile_uses_object_store_thresholds(
     chunk count: it only relies on the splitter respecting the configured
     ceiling, which is a hard invariant.
     """
-    live_store = RrdReader(fragmented_rrd_path).stream().collect(optimize=OptimizationProfile.LIVE)
-    object_store_store = RrdReader(fragmented_rrd_path).stream().collect(optimize=OptimizationProfile.OBJECT_STORE)
+    live_store = RrdReader(fragmented_dlr_path).stream().collect(optimize=OptimizationProfile.LIVE)
+    object_store_store = RrdReader(fragmented_dlr_path).stream().collect(optimize=OptimizationProfile.OBJECT_STORE)
 
     def sensor_rows(s: ChunkStore) -> list[int]:
         return [c.num_rows for c in s.stream().to_chunks() if str(c.entity_path) == "/sensor"]
@@ -326,8 +326,8 @@ def test_collect_optimize_video_stream_summary(tmp_path_factory: pytest.TempPath
     sections = []
     for filename, codec in VIDEO_CASES:
         tmp_dir = tmp_path_factory.mktemp("collect_optimize_video")
-        rrd_path, num_gops = _build_video_stream_rrd(tmp_dir, filename, codec)
-        reader = RrdReader(rrd_path)
+        dlr_path, num_gops = _build_video_stream_dlr(tmp_dir, filename, codec)
+        reader = RrdReader(dlr_path)
 
         # Optimize without GoP alignment.
         without_gop = reader.stream().collect(optimize=OptimizationProfile(gop_batching=False))

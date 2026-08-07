@@ -52,7 +52,7 @@ pub enum Item {
     /// Select a specific application, to see which recordings and blueprints are loaded for it.
     AppId(dl_log_types::ApplicationId),
 
-    /// A place where data comes from, e.g. the path to a .rrd or a gRPC URL.
+    /// A place where data comes from, e.g. the path to a .dlr or a gRPC URL.
     DataSource(dl_log_channel::LogSource),
 
     /// A recording (or blueprint)

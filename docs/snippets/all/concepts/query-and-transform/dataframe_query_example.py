@@ -9,10 +9,10 @@ from datafusion import col
 
 import dalaran as dl
 
-# a cross-platform way to generate a rrd path, cleaned up when the process exits
+# a cross-platform way to generate a dlr path, cleaned up when the process exits
 _tmp_dir = tempfile.TemporaryDirectory()
 atexit.register(_tmp_dir.cleanup)
-RRD_PATH = str(Path(_tmp_dir.name) / "query_example.rrd")
+DLR_PATH = str(Path(_tmp_dir.name) / "query_example.dlr")
 
 # region: setup
 # create some data
@@ -21,7 +21,7 @@ scalars = [math.sin(t / 10.0) for t in times]
 
 # log the data to a temporary recording
 with dl.RecordingStream("dalaran_example_dataframe_query") as rec:
-    rec.save(RRD_PATH)
+    rec.save(DLR_PATH)
     rec.send_columns(
         "/data",
         indexes=[dl.TimeColumn("step", sequence=times)],
@@ -32,7 +32,7 @@ with dl.RecordingStream("dalaran_example_dataframe_query") as rec:
 
 # region: query
 # load the demo recording in a temporary catalog
-with dl.server.Server(datasets={"dataset": [RRD_PATH]}) as server:
+with dl.server.Server(datasets={"dataset": [DLR_PATH]}) as server:
     # obtain a dataset from the catalog
     dataset = server.client().get_dataset("dataset")
 

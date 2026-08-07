@@ -8,13 +8,13 @@
 
 use rand::Rng as _;
 use rand::distr::Uniform;
-use rerun::external::dl_log;
+use dalaran::external::dl_log;
 
 #[derive(Debug, clap::Parser)]
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -23,7 +23,7 @@ fn main() -> anyhow::Result<()> {
     use clap::Parser as _;
     let args = Args::parse();
 
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_incremental_logging")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_incremental_logging")?;
     run(&rec)
 }
 
@@ -39,7 +39,7 @@ It was logged with the following code:
 rec.set_time_sequence("frame_nr", 0);
 rec.log(
     "points",
-    &rerun::Points3D::update_fields()
+    &dalaran::Points3D::update_fields()
         .with_colors([(255, 0, 0)])
         .with_radii([0.1]),
 )?;
@@ -55,7 +55,7 @@ for i in 0..10 {
 
     rec.log(
         "points",
-        &rerun::Points3D::update_fields().with_positions(
+        &dalaran::Points3D::update_fields().with_positions(
             (0..10).map(|_| (rng.sample(dist), rng.sample(dist), rng.sample(dist))),
         ),
     )?;
@@ -65,15 +65,15 @@ for i in 0..10 {
 Move the time cursor around, and notice how the colors and radii from frame 0 are still picked up by later frames, while the points themselves keep changing every frame.
 "#;
 
-fn run(rec: &rerun::RecordingStream) -> anyhow::Result<()> {
-    rec.log_static("readme", &rerun::TextDocument::from_markdown(README))?;
+fn run(rec: &dalaran::RecordingStream) -> anyhow::Result<()> {
+    rec.log_static("readme", &dalaran::TextDocument::from_markdown(README))?;
 
     // Only log colors and radii once.
     // Logging statically would also work (i.e. `log_static`).
     rec.set_time_sequence("frame_nr", 0);
     rec.log(
         "points",
-        &rerun::Points3D::update_fields()
+        &dalaran::Points3D::update_fields()
             .with_colors([(255, 0, 0)])
             .with_radii([0.1]),
     )?;
@@ -89,7 +89,7 @@ fn run(rec: &rerun::RecordingStream) -> anyhow::Result<()> {
 
         rec.log(
             "points",
-            &rerun::Points3D::update_fields().with_positions(
+            &dalaran::Points3D::update_fields().with_positions(
                 (0..10).map(|_| (rng.sample(dist), rng.sample(dist), rng.sample(dist))),
             ),
         )?;

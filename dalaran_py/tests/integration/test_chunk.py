@@ -901,8 +901,8 @@ def test_with_entity_path_preserves_data() -> None:
     assert sorted(moved.timeline_names) == sorted(chunk.timeline_names)
 
 
-def _write_simple_rrd(path: Path, app_id: str, recording_id: str, *, send_properties: bool) -> None:
-    """Write an RRD with a fixed two-entity, two-archetype schema."""
+def _write_simple_dlr(path: Path, app_id: str, recording_id: str, *, send_properties: bool) -> None:
+    """Write an DLR with a fixed two-entity, two-archetype schema."""
     with dl.RecordingStream(app_id, recording_id=recording_id, send_properties=send_properties) as rec:
         rec.save(path)
         rec.send_columns(
@@ -926,10 +926,10 @@ def test_merge_two_rrds_with_distinct_entity_path_prefixes(tmp_path: Path, send_
     and the realistic case (recordings with `/__properties` need to be filtered out before
     prefixing, so each merged recording keeps a single canonical properties chunk).
     """
-    a_path = tmp_path / "a.rrd"
-    b_path = tmp_path / "b.rrd"
-    _write_simple_rrd(a_path, "merge_test_a", "rec_a", send_properties=send_properties)
-    _write_simple_rrd(b_path, "merge_test_b", "rec_b", send_properties=send_properties)
+    a_path = tmp_path / "a.dlr"
+    b_path = tmp_path / "b.dlr"
+    _write_simple_dlr(a_path, "merge_test_a", "rec_a", send_properties=send_properties)
+    _write_simple_dlr(b_path, "merge_test_b", "rec_b", send_properties=send_properties)
 
     def prefixed(reader: RrdReader, prefix: str) -> LazyChunkStream:
         stream = reader.stream()
@@ -941,8 +941,8 @@ def test_merge_two_rrds_with_distinct_entity_path_prefixes(tmp_path: Path, send_
     left = prefixed(RrdReader(a_path), "/left")
     right = prefixed(RrdReader(b_path), "/right")
 
-    merged_path = tmp_path / "merged.rrd"
-    LazyChunkStream.merge(left, right).write_rrd(merged_path, application_id="merged", recording_id="merged")
+    merged_path = tmp_path / "merged.dlr"
+    LazyChunkStream.merge(left, right).write_dlr(merged_path, application_id="merged", recording_id="merged")
 
     paths = set(RrdReader(merged_path).store().schema().entity_paths())
     assert paths == {"/left/points", "/left/log", "/right/points", "/right/log"}

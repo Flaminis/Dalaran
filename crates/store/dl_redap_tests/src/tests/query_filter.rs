@@ -453,7 +453,7 @@ pub async fn query_dataset_or_of_ranges_fans_out(service: impl DalaranCloudServi
     service
         .register_with_dataset_name_blocking(dataset_name, data_sources_def.to_data_sources())
         .await;
-    // Keep the temp RRD files alive: some backends re-read them during `query_dataset`.
+    // Keep the temp DLR files alive: some backends re-read them during `query_dataset`.
     let _data_sources = data_sources_def;
 
     let query = dl_chunk_store::QueryExpression {

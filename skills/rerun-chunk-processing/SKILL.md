@@ -1,29 +1,29 @@
 ---
-name: rerun-chunk-processing
-description: "Core mechanics of the Rerun Chunk Processing API (rerun.experimental) — LazyChunkStream pipelines, Chunk, lenses (MutateLens/DeriveLens/Selector), RrdReader, writing optimized RRDs. Read BEFORE writing any ingestion/conversion/preprocessing code (convert an MCAP, build a recording from a dataset, preprocess an .rrd, port an old converter): it mandates reader+lens pipelines and steers away from hand-built chunks — no Chunk.from_columns for data a reader/lens can produce, no per-message rr.log, no manual pa.array assembly. Source-specific knowledge lives in the importer skills (rerun-mcap, rerun-urdf, rerun-parquet, rerun-lerobot); read rerun-data-model first to decide what the data should become."
+name: dalaran-chunk-processing
+description: "Core mechanics of the Dalaran Chunk Processing API (dalaran.experimental) — LazyChunkStream pipelines, Chunk, lenses (MutateLens/DeriveLens/Selector), RrdReader, writing optimized RRDs. Read BEFORE writing any ingestion/conversion/preprocessing code (convert an MCAP, build a recording from a dataset, preprocess an .dlr, port an old converter): it mandates reader+lens pipelines and steers away from hand-built chunks — no Chunk.from_columns for data a reader/lens can produce, no per-message rr.log, no manual pa.array assembly. Source-specific knowledge lives in the importer skills (dalaran-mcap, dalaran-urdf, dalaran-parquet, dalaran-lerobot); read dalaran-data-model first to decide what the data should become."
 user_invocable: true
 allowed-tools: Read, Grep, Bash, WebFetch
 ---
 
-# Rerun chunk processing
+# Dalaran chunk processing
 
-The pipeline layer between raw data and an RRD: readers produce `Chunk`s,
+The pipeline layer between raw data and an DLR: readers produce `Chunk`s,
 streams transform them, terminal calls execute. This skill is the generic
-mechanics only. Decide the data model first (`rerun-data-model`), then pick the
+mechanics only. Decide the data model first (`dalaran-data-model`), then pick the
 importer skill for each source:
 
 | Source                                    | Reader                                  | Skill           |
 | ----------------------------------------- | --------------------------------------- | --------------- |
-| MCAP file (ROS2, protobuf, Foxglove)      | `McapReader(path).stream()`             | `rerun-mcap`    |
-| URDF robot model (+ joint states → FK)    | `UrdfTree.from_file_path(...).stream()` | `rerun-urdf`    |
-| Parquet table (trajectories, sensor logs) | `ParquetReader(path).stream()`          | `rerun-parquet` |
-| LeRobot dataset directory                 | built-in importer, then `RrdReader`     | `rerun-lerobot` |
-| Existing RRD                              | `RrdReader(path)`                       | here, below     |
+| MCAP file (ROS2, protobuf, Foxglove)      | `McapReader(path).stream()`             | `dalaran-mcap`    |
+| URDF robot model (+ joint states → FK)    | `UrdfTree.from_file_path(...).stream()` | `dalaran-urdf`    |
+| Parquet table (trajectories, sensor logs) | `ParquetReader(path).stream()`          | `dalaran-parquet` |
+| LeRobot dataset directory                 | built-in importer, then `RrdReader`     | `dalaran-lerobot` |
+| Existing DLR                              | `RrdReader(path)`                       | here, below     |
 | Sidecar files (JSON calib, metadata)      | `Chunk.from_columns` + `from_iter`      | here, below     |
 
-The API is `rerun.experimental`; when
+The API is `dalaran.experimental`; when
 behavior matters, check the installed surface:
-`python -c "from rerun.experimental import LazyChunkStream; help(LazyChunkStream)"`.
+`python -c "from dalaran.experimental import LazyChunkStream; help(LazyChunkStream)"`.
 
 ## Decision rule: where does each component come from?
 
@@ -32,11 +32,11 @@ writing any conversion code — most "build it by hand" instincts are wrong here
 
 1. **Source a reader supports?** Use the reader's `.stream()`; never hand-parse
    and re-log. MCAP→`McapReader`, URDF→`UrdfTree`, parquet→`ParquetReader`,
-   RRD→`RrdReader`, LeRobot dir→`log_file_from_path`.
+   DLR→`RrdReader`, LeRobot dir→`log_file_from_path`.
 2. **A decoder already emits the archetype?** Foxglove gives `Transform3D`,
    `Pinhole`, `VideoStream` (real sample bytes) ready-made — **pass it through**,
    do not re-derive. Only custom-protobuf topics arrive as `<Name>:message` and
-   need a lens (see `rerun-mcap`).
+   need a lens (see `dalaran-mcap`).
 3. **Fix an existing component in place** (swapped resolution, recolor, unit
    convert)? `MutateLens`, `output_mode="forward_unmatched"`.
 4. **Derive a new component/entity** (FK→`/tf`, scalars from a message)?
@@ -49,7 +49,7 @@ writing any conversion code — most "build it by hand" instincts are wrong here
    hand-measured extrinsics, external metadata)? `Chunk.from_columns` + `from_iter`.
 6. Finish with `LazyChunkStream.merge(...)` →
    `.collect(optimize=OptimizationProfile.OBJECT_STORE)` →
-   `write_rrd(application_id, recording_id)`.
+   `write_dlr(application_id, recording_id)`.
 
 Why this order: the pipeline stays lazy, columnar, multithreaded, and
 `OBJECT_STORE`-optimizable. A hand-built row loop or an out-of-lens `pa.array`
@@ -62,7 +62,7 @@ If you are writing the left, stop and use the right:
 - **`for`-loop building rows/components** → a lens with a `Selector(...).pipe(...)`
   PyArrow-compute callback.
 - **`rr.init` + `rr.log` per message for conversion** → that is _live_ logging;
-  for ingestion, read with a reader and `write_rrd`.
+  for ingestion, read with a reader and `write_dlr`.
 - **`chunk.to_record_batch()` + `pc.filter` then rebuilding via
   `Chunk.from_columns`** (row-thinning by hand) → `stream.drop(content=...)`,
   `.split(...)`, or a `MutateLens` returning a filtered `pa.array`.
@@ -70,7 +70,7 @@ If you are writing the left, stop and use the right:
   move the transform inside a `MutateLens`/`DeriveLens` selector callback.
 - **`rr.send_columns` hand-assembled from a custom parser** → use the matching
   reader; it produces chunks directly.
-- **Parsing MCAP/URDF with a non-Rerun library then re-logging** → `McapReader`
+- **Parsing MCAP/URDF with a non-Dalaran library then re-logging** → `McapReader`
   / `UrdfTree`.
 - **`Chunk.from_columns` for data a reader already decodes** (`Pinhole`
   intrinsics, `VideoStream`, `Transform3D` from a transforms topic) → keep it in
@@ -89,7 +89,7 @@ check every `Chunk.from_columns` / for-loop against this list before copying.
 
 - `LazyChunkStream` is a lazy pipeline DAG, not a collection. Building
   filters, lenses, maps, splits, and merges reads no source data.
-- Execution starts at terminal calls: `write_rrd(...)`, `collect()`,
+- Execution starts at terminal calls: `write_dlr(...)`, `collect()`,
   `to_chunks()`, or iterating the stream.
 - Execution is streaming, multithreaded, and mostly GIL-free. Prefer
   stream/lens operations and PyArrow compute over Python row loops.
@@ -100,12 +100,12 @@ check every `Chunk.from_columns` / for-loop against this list before copying.
 - `ChunkStore` is materialized in memory (`stream.collect()`,
   `ChunkStore.from_chunks`). `LazyStore` is manifest-indexed, loads chunks on
   demand (`RrdReader(path).store()`, catalog segment stores). Both have
-  `schema()`, `summary()`, `stream()`, and `write_rrd(...)`.
+  `schema()`, `summary()`, `stream()`, and `write_dlr(...)`.
 
 ## Stream composition
 
 ```python
-from rerun.experimental import Chunk, LazyChunkStream, OptimizationProfile
+from dalaran.experimental import Chunk, LazyChunkStream, OptimizationProfile
 ```
 
 - `stream.filter(content=, has_timeline=, is_static=, components=)` keeps the
@@ -124,7 +124,7 @@ stream = source_stream()  # any importer skill
 stream = stream.drop(content="/video_raw/**")
 stream = stream.lenses(fix_lens, content="/cam/**", output_mode="forward_unmatched")
 merged = LazyChunkStream.merge(stream, sidecar_stream)
-merged.write_rrd(out_path, application_id="my_app", recording_id=recording_id)
+merged.write_dlr(out_path, application_id="my_app", recording_id=recording_id)
 ```
 
 ## Hand-built chunks — sidecar only
@@ -227,9 +227,9 @@ row-aligned).
 
 ## Writing RRDs
 
-- `stream.write_rrd(path, application_id=..., recording_id=...)` executes and
+- `stream.write_dlr(path, application_id=..., recording_id=...)` executes and
   writes in one streaming pass.
-- `stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_rrd(...)`
+- `stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_dlr(...)`
   materializes, optimizes chunk layout, then writes. Memory scales with the
   materialized chunks.
 - Profiles: `OBJECT_STORE` (large chunks, for storage/query/catalog) and
@@ -237,19 +237,19 @@ row-aligned).
 - Multiple physical RRDs form one logical recording when they share a
   `recording_id`; use this to separate base data, model/URDF data, and layers.
 
-**Always use `OptimizationProfile.OBJECT_STORE`** when the RRD is headed for a
-Rerun catalog or Hub, unless explicitly asked otherwise.
+**Always use `OptimizationProfile.OBJECT_STORE`** when the DLR is headed for a
+Dalaran catalog or Hub, unless explicitly asked otherwise.
 
 ## Chunk API vs logging API
 
 - Logging (`rr.log`, `rr.send_columns`, `RecordingStream`) is for live logging
   from user code; chunk processing is for ingestion, conversion, and
   postprocessing existing recordings.
-- Logging → chunks: write an RRD, read it back with `RrdReader`.
+- Logging → chunks: write an DLR, read it back with `RrdReader`.
   `RrdReader(path)` lists `recordings()` / `blueprints()` (each a `StoreEntry`
   with `kind`, `application_id`, `recording_id`); `.stream(store=entry)` for
   sequential passes, `.store(store=entry)` for indexed access.
-- Chunks → logging: `rerun.experimental.send_chunks(chunks, recording=...)`
+- Chunks → logging: `dalaran.experimental.send_chunks(chunks, recording=...)`
   accepts a `Chunk`, `LazyChunkStream`, `LazyStore`, `ChunkStore`, or any
   iterable of chunks. The source store's `application_id`/`recording_id` are
   **not** preserved; the active recording's identity wins.
@@ -263,11 +263,11 @@ Rerun catalog or Hub, unless explicitly asked otherwise.
   many entities.
 - Preserve Arrow array type and length in `MutateLens` transforms.
 - For catalog layers, the layer `recording_id` must equal the segment id.
-- This is `rerun.experimental`; pin-check signatures when upgrading.
+- This is `dalaran.experimental`; pin-check signatures when upgrading.
 
 ## References
 
 - End-to-end example (MCAP + URDF + JSON sidecar, lenses, merge, optimize):
   `https://github.com/rerun-io/rerun/tree/main/examples/python/robot_data_preprocessing`
-- Docs: `https://rerun.io/docs/concepts/logging-and-ingestion/chunk-processing-api`,
-  `https://rerun.io/docs/concepts/query-and-transform/lenses`
+- Docs: `https://dalaran.dev/docs/concepts/logging-and-ingestion/chunk-processing-api`,
+  `https://dalaran.dev/docs/concepts/query-and-transform/lenses`

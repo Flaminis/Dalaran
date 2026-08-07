@@ -4,7 +4,7 @@ order: 991
 hidden: true
 ---
 
-Blueprint files (.rbl) from previous Dalaran versions will no longer load _automatically_.
+Blueprint files (.dbl) from previous Dalaran versions will no longer load _automatically_.
 
 ### 🐧 Linux
 Dalaran now require glibc 2.17 or higher.

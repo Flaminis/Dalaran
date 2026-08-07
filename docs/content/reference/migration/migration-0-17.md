@@ -8,7 +8,7 @@ hidden: true
 ## ⚠️ Breaking changes
 * `HalfSizes2D` has been renamed to [`HalfSize2D`](https://dalaran.dev/docs/reference/types/components/half_size2d)
 * `HalfSizes3D` has been renamed to [`HalfSize3D`](https://dalaran.dev/docs/reference/types/components/half_size3d)
-* `.rrd` files from older versions won't load in Dalaran 0.17
+* `.dlr` files from older versions won't load in Dalaran 0.17
 
 
 ## New integrated visualizer and component override UI

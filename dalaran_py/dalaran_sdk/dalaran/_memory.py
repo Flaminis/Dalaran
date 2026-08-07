@@ -14,7 +14,7 @@ def memory_recording(recording: RecordingStream | None = None) -> MemoryRecordin
     """
     Streams all log-data to a memory buffer.
 
-    This can be used to display the RRD to alternative formats such as html.
+    This can be used to display the DLR to alternative formats such as html.
     See: [dalaran.notebook_show][].
 
     Parameters

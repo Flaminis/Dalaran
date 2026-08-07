@@ -462,7 +462,7 @@ impl Dataset {
             .map_err(Error::failed_to_extract_properties)
     }
 
-    pub fn rrd_manifest(&self, segment_id: &SegmentId) -> Result<RawRrdManifest, Error> {
+    pub fn dlr_manifest(&self, segment_id: &SegmentId) -> Result<RawRrdManifest, Error> {
         let partition = self.segment(segment_id)?;
         let application_id = "n/a"; // irrelevant, dropped immediately
         let segment_store_id =
@@ -472,7 +472,7 @@ impl Dataset {
         // from chunks), then we merge them under the segment-scoped store id.
         let per_layer: Vec<RawRrdManifest> = partition
             .iter_sources()
-            .map(|(_, source)| source.rrd_manifest())
+            .map(|(_, source)| source.dlr_manifest())
             .try_collect()?;
 
         RawRrdManifest::merge(segment_store_id, per_layer)
@@ -574,7 +574,7 @@ impl Dataset {
         let source = Arc::new(Source::new(
             store_slot_id,
             resolved,
-            DataSourceKind::Rrd,
+            DataSourceKind::Dlr,
             layer_info,
         ));
 
@@ -660,12 +660,12 @@ impl Dataset {
         Ok(removed_layers)
     }
 
-    /// Load a RRD using its recording id as segment id.
+    /// Load a DLR using its recording id as segment id.
     ///
     /// Only stores with matching kinds will be loaded. The stores are registered in the provided
     /// [`StorePool`] automatically.
     #[cfg(not(target_arch = "wasm32"))]
-    pub async fn register_rrd(
+    pub async fn register_dlr(
         &mut self,
         pool: &mut StorePool,
         path: &Path,
@@ -685,7 +685,7 @@ impl Dataset {
         });
         let mut new_segment_ids = BTreeSet::default();
 
-        for (store_id, resolved) in ResolvedStore::load_rrd_file(path, store_kind).await? {
+        for (store_id, resolved) in ResolvedStore::load_dlr_file(path, store_kind).await? {
             let segment_id = SegmentId::new(store_id.recording_id().to_string());
             let slot_id = pool.register(&resolved);
 

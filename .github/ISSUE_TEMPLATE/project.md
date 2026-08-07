@@ -23,7 +23,7 @@ Feel free to add any helpful sections to make it as useful as possible to the te
 <!-- Describe the background to why we want to do this project and what problem we're trying to solve-->
 
 ## Grounding use-cases
-<!-- Rerun is both powerful and complex, which makes it easy to go off and solve abstract problems that don't actually provide significant value in any realistic scenarios.
+<!-- Dalaran is both powerful and complex, which makes it easy to go off and solve abstract problems that don't actually provide significant value in any realistic scenarios.
 
 This section should describe the real world use-cases that the project is targeting.
 

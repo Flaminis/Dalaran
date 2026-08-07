@@ -6,7 +6,7 @@ use std::borrow::Cow;
 /// arbitrary strings.
 ///
 /// Each segment is an episode, potentially consisting of many layers,
-/// each backed by its own .rrd file.
+/// each backed by its own .dlr file.
 #[derive(
     Debug,
     Clone,

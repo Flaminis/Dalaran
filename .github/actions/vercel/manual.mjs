@@ -11,7 +11,7 @@
 //   node manual.mjs \
 //     --command deploy \
 //     --token VERCEL_TOKEN \
-//     --team rerun \
+//     --team dalaran \
 //     --project landing \
 //     --target production \
 //     --commit RELEASE_COMMIT \
@@ -21,7 +21,7 @@
 //   node manual.mjs \
 //     --command deploy \
 //     --token VERCEL_TOKEN \
-//     --team rerun \
+//     --team dalaran \
 //     --project landing \
 //     --target preview \
 //     --commit RELEASE_COMMIT
@@ -30,7 +30,7 @@
 //   node manual.mjs \
 //     --command update-env \
 //     --token VERCEL_TOKEN \
-//     --team rerun \
+//     --team dalaran \
 //     --project landing \
 //     --commit RELEASE_COMMIT \
 //     --version RELEASE_VERSION

@@ -27,7 +27,7 @@ class LazyChunkStream:
     used again; attempting to do so raises a `ValueError`. This prevents accidental reuse
     that would result in duplicate use of the same stream in a pipeline.
 
-    Terminal methods (`to_chunks`, `__iter__`, `collect`, `write_rrd`) do **not** consume
+    Terminal methods (`to_chunks`, `__iter__`, `collect`, `write_dlr`) do **not** consume
     the stream — they run the pipeline and leave the stream usable. Each call creates a
     fresh execution.
     """
@@ -250,7 +250,7 @@ class LazyChunkStream:
 
     # --- Terminals (trigger execution) ---
 
-    def write_rrd(
+    def write_dlr(
         self,
         path: str | Path,
         *,
@@ -258,11 +258,11 @@ class LazyChunkStream:
         recording_id: str,
     ) -> None:
         """
-        Run the pipeline and write all chunks to an RRD file.
+        Run the pipeline and write all chunks to an DLR file.
 
         The caller must provide application_id and recording_id explicitly.
         """
-        self._internal.write_rrd(
+        self._internal.write_dlr(
             str(path),
             application_id,
             recording_id,

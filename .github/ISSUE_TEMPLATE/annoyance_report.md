@@ -1,13 +1,13 @@
 ---
 name: Annoyance report
-about: Create a report to help us make Rerun easier to use
+about: Create a report to help us make Dalaran easier to use
 title: ''
 labels: 😤 annoying, 👀 needs triage
 assignees: ''
 
 ---
 <!--
-We want Rerun to be easy and satisfying to use. This issue template is for
+We want Dalaran to be easy and satisfying to use. This issue template is for
 reporting things that aren't bugs or missing features but that still degrade
 your experience. You don't need to suggest a solution. Just let us know where
 you're hitting unnecessary friction or confusion.

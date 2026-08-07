@@ -1,5 +1,5 @@
 //! This build script collects all examples which should be part of our example page,
-//! and either runs them to produce `.rrd` files, or builds a manifest file which
+//! and either runs them to produce `.dlr` files, or builds a manifest file which
 //! serves as an index for the files.
 //!
 //! It identifies runnable examples by checking if they have `channel` set in
@@ -14,7 +14,7 @@ mod example;
 mod install;
 mod manifest;
 mod notebook;
-mod rrd;
+mod dlr;
 mod snippets;
 mod wait_for_output;
 
@@ -37,7 +37,7 @@ pub struct Args {
 #[argh(subcommand)]
 enum Cmd {
     Install(install::Install),
-    Rrd(rrd::Rrd),
+    Dlr(dlr::Dlr),
     Manifest(manifest::Manifest),
     Snippets(snippets::Snippets),
     Notebook(notebook::Notebook),
@@ -48,7 +48,7 @@ pub fn main(args: Args) -> anyhow::Result<()> {
 
     match args.cmd {
         Cmd::Install(cmd) => cmd.run(),
-        Cmd::Rrd(cmd) => cmd.run(),
+        Cmd::Dlr(cmd) => cmd.run(),
         Cmd::Manifest(cmd) => cmd.run(),
         Cmd::Snippets(cmd) => cmd.run(),
         Cmd::Notebook(cmd) => cmd.run(),

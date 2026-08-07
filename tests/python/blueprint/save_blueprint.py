@@ -9,4 +9,4 @@ blueprint = dlb.Blueprint(
     dlb.BlueprintPanel(state="collapsed"),
 )
 
-blueprint.save("dalaran_example_blueprint_test.rbl")
+blueprint.save("dalaran_example_blueprint_test.dbl")

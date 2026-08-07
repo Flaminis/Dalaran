@@ -217,9 +217,9 @@ impl App {
             }
 
             match msg {
-                DataSourceMessage::RrdManifest(store_id, rrd_manifest) => {
+                DataSourceMessage::RrdManifest(store_id, dlr_manifest) => {
                     let entity_db = store_hub.entity_db_entry(&store_id);
-                    let store_events = entity_db.add_rrd_manifest_message(rrd_manifest);
+                    let store_events = entity_db.add_dlr_manifest_message(dlr_manifest);
 
                     if let Some((entity_db, cache)) =
                         store_hub.entity_db_and_cache(&store_id, &self.view_class_registry)
@@ -230,7 +230,7 @@ impl App {
 
                 DataSourceMessage::RrdManifestComplete(store_id) => {
                     let entity_db = store_hub.entity_db_entry(&store_id);
-                    entity_db.mark_rrd_manifest_complete();
+                    entity_db.mark_dlr_manifest_complete();
                 }
 
                 DataSourceMessage::LogMsg(msg) => {
@@ -819,7 +819,7 @@ impl App {
                     dl_log::debug_assert!(!roots.is_empty(), "Missing chunk has no roots");
 
                     let all_roots_are_fully_loaded = roots.iter().all(|root_id| {
-                        let root_info = db.rrd_manifest_index().root_chunk_info(root_id);
+                        let root_info = db.dlr_manifest_index().root_chunk_info(root_id);
                         if let Some(root_info) = root_info {
                             root_info.is_fully_loaded()
                         } else {
@@ -845,7 +845,7 @@ impl App {
 
                 let mut store_events = Vec::new();
                 for chunk in db
-                    .rrd_manifest_index_mut()
+                    .dlr_manifest_index_mut()
                     .chunk_requests_mut()
                     .receive_finished(self.egui_ctx.time())
                 {
@@ -869,10 +869,10 @@ impl App {
 
                 // We cancel right after resoliving (above), so that
                 // we give each fetch as much time as possible to finish.
-                db.rrd_manifest_index_mut()
+                db.dlr_manifest_index_mut()
                     .cancel_outdated_requests(self.egui_ctx.time());
 
-                if db.rrd_manifest_index_mut().chunk_requests().has_pending() {
+                if db.dlr_manifest_index_mut().chunk_requests().has_pending() {
                     self.egui_ctx.request_repaint(); // check back for more
                 }
             }
@@ -1116,7 +1116,7 @@ impl App {
                             typ: timeline.typ(),
                             // TODO(RR-4257): Don't hack mid-point time
                             time: recording
-                                .rrd_manifest_index()
+                                .dlr_manifest_index()
                                 .timeline_range(timeline.name())
                                 .map(|r| r.center())
                                 .unwrap_or(dl_chunk::TimeInt::ZERO),

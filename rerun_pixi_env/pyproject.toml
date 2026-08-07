@@ -1,19 +1,19 @@
 [project]
-name = "rerun-pixi-env"
+name = "dalaran-pixi-env"
 version = "0.1.0"
-description = "Pixi environment setup utilities for Rerun"
+description = "Pixi environment setup utilities for Dalaran"
 requires-python = ">=3.10"
 
 [project.scripts]
-ensure-rerun-env = "rerun_pixi_env:main"
-ensure-pyo3-build-cfg = "rerun_pixi_env:ensure_pyo3_build_cfg"
-ensure-uv-shims = "rerun_pixi_env:ensure_uv_shims"
-uv-shim = "rerun_pixi_env:uv_shim_main"
-uvpy-shim = "rerun_pixi_env:uvpy_shim_main"
+ensure-dalaran-env = "dalaran_pixi_env:main"
+ensure-pyo3-build-cfg = "dalaran_pixi_env:ensure_pyo3_build_cfg"
+ensure-uv-shims = "dalaran_pixi_env:ensure_uv_shims"
+uv-shim = "dalaran_pixi_env:uv_shim_main"
+uvpy-shim = "dalaran_pixi_env:uvpy_shim_main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/rerun_pixi_env"]
+packages = ["src/dalaran_pixi_env"]

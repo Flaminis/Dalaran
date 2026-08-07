@@ -202,9 +202,9 @@ namespace dalaran {
             return spawn(options, std::chrono::duration_cast<seconds_float>(flush_timeout).count());
         }
 
-        /// Stream all log-data to a given `.rrd` file.
+        /// Stream all log-data to a given `.dlr` file.
         ///
-        /// The Dalaran Viewer is able to read continuously from the resulting rrd file while it is being written.
+        /// The Dalaran Viewer is able to read continuously from the resulting dlr file while it is being written.
         /// However, depending on your OS and configuration, changes may not be immediately visible due to file caching.
         /// This is a common issue on Windows and (to a lesser extent) on MacOS.
         ///

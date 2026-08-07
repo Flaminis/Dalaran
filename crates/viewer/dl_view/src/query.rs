@@ -164,7 +164,7 @@ fn component_not_found_error(
     } else {
         // Check whether the data *might* come in later.
         if !missing_virtual_chunks.is_empty()
-            && let Some(rrd_manifest) = entity_db.rrd_manifest_index().manifest()
+            && let Some(dlr_manifest) = entity_db.dlr_manifest_index().manifest()
         {
             let store = store_engine.store();
 
@@ -175,14 +175,14 @@ fn component_not_found_error(
                 .iter()
                 .flat_map(|chunk_id| store.find_root_chunks(chunk_id))
             {
-                if let Some(per_component) = rrd_manifest.static_map().get(entity_path)
+                if let Some(per_component) = dlr_manifest.static_map().get(entity_path)
                     && per_component.get(&component) == Some(&missing_root_chunk_id)
                 {
                     return ComponentMappingError::NoComponentDataForQueryButIsFetchable(component);
                 }
 
                 if let Some(timeline) = &timeline
-                    && let Some(per_timeline) = rrd_manifest.temporal_map().get(entity_path)
+                    && let Some(per_timeline) = dlr_manifest.temporal_map().get(entity_path)
                     && let Some(per_component) = per_timeline.get(timeline)
                     && let Some(per_chunk) = per_component.get(&component)
                     && per_chunk.contains_key(&missing_root_chunk_id)

@@ -1,6 +1,6 @@
-//! Spawn a new Rerun Viewer process ready to listen for gRPC connections.
+//! Spawn a new Dalaran Viewer process ready to listen for gRPC connections.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    rerun::spawn(&rerun::SpawnOptions::default())?;
+    dalaran::spawn(&dalaran::SpawnOptions::default())?;
     Ok(())
 }

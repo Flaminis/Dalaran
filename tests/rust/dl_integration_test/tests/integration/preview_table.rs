@@ -111,8 +111,8 @@ pub async fn preview_table() {
         .expect("Failed to write table data");
 
     // Register the table blueprint with the table's implicit blueprint dataset and set it as the default.
-    let blueprint_rbl = blueprint_rbl_file(PREVIEW_COLUMN, TITLE_COLUMN);
-    dl_integration_test::register_table_blueprint(&mut client, &table, blueprint_rbl.path())
+    let blueprint_dbl = blueprint_dbl_file(PREVIEW_COLUMN, TITLE_COLUMN);
+    dl_integration_test::register_table_blueprint(&mut client, &table, blueprint_dbl.path())
         .await
         .expect("Failed to register table blueprint");
 
@@ -227,12 +227,12 @@ pub async fn preview_table() {
     harness.snapshot("preview_table_opened_recording");
 }
 
-/// Build a `.rbl` blueprint file holding a `Spatial3DView` over `/test_entity` plus a
+/// Build a `.dbl` blueprint file holding a `Spatial3DView` over `/test_entity` plus a
 /// `TableBlueprint` archetype pointing segment previews at `preview_column` and grid-view card
 /// titles at `title_column`.
-fn blueprint_rbl_file(preview_column: &str, title_column: &str) -> tempfile::NamedTempFile {
+fn blueprint_dbl_file(preview_column: &str, title_column: &str) -> tempfile::NamedTempFile {
     let file = tempfile::Builder::new()
-        .suffix(".rbl")
+        .suffix(".dbl")
         .tempfile()
         .expect("Failed to create blueprint temp file");
 

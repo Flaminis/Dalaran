@@ -101,9 +101,9 @@ Lens::mutate("component", ".field").build()
 
 To output columns to multiple entities from a single component, multiple lenses can be registered for the same input component.
 
-## `dalaran rrd compact` renamed to `dalaran rrd optimize`, has profiles and new defaults
+## `dalaran dlr compact` renamed to `dalaran dlr optimize`, has profiles and new defaults
 
-`dalaran rrd compact` is now `dalaran rrd optimize`.
+`dalaran dlr compact` is now `dalaran dlr optimize`.
 
 A new `--profile` argument has been added to opt to known good values.
 Two profiles are available: `live` (optimized for the live Viewer workflow, same as previous defaults) and `object-store` (optimized for querying and streaming from object-store-backed storage, e.g. a catalog server). <!-- NOLINT -->
@@ -133,7 +133,7 @@ A custom entity path can be now also configured in the `UrdfTree` API in Python 
 
 ## MCAP metadata and statistics
 
-In MCAP to RRD conversion, metadata records, statistics, and recording info are now saved at dedicated [reserved entity paths](../../concepts/logging-and-ingestion/entity-path.md#reserved-paths) instead of RRD properties (`__properties`).
+In MCAP to DLR conversion, metadata records, statistics, and recording info are now saved at dedicated [reserved entity paths](../../concepts/logging-and-ingestion/entity-path.md#reserved-paths) instead of DLR properties (`__properties`).
 
 Metadata records are saved under `__mcap_metadata`, and MCAP statistics and recording info are saved under `__mcap_properties`.
 
@@ -148,7 +148,7 @@ Use `dalaran.experimental.RrdReader` instead, which natively supports multi-stor
 | `dl.recording.load_archive(path)`                    | `dl.experimental.RrdReader(path)`                                                         |
 | `archive.all_recordings()`                           | `reader.recordings()` then `reader.store(store=entry)`                                    |
 | `recording.application_id()` / `recording_id()`      | `StoreEntry.application_id` / `recording_id` (from `reader.recordings()`)                 |
-| `Recording.from_chunks(chunks, app, rec).save(path)` | `LazyChunkStream.from_iter(chunks).write_rrd(path, application_id=app, recording_id=rec)` |
+| `Recording.from_chunks(chunks, app, rec).save(path)` | `LazyChunkStream.from_iter(chunks).write_dlr(path, application_id=app, recording_id=rec)` |
 | `dl.send_recording(rec)`                             | `dl.experimental.send_chunks(reader.store())`                                             |
 | `RecordingStream.send_recording(rec)`                | `RecordingStream.send_chunks(rec)`                                                        |
 | `DatasetEntry.download_segment(seg)`                 | `DatasetEntry.segment_store(seg)`                                                         |

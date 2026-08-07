@@ -1,5 +1,5 @@
-use rerun::Component as _;
-use rerun::external::dl_sdk_types::try_serialize_field;
+use dalaran::Component as _;
+use dalaran::external::dl_sdk_types::try_serialize_field;
 
 /// Custom archetype for rendering a 3D height field in the spatial view.
 ///
@@ -7,13 +7,13 @@ use rerun::external::dl_sdk_types::try_serialize_field;
 /// with an optional colormap for GPU-side color mapping.
 #[derive(Default)]
 pub struct HeightField {
-    pub buffer: Option<rerun::SerializedComponentBatch>,
-    pub format: Option<rerun::SerializedComponentBatch>,
-    pub colormap: Option<rerun::SerializedComponentBatch>,
+    pub buffer: Option<dalaran::SerializedComponentBatch>,
+    pub format: Option<dalaran::SerializedComponentBatch>,
+    pub colormap: Option<dalaran::SerializedComponentBatch>,
 }
 
-impl rerun::Archetype for HeightField {
-    fn name() -> rerun::ArchetypeName {
+impl dalaran::Archetype for HeightField {
+    fn name() -> dalaran::ArchetypeName {
         "HeightField".into()
     }
 
@@ -21,43 +21,43 @@ impl rerun::Archetype for HeightField {
         "Height Field"
     }
 
-    fn required_components() -> std::borrow::Cow<'static, [rerun::ComponentDescriptor]> {
+    fn required_components() -> std::borrow::Cow<'static, [dalaran::ComponentDescriptor]> {
         vec![Self::descriptor_buffer(), Self::descriptor_format()].into()
     }
 
-    fn optional_components() -> std::borrow::Cow<'static, [rerun::ComponentDescriptor]> {
+    fn optional_components() -> std::borrow::Cow<'static, [dalaran::ComponentDescriptor]> {
         vec![Self::descriptor_colormap()].into()
     }
 }
 
 impl HeightField {
-    /// Returns the [`rerun::ComponentDescriptor`] for [`Self::buffer`].
+    /// Returns the [`dalaran::ComponentDescriptor`] for [`Self::buffer`].
     #[inline]
-    pub fn descriptor_buffer() -> rerun::ComponentDescriptor {
-        rerun::ComponentDescriptor {
+    pub fn descriptor_buffer() -> dalaran::ComponentDescriptor {
+        dalaran::ComponentDescriptor {
             archetype: Some("HeightField".into()),
             component: "HeightField:buffer".into(),
-            component_type: Some(rerun::components::ImageBuffer::name()),
+            component_type: Some(dalaran::components::ImageBuffer::name()),
         }
     }
 
-    /// Returns the [`rerun::ComponentDescriptor`] for [`Self::format`].
+    /// Returns the [`dalaran::ComponentDescriptor`] for [`Self::format`].
     #[inline]
-    pub fn descriptor_format() -> rerun::ComponentDescriptor {
-        rerun::ComponentDescriptor {
+    pub fn descriptor_format() -> dalaran::ComponentDescriptor {
+        dalaran::ComponentDescriptor {
             archetype: Some("HeightField".into()),
             component: "HeightField:format".into(),
-            component_type: Some(rerun::components::ImageFormat::name()),
+            component_type: Some(dalaran::components::ImageFormat::name()),
         }
     }
 
-    /// Returns the [`rerun::ComponentDescriptor`] for [`Self::colormap`].
+    /// Returns the [`dalaran::ComponentDescriptor`] for [`Self::colormap`].
     #[inline]
-    pub fn descriptor_colormap() -> rerun::ComponentDescriptor {
-        rerun::ComponentDescriptor {
+    pub fn descriptor_colormap() -> dalaran::ComponentDescriptor {
+        dalaran::ComponentDescriptor {
             archetype: Some("HeightField".into()),
             component: "HeightField:colormap".into(),
-            component_type: Some(rerun::components::Colormap::name()),
+            component_type: Some(dalaran::components::Colormap::name()),
         }
     }
 
@@ -67,15 +67,15 @@ impl HeightField {
     /// and the format describes its dimensions and channel type.
     #[inline]
     pub fn new(
-        buffer: impl Into<rerun::components::ImageBuffer>,
-        format: impl Into<rerun::components::ImageFormat>,
+        buffer: impl Into<dalaran::components::ImageBuffer>,
+        format: impl Into<dalaran::components::ImageFormat>,
     ) -> Self {
         Self::default().with_buffer(buffer).with_format(format)
     }
 
     #[inline]
-    pub fn with_buffer(mut self, buffer: impl Into<rerun::components::ImageBuffer>) -> Self {
-        self.buffer = try_serialize_field::<rerun::components::ImageBuffer>(
+    pub fn with_buffer(mut self, buffer: impl Into<dalaran::components::ImageBuffer>) -> Self {
+        self.buffer = try_serialize_field::<dalaran::components::ImageBuffer>(
             Self::descriptor_buffer(),
             [buffer.into()],
         );
@@ -83,8 +83,8 @@ impl HeightField {
     }
 
     #[inline]
-    pub fn with_format(mut self, format: impl Into<rerun::components::ImageFormat>) -> Self {
-        self.format = try_serialize_field::<rerun::components::ImageFormat>(
+    pub fn with_format(mut self, format: impl Into<dalaran::components::ImageFormat>) -> Self {
+        self.format = try_serialize_field::<dalaran::components::ImageFormat>(
             Self::descriptor_format(),
             [format.into()],
         );
@@ -93,8 +93,8 @@ impl HeightField {
 
     #[inline]
     #[expect(dead_code)] // Not used in this example, but could be useful for users of the archetype.
-    pub fn with_colormap(mut self, colormap: impl Into<rerun::components::Colormap>) -> Self {
-        self.colormap = try_serialize_field::<rerun::components::Colormap>(
+    pub fn with_colormap(mut self, colormap: impl Into<dalaran::components::Colormap>) -> Self {
+        self.colormap = try_serialize_field::<dalaran::components::Colormap>(
             Self::descriptor_colormap(),
             [colormap.into()],
         );
@@ -102,9 +102,9 @@ impl HeightField {
     }
 }
 
-impl rerun::AsComponents for HeightField {
+impl dalaran::AsComponents for HeightField {
     #[inline]
-    fn as_serialized_batches(&self) -> Vec<rerun::SerializedComponentBatch> {
+    fn as_serialized_batches(&self) -> Vec<dalaran::SerializedComponentBatch> {
         [
             self.buffer.clone(),
             self.format.clone(),

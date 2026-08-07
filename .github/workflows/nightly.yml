@@ -52,7 +52,7 @@ jobs:
       CONCURRENCY: nightly
     secrets: inherit
 
-  # Check that a CLEAN container with just `cargo` on it can build rerun:
+  # Check that a CLEAN container with just `cargo` on it can build dalaran:
   clean-build:
     timeout-minutes: 60
     name: cargo build on clean container
@@ -67,7 +67,7 @@ jobs:
         with:
           toolchain: 1.95.0
 
-      - run: cargo build -p rerun # Intentionally NOT using pixi, because we wanna check that we can build outside of pixi
+      - run: cargo build -p dalaran # Intentionally NOT using pixi, because we wanna check that we can build outside of pixi
 
   build-web:
     name: "Build web viewer"
@@ -103,78 +103,78 @@ jobs:
     secrets: inherit
 
   # -----------------------------------------------------------------------------------
-  # Build rerun_c library binaries:
+  # Build dalaran_c library binaries:
 
-  build-rerun_c-and-upload-linux-arm64:
+  build-dalaran_c-and-upload-linux-arm64:
     needs: [checks]
-    name: "Linux-Arm64: Build & Upload rerun_c"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_c.yml
+    name: "Linux-Arm64: Build & Upload dalaran_c"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_c.yml
     with:
       CONCURRENCY: nightly-linux-arm64
       PLATFORM: linux-arm64
     secrets: inherit
 
-  build-rerun_c-and-upload-linux-x64:
+  build-dalaran_c-and-upload-linux-x64:
     needs: [checks]
-    name: "Linux-x64: Build & Upload rerun_c"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_c.yml
+    name: "Linux-x64: Build & Upload dalaran_c"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_c.yml
     with:
       CONCURRENCY: nightly-linux-x64
       PLATFORM: linux-x64
     secrets: inherit
 
-  build-rerun_c-and-upload-macos-arm64:
+  build-dalaran_c-and-upload-macos-arm64:
     needs: [checks]
-    name: "Mac-Arm64: Build & Upload rerun_c"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_c.yml
+    name: "Mac-Arm64: Build & Upload dalaran_c"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_c.yml
     with:
       CONCURRENCY: nightly-macos-arm64
       PLATFORM: macos-arm64
     secrets: inherit
 
-  build-rerun_c-and-upload-windows-x64:
+  build-dalaran_c-and-upload-windows-x64:
     needs: [checks]
-    name: "Windows-x64: Build & Upload rerun_c"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_c.yml
+    name: "Windows-x64: Build & Upload dalaran_c"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_c.yml
     with:
       CONCURRENCY: nightly-windows-x64
       PLATFORM: windows-x64
     secrets: inherit
 
   # -----------------------------------------------------------------------------------
-  # Build rerun-cli (rerun binaries):
+  # Build dalaran-cli (dalaran binaries):
 
-  build-rerun-cli-and-upload-linux-arm64:
+  build-dalaran-cli-and-upload-linux-arm64:
     needs: [checks]
-    name: "Linux-arm64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+    name: "Linux-arm64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: nightly-linux-arm64
       PLATFORM: linux-arm64
     secrets: inherit
 
-  build-rerun-cli-and-upload-linux-x64:
+  build-dalaran-cli-and-upload-linux-x64:
     needs: [checks]
-    name: "Linux-x64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+    name: "Linux-x64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: nightly-linux-x64
       PLATFORM: linux-x64
     secrets: inherit
 
-  build-rerun-cli-and-upload-macos-arm64:
+  build-dalaran-cli-and-upload-macos-arm64:
     needs: [checks]
-    name: "Mac-arm64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+    name: "Mac-arm64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: nightly-macos-arm64
       PLATFORM: macos-arm64
     secrets: inherit
 
-  build-rerun-cli-and-upload-windows-x64:
+  build-dalaran-cli-and-upload-windows-x64:
     needs: [checks]
-    name: "Windows-x64: Build & Upload rerun-cli"
-    uses: ./.github/workflows/reusable_build_and_upload_rerun_cli.yml
+    name: "Windows-x64: Build & Upload dalaran-cli"
+    uses: ./.github/workflows/reusable_build_and_upload_dalaran_cli.yml
     with:
       CONCURRENCY: nightly-windows-x64
       PLATFORM: windows-x64
@@ -184,7 +184,7 @@ jobs:
   # Build wheels:
 
   build-wheel-linux-arm64:
-    needs: [checks, build-rerun-cli-and-upload-linux-arm64]
+    needs: [checks, build-dalaran-cli-and-upload-linux-arm64]
     name: "Linux-arm64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
@@ -195,7 +195,7 @@ jobs:
     secrets: inherit
 
   build-wheel-linux-x64:
-    needs: [checks, build-rerun-cli-and-upload-linux-x64]
+    needs: [checks, build-dalaran-cli-and-upload-linux-x64]
     name: "Linux-x64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
@@ -206,7 +206,7 @@ jobs:
     secrets: inherit
 
   build-wheel-macos-arm64:
-    needs: [checks, build-rerun-cli-and-upload-macos-arm64]
+    needs: [checks, build-dalaran-cli-and-upload-macos-arm64]
     name: "Macos-arm64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
@@ -217,7 +217,7 @@ jobs:
     secrets: inherit
 
   build-wheel-windows-x64:
-    needs: [checks, build-rerun-cli-and-upload-windows-x64]
+    needs: [checks, build-dalaran-cli-and-upload-windows-x64]
     name: "Windows-x64: Build & Upload Wheels"
     uses: ./.github/workflows/reusable_build_and_upload_wheels.yml
     with:
@@ -328,16 +328,16 @@ jobs:
       CONCURRENCY: nightly
     secrets: inherit
 
-  bundle-and-upload-rerun_cpp:
-    name: "Bundle and upload rerun_cpp_sdk.zip"
+  bundle-and-upload-dalaran_cpp:
+    name: "Bundle and upload dalaran_cpp_sdk.zip"
     needs:
       [
-        build-rerun_c-and-upload-linux-arm64,
-        build-rerun_c-and-upload-linux-x64,
-        build-rerun_c-and-upload-macos-arm64,
-        build-rerun_c-and-upload-windows-x64,
+        build-dalaran_c-and-upload-linux-arm64,
+        build-dalaran_c-and-upload-linux-x64,
+        build-dalaran_c-and-upload-macos-arm64,
+        build-dalaran_c-and-upload-windows-x64,
       ]
-    uses: ./.github/workflows/reusable_bundle_and_upload_rerun_cpp.yml
+    uses: ./.github/workflows/reusable_bundle_and_upload_dalaran_cpp.yml
     with:
       CONCURRENCY: nightly
     secrets: inherit
@@ -348,15 +348,15 @@ jobs:
     concurrency: nightly
     needs:
       [
-        build-rerun-cli-and-upload-linux-arm64,
-        build-rerun-cli-and-upload-linux-x64,
-        build-rerun-cli-and-upload-macos-arm64,
-        build-rerun-cli-and-upload-windows-x64,
-        build-rerun_c-and-upload-linux-arm64,
-        build-rerun_c-and-upload-linux-x64,
-        build-rerun_c-and-upload-macos-arm64,
-        build-rerun_c-and-upload-windows-x64,
-        bundle-and-upload-rerun_cpp,
+        build-dalaran-cli-and-upload-linux-arm64,
+        build-dalaran-cli-and-upload-linux-x64,
+        build-dalaran-cli-and-upload-macos-arm64,
+        build-dalaran-cli-and-upload-windows-x64,
+        build-dalaran_c-and-upload-linux-arm64,
+        build-dalaran_c-and-upload-linux-x64,
+        build-dalaran_c-and-upload-macos-arm64,
+        build-dalaran_c-and-upload-windows-x64,
+        bundle-and-upload-dalaran_cpp,
         generate-pip-index,
         upload-web,
       ]
@@ -385,34 +385,34 @@ jobs:
             Please report any issues you find.
 
             ## Example Hosted App
-            https://rerun.io/viewer/commit/${{ env.SHORT_SHA }}
+            https://dalaran.dev/viewer/commit/${{ env.SHORT_SHA }}
 
             ## Wheels can be installed with:
             ```
-            pip install --pre --no-index -f https://build.rerun.io/commit/${{ env.SHORT_SHA }}/wheels --upgrade rerun-sdk
+            pip install --pre --no-index -f https://build.dalaran.dev/commit/${{ env.SHORT_SHA }}/wheels --upgrade dalaran-sdk
             ```
             or
             ```
-            pip install --pre --no-index -f https://github.com/rerun-io/rerun/releases/download/prerelease --upgrade rerun-sdk
+            pip install --pre --no-index -f https://github.com/rerun-io/rerun/releases/download/prerelease --upgrade dalaran-sdk
             ```
 
             ## CMake fetch-content for C++ SDK
             ```
             include(FetchContent)
-            FetchContent_Declare(rerun_sdk URL https://build.rerun.io/commit/${{ env.SHORT_SHA }}/rerun_cpp_sdk.zip)
-            FetchContent_MakeAvailable(rerun_sdk)
+            FetchContent_Declare(dalaran_sdk URL https://build.dalaran.dev/commit/${{ env.SHORT_SHA }}/dalaran_cpp_sdk.zip)
+            FetchContent_MakeAvailable(dalaran_sdk)
             ```
             or
             ```
             include(FetchContent)
-            FetchContent_Declare(rerun_sdk URL https://github.com/rerun-io/rerun/releases/download/prerelease/rerun_cpp_sdk.zip)
-            FetchContent_MakeAvailable(rerun_sdk)
+            FetchContent_Declare(dalaran_sdk URL https://github.com/rerun-io/rerun/releases/download/prerelease/rerun_cpp_sdk.zip)
+            FetchContent_MakeAvailable(dalaran_sdk)
             ```
 
             ## Web Viewer NPM package
             Can be installed with:
             ```
-            npm install https://build.rerun.io/commit/${{ env.SHORT_SHA }}/rerun_js
+            npm install https://build.dalaran.dev/commit/${{ env.SHORT_SHA }}/dalaran_js
             ```
 
           prerelease: true
@@ -432,7 +432,7 @@ jobs:
 
   sync-release-assets:
     needs: [pre-release]
-    name: "Sync pre-release assets & build.rerun.io"
+    name: "Sync pre-release assets & build.dalaran.dev"
     uses: ./.github/workflows/reusable_sync_release_assets.yml
     with:
       CONCURRENCY: nightly

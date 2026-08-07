@@ -56,5 +56,5 @@ Run `dalaran --help` for more.
 The web viewer is an experimental feature, but you can try it out with:
 
 ```sh
-dalaran --web-viewer path/to/file.rrd
+dalaran --web-viewer path/to/file.dlr
 ```

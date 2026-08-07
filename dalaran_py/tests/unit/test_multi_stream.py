@@ -42,8 +42,8 @@ def test_recording_stream_twice() -> None:
 
 
 def test_isolated_streams(tmp_path: Path) -> None:
-    rec1_path = f"{tmp_path}/rec1.rrd"
-    rec2_path = f"{tmp_path}/rec2.rrd"
+    rec1_path = f"{tmp_path}/rec1.dlr"
+    rec2_path = f"{tmp_path}/rec2.dlr"
 
     rec1 = dl.RecordingStream("dalaran_example_multi_stream", recording_id="rec1")
     rec1.log("/data1", dl.TextLog("Data1"))
@@ -88,7 +88,7 @@ def test_cleanup_reinit() -> None:
             return False
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            rec_path = f"{tmpdir}/my_rec.rrd"
+            rec_path = f"{tmpdir}/my_rec.dlr"
             dl.init("dalaran_example_reinit")
             dl.save(rec_path)
             dl.log("/data1", dl.TextLog("Data1"))

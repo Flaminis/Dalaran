@@ -152,12 +152,12 @@ jobs:
 
       - name: Install built wheel
         run: |
-          pixi run python scripts/ci/uv_install_wheel.py --package rerun-sdk --dir wheel
+          pixi run python scripts/ci/uv_install_wheel.py --package dalaran-sdk --dir wheel
 
       - name: Print wheel version
         run: |
-          pixi run uv pip show rerun-sdk
-          pixi run uvpy -m rerun --version
+          pixi run uv pip show dalaran-sdk
+          pixi run uvpy -m dalaran --version
 
       - name: Run unit tests (with linux arm64 opencv workaround)
         if: ${{ inputs.PLATFORM == 'linux-arm64' }}
@@ -169,12 +169,12 @@ jobs:
         run: pixi run py-test-no-build
 
       - name: Run e2e test
-        run: RUST_LOG=debug pixi run uvpy scripts/run_python_e2e_test.py --no-build # rerun-sdk is already built and installed
+        run: RUST_LOG=debug pixi run uvpy scripts/run_python_e2e_test.py --no-build # dalaran-sdk is already built and installed
 
       - name: Check for release checklist
         if: ${{ inputs.FAST }}
         # Only check that the release checklist executes successfully
-        run: RUST_LOG=warn RERUN_STRICT=1 PYTHONWARNINGS=error pixi run uvpy tests/python/release_checklist/main.py --stdout > /dev/null
+        run: RUST_LOG=warn DALARAN_STRICT=1 PYTHONWARNINGS=error pixi run uvpy tests/python/release_checklist/main.py --stdout > /dev/null
 
       - name: Build C++ snippets
         if: ${{ !inputs.FAST }}
@@ -185,7 +185,7 @@ jobs:
       - name: Run docs/snippets/compare_snippet_output.py
         if: ${{ !inputs.FAST }}
         # explicit target because otherwise cargo loses the target cache… even though this is the target anyhow…
-        # --no-py-build because rerun-sdk is already built and installed
+        # --no-py-build because dalaran-sdk is already built and installed
         run: RUST_LOG=debug pixi run uvpy docs/snippets/compare_snippet_output.py --target ${{ needs.set-config.outputs.TARGET }} --no-py-build --no-cpp-build
 
       - name: Check the python library signatures

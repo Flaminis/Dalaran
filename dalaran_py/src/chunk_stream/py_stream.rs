@@ -28,7 +28,7 @@ use crate::python_bridge::{PyRecordingStream, flush_garbage_queue, get_data_reco
 /// (`filter`, `drop_matching`, `split`, `map`, `flat_map`, `lenses`, `merge`)
 /// **consume** the inner stream via `Option::take()`: a consumed stream raises
 /// `ValueError` on further use, ensuring no lazy stream is used in more than
-/// one pipeline. Terminals (`to_chunks`, `__iter__`, `collect`, `write_rrd`,
+/// one pipeline. Terminals (`to_chunks`, `__iter__`, `collect`, `write_dlr`,
 /// `send_to_recording`) **borrow** the inner stream and run the pipeline; the
 /// stream remains usable and can be re-executed.
 #[pyclass(
@@ -163,8 +163,8 @@ impl PyLazyChunkStreamInternal {
         Ok(Self::new(LazyChunkStream::merge(inners)))
     }
 
-    /// Run the pipeline and write all chunks to an RRD file.
-    fn write_rrd(
+    /// Run the pipeline and write all chunks to an DLR file.
+    fn write_dlr(
         &self,
         py: Python<'_>,
         path: &str,
@@ -176,7 +176,7 @@ impl PyLazyChunkStreamInternal {
         let app_id = application_id.to_owned();
         let rec_id = recording_id.to_owned();
 
-        py.detach(move || write_rrd_compiled(&mut *compiled, &path, &app_id, &rec_id))
+        py.detach(move || write_dlr_compiled(&mut *compiled, &path, &app_id, &rec_id))
             .map_err(|err| PyRuntimeError::new_err(err.to_string()))
     }
 
@@ -328,7 +328,7 @@ impl PyLazyChunkStreamInternal {
 )]
 pub struct PyLazyChunkStreamIterator {
     // Mutex is needed because `frozen` pyclass requires `Sync`, but
-    // `Box<dyn ChunkStream>` is only `Send` (the RRD decoder iterator isn't `Sync`).
+    // `Box<dyn ChunkStream>` is only `Send` (the DLR decoder iterator isn't `Sync`).
     stream: parking_lot::Mutex<Box<dyn ChunkStream>>,
 }
 
@@ -393,8 +393,8 @@ fn build_structured_filter(
     })
 }
 
-/// Write all chunks from a pre-compiled [`ChunkStream`] to an RRD file.
-fn write_rrd_compiled(
+/// Write all chunks from a pre-compiled [`ChunkStream`] to an DLR file.
+fn write_dlr_compiled(
     stream: &mut dyn ChunkStream,
     path: &Path,
     app_id: &str,

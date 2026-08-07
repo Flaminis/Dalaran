@@ -3,7 +3,7 @@
 //!
 //! Usage:
 //! ```sh
-//! # Start the Rerun Viewer with our custom view in a terminal:
+//! # Start the Dalaran Viewer with our custom view in a terminal:
 //! $ cargo r -p custom_store_subscriber
 //!
 //! # Log any kind of data from another terminal:
@@ -12,24 +12,24 @@
 
 use std::collections::{BTreeMap, HashMap};
 
-use rerun::external::dl_byte_size::{MemUsageTree, MemUsageTreeCapture};
-use rerun::external::dl_log_types::{AbsoluteTimeRange, TimelineName};
-use rerun::external::{anyhow, dl_build_info, dl_chunk_store, dl_log};
-use rerun::time::{TimeInt, TimeType};
-use rerun::{ChunkStoreEvent, ChunkStoreSubscriber, ComponentDescriptor, EntityPath, StoreId};
+use dalaran::external::dl_byte_size::{MemUsageTree, MemUsageTreeCapture};
+use dalaran::external::dl_log_types::{AbsoluteTimeRange, TimelineName};
+use dalaran::external::{anyhow, dl_build_info, dl_chunk_store, dl_log};
+use dalaran::time::{TimeInt, TimeType};
+use dalaran::{ChunkStoreEvent, ChunkStoreSubscriber, ComponentDescriptor, EntityPath, StoreId};
 
 fn main() -> anyhow::Result<std::process::ExitCode> {
-    let main_thread_token = rerun::MainThreadToken::i_promise_i_am_on_the_main_thread();
+    let main_thread_token = dalaran::MainThreadToken::i_promise_i_am_on_the_main_thread();
     dl_log::setup_logging();
 
     let _handle = dl_chunk_store::ChunkStore::register_subscriber(Box::<Orchestrator>::default());
     // Could use the returned handle to get a reference to the view if needed.
 
     let build_info = dl_build_info::build_info!();
-    rerun::run(
+    dalaran::run(
         main_thread_token,
         build_info,
-        rerun::CallSource::Cli,
+        dalaran::CallSource::Cli,
         std::env::args(),
     )
     .map(std::process::ExitCode::from)
@@ -57,7 +57,7 @@ impl MemUsageTreeCapture for Orchestrator {
 
 impl ChunkStoreSubscriber for Orchestrator {
     fn name(&self) -> String {
-        "rerun.store_subscriber.ScreenClearer".into()
+        "dalaran.store_subscriber.ScreenClearer".into()
     }
 
     fn as_any(&self) -> &dyn std::any::Any {
@@ -79,7 +79,7 @@ impl ChunkStoreSubscriber for Orchestrator {
 // ---
 
 /// A [`ChunkStoreSubscriber`] that maintains a secondary index that keeps count of the number of occurrences
-/// of each component in each [`rerun::ChunkStore`].
+/// of each component in each [`dalaran::ChunkStore`].
 ///
 /// It also implements a trigger that prints to the console each time a component is first introduced
 /// and retired.
@@ -98,7 +98,7 @@ impl MemUsageTreeCapture for ComponentsPerRecording {
 
 impl ChunkStoreSubscriber for ComponentsPerRecording {
     fn name(&self) -> String {
-        "rerun.store_subscriber.ComponentsPerRecording".into()
+        "dalaran.store_subscriber.ComponentsPerRecording".into()
     }
 
     fn as_any(&self) -> &dyn std::any::Any {
@@ -158,7 +158,7 @@ impl ChunkStoreSubscriber for ComponentsPerRecording {
 // ---
 
 /// A [`ChunkStoreSubscriber`] that maintains a secondary index of the time ranges covered by each entity,
-/// on every timeline, across all recordings (i.e. [`rerun::ChunkStore`]s).
+/// on every timeline, across all recordings (i.e. [`dalaran::ChunkStore`]s).
 ///
 /// For every [`ChunkStoreEvent`], it displays the state of the secondary index to the terminal.
 #[derive(Default, Debug, PartialEq, Eq)]
@@ -175,7 +175,7 @@ impl MemUsageTreeCapture for TimeRangesPerEntity {
 
 impl ChunkStoreSubscriber for TimeRangesPerEntity {
     fn name(&self) -> String {
-        "rerun.store_subscriber.TimeRangesPerEntity".into()
+        "dalaran.store_subscriber.TimeRangesPerEntity".into()
     }
 
     fn as_any(&self) -> &dyn std::any::Any {

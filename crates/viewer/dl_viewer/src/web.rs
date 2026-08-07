@@ -29,9 +29,9 @@ static GLOBAL: AccountingAllocator<std::alloc::System> =
 pub struct WebHandle {
     runner: eframe::WebRunner,
 
-    /// A dedicated smart channel used by the [`WebHandle::add_rrd_from_bytes`] API.
+    /// A dedicated smart channel used by the [`WebHandle::add_dlr_from_bytes`] API.
     ///
-    /// This exists because the direct bytes API is expected to submit many small RRD chunks
+    /// This exists because the direct bytes API is expected to submit many small DLR chunks
     /// and allocating a new tx pair for each chunk doesn't make sense.
     log_senders: HashMap<String, LogSender>,
 
@@ -273,9 +273,9 @@ impl WebHandle {
             .request_repaint_after(std::time::Duration::from_millis(10));
     }
 
-    /// Add an rrd to the viewer directly from a byte array.
+    /// Add an dlr to the viewer directly from a byte array.
     #[wasm_bindgen]
-    pub fn send_rrd_to_channel(&self, id: &str, data: &[u8]) {
+    pub fn send_dlr_to_channel(&self, id: &str, data: &[u8]) {
         use std::ops::ControlFlow;
         use std::sync::Arc;
         let Some(app) = self.runner.app_mut::<crate::App>() else {
@@ -294,12 +294,12 @@ impl WebHandle {
                 egui_ctx.request_repaint_after(std::time::Duration::from_millis(10));
             });
 
-            dl_log_encoding::rrd::stream_from_http::web_decode::decode_rrd(
+            dl_log_encoding::dlr::stream_from_http::web_decode::decode_dlr(
                 data,
                 Arc::new({
                     move |msg| {
                         ui_waker();
-                        use dl_log_encoding::rrd::stream_from_http::HttpMessage;
+                        use dl_log_encoding::dlr::stream_from_http::HttpMessage;
                         match msg {
                             HttpMessage::LogMsg(msg) => {
                                 if log_tx.send(msg.into()).is_ok() {

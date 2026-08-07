@@ -26,7 +26,7 @@ fn build() -> DalaranCloudHandler {
 }
 
 /// Test the cross-dataset memory:// re-registration flow:
-/// 1. Register an RRD to dataset A, obtain its memory:// URL
+/// 1. Register an DLR to dataset A, obtain its memory:// URL
 /// 2. Re-register that memory:// URL to dataset B
 /// 3. Verify dataset B can see the store
 /// 4. Delete dataset A, verify dataset B still has access (strong ref)
@@ -35,7 +35,7 @@ fn build() -> DalaranCloudHandler {
 async fn register_memory_url_cross_dataset() {
     let service = build();
 
-    // --- Step 1: Create dataset A and register an RRD ---
+    // --- Step 1: Create dataset A and register an DLR ---
     let dataset_a = service.create_dataset_entry_with_name("dataset_a").await;
 
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
@@ -62,7 +62,7 @@ async fn register_memory_url_cross_dataset() {
     let dataset_b = service.create_dataset_entry_with_name("dataset_b").await;
 
     let memory_data_source: dl_protos::cloud::v1alpha1::DataSource =
-        ext::DataSource::new_rrd(&memory_url).unwrap().into();
+        ext::DataSource::new_dlr(&memory_url).unwrap().into();
 
     let request = tonic::Request::new(dl_protos::cloud::v1alpha1::RegisterWithDatasetRequest {
         data_sources: vec![memory_data_source.clone()],
@@ -139,7 +139,7 @@ async fn register_memory_url_not_found() {
     let fake_memory_url = format!("memory:///store/{fake_tuid}");
 
     let memory_data_source: dl_protos::cloud::v1alpha1::DataSource =
-        ext::DataSource::new_rrd(&fake_memory_url).unwrap().into();
+        ext::DataSource::new_dlr(&fake_memory_url).unwrap().into();
 
     let request = tonic::Request::new(dl_protos::cloud::v1alpha1::RegisterWithDatasetRequest {
         data_sources: vec![memory_data_source],

@@ -16,7 +16,7 @@ impl crate::AppUi for dl_log_channel::LogSource {
         // TODO(emilk): show whether we're still connected to this data source
 
         // Find all stores from this data source
-        // (e.g. find the recordings and blueprint in this .rrd file).
+        // (e.g. find the recordings and blueprint in this .dlr file).
         let mut recordings = vec![];
         let mut blueprints = vec![];
 

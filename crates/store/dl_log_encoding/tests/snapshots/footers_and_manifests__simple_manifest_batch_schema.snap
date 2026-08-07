@@ -1,6 +1,6 @@
 ---
 source: crates/store/dl_log_encoding/tests/footers_and_manifests.rs
-expression: rrd_manifest_batch.format_schema_snapshot()
+expression: dlr_manifest_batch.format_schema_snapshot()
 ---
 chunk_byte_offset: non-null UInt64
 chunk_byte_size: non-null UInt64

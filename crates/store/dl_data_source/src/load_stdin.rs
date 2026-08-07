@@ -1,4 +1,4 @@
-/// Asynchronously loads RRD data streaming in from standard input.
+/// Asynchronously loads DLR data streaming in from standard input.
 ///
 /// This fails synchronously iff the standard input stream could not be opened, otherwise errors
 /// are handled asynchronously (as in: they're logged).

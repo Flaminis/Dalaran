@@ -13,12 +13,12 @@ import dalaran as dl
 # Load and prepare the data
 
 repo_root = Path(__file__).parent.parent.parent.parent.parent
-example_rrd = (
-    repo_root / "tests" / "assets" / "rrd" / "examples" / "face_tracking.rrd"
+example_dlr = (
+    repo_root / "tests" / "assets" / "dlr" / "examples" / "face_tracking.dlr"
 )
-assert example_rrd.exists(), f"Example RRD not found at {example_rrd}"
+assert example_dlr.exists(), f"Example DLR not found at {example_dlr}"
 # region: launch_server
-server = dl.server.Server(datasets={"tutorial": [example_rrd]})
+server = dl.server.Server(datasets={"tutorial": [example_dlr]})
 
 client = dl.catalog.CatalogClient(server.url())
 # endregion: launch_server
@@ -60,7 +60,7 @@ pd_df["jawOpenState"] = pd_df["jawOpen"] > 0.15
 # Log the data back to the viewer
 
 application_id = (
-    dl.experimental.RrdReader(example_rrd).recordings()[0].application_id
+    dl.experimental.RrdReader(example_dlr).recordings()[0].application_id
 )
 
 # Connect to the viewer

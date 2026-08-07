@@ -64,11 +64,11 @@ def test_binary_stream(monkeypatch: pytest.MonkeyPatch) -> None:
             # Bump this value down when we have less overhead.
             assert len(data) > 1000
 
-            with open(f"{tmpdir}/output_{name}.rrd", "a+b") as f:
+            with open(f"{tmpdir}/output_{name}.dlr", "a+b") as f:
                 f.write(data)
 
         process = subprocess.run(
-            ["dalaran", "rrd", "compare", f"{tmpdir}/output_A.rrd", f"{tmpdir}/output_B.rrd"],
+            ["dalaran", "dlr", "compare", f"{tmpdir}/output_A.dlr", f"{tmpdir}/output_B.dlr"],
             check=False,
             capture_output=True,
         )

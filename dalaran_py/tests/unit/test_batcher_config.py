@@ -73,7 +73,7 @@ def test_partial_overrides() -> None:
 
 def test_flush_always() -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
-        rec_path = f"{tmpdir}/rec.rrd"
+        rec_path = f"{tmpdir}/rec.dlr"
 
         rec = dl.RecordingStream(
             "dalaran_example_multi_stream",
@@ -89,7 +89,7 @@ def test_flush_always() -> None:
 
 def test_flush_never() -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
-        rec_path = f"{tmpdir}/rec.rrd"
+        rec_path = f"{tmpdir}/rec.dlr"
 
         rec = dl.RecordingStream(
             "dalaran_example_multi_stream",
@@ -113,7 +113,7 @@ def test_flush_never() -> None:
 
 def test_flush_custom() -> None:
     with tempfile.TemporaryDirectory() as tmpdir:
-        rec_path = f"{tmpdir}/rec.rrd"
+        rec_path = f"{tmpdir}/rec.dlr"
 
         batcher_config = dl.ChunkBatcherConfig.NEVER()
         batcher_config.flush_num_rows = 3

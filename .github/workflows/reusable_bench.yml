@@ -92,14 +92,14 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: /tmp/${{ env.SHORT_SHA }}
-          destination: "rerun-builds/benches/"
+          destination: "dalaran-builds/benches/"
           process_gcloudignore: false
 
       - name: Download comparison bench from GCS
         if: ${{ inputs.COMPARE_TO != '' }}
         run: |
           mkdir /tmp/compare/
-          gsutil cp gs://rerun-builds/benches/${{inputs.COMPARE_TO}} /tmp/compare/${{ inputs.COMPARE_TO }}
+          gsutil cp gs://dalaran-builds/benches/${{inputs.COMPARE_TO}} /tmp/compare/${{ inputs.COMPARE_TO }}
 
       - name: Install cargo-benchcmp
         run: pixi run cargo install cargo-benchcmp
@@ -113,7 +113,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: /tmp/bench_results.txt
-          destination: "rerun-builds/commit/${{env.SHORT_SHA}}/"
+          destination: "dalaran-builds/commit/${{env.SHORT_SHA}}/"
           process_gcloudignore: false
 
       - name: "Copy bench to named file"
@@ -126,7 +126,7 @@ jobs:
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: /tmp/${{ inputs.BENCH_NAME }}
-          destination: "rerun-builds/benches/"
+          destination: "dalaran-builds/benches/"
           process_gcloudignore: false
 
       - name: Render benchmark result
@@ -134,4 +134,4 @@ jobs:
         run: |
           pixi run python scripts/ci/render_bench.py crates \
             --after $(date -d"30 days ago" +%Y-%m-%d) \
-            --output "gs://rerun-builds/graphs"
+            --output "gs://dalaran-builds/graphs"

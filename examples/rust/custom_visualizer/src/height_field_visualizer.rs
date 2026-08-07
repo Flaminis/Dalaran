@@ -1,13 +1,13 @@
-use rerun::Archetype as _;
-use rerun::components::{Colormap, ImageBuffer, ImageFormat};
-use rerun::external::dl_sdk_types::reflection::Enum as _;
-use rerun::external::dl_view::{DataResultQuery as _, VisualizerInstructionQueryResults};
-use rerun::external::dl_viewer_context::{
+use dalaran::Archetype as _;
+use dalaran::components::{Colormap, ImageBuffer, ImageFormat};
+use dalaran::external::dl_sdk_types::reflection::Enum as _;
+use dalaran::external::dl_view::{DataResultQuery as _, VisualizerInstructionQueryResults};
+use dalaran::external::dl_viewer_context::{
     self, IdentifiedViewSystem, ViewContext, ViewContextCollection, ViewQuery,
     ViewSystemExecutionError, ViewSystemIdentifier, VisualizerExecutionOutput, VisualizerQueryInfo,
     VisualizerSystem,
 };
-use rerun::external::{dl_query, dl_renderer, dl_view_spatial};
+use dalaran::external::{dl_query, dl_renderer, dl_view_spatial};
 
 use crate::height_field_archetype::HeightField;
 use crate::height_field_renderer::{HeightFieldConfig, HeightFieldDrawData};

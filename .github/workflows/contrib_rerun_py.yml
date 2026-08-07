@@ -58,13 +58,13 @@ jobs:
         with:
           pixi-version: v0.71.3
 
-      - name: Build rerun-cli
+      - name: Build dalaran-cli
         run: |
-          pixi run rerun-build-native-and-web-release
+          pixi run dalaran-build-native-and-web-release
 
-      - name: Copy rerun-cli to wheel folder
+      - name: Copy dalaran-cli to wheel folder
         run: |
-          cp target/release/rerun rerun_py/rerun_sdk/rerun_cli
+          cp target/release/dalaran dalaran_py/dalaran_sdk/dalaran_cli
 
       - name: Build the wheel
         run: |
@@ -76,14 +76,14 @@ jobs:
 
       - name: Install built wheel
         run: |
-          pixi run python scripts/ci/uv_install_wheel.py --package rerun-sdk --dir dist/x86_64-unknown-linux-gnu
+          pixi run python scripts/ci/uv_install_wheel.py --package dalaran-sdk --dir dist/x86_64-unknown-linux-gnu
 
       - name: Run e2e test
-        run: RUST_LOG=debug pixi run uvpy scripts/run_python_e2e_test.py --no-build # rerun-sdk is already built and installed
+        run: RUST_LOG=debug pixi run uvpy scripts/run_python_e2e_test.py --no-build # dalaran-sdk is already built and installed
 
       - name: Run docs/snippets/compare_snippet_output.py
         # --release so we can inherit from some of the artifacts that maturin has just built before
         # --target x86_64-unknown-linux-gnu because otherwise cargo loses the target cache… even though this is the target anyhow…
-        # --no-py-build because rerun-sdk is already built and installed
+        # --no-py-build because dalaran-sdk is already built and installed
         run: |
           RUST_LOG=debug pixi run uvpy docs/snippets/compare_snippet_output.py --release --target x86_64-unknown-linux-gnu --no-py-build

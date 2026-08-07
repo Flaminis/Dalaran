@@ -1,11 +1,11 @@
-//! This example shows how to wrap the Rerun Viewer in your own GUI.
+//! This example shows how to wrap the Dalaran Viewer in your own GUI.
 
-use rerun::external::{
+use dalaran::external::{
     arrow, eframe, egui, dl_chunk_store, dl_crash_handler, dl_entity_db, dl_grpc_server, dl_log,
     dl_log_types, dl_memory, dl_sdk_types, dl_viewer, tokio,
 };
 
-// By using `dl_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
+// By using `dl_memory::AccountingAllocator` Dalaran can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.
 // By using `mimalloc` we get faster allocations.
 #[global_allocator]
@@ -20,10 +20,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dl_log::setup_logging();
 
     // Install handlers for panics and crashes that prints to stderr and send
-    // them to Rerun analytics (if the `analytics` feature is on in `Cargo.toml`).
+    // them to Dalaran analytics (if the `analytics` feature is on in `Cargo.toml`).
     dl_crash_handler::install_crash_handlers(dl_viewer::build_info());
 
-    // Listen for gRPC connections from Rerun's logging SDKs.
+    // Listen for gRPC connections from Dalaran's logging SDKs.
     // There are other ways of "feeding" the viewer though - all you need is a `dl_log_channel::LogReceiver`.
     let (rx, _grpc_server_handle) = dl_grpc_server::spawn_with_recv(
         "0.0.0.0:9876".parse()?,
@@ -34,7 +34,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut native_options = dl_viewer::native::eframe_options(None);
     native_options.viewport = native_options
         .viewport
-        .with_app_id("rerun_extend_viewer_ui_example");
+        .with_app_id("dalaran_extend_viewer_ui_example");
 
     let startup_options = dl_viewer::StartupOptions::default();
 
@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Box::new(move |cc| {
             dl_viewer::customize_eframe_and_setup_renderer(cc)?;
 
-            let mut rerun_app = dl_viewer::App::new(
+            let mut dalaran_app = dl_viewer::App::new(
                 main_thread_token,
                 dl_viewer::build_info(),
                 app_env,
@@ -57,8 +57,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 None,
                 dl_viewer::AsyncRuntimeHandle::from_current_tokio_runtime_or_wasmbindgen()?,
             );
-            rerun_app.add_log_receiver(rx);
-            Ok(Box::new(MyApp { rerun_app }))
+            dalaran_app.add_log_receiver(rx);
+            Ok(Box::new(MyApp { dalaran_app }))
         }),
     )?;
 
@@ -66,13 +66,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 struct MyApp {
-    rerun_app: dl_viewer::App,
+    dalaran_app: dl_viewer::App,
 }
 
 impl eframe::App for MyApp {
     fn save(&mut self, storage: &mut dyn eframe::Storage) {
         // Store viewer state on disk
-        self.rerun_app.save(storage);
+        self.dalaran_app.save(storage);
     }
 
     /// Called whenever we need repainting, which could be 60 Hz.
@@ -84,12 +84,12 @@ impl eframe::App for MyApp {
                 self.ui(ui);
             });
 
-        // Now show the Rerun Viewer in the remaining space:
-        self.rerun_app.ui(ui, frame);
+        // Now show the Dalaran Viewer in the remaining space:
+        self.dalaran_app.ui(ui, frame);
     }
 
     fn logic(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        self.rerun_app.logic(ctx, frame);
+        self.dalaran_app.logic(ctx, frame);
     }
 }
 
@@ -101,7 +101,7 @@ impl MyApp {
         });
         ui.separator();
 
-        if let Some(entity_db) = self.rerun_app.recording_db() {
+        if let Some(entity_db) = self.dalaran_app.recording_db() {
             entity_db_ui(ui, entity_db);
         } else {
             ui.label("No log database loaded yet.");

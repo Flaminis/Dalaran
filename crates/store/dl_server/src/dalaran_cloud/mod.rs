@@ -145,18 +145,18 @@ impl DalaranCloudHandlerBuilder {
     pub async fn with_rrds_as_dataset(
         mut self,
         dataset_name: EntryName,
-        rrd_paths: Vec<PathBuf>,
+        dlr_paths: Vec<PathBuf>,
         on_duplicate: IfDuplicateBehavior,
         on_error: crate::OnError,
     ) -> Result<Self, crate::store::Error> {
         let dataset_id = self.store.create_dataset(dataset_name, None)?;
 
-        for rrd_path in rrd_paths {
+        for dlr_path in dlr_paths {
             let load_result = self
                 .store
-                .register_rrd_to_dataset(
+                .register_dlr_to_dataset(
                     dataset_id,
-                    &rrd_path,
+                    &dlr_path,
                     None,
                     on_duplicate,
                     StoreKind::Recording,
@@ -166,7 +166,7 @@ impl DalaranCloudHandlerBuilder {
                 Ok(_segment_ids) => {}
                 Err(err) => match on_error {
                     OnError::Continue => {
-                        dl_log::warn!("Failed loading file {}: {err}", rrd_path.display());
+                        dl_log::warn!("Failed loading file {}: {err}", dlr_path.display());
                     }
                     OnError::Abort => {
                         return Err(err);
@@ -306,7 +306,7 @@ impl DalaranCloudHandler {
                             )));
                         }
 
-                        // Recursively walk the directory and grab all '.rrd' files
+                        // Recursively walk the directory and grab all '.dlr' files
                         let mut dirs_to_visit = vec![path];
                         let mut files = Vec::new();
 
@@ -333,7 +333,7 @@ impl DalaranCloudHandler {
                                 if file_type.is_dir() {
                                     dirs_to_visit.push(entry_path);
                                 } else if let Some(extension) = entry_path.extension()
-                                    && extension == "rrd"
+                                    && extension == "dlr"
                                 {
                                     files.push(entry_path);
                                 }
@@ -342,7 +342,7 @@ impl DalaranCloudHandler {
 
                         if files.is_empty() {
                             return Err(tonic::Status::invalid_argument(format!(
-                                "no rrd files found in {:?}",
+                                "no dlr files found in {:?}",
                                 source.storage_url
                             )));
                         }
@@ -1351,7 +1351,7 @@ impl DalaranCloudService for DalaranCloudHandler {
 
     type GetRrdManifestStream = GetRrdManifestResponseStream;
 
-    async fn get_rrd_manifest(
+    async fn get_dlr_manifest(
         &self,
         request: tonic::Request<dl_protos::cloud::v1alpha1::GetRrdManifestRequest>,
     ) -> tonic::Result<tonic::Response<Self::GetRrdManifestStream>> {
@@ -1370,18 +1370,18 @@ impl DalaranCloudService for DalaranCloudHandler {
             .try_into()?;
 
         let dataset = store.dataset(entry_id)?;
-        let rrd_manifest = dataset.rrd_manifest(&segment_id)?;
+        let dlr_manifest = dataset.dlr_manifest(&segment_id)?;
 
-        let rrd_manifest_stream =
+        let dlr_manifest_stream =
             futures::stream::once(futures::future::ok(GetRrdManifestResponse {
-                rrd_manifest: Some(rrd_manifest.to_transport(()).map_err(|err| {
-                    tonic::Status::internal(format!("Unable to compute RRD manifest: {err:#}"))
+                dlr_manifest: Some(dlr_manifest.to_transport(()).map_err(|err| {
+                    tonic::Status::internal(format!("Unable to compute DLR manifest: {err:#}"))
                 })?),
                 manifest_key: None,
             }));
 
         Ok(tonic::Response::new(
-            Box::pin(rrd_manifest_stream) as Self::GetRrdManifestStream
+            Box::pin(dlr_manifest_stream) as Self::GetRrdManifestStream
         ))
     }
 
@@ -1758,7 +1758,7 @@ impl DalaranCloudService for DalaranCloudHandler {
 
     type FetchChunksStream = FetchChunksResponseStream;
 
-    // NOTE: OSS server does not detect source drift (a registered rrd file
+    // NOTE: OSS server does not detect source drift (a registered dlr file
     // being mutated after registration) which Dalaran Hub implements.
     // Consider if worth having parity (RR-4577).
     async fn fetch_chunks(

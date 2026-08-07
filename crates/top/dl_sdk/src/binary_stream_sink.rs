@@ -28,7 +28,7 @@ impl BinaryStreamStorage {
 
     /// Read and consume the current contents of the buffer.
     ///
-    /// This returns a fully encoded RRD file.
+    /// This returns a fully encoded DLR file.
     ///
     /// This does not flush the underlying batcher.
     /// Use [`BinaryStreamStorage::flush`] if you want to guarantee that all
@@ -37,7 +37,7 @@ impl BinaryStreamStorage {
     pub fn read(&self) -> Option<Vec<u8>> {
         let mut inner = self.inner.lock();
 
-        // if there's no messages to send, do not include the RRD headers.
+        // if there's no messages to send, do not include the DLR headers.
         if inner.is_empty() {
             return None;
         }
@@ -72,7 +72,7 @@ impl Drop for BinaryStreamStorage {
 
 /// Stream log messages to an in-memory binary stream.
 ///
-/// The contents of this stream are encoded in the Dalaran Record Data format (rrd).
+/// The contents of this stream are encoded in the Dalaran Record Data format (dlr).
 ///
 /// This stream has no mechanism of limiting memory or creating back-pressure. If you do not
 /// read from it, it will buffer all messages that you have logged.

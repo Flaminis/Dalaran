@@ -255,7 +255,7 @@ fn dalaran_bindings(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_thread_local_blueprint_recording, m)?)?;
     m.add_function(wrap_pyfunction!(set_thread_local_blueprint_recording, m)?)?;
     m.add_function(wrap_pyfunction!(disconnect_orphaned_recordings, m)?)?;
-    m.add_function(wrap_pyfunction!(check_for_rrd_footer, m)?)?;
+    m.add_function(wrap_pyfunction!(check_for_dlr_footer, m)?)?;
 
     // sinks
     m.add_function(wrap_pyfunction!(is_enabled, m)?)?;
@@ -1553,7 +1553,7 @@ fn stdout(
     })
 }
 
-/// Create an in-memory rrd file.
+/// Create an in-memory dlr file.
 #[pyfunction]
 #[pyo3(signature = (recording = None))]
 fn memory_recording(
@@ -2856,14 +2856,14 @@ fn logout() -> PyResult<Option<String>> {
 }
 
 #[pyfunction]
-/// Check if the RRD has a valid RRD footer.
+/// Check if the DLR has a valid DLR footer.
 ///
 /// This is useful for unit-tests to verify that data has been fully flushed to disk.
-fn check_for_rrd_footer(file_path: std::path::PathBuf) -> PyResult<bool> {
-    let rrd_bytes =
+fn check_for_dlr_footer(file_path: std::path::PathBuf) -> PyResult<bool> {
+    let dlr_bytes =
         std::fs::read(file_path).map_err(|err| PyRuntimeError::new_err(err.to_string()))?;
-    let rrd_manifests = dl_log_encoding::RawRrdManifest::from_rrd_bytes(&rrd_bytes)
+    let dlr_manifests = dl_log_encoding::RawRrdManifest::from_dlr_bytes(&dlr_bytes)
         .map_err(|err| PyRuntimeError::new_err(err.to_string()))?;
 
-    Ok(!rrd_manifests.is_empty())
+    Ok(!dlr_manifests.is_empty())
 }

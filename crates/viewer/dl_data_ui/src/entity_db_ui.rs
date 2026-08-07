@@ -144,7 +144,7 @@ fn grid_content_ui(ctx: &AppContext<'_>, db: &EntityDb, ui: &mut egui::Ui, ui_la
         ui.end_row();
 
         if let Some(store_version) = store_version {
-            ui.grid_left_hand_label("Source RRD version");
+            ui.grid_left_hand_label("Source DLR version");
             ui.label(store_version.to_string());
             ui.end_row();
         } else {
@@ -194,8 +194,8 @@ fn grid_content_ui(ctx: &AppContext<'_>, db: &EntityDb, ui: &mut egui::Ui, ui_la
         ui.grid_left_hand_label("Size");
 
         let current_size_bytes = db.byte_size_of_physical_chunks();
-        let full_size_bytes = if db.rrd_manifest_index().has_manifest() {
-            db.rrd_manifest_index()
+        let full_size_bytes = if db.dlr_manifest_index().has_manifest() {
+            db.dlr_manifest_index()
                 .full_uncompressed_size()
                 .at_least(current_size_bytes)
         } else {
@@ -209,11 +209,11 @@ fn grid_content_ui(ctx: &AppContext<'_>, db: &EntityDb, ui: &mut egui::Ui, ui_la
         );
         ui.end_row();
 
-        if db.rrd_manifest_index().has_manifest() {
+        if db.dlr_manifest_index().has_manifest() {
             ui.grid_left_hand_label("Downloaded");
 
             let memory_limit = ctx.app_options.memory_limit;
-            let max_downloaded_bytes = if db.rrd_manifest_index().is_fully_loaded() {
+            let max_downloaded_bytes = if db.dlr_manifest_index().is_fully_loaded() {
                 full_size_bytes
             } else {
                 u64::min(full_size_bytes, memory_limit.as_bytes())
@@ -224,7 +224,7 @@ fn grid_content_ui(ctx: &AppContext<'_>, db: &EntityDb, ui: &mut egui::Ui, ui_la
 
             let mut num_root_chunks = 0_usize;
             let mut num_fully_loaded = 0_usize;
-            for info in db.rrd_manifest_index().root_chunks() {
+            for info in db.dlr_manifest_index().root_chunks() {
                 num_root_chunks += 1;
                 if info.is_fully_loaded() {
                     num_fully_loaded += 1;
@@ -338,7 +338,7 @@ fn grid_content_ui(ctx: &AppContext<'_>, db: &EntityDb, ui: &mut egui::Ui, ui_la
 
                     This compaction process is an ephemeral, in-memory optimization of the Dalaran viewer.\
                     It will not modify the recording itself: use the `Save` command of the viewer, or the \
-                    `dalaran rrd optimize` CLI tool if you wish to persist the compacted results, which will \
+                    `dalaran dlr optimize` CLI tool if you wish to persist the compacted results, which will \
                     make future runs cheaper.
                     ",
                         chunk_max_rows = dl_format::format_uint(chunk_max_rows),
@@ -364,7 +364,7 @@ fn grid_content_ui(ctx: &AppContext<'_>, db: &EntityDb, ui: &mut egui::Ui, ui_la
 #[cfg(debug_assertions)]
 fn debug_ui(ui: &mut egui::Ui, db: &EntityDb) {
     egui::Grid::new("debug-info").show(ui, |ui| {
-        if let Some(manifest) = db.rrd_manifest_index().manifest() {
+        if let Some(manifest) = db.dlr_manifest_index().manifest() {
             ui.label("Entities");
             ui.label(format_uint(
                 manifest.recording_schema().all_entities().len(),

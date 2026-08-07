@@ -26,7 +26,7 @@ jobs:
   check-cherry-pick:
     name: Check if merge commit can be cherry-picked
     runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.owner.login == 'rerun-io' && contains(github.event.pull_request.labels.*.name, 'deploy docs')
+    if: github.event.pull_request.head.repo.owner.login == 'dalaran-io' && contains(github.event.pull_request.labels.*.name, 'deploy docs')
     steps:
       - uses: actions/checkout@v6
         with:
@@ -35,11 +35,11 @@ jobs:
 
       - name: Try cherry-pick
         env:
-          GH_TOKEN: ${{ secrets.RERUN_BOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.DALARAN_BOT_TOKEN }}
         run: |
           # Setup git user
-          git config --global user.name "rerun-bot"
-          git config --global user.email "bot@rerun.io"
+          git config --global user.name "dalaran-bot"
+          git config --global user.email "bot@dalaran.dev"
 
           git fetch origin main
           git checkout main

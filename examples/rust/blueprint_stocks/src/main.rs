@@ -1,7 +1,7 @@
 use anyhow::Result;
 use chrono::NaiveDate;
 use clap::Parser;
-use rerun::{
+use dalaran::{
     blueprint::{
         Blueprint, ContainerLike, Horizontal, SelectionPanel, TextDocumentView, TimePanel,
         TimeSeriesView, Vertical,
@@ -62,7 +62,7 @@ enum BlueprintMode {
 #[command(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 
     /// Select the blueprint to use
     #[arg(long, value_enum, default_value = "grid")]
@@ -144,18 +144,18 @@ fn brand_color(ticker: Ticker) -> u32 {
     }
 }
 
-fn style_plot(ticker: Ticker) -> rerun::SeriesLines {
-    rerun::SeriesLines::new()
+fn style_plot(ticker: Ticker) -> dalaran::SeriesLines {
+    dalaran::SeriesLines::new()
         .with_colors([brand_color(ticker)])
         .with_names([ticker.as_str()])
 }
 
-fn style_peak(ticker: Ticker) -> rerun::SeriesPoints {
+fn style_peak(ticker: Ticker) -> dalaran::SeriesPoints {
     let ticker_str = ticker.as_str();
-    rerun::SeriesPoints::new()
+    dalaran::SeriesPoints::new()
         .with_colors([0xFF0000FF])
         .with_names([format!("{ticker_str} (peak)")])
-        .with_markers([rerun::components::MarkerShape::Up])
+        .with_markers([dalaran::components::MarkerShape::Up])
 }
 
 /// A blueprint enabling auto views, which matches the application default.
@@ -322,8 +322,8 @@ fn main() -> Result<()> {
     };
 
     let (rec, _serve_guard) = args
-        .rerun
-        .init_with_blueprint("rerun_example_blueprint_stocks", blueprint)?;
+        .dalaran
+        .init_with_blueprint("dalaran_example_blueprint_stocks", blueprint)?;
 
     // Log styling for plots (static)
     for &ticker in &tickers {
@@ -365,7 +365,7 @@ fn main() -> Result<()> {
         rec.set_time_sequence("stable_time", 0);
         rec.log_static(
             format!("stocks/{ticker_str}/info"),
-            &rerun::TextDocument::new(info_md).with_media_type(rerun::MediaType::MARKDOWN),
+            &dalaran::TextDocument::new(info_md).with_media_type(dalaran::MediaType::MARKDOWN),
         )?;
 
         // Log quote data
@@ -396,14 +396,14 @@ fn main() -> Result<()> {
                         rec.set_time_sequence("time", i as i64);
                         rec.log(
                             format!("stocks/{ticker_str}/{date_str}"),
-                            &rerun::Scalars::new([quote.high]),
+                            &dalaran::Scalars::new([quote.high]),
                         )?;
 
                         // Log peak
                         if Some(i) == peak_idx {
                             rec.log(
                                 format!("stocks/{ticker_str}/peaks/{date_str}"),
-                                &rerun::Scalars::new([quote.high]),
+                                &dalaran::Scalars::new([quote.high]),
                             )?;
                         }
                     }

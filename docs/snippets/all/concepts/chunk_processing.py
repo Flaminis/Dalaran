@@ -25,7 +25,7 @@ MCAP = (
     / "mcap"
     / "trossen_transfer_cube.mcap"
 )
-OUT = Path("chunk_processing.rrd")
+OUT = Path("chunk_processing.dlr")
 # endregion: setup
 
 
@@ -96,7 +96,7 @@ merged = LazyChunkStream.merge(processed, LazyChunkStream.from_iter([metadata]))
 
 
 # region: write
-merged.write_rrd(
+merged.write_dlr(
     OUT,
     application_id="dalaran_example_chunk_processing",
     recording_id=str(uuid.uuid4()),

@@ -13,14 +13,14 @@ mcap_path = (
     / "mcap"
     / "trossen_transfer_cube.mcap"
 )
-output_path = Path("trossen_compacted.rrd")
+output_path = Path("trossen_compacted.dlr")
 
 # region: optimize
 (
     McapReader(mcap_path)
     .stream()
     .collect(optimize=OptimizationProfile.OBJECT_STORE)
-    .write_rrd(
+    .write_dlr(
         output_path,
         application_id="dalaran_example_optimize",
         recording_id=mcap_path.stem,

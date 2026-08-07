@@ -14,7 +14,7 @@ from datafusion import functions as F
 import dalaran as dl
 
 sample_5_path = (
-    Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
+    Path(__file__).parents[4] / "tests" / "assets" / "dlr" / "sample_5"
 )
 
 server = dl.server.Server(datasets={"sample_dataset": sample_5_path})

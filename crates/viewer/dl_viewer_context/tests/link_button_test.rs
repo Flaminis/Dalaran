@@ -19,7 +19,7 @@ const TABLE_ENTRY_TUID: &str = "182755B45B963E7774455beb91701aef";
 
 /// All the built-in URL types we recognize, paired with a short description.
 ///
-/// Note: a bare local file path (e.g. `/path/to/file.rrd`) is intentionally absent — `data_label`
+/// Note: a bare local file path (e.g. `/path/to/file.dlr`) is intentionally absent — `data_label`
 /// only treats text containing `://` as a URL, so the decorator is never invoked for it.
 const URLS: &[(&str, &str)] = &[
     (
@@ -56,11 +56,11 @@ const URLS: &[(&str, &str)] = &[
         "dalaran://example.dalaran.dev/folder/perception.detection",
     ),
     ("Intra-recording selection", "recording://camera/points"),
-    ("Local file (file:// URL)", "file:///recordings/data.rrd"),
-    ("Remote file", "https://example.com/recordings/data.rrd"),
+    ("Local file (file:// URL)", "file:///recordings/data.dlr"),
+    ("Remote file", "https://example.com/recordings/data.dlr"),
     (
         "Web-viewer share link",
-        "https://dalaran.dev/viewer?url=https://example.com/inner.rrd",
+        "https://dalaran.dev/viewer?url=https://example.com/inner.dlr",
     ),
     ("Non-redap URL (plain link)", "https://dalaran.dev/"),
 ];

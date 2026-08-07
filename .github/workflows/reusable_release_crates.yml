@@ -41,7 +41,7 @@ jobs:
           pixi-version: v0.71.3
 
       - name: Build web-viewer (release)
-        run: pixi run rerun-build-web-release
+        run: pixi run dalaran-build-web-release
 
       - name: Publish
         run: pixi run python scripts/ci/crates.py publish --token ${{ secrets.CRATES_IO_TOKEN }}

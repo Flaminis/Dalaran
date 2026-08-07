@@ -7,7 +7,7 @@ description: Plot numerical data that wasn't logged with Dalaran semantics
 Dalaran can plot numerical data as a time series, even data that wasn't logged with Dalaran semantics.
 By remapping where a visualizer reads its inputs from, you can separate how you _model_ your data from how you _visualize_ it.
 This is useful for plotting custom messages from MCAPs, or data logged via `AnyValues` and `DynamicArchetype`.
-As a bonus, logging multiple scalars to the same entity can drastically reduce `.rrd` file sizes.
+As a bonus, logging multiple scalars to the same entity can drastically reduce `.dlr` file sizes.
 
 Each visualizer takes components as input and determines their values from various sources.
 By configuring _component mappings_, you can control exactly where each input comes from.

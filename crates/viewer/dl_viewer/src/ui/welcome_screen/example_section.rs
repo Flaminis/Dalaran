@@ -26,7 +26,7 @@ struct ExampleDesc {
 
     tags: Vec<String>,
 
-    rrd_url: String,
+    dlr_url: String,
     thumbnail: ExampleThumbnail,
 
     /// URL of the source code in GitHub
@@ -57,15 +57,15 @@ struct ExampleDescLayout {
     desc: ExampleDesc,
     rect: egui::Rect,
 
-    /// We do an async HEAD request to get the size of the RRD file
+    /// We do an async HEAD request to get the size of the DLR file
     /// so we can show it to the user.
-    rrd_byte_size_promise: Promise<Option<u64>>,
+    dlr_byte_size_promise: Promise<Option<u64>>,
 }
 
 impl ExampleDescLayout {
     fn new(egui_ctx: &egui::Context, desc: ExampleDesc) -> Self {
         Self {
-            rrd_byte_size_promise: load_file_size(egui_ctx, desc.rrd_url.clone()),
+            dlr_byte_size_promise: load_file_size(egui_ctx, desc.dlr_url.clone()),
             desc,
             rect: egui::Rect::NOTHING,
         }
@@ -346,7 +346,7 @@ impl ExampleSection {
                                     ui.input_mut(|i| i.pointer = Default::default());
 
                                     ui.open_url(egui::output::OpenUrl {
-                                        url: example.desc.rrd_url.clone(),
+                                        url: example.desc.dlr_url.clone(),
                                         new_tab: false,
                                     });
                                 }
@@ -531,7 +531,7 @@ impl ExampleDescLayout {
                     });
                 }
 
-                if let Some(Some(size)) = self.rrd_byte_size_promise.ready().copied() {
+                if let Some(Some(size)) = self.dlr_byte_size_promise.ready().copied() {
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                         ui.label(egui::RichText::new(dl_format::format_bytes(size as f64)).weak());
                     });

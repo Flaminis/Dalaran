@@ -102,11 +102,11 @@ impl App {
 
             #[cfg(not(target_arch = "wasm32"))]
             LogDataSource::FilePath { path, .. } => {
-                // TODO(RR-5309): Keep `.rbl` files on the legacy importer until the server supports
+                // TODO(RR-5309): Keep `.dbl` files on the legacy importer until the server supports
                 // blueprint management. Catalog registration must preserve retargeting to the
                 // currently open `ApplicationId`.
-                // If the internal catalog is enabled, route `.rrd` files through it.
-                if path.extension().is_some_and(|ext| ext == "rrd")
+                // If the internal catalog is enabled, route `.dlr` files through it.
+                if path.extension().is_some_and(|ext| ext == "dlr")
                     && self.app_options().experimental.use_internal_catalog
                     && self.connection_registry.internal_origin().is_some()
                 {
@@ -315,11 +315,11 @@ impl App {
 
     #[cfg(target_arch = "wasm32")]
     fn should_register_via_internal_catalog(&self, path: &std::path::Path) -> bool {
-        // TODO(RR-5309): Keep `.rbl` files on the legacy importer until the server supports
+        // TODO(RR-5309): Keep `.dbl` files on the legacy importer until the server supports
         // blueprint management and catalog registration can preserve `ApplicationId` retargeting.
         path.extension()
             .and_then(|ext| ext.to_str())
-            .is_some_and(|ext| ext.eq_ignore_ascii_case("rrd"))
+            .is_some_and(|ext| ext.eq_ignore_ascii_case("dlr"))
             && self.app_options().experimental.use_internal_catalog
             && self.connection_registry.internal_origin().is_some()
     }
@@ -382,7 +382,7 @@ fn record_catalog_load_analytics(
     let _ = (data_source, catalog_kind, started_successfully);
 }
 
-/// Register a local `.rrd` file with the catalog server.
+/// Register a local `.dlr` file with the catalog server.
 #[cfg(not(target_arch = "wasm32"))]
 async fn register_local_file(
     connection_registry: &dl_redap_client::ConnectionRegistryHandle,
@@ -401,33 +401,33 @@ async fn register_local_file(
         )
     })?;
 
-    let rrd_metadata = async {
+    let dlr_metadata = async {
         // TODO(tokio-rs/tokio#1529): positional reads block the reactor; use `std::fs::File` until
         // an async positional file API lands (or push reads to `spawn_blocking`).
         let file = std::fs::File::open(&abs_path).with_context(|| {
             format!(
-                "failed to open RRD for metadata extraction\nFile path: {}",
+                "failed to open DLR for metadata extraction\nFile path: {}",
                 abs_path.display(),
             )
         })?;
 
-        let metadata = read_rrd_metadata(&file).await?;
+        let metadata = read_dlr_metadata(&file).await?;
 
         metadata
             .store_ids
             .first()
-            .context("no application id found in RRD")?;
+            .context("no application id found in DLR")?;
         Ok::<_, anyhow::Error>(metadata)
     }
     .await
     .inspect_err(|err| {
         dl_log::error!(
-            "Failed to read RRD metadata: {err}\nFile path: {}",
+            "Failed to read DLR metadata: {err}\nFile path: {}",
             abs_path.display(),
         );
     })?;
 
-    register_file(connection_registry, file_url, rrd_metadata).await
+    register_file(connection_registry, file_url, dlr_metadata).await
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -451,7 +451,7 @@ async fn register_web_file(
     }
 
     let file_url = upload.file_url();
-    register_file(connection_registry, file_url, upload.rrd_metadata).await
+    register_file(connection_registry, file_url, upload.dlr_metadata).await
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -460,7 +460,7 @@ struct OpfsUpload {
     file_name: String,
     file_size: u64,
     path: std::path::PathBuf,
-    rrd_metadata: dl_log_encoding::RrdMetadata,
+    dlr_metadata: dl_log_encoding::RrdMetadata,
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -487,27 +487,27 @@ async fn prepare_opfs_upload(
 ) -> anyhow::Result<OpfsUpload> {
     let file_size = reader.size().await.with_context(|| {
         format!(
-            "failed to read RRD file size\nFile path: {}",
+            "failed to read DLR file size\nFile path: {}",
             source_path.display(),
         )
     })?;
-    let rrd_metadata = read_rrd_metadata(reader).await.with_context(|| {
+    let dlr_metadata = read_dlr_metadata(reader).await.with_context(|| {
         format!(
-            "failed to read RRD metadata\nFile path: {}",
+            "failed to read DLR metadata\nFile path: {}",
             source_path.display(),
         )
     })?;
-    rrd_metadata.store_ids.first().with_context(|| {
+    dlr_metadata.store_ids.first().with_context(|| {
         format!(
-            "no application id found in RRD\nFile path: {}",
+            "no application id found in DLR\nFile path: {}",
             source_path.display(),
         )
     })?;
-    let fingerprint = dl_log_encoding::RrdFingerprint::compute_for_rrd(reader)
+    let fingerprint = dl_log_encoding::RrdFingerprint::compute_for_dlr(reader)
         .await
         .with_context(|| {
             format!(
-                "failed to fingerprint RRD\nFile path: {}",
+                "failed to fingerprint DLR\nFile path: {}",
                 source_path.display(),
             )
         })?
@@ -531,14 +531,14 @@ async fn prepare_opfs_upload(
         file_name,
         file_size,
         path,
-        rrd_metadata,
+        dlr_metadata,
     })
 }
 
 /// Makes use of the fact that we don't need to scan for `default_blueprint_by_app_id`,
-/// if we don't have blueprints in the RRD.
-async fn read_rrd_metadata(reader: &impl dl_async::AsyncReadAt) -> anyhow::Result<RrdMetadata> {
-    if let Some(footer) = dl_log_encoding::read_rrd_footer(reader).await?
+/// if we don't have blueprints in the DLR.
+async fn read_dlr_metadata(reader: &impl dl_async::AsyncReadAt) -> anyhow::Result<RrdMetadata> {
+    if let Some(footer) = dl_log_encoding::read_dlr_footer(reader).await?
         && footer
             .manifests
             .keys()
@@ -570,21 +570,21 @@ async fn opfs_upload_matches(path: &std::path::Path, expected_size: u64) -> anyh
 async fn register_file(
     connection_registry: &dl_redap_client::ConnectionRegistryHandle,
     file_url: url::Url,
-    rrd_metadata: dl_log_encoding::RrdMetadata,
+    dlr_metadata: dl_log_encoding::RrdMetadata,
 ) -> anyhow::Result<dl_uri::DatasetSegmentUri> {
-    let application_id = rrd_metadata
+    let application_id = dlr_metadata
         .store_ids
         .first()
         .map(StoreId::application_id)
-        .context("no application id found in RRD")?;
+        .context("no application id found in DLR")?;
 
-    if rrd_metadata
+    if dlr_metadata
         .store_ids
         .iter()
         .any(|store_id| store_id.application_id() != application_id)
     {
         dl_log::warn!(
-            "RRD contains multiple application ids; using the first as the dataset name: {application_id}"
+            "DLR contains multiple application ids; using the first as the dataset name: {application_id}"
         );
     }
 
@@ -592,7 +592,7 @@ async fn register_file(
         .internal_origin()
         .context("internal catalog is not running")?;
     let mut client = connection_registry.client(origin.clone()).await?;
-    let data_source = DataSource::new_rrd_url(file_url);
+    let data_source = DataSource::new_dlr_url(file_url);
     let dataset_name = EntryName::from(application_id.clone());
 
     // TODO(RR-5309): Handle RRDs without recording stores as standalone blueprints.
@@ -609,11 +609,11 @@ async fn register_file(
         dataset_id,
         &segment_id,
         data_source,
-        &rrd_metadata,
+        &dlr_metadata,
     )
     .await
     {
-        dl_log::warn!("Failed to update default blueprint for catalog RRD load: {err:#}");
+        dl_log::warn!("Failed to update default blueprint for catalog DLR load: {err:#}");
     }
 
     Ok(dl_uri::DatasetSegmentUri {
@@ -627,29 +627,29 @@ async fn register_file(
 /// Registers the recording's embedded default blueprint (if any) into the dataset's hidden
 /// blueprint dataset and records it as the dataset's default blueprint segment.
 ///
-/// The blueprint lives in the same RRD, so we register the same `file://` URL into the blueprint
+/// The blueprint lives in the same DLR, so we register the same `file://` URL into the blueprint
 /// dataset; the server picks out the blueprint store and serves it lazily.
 async fn update_default_blueprint(
     client: &mut dl_redap_client::ConnectionClient,
     dataset_id: dl_log_types::EntryId,
     segment_id: &SegmentId,
     data_source: DataSource,
-    rrd_metadata: &dl_log_encoding::RrdMetadata,
+    dlr_metadata: &dl_log_encoding::RrdMetadata,
 ) -> anyhow::Result<()> {
     // TODO(RR-5309): Register embedded blueprints that lack a `make_default` command once the
     // server supports blueprint management.
-    if rrd_metadata.default_blueprint_by_app_id.is_empty() {
+    if dlr_metadata.default_blueprint_by_app_id.is_empty() {
         return Ok(());
     }
 
-    let Some(recording_store_id) = rrd_metadata.store_ids.iter().find(|store_id| {
+    let Some(recording_store_id) = dlr_metadata.store_ids.iter().find(|store_id| {
         store_id.is_recording() && SegmentId::from(store_id.recording_id()) == *segment_id
     }) else {
-        dl_log::warn!("Could not match registered segment {segment_id} to an RRD recording store");
+        dl_log::warn!("Could not match registered segment {segment_id} to an DLR recording store");
         return Ok(());
     };
 
-    let Some(default_blueprint_store_id) = rrd_metadata
+    let Some(default_blueprint_store_id) = dlr_metadata
         .default_blueprint_by_app_id
         .get(recording_store_id.application_id())
     else {
@@ -678,7 +678,7 @@ async fn update_default_blueprint(
         .any(|task| task.segment_id == expected_blueprint_segment_id)
     {
         dl_log::warn!(
-            "Registered RRD into the blueprint dataset, but default blueprint segment \
+            "Registered DLR into the blueprint dataset, but default blueprint segment \
              {expected_blueprint_segment_id} was not returned; keeping the existing default blueprint"
         );
         return Ok(());

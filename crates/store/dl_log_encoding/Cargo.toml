@@ -1,7 +1,7 @@
 [package]
 name = "dl_log_encoding"
 authors.workspace = true
-description = "Encode/decode and serialize/deserialize RRD streams"
+description = "Encode/decode and serialize/deserialize DLR streams"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -22,13 +22,13 @@ all-features = true
 [features]
 default = []
 
-## Enable loading data from an .rrd file.
+## Enable loading data from an .dlr file.
 decoder = ["dep:bytes", "dep:dl_async"]
 
-## Enable encoding of log messages to an .rrd file/stream.
+## Enable encoding of log messages to an .dlr file/stream.
 encoder = []
 
-## Enable streaming of .rrd files from HTTP.
+## Enable streaming of .dlr files from HTTP.
 stream_from_http = [
   "decoder",
   "dep:ehttp",

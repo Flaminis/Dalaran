@@ -18,7 +18,7 @@ pub enum DataSourceMessage {
     /// There may be one or more of these, followed by [`Self::RrdManifestComplete`].
     RrdManifest(StoreId, Arc<RrdManifest>),
 
-    /// All parts of the RRD manifest have been sent.
+    /// All parts of the DLR manifest have been sent.
     RrdManifestComplete(StoreId),
 
     /// See [`LogMsg`].

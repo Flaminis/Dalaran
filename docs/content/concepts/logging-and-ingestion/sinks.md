@@ -20,7 +20,7 @@ snippet: concepts/grpc_sink
 
 ### FileSink
 
-Writes data to `.rrd` files on disk.
+Writes data to `.dlr` files on disk.
 
 snippet: concepts/file_sink
 

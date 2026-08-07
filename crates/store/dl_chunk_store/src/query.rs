@@ -1373,15 +1373,15 @@ mod tests {
             assert!(store.take_tracked_chunk_ids().missing_virtual.is_empty());
         }
 
-        // Back the chunks with an RRD manifest. That way, once they get garbage collected, they
+        // Back the chunks with an DLR manifest. That way, once they get garbage collected, they
         // stay recoverable and keep being reported as missing (partial results) instead of
         // vanishing from the virtual indices entirely.
-        let rrd_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
+        let dlr_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
             store_id,
             [&*chunk1, &*chunk2, &*chunk3].into_iter(),
         )
         .unwrap();
-        _ = store.insert_rrd_manifest(rrd_manifest);
+        _ = store.insert_dlr_manifest(dlr_manifest);
 
         store.insert_chunk(&chunk1).unwrap();
         store.insert_chunk(&chunk2).unwrap();

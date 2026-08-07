@@ -1,12 +1,12 @@
 //! Shows how to draw a graph with various node properties.
 
 use itertools::Itertools as _;
-use rerun::{Color, GraphEdges, GraphNodes};
+use dalaran::{Color, GraphEdges, GraphNodes};
 
 const NUM_NODES: usize = 10;
 
 fn main() -> anyhow::Result<()> {
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_graph_lattice").spawn()?;
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_graph_lattice").spawn()?;
 
     let coordinates = (0..NUM_NODES).cartesian_product(0..NUM_NODES);
 

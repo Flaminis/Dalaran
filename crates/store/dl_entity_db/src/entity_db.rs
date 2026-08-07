@@ -30,7 +30,7 @@ use dl_query::{
 
 use crate::Error;
 use crate::ingestion_statistics::IngestionStatistics;
-use crate::rrd_manifest_index::RrdManifestIndex;
+use crate::dlr_manifest_index::RrdManifestIndex;
 
 // ----------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ pub const DEFAULT_GC_TIME_BUDGET: std::time::Duration = std::time::Duration::fro
 /// their default blueprint sourced remotely.
 #[derive(Debug, PartialEq, Eq)]
 pub enum EntityDbClass<'a> {
-    /// This is a regular local recording (e.g. loaded from a `.rrd` file or logged to the viewer).
+    /// This is a regular local recording (e.g. loaded from a `.dlr` file or logged to the viewer).
     LocalRecording,
 
     /// This is an official dalaran example recording.
@@ -126,7 +126,7 @@ pub struct EntityDb {
     /// Clones of an [`EntityDb`] gets a `None` source.
     pub data_source: Option<dl_log_channel::LogSource>,
 
-    rrd_manifest_index: RrdManifestIndex,
+    dlr_manifest_index: RrdManifestIndex,
 
     /// Comes in a special message, [`LogMsg::SetStoreInfo`].
     set_store_info: Option<SetStoreInfo>,
@@ -213,7 +213,7 @@ impl EntityDb {
             store_id,
             enable_viewer_indexes,
             data_source: None,
-            rrd_manifest_index: Default::default(),
+            dlr_manifest_index: Default::default(),
             set_store_info: None,
             last_modified_at: web_time::Instant::now(),
             latest_row_id: None,
@@ -285,10 +285,10 @@ impl EntityDb {
             .sum()
     }
 
-    pub fn rrd_manifest_index_mut_and_storage_engine(
+    pub fn dlr_manifest_index_mut_and_storage_engine(
         &mut self,
     ) -> (&mut RrdManifestIndex, StorageEngineReadGuard<'_>) {
-        (&mut self.rrd_manifest_index, self.storage_engine.read())
+        (&mut self.dlr_manifest_index, self.storage_engine.read())
     }
 
     /// Returns a reference to the backing [`StorageEngine`].
@@ -321,13 +321,13 @@ impl EntityDb {
     }
 
     #[inline]
-    pub fn rrd_manifest_index(&self) -> &RrdManifestIndex {
-        &self.rrd_manifest_index
+    pub fn dlr_manifest_index(&self) -> &RrdManifestIndex {
+        &self.dlr_manifest_index
     }
 
     #[inline]
-    pub fn rrd_manifest_index_mut(&mut self) -> &mut RrdManifestIndex {
-        &mut self.rrd_manifest_index
+    pub fn dlr_manifest_index_mut(&mut self) -> &mut RrdManifestIndex {
+        &mut self.dlr_manifest_index
     }
 
     pub fn redap_connection_state(&self) -> RedapConnectionState {
@@ -338,8 +338,8 @@ impl EntityDb {
             .is_some_and(|source| source.is_redap());
 
         if is_connected_to_redap {
-            if self.rrd_manifest_index.has_manifest() {
-                if self.rrd_manifest_index.is_manifest_complete() {
+            if self.dlr_manifest_index.has_manifest() {
+                if self.dlr_manifest_index.is_manifest_complete() {
                     RedapConnectionState::Ready
                 } else {
                     RedapConnectionState::PartialManifest
@@ -361,7 +361,7 @@ impl EntityDb {
     /// Recordings with protected chunks should not be auto-closed during memory pressure,
     /// since we'd immediately need to re-download them.
     pub fn has_protected_chunks(&self) -> bool {
-        self.rrd_manifest_index.has_protected_chunks()
+        self.dlr_manifest_index.has_protected_chunks()
     }
 
     /// Are we connected to redap, and can fetch missing chunks?
@@ -374,7 +374,7 @@ impl EntityDb {
         }
     }
 
-    /// Are we currently in the process of downloading the RRD Manifest?
+    /// Are we currently in the process of downloading the DLR Manifest?
     pub fn is_downloading_manifest(&self) -> bool {
         matches!(
             self.redap_connection_state(),
@@ -383,7 +383,7 @@ impl EntityDb {
         )
     }
 
-    /// Are we currently waiting for the first part of the RRD Manifest?
+    /// Are we currently waiting for the first part of the DLR Manifest?
     pub fn is_downloading_first_part_of_manifest(&self) -> bool {
         self.redap_connection_state() == RedapConnectionState::DownloadingFirstManifestPart
     }
@@ -398,7 +398,7 @@ impl EntityDb {
 
             RedapConnectionState::Ready => {
                 if let Some(state) = self
-                    .rrd_manifest_index()
+                    .dlr_manifest_index()
                     .chunk_prioritizer()
                     .latest_result()
                 {
@@ -618,7 +618,7 @@ impl EntityDb {
             return false;
         }
 
-        self.is_buffering() || !self.rrd_manifest_index.is_fully_loaded()
+        self.is_buffering() || !self.dlr_manifest_index.is_fully_loaded()
     }
 
     /// Check if we have all loaded chunk for the given entity and component at `query.at()`.
@@ -633,7 +633,7 @@ impl EntityDb {
         };
 
         !self
-            .rrd_manifest_index()
+            .dlr_manifest_index()
             .unloaded_temporal_entries_for(&timeline, entity_path, Some(component))
             .any(|chunk| chunk.time_range.contains(query.at()))
     }
@@ -665,7 +665,7 @@ impl EntityDb {
     ///
     /// Only available for redap connections with manifests.
     pub fn data_time_ranges_for(&self, timeline: &TimelineName) -> Option<&[AbsoluteTimeRange]> {
-        self.rrd_manifest_index.data_time_ranges_for(timeline)
+        self.dlr_manifest_index.data_time_ranges_for(timeline)
     }
 
     /// Returns the total number of temporal rows on the given timeline across all entities.
@@ -748,9 +748,9 @@ impl EntityDb {
         self.entity_path_from_hash.contains_key(&entity_path.hash())
     }
 
-    pub fn add_rrd_manifest_message(
+    pub fn add_dlr_manifest_message(
         &mut self,
-        rrd_manifest: Arc<RrdManifest>,
+        dlr_manifest: Arc<RrdManifest>,
     ) -> Vec<ChunkStoreEvent> {
         dl_tracing::profile_function!();
 
@@ -758,22 +758,22 @@ impl EntityDb {
             .storage_engine
             .write()
             .store()
-            .insert_rrd_manifest(rrd_manifest.clone());
+            .insert_dlr_manifest(dlr_manifest.clone());
 
         self.on_store_events(&events);
 
         let engine = self.storage_engine.read();
         let entity_tree = engine.store().entity_tree();
-        if let Err(err) = self.rrd_manifest_index.append(rrd_manifest, entity_tree) {
-            dl_log::error!("Failed to append RRD manifest: {err}");
+        if let Err(err) = self.dlr_manifest_index.append(dlr_manifest, entity_tree) {
+            dl_log::error!("Failed to append DLR manifest: {err}");
         }
 
         events
     }
 
-    /// Mark the RRD manifest as complete (all parts have been received).
-    pub fn mark_rrd_manifest_complete(&mut self) {
-        self.rrd_manifest_index.set_manifest_complete();
+    /// Mark the DLR manifest as complete (all parts have been received).
+    pub fn mark_dlr_manifest_complete(&mut self) {
+        self.dlr_manifest_index.set_manifest_complete();
     }
 
     /// Insert new data into the store.
@@ -869,12 +869,12 @@ impl EntityDb {
 
         let engine = engine.downgrade();
 
-        self.rrd_manifest_index
+        self.dlr_manifest_index
             .on_events(engine.store(), store_events);
 
         // Update our internal views by notifying them of resulting [`ChunkStoreEvent`]s.
         self.data_meta_per_timeline.on_events(
-            &self.rrd_manifest_index,
+            &self.dlr_manifest_index,
             engine.store(),
             store_events,
         );
@@ -893,7 +893,7 @@ impl EntityDb {
         dl_tracing::profile_function!();
 
         let protected_chunks = self
-            .rrd_manifest_index
+            .dlr_manifest_index
             .chunk_prioritizer()
             .protected_chunks()
             .physical
@@ -925,7 +925,7 @@ impl EntityDb {
                 // So it makes sense to GC the things furthest from the current time cursor:
                 time_cursor.map(|tc| (tc.name, tc.time))
             } else {
-                // If we don't have an RRD manifest, then we can't redownload data,
+                // If we don't have an DLR manifest, then we can't redownload data,
                 // and we GC the oldest data instead.
                 None
             },
@@ -1084,7 +1084,7 @@ impl EntityDb {
         // We generally use `to_messages` to export a blueprint via "save". In that
         // case, we want to make the blueprint active and default when it's reloaded.
         // TODO(jleibs): Coupling this with the stored file instead of injecting seems
-        // architecturally weird. Would be great if we didn't need this in `.rbl` files
+        // architecturally weird. Would be great if we didn't need this in `.dbl` files
         // at all.
         let blueprint_ready = if self.store_kind() == StoreKind::Blueprint {
             let activate_cmd =
@@ -1111,7 +1111,7 @@ impl EntityDb {
         // We do NOT clone the `data_source`, because the reason we clone an entity db
         // is so that we can modify it, and then it would be wrong to say its from the same source.
         // Specifically: if we load a blueprint from an `.rdd`, then modify it heavily and save it,
-        // it would be wrong to claim that this was the blueprint from that `.rrd`,
+        // it would be wrong to claim that this was the blueprint from that `.dlr`,
         // and it would confuse the user.
         // TODO(emilk): maybe we should use a special `Cloned` data source,
         // wrapping either the original source, the original StoreId, or both.
@@ -1201,7 +1201,7 @@ impl EntityDb {
 
         subtree
             .find_first_child_recursive(|path| {
-                self.rrd_manifest_index
+                self.dlr_manifest_index
                     .entity_has_data_on_timeline(path, timeline)
                     || engine
                         .store()
@@ -1228,7 +1228,7 @@ impl EntityDb {
 
         subtree
             .find_first_child_recursive(|path| {
-                self.rrd_manifest_index
+                self.dlr_manifest_index
                     .entity_has_temporal_data_on_timeline(path, timeline)
                     || engine
                         .store()
@@ -1248,7 +1248,7 @@ impl EntityDb {
     ) -> bool {
         dl_tracing::profile_function!();
 
-        self.rrd_manifest_index
+        self.dlr_manifest_index
             .entity_has_temporal_data_on_timeline(entity_path, timeline)
             || engine
                 .store()
@@ -1268,7 +1268,7 @@ impl EntityDb {
     ) -> bool {
         dl_tracing::profile_function!();
 
-        self.rrd_manifest_index
+        self.dlr_manifest_index
             .entity_has_temporal_data_on_timeline_for_component(entity_path, timeline, component)
             || engine
                 .store()
@@ -1291,7 +1291,7 @@ impl dl_byte_size::SizeBytes for EntityDb {
             store_id,
             enable_viewer_indexes,
             data_source: _,
-            rrd_manifest_index,
+            dlr_manifest_index,
             set_store_info,
             last_modified_at: _,
             latest_row_id: _,
@@ -1316,7 +1316,7 @@ impl dl_byte_size::SizeBytes for EntityDb {
 
         store_id.heap_size_bytes()
             + enable_viewer_indexes.heap_size_bytes()
-            + rrd_manifest_index.heap_size_bytes()
+            + dlr_manifest_index.heap_size_bytes()
             + set_store_info.heap_size_bytes()
             + entity_paths.heap_size_bytes()
             + entity_path_from_hash.heap_size_bytes()
@@ -1330,7 +1330,7 @@ impl MemUsageTreeCapture for EntityDb {
         dl_tracing::profile_function!();
 
         let Self {
-            rrd_manifest_index,
+            dlr_manifest_index,
             data_meta_per_timeline,
             storage_engine,
             entity_paths,
@@ -1369,8 +1369,8 @@ impl MemUsageTreeCapture for EntityDb {
             data_meta_per_timeline.total_size_bytes(),
         );
         node.add(
-            "rrd_manifest_index",
-            rrd_manifest_index.capture_mem_usage_tree(),
+            "dlr_manifest_index",
+            dlr_manifest_index.capture_mem_usage_tree(),
         );
 
         node.into_tree()

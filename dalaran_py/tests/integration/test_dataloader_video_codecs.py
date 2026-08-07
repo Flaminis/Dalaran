@@ -165,8 +165,8 @@ def _generate_stream(
 KeyframeLogging = Literal["sparse", "dense", "none"]
 
 
-def _build_rrd(
-    rrd_path: Path,
+def _build_dlr(
+    dlr_path: Path,
     config: CodecConfig,
     samples: list[bytes],
     keyframe_indices: list[int],
@@ -185,7 +185,7 @@ def _build_rrd(
     with dl.RecordingStream(
         "dalaran_example_test_dataloader_video_codecs", recording_id="dataloader-video-codecs"
     ) as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
         rec.log("/video", dl.VideoStream(codec=config.sdk_codec), static=True)
         rec.send_columns(
             "/video",
@@ -215,11 +215,11 @@ def _build_rrd(
 
 
 def _decode_targets(
-    rrd_dir: Path, config: CodecConfig, keyframe_interval: int, targets: list[int]
+    dlr_dir: Path, config: CodecConfig, keyframe_interval: int, targets: list[int]
 ) -> dict[int, dict[str, torch.Tensor | None]]:
-    """Serve *rrd_dir* in-memory and decode each target index, returning `{target: sample}`."""
+    """Serve *dlr_dir* in-memory and decode each target index, returning `{target: sample}`."""
     results: dict[int, dict[str, torch.Tensor | None]] = {}
-    with dl.server.Server(datasets={"video": rrd_dir}) as server:
+    with dl.server.Server(datasets={"video": dlr_dir}) as server:
         ds = server.client().get_dataset("video")
         source = DataSource(ds)
         dataset = DalaranMapDataset(
@@ -260,9 +260,9 @@ def test_decode_matrix(tmp_path: Path, codec: str, gop_size: int, keyframe_loggi
         pytest.skip(f"PyAV build lacks the {config.encoder} encoder")
 
     samples, keyframe_indices = _generate_stream(tmp_path / "gen", config, gop_size)
-    rrd_dir = tmp_path / "recording"
-    rrd_dir.mkdir()
-    _build_rrd(rrd_dir / "recording.rrd", config, samples, keyframe_indices, keyframe_logging=keyframe_logging)
+    dlr_dir = tmp_path / "recording"
+    dlr_dir.mkdir()
+    _build_dlr(dlr_dir / "recording.dlr", config, samples, keyframe_indices, keyframe_logging=keyframe_logging)
 
     targets = [0, len(samples) - 1]
     # Pick a mid-GOP target strictly between the first two real keyframes, at least two frames
@@ -276,7 +276,7 @@ def test_decode_matrix(tmp_path: Path, codec: str, gop_size: int, keyframe_loggi
         targets.append(mid_gop_target)
 
     keyframe_interval = gop_size if keyframe_logging == "none" else 1
-    results = _decode_targets(rrd_dir, config, keyframe_interval, targets)
+    results = _decode_targets(dlr_dir, config, keyframe_interval, targets)
 
     for target in targets:
         sample = results[target]
@@ -345,8 +345,8 @@ def test_duplicate_window_matches_clean_decode(tmp_path: Path) -> None:
 TimelineKind = Literal["timestamp", "duration"]
 
 
-def _build_temporal_video_rrd(
-    rrd_path: Path,
+def _build_temporal_video_dlr(
+    dlr_path: Path,
     config: CodecConfig,
     samples: list[bytes],
     keyframe_indices: list[int],
@@ -366,7 +366,7 @@ def _build_temporal_video_rrd(
         return dl.TimeColumn(timeline, duration=values)
 
     with dl.RecordingStream("dalaran_example_test_dataloader_video_dropped", recording_id="dropped-frames") as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
         rec.log("/video", dl.VideoStream(codec=config.sdk_codec), static=True)
         rec.send_columns(
             "/video",
@@ -413,11 +413,11 @@ def test_fixed_rate_sampling_duplicates_decode_correctly(tmp_path: Path, timelin
         slot_of_frame[frame_index] += 1  # leave the grid slot just before the target empty
     target_slot = slot_of_frame[target_real]
 
-    rrd_dir = tmp_path / "recording"
-    rrd_dir.mkdir()
+    dlr_dir = tmp_path / "recording"
+    dlr_dir.mkdir()
     timestamps_ns = [slot * ns_per_slot for slot in slot_of_frame]
-    _build_temporal_video_rrd(
-        rrd_dir / "recording.rrd", config, samples, keyframe_indices, timestamps_ns, timeline=timeline, kind=kind
+    _build_temporal_video_dlr(
+        dlr_dir / "recording.dlr", config, samples, keyframe_indices, timestamps_ns, timeline=timeline, kind=kind
     )
 
     # The real frames the grid maps to across the window, with the duplicate at the empty slot.
@@ -436,7 +436,7 @@ def test_fixed_rate_sampling_duplicates_decode_correctly(tmp_path: Path, timelin
     ground_truth = _decode_window(decoder, clean_samples, target_slot)
     assert ground_truth is not None
 
-    with dl.server.Server(datasets={"video": rrd_dir}) as server:
+    with dl.server.Server(datasets={"video": dlr_dir}) as server:
         ds = server.client().get_dataset("video")
         dataset = DalaranMapDataset(
             DataSource(ds),
@@ -481,10 +481,10 @@ def test_off_grid_capture_rate_decodes_correctly(tmp_path: Path) -> None:
     ns_per_slot = round(1e9 / OFF_GRID_GRID_RATE_HZ)
     timestamps_ns = [round(i / OFF_GRID_REAL_RATE_HZ * 1e9) for i in range(len(samples))]
 
-    rrd_dir = tmp_path / "recording"
-    rrd_dir.mkdir()
-    _build_temporal_video_rrd(
-        rrd_dir / "recording.rrd",
+    dlr_dir = tmp_path / "recording"
+    dlr_dir.mkdir()
+    _build_temporal_video_dlr(
+        dlr_dir / "recording.dlr",
         config,
         samples,
         keyframe_indices,
@@ -520,7 +520,7 @@ def test_off_grid_capture_rate_decodes_correctly(tmp_path: Path) -> None:
         assert decoded is not None, f"clean decode returned None for slot {slot}"
         ground_truth.append(decoded)
 
-    with dl.server.Server(datasets={"video": rrd_dir}) as server:
+    with dl.server.Server(datasets={"video": dlr_dir}) as server:
         ds = server.client().get_dataset("video")
         dataset = DalaranMapDataset(
             DataSource(ds),

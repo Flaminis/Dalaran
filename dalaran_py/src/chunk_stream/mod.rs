@@ -14,7 +14,7 @@
 //!   may be replaced wholesale (e.g. with a DataFusion-backed optimizer) without
 //!   affecting the public API.
 //!
-//! - The PyO3 bindings ([`rrd_reader`], [`py_stream`]) translate between
+//! - The PyO3 bindings ([`dlr_reader`], [`py_stream`]) translate between
 //!   Python objects and the Rust pipeline types.
 
 pub mod chunk_store;
@@ -26,7 +26,7 @@ mod mcap_reader;
 mod mp4_reader;
 mod parquet_reader;
 mod py_stream;
-pub mod rrd_reader;
+pub mod dlr_reader;
 pub mod stream;
 mod summary;
 pub mod urdf_tree_stream;
@@ -40,8 +40,8 @@ pub use py_stream::PyLazyChunkStreamInternal;
 
 /// Register chunk pipeline classes into the module.
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_class::<rrd_reader::PyRrdReaderInternal>()?;
-    m.add_class::<rrd_reader::PyStoreEntryInternal>()?;
+    m.add_class::<dlr_reader::PyRrdReaderInternal>()?;
+    m.add_class::<dlr_reader::PyStoreEntryInternal>()?;
     m.add_class::<mcap_reader::PyMcapReaderInternal>()?;
     m.add_class::<mcap_reader::PyMcapInfoInternal>()?;
     m.add_class::<mcap_reader::PyMcapChunkInfoInternal>()?;

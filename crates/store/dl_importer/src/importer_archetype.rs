@@ -30,11 +30,11 @@ impl Importer for ArchetypeImporter {
         // are specifically checking whether this is a vanilla, run-of-the-mill, boring file.
         // Not a socket, not a fifo, not some obscure named pipe, and certainly not a symlink to
         // any of these things: just a basic file. Anything other than a vanilla file is assumed to
-        // be an RRD stream by default, and therefore will be handled by the RRD importer.
+        // be an DLR stream by default, and therefore will be handled by the DLR importer.
         //
         // This is super important because, if that thing does turn out to be a fifo or something of
-        // that nature (e.g. `dalaran <(curl …)`), and we end up reading from it, then the RRD importer
-        // will end up executing on top of a racy, partial RRD stream (because these virtual streams
+        // that nature (e.g. `dalaran <(curl …)`), and we end up reading from it, then the DLR importer
+        // will end up executing on top of a racy, partial DLR stream (because these virtual streams
         // have process-global state). The end result will be what looks like a bunch of corrupt data and
         // the decoder which will start spewing random confusing errors.
         if !filepath.is_file() {

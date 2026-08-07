@@ -14,7 +14,7 @@ use dl_build_info::CrateVersion;
 use dl_log_types::{BlueprintActivationCommand, SetStoreInfo};
 
 use crate::ApplicationIdInjector;
-use crate::rrd::CodecError;
+use crate::dlr::CodecError;
 
 // TODO(cmc): I'd really like a nice centralized way of communicating this.
 //
@@ -33,7 +33,7 @@ pub trait ToTransport {
 
 impl ToTransport for dl_log_types::LogMsg {
     type Output = dl_protos::log_msg::v1alpha1::log_msg::Msg;
-    type Context<'a> = crate::rrd::Compression;
+    type Context<'a> = crate::dlr::Compression;
 
     fn to_transport(&self, compression: Self::Context<'_>) -> Result<Self::Output, CodecError> {
         log_msg_app_to_transport(self, compression)
@@ -42,7 +42,7 @@ impl ToTransport for dl_log_types::LogMsg {
 
 impl ToTransport for dl_log_types::ArrowMsg {
     type Output = dl_protos::log_msg::v1alpha1::ArrowMsg;
-    type Context<'a> = (dl_log_types::StoreId, crate::rrd::Compression);
+    type Context<'a> = (dl_log_types::StoreId, crate::dlr::Compression);
 
     fn to_transport(
         &self,
@@ -113,10 +113,10 @@ impl ToApplication for dl_protos::log_msg::v1alpha1::log_msg::Msg {
         if let Some(patched_version) = patched_version
             && let dl_log_types::LogMsg::SetStoreInfo(msg) = &mut log_msg
         {
-            // In the context of a native RRD stream (files, stdio, etc), this is used to patch the
+            // In the context of a native DLR stream (files, stdio, etc), this is used to patch the
             // version advertised by the application-level object so that it matches the one advertised
             // in the stream header.
-            // This in turn is what makes it possible to display the version of the RRD file in the viewer.
+            // This in turn is what makes it possible to display the version of the DLR file in the viewer.
             msg.info.store_version = Some(patched_version);
         }
 
@@ -197,7 +197,7 @@ impl ToApplication for dl_protos::log_msg::v1alpha1::RrdManifest {
             .as_ref()
             .ok_or_else(|| dl_protos::missing_field!(Self, "data"))?;
 
-        let rrd_manifest = Self::Output {
+        let dlr_manifest = Self::Output {
             store_id: store_id.clone().try_into()?,
             sorbet_schema: sorbet_schema
                 .try_into()
@@ -207,14 +207,14 @@ impl ToApplication for dl_protos::log_msg::v1alpha1::RrdManifest {
         };
 
         {
-            rrd_manifest.sanity_check_cheap()?;
+            dlr_manifest.sanity_check_cheap()?;
 
             // that will only work for tests local to this crate, but that's better than nothing
             #[cfg(test)]
-            rrd_manifest.sanity_check_heavy()?;
+            dlr_manifest.sanity_check_heavy()?;
         }
 
-        Ok(rrd_manifest)
+        Ok(dlr_manifest)
     }
 }
 
@@ -345,7 +345,7 @@ fn arrow_msg_transport_to_app(
     let chunk_batch = dl_sorbet::ChunkBatch::try_from(&batch)?;
 
     // TODO(emilk): it would actually be nicer if we could postpone the migration,
-    // so that there is some way to get the original (unmigrated) data out of an .rrd,
+    // so that there is some way to get the original (unmigrated) data out of an .dlr,
     // which would be very useful for debugging, e.g. using the `print` command.
 
     Ok(dl_log_types::ArrowMsg {
@@ -359,7 +359,7 @@ fn arrow_msg_transport_to_app(
 #[tracing::instrument(level = "trace", skip_all)]
 fn log_msg_app_to_transport(
     message: &dl_log_types::LogMsg,
-    compression: crate::rrd::Compression,
+    compression: crate::dlr::Compression,
 ) -> Result<dl_protos::log_msg::v1alpha1::log_msg::Msg, CodecError> {
     dl_tracing::profile_function!();
 
@@ -388,7 +388,7 @@ fn log_msg_app_to_transport(
 fn arrow_msg_app_to_transport(
     arrow_msg: &dl_log_types::ArrowMsg,
     store_id: dl_log_types::StoreId,
-    compression: crate::rrd::Compression,
+    compression: crate::dlr::Compression,
 ) -> Result<dl_protos::log_msg::v1alpha1::ArrowMsg, CodecError> {
     dl_tracing::profile_function!();
 
@@ -422,7 +422,7 @@ struct EncodedArrowRecordBatch {
 #[tracing::instrument(level = "debug", skip_all)]
 fn encode_arrow(
     batch: &arrow::array::RecordBatch,
-    compression: crate::rrd::Compression,
+    compression: crate::dlr::Compression,
 ) -> Result<EncodedArrowRecordBatch, CodecError> {
     dl_tracing::profile_function!();
 
@@ -449,8 +449,8 @@ fn encode_arrow(
     let uncompressed_size = uncompressed.len().try_into()?;
 
     let data = match compression {
-        crate::rrd::Compression::Off => uncompressed,
-        crate::rrd::Compression::LZ4 => {
+        crate::dlr::Compression::Off => uncompressed,
+        crate::dlr::Compression::LZ4 => {
             dl_tracing::profile_scope!("lz4::compress");
             let _span = tracing::trace_span!("lz4::compress").entered();
             lz4_flex::block::compress(&uncompressed)
@@ -472,12 +472,12 @@ fn encode_arrow(
 fn decode_arrow(
     data: &[u8],
     uncompressed_size: usize,
-    compression: crate::rrd::Compression,
+    compression: crate::dlr::Compression,
 ) -> Result<arrow::array::RecordBatch, CodecError> {
     let mut uncompressed = Vec::new();
     let data = match compression {
-        crate::rrd::Compression::Off => data,
-        crate::rrd::Compression::LZ4 => {
+        crate::dlr::Compression::Off => data,
+        crate::dlr::Compression::LZ4 => {
             dl_tracing::profile_scope!("LZ4-decompress");
             let _span = tracing::trace_span!("lz4::decompress").entered();
             uncompressed.resize(uncompressed_size, 0);

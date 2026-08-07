@@ -71,7 +71,7 @@ impl ChunkMeta {
         dl_tracing::profile_function!();
         // Reuse the same logic as ChunkStoreDiffVirtualAddition::chunk_metas.
         ChunkStoreDiffVirtualAddition {
-            rrd_manifest: Arc::new(manifest.clone()),
+            dlr_manifest: Arc::new(manifest.clone()),
         }
         .chunk_metas()
         .collect()
@@ -137,7 +137,7 @@ pub enum ChunkStoreDiff {
     /// When a new physical chunk has been appended.
     Addition(ChunkStoreDiffAddition),
 
-    /// When a new rrd manifest has been appended.
+    /// When a new dlr manifest has been appended.
     VirtualAddition(ChunkStoreDiffVirtualAddition),
 
     /// When a physical chunk has been evicted.
@@ -153,7 +153,7 @@ pub enum ChunkStoreDiff {
 /// Describes newly added columns to the store schema.
 ///
 /// This event is emitted when previously unseen entity/component pairs are
-/// discovered, either from a physical chunk addition or from an RRD manifest.
+/// discovered, either from a physical chunk addition or from an DLR manifest.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ChunkStoreDiffSchemaAddition {
     /// Newly discovered entity/component pairs, grouped by entity.
@@ -197,8 +197,8 @@ impl ChunkStoreDiff {
         })
     }
 
-    pub fn virtual_addition(rrd_manifest: Arc<RrdManifest>) -> Self {
-        Self::VirtualAddition(ChunkStoreDiffVirtualAddition { rrd_manifest })
+    pub fn virtual_addition(dlr_manifest: Arc<RrdManifest>) -> Self {
+        Self::VirtualAddition(ChunkStoreDiffVirtualAddition { dlr_manifest })
     }
 
     pub fn deletion(chunk: Arc<Chunk>, reason: ChunkDeletionReason) -> Self {
@@ -419,7 +419,7 @@ impl ChunkStoreDiffAddition {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ChunkStoreDiffVirtualAddition {
-    /// The [`RrdManifest`] that was passed to [`ChunkStore::insert_rrd_manifest`].
+    /// The [`RrdManifest`] that was passed to [`ChunkStore::insert_dlr_manifest`].
     ///
     /// This is very different from the usual chunk-related events as this is purely virtual.
     /// Still, even though no physical data was ingested yet, it might be important for downstream
@@ -427,11 +427,11 @@ pub struct ChunkStoreDiffVirtualAddition {
     /// For example, query caches must know about pending tombstones as soon as they start being referenced.
     ///
     /// If this is set, all fields below are irrelevant (set to their default/empty values).
-    pub rrd_manifest: Arc<RrdManifest>,
+    pub dlr_manifest: Arc<RrdManifest>,
 }
 
 impl ChunkStoreDiffVirtualAddition {
-    /// Iterator over [`ChunkMeta`]s in the new rrd manifest.
+    /// Iterator over [`ChunkMeta`]s in the new dlr manifest.
     ///
     /// In no particular order.
     pub fn chunk_metas(&self) -> impl Iterator<Item = ChunkMeta> {
@@ -442,7 +442,7 @@ impl ChunkStoreDiffVirtualAddition {
             dl_chunk::ComponentIdentifier,
             ChunkComponentMeta,
         > = self
-            .rrd_manifest
+            .dlr_manifest
             .sorbet_schema()
             .fields()
             .iter()
@@ -486,7 +486,7 @@ impl ChunkStoreDiffVirtualAddition {
             clippy::iter_over_hash_type,
             reason = "This collects information into hashmaps"
         )]
-        for (entity_path, per_component) in self.rrd_manifest.static_map() {
+        for (entity_path, per_component) in self.dlr_manifest.static_map() {
             let entry = entity_components.entry(entity_path).or_default();
             for &component in per_component.keys() {
                 // Static entries always have data (they wouldn't be in the map otherwise).
@@ -504,7 +504,7 @@ impl ChunkStoreDiffVirtualAddition {
             clippy::iter_over_hash_type,
             reason = "This collects information into hashmaps"
         )]
-        for (entity_path, per_timeline) in self.rrd_manifest.temporal_map() {
+        for (entity_path, per_timeline) in self.dlr_manifest.temporal_map() {
             let entry = entity_components.entry(entity_path).or_default();
             for per_component in per_timeline.values() {
                 for (&component, per_chunk) in per_component {

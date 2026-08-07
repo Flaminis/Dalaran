@@ -20,7 +20,7 @@ on:
         type: string
         description: |
           Version label to upload markdown docs/examples under on GCS
-          (`gs://rerun-docs/prose/{label}/`). Use `dev` for non-final
+          (`gs://dalaran-docs/prose/{label}/`). Use `dev` for non-final
           releases / pushes to main, the semver string for final
           releases, or `pr-{N}` for PR previews.
       RELEASE_VERSION:
@@ -79,13 +79,13 @@ jobs:
           version: ">= 363.0.0"
 
       - name: Build docs
-        run: pixi run uv run --group docs mkdocs build -f rerun_py/mkdocs.yml -d site
+        run: pixi run uv run --group docs mkdocs build -f dalaran_py/mkdocs.yml -d site
 
       - name: "Upload Python Docs (version)"
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "rerun_py/site"
-          destination: "rerun-docs/docs/python/${{ inputs.PY_DOCS_VERSION_NAME }}"
+          path: "dalaran_py/site"
+          destination: "dalaran-docs/docs/python/${{ inputs.PY_DOCS_VERSION_NAME }}"
           process_gcloudignore: false
           parent: false
           resumable: false
@@ -101,7 +101,7 @@ jobs:
           VERSION=${{ inputs.PY_DOCS_VERSION_NAME }}
 
           echo "download existing"
-          gsutil cp gs://rerun-docs/docs/python/versions.json ./
+          gsutil cp gs://dalaran-docs/docs/python/versions.json ./
           cat versions.json
 
           echo "remove `stable` alias"
@@ -113,7 +113,7 @@ jobs:
           cat versions.json
 
           echo "overwrite the file on gcs"
-          gsutil cp ./versions.json gs://rerun-docs/docs/python/
+          gsutil cp ./versions.json gs://dalaran-docs/docs/python/
 
   # ---------------------------------------------------------------------------
 
@@ -153,8 +153,8 @@ jobs:
       - name: "Upload C++ Docs (version)"
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "rerun_cpp/docs/html"
-          destination: "rerun-docs/docs/cpp/${{ inputs.RELEASE_VERSION }}"
+          path: "dalaran_cpp/docs/html"
+          destination: "dalaran-docs/docs/cpp/${{ inputs.RELEASE_VERSION }}"
           process_gcloudignore: false
           parent: false
           resumable: false
@@ -163,8 +163,8 @@ jobs:
         if: ${{ inputs.UPDATE_LATEST }}
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "rerun_cpp/docs/html"
-          destination: "rerun-docs/docs/cpp/${{ inputs.CPP_DOCS_VERSION_NAME }}"
+          path: "dalaran_cpp/docs/html"
+          destination: "dalaran-docs/docs/cpp/${{ inputs.CPP_DOCS_VERSION_NAME }}"
           process_gcloudignore: false
           parent: false
           resumable: false
@@ -198,8 +198,8 @@ jobs:
       - name: "Upload (version)"
         uses: google-github-actions/upload-cloud-storage@v3
         with:
-          path: "rerun_js/docs"
-          destination: "rerun-docs/docs/js/${{ inputs.JS_DOCS_VERSION_NAME }}"
+          path: "dalaran_js/docs"
+          destination: "dalaran-docs/docs/js/${{ inputs.JS_DOCS_VERSION_NAME }}"
           process_gcloudignore: false
           parent: false
           resumable: false
@@ -234,13 +234,13 @@ jobs:
           ISR_BYPASS_TOKEN: ${{ secrets.ISR_BYPASS_TOKEN }}
           VERSION_LABEL: ${{ inputs.MARKDOWN_DOCS_VERSION_NAME }}
           MARK_LATEST: ${{ inputs.UPDATE_LATEST }}
-          RERUN_COMMIT: ${{ inputs.RELEASE_COMMIT }}
+          DALARAN_COMMIT: ${{ inputs.RELEASE_COMMIT }}
         run: |
           ARGS=(upload --version "$VERSION_LABEL" --purge-token "$ISR_BYPASS_TOKEN")
           if [ "$MARK_LATEST" = "true" ]; then
             ARGS+=(--mark-latest)
           fi
-          if [ -n "$RERUN_COMMIT" ]; then
-            ARGS+=(--rerun-commit "$RERUN_COMMIT")
+          if [ -n "$DALARAN_COMMIT" ]; then
+            ARGS+=(--dalaran-commit "$DALARAN_COMMIT")
           fi
           pixi run uv run scripts/ci/upload_docs.py "${ARGS[@]}"

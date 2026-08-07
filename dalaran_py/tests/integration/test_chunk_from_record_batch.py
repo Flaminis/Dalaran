@@ -47,9 +47,9 @@ def test_round_trip_preserves_id() -> None:
     assert restored.to_record_batch().equals(rb, check_metadata=True)
 
 
-def test_round_trip_from_rrd(test_rrd_path: Path) -> None:
-    """to_record_batch() -> from_record_batch() round-trips real chunks read from an RRD."""
-    chunks = RrdReader(test_rrd_path).stream().to_chunks()
+def test_round_trip_from_dlr(test_dlr_path: Path) -> None:
+    """to_record_batch() -> from_record_batch() round-trips real chunks read from an DLR."""
+    chunks = RrdReader(test_dlr_path).stream().to_chunks()
     assert len(chunks) > 0
 
     for original in chunks:

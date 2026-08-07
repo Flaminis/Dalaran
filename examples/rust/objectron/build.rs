@@ -12,7 +12,7 @@ fn should_run() -> bool {
 
         // No need to run this on CI (which means setting up `protoc` etc)
         // since the code is committed anyway.
-        Environment::RerunCI | Environment::CondaBuild => false,
+        Environment::DalaranCI | Environment::CondaBuild => false,
 
         // Sure - let's keep it up-to-date.
         Environment::DeveloperInWorkspace => true,
@@ -62,7 +62,7 @@ fn main() -> Result<(), std::io::Error> {
     .flatten()
     .collect::<Vec<_>>();
 
-    // `cargo` has an implicit `rerun-if-changed=src/**` clause, which will act against us in this
+    // `cargo` has an implicit `dalaran-if-changed=src/**` clause, which will act against us in this
     // instance.
     // Make sure to _not_ rewrite identical data, so as to avoid being stuck in an infinite build
     // loop when using tools like e.g. `bacon` that watch the filesystem for any changes to the

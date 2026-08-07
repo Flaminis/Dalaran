@@ -31,9 +31,9 @@ VIDEO_ASSET = (
 )
 
 
-def _build_h264_rrd(rrd_path: Path, *, log_is_keyframe: bool) -> list[int]:
+def _build_h264_dlr(dlr_path: Path, *, log_is_keyframe: bool) -> list[int]:
     """
-    Build an RRD with one VideoStream sample per demuxed packet on a sequence timeline.
+    Build an DLR with one VideoStream sample per demuxed packet on a sequence timeline.
 
     Returns the list of frame indices that are codec keyframes. When
     `log_is_keyframe` is true, also writes a sparse `is_keyframe=True` row on
@@ -66,7 +66,7 @@ def _build_h264_rrd(rrd_path: Path, *, log_is_keyframe: bool) -> list[int]:
     assert keyframe_indices[0] == 0, "test asset's first packet must be a keyframe"
 
     with dl.RecordingStream("dalaran_example_test_dataloader_video", recording_id="dataloader-video") as rec:
-        rec.save(rrd_path)
+        rec.save(dlr_path)
         rec.log("/video", dl.VideoStream(codec=dl.VideoCodec.H264), static=True)
         rec.send_columns(
             "/video",
@@ -91,23 +91,23 @@ def _build_h264_rrd(rrd_path: Path, *, log_is_keyframe: bool) -> list[int]:
 
 
 @pytest.fixture
-def rrd_with_keyframes(tmp_path: Path) -> tuple[Path, list[int]]:
-    rrd_dir = tmp_path / "with_keyframes"
-    rrd_dir.mkdir()
-    keyframes = _build_h264_rrd(rrd_dir / "recording.rrd", log_is_keyframe=True)
-    return rrd_dir, keyframes
+def dlr_with_keyframes(tmp_path: Path) -> tuple[Path, list[int]]:
+    dlr_dir = tmp_path / "with_keyframes"
+    dlr_dir.mkdir()
+    keyframes = _build_h264_dlr(dlr_dir / "recording.dlr", log_is_keyframe=True)
+    return dlr_dir, keyframes
 
 
 @pytest.fixture
-def rrd_without_keyframes(tmp_path: Path) -> tuple[Path, list[int]]:
-    rrd_dir = tmp_path / "without_keyframes"
-    rrd_dir.mkdir()
-    keyframes = _build_h264_rrd(rrd_dir / "recording.rrd", log_is_keyframe=False)
-    return rrd_dir, keyframes
+def dlr_without_keyframes(tmp_path: Path) -> tuple[Path, list[int]]:
+    dlr_dir = tmp_path / "without_keyframes"
+    dlr_dir.mkdir()
+    keyframes = _build_h264_dlr(dlr_dir / "recording.dlr", log_is_keyframe=False)
+    return dlr_dir, keyframes
 
 
 @pytest.mark.filterwarnings("ignore:The default multiprocessing start method is 'fork':RuntimeWarning")
-def test_anchor_path_decodes_mid_gop_target(rrd_with_keyframes: tuple[Path, list[int]]) -> None:
+def test_anchor_path_decodes_mid_gop_target(dlr_with_keyframes: tuple[Path, list[int]]) -> None:
     """
     Decode a mid-GOP target with `keyframe_interval=1` — heuristic alone can't satisfy it.
 
@@ -115,11 +115,11 @@ def test_anchor_path_decodes_mid_gop_target(rrd_with_keyframes: tuple[Path, list
     sample and decode fails. With the `is_keyframe` anchor, the prefetcher
     expands the window back to the prior keyframe and the decode succeeds.
     """
-    rrd_dir, keyframes = rrd_with_keyframes
+    dlr_dir, keyframes = dlr_with_keyframes
     target = keyframes[0] + 5
     assert target not in keyframes, "target must sit strictly between keyframes"
 
-    with dl.server.Server(datasets={"video": rrd_dir}) as server:
+    with dl.server.Server(datasets={"video": dlr_dir}) as server:
         ds = server.client().get_dataset("video")
         source = DataSource(ds)
         dataset = DalaranMapDataset(
@@ -144,7 +144,7 @@ def test_anchor_path_decodes_mid_gop_target(rrd_with_keyframes: tuple[Path, list
 
 @pytest.mark.filterwarnings("ignore:The default multiprocessing start method is 'fork':RuntimeWarning")
 def test_heuristic_fallback_when_is_keyframe_column_absent(
-    rrd_without_keyframes: tuple[Path, list[int]],
+    dlr_without_keyframes: tuple[Path, list[int]],
 ) -> None:
     """
     Decode succeeds via the heuristic fallback when the anchor column is absent.
@@ -153,10 +153,10 @@ def test_heuristic_fallback_when_is_keyframe_column_absent(
     detect that the anchor column is missing from the schema and fall through
     to the decoder's heuristic without raising a planner error.
     """
-    rrd_dir, keyframes = rrd_without_keyframes
+    dlr_dir, keyframes = dlr_without_keyframes
     target = keyframes[0] + 5
 
-    with dl.server.Server(datasets={"video": rrd_dir}) as server:
+    with dl.server.Server(datasets={"video": dlr_dir}) as server:
         ds = server.client().get_dataset("video")
         source = DataSource(ds)
         dataset = DalaranMapDataset(

@@ -245,7 +245,7 @@ fn create_recording_for_query_testing() -> anyhow::Result<TempPath> {
     let tuid_prefix: u64 = 100;
 
     let tmp_dir = tempfile::tempdir()?;
-    let tmp_path = tmp_dir.path().join(format!("{segment_id}.rrd"));
+    let tmp_path = tmp_dir.path().join(format!("{segment_id}.dlr"));
 
     let rec = RecordingStreamBuilder::new(
         dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
@@ -316,7 +316,7 @@ pub async fn query_dataset_with_various_queries(service: impl DalaranCloudServic
         .register_with_dataset_name_blocking(
             dataset_name,
             vec![
-                DataSource::new_rrd_url(
+                DataSource::new_dlr_url(
                     url::Url::from_file_path(recording_path.as_path()).unwrap(),
                 )
                 .into(),

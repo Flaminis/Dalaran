@@ -103,7 +103,7 @@ impl UICommand {
         match self {
             Self::Open => (
                 "Open file…",
-                "Open any supported files (.rrd, images, meshes, …) in a new recording",
+                "Open any supported files (.dlr, images, meshes, …) in a new recording",
             ),
             Self::OpenUrl => (
                 "Open from URL…",
@@ -111,7 +111,7 @@ impl UICommand {
             ),
             Self::Import => (
                 "Import into current recording…",
-                "Import any supported files (.rrd, images, meshes, …) in the current recording",
+                "Import any supported files (.dlr, images, meshes, …) in the current recording",
             ),
 
             Self::CloseAllEntries => (
@@ -143,7 +143,7 @@ impl UICommand {
 
             Self::ResetViewer => (
                 "Reset Viewer",
-                "Reset the Viewer to how it looked the first time you ran it, forgetting UI state and all stored blueprints, except the ones loaded from *.rbl resources",
+                "Reset the Viewer to how it looked the first time you ran it, forgetting UI state and all stored blueprints, except the ones loaded from *.dbl resources",
             ),
 
             #[cfg(not(target_arch = "wasm32"))]

@@ -11,7 +11,7 @@ use crate::{SharablePlayableVideoStream, VideoStreamCache};
 
 use super::{
     STREAM_ENTITY, TIMELINE_NAME, TestVideoPlayer, assert_loading, load_chunks,
-    load_into_rrd_manifest, unload_chunks,
+    load_into_dlr_manifest, unload_chunks,
 };
 
 fn test_png_blob() -> Vec<u8> {
@@ -193,7 +193,7 @@ fn static_image_from_manifest() {
     let image = Arc::new(static_image_chunk());
 
     // The manifest describes both static chunks, but only the media type is materialized.
-    load_into_rrd_manifest(&mut store, &[codec.clone(), image.clone()]);
+    load_into_dlr_manifest(&mut store, &[codec.clone(), image.clone()]);
     load_chunks(&mut store, &mut cache, &[codec]);
 
     let video_stream = playable_stream(&mut cache, &store);
@@ -250,7 +250,7 @@ fn static_image_not_double_counted() {
     let codec = Arc::new(static_codec_chunk());
     let image = Arc::new(static_image_chunk());
 
-    load_into_rrd_manifest(&mut store, &[codec.clone(), image.clone()]);
+    load_into_dlr_manifest(&mut store, &[codec.clone(), image.clone()]);
     load_chunks(&mut store, &mut cache, &[codec, image]);
 
     let video_stream = playable_stream(&mut cache, &store);
@@ -304,7 +304,7 @@ fn static_image_survives_gc() {
 
     let codec = Arc::new(static_codec_chunk());
     let image = Arc::new(static_image_chunk());
-    load_into_rrd_manifest(&mut store, &[codec.clone(), image.clone()]);
+    load_into_dlr_manifest(&mut store, &[codec.clone(), image.clone()]);
     load_chunks(&mut store, &mut cache, &[codec, image]);
 
     let video_stream = playable_stream(&mut cache, &store);
@@ -344,7 +344,7 @@ fn static_image_overwrite_with_manifest() {
     let first = Arc::new(static_image_chunk());
 
     // The first image is described by the manifest and materialized.
-    load_into_rrd_manifest(&mut store, &[codec.clone(), first.clone()]);
+    load_into_dlr_manifest(&mut store, &[codec.clone(), first.clone()]);
     load_chunks(&mut store, &mut cache, &[codec, first]);
 
     let video_stream = playable_stream(&mut cache, &store);

@@ -21,7 +21,7 @@ The experimental [`dalaran.experimental.dataloader`](https://ref.dalaran.dev/doc
 
 Three things describe a dataset (see [reference](https://ref.dalaran.dev/docs/python/stable/experimental_dataloader/)):
 
-- **[`DataSource`](https://ref.dalaran.dev/docs/python/stable/experimental_dataloader/#dalaran.experimental.dataloader.DataSource)** — a catalog `DatasetEntry` with an optional segment filter; each registered RRD is one *segment*, typically one episode or trajectory
+- **[`DataSource`](https://ref.dalaran.dev/docs/python/stable/experimental_dataloader/#dalaran.experimental.dataloader.DataSource)** — a catalog `DatasetEntry` with an optional segment filter; each registered DLR is one *segment*, typically one episode or trajectory
 - **`index`** — the timeline that defines what "one sample" means (e.g. `"frame_index"` or `"real_time"`)
 - **`fields`** — a dict of [`Field`](https://ref.dalaran.dev/docs/python/stable/experimental_dataloader/#dalaran.experimental.dataloader.Field)s, each mapping a source column (an `entity:Archetype:component` triple) to a decoder
 

@@ -45,19 +45,19 @@
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "Debug 'rerun' (no args)",
+            "name": "Debug 'dalaran' (no args)",
             "type": "lldb",
             "request": "launch",
             "cargo": {
                 "args": [
                     "build",
                     "--profile=debugging",
-                    "--package=rerun-cli",
+                    "--package=dalaran-cli",
                     "--no-default-features",
                     "--features=native_viewer"
                 ],
                 "filter": {
-                    "name": "rerun",
+                    "name": "dalaran",
                     "kind": "bin"
                 }
             },
@@ -68,24 +68,24 @@
             }
         },
         {
-            "name": "Debug 'rerun ../data.rrd'",
+            "name": "Debug 'dalaran ../data.dlr'",
             "type": "lldb",
             "request": "launch",
             "cargo": {
                 "args": [
                     "build",
                     "--profile=debugging",
-                    "--package=rerun-cli",
+                    "--package=dalaran-cli",
                     "--no-default-features",
                     "--features=native_viewer"
                 ],
                 "filter": {
-                    "name": "rerun",
+                    "name": "dalaran",
                     "kind": "bin"
                 }
             },
             "args": [
-                "../data.rrd"
+                "../data.dlr"
             ],
             "cwd": "${workspaceFolder}",
             "env": {
@@ -93,24 +93,24 @@
             }
         },
         {
-            "name": "Debug 'rerun' bar_chart.rrd from url",
+            "name": "Debug 'dalaran' bar_chart.dlr from url",
             "type": "lldb",
             "request": "launch",
             "cargo": {
                 "args": [
                     "build",
                     "--profile=debugging",
-                    "--package=rerun-cli",
+                    "--package=dalaran-cli",
                     "--no-default-features",
                     "--features=native_viewer"
                 ],
                 "filter": {
-                    "name": "rerun",
+                    "name": "dalaran",
                     "kind": "bin"
                 }
             },
             "args": [
-                "https://app.rerun.io/version/0.25.0/examples/snippets/bar_chart.rrd"
+                "https://app.dalaran.dev/version/0.25.0/examples/snippets/bar_chart.dlr"
             ],
             "cwd": "${workspaceFolder}",
             "env": {

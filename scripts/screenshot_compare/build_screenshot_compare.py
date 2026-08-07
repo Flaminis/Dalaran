@@ -75,7 +75,7 @@ def run(
 class Example:
     name: str
     title: str
-    rrd: Path
+    dlr: Path
     screenshot_url: str
 
 
@@ -104,7 +104,7 @@ def build_python_sdk() -> None:
 # ====================================================================================================
 # SNIPPETS
 #
-# We scrape FBS for screenshot URL and generate the corresponding snippets RRD with compare_snippet_output.py
+# We scrape FBS for screenshot URL and generate the corresponding snippets DLR with compare_snippet_output.py
 # ====================================================================================================
 
 
@@ -145,11 +145,11 @@ def build_snippets() -> None:
 
 def collect_snippets() -> Iterable[Example]:
     for name in sorted(SNIPPET_URLS):
-        rrd = SNIPPETS_DIR / "all" / f"{name}_rust.rrd"
-        if rrd.exists():
-            yield Example(name=name, title=name, rrd=rrd, screenshot_url=SNIPPET_URLS[name])
+        dlr = SNIPPETS_DIR / "all" / f"{name}_rust.dlr"
+        if dlr.exists():
+            yield Example(name=name, title=name, dlr=dlr, screenshot_url=SNIPPET_URLS[name])
         else:
-            print(f"WARNING: Missing {rrd} for {name}")
+            print(f"WARNING: Missing {dlr} for {name}")
 
 
 # ====================================================================================================
@@ -165,7 +165,7 @@ def build_examples() -> None:
         "pixi", "run", "-e", "examples",
         "cargo", "run", "--locked",
         "-p", "dl_dev_tools", "--",
-        "build-examples", "rrd", "example_data",
+        "build-examples", "dlr", "example_data",
         # TODO(andreas): nightly channel would be better, but the dependencies that requires make things hard to get to run.
         "--channel", "main",
     ]
@@ -191,13 +191,13 @@ def collect_examples() -> Iterable[Example]:
 
     for example in manifest:
         name = example["name"]
-        rrd = example_dir / f"{name}.rrd"
-        assert rrd.exists(), f"Missing {rrd} for {name}"
+        dlr = example_dir / f"{name}.dlr"
+        assert dlr.exists(), f"Missing {dlr} for {name}"
 
         yield Example(
             name=name,
             title=example["title"],
-            rrd=rrd,
+            dlr=dlr,
             screenshot_url=example["thumbnail"]["url"],
         )
 
@@ -220,7 +220,7 @@ def render_examples(examples: list[Example]) -> None:
         print(f"{example.name} -> {index_path}")
         index_path.write_text(EXAMPLE_TEMPLATE.render(example=example, examples=examples))
 
-        shutil.copy(example.rrd, target_path / "data.rrd")
+        shutil.copy(example.dlr, target_path / "data.dlr")
 
 
 class CORSRequestHandler(http.server.SimpleHTTPRequestHandler):

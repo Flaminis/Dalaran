@@ -4,11 +4,11 @@
 //! - Over gRPC
 //! - From disk
 //!
-//! Also handles different file types: rrd, images, text files, 3D models, point clouds…
+//! Also handles different file types: dlr, images, text files, 3D models, point clouds…
 
 mod data_source;
 pub(crate) mod fetch_file_from_http;
-mod stream_rrd_from_http;
+mod stream_dlr_from_http;
 
 #[cfg(not(target_arch = "wasm32"))]
 mod load_stdin;

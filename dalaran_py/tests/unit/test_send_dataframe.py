@@ -51,11 +51,11 @@ def test_send_dataframe_roundtrip(tmp_path: Path, snapshot: SnapshotAssertion) -
     """Test that send_dataframe can roundtrip data through Server + Catalog API."""
     original_dir = tmp_path / "original"
     original_dir.mkdir()
-    rrd_path = original_dir / "recording.rrd"
+    dlr_path = original_dir / "recording.dlr"
 
     # Create initial recording with some data
     with dl.RecordingStream(APP_ID, recording_id=uuid.uuid4()) as rec:
-        rec.save(str(rrd_path))
+        rec.save(str(dlr_path))
         rec.set_time("my_index", sequence=1)
         rec.log("points", dl.Points3D([[1, 2, 3], [4, 5, 6], [7, 8, 9]], radii=[0.5]))
         rec.set_time("my_index", sequence=7)
@@ -69,7 +69,7 @@ def test_send_dataframe_roundtrip(tmp_path: Path, snapshot: SnapshotAssertion) -
     # Send via send_dataframe to a new recording
     roundtrip_dir = tmp_path / "roundtrip"
     roundtrip_dir.mkdir()
-    rrd2_path = roundtrip_dir / "recording.rrd"
+    rrd2_path = roundtrip_dir / "recording.dlr"
     with dl.RecordingStream(APP_ID + "_roundtrip", recording_id=uuid.uuid4()) as rec2:
         rec2.save(str(rrd2_path))
         dl.send_dataframe(original_table, recording=rec2)
@@ -95,7 +95,7 @@ def send_dataframe_and_get_chunks(tmp_path: Path) -> Callable[..., list[Chunk]]:
     def _impl(df: pa.Table | pa.RecordBatchReader, **kwargs: object) -> list[Chunk]:
         nonlocal counter
         counter += 1
-        out_path = tmp_path / f"out_{counter}.rrd"
+        out_path = tmp_path / f"out_{counter}.dlr"
         with dl.RecordingStream(APP_ID, recording_id="characterization", send_properties=False) as rec:
             rec.save(out_path)
             dl.send_dataframe(df, recording=rec, **kwargs)  # type: ignore[arg-type]

@@ -876,14 +876,14 @@ mod tests {
             assert!(results.is_empty());
         }
 
-        // Back the chunks with an RRD manifest so they stay recoverable after removal, and keep
+        // Back the chunks with an DLR manifest so they stay recoverable after removal, and keep
         // being reported as missing (partial results) rather than vanishing from the virtual indices.
-        let rrd_manifest = RrdManifest::build_in_memory_from_chunks(
+        let dlr_manifest = RrdManifest::build_in_memory_from_chunks(
             store_id,
             [&chunk1, &chunk2, &chunk3].into_iter(),
         )
         .unwrap();
-        _ = store.write().insert_rrd_manifest(rrd_manifest);
+        _ = store.write().insert_dlr_manifest(dlr_manifest);
 
         // We don't care about events yet, since the cache is empty anyways.
         store
@@ -1100,14 +1100,14 @@ mod tests {
             (chunk_parent_clear_recursive, true),
         ];
         for (tombstone, should_actually_clear) in tombstones {
-            // Back the tombstone with an RRD manifest so that, once shallowly removed, it stays
+            // Back the tombstone with an DLR manifest so that, once shallowly removed, it stays
             // recoverable and keeps being reported as missing (partial) instead of vanishing.
-            let rrd_manifest = RrdManifest::build_in_memory_from_chunks(
+            let dlr_manifest = RrdManifest::build_in_memory_from_chunks(
                 store_id.clone(),
                 [&tombstone].into_iter(),
             )
             .unwrap();
-            cache.on_events(&store.write().insert_rrd_manifest(rrd_manifest));
+            cache.on_events(&store.write().insert_dlr_manifest(dlr_manifest));
 
             cache.on_events(
                 &store
@@ -1226,7 +1226,7 @@ mod tests {
         }
     }
 
-    // Make sure we're not blind to virtual tombstones coming from RRD manifests.
+    // Make sure we're not blind to virtual tombstones coming from DLR manifests.
     #[test]
     #[expect(clippy::bool_assert_comparison)] // I like it that way, sue me
     fn partial_data_manifest_bootstrap() {
@@ -1256,7 +1256,7 @@ mod tests {
 
         let store_id = StoreId::random(dl_log_types::StoreKind::Recording, "test_app");
 
-        let rrd_manifest = RrdManifest::build_in_memory_from_chunks(
+        let dlr_manifest = RrdManifest::build_in_memory_from_chunks(
             store_id.clone(),
             [&chunk1, &chunk_parent_clear_flat].into_iter(),
         )
@@ -1268,7 +1268,7 @@ mod tests {
         let mut cache = QueryCache::new(store.clone());
 
         // The store is now aware that there is a virtual tombstone pending somewhere, and so should be the cache.
-        cache.on_events(&store.write().insert_rrd_manifest(rrd_manifest));
+        cache.on_events(&store.write().insert_dlr_manifest(dlr_manifest));
 
         // Load the physical data into the store, but not the tombstone.
         cache.on_events(
@@ -1282,7 +1282,7 @@ mod tests {
         let query = LatestAtQuery::new(*timeline_frame.name(), 3);
 
         // Even though the data is physically loaded and the tombstone isn't, the cache should know from
-        // the RRD manifest that it exists somewhere out there.
+        // the DLR manifest that it exists somewhere out there.
         // Note that the tombstone isn't even recursive, but we cannot possibly know that yet.
         {
             let results = cache.latest_at(

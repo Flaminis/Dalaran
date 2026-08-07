@@ -2113,7 +2113,7 @@ impl ScanSegmentTableResponse {
 /// Terminology:
 /// * A *layer* is a named slice of data that spans many segments (e.g. "base", "embeddings"),
 ///   with one source per segment it appears in.
-/// * A *source* is a single `.rrd` (or, in the future, `.mcap` etc)
+/// * A *source* is a single `.dlr` (or, in the future, `.mcap` etc)
 /// * A single segment is the concatenation of all the sources of all the layers it has data in.
 ///
 /// The dataset manifest has one row per (layer, segment) pair,
@@ -2133,14 +2133,14 @@ impl ScanDatasetManifestResponse {
 // NOTE: Match the values of the Protobuf definition to keep life simple.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub enum DataSourceKind {
-    /// Dalaran recording data (`.rrd` files).
-    Rrd = 1,
+    /// Dalaran recording data (`.dlr` files).
+    Dlr = 1,
 }
 
 impl std::fmt::Display for DataSourceKind {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Rrd => write!(f, "rrd"),
+            Self::Dlr => write!(f, "dlr"),
         }
     }
 }
@@ -2156,7 +2156,7 @@ impl TryFrom<crate::cloud::v1alpha1::DataSourceKind> for DataSourceKind {
 
     fn try_from(kind: crate::cloud::v1alpha1::DataSourceKind) -> Result<Self, Self::Error> {
         match kind {
-            crate::cloud::v1alpha1::DataSourceKind::Rrd => Ok(Self::Rrd),
+            crate::cloud::v1alpha1::DataSourceKind::Dlr => Ok(Self::Dlr),
 
             crate::cloud::v1alpha1::DataSourceKind::Unspecified => {
                 return Err(TypeConversionError::InvalidField {
@@ -2182,7 +2182,7 @@ impl TryFrom<i32> for DataSourceKind {
 impl From<DataSourceKind> for crate::cloud::v1alpha1::DataSourceKind {
     fn from(value: DataSourceKind) -> Self {
         match value {
-            DataSourceKind::Rrd => Self::Rrd,
+            DataSourceKind::Dlr => Self::Dlr,
         }
     }
 }
@@ -2190,8 +2190,8 @@ impl From<DataSourceKind> for crate::cloud::v1alpha1::DataSourceKind {
 impl DataSourceKind {
     pub fn to_arrow(self) -> ArrayRef {
         match self {
-            Self::Rrd => {
-                let rec_type = StringArray::from_iter_values(["rrd".to_owned()]);
+            Self::Dlr => {
+                let rec_type = StringArray::from_iter_values(["dlr".to_owned()]);
                 Arc::new(rec_type)
             }
         }
@@ -2201,7 +2201,7 @@ impl DataSourceKind {
         let data = types
             .into_iter()
             .map(|typ| match typ {
-                Self::Rrd => "rrd",
+                Self::Dlr => "dlr",
             })
             .collect::<Vec<_>>();
         Arc::new(StringArray::from(data))
@@ -2211,7 +2211,7 @@ impl DataSourceKind {
         let resource_type = array.try_downcast_array_ref::<StringArray>()?.value(0);
 
         match resource_type {
-            "rrd" => Ok(Self::Rrd),
+            "dlr" => Ok(Self::Dlr),
             _ => Err(TypeConversionError::ArrowError(
                 ArrowError::InvalidArgumentError(format!("unknown resource type {resource_type}")),
             )),
@@ -2225,7 +2225,7 @@ impl DataSourceKind {
             .map(|i| {
                 let resource_type = string_array.value(i);
                 match resource_type {
-                    "rrd" => Ok(Self::Rrd),
+                    "dlr" => Ok(Self::Dlr),
                     _ => Err(TypeConversionError::ArrowError(
                         ArrowError::InvalidArgumentError(format!(
                             "unknown resource type {resource_type}"
@@ -2239,10 +2239,10 @@ impl DataSourceKind {
 
 #[test]
 fn datasourcekind_roundtrip() {
-    let kind = DataSourceKind::Rrd;
+    let kind = DataSourceKind::Dlr;
     let kind: crate::cloud::v1alpha1::DataSourceKind = kind.into();
     let kind = DataSourceKind::try_from(kind).unwrap();
-    assert_eq!(DataSourceKind::Rrd, kind);
+    assert_eq!(DataSourceKind::Dlr, kind);
 }
 
 /// A pointer to one or more recording files stored in object storage.
@@ -2268,25 +2268,25 @@ pub struct DataSource {
 impl DataSource {
     pub const DEFAULT_LAYER: &str = LayerName::DEFAULT_STR;
 
-    pub fn new_rrd(storage_url: impl AsRef<str>) -> Result<Self, url::ParseError> {
+    pub fn new_dlr(storage_url: impl AsRef<str>) -> Result<Self, url::ParseError> {
         Ok(Self {
             storage_url: storage_url.as_ref().parse()?,
             is_prefix: false,
             layer: LayerName::base(),
-            kind: DataSourceKind::Rrd,
+            kind: DataSourceKind::Dlr,
         })
     }
 
-    pub fn new_rrd_prefix(storage_url: impl AsRef<str>) -> Result<Self, url::ParseError> {
+    pub fn new_dlr_prefix(storage_url: impl AsRef<str>) -> Result<Self, url::ParseError> {
         Ok(Self {
             storage_url: storage_url.as_ref().parse()?,
             is_prefix: true,
             layer: LayerName::base(),
-            kind: DataSourceKind::Rrd,
+            kind: DataSourceKind::Dlr,
         })
     }
 
-    pub fn new_rrd_layer(
+    pub fn new_dlr_layer(
         layer: impl Into<LayerName>,
         storage_url: impl AsRef<str>,
     ) -> Result<Self, url::ParseError> {
@@ -2294,11 +2294,11 @@ impl DataSource {
             storage_url: storage_url.as_ref().parse()?,
             is_prefix: false,
             layer: layer.into(),
-            kind: DataSourceKind::Rrd,
+            kind: DataSourceKind::Dlr,
         })
     }
 
-    pub fn new_rrd_layer_prefix(
+    pub fn new_dlr_layer_prefix(
         layer: impl Into<LayerName>,
         storage_url: impl AsRef<str>,
     ) -> Result<Self, url::ParseError> {
@@ -2306,25 +2306,25 @@ impl DataSource {
             storage_url: storage_url.as_ref().parse()?,
             is_prefix: true,
             layer: layer.into(),
-            kind: DataSourceKind::Rrd,
+            kind: DataSourceKind::Dlr,
         })
     }
 
-    pub fn new_rrd_url(storage_url: url::Url) -> Self {
+    pub fn new_dlr_url(storage_url: url::Url) -> Self {
         Self {
             storage_url,
             is_prefix: false,
             layer: LayerName::base(),
-            kind: DataSourceKind::Rrd,
+            kind: DataSourceKind::Dlr,
         }
     }
 
-    pub fn new_rrd_prefix_url(storage_url: url::Url) -> Self {
+    pub fn new_dlr_prefix_url(storage_url: url::Url) -> Self {
         Self {
             storage_url,
             is_prefix: true,
             layer: LayerName::base(),
-            kind: DataSourceKind::Rrd,
+            kind: DataSourceKind::Dlr,
         }
     }
 }
@@ -2373,10 +2373,10 @@ impl TryFrom<crate::cloud::v1alpha1::DataSource> for DataSource {
 #[test]
 fn datasource_layer_from_proto() {
     let proto = |layer: Option<&str>| crate::cloud::v1alpha1::DataSource {
-        storage_url: Some("s3://bucket/file.rrd".to_owned()),
+        storage_url: Some("s3://bucket/file.dlr".to_owned()),
         prefix: false,
         layer: layer.map(ToOwned::to_owned),
-        typ: crate::cloud::v1alpha1::DataSourceKind::Rrd as i32,
+        typ: crate::cloud::v1alpha1::DataSourceKind::Dlr as i32,
     };
 
     let data_source = DataSource::try_from(proto(None)).unwrap();

@@ -24,7 +24,7 @@ const MCAP_IMPORTER_NAME: &str = "McapImporter";
 /// underlying data.
 ///
 /// These decoders can be specified in the CLI when converting an MCAP file
-/// to an .rrd. Here are a few examples:
+/// to an .dlr. Here are a few examples:
 /// - [`dl_mcap::decoders::McapProtobufDecoder`]
 /// - [`dl_mcap::decoders::McapRawDecoder`]
 #[derive(Clone)]
@@ -159,7 +159,7 @@ impl McapImporter {
             let mut chunk = apply_timestamp_offset(chunk, timestamp_offset_ns);
             chunk.sort_by_row_ids_if_needed();
 
-            // If we hit this warning, we may be producing unnecessarily slow .rrd:s
+            // If we hit this warning, we may be producing unnecessarily slow .dlr:s
             // See RR-4658 for details.
             chunk.warn_if_out_of_order();
 

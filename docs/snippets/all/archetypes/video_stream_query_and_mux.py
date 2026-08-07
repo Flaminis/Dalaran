@@ -11,12 +11,12 @@ from pyarrow import ChunkedArray
 import dalaran as dl
 
 
-def read_h264_samples_from_rrd(
-    rrd_path: str, video_entity: str, timeline: str
+def read_h264_samples_from_dlr(
+    dlr_path: str, video_entity: str, timeline: str
 ) -> tuple[ChunkedArray, ChunkedArray]:
     """Load recording data and query video stream."""
 
-    server = dl.server.Server(datasets={"video_stream": [rrd_path]})
+    server = dl.server.Server(datasets={"video_stream": [dlr_path]})
     client = server.client()
     dataset = client.get_dataset("video_stream")
     df = dataset.filter_contents(video_entity).reader(index=timeline)
@@ -106,7 +106,7 @@ def main() -> None:
         )
     )
     parser.add_argument(
-        "input_rrd", type=str, help="Path to the input .rrd recording file"
+        "input_dlr", type=str, help="Path to the input .dlr recording file"
     )
     parser.add_argument(
         "-o",
@@ -130,9 +130,9 @@ def main() -> None:
     args = parser.parse_args()
 
     # Load recording data
-    print(f"Loading recording from: {args.input_rrd}")
-    times, samples = read_h264_samples_from_rrd(
-        args.input_rrd, args.entity, args.timeline
+    print(f"Loading recording from: {args.input_dlr}")
+    times, samples = read_h264_samples_from_dlr(
+        args.input_dlr, args.entity, args.timeline
     )
 
     print(f"Creating video file: {args.output}")

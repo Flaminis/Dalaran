@@ -5,11 +5,11 @@ import sys
 import dalaran as dl
 import dalaran.blueprint as dlb
 
-path_to_rrd = sys.argv[1]
+path_to_dlr = sys.argv[1]
 
 dl.init("dalaran_example_dataframe_view_query", spawn=True)
 
-dl.log_file_from_path(path_to_rrd)
+dl.log_file_from_path(path_to_dlr)
 
 blueprint = dlb.Blueprint(
     dlb.DataframeView(

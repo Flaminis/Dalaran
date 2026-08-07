@@ -10,7 +10,7 @@ impl ChunkStore {
     /// Note that matching events will be dropped from all timelines they appear on.
     ///
     /// Chunks are [*shallowly* removed]: they can be recovered if they were originally fetched
-    /// from a known RRD manifest.
+    /// from a known DLR manifest.
     /// Static chunks are unaffected.
     ///
     /// [*shallowly* removed]: [`Self::remove_chunks_shallow`]

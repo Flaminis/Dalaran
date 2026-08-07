@@ -1,9 +1,9 @@
 name: Notify Reality of Sync Branch Update
 
-# When a PR that was synced from reality is updated on the rerun side,
+# When a PR that was synced from reality is updated on the dalaran side,
 # trigger a re-run of the verification workflow on the reality PR.
-# This ensures the reality PR's "verify-rerun-sync" check reflects the
-# current state of the rerun branch.
+# This ensures the reality PR's "verify-dalaran-sync" check reflects the
+# current state of the dalaran branch.
 
 on:
   pull_request_target:
@@ -19,10 +19,10 @@ jobs:
         with:
           app-id: ${{ vars.SYNC_APP_ID }}
           private-key: ${{ secrets.SYNC_APP_PRIVATE_KEY }}
-          owner: rerun-io
+          owner: dalaran-io
           repositories: |
             reality
-            rerun
+            dalaran
 
       - name: Re-run reality verification
         env:
@@ -43,12 +43,12 @@ jobs:
           echo "Found reality PR #$REALITY_PR"
 
           # Find and re-run the verification workflow for that PR
-          RUN_ID=$(gh api "repos/rerun-io/reality/actions/workflows/sync-pr-to-rerun.yml/runs?event=pull_request&per_page=100" \
+          RUN_ID=$(gh api "repos/rerun-io/reality/actions/workflows/sync-pr-to-dalaran.yml/runs?event=pull_request&per_page=100" \
             --jq ".workflow_runs[] | select(.pull_requests[].number == $REALITY_PR) | .id" | head -1)
 
           if [[ -n "$RUN_ID" ]]; then
             echo "Re-running workflow run $RUN_ID"
-            gh api "repos/rerun-io/reality/actions/runs/$RUN_ID/rerun" -X POST
+            gh api "repos/rerun-io/reality/actions/runs/$RUN_ID/dalaran" -X POST
           else
             echo "No workflow run found for reality PR #$REALITY_PR"
           fi

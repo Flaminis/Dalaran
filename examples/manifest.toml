@@ -36,7 +36,7 @@ examples = [
   "droid_semantic_search",
   "animated_urdf",
   "robot_data_preprocessing",
-  "rerun_export",
+  "dalaran_export",
   "ros_node",
   "chess_robby_fischer",
   "nuscenes_dataset",
@@ -78,7 +78,7 @@ examples = [
 order = 4
 title = "Image and video understanding"
 prelude = """
-Examples related to image and video processing, highlighting Rerun's 2D capabilities.
+Examples related to image and video processing, highlighting Dalaran's 2D capabilities.
 """
 examples = [
   # display order, most interesting first
@@ -147,7 +147,7 @@ examples = [
 order = 7
 title = "Feature showcase"
 prelude = """
-Showcase basic usage and specific features of Rerun.
+Showcase basic usage and specific features of Dalaran.
 """
 examples = [
   # display order, most interesting first
@@ -179,7 +179,7 @@ examples = [
 # or explicitly excluded by running `python scripts/check_example_manifest_coverage.py`.
 [ignored]
 examples = [
-  "_empty_rerun_sdk",
+  "_empty_dalaran_sdk",
   "all_examples",
   "blueprint", # Not very pretty
   "custom_callback",
@@ -189,7 +189,7 @@ examples = [
   "custom_view",
   "custom_visualizer",
   "dataframe_query",
-  "dataloader", # Isolated uv project (conflicts with workspace deps via LeRobot), not built by rerun.io
+  "dataloader", # Isolated uv project (conflicts with workspace deps via LeRobot), not built by dalaran.dev
   "drone_lidar",
   "extend_viewer_ui",
   "external_importer",

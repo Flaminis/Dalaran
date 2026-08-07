@@ -337,7 +337,7 @@ impl ChunkStoreSubscriber for QueryCache {
             );
 
             match diff {
-                ChunkStoreDiff::VirtualAddition(ChunkStoreDiffVirtualAddition { rrd_manifest }) => {
+                ChunkStoreDiff::VirtualAddition(ChunkStoreDiffVirtualAddition { dlr_manifest }) => {
                     dl_tracing::profile_scope!("compact event (virtual addition)");
 
                     // Some virtual data was inserted into the store, we need to keep track of this information.
@@ -345,7 +345,7 @@ impl ChunkStoreSubscriber for QueryCache {
                     // In particular, we must know if there are pending tombstones out there, in order to properly
                     // populate the `might_require_clearing` set.
 
-                    for (entity_path, per_component) in rrd_manifest.static_map() {
+                    for (entity_path, per_component) in dlr_manifest.static_map() {
                         for (component, chunk_id) in per_component {
                             compacted_events
                                 .static_
@@ -355,7 +355,7 @@ impl ChunkStoreSubscriber for QueryCache {
                         }
                     }
 
-                    for (entity_path, per_timeline) in rrd_manifest.temporal_map() {
+                    for (entity_path, per_timeline) in dlr_manifest.temporal_map() {
                         for (timeline, per_component) in per_timeline {
                             for (component, per_chunk) in per_component {
                                 for (chunk_id, entry) in per_chunk {

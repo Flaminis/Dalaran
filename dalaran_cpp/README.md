@@ -19,7 +19,7 @@ You first create a `dalaran::RecordingStream` stream and spawn a viewer. You the
 
 ### Streaming to disk
 
-Streaming data to a file on disk using the .rrd format:
+Streaming data to a file on disk using the .dlr format:
 
 \snippet{trimleft} readme_snippets.cpp Streaming
 

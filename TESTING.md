@@ -3,7 +3,7 @@
 This is an overview of our testing infrastructure.
 
 ## See also
-* [`rerun_py/README.md`](rerun_py/README.md) - build instructions for Python SDK
+* [`dalaran_py/README.md`](dalaran_py/README.md) - build instructions for Python SDK
 * [`ARCHITECTURE.md`](ARCHITECTURE.md)
 * [`BUILD.md`](BUILD.md)
 * [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
@@ -72,13 +72,13 @@ Creating or updating snapshots is done by adding `--snapshot-update` to the pyte
 
 ## Redap tests
 
-Redap stands for "Rerun data protocol." It is the interface between clients such as the Rerun viewer or SDK, and servers such as Rerun OSS or Rerun Hub.
+Redap stands for "Dalaran data protocol." It is the interface between clients such as the Dalaran viewer or SDK, and servers such as Dalaran OSS or Dalaran Hub.
 
 We have several test harnesses related to redap.
 
 ### `dl_redap_tests`
 
-This is a Rust-based compliance test suite that builds directly against the server's service handler. It is run both against the OSS server in this repository, and our Rerun's proprietary implementation Rerun Hub. This test suite does not run through an actual gRPC connection. It directly links to the servers' code.
+This is a Rust-based compliance test suite that builds directly against the server's service handler. It is run both against the OSS server in this repository, and our Dalaran's proprietary implementation Dalaran Hub. This test suite does not run through an actual gRPC connection. It directly links to the servers' code.
 
 This test suite is executed by the OSS server tests, so you can run it locally with:
 
@@ -99,6 +99,6 @@ cargo nextest run -p dl_integration_test --all-features
 
 ### `e2e_redap_tests`
 
-This is a python-based end-to-end test suite that uses our Python SDK and connects, by default, to the OSS server. It is executed by `pytest`. More in formation in the [`e2e_redap_tests` README](rerun_py/tests/e2e_redap_tests/README.md).
+This is a python-based end-to-end test suite that uses our Python SDK and connects, by default, to the OSS server. It is executed by `pytest`. More in formation in the [`e2e_redap_tests` README](dalaran_py/tests/e2e_redap_tests/README.md).
 
 

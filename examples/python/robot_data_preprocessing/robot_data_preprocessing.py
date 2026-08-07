@@ -8,7 +8,7 @@ from multiple file sources (MCAP, custom data, URDF, …):
 - insert URDF assets
 - …
 
-The resulting merged stream is saved to an RRD file, which can be
+The resulting merged stream is saved to an DLR file, which can be
 opened in the Dalaran viewer or registered to a dataset catalog.
 """
 
@@ -173,18 +173,18 @@ def main() -> None:
         scene_urdf.stream(),
     )
 
-    # Run the pipeline, materialize into a ChunkStore and optimize it before writing to an RRD.
+    # Run the pipeline, materialize into a ChunkStore and optimize it before writing to an DLR.
     # Here we use an optimization profile suited for object-store (query & stream applications).
-    data_stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_rrd(
-        OUTPUT_DIR / "data.rrd",
+    data_stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_dlr(
+        OUTPUT_DIR / "data.dlr",
         application_id="dalaran_example_robot_data_preprocessing",
         recording_id="episode",
     )
-    # Write also the URDF streams to an RRD.
-    # Note how we use the same `recording_id` here to group the two RRD layers into the same logical recording.
+    # Write also the URDF streams to an DLR.
+    # Note how we use the same `recording_id` here to group the two DLR layers into the same logical recording.
     # https://dalaran.dev/docs/concepts/logging-and-ingestion/recordings#logical-vs-physical-recordings
-    urdf_stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_rrd(
-        OUTPUT_DIR / "urdf.rrd",
+    urdf_stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_dlr(
+        OUTPUT_DIR / "urdf.dlr",
         application_id="dalaran_example_robot_data_preprocessing",
         recording_id="episode",
     )

@@ -6,7 +6,7 @@ use dl_log_types::{FileSource, RecordingId};
 
 /// Fetch a file from an HTTP URL and load it using all available importers.
 ///
-/// Unlike RRD streaming which decodes incrementally, this downloads the entire file
+/// Unlike DLR streaming which decodes incrementally, this downloads the entire file
 /// first, then passes the bytes through [`dl_importer::import_from_file_contents`].
 ///
 /// This works for all file types supported by the importers (MCAP, images, 3D models, etc.).

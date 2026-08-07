@@ -7,7 +7,7 @@ use dl_log_channel::{LogReceiver, LogSource, RecordingOpenBehavior};
 use dl_log_types::RecordingId;
 use dl_redap_client::ConnectionRegistryHandle;
 
-use crate::stream_rrd_from_http::stream_from_http_to_channel;
+use crate::stream_dlr_from_http::stream_from_http_to_channel;
 
 pub type AuthErrorHandler =
     Arc<dyn Fn(dl_uri::DatasetSegmentUri, &dl_redap_client::ClientCredentialsError) + Send + Sync>;
@@ -21,7 +21,7 @@ pub type AuthErrorHandler =
 pub enum LogDataSource {
     /// A remote file, served over http.
     ///
-    /// Could be an `.rrd` recording, `.rbl` blueprint, `.mcap`, `.png`, `.glb`, etc.
+    /// Could be an `.dlr` recording, `.dbl` blueprint, `.mcap`, `.png`, `.glb`, etc.
     HttpUrl {
         /// This is a canonicalized URL path without any parameters or fragments.
         url: url::Url,
@@ -45,7 +45,7 @@ pub enum LogDataSource {
         file: web_sys::File,
     },
 
-    // RRD data streaming in from standard input.
+    // DLR data streaming in from standard input.
     #[cfg(not(target_arch = "wasm32"))]
     Stdin,
 
@@ -270,8 +270,8 @@ impl LogDataSource {
         match self {
             Self::HttpUrl { url } => {
                 let path = url.path();
-                let is_rrd = path.ends_with(".rrd") || path.ends_with(".rbl");
-                if is_rrd {
+                let is_dlr = path.ends_with(".dlr") || path.ends_with(".dbl");
+                if is_dlr {
                     Ok(stream_from_http_to_channel(url.to_string()))
                 } else {
                     Ok(crate::fetch_file_from_http::fetch_and_load(&url))
@@ -490,7 +490,7 @@ pub struct LogDataSourceAnalytics {
     /// The type of data source (e.g., "file", "http", `redap_grpc`, "stdin").
     pub source_type: &'static str,
 
-    /// The file extension if applicable (e.g., "rrd", "png", "glb").
+    /// The file extension if applicable (e.g., "dlr", "png", "glb").
     pub file_extension: Option<String>,
 
     /// How the file was opened (e.g., "cli", `file_dialog`, `drag_and_drop`).
@@ -511,25 +511,25 @@ mod tests {
 
         let file = [
             "file://foo",
-            "foo.rrd",
+            "foo.dlr",
             "foo.png",
-            "/foo/bar/baz.rbl",
+            "/foo/bar/baz.dbl",
             "D:/file.jpg",
         ];
         let http = [
-            "http://example.com/foo.rrd",
-            "https://example.com/foo.rrd",
-            "http://example.com/foo.rrd?useless_param=1",
-            "example.zip/foo.rrd",
-            "www.foo.zip/foo.rrd",
-            "www.foo.zip/blueprint.rbl",
+            "http://example.com/foo.dlr",
+            "https://example.com/foo.dlr",
+            "http://example.com/foo.dlr?useless_param=1",
+            "example.zip/foo.dlr",
+            "www.foo.zip/foo.dlr",
+            "www.foo.zip/blueprint.dbl",
             "https://example.com/recording.mcap",
             "https://example.com/scene.glb",
             "https://example.com/photo.png",
             "https://example.com/video.mp4",
             // Since the path has an explicit extension, this will be parsed as a DataSource and
             // not a `ViewerOpenUrl` (see invalid section below)
-            "https://example.com/some-file.rrd?url=recording.rrd",
+            "https://example.com/some-file.dlr?url=recording.dlr",
         ];
         // Extensionless URLs — only accepted when accept_extensionless_http is true
         let extensionless_http = [
@@ -556,7 +556,7 @@ mod tests {
         let invalid = [
             // This will be ignored as a DataSource so it can later be parsed as a
             // `ViewerOpenUrl` (due to the ?url=)
-            "https://example.com/some-file?url=recording.rrd",
+            "https://example.com/some-file?url=recording.dlr",
             // Extensionless urls need a proper http protocol present, otherwise even `aaaa` would
             // be parsed as an http url.
             "example.com/some-file",

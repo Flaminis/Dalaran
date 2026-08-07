@@ -269,7 +269,7 @@ pub struct DataSource {
     /// considered part of this data source.
     #[prost(bool, tag = "4")]
     pub prefix: bool,
-    /// What kind of data is it (e.g. rrd, mcap, Lance, etc)?
+    /// What kind of data is it (e.g. dlr, mcap, Lance, etc)?
     #[prost(enumeration = "DataSourceKind", tag = "2")]
     pub typ: i32,
 }
@@ -639,12 +639,12 @@ impl ::prost::Name for GetRrdManifestRequest {
         "/dalaran.cloud.v1alpha1.GetRrdManifestRequest".into()
     }
 }
-/// Exactly one of `rrd_manifest` and `manifest_key` is set per response.
+/// Exactly one of `dlr_manifest` and `manifest_key` is set per response.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetRrdManifestResponse {
     /// The manifest, inlined.
     #[prost(message, optional, tag = "1")]
-    pub rrd_manifest: ::core::option::Option<super::super::log_msg::v1alpha1::RrdManifest>,
+    pub dlr_manifest: ::core::option::Option<super::super::log_msg::v1alpha1::RrdManifest>,
     /// Points at an encoded `dalaran.log_msg.v1alpha1.RrdFooter` payload for the client to fetch and decode.
     #[prost(message, optional, tag = "2")]
     pub manifest_key: ::core::option::Option<RrdManifestKey>,
@@ -1826,13 +1826,13 @@ impl ::prost::Name for DebugInfo {
 ///
 /// Returned by `QueryDataset` (in the `chunk_key` Arrow column) and forwarded
 /// back to the server on `FetchChunks`. The `location` payload is opaque and
-/// interpreted per `data_source_kind` (e.g. `RrdChunkLocation` for RRD).
+/// interpreted per `data_source_kind` (e.g. `RrdChunkLocation` for DLR).
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ChunkKey {
     /// Chunk unique identifier
     #[prost(message, optional, tag = "1")]
     pub chunk_id: ::core::option::Option<super::super::common::v1alpha1::Tuid>,
-    /// What type of partition is this, rrd, mcap, etc.
+    /// What type of partition is this, dlr, mcap, etc.
     /// This information determines how to interpret the `location` payload.
     #[prost(enumeration = "DataSourceKind", tag = "2")]
     pub data_source_kind: i32,
@@ -1866,7 +1866,7 @@ impl ::prost::Name for ChunkKey {
         "/dalaran.cloud.v1alpha1.ChunkKey".into()
     }
 }
-/// RRD-specific decoding of `ChunkKey.location`.
+/// DLR-specific decoding of `ChunkKey.location`.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RrdChunkLocation {
     /// Where the chunk is stored (e.g. s3://bucket/file, file:///path/to/file).
@@ -1898,7 +1898,7 @@ pub struct RrdManifestKey {
     /// The segment layer whose manifest is stored in this footer.
     #[prost(string, optional, tag = "2")]
     pub layer: ::core::option::Option<::prost::alloc::string::String>,
-    /// ETag of the source object (the layer's RRD file) as observed at registration time.
+    /// ETag of the source object (the layer's DLR file) as observed at registration time.
     ///
     /// Clients should pass this as an `If-Match` precondition when fetching, so that a concurrent
     /// re-registration results in a clean failure (HTTP 412) instead of decoding garbage from a
@@ -1962,7 +1962,7 @@ impl ErrorCode {
 #[repr(i32)]
 pub enum DataSourceKind {
     Unspecified = 0,
-    Rrd = 1,
+    Dlr = 1,
 }
 impl DataSourceKind {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -1972,14 +1972,14 @@ impl DataSourceKind {
     pub fn as_str_name(&self) -> &'static str {
         match self {
             Self::Unspecified => "DATA_SOURCE_KIND_UNSPECIFIED",
-            Self::Rrd => "DATA_SOURCE_KIND_RRD",
+            Self::Dlr => "DATA_SOURCE_KIND_DLR",
         }
     }
     /// Creates an enum from field names used in the ProtoBuf definition.
     pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
         match value {
             "DATA_SOURCE_KIND_UNSPECIFIED" => Some(Self::Unspecified),
-            "DATA_SOURCE_KIND_RRD" => Some(Self::Rrd),
+            "DATA_SOURCE_KIND_DLR" => Some(Self::Dlr),
             _ => None,
         }
     }
@@ -2663,20 +2663,20 @@ pub mod dalaran_cloud_service_client {
             ));
             self.inner.unary(req, path, codec).await
         }
-        /// Get the RRD Footer manifest.
+        /// Get the DLR Footer manifest.
         ///
         /// This includes details about what chunks there are, and what kind of data they contain.
         ///
         /// The manifest might be returned in multiple parts, at the discretion of the server.
         /// When that happens, it is guaranteed that all parts have the same exact Sorbet schemas (and therefore
         /// identical Sorbet schema hashes too).
-        /// That means it is always semantically valid to concatenate the data from these RRD manifests.
+        /// That means it is always semantically valid to concatenate the data from these DLR manifests.
         ///
         /// If the client sets `generate_direct_urls`, the server may instead return keys pointing at
         /// encoded `dalaran.log_msg.v1alpha1.RrdFooter` payloads for the client to fetch and decode.
         /// This is best-effort: the response may still inline the manifests: clients must handle both forms.
         /// However, all the items in a stream will either send inline manifest or urls, uniformly.
-        pub async fn get_rrd_manifest(
+        pub async fn get_dlr_manifest(
             &mut self,
             request: impl tonic::IntoRequest<super::GetRrdManifestRequest>,
         ) -> std::result::Result<
@@ -3176,20 +3176,20 @@ pub mod dalaran_cloud_service_server {
                 Item = std::result::Result<super::GetRrdManifestResponse, tonic::Status>,
             > + std::marker::Send
             + 'static;
-        /// Get the RRD Footer manifest.
+        /// Get the DLR Footer manifest.
         ///
         /// This includes details about what chunks there are, and what kind of data they contain.
         ///
         /// The manifest might be returned in multiple parts, at the discretion of the server.
         /// When that happens, it is guaranteed that all parts have the same exact Sorbet schemas (and therefore
         /// identical Sorbet schema hashes too).
-        /// That means it is always semantically valid to concatenate the data from these RRD manifests.
+        /// That means it is always semantically valid to concatenate the data from these DLR manifests.
         ///
         /// If the client sets `generate_direct_urls`, the server may instead return keys pointing at
         /// encoded `dalaran.log_msg.v1alpha1.RrdFooter` payloads for the client to fetch and decode.
         /// This is best-effort: the response may still inline the manifests: clients must handle both forms.
         /// However, all the items in a stream will either send inline manifest or urls, uniformly.
-        async fn get_rrd_manifest(
+        async fn get_dlr_manifest(
             &self,
             request: tonic::Request<super::GetRrdManifestRequest>,
         ) -> std::result::Result<tonic::Response<Self::GetRrdManifestStream>, tonic::Status>;
@@ -4313,7 +4313,7 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::get_rrd_manifest(&inner, request).await
+                                <T as DalaranCloudService>::get_dlr_manifest(&inner, request).await
                             };
                             Box::pin(fut)
                         }

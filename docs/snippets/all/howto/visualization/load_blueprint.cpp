@@ -2,7 +2,7 @@
 //!
 //! The blueprint is being loaded from an existing blueprint recording file.
 
-// ./dataframe_view_query_external /tmp/dna.rrd /tmp/dna.rbl
+// ./dataframe_view_query_external /tmp/dna.dlr /tmp/dna.dbl
 
 #include <string>
 
@@ -13,16 +13,16 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::string path_to_rrd = argv[1];
-    std::string path_to_rbl = argv[2];
+    std::string path_to_dlr = argv[1];
+    std::string path_to_dbl = argv[2];
 
     const auto rec =
         dalaran::RecordingStream("dalaran_example_dataframe_view_query_external");
     rec.spawn().exit_on_failure();
 
     // Log the files
-    rec.log_file_from_path(path_to_rrd);
-    rec.log_file_from_path(path_to_rbl);
+    rec.log_file_from_path(path_to_dlr);
+    rec.log_file_from_path(path_to_dbl);
 
     return 0;
 }

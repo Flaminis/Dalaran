@@ -195,7 +195,7 @@ fn settings_screen_ui_impl(ui: &mut egui::Ui, app_options: &mut AppOptions, keep
             );
         ui.re_checkbox(use_internal_catalog, "Load files via Viewer catalog")
             .on_hover_text(
-                "Load .rrd files through the Viewer catalog instead of importing them as a live \
+                "Load .dlr files through the Viewer catalog instead of importing them as a live \
                  recording. Takes effect for files opened after enabling.",
             );
         cfg_select! {

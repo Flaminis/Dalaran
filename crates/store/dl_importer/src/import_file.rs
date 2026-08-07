@@ -138,7 +138,7 @@ pub(crate) fn import(
             let (tx_feedback, rx_feedback) =
                 crossbeam::channel::bounded::<CompatibleImporterFound>(128);
 
-            // When loading a file type with native support (.rrd, .mcap, .png, …)
+            // When loading a file type with native support (.dlr, .mcap, .png, …)
             // then we don't need the overhead and noise of external importers:
             // See <https://github.com/rerun-io/rerun/issues/6530>.
             let importers = {
@@ -287,7 +287,7 @@ pub(crate) fn send(
 
         #[derive(Default, Debug)]
         struct Tracked {
-            is_rrd_or_rbl: bool,
+            is_dlr_or_dbl: bool,
             already_has_store_info: bool,
         }
 
@@ -316,7 +316,7 @@ pub(crate) fn send(
 
                         if let Some((store_id, store_info_created)) = store_info {
                             let tracked = store_info_tracker.entry(store_id).or_default();
-                            tracked.is_rrd_or_rbl =
+                            tracked.is_dlr_or_dbl =
                                 *importer_name == RrdImporter::name(&RrdImporter);
                             tracked.already_has_store_info |= store_info_created;
                         }
@@ -337,7 +337,7 @@ pub(crate) fn send(
 
                 // Never try to send custom store info for RRDs and RBLs, they always have their own, and
                 // it's always right.
-                let should_force_store_info = settings.force_store_info && !tracked.is_rrd_or_rbl;
+                let should_force_store_info = settings.force_store_info && !tracked.is_dlr_or_dbl;
 
                 let should_send_new_store_info = should_force_store_info
                     || (!tracked.already_has_store_info && !is_a_preexisting_recording);

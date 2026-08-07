@@ -340,7 +340,7 @@ dl.send_blueprint(blueprint)
 
 ### Saving blueprints from code
 
-You can save programmatically-created blueprints to `.rbl` files:
+You can save programmatically-created blueprints to `.dbl` files:
 
 snippet: howto/visualization/save_blueprint
 
@@ -515,7 +515,7 @@ blueprint = dlb.Blueprint(
 
 dl.send_blueprint(blueprint)
 
-blueprint.save("my_favorite_blueprint", "data/blueprint.rbl")
+blueprint.save("my_favorite_blueprint", "data/blueprint.dbl")
 
 input("Press Enter to continue…")
 

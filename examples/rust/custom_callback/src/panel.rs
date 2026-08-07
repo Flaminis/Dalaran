@@ -1,9 +1,9 @@
 use std::time::Instant;
 
-use rerun::external::egui::{self, ScrollArea};
-use rerun::external::dl_log::ResultExt;
-use rerun::external::dl_ui::{UiExt, list_item};
-use rerun::external::{eframe, dl_viewer};
+use dalaran::external::egui::{self, ScrollArea};
+use dalaran::external::dl_log::ResultExt;
+use dalaran::external::dl_ui::{UiExt, list_item};
+use dalaran::external::{eframe, dl_viewer};
 
 use crate::comms::protocol::Message;
 use crate::comms::viewer::ControlViewerHandle;

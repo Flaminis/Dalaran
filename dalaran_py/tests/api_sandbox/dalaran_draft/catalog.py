@@ -155,7 +155,7 @@ class DatasetEntry(Entry):
 
     def register_blueprint(self, uri: str, set_default: bool = True) -> None:
         """
-        Register an existing .rbl visible to the server.
+        Register an existing .dbl visible to the server.
 
         By default, also set this blueprint as default.
         """

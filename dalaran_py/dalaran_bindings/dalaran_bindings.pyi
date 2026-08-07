@@ -531,9 +531,9 @@ def set_thread_local_blueprint_recording(
 
     """
 
-def check_for_rrd_footer(file_path: str | os.PathLike[str]) -> bool:
+def check_for_dlr_footer(file_path: str | os.PathLike[str]) -> bool:
     """
-    Check if the RRD has a valid RRD footer.
+    Check if the DLR has a valid DLR footer.
 
     This is useful for unit-tests to verify that data has been fully flushed to disk.
     """
@@ -678,13 +678,13 @@ class FileSink:
         path:
             Path to write to. The file will be overwritten.
         write_footer:
-            Whether to emit a complete RRD footer (including a manifest of every chunk) at the
+            Whether to emit a complete DLR footer (including a manifest of every chunk) at the
             end of the stream. Defaults to `True`.
 
             Producing a footer keeps per-chunk metadata in memory for the lifetime of the sink,
             which grows linearly with the number of chunks logged. Pass `write_footer=False` for
-            long-running streaming sessions; the resulting file is still a valid RRD and a
-            footer can be added after the fact via `dalaran rrd optimize`.
+            long-running streaming sessions; the resulting file is still a valid DLR and a
+            footer can be added after the fact via `dalaran dlr optimize`.
 
             *Warning*: lack of footer will significantly hurt random-access performance and some
             tools (e.g. LazyStore) may not work properly.
@@ -734,7 +734,7 @@ def stdout(
     """Save to stdout."""
 
 def memory_recording(recording: PyRecordingStream | None = None) -> PyMemorySinkStorage | None:
-    """Create an in-memory rrd file."""
+    """Create an in-memory dlr file."""
 
 def set_callback_sink(
     callback: Callable[[bytes], Any],
@@ -1403,7 +1403,7 @@ class _ServerInternal:
         port:
             The port to bind the server to.
         datasets:
-            Optional dictionary mapping dataset names to lists of RRD file paths.
+            Optional dictionary mapping dataset names to lists of DLR file paths.
         dataset_prefixes:
             Optional dictionary mapping dataset names to directories containing RRDs.
         tables:
@@ -1810,7 +1810,7 @@ class LazyChunkStreamInternal:
     def flat_map(self, callable: Callable[[ChunkInternal], list[ChunkInternal]]) -> LazyChunkStreamInternal: ...
     @staticmethod
     def merge(streams: list[LazyChunkStreamInternal]) -> LazyChunkStreamInternal: ...
-    def write_rrd(self, path: str, application_id: str, recording_id: str) -> None: ...
+    def write_dlr(self, path: str, application_id: str, recording_id: str) -> None: ...
     def collect(
         self,
         *,

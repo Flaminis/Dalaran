@@ -16,7 +16,7 @@ use crate::{TypeConversionError, invalid_field, missing_field};
 ///
 /// The `location` payload is opaque on the wire and is interpreted per
 /// [`crate::cloud::v1alpha1::DataSourceKind`] (e.g. as [`RrdChunkLocation`]
-/// for RRD-backed partitions).
+/// for DLR-backed partitions).
 #[derive(Debug, Clone)]
 pub struct ChunkKey {
     pub chunk_id: dl_chunk::ChunkId,
@@ -119,8 +119,8 @@ impl RrdChunkLocation {
     pub fn as_bytes(&self) -> Vec<u8> {
         use prost::Message as _;
 
-        let rrd_location: crate::cloud::v1alpha1::RrdChunkLocation = self.clone().into();
-        rrd_location.encode_to_vec()
+        let dlr_location: crate::cloud::v1alpha1::RrdChunkLocation = self.clone().into();
+        dlr_location.encode_to_vec()
     }
 }
 
@@ -188,8 +188,8 @@ impl TryFrom<&[u8]> for RrdChunkLocation {
 
 /// Decoded form of [`crate::cloud::v1alpha1::RrdManifestKey`].
 ///
-/// Points at one layer's RRD manifest inside its source object.
-/// Unlike the ranges carried by [`ChunkKey`], it does not include the RRD message header.
+/// Points at one layer's DLR manifest inside its source object.
+/// Unlike the ranges carried by [`ChunkKey`], it does not include the DLR message header.
 #[derive(Debug, Clone)]
 pub struct RrdManifestKey {
     /// The canonical location of the manifest.
@@ -429,7 +429,7 @@ mod tests {
     }
 
     #[test]
-    fn rrd_manifest_key_without_location_is_rejected() {
+    fn dlr_manifest_key_without_location_is_rejected() {
         // A key with no location can't be fetched, so decoding must fail rather than
         // hand back a half-usable key.
         let proto = crate::cloud::v1alpha1::RrdManifestKey {
@@ -443,7 +443,7 @@ mod tests {
     }
 
     #[test]
-    fn rrd_manifest_key_without_byte_range_is_rejected() {
+    fn dlr_manifest_key_without_byte_range_is_rejected() {
         // Half a range is no range: a reader could neither seek nor size its fetch.
         let half_ranges = [
             (Some(10), None),
@@ -454,7 +454,7 @@ mod tests {
         for (offset, length) in half_ranges {
             let proto = crate::cloud::v1alpha1::RrdManifestKey {
                 location: Some(crate::cloud::v1alpha1::RrdChunkLocation {
-                    url: Some("s3://bucket/segment.rrd".to_owned()),
+                    url: Some("s3://bucket/segment.dlr".to_owned()),
                     offset,
                     length,
                 }),
@@ -471,10 +471,10 @@ mod tests {
     }
 
     #[test]
-    fn rrd_manifest_key_with_invalid_direct_url_is_rejected() {
+    fn dlr_manifest_key_with_invalid_direct_url_is_rejected() {
         let proto = crate::cloud::v1alpha1::RrdManifestKey {
             location: Some(crate::cloud::v1alpha1::RrdChunkLocation {
-                url: Some("s3://bucket/segment.rrd".to_owned()),
+                url: Some("s3://bucket/segment.dlr".to_owned()),
                 offset: Some(10),
                 length: Some(20),
             }),
@@ -487,26 +487,26 @@ mod tests {
     }
 
     #[test]
-    fn rrd_manifest_key_direct_url_round_trips() {
+    fn dlr_manifest_key_direct_url_round_trips() {
         let proto = crate::cloud::v1alpha1::RrdManifestKey {
             location: Some(crate::cloud::v1alpha1::RrdChunkLocation {
-                url: Some("s3://bucket/segment.rrd".to_owned()),
+                url: Some("s3://bucket/segment.dlr".to_owned()),
                 offset: Some(10),
                 length: Some(20),
             }),
             layer: None,
             etag: None,
             direct_url: Some(
-                "https://bucket.s3.amazonaws.com/segment.rrd?X-Amz-Signature=abc".to_owned(),
+                "https://bucket.s3.amazonaws.com/segment.dlr?X-Amz-Signature=abc".to_owned(),
             ),
         };
 
         let key = RrdManifestKey::try_from(proto).expect("valid key must decode");
         assert_eq!(
             key.direct_url.expect("direct_url was set").as_str(),
-            "https://bucket.s3.amazonaws.com/segment.rrd?X-Amz-Signature=abc"
+            "https://bucket.s3.amazonaws.com/segment.dlr?X-Amz-Signature=abc"
         );
-        assert_eq!(key.location.url.as_str(), "s3://bucket/segment.rrd");
+        assert_eq!(key.location.url.as_str(), "s3://bucket/segment.dlr");
     }
 
     #[test]

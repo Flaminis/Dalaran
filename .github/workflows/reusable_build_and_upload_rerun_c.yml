@@ -1,4 +1,4 @@
-name: Reusable Rerun-c Build
+name: Reusable Dalaran-c Build
 
 on:
   workflow_call:
@@ -41,7 +41,7 @@ on:
         description: "Concurrency group to use"
 
 concurrency:
-  group: ${{ inputs.CONCURRENCY }}-build-rerun_c
+  group: ${{ inputs.CONCURRENCY }}-build-dalaran_c
   cancel-in-progress: true
 
 env:
@@ -75,25 +75,25 @@ jobs:
               runner="ubuntu-arm-16-core"
               target="aarch64-unknown-linux-gnu"
               container="'ghcr.io/rerun-io/ci_docker:0.18.0'"
-              lib_name="librerun_c.a"
+              lib_name="libdalaran_c.a"
               ;;
             linux-x64)
               runner="ubuntu-latest-16-cores"
               target="x86_64-unknown-linux-gnu"
               container="'ghcr.io/rerun-io/ci_docker:0.18.0'"
-              lib_name="librerun_c.a"
+              lib_name="libdalaran_c.a"
               ;;
             windows-x64)
               runner="windows-latest-8-cores"
               target="x86_64-pc-windows-msvc"
               container="null"
-              lib_name="rerun_c.lib"
+              lib_name="dalaran_c.lib"
               ;;
             macos-arm64)
-              runner="macos-26" # Small runners, because building rerun_c is fast
+              runner="macos-26" # Small runners, because building dalaran_c is fast
               target="aarch64-apple-darwin"
               container="null"
-              lib_name="librerun_c.a"
+              lib_name="libdalaran_c.a"
               ;;
             *) echo "Invalid platform" && exit 1 ;;
           esac
@@ -102,8 +102,8 @@ jobs:
           echo "container=$container" >> "$GITHUB_OUTPUT"
           echo "lib_name=$lib_name" >> "$GITHUB_OUTPUT"
 
-  rs-build-rerun_c:
-    name: Build rerun_c (${{ needs.set-config.outputs.RUNNER }})
+  rs-build-dalaran_c:
+    name: Build dalaran_c (${{ needs.set-config.outputs.RUNNER }})
     timeout-minutes: 60
 
     needs: [set-config]
@@ -145,8 +145,8 @@ jobs:
           service_account: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
           targets: ${{ needs.set-config.outputs.TARGET }}
 
-      - name: Build rerun_c (release)
-        run: pixi run cargo build --locked -p rerun_c --release --target ${{ needs.set-config.outputs.TARGET }}
+      - name: Build dalaran_c (release)
+        run: pixi run cargo build --locked -p dalaran_c --release --target ${{ needs.set-config.outputs.TARGET }}
 
       - name: Get sha
         id: get-sha
@@ -154,19 +154,19 @@ jobs:
           full_commit="${{ inputs.RELEASE_COMMIT || ((github.event_name == 'pull_request' && github.event.pull_request.head.sha) || github.sha) }}"
           echo "sha=$(echo $full_commit | cut -c1-7)" >> "$GITHUB_OUTPUT"
 
-      - name: "Upload rerun_c (commit)"
+      - name: "Upload dalaran_c (commit)"
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "./target/${{ needs.set-config.outputs.TARGET }}/release/${{ needs.set-config.outputs.LIB_NAME }}"
-          destination: "rerun-builds/commit/${{ steps.get-sha.outputs.sha }}/rerun_c/${{ inputs.PLATFORM }}"
+          destination: "dalaran-builds/commit/${{ steps.get-sha.outputs.sha }}/dalaran_c/${{ inputs.PLATFORM }}"
           parent: false
           process_gcloudignore: false
 
-      - name: "Upload rerun_c (adhoc)"
+      - name: "Upload dalaran_c (adhoc)"
         if: ${{ inputs.ADHOC_NAME != '' }}
         uses: google-github-actions/upload-cloud-storage@v3
         with:
           path: "./target/${{ needs.set-config.outputs.TARGET }}/release/${{ needs.set-config.outputs.LIB_NAME }}"
-          destination: "rerun-builds/adhoc/${{inputs.ADHOC_NAME}}/rerun_c/${{ inputs.PLATFORM }}"
+          destination: "dalaran-builds/adhoc/${{inputs.ADHOC_NAME}}/dalaran_c/${{ inputs.PLATFORM }}"
           parent: false
           process_gcloudignore: false
