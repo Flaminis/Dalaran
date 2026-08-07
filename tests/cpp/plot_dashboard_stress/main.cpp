@@ -20,23 +20,23 @@
 #include <thread>
 #include <vector>
 
-#include <rerun.hpp>
-#include <rerun/demo_utils.hpp>
-#include <rerun/third_party/cxxopts.hpp>
+#include <dalaran.hpp>
+#include <dalaran/demo_utils.hpp>
+#include <dalaran/third_party/cxxopts.hpp>
 
 int main(int argc, char** argv) {
-    const auto rec = rerun::RecordingStream("rerun_example_plot_dashboard_stress");
+    const auto rec = dalaran::RecordingStream("dalaran_example_plot_dashboard_stress");
 
     cxxopts::Options options("plot_dashboard_stress", "Plot dashboard stress test");
 
     // clang-format off
     options.add_options()
       ("h,help", "Print usage")
-      // Rerun
-      ("spawn", "Start a new Rerun Viewer process and feed it data in real-time")
-      ("connect", "Connects and sends the logged data to a remote Rerun viewer")
+      // Dalaran
+      ("spawn", "Start a new Dalaran Viewer process and feed it data in real-time")
+      ("connect", "Connects and sends the logged data to a remote Dalaran viewer")
       ("save", "Log data to an rrd file", cxxopts::value<std::string>())
-      ("stdout", "Log data to standard output, to be piped into a Rerun Viewer")
+      ("stdout", "Log data to standard output, to be piped into a Dalaran Viewer")
       // Dashboard
       ("num-plots", "How many different plots?", cxxopts::value<uint64_t>()->default_value("1"))
       ("num-series-per-plot", "How many series in each single plot?", cxxopts::value<uint64_t>()->default_value("1"))
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
         exit(0);
     }
 
-    // TODO(#4602): need common rerun args helper library
+    // TODO(#4602): need common dalaran args helper library
     if (args["spawn"].as<bool>()) {
         rec.spawn().exit_on_failure();
     } else if (args["connect"].as<bool>()) {
@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
 
     std::random_device rd;
     std::mt19937 rng(rd());
-    std::uniform_real_distribution<double> distr_uniform_pi(0.0, rerun::demo::PI);
+    std::uniform_real_distribution<double> distr_uniform_pi(0.0, dalaran::demo::PI);
     std::normal_distribution<double> distr_std_normal;
 
     std::vector<double> sim_times;
@@ -166,12 +166,12 @@ int main(int argc, char** argv) {
 
     size_t time_step = 0;
     for (auto offset : offsets) {
-        std::optional<rerun::TimeColumn> time_column;
+        std::optional<dalaran::TimeColumn> time_column;
         if (temporal_batch_size.has_value()) {
-            time_column = rerun::TimeColumn::from_duration_secs(
+            time_column = dalaran::TimeColumn::from_duration_secs(
                 "sim_time",
-                rerun::borrow(sim_times.data() + offset, *temporal_batch_size),
-                rerun::SortingStatus::Sorted
+                dalaran::borrow(sim_times.data() + offset, *temporal_batch_size),
+                dalaran::SortingStatus::Sorted
             );
         } else {
             rec.set_time_duration_secs("sim_time", sim_times[offset]);
@@ -189,13 +189,13 @@ int main(int argc, char** argv) {
                     rec.send_columns(
                         path,
                         *time_column,
-                        rerun::Scalars(
-                            rerun::borrow(series_values.data() + time_step, *temporal_batch_size)
+                        dalaran::Scalars(
+                            dalaran::borrow(series_values.data() + time_step, *temporal_batch_size)
                         )
                             .columns()
                     );
                 } else {
-                    rec.log(path, rerun::Scalars(series_values[time_step]));
+                    rec.log(path, dalaran::Scalars(series_values[time_step]));
                 }
             }
         }

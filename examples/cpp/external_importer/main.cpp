@@ -5,11 +5,11 @@
 #include <sstream>
 #include <string>
 
-#include <rerun.hpp>
-#include <rerun/third_party/cxxopts.hpp>
+#include <dalaran.hpp>
+#include <dalaran/third_party/cxxopts.hpp>
 #include <string_view>
 
-void set_time_from_args(const rerun::RecordingStream& rec, cxxopts::ParseResult& args) {
+void set_time_from_args(const dalaran::RecordingStream& rec, cxxopts::ParseResult& args) {
     if (args.count("time_sequence")) {
         const auto sequences = args["time_sequence"].as<std::vector<std::string>>();
         for (const auto& sequence_str : sequences) {
@@ -46,7 +46,7 @@ void set_time_from_args(const rerun::RecordingStream& rec, cxxopts::ParseResult&
 }
 
 int main(int argc, char* argv[]) {
-    // The Rerun Viewer will always pass these two pieces of information:
+    // The Dalaran Viewer will always pass these two pieces of information:
     // 1. The path to be loaded, as a positional arg.
     // 2. A shared recording ID, via the `--recording-id` flag.
     //
@@ -58,17 +58,17 @@ int main(int argc, char* argv[]) {
     // the available CLI parameters.
 
     cxxopts::Options options(
-        "rerun-importer-cpp-file",
+        "dalaran-importer-cpp-file",
         R"(
-This is an example executable importer plugin for the Rerun Viewer.
-Any executable on your `$PATH` with a name that starts with `rerun-importer-` will be treated as an
+This is an example executable importer plugin for the Dalaran Viewer.
+Any executable on your `$PATH` with a name that starts with `dalaran-importer-` will be treated as an
 external importer.
 
 This particular one will log C++ source code files as markdown documents, and return a
 special exit code to indicate that it doesn't support anything else.
 
-To try it out, compile it and place it in your $PATH as `rerun-importer-cpp-file`, then open a C++ source
-file with Rerun (`rerun file.cpp`).
+To try it out, compile it and place it in your $PATH as `dalaran-importer-cpp-file`, then open a C++ source
+file with Dalaran (`dalaran file.cpp`).
 )"
     );
 
@@ -100,9 +100,9 @@ file with Rerun (`rerun file.cpp`).
     bool is_file = std::filesystem::is_regular_file(filepath);
     bool is_cpp_file = std::filesystem::path(filepath).extension().string() == ".cpp";
 
-    // Inform the Rerun Viewer that we do not support that kind of file.
+    // Inform the Dalaran Viewer that we do not support that kind of file.
     if (!is_file || !is_cpp_file) {
-        return rerun::EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE;
+        return dalaran::EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE;
     }
 
     std::ifstream file(filepath);
@@ -111,7 +111,7 @@ file with Rerun (`rerun file.cpp`).
 
     std::string text = "## Some C++ code\n```cpp\n" + body.str() + "\n```\n";
 
-    auto application_id = std::string_view("rerun_example_external_importer");
+    auto application_id = std::string_view("dalaran_example_external_importer");
     if (args.count("application-id")) {
         application_id = args["application-id"].as<std::string>();
     }
@@ -119,8 +119,8 @@ file with Rerun (`rerun file.cpp`).
     if (args.count("recording-id")) {
         recording_id = args["recording-id"].as<std::string>();
     }
-    const auto rec = rerun::RecordingStream(application_id, recording_id);
-    // The most important part of this: log to standard output so the Rerun Viewer can ingest it!
+    const auto rec = dalaran::RecordingStream(application_id, recording_id);
+    // The most important part of this: log to standard output so the Dalaran Viewer can ingest it!
     rec.to_stdout().exit_on_failure();
 
     set_time_from_args(rec, args);
@@ -132,6 +132,6 @@ file with Rerun (`rerun file.cpp`).
     rec.log_with_static(
         entity_path,
         args["static"].as<bool>(),
-        rerun::TextDocument(text).with_media_type(rerun::MediaType::markdown())
+        dalaran::TextDocument(text).with_media_type(dalaran::MediaType::markdown())
     );
 }

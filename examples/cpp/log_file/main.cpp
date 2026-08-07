@@ -4,26 +4,26 @@
 #include <sstream>
 #include <string>
 
-#include <rerun.hpp>
-#include <rerun/third_party/cxxopts.hpp>
+#include <dalaran.hpp>
+#include <dalaran/third_party/cxxopts.hpp>
 
 int main(int argc, char** argv) {
     // Create a new `RecordingStream` which sends data over gRPC to the viewer process.
-    const auto rec = rerun::RecordingStream("rerun_example_log_file");
+    const auto rec = dalaran::RecordingStream("dalaran_example_log_file");
 
     cxxopts::Options options(
-        "rerun_example_log_file",
+        "dalaran_example_log_file",
         "Demonstrates how to log any file from the SDK using the `Importer` machinery."
     );
 
     // clang-format off
     options.add_options()
       ("h,help", "Print usage")
-      // Rerun
-      ("spawn", "Start a new Rerun Viewer process and feed it data in real-time")
-      ("connect", "Connects and sends the logged data to a remote Rerun viewer")
+      // Dalaran
+      ("spawn", "Start a new Dalaran Viewer process and feed it data in real-time")
+      ("connect", "Connects and sends the logged data to a remote Dalaran viewer")
       ("save", "Log data to an rrd file", cxxopts::value<std::string>())
-      ("stdout", "Log data to standard output, to be piped into a Rerun Viewer")
+      ("stdout", "Log data to standard output, to be piped into a Dalaran Viewer")
       // Example
       ("from-contents", "Log the contents of the file directly (files only -- not supported by external loaders)", cxxopts::value<bool>()->default_value("false"))
       ("filepaths", "The filepaths to be loaded and logged", cxxopts::value<std::vector<std::string>>())
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
         exit(0);
     }
 
-    // TODO(#4602): need common rerun args helper library
+    // TODO(#4602): need common dalaran args helper library
     if (args["spawn"].as<bool>()) {
         rec.spawn().exit_on_failure();
     } else if (args["connect"].as<bool>()) {

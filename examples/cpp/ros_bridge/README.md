@@ -1,19 +1,19 @@
 <!--[metadata]
 title = "ROS bridge"
-description = "A C++ ROS 1 bridge that subscribes to all supported topics and logs the messages into Rerun (Linux only)."
+description = "A C++ ROS 1 bridge that subscribes to all supported topics and logs the messages into Dalaran (Linux only)."
 source = "https://github.com/rerun-io/cpp-example-ros-bridge"
 tags = ["2D", "3D", "Mesh", "Pinhole camera", "ROS", "Time series", "C++"]
 thumbnail = "https://static.rerun.io/ros_bridge/121f72ebaea57a1b895196a5587fd1a428a9fd0e/480w.png"
 thumbnail_dimensions = [480, 480]
 -->
 
-A proof-of-concept Rerun bridge for ROS 1 that subscribes to all supported topics and visualizes the messages in Rerun.
+A proof-of-concept Dalaran bridge for ROS 1 that subscribes to all supported topics and visualizes the messages in Dalaran.
 
 ## Background
 
-This is an example that shows how to use Rerun's C++ API to log and visualize [ROS](https://www.ros.org/) messages.
+This is an example that shows how to use Dalaran's C++ API to log and visualize [ROS](https://www.ros.org/) messages.
 
-It works by subscribing to all topics with supported types, converting the messages, and logging the data to Rerun. It further allows to remap topic names to specific entity paths, specify additional static transforms, and pinhole parameters via an external config file. See the [launch](https://github.com/rerun-io/cpp-example-ros-bridge/tree/main/rerun_bridge/launch) directory for usage examples.
+It works by subscribing to all topics with supported types, converting the messages, and logging the data to Dalaran. It further allows to remap topic names to specific entity paths, specify additional static transforms, and pinhole parameters via an external config file. See the [launch](https://github.com/rerun-io/cpp-example-ros-bridge/tree/main/rerun_bridge/launch) directory for usage examples.
 
 
 <picture>

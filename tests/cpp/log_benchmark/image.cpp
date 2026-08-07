@@ -3,7 +3,7 @@
 #include "benchmarks.hpp"
 #include "profile_scope.hpp"
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 constexpr size_t IMAGE_DIMENSION = 1024;
 constexpr size_t IMAGE_CHANNELS = 4;
@@ -26,7 +26,7 @@ static std::vector<uint8_t> prepare() {
 static void execute(std::vector<uint8_t> raw_image_data) {
     PROFILE_FUNCTION();
 
-    rerun::RecordingStream rec("rerun_example_benchmark_image");
+    dalaran::RecordingStream rec("dalaran_example_benchmark_image");
 
     for (size_t i = 0; i < NUM_LOG_CALLS; ++i) {
         // Change a single pixel of the image data, just to make sure we transmit something different each time.
@@ -34,7 +34,7 @@ static void execute(std::vector<uint8_t> raw_image_data) {
 
         rec.log(
             "test_image",
-            rerun::Image::from_rgba32(
+            dalaran::Image::from_rgba32(
                 raw_image_data,
                 {
                     IMAGE_DIMENSION,

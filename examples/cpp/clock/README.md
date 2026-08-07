@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Clock"
-description = "An analog clock built from `Boxes3D`, `Points3D`, and `Arrows3D` primitives, animated along a Rerun timeline."
+description = "An analog clock built from `Boxes3D`, `Points3D`, and `Arrows3D` primitives, animated along a Dalaran timeline."
 thumbnail = "https://static.rerun.io/clock/8c49e25f5cac4d6a1d7d0490b14cf6881bdb707b/480w.png"
 thumbnail_dimensions = [480, 480]
 -->
@@ -14,7 +14,7 @@ thumbnail_dimensions = [480, 480]
   <img src="https://static.rerun.io/clock/05e69dc20c9a28005f1ffe7f0f2ac9eeaa95ba3b/full.png" alt="Clock example screenshot">
 </picture>
 
-An example visualizing an analog clock with hour, minute and seconds hands using Rerun Arrow3D primitives.
+An example visualizing an analog clock with hour, minute and seconds hands using Dalaran Arrow3D primitives.
 
 
 To build it from a checkout of the repository (requires a Rust toolchain):

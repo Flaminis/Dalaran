@@ -14,11 +14,11 @@ thumbnail: https://static.rerun.io/external_data_loader_cpp/83cd3c2a322911cf597c
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/external_data_loader_cpp/83cd3c2a322911cf597cf74aeda01c8fe83e275f/1200w.png">
 </picture>
 
-This is an example executable importer plugin for the Rerun Viewer.
+This is an example executable importer plugin for the Dalaran Viewer.
 
 It will log C++ source code files as markdown documents.
-To try it out, compile it and place it in your $PATH, then open a C++ source file with Rerun (`rerun file.cpp`).
+To try it out, compile it and place it in your $PATH, then open a C++ source file with Dalaran (`dalaran file.cpp`).
 
-Consider using the [`send_columns`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65) API for importers that ingest time series data from a file.
+Consider using the [`send_columns`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65) API for importers that ingest time series data from a file.
 This can be much more efficient that the stateful `log` API as it allows bundling
 component data over time into a single call consuming a continuous block of memory.

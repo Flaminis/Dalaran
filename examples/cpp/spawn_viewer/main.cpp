@@ -1,5 +1,5 @@
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main() {
-    rerun::spawn().exit_on_failure();
+    dalaran::spawn().exit_on_failure();
 }

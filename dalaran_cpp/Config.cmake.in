@@ -1,0 +1,73 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/dalaran_sdkTargets.cmake")
+
+set(DALARAN_LIB_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+
+if(@DALARAN_INSTALL_DALARAN_C@)
+    if(NOT TARGET dalaran_c)
+        # Setup `dalaran_c` (imported libraries can't be exported!)
+        add_library(dalaran_c STATIC IMPORTED GLOBAL)
+        get_filename_component(DALARAN_C_LIB_NAME "@DALARAN_C_LIB_LOCATION@" NAME)
+        set_target_properties(dalaran_c PROPERTIES IMPORTED_LOCATION "${DALARAN_LIB_DIR}/${DALARAN_C_LIB_NAME}")
+        if(APPLE)
+            target_link_libraries(dalaran_c INTERFACE "-framework CoreFoundation" "-framework IOKit" "-framework Security")
+        elseif(UNIX) # if(LINUX) # CMake 3.25
+            target_link_libraries(dalaran_c INTERFACE "-lm -ldl -pthread")
+        elseif(WIN32)
+            target_link_libraries(dalaran_c INTERFACE Crypt32
+                                                    Iphlpapi
+                                                    Ncrypt
+                                                    Netapi32
+                                                    ntdll
+                                                    Pdh
+                                                    PowrProf
+                                                    Psapi
+                                                    Secur32
+                                                    Userenv
+                                                    ws2_32)
+        endif()
+    endif()
+endif()
+
+# Setup `dalaran_arrow_target` (imported libraries can't be exported and package dependencies need to be re-declared)
+# if(@DALARAN_DOWNLOAD_AND_BUILD_ARROW@ AND NOT @DALARAN_ARROW_LINK_SHARED@)
+if(@DALARAN_DOWNLOAD_AND_BUILD_ARROW@ AND NOT @DALARAN_ARROW_LINK_SHARED@)
+    message(STATUS "Dalaran is using bundled arrow library.")
+
+    if(NOT TARGET dalaran_arrow_target)
+        add_library(dalaran_arrow_target STATIC IMPORTED GLOBAL)
+        get_filename_component(DALARAN_ARROW_LIB_NAME "@DALARAN_ARROW_LIBRARY_FILE@" NAME)
+        set_target_properties(dalaran_arrow_target PROPERTIES IMPORTED_LOCATION "${DALARAN_LIB_DIR}/${DALARAN_ARROW_LIB_NAME}")
+    endif()
+
+    # We have to explicitly opt in the arrow bundled dependencies, otherwise we're missing the symbols for mimalloc.
+    if(NOT TARGET arrow_targetBundledDeps)
+        add_library(arrow_targetBundledDeps STATIC IMPORTED)
+        get_filename_component(DALARAN_ARROW_DEPS_LIB_NAME "@DALARAN_ARROW_BUNDLED_DEPENDENCIES_FILE@" NAME)
+        set_target_properties(arrow_targetBundledDeps PROPERTIES IMPORTED_LOCATION "${DALARAN_LIB_DIR}/${DALARAN_ARROW_DEPS_LIB_NAME}")
+        target_link_libraries(dalaran_arrow_target INTERFACE arrow_targetBundledDeps)
+    endif()
+else()
+    if(@DALARAN_DOWNLOAD_AND_BUILD_ARROW@ AND @DALARAN_ARROW_LINK_SHARED@)
+        message(WARNING
+            "Dalaran got built with an automatically downloaded version of libArrow,"
+            "but it was not bundled as part of the install since export of shared libArrow is not supported yet."
+            "Set DALARAN_ARROW_LINK_SHARED to OFF during install or make sure find_package succeeds for Arrow."
+        )
+    endif()
+
+    include(CMakeFindDependencyMacro)
+
+    find_dependency(Arrow)
+
+    message(STATUS "Dalaran is using a system installed libArrow.")
+
+    if(NOT TARGET dalaran_arrow_target)
+        if(@DALARAN_ARROW_LINK_SHARED@)
+            add_library(dalaran_arrow_target ALIAS Arrow::arrow_shared)
+        else()
+            add_library(dalaran_arrow_target ALIAS Arrow::arrow_static)
+        endif()
+    endif()
+endif()

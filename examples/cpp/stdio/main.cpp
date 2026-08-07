@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main() {
-    const auto rec = rerun::RecordingStream("rerun_example_stdio");
+    const auto rec = dalaran::RecordingStream("dalaran_example_stdio");
     rec.to_stdout().exit_on_failure();
 
     std::string input;
@@ -13,5 +13,5 @@ int main() {
         input += line + '\n';
     }
 
-    rec.log("stdin", rerun::TextDocument(input));
+    rec.log("stdin", dalaran::TextDocument(input));
 }

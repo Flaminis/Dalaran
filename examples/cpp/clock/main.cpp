@@ -1,4 +1,4 @@
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm> // std::max
 #include <cmath>
@@ -9,23 +9,23 @@ using namespace std::chrono;
 constexpr float TAU = 6.28318530717958647692528676655900577f;
 
 void log_hand(
-    const rerun::RecordingStream& rec, const char* name, seconds step, float angle, float length,
+    const dalaran::RecordingStream& rec, const char* name, seconds step, float angle, float length,
     float width, uint8_t blue
 ) {
-    const auto tip = rerun::Vec3D{length * sinf(angle * TAU), length * cosf(angle * TAU), 0.0f};
+    const auto tip = dalaran::Vec3D{length * sinf(angle * TAU), length * cosf(angle * TAU), 0.0f};
     const auto c = static_cast<uint8_t>(angle * 255.0f);
     const auto color =
-        rerun::Color{static_cast<uint8_t>(255 - c), c, blue, std::max<uint8_t>(128, blue)};
+        dalaran::Color{static_cast<uint8_t>(255 - c), c, blue, std::max<uint8_t>(128, blue)};
 
     rec.set_time_duration("sim_time", step);
 
     rec.log(
         std::string("world/") + name + "_pt",
-        rerun::Points3D(rerun::Position3D(tip)).with_colors(color)
+        dalaran::Points3D(dalaran::Position3D(tip)).with_colors(color)
     );
     rec.log(
         std::string("world/") + name + "hand",
-        rerun::Arrows3D::from_vectors(rerun::Vector3D(tip))
+        dalaran::Arrows3D::from_vectors(dalaran::Vector3D(tip))
             .with_origins({{0.0f, 0.0f, 0.0f}})
             .with_colors(color)
             .with_radii({width * 0.5f})
@@ -42,11 +42,11 @@ int main() {
 
     const int num_steps = 10000;
 
-    const auto rec = rerun::RecordingStream("rerun_example_clock");
+    const auto rec = dalaran::RecordingStream("dalaran_example_clock");
     rec.spawn().exit_on_failure();
 
-    rec.log_static("world", rerun::ViewCoordinates::RIGHT_HAND_Y_UP);
-    rec.log_static("world/frame", rerun::Boxes3D::from_half_sizes({{LENGTH_S, LENGTH_S, 1.0f}}));
+    rec.log_static("world", dalaran::ViewCoordinates::RIGHT_HAND_Y_UP);
+    rec.log_static("world/frame", dalaran::Boxes3D::from_half_sizes({{LENGTH_S, LENGTH_S, 1.0f}}));
 
     for (int step = 0; step < num_steps; step++) {
         log_hand(rec, "seconds", seconds(step), (step % 60) / 60.0f, LENGTH_S, WIDTH_S, 0);

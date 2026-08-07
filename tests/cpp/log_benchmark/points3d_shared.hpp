@@ -6,7 +6,7 @@
 #include "benchmarks.hpp"
 #include "profile_scope.hpp"
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 struct MyPoint3D {
     float x, y, z;
@@ -45,10 +45,10 @@ inline Point3DInput prepare_points3d(int64_t lcg_state, size_t num_points) {
     return input;
 }
 
-// TODO(andreas): We want this adapter in rerun, ideally in a generated manner.
+// TODO(andreas): We want this adapter in dalaran, ideally in a generated manner.
 //                Can we do something like a `binary compatible` attribute on fbs that will generate this as well as ctors?
 template <>
-struct rerun::CollectionAdapter<rerun::Color, std::vector<uint32_t>> {
+struct dalaran::CollectionAdapter<dalaran::Color, std::vector<uint32_t>> {
     Collection<Color> operator()(const std::vector<uint32_t>& container) {
         return Collection<Color>::borrow(container.data(), container.size());
     }
@@ -59,23 +59,23 @@ struct rerun::CollectionAdapter<rerun::Color, std::vector<uint32_t>> {
 };
 
 template <>
-struct rerun::CollectionAdapter<rerun::Position3D, std::vector<MyPoint3D>> {
-    Collection<rerun::Position3D> operator()(const std::vector<MyPoint3D>& container) {
-        return Collection<rerun::Position3D>::borrow(container.data(), container.size());
+struct dalaran::CollectionAdapter<dalaran::Position3D, std::vector<MyPoint3D>> {
+    Collection<dalaran::Position3D> operator()(const std::vector<MyPoint3D>& container) {
+        return Collection<dalaran::Position3D>::borrow(container.data(), container.size());
     }
 
-    Collection<rerun::Position3D> operator()(std::vector<MyPoint3D>&&) {
+    Collection<dalaran::Position3D> operator()(std::vector<MyPoint3D>&&) {
         throw std::runtime_error("Not implemented for temporaries");
     }
 };
 
 template <>
-struct rerun::CollectionAdapter<rerun::Position3D, MyPoint3D> {
-    Collection<rerun::Position3D> operator()(const MyPoint3D& single) {
-        return Collection<rerun::Position3D>::borrow(&single, 1);
+struct dalaran::CollectionAdapter<dalaran::Position3D, MyPoint3D> {
+    Collection<dalaran::Position3D> operator()(const MyPoint3D& single) {
+        return Collection<dalaran::Position3D>::borrow(&single, 1);
     }
 
-    Collection<rerun::Position3D> operator()(MyPoint3D&&) {
+    Collection<dalaran::Position3D> operator()(MyPoint3D&&) {
         throw std::runtime_error("Not implemented for temporaries");
     }
 };

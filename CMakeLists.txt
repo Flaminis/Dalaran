@@ -1,27 +1,27 @@
 cmake_minimum_required(VERSION 3.16...3.27)
 
-project(rerun_cpp_proj LANGUAGES CXX)
+project(dalaran_cpp_proj LANGUAGES CXX)
 
 # ------------------------------------------------------------------------------
 
 # Environment driven hooks so we can configure CMake configure even if its buried deep inside a pixi task.
-if(DEFINED ENV{RERUN_WERROR})
-    message(STATUS "Compiling with warnings as errors since RERUN_WERROR is set.")
+if(DEFINED ENV{DALARAN_WERROR})
+    message(STATUS "Compiling with warnings as errors since DALARAN_WERROR is set.")
     set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
 endif()
 
-if(DEFINED ENV{RERUN_USE_ASAN})
-    message(STATUS "Compiling with address sanitizer ('asan') since RERUN_USE_ASAN is set.")
-    set(RERUN_USE_ASAN ON)
+if(DEFINED ENV{DALARAN_USE_ASAN})
+    message(STATUS "Compiling with address sanitizer ('asan') since DALARAN_USE_ASAN is set.")
+    set(DALARAN_USE_ASAN ON)
 endif()
 
-if(DEFINED ENV{RERUN_SET_CXX_VERSION})
-    message(STATUS "Overwriting CMAKE_CXX_STANDARD to $ENV{RERUN_SET_CXX_VERSION} since RERUN_SET_CXX_VERSION is set accordingly.")
-    set(CMAKE_CXX_STANDARD $ENV{RERUN_SET_CXX_VERSION})
+if(DEFINED ENV{DALARAN_SET_CXX_VERSION})
+    message(STATUS "Overwriting CMAKE_CXX_STANDARD to $ENV{DALARAN_SET_CXX_VERSION} since DALARAN_SET_CXX_VERSION is set accordingly.")
+    set(CMAKE_CXX_STANDARD $ENV{DALARAN_SET_CXX_VERSION})
 endif()
 
 # ------------------------------------------------------------------------------
-function(rerun_strict_warning_settings target)
+function(dalaran_strict_warning_settings target)
     if(MSVC)
         # TODO(andreas): Try to enable /Wall
         target_compile_options(${target} PRIVATE /W4)
@@ -44,8 +44,8 @@ function(rerun_strict_warning_settings target)
             )
         endif()
 
-        if(RERUN_USE_ASAN)
-            message(WARNING "Rerun C++ build does not support address sanitizer ('asan') on Windows. Ignoring RERUN_USE_ASAN.")
+        if(DALARAN_USE_ASAN)
+            message(WARNING "Dalaran C++ build does not support address sanitizer ('asan') on Windows. Ignoring DALARAN_USE_ASAN.")
         endif()
     else()
         # Enabled warnings.
@@ -114,7 +114,7 @@ function(rerun_strict_warning_settings target)
             target_compile_options(${target} PRIVATE -g -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -fno-optimize-sibling-calls)
         endif()
 
-        if(RERUN_USE_ASAN)
+        if(DALARAN_USE_ASAN)
             # Turn on the address sanitizer ("asan"):
             target_compile_options(${target} PRIVATE -fsanitize=address)
             target_link_options(${target} PRIVATE -fsanitize=address)
@@ -128,13 +128,13 @@ if(NOT DEFINED CMAKE_GENERATOR AND UNIX)
 endif()
 
 # If using MSVC, always enable multi-process compiling for all targets.
-# Note that this setting is repeated for rerun_sdk's CMakeLists.txt since it should also work stand-alone.
+# Note that this setting is repeated for dalaran_sdk's CMakeLists.txt since it should also work stand-alone.
 if(MSVC)
     add_compile_options("/MP")
 endif()
 
-# Signal to all our build scripts that we're inside the Rerun repository.
-set(RERUN_REPOSITORY YES)
+# Signal to all our build scripts that we're inside the Dalaran repository.
+set(DALARAN_REPOSITORY YES)
 
 # ------------------------------------------------------------------------------
 # Loguru logging library (https://github.com/emilk/loguru):
@@ -150,14 +150,14 @@ FetchContent_Declare(LoguruGitRepo
 # Loguru does not support being build with BUILD_SHARED_LIBS=ON on Windows
 # so we always compile it with BUILD_SHARED_LIBS=OFF on Windows
 if(MSVC AND BUILD_SHARED_LIBS)
-    set(BUILD_SHARED_LIBS_RERUN_SDK ${BUILD_SHARED_LIBS})
+    set(BUILD_SHARED_LIBS_DALARAN_SDK ${BUILD_SHARED_LIBS})
     set(BUILD_SHARED_LIBS OFF)
 endif()
 
 FetchContent_MakeAvailable(LoguruGitRepo) # defines target 'loguru::loguru'
 
-if(MSVC AND BUILD_SHARED_LIBS_RERUN_SDK)
-    set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_RERUN_SDK})
+if(MSVC AND BUILD_SHARED_LIBS_DALARAN_SDK)
+    set(BUILD_SHARED_LIBS ${BUILD_SHARED_LIBS_DALARAN_SDK})
 endif()
 
 # Set any loguru compile-time flags before calling MakeAvailable()
@@ -167,8 +167,8 @@ if(NOT WIN32)
 endif()
 
 # ------------------------------------------------------------------------------
-add_subdirectory(crates/top/rerun_c) # The Rerun C SDK library, must be included before the C++ SDK.
-add_subdirectory(rerun_cpp) # The Rerun C++ SDK library.
+add_subdirectory(crates/top/dalaran_c) # The Dalaran C SDK library, must be included before the C++ SDK.
+add_subdirectory(dalaran_cpp) # The Dalaran C++ SDK library.
 add_subdirectory(examples/cpp)
 add_subdirectory(tests/cpp)
 add_subdirectory(docs/snippets)

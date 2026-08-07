@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "VRS viewer"
-description = "A C++ example that loads VRS (Facebook's per-device sensor record format) into Rerun: images, audio, IMU, and more."
+description = "A C++ example that loads VRS (Facebook's per-device sensor record format) into Dalaran: images, audio, IMU, and more."
 source = "https://github.com/rerun-io/cpp-example-vrs"
 tags = ["2D", "3D", "VRS", "Viewer", "C++"]
 thumbnail = "https://static.rerun.io/vrs/614f0adf0dd31fa01fff0d6eaeae67bbe8ba9af0/480w.png"
@@ -14,25 +14,25 @@ thumbnail_dimensions = [480, 482]
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/cpp-example-vrs/c765460d4448da27bb9ee2a2a15f092f82a402d2/1024w.png">
 </picture>
 
-This is an example that shows how to use Rerun's C++ API to log and view [VRS](https://github.com/facebookresearch/vrs) files.
+This is an example that shows how to use Dalaran's C++ API to log and view [VRS](https://github.com/facebookresearch/vrs) files.
 
 
-# Used Rerun types
+# Used Dalaran types
 
-[`Arrows3D`](https://www.rerun.io/docs/reference/types/archetypes/arrows3d), [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`Scalars`](https://www.rerun.io/docs/reference/types/archetypes/scalars), [`TextDocument`](https://www.rerun.io/docs/reference/types/archetypes/text_document)
+[`Arrows3D`](https://www.dalaran.dev/docs/reference/types/archetypes/arrows3d), [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`Scalars`](https://www.dalaran.dev/docs/reference/types/archetypes/scalars), [`TextDocument`](https://www.dalaran.dev/docs/reference/types/archetypes/text_document)
 
 # Background
-This C++ example demonstrates how to visualize VRS files with Rerun.
+This C++ example demonstrates how to visualize VRS files with Dalaran.
 VRS is a file format optimized to record & playback streams of sensor data, such as images, audio samples, and any other discrete sensors (IMU, temperature, etc), stored in per-device streams of time-stamped records.
 
-# Logging and visualizing with Rerun
+# Logging and visualizing with Dalaran
 
-The visualizations in this example were created with the following Rerun code:
+The visualizations in this example were created with the following Dalaran code:
 
 ## 3D arrows
 ```cpp
 void IMUPlayer::log_accelerometer(const std::array<float, 3>& accelMSec2) {
-    _rec->log(_entity_path + "/accelerometer", rerun::Arrows3D::from_vectors({accelMSec2}));
+    _rec->log(_entity_path + "/accelerometer", dalaran::Arrows3D::from_vectors({accelMSec2}));
     // … existing code for scalars …
 }
 ```
@@ -41,19 +41,19 @@ void IMUPlayer::log_accelerometer(const std::array<float, 3>& accelMSec2) {
 ```cpp
 void IMUPlayer::log_accelerometer(const std::array<float, 3>& accelMSec2) {
     // … existing code for Arrows3D …
-    _rec->log(_entity_path + "/accelerometer", rerun::Scalars(accelMSec2));
+    _rec->log(_entity_path + "/accelerometer", dalaran::Scalars(accelMSec2));
 }
 ```
 
 ```cpp
 void IMUPlayer::log_gyroscope(const std::array<float, 3>& gyroRadSec) {
-    _rec->log(_entity_path + "/gyroscope", rerun::Scalars(gyroRadSec));
+    _rec->log(_entity_path + "/gyroscope", dalaran::Scalars(gyroRadSec));
 }
 ```
 
 ```cpp
 void IMUPlayer::log_magnetometer(const std::array<float, 3>& magTesla) {
-    _rec->log(_entity_path + "/magnetometer", rerun::Scalars(magTesla));
+    _rec->log(_entity_path + "/magnetometer", dalaran::Scalars(magTesla));
 }
 ```
 
@@ -61,7 +61,7 @@ void IMUPlayer::log_magnetometer(const std::array<float, 3>& magTesla) {
 ```cpp
 _rec->log(
     _entity_path,
-    rerun::Image({
+    dalaran::Image({
     frame->getHeight(),
     frame->getWidth(),
     frame->getSpec().getChannelCountPerPixel()},
@@ -72,7 +72,7 @@ _rec->log(
 
 ## Text document
 ```cpp
-_rec->log_static(_entity_path + "/configuration", rerun::TextDocument(layout_str));
+_rec->log_static(_entity_path + "/configuration", dalaran::TextDocument(layout_str));
 ```
 
 # Run the code

@@ -1,18 +1,18 @@
 # Custom collection adapter
 
 Especially when dealing with large amounts of data, it can be both slow and inconvenient to convert
-your data into the components & datatypes provided by the Rerun SDK in order to log it.
+your data into the components & datatypes provided by the Dalaran SDK in order to log it.
 
-This example demonstrates how to solve this using [`rerun::ComponentAdapter`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1CollectionAdapter.html) for your own types:
-Whenever you have data that is continuous in memory and binary compatible with an existing Rerun component,
-you can adapt it to map to the respective Rerun component.
-For non-temporary objects that live until [`rerun::RecordingStream::log`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#af7a14a7e2c3029ef1679ff9fd680129d) returns,
+This example demonstrates how to solve this using [`dalaran::ComponentAdapter`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1CollectionAdapter.html) for your own types:
+Whenever you have data that is continuous in memory and binary compatible with an existing Dalaran component,
+you can adapt it to map to the respective Dalaran component.
+For non-temporary objects that live until [`dalaran::RecordingStream::log`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#af7a14a7e2c3029ef1679ff9fd680129d) returns,
 it is typically safe to do so with a zero-copy "borrow".
-This means that in those cases [`rerun::Collection`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1Collection.html) will merely store a pointer and a length to your data.
+This means that in those cases [`dalaran::Collection`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1Collection.html) will merely store a pointer and a length to your data.
 
 While collection adapters are primarily used with components, they are also useful for all other usages of
-Rerun's collection type. E.g. the backing buffer of [`rerun::TensorData`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1TensorBuffer.html)
-is also a [`rerun::Collection`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1Collection.html)
+Dalaran's collection type. E.g. the backing buffer of [`dalaran::TensorData`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1TensorBuffer.html)
+is also a [`dalaran::Collection`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1Collection.html)
 allowing you to ingest large amounts of data without a copy and the convenience custom adapters can provide.
 
 

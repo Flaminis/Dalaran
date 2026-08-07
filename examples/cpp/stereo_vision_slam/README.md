@@ -17,24 +17,24 @@ Visualizes stereo vision SLAM on the [KITTI dataset](https://www.cvlibs.net/data
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/stereovision_slam_full/675db4870c12da348552ac9bcdf4c60228d77322/1200w.png">
 </picture>
 
-# Used Rerun types
+# Used Dalaran types
 
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`LineStrips3D`](https://rerun.io/docs/reference/types/archetypes/line_strips3d), [`Scalars`](https://rerun.io/docs/reference/types/archetypes/scalars), [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d), [`Pinhole`](https://rerun.io/docs/reference/types/archetypes/pinhole), [`Points3D`](https://rerun.io/docs/reference/types/archetypes/points3d), [`TextLog`](https://rerun.io/docs/reference/types/archetypes/text_log)
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`LineStrips3D`](https://dalaran.dev/docs/reference/types/archetypes/line_strips3d), [`Scalars`](https://dalaran.dev/docs/reference/types/archetypes/scalars), [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d), [`Pinhole`](https://dalaran.dev/docs/reference/types/archetypes/pinhole), [`Points3D`](https://dalaran.dev/docs/reference/types/archetypes/points3d), [`TextLog`](https://dalaran.dev/docs/reference/types/archetypes/text_log)
 
 
 # Background
 
 This example shows [farhad-dalirani's stereo visual SLAM implementation](https://github.com/farhad-dalirani/StereoVision-SLAM). It's input is the video footage from a stereo camera and it produces the trajectory of the vehicle and a point cloud of the surrounding environment.
 
-# Logging and visualizing with Rerun
+# Logging and visualizing with Dalaran
 
-To easily use Opencv/Eigen types and avoid copying images/points when logging to Rerun it uses [`CollectionAdapter`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1CollectionAdapter.html) with the following code:
+To easily use Opencv/Eigen types and avoid copying images/points when logging to Dalaran it uses [`CollectionAdapter`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1CollectionAdapter.html) with the following code:
 ```cpp
 
 template <>
-struct rerun::CollectionAdapter<uint8_t, cv::Mat>
+struct dalaran::CollectionAdapter<uint8_t, cv::Mat>
 {
-    /* Adapters to borrow an OpenCV image into Rerun
+    /* Adapters to borrow an OpenCV image into Dalaran
      * images without copying */
 
     Collection<uint8_t> operator()(const cv::Mat& img)
@@ -59,55 +59,55 @@ struct rerun::CollectionAdapter<uint8_t, cv::Mat>
 
 
 template <>
-struct rerun::CollectionAdapter<rerun::Position3D, std::vector<Eigen::Vector3f>>
+struct dalaran::CollectionAdapter<dalaran::Position3D, std::vector<Eigen::Vector3f>>
 {
-    /* Adapters to log eigen vectors as rerun positions*/
+    /* Adapters to log eigen vectors as dalaran positions*/
 
-    Collection<rerun::Position3D> operator()(const std::vector<Eigen::Vector3f>& container)
+    Collection<dalaran::Position3D> operator()(const std::vector<Eigen::Vector3f>& container)
     {
         // Borrow for non-temporary.
-        return Collection<rerun::Position3D>::borrow(container.data(), container.size());
+        return Collection<dalaran::Position3D>::borrow(container.data(), container.size());
     }
 
-    Collection<rerun::Position3D> operator()(std::vector<Eigen::Vector3f>&& container)
+    Collection<dalaran::Position3D> operator()(std::vector<Eigen::Vector3f>&& container)
     {
         /* Do a full copy for temporaries (otherwise the data
          * might be deleted when the temporary is destroyed). */
-        std::vector<rerun::Position3D> positions(container.size());
+        std::vector<dalaran::Position3D> positions(container.size());
         memcpy(positions.data(), container.data(), container.size() * sizeof(Eigen::Vector3f));
-        return Collection<rerun::Position3D>::take_ownership(std::move(positions));
+        return Collection<dalaran::Position3D>::take_ownership(std::move(positions));
     }
 };
 
 
 template <>
-struct rerun::CollectionAdapter<rerun::Position3D, Eigen::Matrix3Xf>
+struct dalaran::CollectionAdapter<dalaran::Position3D, Eigen::Matrix3Xf>
 {
-    /* Adapters so we can log an eigen matrix as rerun positions */
+    /* Adapters so we can log an eigen matrix as dalaran positions */
 
     // Sanity check that this is binary compatible.
     static_assert(
-        sizeof(rerun::Position3D) == sizeof(Eigen::Matrix3Xf::Scalar) * Eigen::Matrix3Xf::RowsAtCompileTime
+        sizeof(dalaran::Position3D) == sizeof(Eigen::Matrix3Xf::Scalar) * Eigen::Matrix3Xf::RowsAtCompileTime
     );
 
-    Collection<rerun::Position3D> operator()(const Eigen::Matrix3Xf& matrix)
+    Collection<dalaran::Position3D> operator()(const Eigen::Matrix3Xf& matrix)
     {
         // Borrow for non-temporary.
-        static_assert(alignof(rerun::Position3D) <= alignof(Eigen::Matrix3Xf::Scalar));
-        return Collection<rerun::Position3D>::borrow(
-            // Cast to void because otherwise Rerun will try to do above sanity checks with the wrong type (scalar).
+        static_assert(alignof(dalaran::Position3D) <= alignof(Eigen::Matrix3Xf::Scalar));
+        return Collection<dalaran::Position3D>::borrow(
+            // Cast to void because otherwise Dalaran will try to do above sanity checks with the wrong type (scalar).
             reinterpret_cast<const void*>(matrix.data()),
             matrix.cols()
         );
     }
 
-    Collection<rerun::Position3D> operator()(Eigen::Matrix3Xf&& matrix)
+    Collection<dalaran::Position3D> operator()(Eigen::Matrix3Xf&& matrix)
     {
         /* Do a full copy for temporaries (otherwise the
          * data might be deleted when the temporary is destroyed). */
-        std::vector<rerun::Position3D> positions(matrix.cols());
-        memcpy(positions.data(), matrix.data(), matrix.size() * sizeof(rerun::Position3D));
-        return Collection<rerun::Position3D>::take_ownership(std::move(positions));
+        std::vector<dalaran::Position3D> positions(matrix.cols());
+        memcpy(positions.data(), matrix.data(), matrix.size() * sizeof(dalaran::Position3D));
+        return Collection<dalaran::Position3D>::take_ownership(std::move(positions));
     }
 };
 
@@ -117,8 +117,8 @@ struct rerun::CollectionAdapter<rerun::Position3D, Eigen::Matrix3Xf>
 ```cpp
 // Draw stereo left image
 rec.log(entity_name,
-        rerun::Image(tensor_shape(kf_sort[0].second->left_img_),
-                    rerun::TensorBuffer::u8(kf_sort[0].second->left_img_)));
+        dalaran::Image(tensor_shape(kf_sort[0].second->left_img_),
+                    dalaran::TensorBuffer::u8(kf_sort[0].second->left_img_)));
 ```
 
 ## Pinhole camera
@@ -127,13 +127,13 @@ The camera frames shown in the view is generated by the following code:
 
 ```cpp
 rec.log(entity_name,
-    rerun::Transform3D(
-        rerun::Vec3D(camera_position.data()),
-        rerun::Mat3x3(camera_orientation.data()), true)
+    dalaran::Transform3D(
+        dalaran::Vec3D(camera_position.data()),
+        dalaran::Mat3x3(camera_orientation.data()), true)
 );
 // …
 rec.log(entity_name,
-        rerun::Pinhole::from_focal_length_and_resolution({fx, fy}, {img_num_cols, img_num_rows}));
+        dalaran::Pinhole::from_focal_length_and_resolution({fx, fy}, {img_num_cols, img_num_rows}));
 ```
 
 ## Time series
@@ -142,40 +142,40 @@ void Viewer::Plot(std::string plot_name, double value, unsigned long maxkeyframe
 {
     // …
     rec.set_time_sequence("max_keyframe_id", maxkeyframe_id);
-    rec.log(plot_name, rerun::Scalars(value));
+    rec.log(plot_name, dalaran::Scalars(value));
 }
 ```
 
 ## Trajectory
 ```cpp
 rec.log("world/path",
-    rerun::Transform3D(
-        rerun::Vec3D(camera_position.data()),
-        rerun::Mat3x3(camera_orientation.data()), true));
+    dalaran::Transform3D(
+        dalaran::Vec3D(camera_position.data()),
+        dalaran::Mat3x3(camera_orientation.data()), true));
 
-std::vector<rerun::datatypes::Vec3D> path;
+std::vector<dalaran::datatypes::Vec3D> path;
 // …
-rec.log("world/path", rerun::LineStrips3D(rerun::LineStrip3D(path)));
+rec.log("world/path", dalaran::LineStrips3D(dalaran::LineStrip3D(path)));
 ```
 
 ## Point cloud
 ```cpp
 rec.log("world/landmarks",
-    rerun::Transform3D(
-        rerun::Vec3D(camera_position.data()),
-        rerun::Mat3x3(camera_orientation.data()), true));
+    dalaran::Transform3D(
+        dalaran::Vec3D(camera_position.data()),
+        dalaran::Mat3x3(camera_orientation.data()), true));
 
 std::vector<Eigen::Vector3f> points3d_vector;
 // …
-rec.log("world/landmarks", rerun::Points3D(points3d_vector));
+rec.log("world/landmarks", dalaran::Points3D(points3d_vector));
 ```
 
 ## Text log
 
 ```cpp
-rec.log("world/log", rerun::TextLog(msg).with_color(log_color.at(log_type)));
+rec.log("world/log", dalaran::TextLog(msg).with_color(log_color.at(log_type)));
 // …
-rec.log("world/log", rerun::TextLog("Finished"));
+rec.log("world/log", dalaran::TextLog("Finished"));
 ```
 
 # Run the code
