@@ -4,7 +4,7 @@
 // ----------------------------------------------------------------------------
 //
 // All Rerun functions and types are thread-safe,
-// which means you can share a `rr_recording_stream` across threads.
+// which means you can share a `dl_recording_stream` across threads.
 // ----------------------------------------------------------------------------
 
 #ifndef RERUN_H
@@ -24,7 +24,7 @@ extern "C" {
 // Types:
 
 /// A Utf8 string with a length in bytes.
-typedef struct rr_string {
+typedef struct dl_string {
     /// Pointer to a UTF8 string.
     ///
     /// Does *not* need to be null-terminated.
@@ -33,10 +33,10 @@ typedef struct rr_string {
 
     /// The length of the string in bytes (*excluding* null-terminator, if any).
     uint32_t length_in_bytes;
-} rr_string;
+} dl_string;
 
 /// A byte slice.
-typedef struct rr_bytes {
+typedef struct dl_bytes {
     /// Pointer to the bytes.
     ///
     /// Rerun is guaranteed to not read beyond bytes[length-1].
@@ -44,48 +44,48 @@ typedef struct rr_bytes {
 
     /// The length of the data in bytes.
     uint32_t length;
-} rr_bytes;
+} dl_bytes;
 
 #ifndef __cplusplus
 
 #include <string.h> // For strlen
 
-/// Create a `rr_string` from a null-terminated string.
+/// Create a `dl_string` from a null-terminated string.
 ///
 /// Calling with NULL is safe.
-rr_string rr_make_string(const char* utf8) {
+dl_string dl_make_string(const char* utf8) {
     uint32_t length_in_bytes = 0;
     if (utf8 != NULL) {
         length_in_bytes = (uint32_t)strlen(utf8);
     }
-    return (rr_string){.utf8 = utf8, .length_in_bytes = length_in_bytes};
+    return (dl_string){.utf8 = utf8, .length_in_bytes = length_in_bytes};
 }
 
 #endif
 
 /// Type of store log messages are sent to.
-typedef uint32_t rr_store_kind;
+typedef uint32_t dl_store_kind;
 
 enum {
-    RR_STORE_KIND_RECORDING = 1,
-    RR_STORE_KIND_BLUEPRINT = 2,
+    DL_STORE_KIND_RECORDING = 1,
+    DL_STORE_KIND_BLUEPRINT = 2,
 };
 
-/// Special value for `rr_recording_stream` methods to indicate the most appropriate
+/// Special value for `dl_recording_stream` methods to indicate the most appropriate
 /// globally available recording stream for recordings.
 /// (i.e. thread-local first, then global scope)
-#define RR_REC_STREAM_CURRENT_RECORDING 0xFFFFFFFF
+#define DL_REC_STREAM_CURRENT_RECORDING 0xFFFFFFFF
 
-/// Special value for `rr_recording_stream` methods to indicate the most appropriate
+/// Special value for `dl_recording_stream` methods to indicate the most appropriate
 /// globally available recording stream for blueprints.
 /// (i.e. thread-local first, then global scope)
-#define RR_REC_STREAM_CURRENT_BLUEPRINT 0xFFFFFFFE
+#define DL_REC_STREAM_CURRENT_BLUEPRINT 0xFFFFFFFE
 
 /// Handle to a component type that can be registered.
-typedef uint32_t rr_component_type_handle;
+typedef uint32_t dl_component_type_handle;
 
-/// Special value for `rr_component_type_handle` to indicate an invalid handle.
-#define RR_COMPONENT_TYPE_HANDLE_INVALID 0xFFFFFFFF
+/// Special value for `dl_component_type_handle` to indicate an invalid handle.
+#define DL_COMPONENT_TYPE_HANDLE_INVALID 0xFFFFFFFF
 
 /// A unique handle for a recording stream.
 /// A recording stream handles everything related to logging data into Rerun.
@@ -97,7 +97,7 @@ typedef uint32_t rr_component_type_handle;
 ///   thread originally sent them in, from its point of view.
 /// - There isn't any well defined global order across multiple threads.
 ///
-/// This means that e.g. flushing the pipeline (`rr_recording_stream_flush_blocking`) guarantees
+/// This means that e.g. flushing the pipeline (`dl_recording_stream_flush_blocking`) guarantees
 /// that all previous data sent by the calling thread has been recorded; no more, no less.
 /// (e.g. it does not mean that all file caches are flushed)
 ///
@@ -109,14 +109,14 @@ typedef uint32_t rr_component_type_handle;
 ///
 /// TODO(andreas): The only way of having two instances of a `RecordingStream` is currently to
 /// set it as a the global.
-typedef uint32_t rr_recording_stream;
+typedef uint32_t dl_recording_stream;
 
 /// Options to control the behavior of `spawn`.
 ///
 /// Refer to the field-level documentation for more information about each individual options.
 ///
 /// The defaults are ok for most use cases.
-typedef struct rr_spawn_options {
+typedef struct dl_spawn_options {
     /// The port to listen on.
     ///
     /// Defaults to `9876` if set to `0`.
@@ -127,7 +127,7 @@ typedef struct rr_spawn_options {
     /// Example: `16GB` or `50%` (of system total).
     ///
     /// Defaults to `75%` if null.
-    rr_string memory_limit;
+    dl_string memory_limit;
 
     /// An upper limit on how much memory the gRPC server running
     /// in the same process as the Rerun Viewer should use.
@@ -135,7 +135,7 @@ typedef struct rr_spawn_options {
     /// Example: `16GB` or `50%` (of system total).
     ///
     /// Defaults to `0B` if null.
-    rr_string server_memory_limit;
+    dl_string server_memory_limit;
 
     /// Hide the normal Rerun welcome screen.
     bool hide_welcome_screen;
@@ -148,14 +148,14 @@ typedef struct rr_spawn_options {
     /// You can omit the `.exe` suffix on Windows.
     ///
     /// Defaults to `rerun` if null.
-    rr_string executable_name;
+    dl_string executable_name;
 
     /// Enforce a specific executable to use instead of searching through PATH
     /// for [`Self::executable_name`].
     ///
     /// Unspecified by default.
-    rr_string executable_path;
-} rr_spawn_options;
+    dl_string executable_path;
+} dl_spawn_options;
 
 /// Recommended settings for the [`Importer`].
 ///
@@ -164,189 +164,189 @@ typedef struct rr_spawn_options {
 /// Refer to the field-level documentation for more information about each individual options.
 //
 // TODO(#3841): expose timepoint settings once we implement stateless APIs
-typedef struct rr_importer_settings {
+typedef struct dl_importer_settings {
     /// The recommended `RecordingId` to log the data to.
     ///
     /// Unspecified by default.
-    rr_string recording_id;
+    dl_string recording_id;
 
     /// What should the logged entity paths be prefixed with?
     ///
     /// Unspecified by default.
-    rr_string entity_path_prefix;
+    dl_string entity_path_prefix;
 
     /// Should the logged data be static?
     ///
     /// Defaults to `false` if not set.
     bool static_;
-} rr_importer_settings;
+} dl_importer_settings;
 
-/* Deprecated since 0.32.0: use rr_importer_settings instead. */
-typedef rr_importer_settings rr_data_loader_settings;
+/* Deprecated since 0.32.0: use dl_importer_settings instead. */
+typedef dl_importer_settings dl_data_loader_settings;
 
-typedef struct rr_store_info {
+typedef struct dl_store_info {
     /// The user-chosen name of the application doing the logging.
-    rr_string application_id;
+    dl_string application_id;
 
     /// The user-chosen name of the recording being logged to.
     ///
     /// Defaults to a random ID if unspecified.
-    rr_string recording_id;
+    dl_string recording_id;
 
-    /// `RR_STORE_KIND_RECORDING` or `RR_STORE_KIND_BLUEPRINT`
-    rr_store_kind store_kind;
-} rr_store_info;
+    /// `DL_STORE_KIND_RECORDING` or `DL_STORE_KIND_BLUEPRINT`
+    dl_store_kind store_kind;
+} dl_store_info;
 
 /// Definition of a component descriptor that can be registered.
-typedef struct rr_component_descriptor {
+typedef struct dl_component_descriptor {
     /// Optional name of the `Archetype` associated with this data.
     ///
     /// Null if the data wasn't logged through an archetype.
     ///
     /// Example: `rerun.archetypes.Points3D`.
-    rr_string archetype;
+    dl_string archetype;
 
     /// Optional name of the field within `Archetype` associated with this data.
     ///
     /// Null if the data wasn't logged through an archetype.
     ///
     /// Example: `positions`.
-    rr_string component;
+    dl_string component;
 
     /// Semantic type associated with this data.
     ///
     /// This is fully implied by the `component`, but included for semantic convenience.
     ///
     /// Example: `rerun.components.Position3D`.
-    rr_string component_type;
-} rr_component_descriptor;
+    dl_string component_type;
+} dl_component_descriptor;
 
 /// Definition of a component type that can be registered.
-typedef struct rr_component_type {
+typedef struct dl_component_type {
     /// The complete descriptor for this component.
-    rr_component_descriptor descriptor;
+    dl_component_descriptor descriptor;
 
     /// The arrow schema used for arrow arrays of instances of this component.
     struct ArrowSchema schema;
-} rr_component_type;
+} dl_component_type;
 
 /// Arrow-encoded data of a single batch components for a single entity.
-typedef struct rr_component_batch {
+typedef struct dl_component_batch {
     /// The component type to use for this batch.
-    rr_component_type_handle component_type;
+    dl_component_type_handle component_type;
 
     /// A batch of instances of this component serialized into an arrow array.
     struct ArrowArray array;
-} rr_component_batch;
+} dl_component_batch;
 
 /// Arrow-encoded log data for a single entity.
 /// May contain many components.
-typedef struct rr_data_row {
+typedef struct dl_data_row {
     /// Where to log to, e.g. `world/camera`.
-    rr_string entity_path;
+    dl_string entity_path;
 
     /// Number of different component batches.
     uint32_t num_component_batches;
 
     /// One for each component.
-    rr_component_batch* component_batches;
-} rr_data_row;
+    dl_component_batch* component_batches;
+} dl_data_row;
 
 /// Arrow-encoded data of a column of components.
 ///
-/// This is essentially an array of `rr_component_batch` with all batches
+/// This is essentially an array of `dl_component_batch` with all batches
 /// continuously in a single array.
-typedef struct rr_component_column {
+typedef struct dl_component_column {
     /// The component type used for the components inside the list array.
     ///
     /// This is *not* the type of the arrow list array itself, but of the underlying batch.
-    rr_component_type_handle component_type;
+    dl_component_type_handle component_type;
 
     /// A ListArray with the datatype `List(component_type)`.
     struct ArrowArray array;
-} rr_component_column;
+} dl_component_column;
 
 /// Describes whether an array is known to be sorted or not.
-typedef uint32_t rr_sorting_status;
+typedef uint32_t dl_sorting_status;
 
 enum {
     /// It's not known whether the array is sorted or not.
-    RR_SORTING_STATUS_UNKNOWN = 0,
+    DL_SORTING_STATUS_UNKNOWN = 0,
 
     /// The array is known to be sorted.
-    RR_SORTING_STATUS_SORTED = 1,
+    DL_SORTING_STATUS_SORTED = 1,
 
     /// The array is known to be unsorted.
-    RR_SORTING_STATUS_UNSORTED = 2,
+    DL_SORTING_STATUS_UNSORTED = 2,
 };
 
 /// Describes the type of a timeline or time point.
-typedef uint32_t rr_time_type;
+typedef uint32_t dl_time_type;
 
 enum {
     // 0 no longer in use
 
     /// Used e.g. for frames in a film.
-    RR_TIME_TYPE_SEQUENCE = 1,
+    DL_TIME_TYPE_SEQUENCE = 1,
 
     /// Nanoseconds.
-    RR_TIME_TYPE_DURATION = 2,
+    DL_TIME_TYPE_DURATION = 2,
 
     /// Nanoseconds since Unix epoch (1970-01-01 00:00:00 UTC).
-    RR_TIME_TYPE_TIMESTAMP = 3,
+    DL_TIME_TYPE_TIMESTAMP = 3,
 };
 
 /// Definition of a timeline.
-typedef struct rr_timeline {
+typedef struct dl_timeline {
     /// The name of the timeline.
-    rr_string name;
+    dl_string name;
 
     /// The type of the timeline.
-    rr_time_type type;
-} rr_timeline;
+    dl_time_type type;
+} dl_timeline;
 
 /// A column of timestamps for a given timeline.
-typedef struct rr_time_column {
+typedef struct dl_time_column {
     /// The timeline this column belongs to.
-    rr_timeline timeline;
+    dl_timeline timeline;
 
     /// Time points as a primitive array of i64.
     struct ArrowArray array;
 
     /// The sorting order of the `times` array.
-    rr_sorting_status sorting_status;
-} rr_time_column;
+    dl_sorting_status sorting_status;
+} dl_time_column;
 
 /// Log sink which streams messages to an existing Rerun gRPC server.
 ///
 /// This is a gRPC client: it connects to a server but does not host one.
-/// Use `rr_grpc_server_sink` to host a server that SDKs and Viewers can connect to.
+/// Use `dl_grpc_server_sink` to host a server that SDKs and Viewers can connect to.
 ///
-/// The behavior of this sink is the same as the one set by `rr_recording_stream_connect_grpc`.
-typedef struct rr_grpc_sink {
+/// The behavior of this sink is the same as the one set by `dl_recording_stream_connect_grpc`.
+typedef struct dl_grpc_sink {
     /// A Rerun gRPC URL.
     ///
     /// The scheme must be one of `rerun://`, `rerun+http://`, or `rerun+https://`,
     /// and the pathname must be `/proxy`.
     ///
     /// The default is `rerun+http://127.0.0.1:9876/proxy`.
-    rr_string url;
-} rr_grpc_sink;
+    dl_string url;
+} dl_grpc_sink;
 
 /// Log sink which writes messages to a file.
-typedef struct rr_file_sink {
+typedef struct dl_file_sink {
     /// Path to the output file.
-    rr_string path;
-} rr_file_sink;
+    dl_string path;
+} dl_file_sink;
 
 /// Log sink which hosts a Rerun gRPC server.
 ///
 /// This is a gRPC server: SDKs and Viewers connect to it.
-/// Use `rr_grpc_sink` to connect as a client to an existing server.
+/// Use `dl_grpc_sink` to connect as a client to an existing server.
 /// Replacing the recording's sinks or freeing the recording shuts down the server.
-typedef struct rr_grpc_server_sink {
+typedef struct dl_grpc_server_sink {
     /// IP address on which to listen, such as `0.0.0.0` to listen on all interfaces.
-    rr_string bind_ip;
+    dl_string bind_ip;
 
     /// TCP port on which to listen.
     uint16_t port;
@@ -355,7 +355,7 @@ typedef struct rr_grpc_server_sink {
     ///
     /// Once this limit is reached, the earliest temporal data is dropped.
     /// Static data is never dropped.
-    rr_string server_memory_limit;
+    dl_string server_memory_limit;
 
     /// Whether each new client should receive the newest retained messages first.
     bool newest_first;
@@ -363,96 +363,96 @@ typedef struct rr_grpc_server_sink {
     /// Optional origin patterns allowed to make cross-origin requests to the server.
     ///
     /// The array and its strings only need to remain valid for the
-    /// `rr_recording_stream_set_sinks` call.
+    /// `dl_recording_stream_set_sinks` call.
     /// Set this to `NULL` when `num_cors_allow_origins` is zero.
-    const rr_string* cors_allow_origins;
+    const dl_string* cors_allow_origins;
 
     /// Number of entries in `cors_allow_origins`.
     uint32_t num_cors_allow_origins;
-} rr_grpc_server_sink;
+} dl_grpc_server_sink;
 
 enum {
-    RR_LOG_SINK_KIND_GRPC = 0,
-    RR_LOG_SINK_KIND_FILE = 1,
-    RR_LOG_SINK_KIND_GRPC_SERVER = 2,
+    DL_LOG_SINK_KIND_GRPC = 0,
+    DL_LOG_SINK_KIND_FILE = 1,
+    DL_LOG_SINK_KIND_GRPC_SERVER = 2,
 };
 
-/// Used to tag the kind of `rr_log_sink`.
-typedef uint8_t rr_log_sink_kind;
+/// Used to tag the kind of `dl_log_sink`.
+typedef uint8_t dl_log_sink_kind;
 
 /// A sink for log messages.
 ///
 /// See specific log sink types for more information:
-/// * `rr_grpc_sink`
-/// * `rr_file_sink`
-/// * `rr_grpc_server_sink`
-typedef struct rr_log_sink {
-    rr_log_sink_kind kind;
+/// * `dl_grpc_sink`
+/// * `dl_file_sink`
+/// * `dl_grpc_server_sink`
+typedef struct dl_log_sink {
+    dl_log_sink_kind kind;
 
     union {
-        rr_grpc_sink grpc;
-        rr_file_sink file;
-        rr_grpc_server_sink grpc_server;
+        dl_grpc_sink grpc;
+        dl_file_sink file;
+        dl_grpc_server_sink grpc_server;
     };
-} rr_log_sink;
+} dl_log_sink;
 
-/// Error codes returned by the Rerun C SDK as part of `rr_error`.
+/// Error codes returned by the Rerun C SDK as part of `dl_error`.
 ///
 /// Category codes are used to group errors together, but are never returned directly.
-typedef uint32_t rr_error_code;
+typedef uint32_t dl_error_code;
 
 // ⚠️ Remember to also update `enum CErrorCode` AND `enum class ErrorCode` !
 enum {
-    RR_ERROR_CODE_OK = 0,
-    RR_ERROR_CODE_OUT_OF_MEMORY,
-    RR_ERROR_CODE_NOT_IMPLEMENTED,
-    RR_ERROR_CODE_SDK_VERSION_MISMATCH,
+    DL_ERROR_CODE_OK = 0,
+    DL_ERROR_CODE_OUT_OF_MEMORY,
+    DL_ERROR_CODE_NOT_IMPLEMENTED,
+    DL_ERROR_CODE_SDK_VERSION_MISMATCH,
 
     // Invalid argument errors.
-    _RR_ERROR_CODE_CATEGORY_ARGUMENT = 0x00000010,
-    RR_ERROR_CODE_UNEXPECTED_NULL_ARGUMENT,
-    RR_ERROR_CODE_INVALID_STRING_ARGUMENT,
-    RR_ERROR_CODE_INVALID_ENUM_VALUE,
-    RR_ERROR_CODE_INVALID_RECORDING_STREAM_HANDLE,
-    RR_ERROR_CODE_INVALID_SOCKET_ADDRESS,
-    RR_ERROR_CODE_INVALID_COMPONENT_TYPE_HANDLE,
-    RR_ERROR_CODE_INVALID_TIME_ARGUMENT,
-    RR_ERROR_CODE_INVALID_TENSOR_DIMENSION,
-    RR_ERROR_CODE_INVALID_COMPONENT,
-    RR_ERROR_CODE_INVALID_SERVER_URL = 0x00000001a,
-    RR_ERROR_CODE_FILE_READ,
-    RR_ERROR_CODE_INVALID_MEMORY_LIMIT,
+    _DL_ERROR_CODE_CATEGORY_ARGUMENT = 0x00000010,
+    DL_ERROR_CODE_UNEXPECTED_NULL_ARGUMENT,
+    DL_ERROR_CODE_INVALID_STRING_ARGUMENT,
+    DL_ERROR_CODE_INVALID_ENUM_VALUE,
+    DL_ERROR_CODE_INVALID_RECORDING_STREAM_HANDLE,
+    DL_ERROR_CODE_INVALID_SOCKET_ADDRESS,
+    DL_ERROR_CODE_INVALID_COMPONENT_TYPE_HANDLE,
+    DL_ERROR_CODE_INVALID_TIME_ARGUMENT,
+    DL_ERROR_CODE_INVALID_TENSOR_DIMENSION,
+    DL_ERROR_CODE_INVALID_COMPONENT,
+    DL_ERROR_CODE_INVALID_SERVER_URL = 0x00000001a,
+    DL_ERROR_CODE_FILE_READ,
+    DL_ERROR_CODE_INVALID_MEMORY_LIMIT,
 
     // Recording stream errors
-    _RR_ERROR_CODE_CATEGORY_RECORDING_STREAM = 0x00000100,
-    RR_ERROR_CODE_RECORDING_STREAM_RUNTIME_FAILURE,
-    RR_ERROR_CODE_RECORDING_STREAM_CREATION_FAILURE,
-    RR_ERROR_CODE_RECORDING_STREAM_SAVE_FAILURE,
-    RR_ERROR_CODE_RECORDING_STREAM_STDOUT_FAILURE,
-    RR_ERROR_CODE_RECORDING_STREAM_SPAWN_FAILURE,
-    RR_ERROR_CODE_RECORDING_STREAM_CHUNK_VALIDATION_FAILURE,
-    RR_ERROR_CODE_RECORDING_STREAM_SERVE_GRPC_FAILURE,
-    RR_ERROR_CODE_RECORDING_STREAM_FLUSH_TIMEOUT,
-    RR_ERROR_CODE_RECORDING_STREAM_FLUSH_FAILURE,
+    _DL_ERROR_CODE_CATEGORY_RECORDING_STREAM = 0x00000100,
+    DL_ERROR_CODE_RECORDING_STREAM_RUNTIME_FAILURE,
+    DL_ERROR_CODE_RECORDING_STREAM_CREATION_FAILURE,
+    DL_ERROR_CODE_RECORDING_STREAM_SAVE_FAILURE,
+    DL_ERROR_CODE_RECORDING_STREAM_STDOUT_FAILURE,
+    DL_ERROR_CODE_RECORDING_STREAM_SPAWN_FAILURE,
+    DL_ERROR_CODE_RECORDING_STREAM_CHUNK_VALIDATION_FAILURE,
+    DL_ERROR_CODE_RECORDING_STREAM_SERVE_GRPC_FAILURE,
+    DL_ERROR_CODE_RECORDING_STREAM_FLUSH_TIMEOUT,
+    DL_ERROR_CODE_RECORDING_STREAM_FLUSH_FAILURE,
 
     // Arrow data processing errors.
-    _RR_ERROR_CODE_CATEGORY_ARROW = 0x00001000,
-    RR_ERROR_CODE_ARROW_FFI_SCHEMA_IMPORT_ERROR,
-    RR_ERROR_CODE_ARROW_FFI_ARRAY_IMPORT_ERROR,
+    _DL_ERROR_CODE_CATEGORY_ARROW = 0x00001000,
+    DL_ERROR_CODE_ARROW_FFI_SCHEMA_IMPORT_ERROR,
+    DL_ERROR_CODE_ARROW_FFI_ARRAY_IMPORT_ERROR,
 
     // Utility errors.
-    _RR_ERROR_CODE_CATEGORY_UTILITIES = 0x00010000,
-    RR_ERROR_CODE_VIDEO_LOAD_ERROR,
+    _DL_ERROR_CODE_CATEGORY_UTILITIES = 0x00010000,
+    DL_ERROR_CODE_VIDEO_LOAD_ERROR,
 
     // Errors relating to file IO.
-    _RR_ERROR_CODE_CATEGORY_FILE_IO = 0x00100000,
-    RR_ERROR_CODE_FILE_OPEN_FAILURE,
+    _DL_ERROR_CODE_CATEGORY_FILE_IO = 0x00100000,
+    DL_ERROR_CODE_FILE_OPEN_FAILURE,
 
     // Errors directly translated from arrow::StatusCode.
-    _RR_ERROR_CODE_CATEGORY_ARROW_CPP_STATUS = 0x10000000,
+    _DL_ERROR_CODE_CATEGORY_ARROW_CPP_STATUS = 0x10000000,
 
     // Generic errors.
-    RR_ERROR_CODE_UNKNOWN,
+    DL_ERROR_CODE_UNKNOWN,
 };
 
 /// Error outcome object (success or error) that may be filled for fallible operations.
@@ -460,15 +460,15 @@ enum {
 /// Passing this error struct is always optional, and you can pass `NULL` if you don't care about
 /// the error in which case failure will be silent.
 /// If no error occurs, the error struct will be left untouched.
-typedef struct rr_error {
+typedef struct dl_error {
     /// Error code indicating the type of error.
-    rr_error_code code;
+    dl_error_code code;
 
     /// Human readable description of the error in null-terminated UTF8.
     //
     // NOTE: You must update `CError::MAX_MESSAGE_SIZE_BYTES` too if you modify this value.
     char description[2048];
-} rr_error;
+} dl_error;
 
 // ----------------------------------------------------------------------------
 // Functions:
@@ -477,13 +477,13 @@ typedef struct rr_error {
 ///
 /// This should match the string in `RERUN_SDK_HEADER_VERSION`.
 /// If not, the SDK's binary and the C header are out of sync.
-extern const char* rr_version_string(void);
+extern const char* dl_version_string(void);
 
 /// Converts a 32-bit `float` to the bits of an IEEE 754 16-bit half-precision float.
 ///
 /// Rounds to nearest, ties to even. Values too large to represent become infinity,
 /// and `NaN` stays `NaN`.
-extern uint16_t rr_f16_from_f32(float value);
+extern uint16_t dl_f16_from_f32(float value);
 
 /// Spawns a new Rerun Viewer process from an executable available in PATH, ready to
 /// listen for incoming gRPC connections.
@@ -491,14 +491,14 @@ extern uint16_t rr_f16_from_f32(float value);
 /// `spawn_opts` can be set to NULL to use the recommended defaults.
 ///
 /// If a Rerun Viewer is already listening on this gRPC port, this does nothing.
-extern void rr_spawn(const rr_spawn_options* spawn_opts, rr_error* error);
+extern void dl_spawn(const dl_spawn_options* spawn_opts, dl_error* error);
 
-/// Registers a new component type to be used in `rr_component_batch`.
+/// Registers a new component type to be used in `dl_component_batch`.
 ///
 /// A component with a given name can only be registered once.
 /// Takes ownership of the passed arrow schema and will release it once it is no longer needed.
-extern rr_component_type_handle rr_register_component_type(
-    rr_component_type component_type, rr_error* error
+extern dl_component_type_handle dl_register_component_type(
+    dl_component_type component_type, dl_error* error
 );
 
 /// Creates a new recording stream to log to.
@@ -506,43 +506,43 @@ extern rr_component_type_handle rr_register_component_type(
 /// You must call this at least once to enable logging.
 ///
 /// Usually you only have one recording stream, so you can call
-/// `rr_recording_stream_set_global` afterwards once to make it available globally via
-/// `RR_REC_STREAM_CURRENT_RECORDING` and `RR_REC_STREAM_CURRENT_BLUEPRINT` respectively.
+/// `dl_recording_stream_set_global` afterwards once to make it available globally via
+/// `DL_REC_STREAM_CURRENT_RECORDING` and `DL_REC_STREAM_CURRENT_BLUEPRINT` respectively.
 ///
 /// @return A handle to the recording stream, or null if an error occurred.
-extern rr_recording_stream rr_recording_stream_new(
-    const rr_store_info* store_info, bool default_enabled, rr_error* error
+extern dl_recording_stream dl_recording_stream_new(
+    const dl_store_info* store_info, bool default_enabled, dl_error* error
 );
 
 /// Free the given recording stream. The handle will be invalid after this.
 ///
 /// Flushes the stream before freeing it, but does *not* block.
 ///
-/// Does nothing for `RR_REC_STREAM_CURRENT_RECORDING` and `RR_REC_STREAM_CURRENT_BLUEPRINT`.
+/// Does nothing for `DL_REC_STREAM_CURRENT_RECORDING` and `DL_REC_STREAM_CURRENT_BLUEPRINT`.
 ///
 /// No-op for destroyed/non-existing streams.
-extern void rr_recording_stream_free(rr_recording_stream stream);
+extern void dl_recording_stream_free(dl_recording_stream stream);
 
 /// Replaces the currently active recording of the specified type in the global scope with
 /// the specified one.
-extern void rr_recording_stream_set_global(rr_recording_stream stream, rr_store_kind store_kind);
+extern void dl_recording_stream_set_global(dl_recording_stream stream, dl_store_kind store_kind);
 
 /// Replaces the currently active recording of the specified type in the thread-local scope
 /// with the specified one.
-extern void rr_recording_stream_set_thread_local(
-    rr_recording_stream stream, rr_store_kind store_kind
+extern void dl_recording_stream_set_thread_local(
+    dl_recording_stream stream, dl_store_kind store_kind
 );
 
 /// Check whether the recording stream is enabled.
-extern bool rr_recording_stream_is_enabled(rr_recording_stream stream, rr_error* error);
+extern bool dl_recording_stream_is_enabled(dl_recording_stream stream, dl_error* error);
 
 /// Stream data to multiple different sinks.
 ///
 /// Any previously active sinks will be dropped.
 ///
-/// See `rr_log_sink` for more information about what each sink does.
-extern void rr_recording_stream_set_sinks(
-    rr_recording_stream stream, rr_log_sink* sinks, uint32_t num_sinks, rr_error* error
+/// See `dl_log_sink` for more information about what each sink does.
+extern void dl_recording_stream_set_sinks(
+    dl_recording_stream stream, dl_log_sink* sinks, uint32_t num_sinks, dl_error* error
 );
 
 /// Connect to a remote Rerun Viewer on the given URL.
@@ -557,8 +557,8 @@ extern void rr_recording_stream_set_sinks(
 ///
 /// This function returns immediately and will only raise an error for argument parsing errors,
 /// not for connection errors as these happen asynchronously.
-extern void rr_recording_stream_connect_grpc(
-    rr_recording_stream stream, rr_string url, rr_error* error
+extern void dl_recording_stream_connect_grpc(
+    dl_recording_stream stream, dl_string url, dl_error* error
 );
 
 /// Swaps the underlying sink for a gRPC server sink pre-configured to listen on `rerun+http://{bind_ip}:{port}/proxy`.
@@ -574,10 +574,10 @@ extern void rr_recording_stream_connect_grpc(
 /// Patterns are matched against the full Origin header (e.g. "https://example.com:8080"),
 /// using glob-style matching where `*` matches any sequence of characters.
 /// Examples: "https://*.example.com", "https://example.com:8080", "https://example.com:*".
-extern void rr_recording_stream_serve_grpc(
-    rr_recording_stream stream, rr_string bind_ip, uint16_t port, rr_string server_memory_limit,
-    bool newest_first, const rr_string* cors_allow_origins, uint32_t num_cors_allow_origins,
-    rr_error* error
+extern void dl_recording_stream_serve_grpc(
+    dl_recording_stream stream, dl_string bind_ip, uint16_t port, dl_string server_memory_limit,
+    bool newest_first, const dl_string* cors_allow_origins, uint32_t num_cors_allow_origins,
+    dl_error* error
 );
 
 /// Spawns a new Rerun Viewer process from an executable available in PATH, then connects to it
@@ -590,16 +590,16 @@ extern void rr_recording_stream_serve_grpc(
 ///
 /// spawn_opts:
 /// Configuration of the spawned process.
-/// Refer to `rr_spawn_options` documentation for details.
+/// Refer to `dl_spawn_options` documentation for details.
 /// Passing null is valid and will result in the recommended defaults.
-extern void rr_recording_stream_spawn(
-    rr_recording_stream stream, const rr_spawn_options* spawn_opts, rr_error* error
+extern void dl_recording_stream_spawn(
+    dl_recording_stream stream, const dl_spawn_options* spawn_opts, dl_error* error
 );
 
 /// Stream all log-data to a given `.rrd` file.
 ///
 /// This function returns immediately.
-extern void rr_recording_stream_save(rr_recording_stream stream, rr_string path, rr_error* error);
+extern void dl_recording_stream_save(dl_recording_stream stream, dl_string path, dl_error* error);
 
 /// Stream all log-data to stdout.
 ///
@@ -609,14 +609,14 @@ extern void rr_recording_stream_save(rr_recording_stream stream, rr_string path,
 /// default back to `buffered` mode, in order not to break the user's terminal.
 ///
 /// This function returns immediately.
-extern void rr_recording_stream_stdout(rr_recording_stream stream, rr_error* error);
+extern void dl_recording_stream_stdout(dl_recording_stream stream, dl_error* error);
 
 /// Initiates a flush the batching pipeline and waits for it to propagate.
 ///
-/// See `rr_recording_stream` docs for ordering semantics and multithreading guarantees.
+/// See `dl_recording_stream` docs for ordering semantics and multithreading guarantees.
 /// No-op for destroyed/non-existing streams.
-extern void rr_recording_stream_flush_blocking(
-    rr_recording_stream stream, float timeout_sec, rr_error* error
+extern void dl_recording_stream_flush_blocking(
+    dl_recording_stream stream, float timeout_sec, dl_error* error
 );
 
 /// Set the current index value of the recording, for a specific timeline, for the current calling thread.
@@ -625,10 +625,10 @@ extern void rr_recording_stream_flush_blocking(
 /// to one of the time setting methods.
 ///
 /// For example:
-/// `rr_recording_stream_set_time_sequence(stream, "frame_nr", RR_TIME_TYPE_SEQUENCE, frame_nr, &err)`.
-extern void rr_recording_stream_set_time(
-    rr_recording_stream stream, rr_string timeline_name, rr_time_type time_type, int64_t value,
-    rr_error* error
+/// `dl_recording_stream_set_time_sequence(stream, "frame_nr", DL_TIME_TYPE_SEQUENCE, frame_nr, &err)`.
+extern void dl_recording_stream_set_time(
+    dl_recording_stream stream, dl_string timeline_name, dl_time_type time_type, int64_t value,
+    dl_error* error
 );
 
 /// Stops logging to the specified timeline for subsequent log calls.
@@ -636,8 +636,8 @@ extern void rr_recording_stream_set_time(
 /// The timeline is still there, but will not be updated with any new data.
 ///
 /// No-op if the timeline doesn't exist.
-void rr_recording_stream_disable_timeline(
-    rr_recording_stream stream, rr_string timeline_name, rr_error* error
+void dl_recording_stream_disable_timeline(
+    dl_recording_stream stream, dl_string timeline_name, dl_error* error
 );
 
 /// Clears out the current time of the recording, for the current calling thread.
@@ -646,7 +646,7 @@ void rr_recording_stream_disable_timeline(
 /// to one of the time setting methods.
 ///
 /// No-op for destroyed/non-existing streams.
-extern void rr_recording_stream_reset_time(rr_recording_stream stream);
+extern void dl_recording_stream_reset_time(dl_recording_stream stream);
 
 /// Enable or disable automatic injection of the `log_tick` timeline into logged data.
 ///
@@ -654,7 +654,7 @@ extern void rr_recording_stream_reset_time(rr_recording_stream stream);
 /// It is disabled by default (it can also be controlled via the `RERUN_LOG_TICK` environment variable).
 ///
 /// No-op for destroyed/non-existing streams.
-extern void rr_recording_stream_set_log_tick_enabled(rr_recording_stream stream, bool enabled);
+extern void dl_recording_stream_set_log_tick_enabled(dl_recording_stream stream, bool enabled);
 
 /// Enable or disable automatic injection of the `log_time` timeline into logged data.
 ///
@@ -662,7 +662,7 @@ extern void rr_recording_stream_set_log_tick_enabled(rr_recording_stream stream,
 /// It is enabled by default (it can also be controlled via the `RERUN_LOG_TIME` environment variable).
 ///
 /// No-op for destroyed/non-existing streams.
-extern void rr_recording_stream_set_log_time_enabled(rr_recording_stream stream, bool enabled);
+extern void dl_recording_stream_set_log_time_enabled(dl_recording_stream stream, bool enabled);
 
 /// Log the given data to the given stream.
 ///
@@ -671,9 +671,9 @@ extern void rr_recording_stream_set_log_time_enabled(rr_recording_stream stream,
 ///
 /// Takes ownership of the passed data component batches and will release underlying
 /// arrow data once it is no longer needed.
-/// Any pointers passed via `rr_string` can be safely freed after this call.
-extern void rr_recording_stream_log(
-    rr_recording_stream stream, rr_data_row data_row, bool inject_time, rr_error* error
+/// Any pointers passed via `dl_string` can be safely freed after this call.
+extern void dl_recording_stream_log(
+    dl_recording_stream stream, dl_data_row data_row, bool inject_time, dl_error* error
 );
 
 /// Logs the file at the given `path` using all `Importer`s available.
@@ -684,9 +684,9 @@ extern void rr_recording_stream_log(
 /// or all of them fail.
 ///
 /// See <https://www.rerun.io/docs/concepts/logging-and-ingestion/importers/overview> for more information.
-extern void rr_recording_stream_log_file_from_path(
-    rr_recording_stream stream, rr_string path, rr_string entity_path_prefix, bool static_,
-    rr_error* error
+extern void dl_recording_stream_log_file_from_path(
+    dl_recording_stream stream, dl_string path, dl_string entity_path_prefix, bool static_,
+    dl_error* error
 );
 
 /// Logs the given `contents` using all `Importer`s available.
@@ -697,9 +697,9 @@ extern void rr_recording_stream_log_file_from_path(
 /// or all of them fail.
 ///
 /// See <https://www.rerun.io/docs/concepts/logging-and-ingestion/importers/overview> for more information.
-extern void rr_recording_stream_log_file_from_contents(
-    rr_recording_stream stream, rr_string path, rr_bytes contents, rr_string entity_path_prefix,
-    bool static_, rr_error* error
+extern void dl_recording_stream_log_file_from_contents(
+    dl_recording_stream stream, dl_string path, dl_bytes contents, dl_string entity_path_prefix,
+    bool static_, dl_error* error
 );
 
 /// Sends the columns of components to the stream.
@@ -710,22 +710,22 @@ extern void rr_recording_stream_log_file_from_contents(
 /// arrays will act as a single logical row.
 ///
 /// Note that this API ignores any stateful time set on the log stream via the
-/// `rr_recording_stream_set_time_sequence`/`rr_recording_stream_set_time_nanos`/etc. APIs.
+/// `dl_recording_stream_set_time_sequence`/`dl_recording_stream_set_time_nanos`/etc. APIs.
 /// Furthermore, this will _not_ inject the default timelines `log_tick` and `log_time` timeline columns.
 ///
 /// The contents of `time_columns` and `component_columns` AFTER this call is undefined.
-extern void rr_recording_stream_send_columns(
-    rr_recording_stream stream, rr_string entity_path,                      //
-    rr_time_column* time_columns, uint32_t num_time_columns,                //
-    rr_component_column* component_columns, uint32_t num_component_columns, //
-    rr_error* error
+extern void dl_recording_stream_send_columns(
+    dl_recording_stream stream, dl_string entity_path,                      //
+    dl_time_column* time_columns, uint32_t num_time_columns,                //
+    dl_component_column* component_columns, uint32_t num_component_columns, //
+    dl_error* error
 );
 
 // ----------------------------------------------------------------------------
 // Other utilities
 
-/// Allocation method for `rr_video_asset_read_frame_timestamps_nanos`.
-typedef int64_t* (*rr_alloc_timestamps)(void* alloc_context, uint32_t num_timestamps);
+/// Allocation method for `dl_video_asset_read_frame_timestamps_nanos`.
+typedef int64_t* (*dl_alloc_timestamps)(void* alloc_context, uint32_t num_timestamps);
 
 /// Determines the presentation timestamps of all frames inside the video.
 ///
@@ -736,9 +736,9 @@ typedef int64_t* (*rr_alloc_timestamps)(void* alloc_context, uint32_t num_timest
 /// \param alloc_func
 /// Function used to allocate memory for the returned timestamps.
 /// Guaranteed to be called exactly once with the `alloc_context` pointer as argument.
-extern int64_t* rr_video_asset_read_frame_timestamps_nanos(
-    const uint8_t* video_bytes, uint64_t video_bytes_len, rr_string media_type, void* alloc_context,
-    rr_alloc_timestamps alloc_timestamps, rr_error* error
+extern int64_t* dl_video_asset_read_frame_timestamps_nanos(
+    const uint8_t* video_bytes, uint64_t video_bytes_len, dl_string media_type, void* alloc_context,
+    dl_alloc_timestamps alloc_timestamps, dl_error* error
 );
 
 // ----------------------------------------------------------------------------
@@ -748,15 +748,15 @@ extern int64_t* rr_video_asset_read_frame_timestamps_nanos(
 ///
 /// Escape a single part of an entity path, returning an new null-terminated string.
 ///
-/// The returned string must be freed with `_rr_free_string`.
+/// The returned string must be freed with `_dl_free_string`.
 ///
 /// Returns `nullptr` on failure (e.g. invalid UTF8, ore null bytes in the string).
-extern char* _rr_escape_entity_path_part(rr_string part);
+extern char* _dl_escape_entity_path_part(dl_string part);
 
 /// PRIVATE FUNCTION: do not use.
 ///
-/// Must only be called with the results from `_rr_escape_entity_path_part`.
-extern void _rr_free_string(char* string);
+/// Must only be called with the results from `_dl_escape_entity_path_part`.
+extern void _dl_free_string(char* string);
 
 // ----------------------------------------------------------------------------
 

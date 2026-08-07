@@ -34,7 +34,7 @@ use recording_streams::{RECORDING_STREAMS, recording_stream};
 // ----------------------------------------------------------------------------
 // Types:
 
-/// This is called `rr_string` in the C API.
+/// This is called `dl_string` in the C API.
 ///
 /// NOTE: [`CStringView`] is NOT an `Option`, and there is no difference between null and "".
 #[repr(C)]
@@ -95,7 +95,7 @@ impl CStringView {
     }
 }
 
-/// This is called `rr_bytes` in the C API.
+/// This is called `dl_bytes` in the C API.
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct CBytesView {
@@ -122,13 +122,13 @@ pub type CRecordingStream = u32;
 
 pub type CComponentTypeHandle = u32;
 
-pub const RR_REC_STREAM_CURRENT_RECORDING: CRecordingStream = 0xFFFFFFFF;
-pub const RR_REC_STREAM_CURRENT_BLUEPRINT: CRecordingStream = 0xFFFFFFFE;
-pub const RR_COMPONENT_TYPE_HANDLE_INVALID: CComponentTypeHandle = 0xFFFFFFFF;
+pub const DL_REC_STREAM_CURRENT_RECORDING: CRecordingStream = 0xFFFFFFFF;
+pub const DL_REC_STREAM_CURRENT_BLUEPRINT: CRecordingStream = 0xFFFFFFFE;
+pub const DL_COMPONENT_TYPE_HANDLE_INVALID: CComponentTypeHandle = 0xFFFFFFFF;
 
 /// C version of [`dl_sdk::SpawnOptions`].
 ///
-/// See `rr_spawn_options` in the C header.
+/// See `dl_spawn_options` in the C header.
 #[derive(Debug, Clone)]
 #[repr(C)]
 pub struct CSpawnOptions {
@@ -205,7 +205,7 @@ impl From<CStoreKind> for StoreKind {
     }
 }
 
-/// See `rr_store_info` in the C header.
+/// See `dl_store_info` in the C header.
 #[repr(C)]
 #[derive(Debug)]
 pub struct CStoreInfo {
@@ -220,7 +220,7 @@ pub struct CStoreInfo {
     pub store_kind: CStoreKind,
 }
 
-/// See `rr_component_descriptor` in the C header.
+/// See `dl_component_descriptor` in the C header.
 #[repr(C)]
 pub struct CComponentDescriptor {
     pub archetype_name: CStringView,
@@ -228,14 +228,14 @@ pub struct CComponentDescriptor {
     pub component_type: CStringView,
 }
 
-/// See `rr_component_type` in the C header.
+/// See `dl_component_type` in the C header.
 #[repr(C)]
 pub struct CComponentType {
     pub descriptor: CComponentDescriptor,
     pub schema: FFI_ArrowSchema,
 }
 
-/// See `rr_component_batch` in the C header.
+/// See `dl_component_batch` in the C header.
 #[repr(C)]
 pub struct CComponentBatch {
     pub component_type: CComponentTypeHandle,
@@ -249,7 +249,7 @@ pub struct CDataRow {
     pub batches: *mut CComponentBatch,
 }
 
-/// See `rr_component_column` in the C header.
+/// See `dl_component_column` in the C header.
 #[repr(C)]
 pub struct CComponentColumns {
     pub component_type: CComponentTypeHandle,
@@ -258,7 +258,7 @@ pub struct CComponentColumns {
     pub array: FFI_ArrowArray,
 }
 
-/// See `rr_sorting_status` in the C header.
+/// See `dl_sorting_status` in the C header.
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CSortingStatus {
@@ -277,7 +277,7 @@ impl CSortingStatus {
     }
 }
 
-/// See `rr_time_type` in the C header.
+/// See `dl_time_type` in the C header.
 /// Equivalent to Rust [`dl_sdk::time::TimeType`].
 #[repr(u32)]
 #[derive(Debug, Clone, Copy)]
@@ -292,7 +292,7 @@ pub enum CTimeType {
     Timestamp = 3,
 }
 
-/// See `rr_timeline` in the C header.
+/// See `dl_timeline` in the C header.
 /// Equivalent to Rust [`dl_sdk::Timeline`].
 #[repr(C)]
 #[derive(Debug, Clone)]
@@ -319,7 +319,7 @@ impl TryFrom<CTimeline> for Timeline {
     }
 }
 
-/// See `rr_time_column` in the C header.
+/// See `dl_time_column` in the C header.
 /// Equivalent to Rust [`dl_sdk::log::TimeColumn`].
 #[repr(C)]
 pub struct CTimeColumn {
@@ -334,9 +334,9 @@ pub struct CTimeColumn {
 
 /// Log sink which streams messages to a gRPC server.
 ///
-/// The behavior of this sink is the same as the one set by `rr_recording_stream_connect_grpc`.
+/// The behavior of this sink is the same as the one set by `dl_recording_stream_connect_grpc`.
 ///
-/// See `rr_grpc_sink` in the C header.
+/// See `dl_grpc_sink` in the C header.
 #[derive(Debug)]
 #[repr(C)]
 pub struct CGrpcSink {
@@ -348,7 +348,7 @@ pub struct CGrpcSink {
 
 /// Log sink which writes messages to a file.
 ///
-/// See `rr_file_sink` in the C header.
+/// See `dl_file_sink` in the C header.
 #[derive(Debug)]
 #[repr(C)]
 pub struct CFileSink {
@@ -375,19 +375,19 @@ pub struct CGrpcServerSink {
 /// * [`CGrpcServerSink`]
 /// * [`CFileSink`]
 ///
-/// See `rr_log_sink` and `RR_LOG_SINK_KIND` enum values in the C header.
+/// See `dl_log_sink` and `DL_LOG_SINK_KIND` enum values in the C header.
 ///
 /// Layout is defined in [the Rust reference](https://doc.rust-lang.org/stable/reference/type-layout.html#reprc-enums-with-fields).
 #[derive(Debug)]
 #[repr(C, u8)]
-#[expect(clippy::enum_variant_names)] // Variant names mirror the C `rr_log_sink` union field names.
+#[expect(clippy::enum_variant_names)] // Variant names mirror the C `dl_log_sink` union field names.
 pub enum CLogSink {
     GrpcSink { grpc: CGrpcSink } = 0,
     FileSink { file: CFileSink } = 1,
     GrpcServerSink { grpc_server: CGrpcServerSink } = 2,
 }
 
-// ⚠️ Remember to also update `uint32_t rr_error_code` AND `enum class ErrorCode` !
+// ⚠️ Remember to also update `uint32_t dl_error_code` AND `enum class ErrorCode` !
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CErrorCode {
@@ -456,7 +456,7 @@ pub struct CError {
 // functions with the same symbol names, and the linker behavior in this case i undefined.
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_version_string() -> *const c_char {
+pub extern "C" fn dl_version_string() -> *const c_char {
     static VERSION: std::sync::LazyLock<CString> = std::sync::LazyLock::new(|| {
         CString::new(dl_sdk::build_info().version.to_string()).expect("CString::new failed")
     }); // unwrap: there won't be any NUL bytes in the string
@@ -469,12 +469,12 @@ pub extern "C" fn rr_version_string() -> *const c_char {
 // functions with the same symbol names, and the linker behavior in this case i undefined.
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_f16_from_f32(value: f32) -> u16 {
+pub extern "C" fn dl_f16_from_f32(value: f32) -> u16 {
     half::f16::from_f32(value).to_bits()
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_spawn_impl(spawn_opts: *const CSpawnOptions) -> Result<(), CError> {
+fn dl_spawn_impl(spawn_opts: *const CSpawnOptions) -> Result<(), CError> {
     let spawn_opts = if spawn_opts.is_null() {
         dl_sdk::SpawnOptions::default()
     } else {
@@ -483,7 +483,7 @@ fn rr_spawn_impl(spawn_opts: *const CSpawnOptions) -> Result<(), CError> {
     };
 
     // Port is unused here — this function only spawns the viewer process.
-    // The C SDK connects separately via `rr_recording_stream_spawn`.
+    // The C SDK connects separately via `dl_recording_stream_spawn`.
     dl_sdk::spawn(&spawn_opts)
         .map(drop)
         .map_err(|err| CError::new(CErrorCode::RecordingStreamSpawnFailure, &err.to_string()))?;
@@ -493,14 +493,14 @@ fn rr_spawn_impl(spawn_opts: *const CSpawnOptions) -> Result<(), CError> {
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_spawn(spawn_opts: *const CSpawnOptions, error: *mut CError) {
-    if let Err(err) = rr_spawn_impl(spawn_opts) {
+pub extern "C" fn dl_spawn(spawn_opts: *const CSpawnOptions, error: *mut CError) {
+    if let Err(err) = dl_spawn_impl(spawn_opts) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_register_component_type_impl(
+fn dl_register_component_type_impl(
     component_type: &CComponentType,
 ) -> Result<CComponentTypeHandle, CError> {
     let CComponentDescriptor {
@@ -538,22 +538,22 @@ fn rr_register_component_type_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_register_component_type(
+pub extern "C" fn dl_register_component_type(
     // Note that since this is passed by value, arrow will release the schema on drop!
     component_type: CComponentType,
     error: *mut CError,
 ) -> u32 {
-    match rr_register_component_type_impl(&component_type) {
+    match dl_register_component_type_impl(&component_type) {
         Ok(id) => id,
         Err(err) => {
             err.write_error(error);
-            RR_COMPONENT_TYPE_HANDLE_INVALID
+            DL_COMPONENT_TYPE_HANDLE_INVALID
         }
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_new_impl(
+fn dl_recording_stream_new_impl(
     store_info: *const CStoreInfo,
     default_enabled: bool,
 ) -> Result<CRecordingStream, CError> {
@@ -618,12 +618,12 @@ fn rr_recording_stream_new_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_new(
+pub extern "C" fn dl_recording_stream_new(
     store_info: *const CStoreInfo,
     default_enabled: bool,
     error: *mut CError,
 ) -> CRecordingStream {
-    match rr_recording_stream_new_impl(store_info, default_enabled) {
+    match dl_recording_stream_new_impl(store_info, default_enabled) {
         Err(err) => {
             err.write_error(error);
             0
@@ -643,7 +643,7 @@ impl Drop for TrivialTypeWithDrop {
 }
 
 thread_local! {
-    /// It can happen that we end up inside of [`rr_recording_stream_free`] during a thread shutdown.
+    /// It can happen that we end up inside of [`dl_recording_stream_free`] during a thread shutdown.
     /// This happens either when:
     /// * the application shuts down, causing the destructor of globally defined recordings to be invoked
     ///   -> Not an issue, we likely already destroyed the recording list.
@@ -667,7 +667,7 @@ thread_local! {
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_free(id: CRecordingStream) {
+pub extern "C" fn dl_recording_stream_free(id: CRecordingStream) {
     if THREAD_LIFE_TRACKER.try_with(|_v| {}).is_ok() {
         if let Some(stream) = RECORDING_STREAMS.lock().remove(id) {
             // Before we called `stream.disconnect()` here`, which unnecessarily replaced the current sink with a
@@ -678,21 +678,21 @@ pub extern "C" fn rr_recording_stream_free(id: CRecordingStream) {
     } else {
         // ⚠️ Don't use `dl_log` here since it goes through `tracing` which _also_ may have shut down thread locals at this point, causing a panic when accessing them.
         eprintln!(
-            "rr_recording_stream_free called on a thread that is shutting down and can no longer access thread locals. We can't handle this and have to ignore this call."
+            "dl_recording_stream_free called on a thread that is shutting down and can no longer access thread locals. We can't handle this and have to ignore this call."
         );
     }
 }
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_set_global(id: CRecordingStream, store_kind: CStoreKind) {
+pub extern "C" fn dl_recording_stream_set_global(id: CRecordingStream, store_kind: CStoreKind) {
     let stream = RECORDING_STREAMS.lock().get(id);
     RecordingStream::set_global(store_kind.into(), stream);
 }
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_set_thread_local(
+pub extern "C" fn dl_recording_stream_set_thread_local(
     id: CRecordingStream,
     store_kind: CStoreKind,
 ) {
@@ -702,11 +702,11 @@ pub extern "C" fn rr_recording_stream_set_thread_local(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_is_enabled(
+pub extern "C" fn dl_recording_stream_is_enabled(
     stream: CRecordingStream,
     error: *mut CError,
 ) -> bool {
-    match rr_recording_stream_is_enabled_impl(stream) {
+    match dl_recording_stream_is_enabled_impl(stream) {
         Ok(enabled) => enabled,
         Err(err) => {
             err.write_error(error);
@@ -716,13 +716,13 @@ pub extern "C" fn rr_recording_stream_is_enabled(
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_is_enabled_impl(id: CRecordingStream) -> Result<bool, CError> {
+fn dl_recording_stream_is_enabled_impl(id: CRecordingStream) -> Result<bool, CError> {
     Ok(recording_stream(id)?.is_enabled())
 }
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rr_recording_stream_flush_blocking(
+pub unsafe extern "C" fn dl_recording_stream_flush_blocking(
     id: CRecordingStream,
     timeout_sec: c_float,
     error: *mut CError,
@@ -759,7 +759,7 @@ pub unsafe extern "C" fn rr_recording_stream_flush_blocking(
 
 #[expect(unsafe_code)]
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_set_sinks_impl(
+fn dl_recording_stream_set_sinks_impl(
     stream: CRecordingStream,
     raw_sinks: *mut CLogSink,
     num_sinks: u32,
@@ -843,19 +843,19 @@ fn rr_recording_stream_set_sinks_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_set_sinks(
+pub extern "C" fn dl_recording_stream_set_sinks(
     id: CRecordingStream,
     sinks: *mut CLogSink,
     num_sinks: u32,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_set_sinks_impl(id, sinks, num_sinks) {
+    if let Err(err) = dl_recording_stream_set_sinks_impl(id, sinks, num_sinks) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_connect_grpc_impl(
+fn dl_recording_stream_connect_grpc_impl(
     stream: CRecordingStream,
     url: CStringView,
 ) -> Result<(), CError> {
@@ -872,18 +872,18 @@ fn rr_recording_stream_connect_grpc_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_connect_grpc(
+pub extern "C" fn dl_recording_stream_connect_grpc(
     id: CRecordingStream,
     url: CStringView,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_connect_grpc_impl(id, url) {
+    if let Err(err) = dl_recording_stream_connect_grpc_impl(id, url) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_serve_grpc_impl(
+fn dl_recording_stream_serve_grpc_impl(
     stream: CRecordingStream,
     bind_ip: CStringView,
     port: u16,
@@ -923,7 +923,7 @@ fn rr_recording_stream_serve_grpc_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rr_recording_stream_serve_grpc(
+pub unsafe extern "C" fn dl_recording_stream_serve_grpc(
     id: CRecordingStream,
     bind_ip: CStringView,
     port: u16,
@@ -940,7 +940,7 @@ pub unsafe extern "C" fn rr_recording_stream_serve_grpc(
     } else {
         unsafe { std::slice::from_raw_parts(cors_allow_origins, num_cors_allow_origins as usize) }
     };
-    if let Err(err) = rr_recording_stream_serve_grpc_impl(
+    if let Err(err) = dl_recording_stream_serve_grpc_impl(
         id,
         bind_ip,
         port,
@@ -953,7 +953,7 @@ pub unsafe extern "C" fn rr_recording_stream_serve_grpc(
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_spawn_impl(
+fn dl_recording_stream_spawn_impl(
     stream: CRecordingStream,
     spawn_opts: *const CSpawnOptions,
 ) -> Result<(), CError> {
@@ -975,18 +975,18 @@ fn rr_recording_stream_spawn_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_spawn(
+pub extern "C" fn dl_recording_stream_spawn(
     id: CRecordingStream,
     spawn_opts: *const CSpawnOptions,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_spawn_impl(id, spawn_opts) {
+    if let Err(err) = dl_recording_stream_spawn_impl(id, spawn_opts) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_save_impl(
+fn dl_recording_stream_save_impl(
     stream: CRecordingStream,
     rrd_filepath: CStringView,
 ) -> Result<(), CError> {
@@ -1001,18 +1001,18 @@ fn rr_recording_stream_save_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_save(
+pub extern "C" fn dl_recording_stream_save(
     id: CRecordingStream,
     path: CStringView,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_save_impl(id, path) {
+    if let Err(err) = dl_recording_stream_save_impl(id, path) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_stdout_impl(stream: CRecordingStream) -> Result<(), CError> {
+fn dl_recording_stream_stdout_impl(stream: CRecordingStream) -> Result<(), CError> {
     recording_stream(stream)?.stdout().map_err(|err| {
         CError::new(
             CErrorCode::RecordingStreamStdoutFailure,
@@ -1023,14 +1023,14 @@ fn rr_recording_stream_stdout_impl(stream: CRecordingStream) -> Result<(), CErro
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_stdout(id: CRecordingStream, error: *mut CError) {
-    if let Err(err) = rr_recording_stream_stdout_impl(id) {
+pub extern "C" fn dl_recording_stream_stdout(id: CRecordingStream, error: *mut CError) {
+    if let Err(err) = dl_recording_stream_stdout_impl(id) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_set_time_impl(
+fn dl_recording_stream_set_time_impl(
     stream: CRecordingStream,
     timeline_name: CStringView,
     time_type: CTimeType,
@@ -1050,20 +1050,20 @@ fn rr_recording_stream_set_time_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_set_time(
+pub extern "C" fn dl_recording_stream_set_time(
     stream: CRecordingStream,
     timeline_name: CStringView,
     time_type: CTimeType,
     value: i64,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_set_time_impl(stream, timeline_name, time_type, value) {
+    if let Err(err) = dl_recording_stream_set_time_impl(stream, timeline_name, time_type, value) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_disable_timeline_impl(
+fn dl_recording_stream_disable_timeline_impl(
     stream: CRecordingStream,
     timeline_name: CStringView,
 ) -> Result<(), CError> {
@@ -1075,19 +1075,19 @@ fn rr_recording_stream_disable_timeline_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_disable_timeline(
+pub extern "C" fn dl_recording_stream_disable_timeline(
     stream: CRecordingStream,
     timeline_name: CStringView,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_disable_timeline_impl(stream, timeline_name) {
+    if let Err(err) = dl_recording_stream_disable_timeline_impl(stream, timeline_name) {
         err.write_error(error);
     }
 }
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_reset_time(stream: CRecordingStream) {
+pub extern "C" fn dl_recording_stream_reset_time(stream: CRecordingStream) {
     if let Some(stream) = RECORDING_STREAMS.lock().get(stream) {
         stream.reset_time();
     }
@@ -1095,7 +1095,7 @@ pub extern "C" fn rr_recording_stream_reset_time(stream: CRecordingStream) {
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_set_log_tick_enabled(
+pub extern "C" fn dl_recording_stream_set_log_tick_enabled(
     stream: CRecordingStream,
     enabled: bool,
 ) {
@@ -1106,7 +1106,7 @@ pub extern "C" fn rr_recording_stream_set_log_tick_enabled(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_recording_stream_set_log_time_enabled(
+pub extern "C" fn dl_recording_stream_set_log_time_enabled(
     stream: CRecordingStream,
     enabled: bool,
 ) {
@@ -1118,7 +1118,7 @@ pub extern "C" fn rr_recording_stream_set_log_time_enabled(
 #[expect(unsafe_code)]
 #[expect(clippy::result_large_err)]
 #[expect(clippy::needless_pass_by_value)] // Conceptually we're consuming the data_row, as we take ownership of data it points to.
-fn rr_recording_stream_log_impl(
+fn dl_recording_stream_log_impl(
     stream: CRecordingStream,
     data_row: CDataRow,
     inject_time: bool,
@@ -1174,19 +1174,19 @@ fn rr_recording_stream_log_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rr_recording_stream_log(
+pub unsafe extern "C" fn dl_recording_stream_log(
     stream: CRecordingStream,
     data_row: CDataRow,
     inject_time: bool,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_log_impl(stream, data_row, inject_time) {
+    if let Err(err) = dl_recording_stream_log_impl(stream, data_row, inject_time) {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_log_file_from_path_impl(
+fn dl_recording_stream_log_file_from_path_impl(
     stream: CRecordingStream,
     filepath: CStringView,
     entity_path_prefix: CStringView,
@@ -1211,7 +1211,7 @@ fn rr_recording_stream_log_file_from_path_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rr_recording_stream_log_file_from_path(
+pub unsafe extern "C" fn dl_recording_stream_log_file_from_path(
     stream: CRecordingStream,
     filepath: CStringView,
     entity_path_prefix: CStringView,
@@ -1219,14 +1219,14 @@ pub unsafe extern "C" fn rr_recording_stream_log_file_from_path(
     error: *mut CError,
 ) {
     if let Err(err) =
-        rr_recording_stream_log_file_from_path_impl(stream, filepath, entity_path_prefix, static_)
+        dl_recording_stream_log_file_from_path_impl(stream, filepath, entity_path_prefix, static_)
     {
         err.write_error(error);
     }
 }
 
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_log_file_from_contents_impl(
+fn dl_recording_stream_log_file_from_contents_impl(
     stream: CRecordingStream,
     filepath: CStringView,
     contents: CBytesView,
@@ -1258,7 +1258,7 @@ fn rr_recording_stream_log_file_from_contents_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rr_recording_stream_log_file_from_contents(
+pub unsafe extern "C" fn dl_recording_stream_log_file_from_contents(
     stream: CRecordingStream,
     filepath: CStringView,
     contents: CBytesView,
@@ -1266,7 +1266,7 @@ pub unsafe extern "C" fn rr_recording_stream_log_file_from_contents(
     static_: bool,
     error: *mut CError,
 ) {
-    if let Err(err) = rr_recording_stream_log_file_from_contents_impl(
+    if let Err(err) = dl_recording_stream_log_file_from_contents_impl(
         stream,
         filepath,
         contents,
@@ -1279,7 +1279,7 @@ pub unsafe extern "C" fn rr_recording_stream_log_file_from_contents(
 
 #[expect(unsafe_code)]
 #[expect(clippy::result_large_err)]
-fn rr_recording_stream_send_columns_impl(
+fn dl_recording_stream_send_columns_impl(
     stream: CRecordingStream,
     entity_path: CStringView,
     time_columns: &mut [CTimeColumn],
@@ -1366,7 +1366,7 @@ fn rr_recording_stream_send_columns_impl(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn rr_recording_stream_send_columns(
+pub unsafe extern "C" fn dl_recording_stream_send_columns(
     stream: CRecordingStream,
     entity_path: CStringView,
     time_columns: *mut CTimeColumn,
@@ -1382,7 +1382,7 @@ pub unsafe extern "C" fn rr_recording_stream_send_columns(
     };
 
     if let Err(err) =
-        rr_recording_stream_send_columns_impl(stream, entity_path, time_columns, component_batches)
+        dl_recording_stream_send_columns_impl(stream, entity_path, time_columns, component_batches)
     {
         err.write_error(error);
     }
@@ -1393,7 +1393,7 @@ pub unsafe extern "C" fn rr_recording_stream_send_columns(
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn _rr_escape_entity_path_part(part: CStringView) -> *const c_char {
+pub unsafe extern "C" fn _dl_escape_entity_path_part(part: CStringView) -> *const c_char {
     let Ok(part) = part.as_maybe_empty_str("entity_path_part") else {
         return std::ptr::null();
     };
@@ -1409,14 +1409,14 @@ pub unsafe extern "C" fn _rr_escape_entity_path_part(part: CStringView) -> *cons
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn _rr_free_string(str: *mut c_char) {
+pub unsafe extern "C" fn _dl_free_string(str: *mut c_char) {
     if str.is_null() {
         return;
     }
 
     // Free the string:
     unsafe {
-        // SAFETY: `_rr_free_string` should only be called on strings allocated by `_rr_escape_entity_path_part`.
+        // SAFETY: `_dl_free_string` should only be called on strings allocated by `_dl_escape_entity_path_part`.
         std::mem::drop(CString::from_raw(str));
     }
 }

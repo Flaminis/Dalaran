@@ -27,7 +27,7 @@ namespace rerun {
 
         ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
         if (instances && num_instances > 0) {
-            RR_RETURN_NOT_OK(Loggable<components::AffixFuzzer16>::fill_arrow_array_builder(
+            DL_RETURN_NOT_OK(Loggable<components::AffixFuzzer16>::fill_arrow_array_builder(
                 static_cast<arrow::ListBuilder*>(builder.get()),
                 instances,
                 num_instances
@@ -59,7 +59,7 @@ namespace rerun {
             const auto& element = elements[elem_idx];
             ARROW_RETURN_NOT_OK(builder->Append());
             if (element.many_required_unions.data()) {
-                RR_RETURN_NOT_OK(Loggable<rerun::datatypes::ScalarUnion>::fill_arrow_array_builder(
+                DL_RETURN_NOT_OK(Loggable<rerun::datatypes::ScalarUnion>::fill_arrow_array_builder(
                     value_builder,
                     element.many_required_unions.data(),
                     element.many_required_unions.size()

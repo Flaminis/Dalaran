@@ -41,16 +41,16 @@ namespace rerun {
         );
     }
 
-    Error to_rr_sorting_status(SortingStatus status, rr_sorting_status& out_status) {
+    Error to_dl_sorting_status(SortingStatus status, dl_sorting_status& out_status) {
         switch (status) {
             case SortingStatus::Unknown:
-                out_status = RR_SORTING_STATUS_UNKNOWN;
+                out_status = DL_SORTING_STATUS_UNKNOWN;
                 break;
             case SortingStatus::Sorted:
-                out_status = RR_SORTING_STATUS_SORTED;
+                out_status = DL_SORTING_STATUS_SORTED;
                 break;
             case SortingStatus::Unsorted:
-                out_status = RR_SORTING_STATUS_UNSORTED;
+                out_status = DL_SORTING_STATUS_UNSORTED;
                 break;
             default:
                 return Error(ErrorCode::InvalidEnumValue, "Invalid SortingStatus");
@@ -58,10 +58,10 @@ namespace rerun {
         return Error::ok();
     }
 
-    Error TimeColumn::to_c_ffi_struct(rr_time_column& out_column) const {
-        RR_RETURN_NOT_OK(timeline.to_c_ffi_struct(out_column.timeline));
-        RR_RETURN_NOT_OK(arrow::ExportArray(*array, &out_column.array, nullptr));
-        RR_RETURN_NOT_OK(to_rr_sorting_status(sorting_status, out_column.sorting_status));
+    Error TimeColumn::to_c_ffi_struct(dl_time_column& out_column) const {
+        DL_RETURN_NOT_OK(timeline.to_c_ffi_struct(out_column.timeline));
+        DL_RETURN_NOT_OK(arrow::ExportArray(*array, &out_column.array, nullptr));
+        DL_RETURN_NOT_OK(to_dl_sorting_status(sorting_status, out_column.sorting_status));
         return Error::ok();
     }
 

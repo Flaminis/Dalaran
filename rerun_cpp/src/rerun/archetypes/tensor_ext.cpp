@@ -16,13 +16,13 @@ namespace rerun::archetypes {
 #if 0
     // <CODEGEN_COPY_TO_HEADER>
 
-RR_DISABLE_MAYBE_UNINITIALIZED_PUSH
+DL_DISABLE_MAYBE_UNINITIALIZED_PUSH
 
     /// New Tensor from dimensions and tensor buffer.
     Tensor(Collection<uint64_t> shape, datatypes::TensorBuffer buffer)
         : Tensor(datatypes::TensorData(std::move(shape), std::move(buffer))) {}
 
-RR_DISABLE_MAYBE_UNINITIALIZED_POP
+DL_DISABLE_MAYBE_UNINITIALIZED_POP
 
     /// New tensor from dimensions and pointer to tensor data.
     ///

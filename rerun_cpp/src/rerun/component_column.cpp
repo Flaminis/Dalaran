@@ -15,10 +15,10 @@ namespace rerun {
         // Convert lengths into offsets.
         std::vector<uint32_t> offsets(lengths.size() + 1);
         // Some GCC versions see ghosts here - this can't be a null dereference since we have at least 1 element.
-        RR_PUSH_WARNINGS
-        RR_DISABLE_NULL_DEREF_WARNING
+        DL_PUSH_WARNINGS
+        DL_DISABLE_NULL_DEREF_WARNING
         offsets[0] = 0;
-        RR_POP_WARNINGS
+        DL_POP_WARNINGS
 
         for (size_t i = 0; i < lengths.size(); i++) {
             offsets[i + 1] = offsets[i] + lengths[i];
@@ -45,7 +45,7 @@ namespace rerun {
         return component_batch;
     }
 
-    Error ComponentColumn::to_c_ffi_struct(rr_component_column& out_component_batch) const {
+    Error ComponentColumn::to_c_ffi_struct(dl_component_column& out_component_batch) const {
         if (array == nullptr) {
             return Error(ErrorCode::UnexpectedNullArgument, "array is null");
         }

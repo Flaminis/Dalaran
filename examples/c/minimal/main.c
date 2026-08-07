@@ -2,21 +2,21 @@
 #include <stdio.h>
 
 int main(void) {
-    printf("Rerun C SDK Version: %s\n", rr_version_string());
+    printf("Rerun C SDK Version: %s\n", dl_version_string());
 
-    rr_error error = {0};
-    const rr_store_info store_info = {
-        .application_id = rr_make_string("c-example-app"),
-        .recording_id = rr_make_string(NULL),
-        .store_kind = RR_STORE_KIND_RECORDING,
+    dl_error error = {0};
+    const dl_store_info store_info = {
+        .application_id = dl_make_string("c-example-app"),
+        .recording_id = dl_make_string(NULL),
+        .store_kind = DL_STORE_KIND_RECORDING,
     };
-    rr_recording_stream rec = rr_recording_stream_new(&store_info, true, &error);
+    dl_recording_stream rec = dl_recording_stream_new(&store_info, true, &error);
 
     // Connect to running viewer:
-    //rr_recording_stream_connect_grpc(rec, rr_make_string("rerun+http://127.0.0.1:9876"), &error);
+    //dl_recording_stream_connect_grpc(rec, dl_make_string("rerun+http://127.0.0.1:9876"), &error);
 
     // Spawn and connect:
-    rr_recording_stream_spawn(rec, NULL, &error);
+    dl_recording_stream_spawn(rec, NULL, &error);
 
     if (error.code != 0) {
         printf("Error occurred: %s\n", error.description);
@@ -25,5 +25,5 @@ int main(void) {
 
     printf("rec: %d\n", rec);
 
-    rr_recording_stream_free(rec);
+    dl_recording_stream_free(rec);
 }

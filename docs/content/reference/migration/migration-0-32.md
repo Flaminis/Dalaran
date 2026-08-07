@@ -29,7 +29,7 @@ The Cargo feature flag `data_loaders` has been renamed to `importers`.
 
 | Before | After |
 |--------|-------|
-| `rr_data_loader_settings` | `rr_importer_settings` |
+| `dl_data_loader_settings` | `dl_importer_settings` |
 | `EXTERNAL_DATA_LOADER_INCOMPATIBLE_EXIT_CODE` | `EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE` |
 
 The old names are still available as deprecated aliases.

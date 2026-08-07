@@ -4,16 +4,16 @@
 #include "string_utils.hpp"
 
 namespace rerun {
-    Error Timeline::to_c_ffi_struct(rr_timeline& out_column) const {
+    Error Timeline::to_c_ffi_struct(dl_timeline& out_column) const {
         switch (type) {
             case TimeType::Sequence:
-                out_column.type = RR_TIME_TYPE_SEQUENCE;
+                out_column.type = DL_TIME_TYPE_SEQUENCE;
                 break;
             case TimeType::Duration:
-                out_column.type = RR_TIME_TYPE_DURATION;
+                out_column.type = DL_TIME_TYPE_DURATION;
                 break;
             case TimeType::Timestamp:
-                out_column.type = RR_TIME_TYPE_TIMESTAMP;
+                out_column.type = DL_TIME_TYPE_TIMESTAMP;
                 break;
             default:
                 return Error(
@@ -21,7 +21,7 @@ namespace rerun {
                     "Invalid TimeType" + std::to_string(static_cast<int>(type))
                 );
         }
-        out_column.name = detail::to_rr_string(name);
+        out_column.name = detail::to_dl_string(name);
 
         return Error::ok();
     }

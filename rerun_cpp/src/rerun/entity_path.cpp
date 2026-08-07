@@ -6,14 +6,14 @@
 
 namespace rerun {
     std::string escape_entity_path_part(std::string_view unescaped) {
-        auto escaped_c_str = _rr_escape_entity_path_part(detail::to_rr_string(unescaped));
+        auto escaped_c_str = _dl_escape_entity_path_part(detail::to_dl_string(unescaped));
 
         if (escaped_c_str == nullptr) {
             Error(ErrorCode::InvalidStringArgument, "Failed to escape entity path part").handle();
             return std::string(unescaped);
         } else {
             std::string result = escaped_c_str;
-            _rr_free_string(escaped_c_str);
+            _dl_free_string(escaped_c_str);
             return result;
         }
     }

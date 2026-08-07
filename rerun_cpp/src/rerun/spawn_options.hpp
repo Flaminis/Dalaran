@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string_view>
 
-extern "C" struct rr_spawn_options;
+extern "C" struct dl_spawn_options;
 
 namespace rerun {
 
@@ -13,7 +13,7 @@ namespace rerun {
     ///
     /// The defaults are ok for most use cases.
     ///
-    /// Keep this in sync with rerun.h's `rr_spawn_options`.
+    /// Keep this in sync with rerun.h's `dl_spawn_options`.
     struct SpawnOptions {
         /// The port to listen on.
         uint16_t port = 9876;
@@ -60,6 +60,6 @@ namespace rerun {
         /// _Implementation note:_
         /// By not returning it we avoid including the C header in this header.
         /// \private
-        void fill_rerun_c_struct(rr_spawn_options& spawn_opts) const;
+        void fill_rerun_c_struct(dl_spawn_options& spawn_opts) const;
     };
 } // namespace rerun

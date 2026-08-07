@@ -8,7 +8,7 @@
 
 namespace rerun {
     const char* version_string() {
-        return rr_version_string();
+        return dl_version_string();
     }
 
     Error check_binary_and_header_version_match() {

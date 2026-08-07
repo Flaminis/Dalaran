@@ -13,7 +13,7 @@ using ComponentBatch = rerun::ComponentBatch;
 
 // Something about the setup of `Transform3D manual` sets gcc off. Can't see any issue with it.
 // This warning known to be notoriously unreliable, so let's ignore it here.
-RR_DISABLE_MAYBE_UNINITIALIZED_PUSH
+DL_DISABLE_MAYBE_UNINITIALIZED_PUSH
 
 SCENARIO(
     "The various utilities of Transform3D archetype produce the same data as manually constructed "
@@ -239,4 +239,4 @@ SCENARIO(
     }
 }
 
-RR_DISABLE_MAYBE_UNINITIALIZED_POP
+DL_DISABLE_MAYBE_UNINITIALIZED_POP

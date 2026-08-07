@@ -55,7 +55,7 @@ namespace rerun {
         static Result<Collection<ComponentBatch>> as_batches(
             Result<Collection<ComponentBatch>> components
         ) {
-            RR_RETURN_NOT_OK(components.error);
+            DL_RETURN_NOT_OK(components.error);
             return components.value;
         }
     };
@@ -69,7 +69,7 @@ namespace rerun {
             std::vector<ComponentBatch> result;
             result.reserve(components.size());
             for (auto& component : components) {
-                RR_RETURN_NOT_OK(component.error);
+                DL_RETURN_NOT_OK(component.error);
                 result.push_back(std::move(component.value));
             }
             return rerun::take_ownership(std::move(result));
@@ -80,7 +80,7 @@ namespace rerun {
     template <>
     struct AsComponents<Result<ComponentBatch>> {
         static Result<Collection<ComponentBatch>> as_batches(Result<ComponentBatch> components) {
-            RR_RETURN_NOT_OK(components.error);
+            DL_RETURN_NOT_OK(components.error);
             return rerun::take_ownership(std::move(components.value));
         }
     };

@@ -5,7 +5,7 @@ impl CError {
     ///
     /// Error message larger than this value will be automatically truncated.
     //
-    // NOTE: You must update `rr_error.description` too if you modify this value.
+    // NOTE: You must update `dl_error.description` too if you modify this value.
     pub const MAX_MESSAGE_SIZE_BYTES: usize = 2048;
 
     pub const OK: Self = Self {

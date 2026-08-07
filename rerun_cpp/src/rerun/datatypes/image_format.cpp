@@ -45,7 +45,7 @@ namespace rerun {
 
         ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
         if (instances && num_instances > 0) {
-            RR_RETURN_NOT_OK(Loggable<datatypes::ImageFormat>::fill_arrow_array_builder(
+            DL_RETURN_NOT_OK(Loggable<datatypes::ImageFormat>::fill_arrow_array_builder(
                 static_cast<arrow::StructBuilder*>(builder.get()),
                 instances,
                 num_instances
@@ -89,7 +89,7 @@ namespace rerun {
             for (size_t elem_idx = 0; elem_idx < num_elements; elem_idx += 1) {
                 const auto& element = elements[elem_idx];
                 if (element.pixel_format.has_value()) {
-                    RR_RETURN_NOT_OK(
+                    DL_RETURN_NOT_OK(
                         Loggable<rerun::datatypes::PixelFormat>::fill_arrow_array_builder(
                             field_builder,
                             &element.pixel_format.value(),
@@ -107,7 +107,7 @@ namespace rerun {
             for (size_t elem_idx = 0; elem_idx < num_elements; elem_idx += 1) {
                 const auto& element = elements[elem_idx];
                 if (element.color_model.has_value()) {
-                    RR_RETURN_NOT_OK(
+                    DL_RETURN_NOT_OK(
                         Loggable<rerun::datatypes::ColorModel>::fill_arrow_array_builder(
                             field_builder,
                             &element.color_model.value(),
@@ -125,7 +125,7 @@ namespace rerun {
             for (size_t elem_idx = 0; elem_idx < num_elements; elem_idx += 1) {
                 const auto& element = elements[elem_idx];
                 if (element.channel_datatype.has_value()) {
-                    RR_RETURN_NOT_OK(
+                    DL_RETURN_NOT_OK(
                         Loggable<rerun::datatypes::ChannelDatatype>::fill_arrow_array_builder(
                             field_builder,
                             &element.channel_datatype.value(),

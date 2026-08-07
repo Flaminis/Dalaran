@@ -354,7 +354,7 @@ def lint_line(
         if err := check_string(m.group(1)):
             return err
 
-    if "rec_stream" in line or "rr_stream" in line:
+    if "rec_stream" in line or "dl_stream" in line:
         return "Instantiated RecordingStreams should be named `rec`"
 
     # rST syntax is not rendered by MkDocs/mkdocstrings (our Python API docs).
@@ -638,7 +638,7 @@ def test_lint_line() -> None:
         r'println!("Problem: \"{string}\"")',
         'ui.label("This uses ugly title casing for View.")',
         "trailing whitespace ",
-        "rr_stream",
+        "dl_stream",
         "rec_stream",
         "Result<(), anyhow::Error>",
         "let options = SnapshotOptions::default();",

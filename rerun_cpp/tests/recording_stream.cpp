@@ -471,7 +471,7 @@ SCENARIO("Recording stream handles invalid logging gracefully", TEST_TAG) {
             }
             AND_GIVEN("a cell with an invalid component type") {
                 rerun::ComponentBatch cell = {};
-                cell.component_type = RR_COMPONENT_TYPE_HANDLE_INVALID;
+                cell.component_type = DL_COMPONENT_TYPE_HANDLE_INVALID;
                 cell.array = null_arrow_array();
 
                 THEN("try_log_data_row fails with InvalidComponentTypeHandle") {

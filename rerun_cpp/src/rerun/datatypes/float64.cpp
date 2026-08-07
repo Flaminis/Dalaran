@@ -23,7 +23,7 @@ namespace rerun {
 
         ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
         if (instances && num_instances > 0) {
-            RR_RETURN_NOT_OK(Loggable<datatypes::Float64>::fill_arrow_array_builder(
+            DL_RETURN_NOT_OK(Loggable<datatypes::Float64>::fill_arrow_array_builder(
                 static_cast<arrow::DoubleBuilder*>(builder.get()),
                 instances,
                 num_instances

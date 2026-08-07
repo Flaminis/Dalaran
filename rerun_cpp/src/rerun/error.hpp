@@ -11,10 +11,10 @@ namespace arrow {
     class Status;
 }
 
-struct rr_error;
+struct dl_error;
 
 /// Return error if a given rerun::Error producing expression is not rerun::ErrorCode::Ok.
-#define RR_RETURN_NOT_OK(status_expr)              \
+#define DL_RETURN_NOT_OK(status_expr)              \
     do {                                           \
         const rerun::Error _status_ = status_expr; \
         if (_status_.is_err()) {                   \
@@ -26,7 +26,7 @@ namespace rerun {
     /// Status codes returned by the SDK as part of `Status`.
     ///
     /// Category codes are used to group errors together, but are never returned directly.
-    // ⚠️ Remember to also update `enum CErrorCode` AND `uint32_t rr_error_code` !
+    // ⚠️ Remember to also update `enum CErrorCode` AND `uint32_t dl_error_code` !
     enum class ErrorCode : uint32_t {
         Ok = 0x0000'0000,
         OutOfMemory,
@@ -115,7 +115,7 @@ namespace rerun {
             : code(_code), description(std::move(_description)) {}
 
         /// Construct from a C status object.
-        Error(const rr_error& status);
+        Error(const dl_error& status);
 
         /// Construct from an arrow status.
         Error(const arrow::Status& status);

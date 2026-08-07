@@ -30,7 +30,7 @@ namespace rerun {
 
         ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
         if (instances && num_instances > 0) {
-            RR_RETURN_NOT_OK(
+            DL_RETURN_NOT_OK(
                 Loggable<blueprint::datatypes::TimelineColumn>::fill_arrow_array_builder(
                     static_cast<arrow::StructBuilder*>(builder.get()),
                     instances,
@@ -61,7 +61,7 @@ namespace rerun {
             auto field_builder = static_cast<arrow::BooleanBuilder*>(builder->field_builder(0));
             ARROW_RETURN_NOT_OK(field_builder->Reserve(static_cast<int64_t>(num_elements)));
             for (size_t elem_idx = 0; elem_idx < num_elements; elem_idx += 1) {
-                RR_RETURN_NOT_OK(Loggable<rerun::datatypes::Bool>::fill_arrow_array_builder(
+                DL_RETURN_NOT_OK(Loggable<rerun::datatypes::Bool>::fill_arrow_array_builder(
                     field_builder,
                     &elements[elem_idx].visible,
                     1
@@ -72,7 +72,7 @@ namespace rerun {
             auto field_builder = static_cast<arrow::StringBuilder*>(builder->field_builder(1));
             ARROW_RETURN_NOT_OK(field_builder->Reserve(static_cast<int64_t>(num_elements)));
             for (size_t elem_idx = 0; elem_idx < num_elements; elem_idx += 1) {
-                RR_RETURN_NOT_OK(Loggable<rerun::datatypes::Utf8>::fill_arrow_array_builder(
+                DL_RETURN_NOT_OK(Loggable<rerun::datatypes::Utf8>::fill_arrow_array_builder(
                     field_builder,
                     &elements[elem_idx].timeline,
                     1

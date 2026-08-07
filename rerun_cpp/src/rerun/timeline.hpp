@@ -4,7 +4,7 @@
 
 #include <string>
 
-struct rr_timeline;
+struct dl_timeline;
 
 namespace rerun {
     /// Describes the type of a timeline or time point.
@@ -33,6 +33,6 @@ namespace rerun {
         Timeline() = delete;
 
         /// To rerun C API timeline.
-        Error to_c_ffi_struct(rr_timeline& out_column) const;
+        Error to_c_ffi_struct(dl_timeline& out_column) const;
     };
 } // namespace rerun

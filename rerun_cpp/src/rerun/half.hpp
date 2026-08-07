@@ -4,7 +4,7 @@
 
 // Declared here rather than by including `c/rerun.h`: `half.hpp` is part of the public C++ API,
 // and `rerun.hpp` must not leak the C header (see `tests/header_checks.cpp`).
-extern "C" uint16_t rr_f16_from_f32(float value);
+extern "C" uint16_t dl_f16_from_f32(float value);
 
 namespace rerun {
     /// IEEE 754 16-bit half-precision floating point number.
@@ -16,7 +16,7 @@ namespace rerun {
         /// Values too large to represent become infinity, and `NaN` stays `NaN`.
         static half from_float(float value) {
             half result;
-            result.f16 = rr_f16_from_f32(value);
+            result.f16 = dl_f16_from_f32(value);
             return result;
         }
     };

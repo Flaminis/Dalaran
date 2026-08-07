@@ -35,7 +35,7 @@ namespace rerun {
 
         ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
         if (instances && num_instances > 0) {
-            RR_RETURN_NOT_OK(Loggable<datatypes::TimeRangeBoundary>::fill_arrow_array_builder(
+            DL_RETURN_NOT_OK(Loggable<datatypes::TimeRangeBoundary>::fill_arrow_array_builder(
                 static_cast<arrow::DenseUnionBuilder*>(builder.get()),
                 instances,
                 num_instances
@@ -77,7 +77,7 @@ namespace rerun {
                 case TagType::CursorRelative: {
                     auto variant_builder =
                         static_cast<arrow::Int64Builder*>(variant_builder_untyped);
-                    RR_RETURN_NOT_OK(Loggable<rerun::datatypes::TimeInt>::fill_arrow_array_builder(
+                    DL_RETURN_NOT_OK(Loggable<rerun::datatypes::TimeInt>::fill_arrow_array_builder(
                         variant_builder,
                         &union_instance.get_union_data().cursor_relative,
                         1
@@ -86,7 +86,7 @@ namespace rerun {
                 case TagType::Absolute: {
                     auto variant_builder =
                         static_cast<arrow::Int64Builder*>(variant_builder_untyped);
-                    RR_RETURN_NOT_OK(Loggable<rerun::datatypes::TimeInt>::fill_arrow_array_builder(
+                    DL_RETURN_NOT_OK(Loggable<rerun::datatypes::TimeInt>::fill_arrow_array_builder(
                         variant_builder,
                         &union_instance.get_union_data().absolute,
                         1

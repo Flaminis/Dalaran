@@ -43,7 +43,7 @@ namespace rerun {
                   channel_datatype(datatype_) {}
 
             // GCC 14.4 incorrectly reports disengaged std::optional payloads as maybe-uninitialized.
-            RR_DISABLE_MAYBE_UNINITIALIZED_PUSH
+            DL_DISABLE_MAYBE_UNINITIALIZED_PUSH
 
             /// How many bytes will this image occupy?
             size_t num_bytes() const {
@@ -60,7 +60,7 @@ namespace rerun {
                 }
             }
 
-            RR_DISABLE_MAYBE_UNINITIALIZED_POP
+            DL_DISABLE_MAYBE_UNINITIALIZED_POP
 
             // </CODEGEN_COPY_TO_HEADER>
         };

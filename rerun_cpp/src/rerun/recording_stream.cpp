@@ -15,13 +15,13 @@
 #include <vector>
 
 namespace rerun {
-    static rr_store_kind store_kind_to_c(StoreKind store_kind) {
+    static dl_store_kind store_kind_to_c(StoreKind store_kind) {
         switch (store_kind) {
             case StoreKind::Recording:
-                return RR_STORE_KIND_RECORDING;
+                return DL_STORE_KIND_RECORDING;
 
             case StoreKind::Blueprint:
-                return RR_STORE_KIND_BLUEPRINT;
+                return DL_STORE_KIND_BLUEPRINT;
 
             default:
                 assert(false && "unreachable");
@@ -30,7 +30,7 @@ namespace rerun {
         // This should never happen since if we missed a switch case we'll get a warning on
         // compilers which compiles as an error on CI. But let's play it safe regardless and default
         // to recording.
-        return RR_STORE_KIND_RECORDING;
+        return DL_STORE_KIND_RECORDING;
     }
 
     RecordingStream::RecordingStream(
@@ -39,16 +39,16 @@ namespace rerun {
         : _store_kind(store_kind) {
         check_binary_and_header_version_match().handle();
 
-        rr_store_info store_info;
-        store_info.application_id = detail::to_rr_string(app_id);
-        store_info.recording_id = detail::to_rr_string(recording_id);
+        dl_store_info store_info;
+        store_info.application_id = detail::to_dl_string(app_id);
+        store_info.recording_id = detail::to_dl_string(recording_id);
         store_info.store_kind = store_kind_to_c(store_kind);
 
-        rr_error status = {};
-        this->_id = rr_recording_stream_new(&store_info, is_default_enabled(), &status);
+        dl_error status = {};
+        this->_id = dl_recording_stream_new(&store_info, is_default_enabled(), &status);
         auto err = Error(status);
         if (err.is_ok()) {
-            this->_enabled = rr_recording_stream_is_enabled(this->_id, &status);
+            this->_enabled = dl_recording_stream_is_enabled(this->_id, &status);
             Error(status).handle();
         } else {
             this->_enabled = false;
@@ -58,40 +58,40 @@ namespace rerun {
 
     RecordingStream::RecordingStream(RecordingStream&& other)
         : _id(other._id), _store_kind(other._store_kind), _enabled(other._enabled) {
-        // Set to `RR_REC_STREAM_CURRENT_RECORDING` since it's a no-op on destruction.
-        other._id = RR_REC_STREAM_CURRENT_RECORDING;
+        // Set to `DL_REC_STREAM_CURRENT_RECORDING` since it's a no-op on destruction.
+        other._id = DL_REC_STREAM_CURRENT_RECORDING;
     }
 
     RecordingStream::RecordingStream(uint32_t id, StoreKind store_kind)
         : _id(id), _store_kind(store_kind) {
         check_binary_and_header_version_match().handle();
 
-        rr_error status = {};
-        this->_enabled = rr_recording_stream_is_enabled(this->_id, &status);
+        dl_error status = {};
+        this->_enabled = dl_recording_stream_is_enabled(this->_id, &status);
         Error(status).handle();
     }
 
     RecordingStream::~RecordingStream() {
         // C-Api already specifies that the current constants are not destroyed, but we repeat this
         // here, since we rely on this invariant in the move constructor.
-        if (_id != RR_REC_STREAM_CURRENT_RECORDING && _id != RR_REC_STREAM_CURRENT_BLUEPRINT) {
-            rr_recording_stream_free(this->_id);
+        if (_id != DL_REC_STREAM_CURRENT_RECORDING && _id != DL_REC_STREAM_CURRENT_BLUEPRINT) {
+            dl_recording_stream_free(this->_id);
         }
     }
 
     void RecordingStream::set_global() const {
-        rr_recording_stream_set_global(_id, store_kind_to_c(_store_kind));
+        dl_recording_stream_set_global(_id, store_kind_to_c(_store_kind));
     }
 
     void RecordingStream::set_thread_local() const {
-        rr_recording_stream_set_thread_local(_id, store_kind_to_c(_store_kind));
+        dl_recording_stream_set_thread_local(_id, store_kind_to_c(_store_kind));
     }
 
     RecordingStream& RecordingStream::current(StoreKind store_kind) {
         switch (store_kind) {
             case StoreKind::Blueprint: {
                 static RecordingStream current_blueprint(
-                    RR_REC_STREAM_CURRENT_BLUEPRINT,
+                    DL_REC_STREAM_CURRENT_BLUEPRINT,
                     StoreKind::Blueprint
                 );
                 return current_blueprint;
@@ -99,7 +99,7 @@ namespace rerun {
             case StoreKind::Recording:
             default: {
                 static RecordingStream current_recording(
-                    RR_REC_STREAM_CURRENT_RECORDING,
+                    DL_REC_STREAM_CURRENT_RECORDING,
                     StoreKind::Recording
                 );
                 return current_recording;
@@ -108,22 +108,22 @@ namespace rerun {
     }
 
     Error RecordingStream::try_set_sinks(const LogSink* sinks, uint32_t num_sinks) const {
-        rr_error status = {};
+        dl_error status = {};
 
-        std::vector<rr_log_sink> c_sinks;
+        std::vector<dl_log_sink> c_sinks;
         c_sinks.reserve(num_sinks);
-        std::vector<std::vector<rr_string>> c_cors_origins;
+        std::vector<std::vector<dl_string>> c_cors_origins;
         c_cors_origins.reserve(num_sinks);
 
         for (uint32_t i = 0; i < num_sinks; i++) {
-            c_sinks.push_back(detail::to_rr_log_sink(sinks[i]));
+            c_sinks.push_back(detail::to_dl_log_sink(sinks[i]));
 
             if (sinks[i].kind == LogSink::Kind::GrpcServer) {
                 const auto& origins = sinks[i].grpc_server->cors_allow_origins;
                 auto& c_origins = c_cors_origins.emplace_back();
                 c_origins.reserve(origins.size());
                 for (const auto& origin : origins) {
-                    c_origins.push_back(detail::to_rr_string(origin));
+                    c_origins.push_back(detail::to_dl_string(origin));
                 }
 
                 c_sinks.back().grpc_server.cors_allow_origins = c_origins.data();
@@ -133,14 +133,14 @@ namespace rerun {
                 c_cors_origins.emplace_back();
             }
         }
-        rr_recording_stream_set_sinks(_id, c_sinks.data(), num_sinks, &status);
+        dl_recording_stream_set_sinks(_id, c_sinks.data(), num_sinks, &status);
 
         return status;
     }
 
     Error RecordingStream::connect_grpc(std::string_view url) const {
-        rr_error status = {};
-        rr_recording_stream_connect_grpc(_id, detail::to_rr_string(url), &status);
+        dl_error status = {};
+        dl_recording_stream_connect_grpc(_id, detail::to_dl_string(url), &status);
         return status;
     }
 
@@ -150,24 +150,24 @@ namespace rerun {
     ) const {
         bool newest_first = playback_behavior == PlaybackBehavior::NewestFirst;
 
-        std::vector<rr_string> c_cors_origins;
+        std::vector<dl_string> c_cors_origins;
         c_cors_origins.reserve(cors_allow_origins.size());
         for (const auto& origin : cors_allow_origins) {
-            c_cors_origins.push_back(detail::to_rr_string(origin));
+            c_cors_origins.push_back(detail::to_dl_string(origin));
         }
 
-        rr_error status = {};
-        rr_recording_stream_serve_grpc(
+        dl_error status = {};
+        dl_recording_stream_serve_grpc(
             _id,
-            detail::to_rr_string(bind_ip),
+            detail::to_dl_string(bind_ip),
             port,
-            detail::to_rr_string(server_memory_limit),
+            detail::to_dl_string(server_memory_limit),
             newest_first,
             c_cors_origins.data(),
             static_cast<uint32_t>(c_cors_origins.size()),
             &status
         );
-        RR_RETURN_NOT_OK(status);
+        DL_RETURN_NOT_OK(status);
 
         // Constructing the string from scratch is easier than passing it via the C FFI:
         std::stringstream ss;
@@ -176,28 +176,28 @@ namespace rerun {
     }
 
     Error RecordingStream::spawn(const SpawnOptions& options) const {
-        rr_spawn_options rerun_c_options = {};
+        dl_spawn_options rerun_c_options = {};
         options.fill_rerun_c_struct(rerun_c_options);
-        rr_error status = {};
-        rr_recording_stream_spawn(_id, &rerun_c_options, &status);
+        dl_error status = {};
+        dl_recording_stream_spawn(_id, &rerun_c_options, &status);
         return status;
     }
 
     Error RecordingStream::save(std::string_view path) const {
-        rr_error status = {};
-        rr_recording_stream_save(_id, detail::to_rr_string(path), &status);
+        dl_error status = {};
+        dl_recording_stream_save(_id, detail::to_dl_string(path), &status);
         return status;
     }
 
     Error RecordingStream::to_stdout() const {
-        rr_error status = {};
-        rr_recording_stream_stdout(_id, &status);
+        dl_error status = {};
+        dl_recording_stream_stdout(_id, &status);
         return status;
     }
 
     Error RecordingStream::flush_blocking(float timeout_sec) const {
-        rr_error status = {};
-        rr_recording_stream_flush_blocking(_id, timeout_sec, &status);
+        dl_error status = {};
+        dl_recording_stream_flush_blocking(_id, timeout_sec, &status);
         return status;
     }
 
@@ -206,11 +206,11 @@ namespace rerun {
         if (!is_enabled()) {
             return;
         }
-        rr_error error = {};
-        rr_recording_stream_set_time(
+        dl_error error = {};
+        dl_recording_stream_set_time(
             _id,
-            detail::to_rr_string(timeline_name),
-            RR_TIME_TYPE_SEQUENCE,
+            detail::to_dl_string(timeline_name),
+            DL_TIME_TYPE_SEQUENCE,
             sequence_nr,
             &error
         );
@@ -219,11 +219,11 @@ namespace rerun {
 
     void RecordingStream::set_time_duration_nanos(std::string_view timeline_name, int64_t nanos)
         const {
-        rr_error error = {};
-        rr_recording_stream_set_time(
+        dl_error error = {};
+        dl_recording_stream_set_time(
             _id,
-            detail::to_rr_string(timeline_name),
-            RR_TIME_TYPE_DURATION,
+            detail::to_dl_string(timeline_name),
+            DL_TIME_TYPE_DURATION,
             nanos,
             &error
         );
@@ -233,11 +233,11 @@ namespace rerun {
     void RecordingStream::set_time_timestamp_nanos_since_epoch(
         std::string_view timeline_name, int64_t nanos
     ) const {
-        rr_error error = {};
-        rr_recording_stream_set_time(
+        dl_error error = {};
+        dl_recording_stream_set_time(
             _id,
-            detail::to_rr_string(timeline_name),
-            RR_TIME_TYPE_TIMESTAMP,
+            detail::to_dl_string(timeline_name),
+            DL_TIME_TYPE_TIMESTAMP,
             nanos,
             &error
         );
@@ -245,21 +245,21 @@ namespace rerun {
     }
 
     void RecordingStream::disable_timeline(std::string_view timeline_name) const {
-        rr_error status = {};
-        rr_recording_stream_disable_timeline(_id, detail::to_rr_string(timeline_name), &status);
+        dl_error status = {};
+        dl_recording_stream_disable_timeline(_id, detail::to_dl_string(timeline_name), &status);
         Error(status).handle(); // Too unlikely to fail to make it worth forwarding.
     }
 
     void RecordingStream::reset_time() const {
-        rr_recording_stream_reset_time(_id);
+        dl_recording_stream_reset_time(_id);
     }
 
     void RecordingStream::set_log_tick_enabled(bool enabled) const {
-        rr_recording_stream_set_log_tick_enabled(_id, enabled);
+        dl_recording_stream_set_log_tick_enabled(_id, enabled);
     }
 
     void RecordingStream::set_log_time_enabled(bool enabled) const {
-        rr_recording_stream_set_log_time_enabled(_id, enabled);
+        dl_recording_stream_set_log_time_enabled(_id, enabled);
     }
 
     Error RecordingStream::try_log_serialized_batches(
@@ -288,18 +288,18 @@ namespace rerun {
             return Error::ok();
         }
         // Map to C API:
-        std::vector<rr_component_batch> c_component_batches(num_component_batches);
+        std::vector<dl_component_batch> c_component_batches(num_component_batches);
         for (size_t i = 0; i < num_component_batches; i++) {
-            RR_RETURN_NOT_OK(component_batches[i].to_c_ffi_struct(c_component_batches[i]));
+            DL_RETURN_NOT_OK(component_batches[i].to_c_ffi_struct(c_component_batches[i]));
         }
 
-        rr_data_row c_data_row;
-        c_data_row.entity_path = detail::to_rr_string(entity_path);
+        dl_data_row c_data_row;
+        c_data_row.entity_path = detail::to_dl_string(entity_path);
         c_data_row.num_component_batches = static_cast<uint32_t>(num_component_batches);
         c_data_row.component_batches = c_component_batches.data();
 
-        rr_error status = {};
-        rr_recording_stream_log(_id, c_data_row, inject_time, &status);
+        dl_error status = {};
+        dl_recording_stream_log(_id, c_data_row, inject_time, &status);
 
         return status;
     }
@@ -311,11 +311,11 @@ namespace rerun {
             return Error::ok();
         }
 
-        rr_error status = {};
-        rr_recording_stream_log_file_from_path(
+        dl_error status = {};
+        dl_recording_stream_log_file_from_path(
             _id,
-            detail::to_rr_string(filepath.string()),
-            detail::to_rr_string(entity_path_prefix),
+            detail::to_dl_string(filepath.string()),
+            detail::to_dl_string(entity_path_prefix),
             static_,
             &status
         );
@@ -331,16 +331,16 @@ namespace rerun {
             return Error::ok();
         }
 
-        rr_bytes data = {};
+        dl_bytes data = {};
         data.bytes = reinterpret_cast<const uint8_t*>(contents);
         data.length = static_cast<uint32_t>(contents_size);
 
-        rr_error status = {};
-        rr_recording_stream_log_file_from_contents(
+        dl_error status = {};
+        dl_recording_stream_log_file_from_contents(
             _id,
-            detail::to_rr_string(filepath.string()),
+            detail::to_dl_string(filepath.string()),
             data,
-            detail::to_rr_string(entity_path_prefix),
+            detail::to_dl_string(entity_path_prefix),
             static_,
             &status
         );
@@ -356,26 +356,26 @@ namespace rerun {
             return Error::ok();
         }
 
-        std::vector<rr_time_column> c_time_columns;
+        std::vector<dl_time_column> c_time_columns;
         c_time_columns.reserve(time_columns.size());
         for (const auto& time_column : time_columns) {
-            rr_time_column c_time_column;
-            RR_RETURN_NOT_OK(time_column.to_c_ffi_struct(c_time_column));
+            dl_time_column c_time_column;
+            DL_RETURN_NOT_OK(time_column.to_c_ffi_struct(c_time_column));
             c_time_columns.push_back(c_time_column);
         }
 
-        std::vector<rr_component_column> c_component_columns;
+        std::vector<dl_component_column> c_component_columns;
         c_component_columns.reserve(component_columns.size());
         for (const auto& component_batch : component_columns) {
-            rr_component_column c_component_batch;
-            RR_RETURN_NOT_OK(component_batch.to_c_ffi_struct(c_component_batch));
+            dl_component_column c_component_batch;
+            DL_RETURN_NOT_OK(component_batch.to_c_ffi_struct(c_component_batch));
             c_component_columns.push_back(c_component_batch);
         }
 
-        rr_error status = {};
-        rr_recording_stream_send_columns(
+        dl_error status = {};
+        dl_recording_stream_send_columns(
             _id,
-            detail::to_rr_string(entity_path),
+            detail::to_dl_string(entity_path),
             c_time_columns.data(),
             static_cast<uint32_t>(c_time_columns.size()),
             c_component_columns.data(),
@@ -387,7 +387,7 @@ namespace rerun {
     }
 
     Error RecordingStream::try_send_recording_name(std::string_view name) const {
-        rr_error status = {};
+        dl_error status = {};
         log_static(
             this->PROPERTIES_ENTITY_PATH,
             rerun::archetypes::RecordingInfo::update_fields().with_name(std::string(name))
@@ -396,7 +396,7 @@ namespace rerun {
     }
 
     Error RecordingStream::try_send_recording_start_time_nanos(int64_t nanos) const {
-        rr_error status = {};
+        dl_error status = {};
         log_static(
             this->PROPERTIES_ENTITY_PATH,
             rerun::archetypes::RecordingInfo::update_fields().with_start_time(nanos)

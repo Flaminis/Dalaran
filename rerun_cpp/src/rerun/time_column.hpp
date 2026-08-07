@@ -17,7 +17,7 @@
     "Found a macro 'Unsorted' (probably from X11), conflicting with `rerun::SortingStatus::Unsorted`. Add '#undef Unsorted' before '#include <rerun.hpp>' to work around this."
 #endif
 
-struct rr_time_column;
+struct dl_time_column;
 
 namespace arrow {
     class Array;
@@ -283,7 +283,7 @@ namespace rerun {
 
         /// To rerun C API component batch.
         ///
-        /// The resulting `rr_time_column` keeps the `arrow::Array` alive until it is released.
-        Error to_c_ffi_struct(rr_time_column& out_column) const;
+        /// The resulting `dl_time_column` keeps the `arrow::Array` alive until it is released.
+        Error to_c_ffi_struct(dl_time_column& out_column) const;
     };
 } // namespace rerun

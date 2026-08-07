@@ -29,7 +29,7 @@ namespace rerun {
 
         ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
         if (instances && num_instances > 0) {
-            RR_RETURN_NOT_OK(Loggable<datatypes::MultiEnum>::fill_arrow_array_builder(
+            DL_RETURN_NOT_OK(Loggable<datatypes::MultiEnum>::fill_arrow_array_builder(
                 static_cast<arrow::StructBuilder*>(builder.get()),
                 instances,
                 num_instances
@@ -57,7 +57,7 @@ namespace rerun {
             auto field_builder = static_cast<arrow::UInt8Builder*>(builder->field_builder(0));
             ARROW_RETURN_NOT_OK(field_builder->Reserve(static_cast<int64_t>(num_elements)));
             for (size_t elem_idx = 0; elem_idx < num_elements; elem_idx += 1) {
-                RR_RETURN_NOT_OK(Loggable<rerun::datatypes::EnumTest>::fill_arrow_array_builder(
+                DL_RETURN_NOT_OK(Loggable<rerun::datatypes::EnumTest>::fill_arrow_array_builder(
                     field_builder,
                     &elements[elem_idx].value1,
                     1
@@ -70,7 +70,7 @@ namespace rerun {
             for (size_t elem_idx = 0; elem_idx < num_elements; elem_idx += 1) {
                 const auto& element = elements[elem_idx];
                 if (element.value2.has_value()) {
-                    RR_RETURN_NOT_OK(
+                    DL_RETURN_NOT_OK(
                         Loggable<rerun::datatypes::ValuedEnum>::fill_arrow_array_builder(
                             field_builder,
                             &element.value2.value(),

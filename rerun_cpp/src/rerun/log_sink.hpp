@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-struct rr_log_sink;
+struct dl_log_sink;
 
 namespace rerun {
     /// What happens when a client connects to a gRPC server.
@@ -127,6 +127,6 @@ namespace rerun {
     }
 
     namespace detail {
-        rr_log_sink to_rr_log_sink(LogSink sink);
+        dl_log_sink to_dl_log_sink(LogSink sink);
     }
 } // namespace rerun

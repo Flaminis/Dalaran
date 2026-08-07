@@ -629,7 +629,7 @@ namespace rerun {
                 }(),
                 ...
             );
-            RR_RETURN_NOT_OK(err);
+            DL_RETURN_NOT_OK(err);
 
             return try_log_serialized_batches(entity_path, static_, std::move(serialized_columns));
         }

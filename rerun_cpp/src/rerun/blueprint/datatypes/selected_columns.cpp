@@ -45,7 +45,7 @@ namespace rerun {
 
         ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
         if (instances && num_instances > 0) {
-            RR_RETURN_NOT_OK(
+            DL_RETURN_NOT_OK(
                 Loggable<blueprint::datatypes::SelectedColumns>::fill_arrow_array_builder(
                     static_cast<arrow::StructBuilder*>(builder.get()),
                     instances,
@@ -82,7 +82,7 @@ namespace rerun {
                 const auto& element = elements[elem_idx];
                 ARROW_RETURN_NOT_OK(field_builder->Append());
                 if (element.time_columns.data()) {
-                    RR_RETURN_NOT_OK(Loggable<rerun::datatypes::Utf8>::fill_arrow_array_builder(
+                    DL_RETURN_NOT_OK(Loggable<rerun::datatypes::Utf8>::fill_arrow_array_builder(
                         value_builder,
                         element.time_columns.data(),
                         element.time_columns.size()
@@ -100,7 +100,7 @@ namespace rerun {
                 const auto& element = elements[elem_idx];
                 ARROW_RETURN_NOT_OK(field_builder->Append());
                 if (element.component_columns.data()) {
-                    RR_RETURN_NOT_OK(
+                    DL_RETURN_NOT_OK(
                         Loggable<rerun::blueprint::datatypes::ComponentColumnSelector>::
                             fill_arrow_array_builder(
                                 value_builder,

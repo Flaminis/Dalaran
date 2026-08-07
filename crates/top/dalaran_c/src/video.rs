@@ -2,7 +2,7 @@ use crate::{CError, CErrorCode, CStringView};
 
 #[expect(unsafe_code)]
 #[unsafe(no_mangle)]
-pub extern "C" fn rr_video_asset_read_frame_timestamps_nanos(
+pub extern "C" fn dl_video_asset_read_frame_timestamps_nanos(
     video_bytes: *const u8,
     video_bytes_len: u64,
     media_type: CStringView,

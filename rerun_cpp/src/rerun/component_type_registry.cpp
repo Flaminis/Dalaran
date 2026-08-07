@@ -33,7 +33,7 @@ namespace rerun {
 
         const Result<ComponentTypeHandle> comp_type_handle_result =
             ComponentType(descriptor, arrow_datatype).register_component();
-        RR_RETURN_NOT_OK(comp_type_handle_result.error);
+        DL_RETURN_NOT_OK(comp_type_handle_result.error);
 
         comp_types_per_descr_.insert({descr_hash, comp_type_handle_result.value});
         return comp_type_handle_result.value;

@@ -15,7 +15,7 @@ namespace arrow {
     class DataType;
 } // namespace arrow
 
-struct rr_component_batch;
+struct dl_component_batch;
 
 namespace rerun {
     struct ComponentColumn;
@@ -53,7 +53,7 @@ namespace rerun {
 
             /// TODO(#4257) should take a rerun::Collection instead of pointer and size.
             auto array = Loggable<T>::to_arrow(components.data(), components.size());
-            RR_RETURN_NOT_OK(array.error);
+            DL_RETURN_NOT_OK(array.error);
 
             return from_arrow_array(std::move(array.value), descriptor);
         }
@@ -148,7 +148,7 @@ namespace rerun {
 
         /// To rerun C API component batch.
         ///
-        /// The resulting `rr_component_batch` keeps the `arrow::Array` alive until it is released.
-        Error to_c_ffi_struct(rr_component_batch& out_component_batch) const;
+        /// The resulting `dl_component_batch` keeps the `arrow::Array` alive until it is released.
+        Error to_c_ffi_struct(dl_component_batch& out_component_batch) const;
     };
 } // namespace rerun

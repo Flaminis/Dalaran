@@ -18,7 +18,7 @@ namespace rerun {
 
         const Result<ComponentTypeHandle> comp_type_handle =
             comp_type_registry.get_or_register(descriptor, array->type());
-        RR_RETURN_NOT_OK(comp_type_handle.error);
+        DL_RETURN_NOT_OK(comp_type_handle.error);
 
         ComponentBatch component_batch;
         component_batch.array = std::move(array);
@@ -47,7 +47,7 @@ namespace rerun {
         return partitioned(std::vector<uint32_t>(length(), 1));
     }
 
-    Error ComponentBatch::to_c_ffi_struct(rr_component_batch& out_component_batch) const {
+    Error ComponentBatch::to_c_ffi_struct(dl_component_batch& out_component_batch) const {
         if (array == nullptr) {
             return Error(ErrorCode::UnexpectedNullArgument, "array is null");
         }

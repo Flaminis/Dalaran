@@ -8,7 +8,7 @@
 #include "error.hpp"
 #include "loggable.hpp"
 
-struct rr_component_column;
+struct dl_component_column;
 
 namespace rerun {
     /// Arrow-encoded data of a column of components.
@@ -92,7 +92,7 @@ namespace rerun {
 
         /// To rerun C API component batch.
         ///
-        /// The resulting `rr_component_column` keeps the `arrow::Array` alive until it is released.
-        Error to_c_ffi_struct(rr_component_column& out_component_batch) const;
+        /// The resulting `dl_component_column` keeps the `arrow::Array` alive until it is released.
+        Error to_c_ffi_struct(dl_component_column& out_component_batch) const;
     };
 } // namespace rerun

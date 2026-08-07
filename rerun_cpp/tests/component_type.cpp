@@ -16,7 +16,7 @@ SCENARIO("Component type registration" TEST_TAG) {
 
             THEN("it succeeds") {
                 REQUIRE(result.is_ok());
-                CHECK(result.value != RR_COMPONENT_TYPE_HANDLE_INVALID);
+                CHECK(result.value != DL_COMPONENT_TYPE_HANDLE_INVALID);
             }
         }
     }

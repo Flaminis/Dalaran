@@ -1791,7 +1791,7 @@ fn to_arrow_method(
                 #NEWLINE_TOKEN
                 ARROW_ASSIGN_OR_RAISE(auto builder, arrow::MakeBuilder(datatype, pool))
                 if (instances && num_instances > 0) {
-                    RR_RETURN_NOT_OK(Loggable<#quoted_namespace::#type_ident>::fill_arrow_array_builder(
+                    DL_RETURN_NOT_OK(Loggable<#quoted_namespace::#type_ident>::fill_arrow_array_builder(
                         static_cast<arrow::#arrow_builder_type*>(builder.get()),
                         instances,
                         num_instances
@@ -1910,7 +1910,7 @@ fn quote_fill_arrow_array_builder(
                 let quoted_fqname = quote_fqname_as_type_path(includes, fqname);
                 quote! {
                     static_assert(sizeof(#quoted_fqname) == sizeof(#quoted_namespace::#type_ident));
-                    RR_RETURN_NOT_OK(Loggable<#quoted_fqname>::fill_arrow_array_builder(
+                    DL_RETURN_NOT_OK(Loggable<#quoted_fqname>::fill_arrow_array_builder(
                         builder, reinterpret_cast<const #quoted_fqname*>(elements), num_elements
                     ));
                 }
@@ -2123,7 +2123,7 @@ fn quote_append_field_to_builder(
                 let fqname = quote_fqname_as_type_path(includes, fqname);
                 quote! {
                     #setup
-                    RR_RETURN_NOT_OK(Loggable<#fqname>::fill_arrow_array_builder(
+                    DL_RETURN_NOT_OK(Loggable<#fqname>::fill_arrow_array_builder(
                         #value_builder,
                         #field_accessor.data(),
                         num_elements * #num_items_per_value)
@@ -2369,7 +2369,7 @@ fn quote_append_single_value_to_builder(
                     let field_ptr_accessor = quote_field_ptr_access(typ, value_access);
                     quote! {
                         if (#field_ptr_accessor) {
-                            RR_RETURN_NOT_OK(Loggable<#fqname>::fill_arrow_array_builder(#value_builder, #field_ptr_accessor, #num_items_per_element));
+                            DL_RETURN_NOT_OK(Loggable<#fqname>::fill_arrow_array_builder(#value_builder, #field_ptr_accessor, #num_items_per_element));
                         }
                     }
                 }
@@ -2385,7 +2385,7 @@ fn quote_append_single_value_to_builder(
         }
         Type::Object { fqname } => {
             let fqname = quote_fqname_as_type_path(includes, fqname);
-            quote!(RR_RETURN_NOT_OK(Loggable<#fqname>::fill_arrow_array_builder(#value_builder, &#value_access, 1));)
+            quote!(DL_RETURN_NOT_OK(Loggable<#fqname>::fill_arrow_array_builder(#value_builder, &#value_access, 1));)
         }
     }
 }
@@ -2996,10 +2996,10 @@ fn quote_deprecation_ignore_start_and_end(
         includes.insert_dalaran("compiler_utils.hpp");
         (
             quote! {
-                RR_PUSH_WARNINGS #NEWLINE_TOKEN
-                RR_DISABLE_DEPRECATION_WARNING #NEWLINE_TOKEN
+                DL_PUSH_WARNINGS #NEWLINE_TOKEN
+                DL_DISABLE_DEPRECATION_WARNING #NEWLINE_TOKEN
             },
-            quote! { RR_POP_WARNINGS },
+            quote! { DL_POP_WARNINGS },
         )
     } else {
         (quote!(), quote!())

@@ -104,19 +104,19 @@ namespace rerun::archetypes {
         }
         auto blob_array_data = blob_array->values();
 
-        rr_string media_type_c = detail::to_rr_string(std::nullopt);
+        dl_string media_type_c = detail::to_dl_string(std::nullopt);
         if (media_type.has_value()) {
             auto media_type_array =
                 std::dynamic_pointer_cast<arrow::StringArray>(media_type.value().array);
             if (media_type_array) {
-                media_type_c = detail::to_rr_string(media_type_array->GetView(0));
+                media_type_c = detail::to_dl_string(media_type_array->GetView(0));
             }
         }
 
         std::vector<std::chrono::nanoseconds> frame_timestamps;
 
-        rr_error status = {};
-        rr_video_asset_read_frame_timestamps_nanos(
+        dl_error status = {};
+        dl_video_asset_read_frame_timestamps_nanos(
             blob_array_data->data(),
             static_cast<uint64_t>(blob_array_data->size()),
             media_type_c,
@@ -124,7 +124,7 @@ namespace rerun::archetypes {
             &alloc_timestamps,
             &status
         );
-        if (status.code != RR_ERROR_CODE_OK) {
+        if (status.code != DL_ERROR_CODE_OK) {
             return Error(status);
         }
 

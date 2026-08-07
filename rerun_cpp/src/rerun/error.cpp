@@ -46,7 +46,7 @@ namespace rerun {
     static StatusLogHandler global_log_handler = nullptr;
     static void* global_log_handler_user_data = nullptr;
 
-    Error::Error(const rr_error& status)
+    Error::Error(const dl_error& status)
         : code(static_cast<ErrorCode>(status.code)), description(status.description) {}
 
     Error::Error(const arrow::Status& status) {
