@@ -2,6 +2,7 @@
 
 mod environment;
 mod graphics;
+mod recording;
 mod report;
 
 use std::path::PathBuf;
@@ -89,13 +90,19 @@ impl DoctorCommand {
     ) -> Report {
         let env = environment::snapshot();
 
-        let checks = vec![
+        let mut checks = vec![
             check_build(build_info),
             graphics::check_graphics(tokio_runtime),
             environment::check_environment(&env),
             environment::check_display(&env),
             environment::check_ros2(&env),
         ];
+
+        checks.extend(
+            self.recordings
+                .iter()
+                .map(|path| recording::check_recording(path)),
+        );
 
         Report {
             dalaran_version: build_info.version.to_string(),
