@@ -76,5 +76,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Serving rerun_js/docs at http://localhost:${port}/`);
+  console.log(`Serving dalaran_js/docs at http://localhost:${port}/`);
 });

@@ -26,7 +26,7 @@ function has_wasm_simd(): boolean {
 }
 
 const UNSUPPORTED_BROWSER_MESSAGE =
-  "Your browser is too old to run the Rerun Viewer. " +
+  "Your browser is too old to run the Dalaran Viewer. " +
   "The Viewer requires WebAssembly SIMD support, available in " +
   "Chrome 91+, Firefox 89+, Safari 16.4+, or any modern Chromium-based browser. " +
   "Please update your browser and try again.";
@@ -59,8 +59,8 @@ async function fetch_viewer_wasm(
  * This is a rough estimate — do NOT use for truncation detection.
  */
 function estimate_total_bytes(response: Response): number | null {
-  // When served with `rerun-final-length`, use that (set by `dl_web_viewer_server`).
-  const final_length = response.headers.get("rerun-final-length");
+  // When served with `dalaran-final-length`, use that (set by `dl_web_viewer_server`).
+  const final_length = response.headers.get("dalaran-final-length");
   if (final_length != null) return parseInt(final_length, 10);
 
   // When gzip-compressed, try the GCS uncompressed-size header.
@@ -233,7 +233,7 @@ export interface WebViewerOptions {
    *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-in.html
    *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-out.html
    * 2. Set the URLs to those pages here.
-   * 3. Contact your Rerun representative to have the redirect URLs
+   * 3. Contact your Dalaran representative to have the redirect URLs
    *    and origin whitelisted in the OAuth configuration.
    *
    * When not set (default), login UI is hidden. Token-based auth still works.
@@ -444,7 +444,7 @@ function resolveAbsoluteUrl(url: string): string {
 }
 
 /**
- * Rerun Web Viewer
+ * Dalaran Web Viewer
  *
  * ```ts
  * const viewer = new WebViewer();
@@ -452,8 +452,8 @@ function resolveAbsoluteUrl(url: string): string {
  * ```
  *
  * Data may be provided to the Viewer as:
- * - An HTTP file URL, e.g. `viewer.start("https://app.rerun.io/version/0.35.0/examples/dna.rrd")`
- * - A Rerun gRPC URL, e.g. `viewer.start("rerun+http://127.0.0.1:9876/proxy")`
+ * - An HTTP file URL, e.g. `viewer.start("https://app.dalaran.dev/version/0.35.0/examples/dna.rrd")`
+ * - A Dalaran gRPC URL, e.g. `viewer.start("dalaran+http://127.0.0.1:9876/proxy")`
  * - A stream of log messages, via {@link WebViewer.open_channel}.
  *
  * Callbacks may be attached for various events using {@link WebViewer.on}:
@@ -511,12 +511,12 @@ export class WebViewer {
     this.#loader = document.createElement("div");
     this.#loader.innerHTML = `
       <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background-color: #1c1c1c; font-family: sans-serif; color: white;">
-        <div style="margin-bottom: 16px;">Loading Rerun\u2026</div>
+        <div style="margin-bottom: 16px;">Loading Dalaran\u2026</div>
         <div style="width: 200px;">
           <div style="background: #333; border-radius: 4px; height: 6px; overflow: hidden;">
-            <div class="rerun-progress-bar" style="background: white; height: 100%; width: 0%; transition: width 0.2s;"></div>
+            <div class="dalaran-progress-bar" style="background: white; height: 100%; width: 0%; transition: width 0.2s;"></div>
           </div>
-          <div class="rerun-progress-text" style="margin-top: 6px; font-size: 12px; color: #999;"></div>
+          <div class="dalaran-progress-text" style="margin-top: 6px; font-size: 12px; color: #999;"></div>
         </div>
       </div>
     `;
@@ -525,8 +525,8 @@ export class WebViewer {
     parent.style.position = "relative";
     parent.append(this.#loader);
 
-    const progress_bar = this.#loader.querySelector(".rerun-progress-bar") as HTMLElement;
-    const progress_text = this.#loader.querySelector(".rerun-progress-text") as HTMLElement;
+    const progress_bar = this.#loader.querySelector(".dalaran-progress-bar") as HTMLElement;
+    const progress_text = this.#loader.querySelector(".dalaran-progress-text") as HTMLElement;
 
     const on_progress = (received: number, total: number | null) => {
       if (total != null && total > 0) {
@@ -553,7 +553,7 @@ export class WebViewer {
       WebHandle_class = await load(base_url, on_progress);
     } catch (e) {
       this.#clearLoader();
-      this.#fail("Failed to load rerun", String(e));
+      this.#fail("Failed to load dalaran", String(e));
       throw e;
     }
     if (this.#state !== "starting") {
@@ -619,7 +619,7 @@ export class WebViewer {
 
     function check_for_panic() {
       if (self.#handle?.has_panicked()) {
-        self.#fail("Rerun has crashed.", self.#handle?.panic_message());
+        self.#fail("Dalaran has crashed.", self.#handle?.panic_message());
       } else {
         let delay_ms = 1000;
         setTimeout(check_for_panic, delay_ms);
@@ -841,22 +841,22 @@ export class WebViewer {
       const parent = this.canvas.parentElement;
       parent.innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: white; font-family: sans-serif; background-color: #1c1c1c;">
-          <h1 class="rerun-fail-message"></h1>
-          <pre class="rerun-fail-error" style="text-align: left; white-space: pre-wrap; word-break: break-word; max-width: 90vw;"></pre>
-          <button class="rerun-fail-clear-cache">Clear caches and reload</button>
+          <h1 class="dalaran-fail-message"></h1>
+          <pre class="dalaran-fail-error" style="text-align: left; white-space: pre-wrap; word-break: break-word; max-width: 90vw;"></pre>
+          <button class="dalaran-fail-clear-cache">Clear caches and reload</button>
         </div>
       `;
 
-      parent.querySelector(".rerun-fail-message")!.textContent = message;
+      parent.querySelector(".dalaran-fail-message")!.textContent = message;
 
-      const errorEl = parent.querySelector(".rerun-fail-error")!;
+      const errorEl = parent.querySelector(".dalaran-fail-error")!;
       if (error_message) {
         errorEl.textContent = error_message;
       } else {
         errorEl.remove();
       }
 
-      parent.querySelector(".rerun-fail-clear-cache")!.addEventListener("click", async () => {
+      parent.querySelector(".dalaran-fail-clear-cache")!.addEventListener("click", async () => {
         if ("caches" in window) {
           const keys = await caches.keys();
           await Promise.all(keys.map((key) => caches.delete(key)));
@@ -1289,10 +1289,10 @@ export class LogChannel {
 }
 
 const classes = {
-  hide_scrollbars: "rerun-viewer-hide-scrollbars",
-  fullscreen_base: "rerun-viewer-fullscreen-base",
-  fullscreen_rect: "rerun-viewer-fullscreen-rect",
-  transition: "rerun-viewer-transition",
+  hide_scrollbars: "dalaran-viewer-hide-scrollbars",
+  fullscreen_base: "dalaran-viewer-fullscreen-base",
+  fullscreen_rect: "dalaran-viewer-fullscreen-rect",
+  transition: "dalaran-viewer-transition",
 };
 
 const transition_delay_ms = 100;
@@ -1322,7 +1322,7 @@ const css = `
 `;
 
 function injectStyle() {
-  const ID = "__rerun_viewer_style";
+  const ID = "__dalaran_viewer_style";
 
   if (document.getElementById(ID)) {
     // already injected

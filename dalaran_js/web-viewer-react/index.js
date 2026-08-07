@@ -1,5 +1,5 @@
 import React, { createRef } from "react";
-import * as rerun from "@rerun-io/web-viewer";
+import * as dalaran from "@dalaran/web-viewer";
 
 // NOTE: We're intentionally not exposing `allow_fullscreen` and `enable_history`.
 //       Those features are already pretty sensitive to the environment, especially
@@ -13,14 +13,14 @@ import * as rerun from "@rerun-io/web-viewer";
  * @property {string} [height] CSS height of the viewer's parent div
  *
  * @typedef {(
- *   Omit<import("@rerun-io/web-viewer").WebViewerOptions, "allow_fullscreen" | "enable_history">
+ *   Omit<import("@dalaran/web-viewer").WebViewerOptions, "allow_fullscreen" | "enable_history">
  *   & BaseProps
  *   & import("./types.d.ts").ViewerEvents
  * )} Props
  */
 
 /**
- * Wrapper for `WebViewer` from the `@rerun-io/web-viewer`.
+ * Wrapper for `WebViewer` from the `@dalaran/web-viewer`.
  *
  * This component creates and manages the web viewer's `canvas` element.
  *
@@ -30,14 +30,14 @@ export default class WebViewer extends React.Component {
   /** @type {React.RefObject<HTMLDivElement>} */
   #parent = /** @type {React.RefObject<HTMLDivElement>} */ (createRef());
 
-  /** @type {rerun.WebViewer} */
+  /** @type {dalaran.WebViewer} */
   #handle;
 
   /** @param {Props} props */
   constructor(props) {
     super(props);
 
-    this.#handle = new rerun.WebViewer();
+    this.#handle = new dalaran.WebViewer();
   }
 
   componentDidMount() {
@@ -62,7 +62,7 @@ export default class WebViewer extends React.Component {
       // after the viewer has been started.
       this.#handle.stop();
 
-      this.#handle = new rerun.WebViewer();
+      this.#handle = new dalaran.WebViewer();
       startViewer(
         this.#handle,
         /** @type {HTMLDivElement} */ (this.#parent.current),
@@ -90,7 +90,7 @@ export default class WebViewer extends React.Component {
   render() {
     const { width = "640px", height = "360px" } = this.props;
     return React.createElement("div", {
-      className: "rerun-web-viewer",
+      className: "dalaran-web-viewer",
       style: { width, height, position: "relative" },
       ref: this.#parent,
     });
@@ -118,7 +118,7 @@ function pascalToSnake(str) {
 }
 
 /**
- * @param {rerun.WebViewer} handle
+ * @param {dalaran.WebViewer} handle
  * @param {HTMLElement} parent
  * @param {() => Props} getProps
  */
@@ -177,7 +177,7 @@ function diff(prev, current) {
 /**
  * Reconcile the currently open recordings with the latest props.
  *
- * @param {rerun.WebViewer} handle
+ * @param {dalaran.WebViewer} handle
  * @param {string[]} prev
  * @param {string[]} current
  */

@@ -1,6 +1,6 @@
-# Rerun web viewer
+# Dalaran web viewer
 
-Embed the Rerun web viewer within your React app.
+Embed the Dalaran web viewer within your React app.
 
 <p align="center">
   <picture>
@@ -12,22 +12,22 @@ Embed the Rerun web viewer within your React app.
   </picture>
 </p>
 
-If you'd like to use a framework-agnostic package instead, see <https://www.npmjs.com/package/@rerun-io/web-viewer>.
+If you'd like to use a framework-agnostic package instead, see <https://www.npmjs.com/package/@dalaran/web-viewer>.
 
 ## Install
 
 ```sh
-npm i @rerun-io/web-viewer-react
+npm i @dalaran/web-viewer-react
 ```
 
 ℹ️ Note:
-The package version is equal to the supported Rerun SDK version.
-This means that `@rerun-io/web-viewer-react@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) that originates from a Rerun SDK with version `0.10.0`!
+The package version is equal to the supported Dalaran SDK version.
+This means that `@dalaran/web-viewer-react@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) that originates from a Dalaran SDK with version `0.10.0`!
 
 ## Usage
 
 ```jsx
-import WebViewer from "@rerun-io/web-viewer-react";
+import WebViewer from "@dalaran/web-viewer-react";
 
 export default function App() {
   return <WebViewer width="800px" height="600px" rrd="…"/>
@@ -35,10 +35,10 @@ export default function App() {
 ```
 
 The `rrd` in the snippet above should be a URL pointing to either:
-- A hosted `.rrd` file, such as <https://app.rerun.io/version/0.35.0/examples/dna.rrd>
-- A gRPC connection to the SDK opened via the [`serve`](https://www.rerun.io/docs/reference/sdk/operating-modes#serve) API
+- A hosted `.rrd` file, such as <https://app.dalaran.dev/version/0.35.0/examples/dna.rrd>
+- A gRPC connection to the SDK opened via the [`serve`](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API
 
-If `rrd` is not set, the Viewer will display the same welcome screen as <https://app.rerun.io>.
+If `rrd` is not set, the Viewer will display the same welcome screen as <https://app.dalaran.dev>.
 This can be disabled by setting the `hide_welcome_screen` prop to `true`.
 
 ⚠ It's important to set the viewer's width and height, as without it the viewer may not display correctly.

@@ -1,15 +1,8 @@
 {
-  "name": "@rerun-io/web-viewer-react",
+  "name": "@dalaran/web-viewer-react",
   "version": "0.36.0-alpha.1+dev",
-  "description": "Embed the Rerun web viewer in your React app",
-  "licenses": [
-    {
-      "type": "MIT"
-    },
-    {
-      "type": "Apache-2.0"
-    }
-  ],
+  "description": "Embed the Dalaran web viewer in your React app",
+  "license": "Apache-2.0",
   "scripts": {
     "build:types": "tsc --noEmit && dts-buddy",
     "build": "npm run build:types",
@@ -21,12 +14,12 @@
     "type": "git",
     "url": "git+https://github.com/rerun-io/rerun.git"
   },
-  "author": "rerun-io",
+  "author": "dalaran-io",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/rerun-io/rerun/issues"
   },
-  "homepage": "https://rerun.io",
+  "homepage": "https://dalaran.dev",
   "type": "module",
   "exports": {
     ".": {
@@ -43,7 +36,7 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "@rerun-io/web-viewer": "0.36.0-alpha.1"
+    "@dalaran/web-viewer": "0.36.0-alpha.1"
   },
   "peerDependencies": {
     "@types/react": "^18.2.33 || ^19.0.0",

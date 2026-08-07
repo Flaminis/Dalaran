@@ -4,7 +4,7 @@ import {
   type PanelState,
   WebViewer,
   type AppOptions,
-} from "@rerun-io/web-viewer";
+} from "@dalaran/web-viewer";
 
 import type { AnyModel, Render } from "@anywidget/types";
 import "./widget.css";

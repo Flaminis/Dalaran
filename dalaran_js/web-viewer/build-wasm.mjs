@@ -33,7 +33,7 @@ function buildWebViewer(mode) {
       "--target no-modules-base",
       "--no-default-features",
       "--features map_view", // no `analytics`
-      "-o rerun_js/web-viewer",
+      "-o dalaran_js/web-viewer",
     ].join(" "),
   );
 }

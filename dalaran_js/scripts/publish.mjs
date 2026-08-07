@@ -65,9 +65,9 @@ for (const pkg of all_packages) {
 
 console.log("constructing final package for GCS upload");
 console.log(`files: ${tarballs.join(" ")}`);
-const rerun_js_package_dir = "rerun_js_package";
-fs.mkdirSync(rerun_js_package_dir);
+const dalaran_js_package_dir = "dalaran_js_package";
+fs.mkdirSync(dalaran_js_package_dir);
 for (const tarball of tarballs) {
-  const dest = path.join(rerun_js_package_dir, path.basename(tarball));
+  const dest = path.join(dalaran_js_package_dir, path.basename(tarball));
   fs.copyFileSync(tarball, dest);
 }

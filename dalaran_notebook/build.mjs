@@ -18,7 +18,7 @@ async function main() {
       outdir: "src/dalaran_notebook/static",
     });
     fs.copyFileSync(
-      "node_modules/@rerun-io/web-viewer/re_viewer_bg.wasm",
+      "node_modules/@dalaran/web-viewer/re_viewer_bg.wasm",
       "src/dalaran_notebook/static/re_viewer_bg.wasm",
     );
     log(`Built widget in ${Date.now() - start}ms`);

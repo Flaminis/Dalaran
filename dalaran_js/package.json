@@ -1,12 +1,5 @@
 {
-  "licenses": [
-    {
-      "type": "MIT"
-    },
-    {
-      "type": "Apache-2.0"
-    }
-  ],
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "docs": "node scripts/docs.mjs",

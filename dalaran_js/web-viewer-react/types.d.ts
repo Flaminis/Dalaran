@@ -1,5 +1,5 @@
 
-import type { WebViewerEvents } from "@rerun-io/web-viewer";
+import type { WebViewerEvents } from "@dalaran/web-viewer";
 
 type PascalCase<S extends string> = S extends `${infer P1}_${infer P2}`
   ? `${Capitalize<P1>}${PascalCase<P2>}`

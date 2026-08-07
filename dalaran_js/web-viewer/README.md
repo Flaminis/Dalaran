@@ -1,6 +1,6 @@
-# Rerun web viewer
+# Dalaran web viewer
 
-Embed the Rerun web viewer within your app.
+Embed the Dalaran web viewer within your app.
 
 <p align="center">
   <picture>
@@ -12,27 +12,27 @@ Embed the Rerun web viewer within your app.
   </picture>
 </p>
 
-This package is framework-agnostic. A React wrapper is available at <https://www.npmjs.com/package/@rerun-io/web-viewer-react>.
+This package is framework-agnostic. A React wrapper is available at <https://www.npmjs.com/package/@dalaran/web-viewer-react>.
 
 ## Install
 
 ```sh
-npm i @rerun-io/web-viewer
+npm i @dalaran/web-viewer
 ```
 
 ℹ️ Note:
-The package version is equal to the supported Rerun SDK version, and [RRD files are only partially stable across different versions](https://rerun.io/blog/release-0.23).
+The package version is equal to the supported Dalaran SDK version, and [RRD files are only partially stable across different versions](https://dalaran.dev/blog/release-0.23).
 This means that:
-- `@rerun-io/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) that originates from a Rerun SDK with version `0.10.0`!
-- For versions after `@rerun-io/web-viewer@0.23.0`, the Viewer can load data from the previous _minor_ version of Rerun, e.g. `0.24` can load `0.23` files.
+- `@dalaran/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) that originates from a Dalaran SDK with version `0.10.0`!
+- For versions after `@dalaran/web-viewer@0.23.0`, the Viewer can load data from the previous _minor_ version of Dalaran, e.g. `0.24` can load `0.23` files.
 
 ## Usage
 
-The entrypoint for this packages is the [`WebViewer`](https://ref.rerun.io/docs/js/0.35.0/web-viewer/classes/WebViewer.html) class.
+The entrypoint for this packages is the [`WebViewer`](https://ref.dalaran.dev/docs/js/0.35.0/web-viewer/classes/WebViewer.html) class.
 The web viewer is an object which manages a canvas element:
 
 ```js
-import { WebViewer } from "@rerun-io/web-viewer";
+import { WebViewer } from "@dalaran/web-viewer";
 
 const rrd = "…";
 const parentElement = document.body;
@@ -44,10 +44,10 @@ viewer.stop();
 ```
 
 The `rrd` in the snippet above should be a URL pointing to either:
-- A hosted `.rrd` file, such as <https://app.rerun.io/version/0.35.0/examples/dna.rrd>
-- A gRPC connection to the SDK opened via the [`serve`](https://www.rerun.io/docs/reference/sdk/operating-modes#serve) API
+- A hosted `.rrd` file, such as <https://app.dalaran.dev/version/0.35.0/examples/dna.rrd>
+- A gRPC connection to the SDK opened via the [`serve`](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API
 
-If `rrd` is not set, the Viewer will display the same welcome screen as <https://app.rerun.io>.
+If `rrd` is not set, the Viewer will display the same welcome screen as <https://app.dalaran.dev>.
 This can be disabled by setting `hide_welcome_screen` to `true` in the options object of `viewer.start`.
 
 ⚠ It's important to set the viewer's width and height, as without it the viewer may not display correctly.
@@ -61,5 +61,5 @@ This package only targets recent versions of browsers.
 If your target browser does not support Wasm imports or top-level await, you may need to install additional plugins for your bundler.
 
 For more information about using the package, visit:
-- [Integration docs](https://rerun.io/docs/howto/integrations/embed-web#using-the-javascript-package).
-- [Package docs](https://ref.rerun.io/docs/js/0.26.0/web-viewer/index.html).
+- [Integration docs](https://dalaran.dev/docs/howto/integrations/embed-web#using-the-javascript-package).
+- [Package docs](https://ref.dalaran.dev/docs/js/0.26.0/web-viewer/index.html).

@@ -40,18 +40,18 @@ This is useful for sites whose theme can differ from the OS preference — witho
 We offer JavaScript bindings to the Dalaran Viewer via NPM. This method provides control over the Viewer but requires a JavaScript web application setup with a bundler.
 
 Various packages are available:
-- [@rerun-io/web-viewer](https://www.npmjs.com/package/@rerun-io/web-viewer): Suitable for JS apps without a framework or frameworks without dedicated packages.
-- [@rerun-io/web-viewer-react](https://www.npmjs.com/package/@rerun-io/web-viewer-react): Designed specifically for React apps.
+- [@dalaran/web-viewer](https://www.npmjs.com/package/@dalaran/web-viewer): Suitable for JS apps without a framework or frameworks without dedicated packages.
+- [@dalaran/web-viewer-react](https://www.npmjs.com/package/@dalaran/web-viewer-react): Designed specifically for React apps.
 
 > [!NOTE]
-> The stability of the `rrd` format is still evolving, so the package version corresponds to the supported Dalaran SDK version. Therefore, `@rerun-io/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) originating from a Dalaran SDK with version `0.10.0`!
+> The stability of the `rrd` format is still evolving, so the package version corresponds to the supported Dalaran SDK version. Therefore, `@dalaran/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) originating from a Dalaran SDK with version `0.10.0`!
 
 ### Basic example
 
-To begin, install the package ([@rerun-io/web-viewer](https://www.npmjs.com/package/@rerun-io/web-viewer)) from NPM:
+To begin, install the package ([@dalaran/web-viewer](https://www.npmjs.com/package/@dalaran/web-viewer)) from NPM:
 
 ```
-npm i @rerun-io/web-viewer
+npm i @dalaran/web-viewer
 ```
 
 > [!NOTE]
@@ -60,7 +60,7 @@ npm i @rerun-io/web-viewer
 Once installed and configured, import and use it within your application:
 
 ```js
-import { WebViewer } from "@rerun-io/web-viewer";
+import { WebViewer } from "@dalaran/web-viewer";
 
 const rrdUrl = null;
 const parentElement = document.body;

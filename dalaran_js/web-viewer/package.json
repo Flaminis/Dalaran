@@ -1,15 +1,8 @@
 {
-  "name": "@rerun-io/web-viewer",
+  "name": "@dalaran/web-viewer",
   "version": "0.36.0-alpha.1+dev",
-  "description": "Embed the Rerun web viewer in your app",
-  "licenses": [
-    {
-      "type": "MIT"
-    },
-    {
-      "type": "Apache-2.0"
-    }
-  ],
+  "description": "Embed the Dalaran web viewer in your app",
+  "license": "Apache-2.0",
   "scripts": {
     "build:wasm": "node build-wasm.mjs --mode release",
     "build:js": "tsc",
@@ -23,12 +16,12 @@
     "type": "git",
     "url": "git+https://github.com/rerun-io/rerun.git"
   },
-  "author": "rerun-io",
+  "author": "dalaran-io",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/rerun-io/rerun/issues"
   },
-  "homepage": "https://rerun.io",
+  "homepage": "https://dalaran.dev",
   "type": "module",
   "main": "index.js",
   "types": "index.d.ts",

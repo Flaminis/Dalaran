@@ -40,7 +40,7 @@ for (const pkg_path of root_package_json.workspaces) {
   // update dependency versions
   if ("dependencies" in package_json) {
     for (const dependency of Object.keys(package_json.dependencies)) {
-      if (dependency.startsWith("@rerun-io/")) {
+      if (dependency.startsWith("@dalaran/")) {
         package_json.dependencies[dependency] =
           stripSemverBuildMetadata(version);
       }
@@ -55,17 +55,17 @@ for (const pkg_path of root_package_json.workspaces) {
   // be uploaded, so the links will work, and this is safe to bump.
   if (!version.includes("+dev")) {
     readme = readme.replace(
-      /<https:\/\/app\.rerun\.io\/version\/.*\/examples\/dna\.rrd>/,
-      `<https://app.rerun.io/version/${version}/examples/dna.rrd>`,
+      /<https:\/\/app\.dalaran\.io\/version\/.*\/examples\/dna\.rrd>/,
+      `<https://app.dalaran.dev/version/${version}/examples/dna.rrd>`,
     );
     readme = readme.replace(
-      /https:\/\/ref\.rerun\.io\/docs\/js\/.*\/web-viewer/,
-      `https://ref.rerun.io/docs/js/${version}/web-viewer`
+      /https:\/\/ref\.dalaran\.io\/docs\/js\/.*\/web-viewer/,
+      `https://ref.dalaran.dev/docs/js/${version}/web-viewer`
     )
     if (index_ts) {
       index_ts = index_ts.replace(
-        /https:\/\/app\.rerun\.io\/version\/.*\/examples\/dna\.rrd/,
-        `https://app.rerun.io/version/${version}/examples/dna.rrd`,
+        /https:\/\/app\.dalaran\.io\/version\/.*\/examples\/dna\.rrd/,
+        `https://app.dalaran.dev/version/${version}/examples/dna.rrd`,
       )
 
     }
