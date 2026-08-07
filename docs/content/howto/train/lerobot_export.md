@@ -9,14 +9,14 @@ This guide demonstrates how to use the OSS Dalaran server to query recordings, a
 
 ## Prerequisites
 
-The conversion code lives in the [`dalaran-lerobot`](https://github.com/rerun-io/rerun-lerobot) package.
+The conversion code lives in the [`dalaran-lerobot`](https://github.com/Flaminis/Dalaran-lerobot) package.
 Install it from PyPI:
 
 ```bash
 pip install dalaran-lerobot
 ```
 
-See the [`dalaran-lerobot` repository](https://github.com/rerun-io/rerun-lerobot) for source and development instructions.
+See the [`dalaran-lerobot` repository](https://github.com/Flaminis/Dalaran-lerobot) for source and development instructions.
 
 ## Time alignment and resampling
 
@@ -121,4 +121,4 @@ dalaran-lerobot \
   --video wrist:/camera/wrist:VideoStream:sample
 ```
 
-See the [`dalaran-lerobot` repository](https://github.com/rerun-io/rerun-lerobot) for the complete implementation.
+See the [`dalaran-lerobot` repository](https://github.com/Flaminis/Dalaran-lerobot) for the complete implementation.

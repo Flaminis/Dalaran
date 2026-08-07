@@ -215,16 +215,16 @@ class BacktickLinkError(Error):
 
             Example:
             ```
-            [Some link](`https://github.com/rerun-io/rerun`)
+            [Some link](`https://github.com/Flaminis/Dalaran`)
             ```
 
             Our markdown renderer will treat the above link as a _relative path_
             instead of a URL. If the above markdown is in `examples/robotics/README.md`,
-            it will link to \"https://dalaran.dev/examples/robotics/`https://github.com/rerun-io/rerun`\".
+            it will link to \"https://dalaran.dev/examples/robotics/`https://github.com/Flaminis/Dalaran`\".
 
             Solution: Remove the backticks.
             ```
-            [Some link](https://github.com/rerun-io/rerun)
+            [Some link](https://github.com/Flaminis/Dalaran)
             ```
             """,
         )

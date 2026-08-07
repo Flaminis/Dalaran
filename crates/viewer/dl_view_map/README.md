@@ -1,6 +1,6 @@
 # dl_view_map
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_view_map.svg)](https://crates.io/crates/dl_view_spatial)
 [![Documentation](https://docs.rs/dl_view_map/badge.svg)](https://docs.rs/dl_view_spatial)

@@ -1,6 +1,6 @@
 # dl_types_builder
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_types_builder.svg)](https://crates.io/crates/dl_types_builder)
 [![Documentation](https://docs.rs/dl_types_builder/badge.svg)](https://docs.rs/dl_types_builder)

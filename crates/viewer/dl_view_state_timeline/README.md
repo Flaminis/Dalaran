@@ -1,6 +1,6 @@
 # dl_view_state_timeline
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_view_state_timeline.svg)](https://crates.io/crates/dl_view_state_timeline)
 [![Documentation](https://docs.rs/dl_view_state_timeline/badge.svg)](https://docs.rs/dl_view_state_timeline)

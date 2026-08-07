@@ -3,7 +3,7 @@ LABEL maintainer="opensource@dalaran.dev"
 # Remember to update the version in publish.sh
 # TODO(jleibs) use this version in the publish.sh script and below in the CACHE_KEY
 LABEL version="0.18.0-x86-64"
-LABEL description="Docker image used for the CI of https://github.com/rerun-io/rerun"
+LABEL description="Docker image used for the CI of https://github.com/Flaminis/Dalaran"
 
 RUN set -eux; \
   dnf update -y; \

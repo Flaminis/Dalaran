@@ -15,9 +15,9 @@ This guide aims to go wide instead of deep.
 There are links to other doc pages where you can learn more about specific topics.
 
 The complete code listings for this tutorial live alongside the Dalaran source tree:
-[Python](https://github.com/rerun-io/rerun/tree/latest/examples/python/dna/dna.py),
-[Rust](https://github.com/rerun-io/rerun/tree/latest/examples/rust/dna/src/main.rs),
-[C++](https://github.com/rerun-io/rerun/tree/latest/examples/cpp/dna/main.cpp).
+[Python](https://github.com/Flaminis/Dalaran/tree/latest/examples/python/dna/dna.py),
+[Rust](https://github.com/Flaminis/Dalaran/tree/latest/examples/rust/dna/src/main.rs),
+[C++](https://github.com/Flaminis/Dalaran/tree/latest/examples/cpp/dna/main.cpp).
 
 ## Prerequisites
 

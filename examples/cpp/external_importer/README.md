@@ -1,8 +1,8 @@
 ---
 title: External importer example
-python: https://github.com/rerun-io/rerun/tree/latest/examples/python/external_importer/rerun-importer-python-file.py
-rust: https://github.com/rerun-io/rerun/tree/latest/examples/rust/external_importer/src/main.rs
-cpp: https://github.com/rerun-io/rerun/tree/latest/examples/cpp/external_importer/main.cpp
+python: https://github.com/Flaminis/Dalaran/tree/latest/examples/python/external_importer/rerun-importer-python-file.py
+rust: https://github.com/Flaminis/Dalaran/tree/latest/examples/rust/external_importer/src/main.rs
+cpp: https://github.com/Flaminis/Dalaran/tree/latest/examples/cpp/external_importer/main.cpp
 thumbnail: https://static.rerun.io/external_data_loader_cpp/83cd3c2a322911cf597cf74aeda01c8fe83e275f/480w.png
 ---
 

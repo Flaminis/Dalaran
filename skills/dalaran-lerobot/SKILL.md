@@ -70,4 +70,4 @@ Computed layers and per-episode properties then follow the standard patterns in 
 
 ## References
 
-- `https://github.com/rerun-io/rerun/tree/main/examples/python/dataloader` `prepare_dataset.py` (download → import → split → register, complete and runnable) and `train.py` (training-side consumption via `dalaran.experimental.dataloader`)
+- `https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader` `prepare_dataset.py` (download → import → split → register, complete and runnable) and `train.py` (training-side consumption via `dalaran.experimental.dataloader`)

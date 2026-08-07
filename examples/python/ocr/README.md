@@ -152,7 +152,7 @@ To run this example locally, make sure you have the Dalaran repository checked o
 
 ```bash
 pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
-git clone git@github.com:rerun-io/rerun.git  # Clone the repository
+git clone git@github.com:Flaminis/Dalaran.git  # Clone the repository
 cd dalaran
 ```
 

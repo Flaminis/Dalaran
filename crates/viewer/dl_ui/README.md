@@ -1,6 +1,6 @@
 # dl_ui
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_ui.svg)](https://crates.io/crates/dl_ui)
 [![Documentation](https://docs.rs/dl_ui/badge.svg)](https://docs.rs/dl_ui)

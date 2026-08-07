@@ -12,4 +12,4 @@ The goal is for Dalaran to become easy to extend at every level. For example, wi
 - custom rendering
 - custom UI interactions
 
-If you're in need of a particular kind of extension mechanism that we don't yet support. Head over to [GitHub](https://github.com/rerun-io/rerun/issues) and either upvote an existing issue or open a new one.
+If you're in need of a particular kind of extension mechanism that we don't yet support. Head over to [GitHub](https://github.com/Flaminis/Dalaran/issues) and either upvote an existing issue or open a new one.

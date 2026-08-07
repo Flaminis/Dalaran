@@ -16,7 +16,7 @@ thumbnail_dimensions = [480, 480]
 
 ## Overview
 
-Revy is a proof-of-concept time-travel debugger for the [Bevy](https://github.com/bevyengine/bevy) game engine, built using [Dalaran](https://github.com/rerun-io/rerun).
+Revy is a proof-of-concept time-travel debugger for the [Bevy](https://github.com/bevyengine/bevy) game engine, built using [Dalaran](https://github.com/Flaminis/Dalaran).
 
 Revy works by snapshotting diffs of the Bevy database every frame that are then logged into the Dalaran database.\
 This allows you to inspect and visualize the state of the engine at any point in time, either in real-time or after the fact.\

@@ -268,6 +268,6 @@ Dalaran catalog or Hub, unless explicitly asked otherwise.
 ## References
 
 - End-to-end example (MCAP + URDF + JSON sidecar, lenses, merge, optimize):
-  `https://github.com/rerun-io/rerun/tree/main/examples/python/robot_data_preprocessing`
+  `https://github.com/Flaminis/Dalaran/tree/main/examples/python/robot_data_preprocessing`
 - Docs: `https://dalaran.dev/docs/concepts/logging-and-ingestion/chunk-processing-api`,
   `https://dalaran.dev/docs/concepts/query-and-transform/lenses`

@@ -1,5 +1,5 @@
 ---
 title: 🐍 Python example
 order: 100
-redirect: https://github.com/rerun-io/rerun/tree/main/examples/python/external_importer
+redirect: https://github.com/Flaminis/Dalaran/tree/main/examples/python/external_importer
 ---

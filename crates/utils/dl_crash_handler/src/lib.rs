@@ -65,7 +65,7 @@ fn install_panic_hook(_build_info: BuildInfo) {
             eprintln!(
                 "\n\
             Troubleshooting Dalaran: https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting \n\
-            Report bugs: https://github.com/rerun-io/rerun/issues"
+            Report bugs: https://github.com/Flaminis/Dalaran/issues"
             );
 
             #[cfg(feature = "analytics")]
@@ -128,7 +128,7 @@ pub fn install_signal_handler(build_info: BuildInfo) {
             write_to_stderr(
                 "Troubleshooting Dalaran: https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting \n",
             );
-            write_to_stderr("Report bugs: https://github.com/rerun-io/rerun/issues \n");
+            write_to_stderr("Report bugs: https://github.com/Flaminis/Dalaran/issues \n");
             write_to_stderr("\n");
         }
 

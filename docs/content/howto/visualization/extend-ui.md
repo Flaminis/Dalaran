@@ -15,13 +15,13 @@ embedding custom UI panels alongside the Viewer, adding a custom visualizer to a
 
 ![The Dalaran Viewer, extended with a custom panel to the right](https://github.com/rerun-io/rerun/assets/1148717/cbbad63e-9b18-4e54-bafe-b6ffd723f63e)
 
-In the above screenshot you see the example [`extend_viewer_ui`](https://github.com/rerun-io/rerun/tree/main/examples/rust/extend_viewer_ui), which contains the Dalaran Viewer to the left and a custom panel to the right. In this example the panel contains a hierarchical text view of the loaded data.
+In the above screenshot you see the example [`extend_viewer_ui`](https://github.com/Flaminis/Dalaran/tree/main/examples/rust/extend_viewer_ui), which contains the Dalaran Viewer to the left and a custom panel to the right. In this example the panel contains a hierarchical text view of the loaded data.
 
 ### How to build it
 
-The Dalaran Viewer is defined by the crate [`dl_viewer`](https://github.com/rerun-io/rerun/tree/main/crates/viewer/dl_viewer). It uses the popular Rust GUI library [`egui`](https://github.com/emilk/egui) (written by our CTO) and its framework [`eframe`](https://github.com/emilk/egui/tree/master/crates/eframe). To extend the UI you need to create your own `eframe` application and embed `dl_viewer` inside of it. You can then use `egui` to add custom panels and windows.
+The Dalaran Viewer is defined by the crate [`dl_viewer`](https://github.com/Flaminis/Dalaran/tree/main/crates/viewer/dl_viewer). It uses the popular Rust GUI library [`egui`](https://github.com/emilk/egui) (written by our CTO) and its framework [`eframe`](https://github.com/emilk/egui/tree/master/crates/eframe). To extend the UI you need to create your own `eframe` application and embed `dl_viewer` inside of it. You can then use `egui` to add custom panels and windows.
 
-The best way to get started is by reading [the source code of the `extend_viewer_ui` example](https://github.com/rerun-io/rerun/tree/main/examples/rust/extend_viewer_ui).
+The best way to get started is by reading [the source code of the `extend_viewer_ui` example](https://github.com/Flaminis/Dalaran/tree/main/examples/rust/extend_viewer_ui).
 
 
 ## Custom visualizers for built-in views
@@ -36,7 +36,7 @@ The best way to get started is by reading [the source code of the `extend_viewer
 
 You can register custom visualizers with existing built-in views (such as the 3D Spatial View) without having to implement an entire view class from scratch. This is the right approach when your data fits naturally into an existing view but needs custom rendering. A custom visualizer typically consists of a custom archetype, a visualizer system, and optionally a custom GPU renderer.
 
-The [`custom_visualizer`](https://github.com/rerun-io/rerun/tree/main/examples/rust/custom_visualizer) example demonstrates this by adding a GPU-rendered heightfield to the built-in 3D Spatial View. See its README for a detailed walkthrough of the three parts involved.
+The [`custom_visualizer`](https://github.com/Flaminis/Dalaran/tree/main/examples/rust/custom_visualizer) example demonstrates this by adding a GPU-rendered heightfield to the built-in 3D Spatial View. See its README for a detailed walkthrough of the three parts involved.
 
 
 ## Custom view classes
@@ -51,11 +51,11 @@ The [`custom_visualizer`](https://github.com/rerun-io/rerun/tree/main/examples/r
 
 If you need a completely new kind of view (not just a new visualizer within an existing view), you can implement a custom view class.
 
-The [`custom_view`](https://github.com/rerun-io/rerun/tree/main/examples/rust/custom_view) example demonstrates how to add a fully custom View class to Dalaran on startup.
+The [`custom_view`](https://github.com/Flaminis/Dalaran/tree/main/examples/rust/custom_view) example demonstrates how to add a fully custom View class to Dalaran on startup.
 Views that are added this way have access to the exact same interfaces as all other Views,
 meaning that any of the built-in Views can serve as an additional example on how to implement Views.
 
-The best way to get started is by reading [the source code of the `custom_view` example](https://github.com/rerun-io/rerun/tree/main/examples/rust/custom_view).
+The best way to get started is by reading [the source code of the `custom_view` example](https://github.com/Flaminis/Dalaran/tree/main/examples/rust/custom_view).
 
 ## Future work
 

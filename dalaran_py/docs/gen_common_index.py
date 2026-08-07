@@ -529,7 +529,7 @@ with mkdocs_gen_files.open(index_path, "w") as index_file:
 ## Getting Started
 * [Quick start](https://www.dalaran.dev/docs/getting-started/data-in/python)
 * [Tutorial](https://www.dalaran.dev/docs/getting-started/data-in/python)
-* [Examples on GitHub](https://github.com/rerun-io/rerun/tree/latest/examples/python)
+* [Examples on GitHub](https://github.com/Flaminis/Dalaran/tree/latest/examples/python)
 * [Troubleshooting](https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting)
 
 There are many different ways of sending data to the Dalaran Viewer depending on what you're trying
@@ -600,7 +600,7 @@ of Python, you can use the table below to make sure you choose the proper Dalara
 You can set `RUST_LOG=debug` before running your Python script
 and/or `dalaran` process to get some verbose logging output.
 
-If you run into any issues don't hesitate to [open a ticket](https://github.com/rerun-io/rerun/issues/new/choose)
+If you run into any issues don't hesitate to [open a ticket](https://github.com/Flaminis/Dalaran/issues/new/choose)
 or [join our Discord](https://discord.gg/Gcm8BbTaAj).
 """,
     )

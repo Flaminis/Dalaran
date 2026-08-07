@@ -230,8 +230,8 @@ export interface WebViewerOptions {
    * To use this:
    * 1. Host the `signed-in.html` and `signed-out.html` pages alongside your viewer.
    *    Templates can be found at:
-   *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-in.html
-   *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-out.html
+   *    - https://github.com/Flaminis/Dalaran/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-in.html
+   *    - https://github.com/Flaminis/Dalaran/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-out.html
    * 2. Set the URLs to those pages here.
    * 3. Contact your Dalaran representative to have the redirect URLs
    *    and origin whitelisted in the OAuth configuration.

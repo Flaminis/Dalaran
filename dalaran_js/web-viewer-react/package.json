@@ -12,12 +12,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rerun-io/rerun.git"
+    "url": "git+https://github.com/Flaminis/Dalaran.git"
   },
   "author": "dalaran-io",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rerun-io/rerun/issues"
+    "url": "https://github.com/Flaminis/Dalaran/issues"
   },
   "homepage": "https://dalaran.dev",
   "type": "module",

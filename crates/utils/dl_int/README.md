@@ -1,6 +1,6 @@
 # dl_int
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_int.svg)](https://crates.io/crates/dl_int)
 [![Documentation](https://docs.rs/dl_int/badge.svg)](https://docs.rs/dl_int?speculative-link)

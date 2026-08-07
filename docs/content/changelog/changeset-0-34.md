@@ -58,7 +58,7 @@ raw data -> DLR -> derived layers -> dataset queries -> training -> evaluation
 We added new skills to the Dalaran repo to make it easier to investigate existing robotics data with Dalaran.
 You can install the skills in your project via:
 ```sh
-npx skills add rerun-io/rerun
+npx skills add Flaminis/Dalaran
 ```
 
 The new [learning course](https://dalaran.dev/learn) also shows how these agent skills can be used to collect, refine and train with robotics data.

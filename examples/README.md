@@ -49,7 +49,7 @@ add a `channel` entry to its README frontmatter. The available channels right no
 - `nightly` for heavier examples built once per day
 - `release` for very heavy examples built once per release
 
-These channels are defined in: https://github.com/rerun-io/rerun/blob/18189a436271d58efe55a9c58fb3ff4d29098fd2/crates/build/dl_dev_tools/src/build_examples/example.rs#L150-L158
+These channels are defined in: https://github.com/Flaminis/Dalaran/blob/18189a436271d58efe55a9c58fb3ff4d29098fd2/crates/build/dl_dev_tools/src/build_examples/example.rs#L150-L158
 
 
 If `channel` is missing, the example is never built on CI.

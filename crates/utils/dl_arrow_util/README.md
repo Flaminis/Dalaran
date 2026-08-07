@@ -1,6 +1,6 @@
 # dl_arrow_util
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_arrow_util.svg)](https://crates.io/crates/dl_arrow_util)
 [![Documentation](https://docs.rs/dl_arrow_util/badge.svg)](https://docs.rs/dl_arrow_util)

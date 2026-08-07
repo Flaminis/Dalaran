@@ -12,7 +12,7 @@ This document describes the current release and versioning strategy. This strate
 
 ## Repository
 
-:warning: The steps & workflows in this document are targeting the open-source Dalaran repository (https://github.com/rerun-io/rerun), not our internal monorepo.
+:warning: The steps & workflows in this document are targeting the open-source Dalaran repository (https://github.com/Flaminis/Dalaran), not our internal monorepo.
 
 ## Release cadence
 
@@ -37,7 +37,7 @@ In rare cases we will do patch releases, e.g. `0.3.1`, when there is a critical 
 We sometimes do pre-releases. Then we use the versioning `0.2.0-alpha.0` etc.
 
 The version on our `main` branch is always an `-alpha.N+dev` version. We build artifacts from `main` every day, though these are not published on package registries.
-You can find the latest development version in our [GitHub releases](https://github.com/rerun-io/rerun/releases/tag/prerelease).
+You can find the latest development version in our [GitHub releases](https://github.com/Flaminis/Dalaran/releases/tag/prerelease).
 
 ## Rust version policy
 
@@ -61,7 +61,7 @@ Before doing anything, read all the steps in full!
 
 There usually isn't any ambiguity, as releases are planned ahead of time.
 
-You can always find the latest release on our [GitHub releases](https://github.com/rerun-io/rerun/releases/tag/prerelease) page.
+You can always find the latest release on our [GitHub releases](https://github.com/Flaminis/Dalaran/releases/tag/prerelease) page.
 
 ### 2. Create a release branch
 
@@ -174,7 +174,7 @@ Once the release workflow is started, it will create a pull request for the rele
 The pull request description will tell you what to do next.
 
 [The `Release` workflow](https://github.com/rerun-io/rerun/actions/workflows/release.yml) will build artifacts, run PR checks, and publish them to PyPI, crates.io, npm, etc.
-For `rc` and `final` releases it also creates a **draft** [GitHub release](https://github.com/rerun-io/rerun/releases) (in the `tag-release` job) and attaches a comment to the release PR pointing at it.
+For `rc` and `final` releases it also creates a **draft** [GitHub release](https://github.com/Flaminis/Dalaran/releases) (in the `tag-release` job) and attaches a comment to the release PR pointing at it.
 
 Once the `Release` workflow has finished successfully and you've sanity-checked the artifacts, edit the GitHub release draft (changelog, header media) and click `Publish release`.
 Publishing the release triggers the [`GitHub Release` workflow](https://github.com/rerun-io/rerun/actions/workflows/on_gh_release.yml), which syncs the binary assets from `build.dalaran.dev` onto the published GitHub release.

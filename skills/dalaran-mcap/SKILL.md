@@ -82,5 +82,5 @@ Drop to `mcap.reader.make_reader` only when you need raw record metadata without
 
 ## References
 
-- End-to-end MCAP pipeline: `https://github.com/rerun-io/rerun/tree/main/examples/python/robot_data_preprocessing`
+- End-to-end MCAP pipeline: `https://github.com/Flaminis/Dalaran/tree/main/examples/python/robot_data_preprocessing`
 - `dalaran-chunk-processing` (stream/lens mechanics), `dalaran-urdf` (FK from joint-state topics), `dalaran-data-model` (modeling decisions)

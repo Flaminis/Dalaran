@@ -39,7 +39,7 @@ urdf = UrdfTree.from_file_path(
   (defaults to `/tf_static`).
 
 The tree is also introspectable (full surface in `help(UrdfTree)`)
-For one-off, non-stream use there are `joint.compute_transform(value)`, `joint.compute_transform_columns(values)` (feeds `rr.send_columns`), and `urdf.log_urdf_to_recording()` to log the whole model through the classic logging API (the `animated_urdf` example, `https://github.com/rerun-io/rerun/tree/main/examples/python/animated_urdf`, is that style).
+For one-off, non-stream use there are `joint.compute_transform(value)`, `joint.compute_transform_columns(values)` (feeds `rr.send_columns`), and `urdf.log_urdf_to_recording()` to log the whole model through the classic logging API (the `animated_urdf` example, `https://github.com/Flaminis/Dalaran/tree/main/examples/python/animated_urdf`, is that style).
 
 For pipelines, a `UrdfTree` does two things.
 
@@ -254,10 +254,10 @@ correct.
 
 ## References
 
-- `https://github.com/rerun-io/rerun/tree/main/examples/python/robot_data_preprocessing`
+- `https://github.com/Flaminis/Dalaran/tree/main/examples/python/robot_data_preprocessing`
   (FK two-lens pattern, two robots + scene URDFs, prefixes, recoloring,
   calibration offsets)
-- `https://github.com/rerun-io/rerun/tree/main/examples/python/animated_urdf`
+- `https://github.com/Flaminis/Dalaran/tree/main/examples/python/animated_urdf`
   (classic logging API: `log_urdf_to_recording`, per-joint `compute_transform`)
 - `dalaran-data-model` (the mapping table this skill consumes)
 - the importer skill for your joint-state source format (making the source readable)

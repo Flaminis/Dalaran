@@ -28,5 +28,5 @@ order: 400
 ## Beyond the docs
 
 - [Discord](https://discord.gg/PXtCgFBSmH) — ask questions and chat with other Dalaran users
-- [GitHub](https://github.com/rerun-io/rerun) — source code and issue tracker
+- [GitHub](https://github.com/Flaminis/Dalaran) — source code and issue tracker
 - [Examples](https://dalaran.dev/examples) — see Dalaran in action

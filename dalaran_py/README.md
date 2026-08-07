@@ -83,7 +83,7 @@ Refer to [BUILD.md](../BUILD.md) for details on the various different build opti
 
 # Installing a pre-release
 
-Prebuilt dev wheels from head of main are available at <https://github.com/rerun-io/rerun/releases/tag/prerelease>.
+Prebuilt dev wheels from head of main are available at <https://github.com/Flaminis/Dalaran/releases/tag/prerelease>.
 
 While we try to keep the main branch usable at all times, it may be unstable occasionally. Use at your own risk.
 

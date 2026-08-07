@@ -1,6 +1,6 @@
 # dl_lenses_core
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_lenses_core.svg)](https://crates.io/crates/dl_lenses_core)
 [![Documentation](https://docs.rs/dl_lenses_core/badge.svg)](https://docs.rs/dl_lenses_core)

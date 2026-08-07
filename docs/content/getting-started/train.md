@@ -3,7 +3,7 @@ title: Train
 order: 475
 ---
 
-This page walks through streaming Dalaran recordings directly into a PyTorch `DataLoader`, without an intermediate export step, using the bundled [LeRobot ACT training example](https://github.com/rerun-io/rerun/tree/main/examples/python/dataloader) end-to-end.
+This page walks through streaming Dalaran recordings directly into a PyTorch `DataLoader`, without an intermediate export step, using the bundled [LeRobot ACT training example](https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader) end-to-end.
 For an explanation of the dataloader API itself — windowed action chunks, GOP-aware video decoding, DDP partitioning — see [Train PyTorch models with Dalaran](../howto/train.md).
 
 > [!NOTE]
@@ -18,7 +18,7 @@ The example trains a [LeRobot ACT](https://tonyzhaozh.github.io/aloha/) policy o
 Sparse-checkout just the example directory, without the rest of the Dalaran repo:
 
 ```bash
-git clone --filter=blob:none --sparse https://github.com/rerun-io/rerun.git
+git clone --filter=blob:none --sparse https://github.com/Flaminis/Dalaran.git
 cd dalaran
 git sparse-checkout set examples/python/dataloader
 cd examples/python/dataloader
@@ -66,6 +66,6 @@ The script streams batches from the catalog, trains an ACT policy for a few epoc
 
 ## References
 
-- [Example source](https://github.com/rerun-io/rerun/tree/main/examples/python/dataloader) — `prepare_dataset.py` and `train.py`
+- [Example source](https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader) — `prepare_dataset.py` and `train.py`
 - [`dalaran/so101-pick-and-place`](https://huggingface.co/datasets/dalaran/so101-pick-and-place) — LeRobot dataset on HuggingFace
 - [Train PyTorch models with Dalaran](../howto/train.md) — full how-to: windowing, video decoding, iterable vs. map style, DDP

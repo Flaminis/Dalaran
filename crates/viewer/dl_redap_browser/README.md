@@ -1,6 +1,6 @@
 # dl_redap_browser
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_redap_browser.svg)](https://crates.io/crates/dl_redap_browser)
 [![Documentation](https://docs.rs/dl_redap_browser/badge.svg)](https://docs.rs/dl_redap_browser)

@@ -79,7 +79,7 @@ all = ["datafusion==54.0.0", "pandas>=2", "dalaran-notebook==0.36.0-alpha.1+dev"
 [project.urls]
 documentation = "https://www.dalaran.dev/docs"
 homepage = "https://www.dalaran.dev"
-repository = "https://github.com/rerun-io/rerun"
+repository = "https://github.com/Flaminis/Dalaran"
 
 [project.scripts]
 dalaran = "dalaran_cli.__main__:main"

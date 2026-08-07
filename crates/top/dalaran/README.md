@@ -7,8 +7,8 @@
 <h1 align="center">
   <a href="https://crates.io/crates/dalaran">                             <img alt="Latest version" src="https://img.shields.io/crates/v/dalaran.svg">                               </a>
   <a href="https://docs.rs/dalaran">                                      <img alt="Documentation"  src="https://docs.rs/dalaran/badge.svg">                                         </a>
-  <a href="https://github.com/rerun-io/rerun/blob/main/LICENSE-MIT">    <img alt="MIT"            src="https://img.shields.io/badge/license-MIT-blue.svg">                        </a>
-  <a href="https://github.com/rerun-io/rerun/blob/main/LICENSE-APACHE"> <img alt="Apache"         src="https://img.shields.io/badge/license-Apache-blue.svg">                     </a>
+  <a href="https://github.com/Flaminis/Dalaran/blob/main/LICENSE-MIT">    <img alt="MIT"            src="https://img.shields.io/badge/license-MIT-blue.svg">                        </a>
+  <a href="https://github.com/Flaminis/Dalaran/blob/main/LICENSE-APACHE"> <img alt="Apache"         src="https://img.shields.io/badge/license-Apache-blue.svg">                     </a>
   <a href="https://discord.gg/Gcm8BbTaAj">                              <img alt="Dalaran Discord"  src="https://img.shields.io/discord/1062300748202921994?label=Dalaran%20Discord"> </a>
 </h1>
 
@@ -30,7 +30,7 @@ rec.log("image", &dalaran::archetypes::Image::new(image))?;
 </p>
 
 ## Getting started
-- [Examples](https://github.com/rerun-io/rerun/tree/latest/examples/rust)
+- [Examples](https://github.com/Flaminis/Dalaran/tree/latest/examples/rust)
 - [High-level docs](https://dalaran.dev/docs)
 - [Rust API docs](https://docs.rs/dalaran/)
 - [Troubleshooting](https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting)
@@ -38,7 +38,7 @@ rec.log("image", &dalaran::archetypes::Image::new(image))?;
 ## Library
 You can add the `dalaran` crate to your project with `cargo add dalaran`.
 
-To get started, see [the examples](https://github.com/rerun-io/rerun/tree/latest/examples/rust).
+To get started, see [the examples](https://github.com/Flaminis/Dalaran/tree/latest/examples/rust).
 
 ## Binary
 You can install the binary with `cargo install dalaran-cli --locked --features nasm`.

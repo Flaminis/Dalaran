@@ -1,6 +1,6 @@
 # dl_quota_channel
 
-Part of the [Dalaran](https://github.com/rerun-io/rerun) project.
+Part of the [Dalaran](https://github.com/Flaminis/Dalaran) project.
 
 [![Latest version](https://img.shields.io/crates/v/dl_quota_channel.svg)](https://crates.io/crates/dl_quota_channel)
 [![Documentation](https://docs.rs/dl_quota_channel/badge.svg)](https://docs.rs/dl_quota_channel)

@@ -103,7 +103,7 @@ display(viewer)
 Whenever an entity is selected in the Viewer, `selected_entities.value` changes. The payload includes other useful information,
 such as the position of the selection within a 2D or 3D view.
 
-For a more complete example, see [callbacks.ipynb](https://github.com/rerun-io/rerun/blob/main/examples/python/notebook_callbacks/notebook_callbacks.ipynb).
+For a more complete example, see [callbacks.ipynb](https://github.com/Flaminis/Dalaran/blob/main/examples/python/notebook_callbacks/notebook_callbacks.ipynb).
 
 ## Working with blueprints
 
@@ -181,7 +181,7 @@ To experiment with notebooks yourself, there are a few options.
 
 ### Running locally
 
-The GitHub repo includes a [notebook example](https://github.com/rerun-io/rerun/blob/main/examples/python/notebook/cube.ipynb).
+The GitHub repo includes a [notebook example](https://github.com/Flaminis/Dalaran/blob/main/examples/python/notebook/cube.ipynb).
 
 If you have a local checkout of Dalaran, you can:
 

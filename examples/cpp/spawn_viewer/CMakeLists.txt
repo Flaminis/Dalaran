@@ -12,7 +12,7 @@ else()
     add_executable(example_spawn_viewer main.cpp)
 
     # Set the path to the dalaran_c build.
-    set(DALARAN_CPP_URL "https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip" CACHE STRING "URL to the dalaran_cpp zip.")
+    set(DALARAN_CPP_URL "https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip" CACHE STRING "URL to the dalaran_cpp zip.")
 
     # Download the dalaran_sdk
     include(FetchContent)

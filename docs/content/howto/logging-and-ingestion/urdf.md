@@ -33,11 +33,11 @@ Here is an example that demonstrates how to load and update a `URDF` with the Py
 
 snippet: howto/load_urdf
 
-For a full animation example, see the [Python animated URDF example](https://github.com/rerun-io/rerun/tree/main/examples/python/animated_urdf). There's also a [Rust example](https://github.com/rerun-io/rerun/tree/main/examples/rust/animated_urdf).
+For a full animation example, see the [Python animated URDF example](https://github.com/Flaminis/Dalaran/tree/main/examples/python/animated_urdf). There's also a [Rust example](https://github.com/Flaminis/Dalaran/tree/main/examples/rust/animated_urdf).
 
 ## URDF utilities (Python)
 
-Dalaran provides the [`dl.urdf`](https://github.com/rerun-io/rerun/tree/main/rerun_py/rerun_sdk/rerun/urdf.py) Python module that can facilitate the handling of URDF models in your code.
+Dalaran provides the [`dl.urdf`](https://github.com/Flaminis/Dalaran/tree/main/rerun_py/rerun_sdk/rerun/urdf.py) Python module that can facilitate the handling of URDF models in your code.
 It can be used as an alternative to other 3rd-party packages like [yourdfpy](https://yourdfpy.readthedocs.io/en/latest/index.html) or [pytransforms3d](https://dfki-ric.github.io/pytransform3d/index.html).
 As shown below, you can use it e.g. to access individual joints of the URDF model and to compute their respective transforms based on joint states (e.g. angles for revolute joints).
 These transforms can be directly sent to Dalaran.

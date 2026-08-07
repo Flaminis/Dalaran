@@ -26,7 +26,7 @@ DESCRIPTION = """
 # 3D meshes
 This example can log a 3D scene as explicit `Mesh3D` data or as a prepacked `Asset3D`.
 
-The full source code for this example is available [on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/raw_mesh).
+The full source code for this example is available [on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/raw_mesh).
 """
 
 

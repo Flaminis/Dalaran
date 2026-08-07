@@ -10,7 +10,7 @@ dl.log(
     .AnyValues(
         # Using arbitrary Arrow data.
         homepage="https://www.dalaran.dev",
-        repository="https://github.com/rerun-io/rerun",
+        repository="https://github.com/Flaminis/Dalaran",
     )
     # Using Dalaran's builtin components.
     .with_component_override(

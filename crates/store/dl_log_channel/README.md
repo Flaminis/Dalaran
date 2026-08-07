@@ -1,6 +1,6 @@
 # dl_log_channel
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_log_channel.svg)](https://crates.io/crates/dl_log_channel)
 [![Documentation](https://docs.rs/dl_log_channel/badge.svg)](https://docs.rs/dl_log_channel)

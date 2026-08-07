@@ -1,6 +1,6 @@
 # Dalaran's analytics SDK
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_analytics.svg)](https://crates.io/crates/dl_analytics)
 [![Documentation](https://docs.rs/dl_analytics/badge.svg)](https://docs.rs/dl_analytics)
@@ -21,7 +21,7 @@ Run `dalaran analytics disable` to opt out of all usage data collection.
 In debug builds, analytics is off by default. Turn it on by setting the environment variable `FORCE_DALARAN_ANALYTICS=1`.
 
 ### What data is collected?
-The exact set of analytics events and parameters can be found here: <https://github.com/rerun-io/rerun/blob/main/crates/utils/dl_analytics/src/event.rs>
+The exact set of analytics events and parameters can be found here: <https://github.com/Flaminis/Dalaran/blob/main/crates/utils/dl_analytics/src/event.rs>
 
 - We collect high level events about the usage of the Dalaran Viewer. For example:
     - The event 'Viewer Opened' helps us estimate how often Dalaran is used.

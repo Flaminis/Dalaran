@@ -12,7 +12,7 @@ else()
     add_executable(example_stdio main.cpp)
 
     # Set the path to the dalaran_c build.
-    set(DALARAN_CPP_URL "https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip" CACHE STRING "URL to the dalaran_cpp zip.")
+    set(DALARAN_CPP_URL "https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip" CACHE STRING "URL to the dalaran_cpp zip.")
     option(DALARAN_FIND_PACKAGE "Whether to use find_package to find a preinstalled dalaran package (instead of using FetchContent)." OFF)
 
     if(DALARAN_FIND_PACKAGE)

@@ -46,7 +46,7 @@ arrow::Status run_main() {
 
     arrow::StringBuilder repository_builder;
     ARROW_RETURN_NOT_OK(
-        repository_builder.Append("https://github.com/rerun-io/rerun")
+        repository_builder.Append("https://github.com/Flaminis/Dalaran")
     );
     ARROW_RETURN_NOT_OK(repository_builder.Finish(&arrow_array));
     auto repository = dalaran::ComponentBatch::from_arrow_array(

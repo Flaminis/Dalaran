@@ -1,6 +1,6 @@
 # dl_data_source
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_data_source.svg)](https://crates.io/crates/dl_data_source)
 [![Documentation](https://docs.rs/dl_data_source/badge.svg)](https://docs.rs/dl_data_source)

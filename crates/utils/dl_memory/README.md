@@ -1,6 +1,6 @@
 # Run-time memory tracking and profiling.
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_memory.svg)](https://crates.io/crates/dl_memory)
 [![Documentation](https://docs.rs/dl_memory/badge.svg)](https://docs.rs/dl_memory)

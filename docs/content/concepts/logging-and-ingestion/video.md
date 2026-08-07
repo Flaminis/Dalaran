@@ -43,7 +43,7 @@ allows the Dalaran Viewer to show incomplete or open ended video streams.
 In contrast, [`AssetVideo`](../../reference/types/archetypes/asset_video.md) requires the entire
 video asset file to be in Viewer memory before decoding can begin.
 
-Refer to the [video camera streaming](https://github.com/rerun-io/rerun/blob/latest/examples/python/camera_video_stream) example to learn how to stream live video to Dalaran.
+Refer to the [video camera streaming](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/camera_video_stream) example to learn how to stream live video to Dalaran.
 
 For more details on how to query and decode video streams from Dalaran, see our [query video streams how-to](../../howto/query-and-transform/query_videos.md).
 
@@ -64,7 +64,7 @@ TODO(#10422): fix above if ticket is outdated.
 ### Export MP4 from DLR (remuxing)
 
 Sample data from [`VideoStream`](../../reference/types/archetypes/video_stream.md) can be queried
-and remuxed to mp4 without re-encoding the video as demonstrated in [this sample](https://github.com/rerun-io/rerun/blob/latest/docs/snippets/all/archetypes/video_stream_query_and_mux.py).
+and remuxed to mp4 without re-encoding the video as demonstrated in [this sample](https://github.com/Flaminis/Dalaran/blob/latest/docs/snippets/all/archetypes/video_stream_query_and_mux.py).
 
 Check the [doc page on retrieving data](../../howto/query-and-transform/get-data-out.md) to learn more about dataframe queries in general.
 
@@ -173,7 +173,7 @@ There are still some limitations to encoded Video in Dalaran which will be addre
 * [#7594](https://github.com/rerun-io/rerun/issues/7594): HDR video is not supported
 * [#5181](https://github.com/rerun-io/rerun/issues/5181): There is no audio support
 * There is no video encoder in the Dalaran SDK, so you need to create the video stream or file yourself.
-  Refer to the [video camera streaming](https://github.com/rerun-io/rerun/blob/latest/examples/python/camera_video_stream) example to learn how to encode video using [`pyAV`](https://github.com/PyAV-Org/PyAV).
+  Refer to the [video camera streaming](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/camera_video_stream) example to learn how to encode video using [`pyAV`](https://github.com/PyAV-Org/PyAV).
 
 <!--
 Discoverable for scripts/zombie_todos.py:

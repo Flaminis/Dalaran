@@ -133,7 +133,7 @@ Note that doing so executes the entire pipeline twice, which may not be desirabl
 
 The rest of this page walks through a single end-to-end pipeline that reads a robot-arm MCAP recording, fans the protobuf joint-state column out into per-joint `Scalars` series in degrees, tags the result with a static `/metadata` chunk built from scratch, and writes a new `.dlr`.
 
-Full source: [Python](https://github.com/rerun-io/rerun/blob/main/docs/snippets/all/concepts/chunk_processing.py).
+Full source: [Python](https://github.com/Flaminis/Dalaran/blob/main/docs/snippets/all/concepts/chunk_processing.py).
 
 ### Setup
 
@@ -199,4 +199,4 @@ The two are interoperable:
 
 - [Chunks](chunks.md): the underlying data model.
 - [Lenses](../query-and-transform/lenses.md): the reshaping primitives used here.
-- [`robot_data_preprocessing`](https://github.com/rerun-io/rerun/tree/main/examples/python/robot_data_preprocessing): a practical example showing how to apply the chunk processing API to robot data.
+- [`robot_data_preprocessing`](https://github.com/Flaminis/Dalaran/tree/main/examples/python/robot_data_preprocessing): a practical example showing how to apply the chunk processing API to robot data.

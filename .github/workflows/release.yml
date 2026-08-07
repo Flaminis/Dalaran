@@ -444,7 +444,7 @@ jobs:
           version="${{ needs.version.outputs.final }}"
 
           cat <<EOF > comment-body.txt
-          The GitHub release draft for $version can be found in the [release list](https://github.com/rerun-io/rerun/releases).
+          The GitHub release draft for $version can be found in the [release list](https://github.com/Flaminis/Dalaran/releases).
 
           Add a description, changelog, and a nice header video/picture, then click 'Publish release'.
           EOF

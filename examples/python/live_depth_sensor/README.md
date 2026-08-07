@@ -96,7 +96,7 @@ dl.log("realsense/depth/image", dl.DepthImage(depth_image, meter=1.0 / depth_uni
 To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
 pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
-git clone git@github.com:rerun-io/rerun.git  # Clone the repository
+git clone git@github.com:Flaminis/Dalaran.git  # Clone the repository
 cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```

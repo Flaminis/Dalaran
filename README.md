@@ -8,8 +8,8 @@
 <h3 align="center">
   <a href="https://pypi.org/project/dalaran-sdk/">                        <img alt="PyPi"           src="https://img.shields.io/pypi/v/dalaran-sdk.svg">                              </a>
   <a href="https://crates.io/crates/dalaran">                             <img alt="crates.io"      src="https://img.shields.io/crates/v/dalaran.svg">                                </a>
-  <a href="https://github.com/rerun-io/rerun/blob/main/LICENSE-MIT">    <img alt="MIT"            src="https://img.shields.io/badge/license-MIT-blue.svg">                        </a>
-  <a href="https://github.com/rerun-io/rerun/blob/main/LICENSE-APACHE"> <img alt="Apache"         src="https://img.shields.io/badge/license-Apache-blue.svg">                     </a>
+  <a href="https://github.com/Flaminis/Dalaran/blob/main/LICENSE-MIT">    <img alt="MIT"            src="https://img.shields.io/badge/license-MIT-blue.svg">                        </a>
+  <a href="https://github.com/Flaminis/Dalaran/blob/main/LICENSE-APACHE"> <img alt="Apache"         src="https://img.shields.io/badge/license-Apache-blue.svg">                     </a>
   <a href="https://discord.gg/Gcm8BbTaAj">                              <img alt="Dalaran Discord"  src="https://img.shields.io/discord/1062300748202921994?label=Dalaran%20Discord"> </a>
 </h3>
 
@@ -95,7 +95,7 @@ This repo ships a set of agent skills that help coding agents write Dalaran code
 Install them into your agent with the `skills` CLI:
 
 ```sh
-npx skills add rerun-io/rerun
+npx skills add Flaminis/Dalaran
 ```
 
 The skills themselves live in [`skills/`](./skills) if you want to read them directly.
@@ -182,7 +182,7 @@ Suggested citation format:
   year = {2024},
   publisher = {{Dalaran Technologies AB}},
   address = {Online},
-  note = {Available from https://www.dalaran.dev/ and https://github.com/rerun-io/rerun}
+  note = {Available from https://www.dalaran.dev/ and https://github.com/Flaminis/Dalaran}
 }
 ```
 
@@ -203,6 +203,6 @@ facilitates the tool's discovery by other researchers.
 
 ## Installing a pre-release Python SDK
 
-1. Download the correct `.whl` from [GitHub Releases](https://github.com/rerun-io/rerun/releases)
+1. Download the correct `.whl` from [GitHub Releases](https://github.com/Flaminis/Dalaran/releases)
 2. Run `pip install dalaran_sdk<…>.whl` (replace `<…>` with the actual filename)
 3. Test it: `dalaran --version`

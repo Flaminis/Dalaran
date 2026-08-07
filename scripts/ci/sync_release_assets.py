@@ -140,7 +140,7 @@ def fetch_binary_assets(
                 #
                 # ATTENTION: Renaming this file has tremendous ripple effects:
                 # Not only is this the convenient short name we use in examples,
-                # we also rely on https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip
+                # we also rely on https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip
                 # to always give you the latest stable version of the Dalaran SDK.
                 # -> The name should *not* contain the version number.
                 assets["dalaran_cpp_sdk.zip"] = blob
@@ -248,7 +248,7 @@ def update_release_assets(release: GitRelease, assets: Assets) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--github-token", required=True, help="GitHub token")
-    parser.add_argument("--github-repository", default="rerun-io/rerun", help="GitHub repository")
+    parser.add_argument("--github-repository", default="Flaminis/Dalaran", help="GitHub repository")
     parser.add_argument(
         "--github-release",
         required=True,

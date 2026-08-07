@@ -13,5 +13,5 @@ For users extending the Viewer through the Rust [`dl_viewer`](https://docs.rs/dl
 
 - Use [`StartupOptions.on_event`](https://docs.rs/dl_viewer/latest/dl_viewer/struct.StartupOptions.html#structfield.on_event) to register
   the same events available on the web and in Jupyter.
-- [Extend the UI](https://github.com/rerun-io/rerun/tree/main/examples/rust/custom_callback) to add your own widgets using `egui`, and
+- [Extend the UI](https://github.com/Flaminis/Dalaran/tree/main/examples/rust/custom_callback) to add your own widgets using `egui`, and
   fire completely custom events.

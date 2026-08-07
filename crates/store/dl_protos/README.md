@@ -1,6 +1,6 @@
 # dl_protos
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_protos.svg)](https://crates.io/crates/dl_protos)
 [![Documentation](https://docs.rs/dl_protos/badge.svg)](https://docs.rs/dl_protos)

@@ -86,8 +86,8 @@ The complete example logs three series to a single entity and configures each wi
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/component-mapping-all-visualizers/82b4ea0a8290bb3b5043296cae810002c1bd5174/1024w.png">
 </picture>
 
-* 🐍 [Python](https://github.com/rerun-io/rerun/blob/main/docs/snippets/all/howto/component_mapping.py)
-* 🦀 [Rust](https://github.com/rerun-io/rerun/blob/main/docs/snippets/all/howto/component_mapping.rs)
+* 🐍 [Python](https://github.com/Flaminis/Dalaran/blob/main/docs/snippets/all/howto/component_mapping.py)
+* 🦀 [Rust](https://github.com/Flaminis/Dalaran/blob/main/docs/snippets/all/howto/component_mapping.rs)
 
 <picture>
   <img src="https://static.rerun.io/component-mapping-result/93fb68e03744e5ace721e2a8b49eebf5c39d9076/full.png" alt="Three series plotted from a single entity using different component mapping strategies">

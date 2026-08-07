@@ -12,7 +12,7 @@ that class across entities.
 
 <!-- Example link should point to `latest` but at the time of writing the samples just got renamed -->
 This is particularly useful for visualizing the output of classifications algorithms
-(as demonstrated by the [Detect and Track Objects](https://github.com/rerun-io/rerun/tree/main/examples/python/detect_and_track_objects) example),
+(as demonstrated by the [Detect and Track Objects](https://github.com/Flaminis/Dalaran/tree/main/examples/python/detect_and_track_objects) example),
 but can be used more generally for any kind of reoccurring categorization within a Dalaran recording.
 
 <picture>

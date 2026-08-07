@@ -1,6 +1,6 @@
 # Dalaran Rust examples
 
-These are examples of how to use the [`dalaran`](https://github.com/rerun-io/rerun/tree/latest/crates/top/rerun) crate.
+These are examples of how to use the [`dalaran`](https://github.com/Flaminis/Dalaran/tree/latest/crates/top/rerun) crate.
 
 ## Running the examples
 

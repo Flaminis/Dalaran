@@ -21,8 +21,8 @@ The `send_table` API provides a straightforward way to send tabular data to the 
 
 For complete examples of using `send_table`, please refer to:
 
-- [🐍 Jupyter Notebook](https://github.com/rerun-io/rerun/blob/main/examples/notebook/notebook/send_table.ipynb)
-- [🐍 Python SDK](https://github.com/rerun-io/rerun/blob/main/docs/snippets/all/howto/send_table.py)
+- [🐍 Jupyter Notebook](https://github.com/Flaminis/Dalaran/blob/main/examples/notebook/notebook/send_table.ipynb)
+- [🐍 Python SDK](https://github.com/Flaminis/Dalaran/blob/main/docs/snippets/all/howto/send_table.py)
 
 ## Prerequisites
 
@@ -56,7 +56,7 @@ import pyarrow as pa
 # Create a record batch from a Python dictionary
 record_batch = pa.RecordBatch.from_pydict({
     "id": [1, 2, 3],
-    "url": ["https://www.dalaran.dev", "https://github.com/rerun-io/rerun", "https://crates.io/crates/dalaran"],
+    "url": ["https://www.dalaran.dev", "https://github.com/Flaminis/Dalaran", "https://crates.io/crates/dalaran"],
 })
 
 # Send the table to the viewer with an identifier

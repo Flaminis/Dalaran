@@ -1301,7 +1301,7 @@ fn dl_recording_stream_send_columns_impl(
             let time_values = TimeColumn::read_array(&ArrowArrayRef::from(time_values_untyped)).map_err(|err| {
                 CError::new(
                     CErrorCode::ArrowFfiArrayImportError,
-                    &format!("Arrow C FFI import did not produce a Int64 time array - please file an issue at https://github.com/rerun-io/rerun/issues if you see this! This shouldn't be possible since conversion from C was successful with this datatype. Details: {err}")
+                    &format!("Arrow C FFI import did not produce a Int64 time array - please file an issue at https://github.com/Flaminis/Dalaran/issues if you see this! This shouldn't be possible since conversion from C was successful with this datatype. Details: {err}")
                 )
             })?;
 
@@ -1337,7 +1337,7 @@ fn dl_recording_stream_send_columns_impl(
                     .ok_or_else(|| {
                         CError::new(
                             CErrorCode::ArrowFfiArrayImportError,
-                            "Arrow C FFI import did not produce a ListArray - please file an issue at https://github.com/rerun-io/rerun/issues if you see this! This shouldn't be possible since conversion from C was successful with this datatype.",
+                            "Arrow C FFI import did not produce a ListArray - please file an issue at https://github.com/Flaminis/Dalaran/issues if you see this! This shouldn't be possible since conversion from C was successful with this datatype.",
                         )
                     })?;
 

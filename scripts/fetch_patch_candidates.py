@@ -16,10 +16,10 @@ from tabulate import tabulate
 from tqdm import tqdm
 
 DOC = """
-Fetch potential patch release candidates from both rerun-io/rerun and rerun-io/reality.
+Fetch potential patch release candidates from both Flaminis/Dalaran and rerun-io/reality.
 
 Looks at merged PRs labeled:
-- "consider-patch" in rerun-io/rerun
+- "consider-patch" in Flaminis/Dalaran
 - "consider-oss-patch" in rerun-io/reality
 
 Requirements:
@@ -214,7 +214,7 @@ def fetch_prs(repo: str, label: str, state: str) -> list[PullRequest]:
 
 
 def fetch_dalaran_releases() -> list[Release]:
-    """Fetch recent releases from rerun-io/rerun, sorted by date ascending."""
+    """Fetch recent releases from Flaminis/Dalaran, sorted by date ascending."""
     try:
         result = subprocess.run(
             [

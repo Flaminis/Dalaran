@@ -1,7 +1,7 @@
 <!--[metadata]
 title = "LeRobot dataset from DLR"
 description = "Convert DLR robot recordings into LeRobot v3 training datasets using the OSS Dalaran server, with video remuxing."
-source = "https://github.com/rerun-io/rerun-lerobot"
+source = "https://github.com/Flaminis/Dalaran-lerobot"
 tags = ["Robotics", "MCAP", "LeRobot", "Dataset", "Server"]
 thumbnail = "https://static.rerun.io/rerun_export/f3b727db8bbe3ecf6894707ac7770d3d8fc8bf1f/480w.png"
 thumbnail_dimensions = [480, 384]
@@ -26,10 +26,10 @@ The workflow uses the server to load DLR files, query robot data (actions, obser
 
 ## Run the code
 
-The code lives in the [`dalaran-lerobot`](https://github.com/rerun-io/rerun-lerobot) package, which you can install from PyPI:
+The code lives in the [`dalaran-lerobot`](https://github.com/Flaminis/Dalaran-lerobot) package, which you can install from PyPI:
 
 ```bash
 pip install dalaran-lerobot
 ```
 
-You can find the source and build instructions here: [dalaran-lerobot](https://github.com/rerun-io/rerun-lerobot)
+You can find the source and build instructions here: [dalaran-lerobot](https://github.com/Flaminis/Dalaran-lerobot)

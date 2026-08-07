@@ -1,7 +1,7 @@
 <!--[metadata]
 title = "TFRecord loader"
 description = "An external importer plugin that opens TFRecord (Tensorboard) event files in the Dalaran viewer, extending the viewer without modifying it."
-source = "https://github.com/rerun-io/rerun-loader-python-example-tfrecord"
+source = "https://github.com/Flaminis/Dalaran-loader-python-example-tfrecord"
 tags = ["2D", "Tensor", "Loader", "Time series"]
 thumbnail = "https://static.rerun.io/tfrecord_loader/26da14f065a3d12322890d2842c988031113bd7b/480w.png"
 thumbnail_dimensions = [480, 480]
@@ -27,10 +27,10 @@ This example is written in Python, and uses [TensorFlow](https://www.tensorflow.
 
 ## Installing the plug-in
 
-The [repository](https://github.com/rerun-io/rerun-loader-python-example-tfrecord) has detailed installation instruction. In a nutshell, the easiest is to use `pipx`:
+The [repository](https://github.com/Flaminis/Dalaran-loader-python-example-tfrecord) has detailed installation instruction. In a nutshell, the easiest is to use `pipx`:
 
 ```
-pipx install git+https://github.com/rerun-io/rerun-loader-python-example-tfrecord.git
+pipx install git+https://github.com/Flaminis/Dalaran-loader-python-example-tfrecord.git
 pipx ensurepath
 ```
 
@@ -40,7 +40,7 @@ pipx ensurepath
 To try the plug-in, first download an example `xxx.tfevents.xxx` file:
 
 ```bash
-curl -OL https://github.com/rerun-io/rerun-loader-python-example-tfrecord/raw/main/events.tfevents.example
+curl -OL https://github.com/Flaminis/Dalaran-loader-python-example-tfrecord/raw/main/events.tfevents.example
 ```
 
 Then you can open the Viewer and open the file using drag-and-drop or the open dialog, or you can open it directly from the terminal:

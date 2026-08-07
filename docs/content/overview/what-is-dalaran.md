@@ -94,4 +94,4 @@ Ready to speed up your iteration cycle?
 ## Can't find what you're looking for?
 
 - Join us in the [Dalaran Community Discord](https://discord.gg/xwcxHUjD35)
-- [Submit an issue](https://github.com/rerun-io/rerun/issues) in the Dalaran GitHub project
+- [Submit an issue](https://github.com/Flaminis/Dalaran/issues) in the Dalaran GitHub project

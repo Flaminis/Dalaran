@@ -219,7 +219,7 @@ That brings us to the end of this walkthrough. To recap, you have learned how to
 -   Change the time selection.
 -   Switch between different timelines.
 
-Again, if you ran into any issues following this guide, please don't hesitate to [open an issue](https://github.com/rerun-io/rerun/issues/new/choose).
+Again, if you ran into any issues following this guide, please don't hesitate to [open an issue](https://github.com/Flaminis/Dalaran/issues/new/choose).
 
 ### Up next
 

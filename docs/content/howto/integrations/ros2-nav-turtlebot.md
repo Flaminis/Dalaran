@@ -18,7 +18,7 @@ covering how to use ROS 2 itself. If you are a Dalaran user that is curious abou
 please consult the [ROS 2 Documentation](https://docs.ros.org) instead.
 
 All of the code for this guide can be found on GitHub in
-[dalaran/examples/python/ros_node](https://github.com/rerun-io/rerun/blob/main/examples/python/ros_node/).
+[dalaran/examples/python/ros_node](https://github.com/Flaminis/Dalaran/blob/main/examples/python/ros_node/).
 
 <picture>
   <img src="https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/full.png" alt="Dalaran viewer showing data streamed from the example ROS node">
@@ -38,15 +38,15 @@ Other relevant tutorials:
 -   [Loading URDF models](../../howto/logging-and-ingestion/urdf.md)
 -   [Working with MCAP](../../howto/logging-and-ingestion/mcap.md)
 
-If you're new to Dalaran or wonder about differences to RViz, we recommend also to read the *"What is Dalaran for?"* introduction in our README (see [here](https://github.com/rerun-io/rerun?tab=readme-ov-file#what-is-rerun-for)).
+If you're new to Dalaran or wonder about differences to RViz, we recommend also to read the *"What is Dalaran for?"* introduction in our README (see [here](https://github.com/Flaminis/Dalaran?tab=readme-ov-file#what-is-rerun-for)).
 
 ## Install and run the example
 
-All steps that are required to install and run this example are explained in the example's description, which can be found [here](https://dalaran.dev/examples/robotics/ros_node) or in the [README.md](https://github.com/rerun-io/rerun/tree/main/examples/python/ros_node) of the example's source code.
+All steps that are required to install and run this example are explained in the example's description, which can be found [here](https://dalaran.dev/examples/robotics/ros_node) or in the [README.md](https://github.com/Flaminis/Dalaran/tree/main/examples/python/ros_node) of the example's source code.
 
 ## Code explanation
 
-It may be helpful to open [dalaran/examples/python/ros_node/main.py](https://github.com/rerun-io/rerun/blob/latest/examples/python/ros_node/main.py)
+It may be helpful to open [dalaran/examples/python/ros_node/main.py](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/ros_node/main.py)
 to follow along.
 
 At a very high level, for each ROS message we are interested in, we create a
@@ -235,7 +235,7 @@ def image_callback(self, img: Image) -> None:
 ### Others
 
 The example also logs more data, like depth images and parts of the odometry data.
-Please refer to the [source code](https://github.com/rerun-io/rerun/blob/main/examples/python/ros_node/) of the example to see the details of those.
+Please refer to the [source code](https://github.com/Flaminis/Dalaran/blob/main/examples/python/ros_node/) of the example to see the details of those.
 
 ## In summary
 
@@ -251,4 +251,4 @@ While this guide has only covered a small fraction of the possible ROS messages 
 be sent to Dalaran, hopefully, it has given you some tools to apply to your project.
 
 If you find that specific functionality is lacking for your use case, please provide more
-context in the existing issues or [open an new one](https://github.com/rerun-io/rerun/issues/new/choose) on GitHub.
+context in the existing issues or [open an new one](https://github.com/Flaminis/Dalaran/issues/new/choose) on GitHub.

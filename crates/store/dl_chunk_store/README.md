@@ -1,6 +1,6 @@
 # Dalaran chunk store
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_chunk_store.svg)](https://crates.io/crates/dl_chunk_store)
 [![Documentation](https://docs.rs/dl_chunk_store/badge.svg)](https://docs.rs/dl_chunk_store)

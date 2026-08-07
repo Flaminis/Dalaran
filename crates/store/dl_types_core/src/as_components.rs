@@ -13,8 +13,8 @@ use crate::{SerializationResult, SerializedComponentBatch};
 ///
 /// Have a look at our [Custom Data Importer] example to learn more about handwritten bundles.
 ///
-/// [IDL definitions]: https://github.com/rerun-io/rerun/tree/latest/crates/store/dl_sdk_types/definitions/rerun
-/// [Custom Data Importer]: https://github.com/rerun-io/rerun/blob/latest/examples/rust/custom_importer
+/// [IDL definitions]: https://github.com/Flaminis/Dalaran/tree/latest/crates/store/dl_sdk_types/definitions/rerun
+/// [Custom Data Importer]: https://github.com/Flaminis/Dalaran/blob/latest/examples/rust/custom_importer
 /// [`Component`]: [crate::Component]
 pub trait AsComponents {
     /// Exposes the object's contents as a set of [`SerializedComponentBatch`]es.
@@ -26,7 +26,7 @@ pub trait AsComponents {
     /// Implementers of [`AsComponents`] get one last chance to override the tags in the
     /// [`ComponentDescriptor`], see [`SerializedComponentBatch::with_descriptor_override`].
     ///
-    /// [Custom Data Importer]: https://github.com/rerun-io/rerun/blob/latest/docs/snippets/all/tutorials/custom_data.rs
+    /// [Custom Data Importer]: https://github.com/Flaminis/Dalaran/blob/latest/docs/snippets/all/tutorials/custom_data.rs
     /// [`ComponentDescriptor`]: [crate::ComponentDescriptor]
     //
     // NOTE: Don't bother returning a CoW here: we need to dynamically discard optional components

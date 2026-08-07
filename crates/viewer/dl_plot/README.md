@@ -1,6 +1,6 @@
 # dl_plot
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_plot.svg)](https://crates.io/crates/dl_plot)
 [![Documentation](https://docs.rs/dl_plot/badge.svg)](https://docs.rs/dl_plot)

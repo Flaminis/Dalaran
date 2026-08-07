@@ -3,7 +3,7 @@
 # See: https://www.mkdocs.org/user-guide/configuration/
 site_name: Dalaran Python APIs
 site_url: https://ref.dalaran.dev/docs/python/
-repo_url: https://github.com/rerun-io/rerun/
+repo_url: https://github.com/Flaminis/Dalaran/
 
 # Files in `docs/` that are contributor-facing source materials and should
 # not ship as part of the published site (mkdocs copies non-`.md` files

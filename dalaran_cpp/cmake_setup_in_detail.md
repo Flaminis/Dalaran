@@ -3,7 +3,7 @@
 \tableofcontents
 
 The Dalaran C++ SDK is meant to be built from source and everything described on this page will do just that.
-Its [CMake build script](https://github.com/rerun-io/rerun/blob/latest/rerun_cpp/CMakeLists.txt)
+Its [CMake build script](https://github.com/Flaminis/Dalaran/blob/latest/rerun_cpp/CMakeLists.txt)
 is ready to be used from outside of the Dalaran repo.
 
 ## Download via FetchContent
@@ -12,7 +12,7 @@ By far the easiest way to add Dalaran to your project is using `FetchContent`:
 ```cmake
 include(FetchContent)
 FetchContent_Declare(dalaran_sdk URL
-    https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip)
+    https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip)
 FetchContent_MakeAvailable(dalaran_sdk)
 ```
 
@@ -25,12 +25,12 @@ All other workflows and configuration are there to best address more specific ne
 
 ## From Dalaran repository
 
-Alternatively, you can add the source of `https://github.com/rerun-io/rerun/blob/latest/rerun_cpp/` directly to your own
+Alternatively, you can add the source of `https://github.com/Flaminis/Dalaran/blob/latest/rerun_cpp/` directly to your own
 project and then use `add_subdirectory`.
 
 In this case you will also need to make sure the Dalaran C static libraries are available for your target platforms.
 
-Pre-built libraries can be downloaded from [the release pages](https://github.com/rerun-io/rerun/releases/latest).
+Pre-built libraries can be downloaded from [the release pages](https://github.com/Flaminis/Dalaran/releases/latest).
 
 If you want to match the behavior of `dalaran_cpp_sdk.zip`, these libraries should be placed in the folder `dalaran_cpp/lib`, renamed as:
  - Linux, x64: `libdalaran_c__linux_x64.a`
@@ -51,7 +51,7 @@ If you want to pre-build `dalaran_sdk` for use with a different build system, or
 `dalaran_sdk`, it can be useful to use CMake's install command to install a re-usable version of `dalaran_sdk` on your system.
 
 To do so, follow these following steps:
-* Download and unpack the desired `dalaran_cpp_sdk.zip` (e.g https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip for the latest version)
+* Download and unpack the desired `dalaran_cpp_sdk.zip` (e.g https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip for the latest version)
 * In the directory of the unpacked `dalaran_cpp_sdk` run:
   * Configure:
     * `cmake -B build -S . -DCMAKE_BUILD_TYPE=Release`
@@ -104,7 +104,7 @@ to pick up a system-version of Arrow instead of the one you built against.
 ## DALARAN_C_LIB
 Path to the static Dalaran C library to link against.
 
-`dalaran_c` is a static library built from a [Rust crate](https://github.com/rerun-io/rerun/tree/latest/crates/top/rerun_c).
+`dalaran_c` is a static library built from a [Rust crate](https://github.com/Flaminis/Dalaran/tree/latest/crates/top/rerun_c).
 It provides a minimalistic C interface that encapsulates the shared building blocks of all Dalaran SDKs.
 
 By default points to where a pre-built library for the currently active platform

@@ -1,6 +1,6 @@
 # dl_mp4_reader
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_mp4_reader.svg)](https://crates.io/crates/dl_mp4_reader)
 [![Documentation](https://docs.rs/dl_mp4_reader/badge.svg)](https://docs.rs/dl_mp4_reader)

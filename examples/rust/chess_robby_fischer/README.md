@@ -51,7 +51,7 @@ let _vision_handle = std::thread::spawn(move || {
 
 ### Robot arm
 
-Then, we install the official [URDF importer](https://github.com/rerun-io/rerun-loader-python-example-urdf) and use it to log the URDF model.
+Then, we install the official [URDF importer](https://github.com/Flaminis/Dalaran-loader-python-example-urdf) and use it to log the URDF model.
 
 ```rust
 // Dalaran will find the importer in the `PATH` and use it to log `arm.urdf`.
@@ -116,7 +116,7 @@ rec.log("a8origin/trajectory", &dalaran::Clear::flat())
 First it logs the position and meshes of the boards.
 
 ```rust
-// The board is stored as a GLTF file so we use the `log_node` function from this example: https://github.com/rerun-io/rerun/tree/main/examples/rust/raw_mesh to log it.
+// The board is stored as a GLTF file so we use the `log_node` function from this example: https://github.com/Flaminis/Dalaran/tree/main/examples/rust/raw_mesh to log it.
 log_node(rec, "a8origin/board", self.board_scene.clone()).unwrap();
 
 // Align the board mesh so that the origin of `a8origin` appears on the a8 square.

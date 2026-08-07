@@ -27,7 +27,7 @@ This is a more elaborate example applying simple object detection and segmentati
 visualized using Dalaran.
 
 The full source code for this example is available
-[on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/detect_and_track_objects).
+[on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/detect_and_track_objects).
 """.strip()
 
 EXAMPLE_DIR: Final = Path(os.path.dirname(__file__))

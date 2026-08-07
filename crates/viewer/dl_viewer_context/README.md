@@ -1,6 +1,6 @@
 # dl_viewer_context
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_viewer_context.svg)](https://crates.io/crates/viewer/dl_viewer_context)
 [![Documentation](https://docs.rs/dl_viewer_context/badge.svg)](https://docs.rs/dl_viewer_context)

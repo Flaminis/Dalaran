@@ -25,7 +25,7 @@ This example simulates a robot work cell and demonstrates every feature of the s
 state changes, custom styling (labels, colors, per-state visibility), state resets, and columnar logging.
 
 The full source code for this example is available
-[on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/state_timeline).
+[on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/state_timeline).
 """.strip()
 
 CYCLE_DURATION_SEC = 8.0

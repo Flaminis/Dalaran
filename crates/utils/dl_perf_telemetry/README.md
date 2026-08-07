@@ -1,6 +1,6 @@
 # dl_perf_telemetry
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_perf_telemetry.svg)](https://crates.io/crates/dl_perf_telemetry)
 [![Documentation](https://docs.rs/dl_perf_telemetry/badge.svg)](https://docs.rs/dl_perf_telemetry)

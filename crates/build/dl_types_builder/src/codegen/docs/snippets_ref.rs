@@ -129,7 +129,7 @@ impl SnippetsRefCodeGenerator {
         // NOTE: We're pointing to `main` instead of `latest` for now, because a lot of snippets
         // were recently renamed.
         // We can change that back during the next release.
-        const SNIPPETS_URL: &str = "https://github.com/rerun-io/rerun/blob/main/docs/snippets/all";
+        const SNIPPETS_URL: &str = "https://github.com/Flaminis/Dalaran/blob/main/docs/snippets/all";
 
         let mut files_to_write = GeneratedFiles::default();
 

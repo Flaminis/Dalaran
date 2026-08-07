@@ -6,12 +6,12 @@ description: Stream Dalaran recordings into a PyTorch DataLoader for model train
 
 Train PyTorch models directly from a Dalaran server.
 
-The experimental [`dataloader`](https://github.com/rerun-io/rerun/tree/main/rerun_py/rerun_sdk/rerun/experimental/dataloader) module exposes Dalaran recordings as iterable or map-style PyTorch datasets, decoding compressed video (`h264`/`h265`/`av1`), images, and scalars on the fly. Random access, multi-worker prefetching, and [DDP](https://docs.pytorch.org/tutorials/beginner/ddp_series_theory.html) partitioning all work out of the box.
+The experimental [`dataloader`](https://github.com/Flaminis/Dalaran/tree/main/rerun_py/rerun_sdk/rerun/experimental/dataloader) module exposes Dalaran recordings as iterable or map-style PyTorch datasets, decoding compressed video (`h264`/`h265`/`av1`), images, and scalars on the fly. Random access, multi-worker prefetching, and [DDP](https://docs.pytorch.org/tutorials/beginner/ddp_series_theory.html) partitioning all work out of the box.
 
 > [!WARNING]
 > **Experimental.** The API is provisional and will change between releases. For large-scale training, [Dalaran Hub](https://dalaran.dev) offers a higher-performance backend than the OSS catalog.
 
-The full code for this guide lives in [`examples/python/dataloader/`](https://github.com/rerun-io/rerun/tree/main/examples/python/dataloader), which trains a [LeRobot ACT](https://tonyzhaozh.github.io/aloha/) policy from a HuggingFace dataset.
+The full code for this guide lives in [`examples/python/dataloader/`](https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader), which trains a [LeRobot ACT](https://tonyzhaozh.github.io/aloha/) policy from a HuggingFace dataset.
 
 <picture>
   <img src="https://static.rerun.io/howto-dataloader/c635e994f9d1591811816821173813c54fe440ef/full.png" alt="">
@@ -45,7 +45,7 @@ Then register your recordings. Each registered DLR becomes a *segment* in the da
 
 snippet: howto/dataloader[register]
 
-The example's [`prepare_dataset.py`](https://github.com/rerun-io/rerun/blob/main/examples/python/dataloader/prepare_dataset.py) shows the full flow for converting a HuggingFace LeRobot dataset into per-episode RRDs and registering them.
+The example's [`prepare_dataset.py`](https://github.com/Flaminis/Dalaran/blob/main/examples/python/dataloader/prepare_dataset.py) shows the full flow for converting a HuggingFace LeRobot dataset into per-episode RRDs and registering them.
 
 ### Describe a sample
 
@@ -145,7 +145,7 @@ From there, the training loop is standard PyTorch:
 
 snippet: howto/dataloader[train]
 
-The full [LeRobot ACT example](https://github.com/rerun-io/rerun/tree/main/examples/python/dataloader) wires this up against three camera streams plus state and action chunks, and trains the policy end-to-end.
+The full [LeRobot ACT example](https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader) wires this up against three camera streams plus state and action chunks, and trains the policy end-to-end.
 
 ## Limitations
 
@@ -155,7 +155,7 @@ For large-scale training (hundreds of recordings, multi-node), consider [Dalaran
 
 ## References
 
-- [LeRobot ACT training example](https://github.com/rerun-io/rerun/tree/main/examples/python/dataloader)
-- [`dalaran.experimental.dataloader`](https://github.com/rerun-io/rerun/tree/main/rerun_py/rerun_sdk/rerun/experimental/dataloader) module source
+- [LeRobot ACT training example](https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader)
+- [`dalaran.experimental.dataloader`](https://github.com/Flaminis/Dalaran/tree/main/rerun_py/rerun_sdk/rerun/experimental/dataloader) module source
 - [The data layer tax in robot learning](https://dalaran.dev/blog/data-layer-tax) (figures used in this guide)
 - [Export recordings to LeRobot datasets](lerobot_export.md) (inverse: Dalaran → LeRobot dataset)

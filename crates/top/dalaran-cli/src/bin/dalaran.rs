@@ -1,4 +1,4 @@
-//! The `dalaran` binary, part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+//! The `dalaran` binary, part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 //!
 //! Run `dalaran --help` for more information.
 //!
@@ -6,7 +6,7 @@
 #![doc = document_features::document_features!()]
 //!
 //! ## Links
-//! - [Examples](https://github.com/rerun-io/rerun/tree/latest/examples/rust)
+//! - [Examples](https://github.com/Flaminis/Dalaran/tree/latest/examples/rust)
 //! - [High-level docs](https://dalaran.dev/docs)
 //! - [Rust API docs](https://docs.rs/dalaran/)
 //! - [Troubleshooting](https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting)

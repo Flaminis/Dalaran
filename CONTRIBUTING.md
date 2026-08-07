@@ -11,7 +11,7 @@ This guide is for anyone who wants to contribute to the Dalaran repository, for 
 
 ## What to contribute
 * **Examples**: We welcome any examples you would like to add. Follow the pattern of existing examples in the [`examples/`](examples) folder.
-* Report bugs and feature requests at <https://github.com/rerun-io/rerun/issues>.
+* Report bugs and feature requests at <https://github.com/Flaminis/Dalaran/issues>.
 * Look at our [`good first issue` tag](https://github.com/rerun-io/rerun/labels/good%20first%20issue).
 * We track things we would like implemented in 3rd party crates [here](https://github.com/rerun-io/opensource/issues/1).
 
@@ -85,7 +85,7 @@ Members of the `dalaran-io` organization can enable auto-approval for a single P
 
 ### Labeling of PRs & changelog generation
 
-Org members _must_ label their PRs — labels drive both the [changelog](https://github.com/rerun-io/rerun/blob/main/CHANGELOG.md) and the per-release changeset.
+Org members _must_ label their PRs — labels drive both the [changelog](https://github.com/Flaminis/Dalaran/blob/main/CHANGELOG.md) and the per-release changeset.
 
 Every PR needs **exactly one** of these four changelog categories:
 

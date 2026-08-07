@@ -30,7 +30,7 @@ This example uses Dalaran to visualize the output of [MediaPipe](https://develop
 of a human pose in 2D and 3D.
 
 The full source code for this example is available
-[on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/human_pose_tracking).
+[on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/human_pose_tracking).
 """.strip()
 
 EXAMPLE_DIR: Final = Path(os.path.dirname(__file__))

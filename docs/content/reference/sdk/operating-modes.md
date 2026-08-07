@@ -103,19 +103,19 @@ Streams all logging data to standard output, which can then be loaded by the Dal
 
 Use [`RecordingStream::stdout`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html).
 
-Check out our [dedicated example](https://github.com/rerun-io/rerun/tree/latest/examples/cpp/stdio/main.cpp).
+Check out our [dedicated example](https://github.com/Flaminis/Dalaran/tree/latest/examples/cpp/stdio/main.cpp).
 
 #### Python
 
 Use [`dl.stdout`](https://ref.dalaran.dev/docs/python/stable/common/initialization_functions/#dalaran.stdout).
 
-Check out our [dedicated example](https://github.com/rerun-io/rerun/tree/latest/examples/python/stdio/stdio.py).
+Check out our [dedicated example](https://github.com/Flaminis/Dalaran/tree/latest/examples/python/stdio/stdio.py).
 
 #### Rust
 
 Use [`RecordingStream::stdout`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.stdout).
 
-Check out our [dedicated example](https://github.com/rerun-io/rerun/tree/latest/examples/rust/stdio/src/main.rs).
+Check out our [dedicated example](https://github.com/Flaminis/Dalaran/tree/latest/examples/rust/stdio/src/main.rs).
 
 ### `set_sinks`
 

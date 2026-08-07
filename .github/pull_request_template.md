@@ -39,7 +39,7 @@ For maintainers:
 * To run all checks from `main`, comment on the PR with `@dalaran-bot full-check`.
 * To deploy documentation changes immediately after merging this PR, add the `deploy docs` label.
 
-For more details check the PR section on <https://github.com/rerun-io/rerun/blob/main/CONTRIBUTING.md>.
+For more details check the PR section on <https://github.com/Flaminis/Dalaran/blob/main/CONTRIBUTING.md>.
 -->
 
 <!--

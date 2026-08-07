@@ -1,6 +1,6 @@
 # TUID: time-based unique identifier
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_tuid.svg)](https://crates.io/crates/dl_tuid)
 [![Documentation](https://docs.rs/dl_tuid/badge.svg)](https://docs.rs/dl_tuid)

@@ -33,9 +33,9 @@ dalaran /tmp/recording*.dlr  # they share the same Recording ID!
 ```
 
 For more information, check out our dedicated examples:
-* [🐍 Python](https://github.com/rerun-io/rerun/blob/latest/examples/python/shared_recording/shared_recording.py)
-* [🦀 Rust](https://github.com/rerun-io/rerun/blob/latest/examples/rust/shared_recording/src/main.rs)
-* [🌊 C++](https://github.com/rerun-io/rerun/blob/latest/examples/cpp/shared_recording/main.cpp)
+* [🐍 Python](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/shared_recording/shared_recording.py)
+* [🦀 Rust](https://github.com/Flaminis/Dalaran/blob/latest/examples/rust/shared_recording/src/main.rs)
+* [🌊 C++](https://github.com/Flaminis/Dalaran/blob/latest/examples/cpp/shared_recording/main.cpp)
 
 
 ### Merging recordings with the Dalaran CLI

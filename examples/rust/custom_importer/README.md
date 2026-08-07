@@ -1,7 +1,7 @@
 ---
 title: Custom importer
 tags: [importer, extension]
-rust: https://github.com/rerun-io/rerun/tree/latest/examples/rust/custom_importer/src/main.rs
+rust: https://github.com/Flaminis/Dalaran/tree/latest/examples/rust/custom_importer/src/main.rs
 ---
 
 <picture>

@@ -76,7 +76,7 @@ class TextDocument(Archetype, VisualizableArchetype):
     a [specific instance of an entity](recording://markdown[#0]),
     or a [specific component](recording://markdown:Text).
 
-    Of course you can also have [normal https links](https://github.com/rerun-io/rerun), e.g. <https://dalaran.dev>.
+    Of course you can also have [normal https links](https://github.com/Flaminis/Dalaran), e.g. <https://dalaran.dev>.
 
     ## Image
     ![A random image](https://picsum.photos/640/480)

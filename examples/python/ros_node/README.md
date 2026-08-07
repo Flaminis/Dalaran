@@ -52,7 +52,7 @@ sudo apt install ros-kilted-desktop ros-kilted-nav2-bringup
 
 Then clone the Dalaran repository to get the example code:
 ```bash
-git clone https://github.com/rerun-io/rerun.git  # Clone the repository
+git clone https://github.com/Flaminis/Dalaran.git  # Clone the repository
 cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```

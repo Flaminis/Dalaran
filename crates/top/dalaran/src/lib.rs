@@ -15,7 +15,7 @@
 //!
 //!
 //! ## Links
-//! - [Examples](https://github.com/rerun-io/rerun/tree/latest/examples/rust)
+//! - [Examples](https://github.com/Flaminis/Dalaran/tree/latest/examples/rust)
 //! - [High-level docs](https://dalaran.dev/docs)
 //! - [Rust API docs](https://docs.rs/dalaran/)
 //! - [Troubleshooting](https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting)
@@ -27,7 +27,7 @@
 //! Checkout [SDK Operating Modes](https://www.dalaran.dev/docs/reference/sdk/operating-modes) for an
 //! overview of what's possible and how.
 //!
-//! If you get stuck on anything, open an issue at <https://github.com/rerun-io/rerun/issues>.
+//! If you get stuck on anything, open an issue at <https://github.com/Flaminis/Dalaran/issues>.
 //! You can also ask questions on the [Dalaran Discord](https://discord.gg/Gcm8BbTaAj).
 //!
 //!

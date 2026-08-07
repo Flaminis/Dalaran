@@ -18,7 +18,7 @@ This is a minimal example that logs synthetic 3D data in the shape of a double h
 using numpy and visualized using Dalaran.
 
 The full source code for this example is available
-[on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/dna).
+[on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/dna).
 """.strip()
 
 

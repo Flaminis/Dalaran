@@ -133,5 +133,5 @@ Please refer to the `rosbags` documentation for further information.
 
 To request support for additional message types:
 
-- [File a GitHub issue](https://github.com/rerun-io/rerun/issues) requesting the specific message type
+- [File a GitHub issue](https://github.com/Flaminis/Dalaran/issues) requesting the specific message type
 - Join the Dalaran community on [Discord](https://discord.gg/PXtCgFBSmH) to discuss and provide feedback on message support priorities. Or if you're open for a conversation, [sign up here](https://dalaran.dev/feedback)

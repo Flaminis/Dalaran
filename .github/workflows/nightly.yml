@@ -393,7 +393,7 @@ jobs:
             ```
             or
             ```
-            pip install --pre --no-index -f https://github.com/rerun-io/rerun/releases/download/prerelease --upgrade dalaran-sdk
+            pip install --pre --no-index -f https://github.com/Flaminis/Dalaran/releases/download/prerelease --upgrade dalaran-sdk
             ```
 
             ## CMake fetch-content for C++ SDK
@@ -405,7 +405,7 @@ jobs:
             or
             ```
             include(FetchContent)
-            FetchContent_Declare(dalaran_sdk URL https://github.com/rerun-io/rerun/releases/download/prerelease/rerun_cpp_sdk.zip)
+            FetchContent_Declare(dalaran_sdk URL https://github.com/Flaminis/Dalaran/releases/download/prerelease/rerun_cpp_sdk.zip)
             FetchContent_MakeAvailable(dalaran_sdk)
             ```
 

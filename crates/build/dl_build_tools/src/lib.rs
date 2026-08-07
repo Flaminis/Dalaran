@@ -74,7 +74,7 @@ pub enum Environment {
     /// See <https://github.com/conda-forge/dalaran-sdk-feedstock>.
     CondaBuild,
 
-    /// Are we a developer running inside the workspace of <https://github.com/rerun-io/rerun> ?
+    /// Are we a developer running inside the workspace of <https://github.com/Flaminis/Dalaran> ?
     DeveloperInWorkspace,
 
     /// We are not on Dalaran's CI, and not in the Dalaran workspace.

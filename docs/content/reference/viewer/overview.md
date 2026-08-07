@@ -5,7 +5,7 @@ order: 0
 The following sections give an overview of the basic UI concepts and where to find which functionality.
 
 Generally, the Viewer tries to be as self-explaining as possible - most items in the UI show a tooltip upon hovering which should give additional information.
-If you are missing a piece of information, don't hesitate to [file an issue](https://github.com/rerun-io/rerun/issues/new/choose)!
+If you are missing a piece of information, don't hesitate to [file an issue](https://github.com/Flaminis/Dalaran/issues/new/choose)!
 
 Overview
 --------------------------

@@ -69,7 +69,7 @@ The `dalaran` binary bundles multiple tools in one:
 - **Web Viewer** (via `dalaran --serve-web`)
 
 
-The Dalaran CLI can be downloaded from [GitHub](https://github.com/rerun-io/rerun/releases) or as part of the Python SDK.
+The Dalaran CLI can be downloaded from [GitHub](https://github.com/Flaminis/Dalaran/releases) or as part of the Python SDK.
 It can also be built from source with `cargo install dalaran-cli --locked`.
 
 See: [CLI reference](../reference/cli.md)

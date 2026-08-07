@@ -34,7 +34,7 @@ The easiest way to launch the Viewer is directly from the logging API with `rr.i
 
 You can try running the Viewer in a browser using `rr.serve()` in Python, or using `dalaran --web-viewer mydata.dlr`.
 
-The web viewer consists of just a few small files - a thin `.html`, a `.wasm` blob, and an auto-generated `.js` bridge for the wasm. These files are served using the [`dl_web_viewer_server`](https://github.com/rerun-io/rerun/tree/latest/crates/viewer/dl_web_viewer_server) crate.
+The web viewer consists of just a few small files - a thin `.html`, a `.wasm` blob, and an auto-generated `.js` bridge for the wasm. These files are served using the [`dl_web_viewer_server`](https://github.com/Flaminis/Dalaran/tree/latest/crates/viewer/dl_web_viewer_server) crate.
 
 The web viewer can load `.dlr` files (just drag-drop them into the browser), or read logging data streamed over gRPC.
 

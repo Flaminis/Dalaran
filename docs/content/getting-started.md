@@ -74,5 +74,5 @@ snippet: tutorials/getting_started[train]
 ## If you're stuck
 
 -   Check the [troubleshooting guide](./getting-started/install-dalaran/troubleshooting.md).
--   [Open an issue](https://github.com/rerun-io/rerun/issues/new/choose).
+-   [Open an issue](https://github.com/Flaminis/Dalaran/issues/new/choose).
 -   [Join the Discord server](https://discord.gg/PXtCgFBSmH).

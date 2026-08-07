@@ -1,6 +1,6 @@
 # dl_importer
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_importer.svg)](https://crates.io/crates/dl_importer)
 [![Documentation](https://docs.rs/dl_importer/badge.svg)](https://docs.rs/dl_importer)

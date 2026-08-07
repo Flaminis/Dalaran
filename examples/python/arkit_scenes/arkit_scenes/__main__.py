@@ -26,7 +26,7 @@ This example visualizes the [ARKitScenes dataset](https://github.com/apple/ARKit
 contains color images, depth images, the reconstructed mesh, and labeled bounding boxes around furniture.
 
 The full source code for this example is available
-[on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/arkit_scenes).
+[on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/arkit_scenes).
 """.strip()
 
 Color = tuple[float, float, float, float]

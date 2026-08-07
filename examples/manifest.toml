@@ -4,7 +4,7 @@
 # This has no effect whatsoever on whether they appear in the app itself.
 #
 # To add examples to the app itself, use the `channel` attribute in the example's readme's frontmatter.
-# See <https://github.com/rerun-io/rerun/tree/main/examples#adding-a-new-example> for more information.
+# See <https://github.com/Flaminis/Dalaran/tree/main/examples#adding-a-new-example> for more information.
 
 [categories.spatial-computing]
 order = 1

@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .with_component_from_data(
             "repository",
             Arc::new(arrow::array::StringArray::from(vec![
-                "https://github.com/rerun-io/rerun",
+                "https://github.com/Flaminis/Dalaran",
             ])),
         )
         // Using Dalaran's builtin components.

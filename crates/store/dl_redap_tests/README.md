@@ -1,6 +1,6 @@
 # dl_redap_tests
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 
 ![MIT](https://img.shields.io/badge/license-MIT-blue.svg)

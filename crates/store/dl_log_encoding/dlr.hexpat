@@ -16,7 +16,7 @@
 
 // Refer to the `dl_log_encoding` crate [1] for the ground truth.
 //
-// [1]: <https://github.com/rerun-io/rerun/tree/main/crates/store/dl_log_encoding>
+// [1]: <https://github.com/Flaminis/Dalaran/tree/main/crates/store/dl_log_encoding>
 
 #pragma MIME application/dlr
 #pragma magic [ 52 52 46 ?? ] @ 0x00

@@ -9,7 +9,7 @@ If you're using CMake you can add the SDK to your project using `FetchContent`:
 ```cmake
 include(FetchContent)
 FetchContent_Declare(dalaran_sdk URL
-    https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip)
+    https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip)
 FetchContent_MakeAvailable(dalaran_sdk)
 ```
 

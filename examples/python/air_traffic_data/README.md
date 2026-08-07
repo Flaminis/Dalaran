@@ -31,7 +31,7 @@ This example demonstrates multiple aspects of the Dalaran viewer:
 To run this example, make sure you have the [required Python version](https://ref.dalaran.dev/docs/python/main/common#supported-python-versions), the Dalaran repository checked out and the latest SDK installed:
 ```bash
 pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
-git clone git@github.com:rerun-io/rerun.git  # Clone the repository
+git clone git@github.com:Flaminis/Dalaran.git  # Clone the repository
 cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```

@@ -1,6 +1,6 @@
 # `dalaran-notebook`
 
-Part of the [Dalaran](https://github.com/rerun-io/rerun) project.
+Part of the [Dalaran](https://github.com/Flaminis/Dalaran) project.
 
 ## What?
 
@@ -33,7 +33,7 @@ The assets are:
 - `re_viewer_bg.wasm`, which is our Viewer compiled to Wasm, and
 - `widget.js`, which is the glue code used to bind it to a Jupyter widget.
 
-Both can be built in the [`dalaran`](https://github.com/rerun-io/rerun) repository by running `pixi run py-build-notebook`.
+Both can be built in the [`dalaran`](https://github.com/Flaminis/Dalaran) repository by running `pixi run py-build-notebook`.
 
 ### Inlined assets
 

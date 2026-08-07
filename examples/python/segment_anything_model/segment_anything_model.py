@@ -32,7 +32,7 @@ if TYPE_CHECKING:
 DESCRIPTION = """
 Example of using Dalaran to log and visualize the output of [Segment Anything](https://github.com/facebookresearch/segment-anything).
 
-The full source code for this example is available [on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/segment_anything_model).
+The full source code for this example is available [on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/segment_anything_model).
 """.strip()
 
 MODEL_DIR: Final = Path(os.path.dirname(__file__)) / "model"

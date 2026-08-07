@@ -7,8 +7,8 @@
 <h1 align="center">
   <a href="https://crates.io/crates/dalaran-cli">                         <img alt="Latest version" src="https://img.shields.io/crates/v/dalaran-cli.svg">                            </a>
   <a href="https://docs.rs/dalaran-cli">                                  <img alt="Documentation"  src="https://docs.rs/dalaran-cli/badge.svg">                                      </a>
-  <a href="https://github.com/rerun-io/rerun/blob/main/LICENSE-MIT">    <img alt="MIT"            src="https://img.shields.io/badge/license-MIT-blue.svg">                        </a>
-  <a href="https://github.com/rerun-io/rerun/blob/main/LICENSE-APACHE"> <img alt="Apache"         src="https://img.shields.io/badge/license-Apache-blue.svg">                     </a>
+  <a href="https://github.com/Flaminis/Dalaran/blob/main/LICENSE-MIT">    <img alt="MIT"            src="https://img.shields.io/badge/license-MIT-blue.svg">                        </a>
+  <a href="https://github.com/Flaminis/Dalaran/blob/main/LICENSE-APACHE"> <img alt="Apache"         src="https://img.shields.io/badge/license-Apache-blue.svg">                     </a>
   <a href="https://discord.gg/Gcm8BbTaAj">                              <img alt="Dalaran Discord"  src="https://img.shields.io/discord/1062300748202921994?label=Dalaran%20Discord"> </a>
 </h1>
 
@@ -26,7 +26,7 @@ Run `dalaran --help` for more.
 
 
 ## What is Dalaran?
-- [Examples](https://github.com/rerun-io/rerun/tree/latest/examples/rust)
+- [Examples](https://github.com/Flaminis/Dalaran/tree/latest/examples/rust)
 - [High-level docs](https://dalaran.dev/docs)
 - [Rust API docs](https://docs.rs/dalaran/)
 - [Troubleshooting](https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting)

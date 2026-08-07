@@ -11,7 +11,7 @@ client.send_table(
         "id": [1, 2, 3],
         "url": [
             "https://www.dalaran.dev",
-            "https://github.com/rerun-io/rerun",
+            "https://github.com/Flaminis/Dalaran",
             "https://crates.io/crates/dalaran",
         ],
     }),

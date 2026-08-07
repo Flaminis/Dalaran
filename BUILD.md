@@ -18,7 +18,7 @@ First, install the Rust toolchain using the installer from <https://rustup.rs/>.
 
 Then, clone the repository:
 ```sh
-git clone git@github.com:rerun-io/rerun.git
+git clone git@github.com:Flaminis/Dalaran.git
 cd dalaran
 ```
 
@@ -124,7 +124,7 @@ In debug builds, it will spawn `target/debug/dalaran` if it exists, otherwise lo
 
 Dalaran is available as a package on PyPi and can be installed with `pip install dalaran-sdk`.
 
-Additionally, nightly dev wheels from head of `main` are available at <https://github.com/rerun-io/rerun/releases/tag/prerelease>.
+Additionally, nightly dev wheels from head of `main` are available at <https://github.com/Flaminis/Dalaran/releases/tag/prerelease>.
 
 
 ### Building from source
@@ -199,7 +199,7 @@ This can be useful for developer tools, e.g. for [setting up IntelliSense in VSC
 
 ## Building the docs
 
-High-level documentation for Dalaran can be found at [https://dalaran.dev/docs](https://dalaran.dev/docs). It is built from the separate repository [dalaran-docs](https://github.com/rerun-io/rerun-docs).
+High-level documentation for Dalaran can be found at [https://dalaran.dev/docs](https://dalaran.dev/docs). It is built from the separate repository [dalaran-docs](https://github.com/Flaminis/Dalaran-docs).
 
 - 🌊 [C++ API docs](https://ref.dalaran.dev/docs/cpp) are built with `doxygen` and hosted on GitHub. Use `pixi run -e cpp cpp-docs` to build them locally. For details on the C++ doc-system, see [Writing Docs](dalaran_cpp/docs/writing_docs.md).
 - 🐍 [Python API docs](https://ref.dalaran.dev/docs/python) are built via `mkdocs` and hosted on GitHub. For details on the Python doc-system, see [Writing Docs](dalaran_py/docs/writing_docs.md).

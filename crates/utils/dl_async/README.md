@@ -1,6 +1,6 @@
 # dl_async
 
-Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/Flaminis/Dalaran) family of crates.
 
 Async runtime abstractions for native and WebAssembly targets.
 

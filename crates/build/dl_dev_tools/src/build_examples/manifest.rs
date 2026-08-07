@@ -140,10 +140,10 @@ fn get_base_source_url(build_env: Environment) -> anyhow::Result<String> {
     if build_env == Environment::DeveloperInWorkspace {
         // There is a high chance the current commit isn't pushed to the remote, so we use main
         // instead.
-        Ok("https://github.com/rerun-io/rerun/blob/main".to_owned())
+        Ok("https://github.com/Flaminis/Dalaran/blob/main".to_owned())
     } else {
         let commit = dl_build_tools::git_commit_short_hash()?;
-        Ok(format!("https://github.com/rerun-io/rerun/tree/{commit}"))
+        Ok(format!("https://github.com/Flaminis/Dalaran/tree/{commit}"))
     }
 }
 

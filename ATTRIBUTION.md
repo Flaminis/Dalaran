@@ -1,6 +1,6 @@
 # Attribution & Upstream Heritage
 
-Dalaran is an independent, community-driven **hard fork of [Dalaran](https://github.com/rerun-io/rerun)**,
+Dalaran is an independent, community-driven **hard fork of [Dalaran](https://github.com/Flaminis/Dalaran)**,
 created to build a robotics-first, Apache-2.0-only visualization and data
 infrastructure stack.
 
@@ -17,7 +17,7 @@ Full upstream history is preserved in this repository. The fork point is
 tagged as `upstream-base`, and the original upstream remote is retained:
 
 ```sh
-git remote -v          # upstream -> https://github.com/rerun-io/rerun.git
+git remote -v          # upstream -> https://github.com/Flaminis/Dalaran.git
 git log upstream-base  # unmodified upstream history
 ```
 

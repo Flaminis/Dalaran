@@ -7,8 +7,8 @@ To learn more about Dalaran, the company, visit our Website at [https://www.dala
 
 Code & License
 --------------
-The Dalaran SDK & Viewer are open source, all code is available on [GitHub](https://github.com/rerun-io/rerun/) and open for contributions.
-Licensing is permissive, the project is dual licensed under [MIT](https://github.com/rerun-io/rerun/blob/main/LICENSE-MIT) & [Apache 2.0](https://github.com/rerun-io/rerun/blob/main/LICENSE-APACHE).
+The Dalaran SDK & Viewer are open source, all code is available on [GitHub](https://github.com/Flaminis/Dalaran/) and open for contributions.
+Licensing is permissive, the project is dual licensed under [MIT](https://github.com/Flaminis/Dalaran/blob/main/LICENSE-MIT) & [Apache 2.0](https://github.com/Flaminis/Dalaran/blob/main/LICENSE-APACHE).
 
 
 Under the hood
@@ -23,5 +23,5 @@ We depend on a number of third party libraries, most notably:
 * [PyO3](https://github.com/PyO3/pyo3) for Python bindings
 
 If you want to learn more about the different parts of the SDK & Viewer and how they work, check out
-[this architecture overview](https://github.com/rerun-io/rerun/blob/latest/ARCHITECTURE.md)
+[this architecture overview](https://github.com/Flaminis/Dalaran/blob/latest/ARCHITECTURE.md)
 for an introduction.

@@ -24,7 +24,7 @@ DESCRIPTION = """
 This example shows various plot types that you can create using Dalaran. Common usecases for such plots would be logging
 losses or metrics over time, histograms, or general function plots.
 
-The full source code for this example is available [on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/plots).
+The full source code for this example is available [on GitHub](https://github.com/Flaminis/Dalaran/blob/latest/examples/python/plots).
 """.strip()
 
 

@@ -150,7 +150,7 @@ def check_string(s: str) -> str | None:
     if m := re.search(r"[^.] ([A-Z]\w+)", s):
         word = m.group(1)
         if word in bad_titles:
-            return f"Do not use title casing ({word}). See https://github.com/rerun-io/rerun/blob/main/DESIGN.md"
+            return f"Do not use title casing ({word}). See https://github.com/Flaminis/Dalaran/blob/main/DESIGN.md"
 
     return None
 
@@ -161,11 +161,11 @@ def lint_url(url: str) -> str | None:
         "https://github.com/rerun-io/documentation/blob/main/src/utils/tokens.ts",
         "https://github.com/rerun-io/landing/blob/main/src/lib/lang.ts",  # if this file moves we should check the linked code.
         "https://github.com/rerun-io/platform-operator/blob/main/README-tech-overview.md",
-        "https://github.com/rerun-io/rerun/blob/main/ARCHITECTURE.md",
-        "https://github.com/rerun-io/rerun/blob/main/CODE_OF_CONDUCT.md",
-        "https://github.com/rerun-io/rerun/blob/main/CONTRIBUTING.md",
-        "https://github.com/rerun-io/rerun/blob/main/LICENSE-APACHE",
-        "https://github.com/rerun-io/rerun/blob/main/LICENSE-MIT",
+        "https://github.com/Flaminis/Dalaran/blob/main/ARCHITECTURE.md",
+        "https://github.com/Flaminis/Dalaran/blob/main/CODE_OF_CONDUCT.md",
+        "https://github.com/Flaminis/Dalaran/blob/main/CONTRIBUTING.md",
+        "https://github.com/Flaminis/Dalaran/blob/main/LICENSE-APACHE",
+        "https://github.com/Flaminis/Dalaran/blob/main/LICENSE-MIT",
     }
 
     if url in ALLOW_LIST_URLS:
@@ -179,7 +179,7 @@ def lint_url(url: str) -> str | None:
 
             if "/README.md" in url:
                 pass  # Probably fine
-            elif url.startswith("https://github.com/rerun-io/rerun/blob/"):
+            elif url.startswith("https://github.com/Flaminis/Dalaran/blob/"):
                 pass  # TODO(#6077): figure out how we best link to our own code from our docs
             elif url.startswith("https://github.com/anthropics/claude-code-action"):
                 pass
@@ -347,7 +347,7 @@ def lint_line(
     if explicit_quotes.search(line):
         return (
             "Prefer using {:?} over explicit quotes - it will also escape newlines etc. "
-            "See: https://github.com/rerun-io/rerun/blob/main/CODE_STYLE.md#misc"
+            "See: https://github.com/Flaminis/Dalaran/blob/main/CODE_STYLE.md#misc"
         )
 
     if m := quoted_string.search(line):

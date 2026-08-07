@@ -20,7 +20,7 @@ class AnyValues(AsComponents):
             description="Bla bla bla…",
             # URIs will become clickable links
             homepage="https://www.dalaran.dev",
-            repository="https://github.com/rerun-io/rerun",
+            repository="https://github.com/Flaminis/Dalaran",
         ),
     )
     ```
