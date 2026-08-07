@@ -110,16 +110,16 @@ and remote catalogs are addressed with `dalaran://` URIs.
 
 ## Why Dalaran
 
-Everything below is what Dalaran adds for robotics teams specifically. Items
-marked *(in progress)* are being actively built and are not something you should
-depend on yet; unmarked items work today.
+Everything below is what Dalaran adds for robotics teams specifically, and
+everything below works today — it is code in this repository with tests, not a
+roadmap. What is *not* built yet lives in [ROADMAP.md](ROADMAP.md).
 
 - **`dalaran.robot`, a high-level robotics logging API** — one handle that knows
   about a robot: joint states, base pose, sensor frames, and URDF-driven link
   transforms, so you log `robot.log_joint_states(...)` instead of hand-rolling a
   dozen entity paths and quaternion conversions. Point it at a URDF and joint
   limits, joint axes and `<mimic>` joints are honoured for you.
-- **ROS 2 bridge and rosbag2 replay** *(in progress)* — subscribe to live ROS 2
+- **ROS 2 bridge and rosbag2 replay** — subscribe to live ROS 2
   topics or replay a rosbag2 into Dalaran, backed by an **extensible message
   registry** so you can teach it your own `.msg` types without patching the
   core. Today the repository already ingests MCAP and a set of common ROS
@@ -137,10 +137,13 @@ depend on yet; unmarked items work today.
   they are rather than as points on the cost gradient, a costmap's layers stack
   as separate entities with their own draw order and opacity, and the rolling
   local window keeps one entity while its origin moves.
-- **`dalaran doctor`** *(in progress)* — a diagnostic subcommand that inspects
-  your environment (GPU and driver, viewer/SDK version skew, ROS 2 setup,
-  recording integrity) and tells you what is wrong in plain language.
-- **`.dlrpack` portable dataset bundles** *(in progress)* — a single file that
+- **`dalaran doctor`** — a diagnostic subcommand that inspects your environment
+  (build info, wgpu adapters and drivers, `DALARAN_*` variables, headless and
+  ROS 2 setup, recording integrity) and tells you what is wrong in plain
+  language. It lives in the viewer binary, so it still runs when your Python
+  installation is the thing that is broken; `dalaran-doctor` covers the
+  interpreter and SDK/viewer version skew from the Python side.
+- **`.dlrpack` portable dataset bundles** — a single file that
   carries recordings, the blueprint, referenced assets, and metadata, so
   "here is the run that failed" is one artifact you can hand to a colleague.
 - **Apache-2.0 throughout, self-hostable** — no dual-licence ambiguity, no
