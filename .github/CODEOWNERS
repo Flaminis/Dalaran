@@ -1,0 +1,12 @@
+# Every change needs a review from the maintainer.
+#
+# See https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+*       @Flaminis
+
+# Areas where a mistake is expensive: CI credentials, release plumbing and the
+# licensing/attribution files that keep the fork compliant.
+/.github/            @Flaminis
+/LICENSE             @Flaminis
+/NOTICE              @Flaminis
+/ATTRIBUTION.md      @Flaminis
