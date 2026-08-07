@@ -73,7 +73,7 @@ const CHUNK_CHANNEL_CAPACITY: usize = 16;
 /// `Ok(None)` indicates successful termination of the stream.
 /// `Err(err)` indicates a fatal error that should terminate the pipeline.
 pub trait ChunkStream: Send {
-    fn next(&mut self) -> Result<Option<Arc<re_chunk::Chunk>>, error::ChunkPipelineError>;
+    fn next(&mut self) -> Result<Option<Arc<dl_chunk::Chunk>>, error::ChunkPipelineError>;
 }
 
 /// Factory that creates a [`ChunkStream`], e.g. from a data source.

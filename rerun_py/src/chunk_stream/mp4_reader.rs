@@ -3,11 +3,11 @@ use std::sync::Arc;
 
 use pyo3::exceptions::{PyFileNotFoundError, PyValueError};
 use pyo3::prelude::*;
-use re_chunk::{Chunk, EntityPath};
-use re_log_types::{TimeType, TimelineName};
-use re_mp4_reader::{Mode, Mp4Config};
-use re_sdk_types::components::VideoCodec;
-use re_video::{HwAccel, Mp4TranscodeOptions};
+use dl_chunk::{Chunk, EntityPath};
+use dl_log_types::{TimeType, TimelineName};
+use dl_mp4_reader::{Mode, Mp4Config};
+use dl_sdk_types::components::VideoCodec;
+use dl_video::{HwAccel, Mp4TranscodeOptions};
 
 use super::error::ChunkPipelineError;
 use super::py_stream::PyLazyChunkStreamInternal;
@@ -132,7 +132,7 @@ impl PyMp4ReaderInternal {
                 // `transcode` is validated and rejected for asset mode on the Python
                 // side, so it's simply ignored here.
                 Mode::Asset {
-                    timepoint: re_chunk::TimePoint::default(),
+                    timepoint: dl_chunk::TimePoint::default(),
                 }
             }
             "stream" => Mode::Stream {
@@ -205,7 +205,7 @@ impl ChunkStreamFactory for PyMp4ReaderInternal {
         std::thread::Builder::new()
             .name("mp4-chunk-source".into())
             .spawn(move || {
-                match re_mp4_reader::load_mp4(&path, &config, &entity_path) {
+                match dl_mp4_reader::load_mp4(&path, &config, &entity_path) {
                     Ok(iter) => {
                         for chunk_result in iter {
                             let msg = match chunk_result {
@@ -214,13 +214,13 @@ impl ChunkStreamFactory for PyMp4ReaderInternal {
                                     reason: err.to_string(),
                                 }),
                             };
-                            if re_quota_channel::send_crossbeam(&tx, msg).is_err() {
+                            if dl_quota_channel::send_crossbeam(&tx, msg).is_err() {
                                 break; // receiver dropped
                             }
                         }
                     }
                     Err(err) => {
-                        re_quota_channel::send_crossbeam(
+                        dl_quota_channel::send_crossbeam(
                             &tx,
                             Err(ChunkPipelineError::Mp4 {
                                 reason: err.to_string(),

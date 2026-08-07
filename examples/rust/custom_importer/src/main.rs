@@ -1,4 +1,4 @@
-//! This example demonstrates how to implement and register a [`re_importer::Importer`] into
+//! This example demonstrates how to implement and register a [`dl_importer::Importer`] into
 //! the Rerun Viewer in order to add support for loading arbitrary files.
 //!
 //! Usage:
@@ -6,17 +6,17 @@
 //! $ cargo r -p custom_importer -- path/to/some/file
 //! ```
 
-use rerun::external::{anyhow, re_build_info, re_importer, re_log};
+use rerun::external::{anyhow, dl_build_info, dl_importer, dl_log};
 use rerun::log::{Chunk, RowId};
 use rerun::{EntityPath, ImportedData, Importer as _, TimePoint};
 
 fn main() -> anyhow::Result<std::process::ExitCode> {
     let main_thread_token = rerun::MainThreadToken::i_promise_i_am_on_the_main_thread();
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
-    re_importer::register_custom_importer(HashLoader);
+    dl_importer::register_custom_importer(HashLoader);
 
-    let build_info = re_build_info::build_info!();
+    let build_info = dl_build_info::build_info!();
     rerun::run(
         main_thread_token,
         build_info,
@@ -28,44 +28,44 @@ fn main() -> anyhow::Result<std::process::ExitCode> {
 
 // ---
 
-/// A custom [`re_importer::Importer`] that logs the hash of file as a [`rerun::TextDocument`].
+/// A custom [`dl_importer::Importer`] that logs the hash of file as a [`rerun::TextDocument`].
 struct HashLoader;
 
-impl re_importer::Importer for HashLoader {
+impl dl_importer::Importer for HashLoader {
     fn name(&self) -> String {
         "rerun.importers.HashLoader".into()
     }
 
     fn import_from_path(
         &self,
-        settings: &rerun::external::re_importer::ImporterSettings,
+        settings: &rerun::external::dl_importer::ImporterSettings,
         path: std::path::PathBuf,
-        tx: crossbeam::channel::Sender<re_importer::ImportedData>,
-    ) -> Result<(), re_importer::ImporterError> {
+        tx: crossbeam::channel::Sender<dl_importer::ImportedData>,
+    ) -> Result<(), dl_importer::ImporterError> {
         let contents = std::fs::read(&path)?;
         if path.is_dir() {
-            return Err(re_importer::ImporterError::Incompatible(path)); // simply not interested
+            return Err(dl_importer::ImporterError::Incompatible(path)); // simply not interested
         }
         hash_and_log(settings, &tx, &path, &contents)
     }
 
     fn import_from_file_contents(
         &self,
-        settings: &rerun::external::re_importer::ImporterSettings,
+        settings: &rerun::external::dl_importer::ImporterSettings,
         filepath: std::path::PathBuf,
         contents: std::borrow::Cow<'_, [u8]>,
-        tx: crossbeam::channel::Sender<re_importer::ImportedData>,
-    ) -> Result<(), re_importer::ImporterError> {
+        tx: crossbeam::channel::Sender<dl_importer::ImportedData>,
+    ) -> Result<(), dl_importer::ImporterError> {
         hash_and_log(settings, &tx, &filepath, &contents)
     }
 }
 
 fn hash_and_log(
-    settings: &rerun::external::re_importer::ImporterSettings,
-    tx: &crossbeam::channel::Sender<re_importer::ImportedData>,
+    settings: &rerun::external::dl_importer::ImporterSettings,
+    tx: &crossbeam::channel::Sender<dl_importer::ImportedData>,
     filepath: &std::path::Path,
     contents: &[u8],
-) -> Result<(), re_importer::ImporterError> {
+) -> Result<(), dl_importer::ImporterError> {
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};
 
@@ -83,7 +83,7 @@ fn hash_and_log(
 
     let store_id = settings.opened_store_id_or_recommended();
     let data = ImportedData::Chunk(HashLoader::name(&HashLoader), store_id, chunk);
-    re_quota_channel::send_crossbeam(tx, data).ok();
+    dl_quota_channel::send_crossbeam(tx, data).ok();
 
     Ok(())
 }

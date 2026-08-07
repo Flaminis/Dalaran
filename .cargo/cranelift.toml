@@ -14,7 +14,7 @@ codegen-backend = "llvm"
 [profile.dev-fast.package.image]
 codegen-backend = "llvm"
 
-[profile.dev-fast.package.re_sdk_types]
+[profile.dev-fast.package.dl_sdk_types]
 codegen-backend = "llvm"
 
 [profile.dev-fast.package.glam]

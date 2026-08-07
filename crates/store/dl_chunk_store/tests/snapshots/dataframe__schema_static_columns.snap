@@ -1,0 +1,10 @@
+---
+source: crates/store/dl_chunk_store/tests/dataframe.rs
+expression: both_static_and_non_static
+---
+[
+    "baz",
+    "foo",
+    "yak",
+    "example.MyPoints:points",
+]

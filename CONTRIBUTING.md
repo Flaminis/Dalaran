@@ -96,7 +96,7 @@ Every PR needs **exactly one** of these four changelog categories:
 
 In addition:
 
-* At least one category label (e.g. `📺 re_viewer`, `sdk-python`, …) is required. See the [CI job](./.github/workflows/labels.yml) for the current list.
+* At least one category label (e.g. `📺 dl_viewer`, `sdk-python`, …) is required. See the [CI job](./.github/workflows/labels.yml) for the current list.
 * When in doubt, add more labels rather than fewer — they help with search.
 
 #### What goes in the changeset?
@@ -210,7 +210,7 @@ If output changes, they will fail. Review results with `cargo insta review` (ins
 Some tests render an image and compare it against a checked-in reference image. They run as part of the regular test suite.
 
 These are driven by [egui_kittest](https://github.com/emilk/egui/tree/master/crates/egui_kittest)'s `Harness::snapshot` method.
-We typically use [TestContext](./crates/viewer/re_test_context/src/lib.rs) to mock relevant parts of the viewer.
+We typically use [TestContext](./crates/viewer/dl_test_context/src/lib.rs) to mock relevant parts of the viewer.
 
 ##### Comparing results & updating images
 

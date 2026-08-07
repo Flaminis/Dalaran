@@ -8,8 +8,8 @@ publish = false
 
 [dependencies]
 crossbeam.workspace = true
-re_quota_channel = { path = "../../../crates/utils/re_quota_channel" }
+dl_quota_channel = { path = "../../../crates/utils/dl_quota_channel" }
 rerun = { path = "../../../crates/top/rerun", features = ["native_viewer", "run"] }
 
 [build-dependencies]
-re_build_tools = { path = "../../../crates/build/re_build_tools" }
+dl_build_tools = { path = "../../../crates/build/dl_build_tools" }

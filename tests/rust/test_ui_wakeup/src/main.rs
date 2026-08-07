@@ -26,13 +26,13 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     use clap::Parser as _;
     let args = Args::parse();
 
-    // This is so that re_viewer logs incoming messages:
-    let rust_log = "info,re_viewer=trace";
+    // This is so that dl_viewer logs incoming messages:
+    let rust_log = "info,dl_viewer=trace";
     eprintln!("Setting RUST_LOG={rust_log}");
 
     // SAFETY: No multithreading here

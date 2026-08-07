@@ -4,7 +4,7 @@ use arrow::array::{
     ArrayBuilder, Float32Array, Float64Array, Int64Builder, ListBuilder, StringBuilder, StructArray,
 };
 use arrow::datatypes::{DataType, Field};
-use rerun::external::re_log;
+use rerun::external::dl_log;
 use rerun::lenses::{CastTo, Lens, Lenses, LensesSink, OutputMode, Selector};
 use rerun::sink::GrpcSink;
 use rerun::{
@@ -13,7 +13,7 @@ use rerun::{
 };
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     let instruction = Lens::derive("example:Instruction:text")
         .to_component(TextDocument::descriptor_text(), Selector::parse(".")?)

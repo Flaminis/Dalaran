@@ -15,7 +15,7 @@
 // NOTE: The SDK currently allocates *a lot*, so much in fact that adding accounting around
 // allocations yields a lot of overhead.
 //
-// use re_memory::AccountingAllocator;
+// use dl_memory::AccountingAllocator;
 //
 // #[global_allocator]
 // static GLOBAL: AccountingAllocator<mimalloc::MiMalloc> =

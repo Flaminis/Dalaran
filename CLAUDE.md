@@ -35,7 +35,7 @@ We use `pixi` for task management and dependency installation. Check `pixi.toml`
 **Testing:**
 - Use `cargo clippy -p <crate_name>` to run general rust checks before building things
 - `cargo nextest run --all-features --no-fail-fast -p <crate_name>` - Run tests for a specific crate
-  - Example: `cargo nextest run --all-features --no-fail-fast -p re_view_spatial`
+  - Example: `cargo nextest run --all-features --no-fail-fast -p dl_view_spatial`
 - Use `cargo nextest` (not `cargo test`) for better output and parallelism
 - Always use `--all-features` unless you have a specific reason not to
 - Use `--no-fail-fast` to gather all test failures in a single run
@@ -50,12 +50,12 @@ We use `pixi` for task management and dependency installation. Check `pixi.toml`
 .fbs files (definitions/) → pixi run codegen → Generated code (Rust/Python/C++) + docs (docs/content/reference/types/)
 ```
 
-- Type definitions live in `crates/store/re_sdk_types/definitions/rerun/`
+- Type definitions live in `crates/store/dl_sdk_types/definitions/rerun/`
   - `datatypes/*.fbs` - Low-level types (Vec3D, Mat4x4, etc.)
   - `components/*.fbs` - Component types (Position3D, Color, etc.)
   - `archetypes/*.fbs` - Archetypes (Points3D, Image, etc.)
   - `blueprint/*.fbs` - Blueprint system types
-- Codegen implementation is in `crates/build/re_types_builder/`
+- Codegen implementation is in `crates/build/dl_types_builder/`
 - After modifying .fbs files, run `pixi run codegen` to regenerate code
 
 ### Extension pattern
@@ -85,7 +85,7 @@ To add custom functionality to generated types, create `_ext` files:
 
 ```
 crates/
-├── build/     # Code generation (re_types_builder)
+├── build/     # Code generation (dl_types_builder)
 ├── store/     # Data types, storage, querying
 ├── top/       # User-facing SDKs and CLI
 └── viewer/    # Viewer UI and rendering
@@ -118,7 +118,7 @@ SDK (log archetype)
     ↓ encode to Apache Arrow
 LogMsg (encoded data)
     ↓ transport (gRPC/file/memory)
-re_chunk_store (indexed time series DB)
+dl_chunk_store (indexed time series DB)
     ↓ query
 Viewer (immediate mode rendering)
 ```
@@ -126,7 +126,7 @@ Viewer (immediate mode rendering)
 ### Blueprint system
 
 The blueprint is the viewer's configuration layer:
-- Stored as a separate store (`re_entity_db`) with "blueprint" timeline
+- Stored as a separate store (`dl_entity_db`) with "blueprint" timeline
 - Defines: view layout, visibility, per-entity overrides, view properties
 - Uses the same type system as logged data
 - Basic blueprint path hierarchy: `/viewport/`, `/view/{uuid}/`, `/container/{uuid}/`

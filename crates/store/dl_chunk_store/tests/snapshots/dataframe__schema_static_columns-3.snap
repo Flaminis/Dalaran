@@ -1,0 +1,7 @@
+---
+source: crates/store/dl_chunk_store/tests/dataframe.rs
+expression: non_static_only
+---
+[
+    "example.MyPoints:points",
+]

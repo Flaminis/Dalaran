@@ -4,7 +4,7 @@ use pyo3::exceptions::{PyRuntimeError, PyTypeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyModule;
 
-use re_lenses_core::{DynExpr, Selector};
+use dl_lenses_core::{DynExpr, Selector};
 
 /// Register the selector class.
 pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
@@ -23,23 +23,23 @@ impl PySelectorInternal {
     }
 }
 
-/// Wrap a Python callable into a closure compatible with [`re_lenses_core::IntoDynExpr`].
+/// Wrap a Python callable into a closure compatible with [`dl_lenses_core::IntoDynExpr`].
 fn wrap_py_callable(
     callback: Py<PyAny>,
-) -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, re_lenses_core::combinators::Error>
+) -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, dl_lenses_core::combinators::Error>
 + Send
 + Sync
 + 'static {
     move |source: &ArrayRef| {
         Python::attach(|py| {
             let py_array = source.to_data().to_pyarrow(py).map_err(|err| {
-                re_lenses_core::combinators::Error::Other(format!(
+                dl_lenses_core::combinators::Error::Other(format!(
                     "Failed to convert array to PyArrow: {err}"
                 ))
             })?;
 
             let result = callback.call1(py, (py_array,)).map_err(|err| {
-                re_lenses_core::combinators::Error::Other(format!("Python callback failed: {err}"))
+                dl_lenses_core::combinators::Error::Other(format!("Python callback failed: {err}"))
             })?;
 
             if result.is_none(py) {
@@ -47,7 +47,7 @@ fn wrap_py_callable(
             }
 
             let array_data: PyArrowType<ArrayData> = result.extract(py).map_err(|err| {
-                re_lenses_core::combinators::Error::Other(format!(
+                dl_lenses_core::combinators::Error::Other(format!(
                     "Failed to convert callback result to Arrow: {err}"
                 ))
             })?;
@@ -70,7 +70,7 @@ impl PySelectorInternal {
     /// Execute this selector against a pyarrow array.
     fn execute(&self, py: Python<'_>, source: PyArrowType<ArrayData>) -> PyResult<Py<PyAny>> {
         let array: ArrayRef = make_array(source.0);
-        let result = re_lenses::default_runtime()
+        let result = dl_lenses::default_runtime()
             .execute(&self.selector, array)
             .map_err(|err| PyRuntimeError::new_err(format!("Selector execution failed: {err}")))?;
         match result {
@@ -91,7 +91,7 @@ impl PySelectorInternal {
         let list_array = array.as_any().downcast_ref::<ListArray>().ok_or_else(|| {
             PyTypeError::new_err(format!("expected a ListArray, got {:?}", array.data_type()))
         })?;
-        let result = re_lenses::default_runtime()
+        let result = dl_lenses::default_runtime()
             .execute_per_row(&self.selector, list_array)
             .map_err(|err| PyRuntimeError::new_err(format!("Selector execution failed: {err}")))?;
         match result {

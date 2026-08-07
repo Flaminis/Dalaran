@@ -12,11 +12,11 @@ struct Args {
     rerun: rerun::clap::RerunArgs,
 }
 
-use rerun::external::re_importer::UrdfTree;
-use rerun::external::{re_log, urdf_rs};
+use rerun::external::dl_importer::UrdfTree;
+use rerun::external::{dl_log, urdf_rs};
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     use clap::Parser as _;
     let args = Args::parse();

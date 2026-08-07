@@ -1,0 +1,61 @@
+[package]
+name = "dl_types_core"
+authors.workspace = true
+description = "The core traits and types that power Rerun's data model."
+edition = "2024"
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+
+
+[dependencies]
+# Rerun
+dl_arrow_util.workspace = true
+dl_byte_size.workspace = true
+dl_case.workspace = true
+dl_error.workspace = true
+dl_log.workspace = true
+dl_string_interner.workspace = true
+dl_tracing.workspace = true
+dl_tuid = { workspace = true, features = ["bytemuck"] }
+
+# External
+anyhow.workspace = true
+bitflags.workspace = true
+arrow.workspace = true
+bytemuck = { workspace = true, features = ["derive"] }
+document-features.workspace = true
+half.workspace = true
+itertools.workspace = true
+nohash-hasher.workspace = true
+quiver.workspace = true
+serde = { workspace = true, features = ["derive"] }
+thiserror.workspace = true
+
+
+[dev-dependencies]
+criterion.workspace = true
+serde_json.workspace = true
+similar-asserts.workspace = true
+
+[lib]
+bench = false
+
+[[bench]]
+name = "bench_tuid"
+harness = false

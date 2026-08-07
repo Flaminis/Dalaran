@@ -1,0 +1,177 @@
+use egui::Color32;
+use dl_chunk::LatestAtQuery;
+use dl_log_types::{EntityPath, Instance};
+use dl_query::{clamped_zip_2x4, range_zip_1x4};
+use dl_sdk_types::archetypes::GraphNodes;
+use dl_sdk_types::blueprint::components::VisualizerInstructionId;
+use dl_sdk_types::components::{
+    Color, {self},
+};
+use dl_sdk_types::{self, Archetype as _, ArrowString, archetypes};
+use dl_view::{DataResultQuery as _, VisualizerInstructionQueryResults};
+use dl_viewer_context::{
+    self, IdentifiedViewSystem, ViewContext, ViewContextCollection, ViewQuery,
+    ViewSystemExecutionError, ViewSystemIdentifier, VisualizerExecutionOutput, VisualizerQueryInfo,
+    VisualizerSystem,
+};
+
+use crate::graph::NodeId;
+
+#[derive(Default)]
+pub struct NodeVisualizer;
+
+pub const FALLBACK_RADIUS: f32 = 4.0;
+
+/// The label information of a [`dl_sdk_types::archetypes::GraphNodes`].
+#[derive(Clone)]
+pub enum Label {
+    Circle {
+        /// Radius of the circle in world coordinates.
+        radius: f32,
+        color: Option<Color32>,
+    },
+    Text {
+        text: ArrowString,
+        color: Option<Color32>,
+    },
+}
+
+/// A [`NodeInstance`] is the output of the [`NodeVisualizer`] and represents a single node in the graph.
+#[derive(Clone)]
+pub struct NodeInstance {
+    pub instance_index: Instance,
+    pub id: NodeId,
+    pub position: Option<egui::Pos2>,
+    pub label: Label,
+}
+
+#[derive(Clone)]
+pub struct NodeData {
+    pub visualizer_instruction_id: VisualizerInstructionId,
+    pub nodes: Vec<NodeInstance>,
+}
+
+impl IdentifiedViewSystem for NodeVisualizer {
+    fn identifier() -> ViewSystemIdentifier {
+        dl_viewer_context::external::dl_string_interner::intern_static!(
+            dl_viewer_context::ViewSystemIdentifier,
+            "GraphNodes"
+        )
+    }
+}
+
+impl VisualizerSystem for NodeVisualizer {
+    fn visualizer_query_info(
+        &self,
+        _app_options: &dl_viewer_context::AppOptions,
+    ) -> VisualizerQueryInfo {
+        VisualizerQueryInfo::single_required_component::<components::GraphNode>(
+            &archetypes::GraphNodes::descriptor_node_ids(),
+            &archetypes::GraphNodes::all_components(),
+        )
+    }
+
+    /// Populates the visualizer with data from the store.
+    fn execute(
+        &self,
+        ctx: &ViewContext<'_>,
+        query: &ViewQuery<'_>,
+        _context_systems: &ViewContextCollection,
+    ) -> Result<VisualizerExecutionOutput, ViewSystemExecutionError> {
+        let timeline_query = LatestAtQuery::new(query.timeline, query.latest_at);
+
+        let output = VisualizerExecutionOutput::default();
+        let mut node_data: ahash::HashMap<EntityPath, NodeData> = ahash::HashMap::default();
+
+        for (data_result, instruction) in query.iter_visualizer_instruction_for(Self::identifier())
+        {
+            // TODO(andreas): why not data_result.query_archetype_with_history
+            let latest_at_results = data_result
+                .latest_at_with_blueprint_resolved_data::<archetypes::GraphNodes>(
+                    ctx,
+                    &timeline_query,
+                    Some(instruction),
+                );
+            let results = dl_view::BlueprintResolvedResults::from((
+                timeline_query.clone(),
+                latest_at_results,
+            ));
+            let results = VisualizerInstructionQueryResults::new(instruction, &results, &output);
+
+            let all_nodes = results.iter_required(GraphNodes::descriptor_node_ids().component);
+            let all_colors = results.iter_optional(GraphNodes::descriptor_colors().component);
+            let all_positions = results.iter_optional(GraphNodes::descriptor_positions().component);
+            let all_labels = results.iter_optional(GraphNodes::descriptor_labels().component);
+            let all_radii = results.iter_optional(GraphNodes::descriptor_radii().component);
+            let show_label = results
+                .iter_optional(GraphNodes::descriptor_show_labels().component)
+                .slice::<bool>()
+                .next()
+                .is_none_or(|(_index, b)| !b.is_empty() && b.value(0));
+
+            let data = range_zip_1x4(
+                all_nodes.slice::<String>(),
+                all_colors.slice::<u32>(),
+                all_positions.slice::<[f32; 2]>(),
+                all_labels.slice::<String>(),
+                all_radii.slice::<f32>(),
+            );
+
+            for (_index, nodes, colors, positions, labels, radii) in data {
+                let nodes = clamped_zip_2x4(
+                    nodes.iter(),
+                    (0..).map(Instance::from),
+                    colors.unwrap_or_default().iter().map(Option::Some),
+                    Option::<&u32>::default,
+                    positions
+                        .unwrap_or_default()
+                        .iter()
+                        .copied()
+                        .map(Option::Some),
+                    Option::<[f32; 2]>::default,
+                    labels.unwrap_or_default().iter().cloned().map(Option::Some),
+                    Option::<ArrowString>::default,
+                    radii.unwrap_or_default().iter().copied().map(Option::Some),
+                    Option::<f32>::default,
+                )
+                .map(|(node, instance, color, position, label, radius)| {
+                    let node = components::GraphNode(node.clone().into());
+                    let color = color.map(|&c| egui::Color32::from(Color::new(c)));
+                    let label = match (label, show_label) {
+                        (Some(label), true) => Label::Text {
+                            text: label.clone(),
+                            color,
+                        },
+                        (None, true) => Label::Text {
+                            text: node.0.0.clone(),
+                            color,
+                        },
+                        _ => Label::Circle {
+                            // Radius is negative for UI radii, but we don't handle this here.
+                            radius: radius.unwrap_or(FALLBACK_RADIUS).abs(),
+                            color,
+                        },
+                    };
+
+                    NodeInstance {
+                        instance_index: instance,
+                        id: NodeId::from_entity_node(&data_result.entity_path, &node),
+                        position: position.map(|[x, y]| egui::Pos2::new(x, y)),
+                        label,
+                    }
+                })
+                .collect::<Vec<_>>();
+
+                node_data.insert(
+                    data_result.entity_path.clone(),
+                    NodeData {
+                        visualizer_instruction_id: instruction.id,
+                        nodes,
+                    },
+                );
+            }
+        }
+
+        Ok(output.with_visualizer_data(node_data))
+    }
+}

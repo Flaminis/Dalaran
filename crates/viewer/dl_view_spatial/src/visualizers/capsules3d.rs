@@ -1,0 +1,269 @@
+use std::iter;
+
+use ordered_float::NotNan;
+use dl_chunk_store::external::dl_chunk::ChunkComponentIterItem;
+use dl_sdk_types::archetypes::Capsules3D;
+use dl_sdk_types::components::{ClassId, Color, FillMode, HalfSize3D, Length, Radius, ShowLabels};
+use dl_sdk_types::reflection::Enum as _;
+use dl_sdk_types::{Archetype as _, ArrowString, components};
+use dl_view::clamped_or_else;
+use dl_viewer_context::{
+    IdentifiedViewSystem, QueryContext, ViewClass as _, ViewContext, ViewContextCollection,
+    ViewQuery, ViewSystemExecutionError, VisualizerExecutionOutput, VisualizerQueryInfo,
+    VisualizerSystem, typed_fallback_for,
+};
+
+use super::SpatialViewVisualizerData;
+use super::utilities::{ProcMeshBatch, ProcMeshDrawableBuilder};
+use crate::contexts::SpatialSceneVisualizerInstructionContext;
+use crate::proc_mesh;
+
+// ---
+#[derive(Default)]
+pub struct Capsules3DVisualizer;
+
+// NOTE: Do not put profile scopes in these methods. They are called for all entities and all
+// timestamps within a time range -- it's _a lot_.
+impl Capsules3DVisualizer {
+    fn process_data<'a>(
+        builder: &mut ProcMeshDrawableBuilder<'_>,
+        query_context: &QueryContext<'_>,
+        ent_context: &SpatialSceneVisualizerInstructionContext<'_>,
+        batches: impl Iterator<Item = Capsules3DComponentData<'a>>,
+    ) -> Result<(), ViewSystemExecutionError> {
+        for batch in batches {
+            // Number of instances is determined by whichever is *longer* of `lengths` and `radii`.
+            // The other component is clamped (last value repeated) to match.
+            let num_instances = batch.radii.len().max(batch.lengths.len());
+            let lengths_iter = clamped_or_else(batch.lengths, || {
+                typed_fallback_for(query_context, Capsules3D::descriptor_lengths().component)
+            })
+            .take(num_instances);
+            let radii: Vec<Radius> = clamped_or_else(batch.radii, || {
+                typed_fallback_for(query_context, Capsules3D::descriptor_radii().component)
+            })
+            .take(num_instances)
+            .collect();
+
+            let half_sizes: Vec<HalfSize3D> = radii
+                .iter()
+                .map(|&Radius(radius)| HalfSize3D::splat(clean_length(radius.0)))
+                .collect();
+
+            let subdivisions = match batch.fill_mode {
+                FillMode::DenseWireframe => 3, // Don't make it too crowded - let the user see inside the mesh.
+                FillMode::Solid | FillMode::TransparentFillMajorWireframe => 4, // Smooth, but not too CPU/GPU intensive
+                FillMode::MajorWireframe => 10,
+            };
+
+            let axes_only = batch.fill_mode.axes_only();
+
+            let meshes =
+                std::iter::zip(lengths_iter, &radii).map(|(Length(length), &Radius(radius))| {
+                    let ratio = clean_length(length.0 / radius.0);
+
+                    // Avoid generating extremely similar meshes by rounding the ratio.
+                    // Note: This will cause jitter in the displayed length of the capsule.
+                    // TODO(kpreid): Replace this entirely with stretchable meshes.
+                    let granularity = 2.0f32.powi(-4); // a round number in base 2
+                    let ratio = (ratio / granularity).round() * granularity;
+
+                    proc_mesh::ProcMeshKey::Capsule {
+                        subdivisions,
+                        length: NotNan::new(ratio)
+                            .expect("Ratio was not properly checked with clean_length"),
+                        axes_only,
+                    }
+                });
+
+            builder.add_batch(
+                query_context,
+                ent_context,
+                Capsules3D::descriptor_colors().component,
+                Capsules3D::descriptor_line_radii().component,
+                Capsules3D::descriptor_show_labels().component,
+                glam::Affine3A::IDENTITY,
+                ProcMeshBatch {
+                    half_sizes: &half_sizes,
+                    centers: batch.translations,
+                    rotation_axis_angles: batch.rotation_axis_angles.as_slice(),
+                    quaternions: batch.quaternions,
+                    meshes,
+                    fill_modes: iter::repeat(batch.fill_mode),
+                    line_radii: batch.line_radii,
+                    colors: batch.colors,
+                    labels: &batch.labels,
+                    show_labels: batch.show_labels,
+                    class_ids: batch.class_ids,
+                },
+            )?;
+        }
+
+        Ok(())
+    }
+}
+
+// ---
+
+struct Capsules3DComponentData<'a> {
+    // Point of views
+    lengths: &'a [Length],
+
+    // Clamped to edge
+    radii: &'a [Radius],
+    translations: &'a [components::Translation3D],
+    rotation_axis_angles: ChunkComponentIterItem<components::RotationAxisAngle>,
+    quaternions: &'a [components::RotationQuat],
+    colors: &'a [Color],
+    labels: Vec<ArrowString>,
+    line_radii: &'a [Radius],
+    class_ids: &'a [ClassId],
+
+    // Non-repeated
+    show_labels: Option<ShowLabels>,
+    fill_mode: FillMode,
+}
+
+impl IdentifiedViewSystem for Capsules3DVisualizer {
+    fn identifier() -> dl_viewer_context::ViewSystemIdentifier {
+        dl_viewer_context::external::dl_string_interner::intern_static!(
+            dl_viewer_context::ViewSystemIdentifier,
+            "Capsules3D"
+        )
+    }
+}
+
+impl VisualizerSystem for Capsules3DVisualizer {
+    fn visualizer_query_info(
+        &self,
+        _app_options: &dl_viewer_context::AppOptions,
+    ) -> VisualizerQueryInfo {
+        // The required component of the archetype is actually both lengths and radii,
+        // But while that makes sense for the user-facing API, we can just use lengths as the required component for visualizability purposes.
+        // This makes the requirements easier, and also means that if a user only provides length,
+        // they will still get a visualizer with (editable) default radii instead of no visualizer at all.
+        VisualizerQueryInfo::single_required_component::<Length>(
+            &Capsules3D::descriptor_lengths(),
+            &Capsules3D::all_components(),
+        )
+    }
+
+    fn affinity(&self) -> Option<dl_sdk_types::ViewClassIdentifier> {
+        Some(crate::SpatialView3D::identifier())
+    }
+
+    fn execute(
+        &self,
+        ctx: &ViewContext<'_>,
+        view_query: &ViewQuery<'_>,
+        context_systems: &ViewContextCollection,
+    ) -> Result<VisualizerExecutionOutput, ViewSystemExecutionError> {
+        let output = VisualizerExecutionOutput::default();
+        let mut data = SpatialViewVisualizerData::default();
+        let mut builder = ProcMeshDrawableBuilder::new(
+            &mut data,
+            ctx.viewer_ctx.render_ctx(),
+            view_query,
+            &output,
+            "capsules3d",
+        );
+
+        use super::entity_iterator::process_archetype;
+        process_archetype::<Capsules3D, _, _>(
+            ctx,
+            view_query,
+            context_systems,
+            &output,
+            self,
+            |ctx, spatial_ctx, results| {
+                // See comment on `visualizer_query_info` for the rationale of treating only lengths as required.
+                // (instead of lengths and radii as noted in the archetype definition).
+                let all_lengths = results.iter_required(Capsules3D::descriptor_lengths().component);
+
+                let all_radii = results.iter_optional(Capsules3D::descriptor_radii().component);
+                let all_translations =
+                    results.iter_optional(Capsules3D::descriptor_translations().component);
+                let all_rotation_axis_angles =
+                    results.iter_optional(Capsules3D::descriptor_rotation_axis_angles().component);
+                let all_quaternions =
+                    results.iter_optional(Capsules3D::descriptor_quaternions().component);
+                let all_colors = results.iter_optional(Capsules3D::descriptor_colors().component);
+                let all_labels = results.iter_optional(Capsules3D::descriptor_labels().component);
+                let all_show_labels =
+                    results.iter_optional(Capsules3D::descriptor_show_labels().component);
+                let all_fill_modes =
+                    results.iter_optional(Capsules3D::descriptor_fill_mode().component);
+                let all_line_radii =
+                    results.iter_optional(Capsules3D::descriptor_line_radii().component);
+                let all_class_ids =
+                    results.iter_optional(Capsules3D::descriptor_class_ids().component);
+
+                let data = dl_query::range_zip_1x10(
+                    all_lengths.slice::<f32>(),
+                    all_radii.slice::<f32>(),
+                    all_translations.slice::<[f32; 3]>(),
+                    all_rotation_axis_angles.component_slow::<components::RotationAxisAngle>(),
+                    all_quaternions.slice::<[f32; 4]>(),
+                    all_colors.slice::<u32>(),
+                    all_line_radii.slice::<f32>(),
+                    all_fill_modes.slice::<u8>(),
+                    all_labels.slice::<String>(),
+                    all_show_labels.slice::<bool>(),
+                    all_class_ids.slice::<u16>(),
+                )
+                .map(
+                    |(
+                        _index,
+                        lengths,
+                        radii,
+                        translations,
+                        rotation_axis_angles,
+                        quaternions,
+                        colors,
+                        line_radii,
+                        fill_modes,
+                        labels,
+                        show_labels,
+                        class_ids,
+                    )| {
+                        Capsules3DComponentData {
+                            lengths: bytemuck::cast_slice(lengths),
+                            radii: radii.map_or(&[], bytemuck::cast_slice),
+                            translations: translations.map_or(&[], bytemuck::cast_slice),
+                            rotation_axis_angles: rotation_axis_angles.unwrap_or_default(),
+                            quaternions: quaternions.map_or(&[], bytemuck::cast_slice),
+                            colors: colors.map_or(&[], |colors| bytemuck::cast_slice(colors)),
+                            labels: labels.unwrap_or_default(),
+                            line_radii: line_radii
+                                .map_or(&[], |line_radii| bytemuck::cast_slice(line_radii)),
+                            fill_mode: fill_modes
+                                .and_then(|s| FillMode::from_integer_slice(s).next()?)
+                                .unwrap_or_default(),
+                            class_ids: class_ids
+                                .map_or(&[], |class_ids| bytemuck::cast_slice(class_ids)),
+                            show_labels: show_labels
+                                .map(|b| !b.is_empty() && b.value(0))
+                                .map(Into::into),
+                        }
+                    },
+                );
+
+                Self::process_data(&mut builder, ctx, spatial_ctx, data)?;
+
+                Ok(())
+            },
+        )?;
+
+        let draw_data = builder.into_draw_data()?;
+        Ok(output.with_draw_data(draw_data).with_visualizer_data(data))
+    }
+}
+
+fn clean_length(suspicious_length: f32) -> f32 {
+    if suspicious_length.is_finite() && suspicious_length > 0.0 {
+        suspicious_length
+    } else {
+        // all negatives including negative zero, NaNs, and infinities shall become positive zero
+        0.0
+    }
+}

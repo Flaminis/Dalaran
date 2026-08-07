@@ -1,0 +1,74 @@
+//! Video decoding library.
+
+mod av1;
+mod decode;
+mod demux;
+mod gop_detection;
+mod h264;
+mod h265;
+mod nalu;
+pub mod player;
+mod stable_index_deque;
+mod time;
+mod transcode_options;
+mod vp8;
+mod vp9;
+
+pub use av1::{AV1_TEST_INTER_FRAME, AV1_TEST_KEYFRAME};
+#[cfg(target_arch = "wasm32")]
+pub use decode::WebVideoFrame;
+pub use decode::{
+    AsyncDecoder, Chunk, DecodeError, DecodeHardwareAcceleration, DecodeSettings,
+    DecodedFrameContent, Frame, FrameContent, FrameInfo, FrameResult, PixelFormat,
+    Result as DecodeResult, YuvMatrixCoefficients, YuvPixelLayout, YuvRange, new_decoder,
+};
+pub use demux::{
+    ChromaSubsamplingModes, FrameNumber, KeyframeIndex, SampleIndex, SampleMetadata,
+    SampleMetadataState, SamplesStatistics, VideoCodec, VideoDataDescription, VideoDeliveryMethod,
+    VideoEncodingDetails, VideoLoadError, VideoSource,
+};
+pub use gop_detection::{
+    DetectGopStartError, GopStartDetection, detect_gop_start, is_start_of_gop,
+};
+// AnnexB conversions are useful for testing.
+pub use h264::{write_avc_chunk_to_annexb, write_avc_chunk_to_nalu_stream};
+pub use h265::{write_hevc_chunk_to_annexb, write_hevc_chunk_to_nalu_stream};
+pub use nalu::{
+    AnnexBStreamState, AnnexBStreamWriteError, write_length_prefixed_nalus_to_annexb_stream,
+};
+// Re-export:
+#[doc(no_inline)]
+pub use {
+    re_mp4::{TrackId, TrackKind},
+    dl_quota_channel::{Receiver, Sender, TryRecvError},
+    dl_span::Span,
+    stable_index_deque::StableIndexDeque,
+    time::{Time, Timescale},
+};
+
+pub use self::transcode_options::{HwAccel, Mp4TranscodeOptions};
+
+#[cfg(with_ffmpeg)]
+pub use self::decode::{
+    FFmpegError, FFmpegVersion, FFmpegVersionParseError, TranscodedMp4, ffmpeg_download_url,
+    transcode_mp4,
+};
+
+pub fn enabled_features() -> &'static [&'static str] {
+    &[
+        #[cfg(feature = "av1")]
+        "av1",
+        #[cfg(feature = "ffmpeg")]
+        "ffmpeg",
+        #[cfg(feature = "nasm")]
+        "nasm",
+    ]
+}
+
+/// Create a channel for use with [`new_decoder`].
+pub fn channel<T>(
+    debug_name: impl Into<String>,
+) -> (dl_quota_channel::Sender<T>, dl_quota_channel::Receiver<T>) {
+    let max_bytes_in_flight = 512 * 1024 * 1024; // TODO(emilk): make configurable
+    dl_quota_channel::channel(debug_name, max_bytes_in_flight)
+}

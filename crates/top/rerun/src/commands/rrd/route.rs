@@ -4,11 +4,11 @@ use std::io::BufWriter;
 use crossbeam::channel::Receiver;
 use itertools::Itertools as _;
 
-use re_chunk::ChunkId;
-use re_log_encoding::{Encoder, RawRrdManifest};
-use re_log_types::ApplicationId;
-use re_protos::log_msg::v1alpha1::log_msg::Msg;
-use re_protos::log_msg::v1alpha1::{ArrowMsg, BlueprintActivationCommand, SetStoreInfo, StoreInfo};
+use dl_chunk::ChunkId;
+use dl_log_encoding::{Encoder, RawRrdManifest};
+use dl_log_types::ApplicationId;
+use dl_protos::log_msg::v1alpha1::log_msg::Msg;
+use dl_protos::log_msg::v1alpha1::{ArrowMsg, BlueprintActivationCommand, SetStoreInfo, StoreInfo};
 
 use crate::commands::read_raw_rrd_streams_from_file_or_stdin;
 use crate::commands::stdio::InputSource;
@@ -108,14 +108,14 @@ fn process_messages<W: std::io::Write>(
     rx_footers: &Receiver<(u64, Vec<(InputSource, anyhow::Result<RawRrdManifest>)>)>,
     drop_blueprint_activation_cmds: bool,
 ) -> anyhow::Result<()> {
-    re_log::info!("processing input…");
+    dl_log::info!("processing input…");
     let mut num_total_msgs = 0;
     let mut num_unexpected_msgs = 0;
     let mut num_blueprint_activations = 0;
 
     // TODO(grtlr): encoding should match the original (just like in `rrd stats`).
-    let options = re_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
-    let version = re_build_info::CrateVersion::LOCAL;
+    let options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let version = dl_build_info::CrateVersion::LOCAL;
     let mut encoder = Encoder::new_eager(version, options, writer)?;
 
     // TODO(cmc): this can be optimized to not keep all the values in memory in the multi-store case.
@@ -181,7 +181,7 @@ fn process_messages<W: std::io::Write>(
                     }) => {
                         num_unexpected_msgs += 1;
                         is_success = false;
-                        re_log::warn_once!(
+                        dl_log::warn_once!(
                             "Encountered `SetStoreInfo` without `info` field: {:#?}",
                             msg
                         );
@@ -196,7 +196,7 @@ fn process_messages<W: std::io::Write>(
                     encoder.append_transport_without_footer(&msg)?
                 };
 
-                if let re_protos::log_msg::v1alpha1::log_msg::Msg::ArrowMsg(arrow_msg) = msg {
+                if let dl_protos::log_msg::v1alpha1::log_msg::Msg::ArrowMsg(arrow_msg) = msg {
                     chunk_ids.push(arrow_msg.chunk_id.expect("chunk must have a chunk ID"));
                     byte_offsets_excluding_header.push(byte_span_excluding_header.start);
                     byte_sizes_excluding_header.push(byte_span_excluding_header.len);
@@ -204,7 +204,7 @@ fn process_messages<W: std::io::Write>(
                 }
             }
             Err(err) => {
-                re_log::error_once!("{}", re_error::format(err));
+                dl_log::error_once!("{}", dl_error::format(err));
                 is_success = false;
             }
         }
@@ -216,7 +216,7 @@ fn process_messages<W: std::io::Write>(
         }
     }
 
-    let mut rrd_footer = re_log_encoding::RrdFooter::default();
+    let mut rrd_footer = dl_log_encoding::RrdFooter::default();
     let mut i = 0;
     for (_, manifests) in rx_footers {
         for (_, res) in manifests {
@@ -229,7 +229,7 @@ fn process_messages<W: std::io::Write>(
                 data,
             } = manifest.clone();
 
-            let patched_store_id = re_log_types::StoreId::new(
+            let patched_store_id = dl_log_types::StoreId::new(
                 store_id.kind(),
                 rewrites
                     .application_id
@@ -339,7 +339,7 @@ fn process_messages<W: std::io::Write>(
         encoder.finish_with_custom_footer(&rrd_footer)?;
     }
 
-    re_log::info_once!(
+    dl_log::info_once!(
         "Processed {num_total_msgs} messages, dropped {num_blueprint_activations} blueprint activations, and encountered {num_unexpected_msgs} unexpected messages."
     );
     Ok(())

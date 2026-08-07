@@ -52,9 +52,9 @@ entry.set_name("new_name")
 
 ## Rust API
 
-### `re_mcap`: Layer types renamed to Decoder
+### `dl_mcap`: Layer types renamed to Decoder
 
-All public types in the `re_mcap` crate have been renamed from `Layer` to `Decoder`.
+All public types in the `dl_mcap` crate have been renamed from `Layer` to `Decoder`.
 
 | Old name           | New name              |
 |--------------------|-----------------------|
@@ -64,7 +64,7 @@ All public types in the `re_mcap` crate have been renamed from `Layer` to `Decod
 | `LayerRegistry`    | `DecoderRegistry`     |
 | `SelectedLayers`   | `SelectedDecoders`    |
 
-The `layers` module has been renamed to `decoders` (e.g., `re_mcap::layers::McapRawLayer` is now `re_mcap::decoders::McapRawDecoder`).
+The `layers` module has been renamed to `decoders` (e.g., `dl_mcap::layers::McapRawLayer` is now `dl_mcap::decoders::McapRawDecoder`).
 
 ### `McapLoader` API updated
 

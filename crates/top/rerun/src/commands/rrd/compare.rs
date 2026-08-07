@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use anyhow::Context as _;
 use itertools::{Itertools as _, izip};
-use re_chunk::Chunk;
+use dl_chunk::Chunk;
 
 // ---
 
@@ -54,12 +54,12 @@ impl CompareCommand {
             ignore_timelines,
         } = self;
 
-        let ignore_timelines: Vec<re_chunk::TimelineName> = ignore_timelines
+        let ignore_timelines: Vec<dl_chunk::TimelineName> = ignore_timelines
             .iter()
-            .map(re_chunk::TimelineName::try_new)
+            .map(dl_chunk::TimelineName::try_new)
             .collect::<Result<_, _>>()?;
 
-        re_log::debug!("Comparing {path_to_rrd1:?} to {path_to_rrd2:?}…");
+        dl_log::debug!("Comparing {path_to_rrd1:?} to {path_to_rrd2:?}…");
 
         let path_to_rrd1 = PathBuf::from(path_to_rrd1);
         let path_to_rrd2 = PathBuf::from(path_to_rrd2);
@@ -87,9 +87,9 @@ impl CompareCommand {
         );
 
         fn format_chunk(chunk: &Chunk) -> String {
-            re_arrow_util::format_record_batch_opts(
+            dl_arrow_util::format_record_batch_opts(
                 &chunk.to_record_batch().expect("Cannot fail in practice"),
-                &re_arrow_util::RecordBatchFormatOpts {
+                &dl_arrow_util::RecordBatchFormatOpts {
                     width: Some(800),
                     max_cell_content_width: 100,
                     trim_field_names: false,
@@ -107,7 +107,7 @@ impl CompareCommand {
 
             for chunk1 in &chunks1 {
                 if let Some(pos) = chunks2_remaining.iter().position(|chunk2| {
-                    re_chunk::Chunk::ensure_similar_ignoring_timelines(
+                    dl_chunk::Chunk::ensure_similar_ignoring_timelines(
                         chunk1,
                         chunk2,
                         &ignore_timelines,
@@ -153,12 +153,12 @@ impl CompareCommand {
             anyhow::ensure!(
                 chunks1.len() == chunks2.len(),
                 "Number of Chunks does not match: '{}' vs. '{}'",
-                re_format::format_uint(chunks1.len()),
-                re_format::format_uint(chunks2.len()),
+                dl_format::format_uint(chunks1.len()),
+                dl_format::format_uint(chunks2.len()),
             );
 
             for (chunk1, chunk2) in izip!(chunks1, chunks2) {
-                re_chunk::Chunk::ensure_similar_ignoring_timelines(
+                dl_chunk::Chunk::ensure_similar_ignoring_timelines(
                     &chunk1,
                     &chunk2,
                     &ignore_timelines,
@@ -177,7 +177,7 @@ impl CompareCommand {
             }
         }
 
-        re_log::debug!("{path_to_rrd1:?} and {path_to_rrd2:?} are similar enough.");
+        dl_log::debug!("{path_to_rrd1:?} and {path_to_rrd2:?} are similar enough.");
 
         Ok(())
     }
@@ -190,9 +190,9 @@ impl CompareCommand {
 fn load_chunks(
     path_to_rrd: &Path,
     ignore_chunks_without_components: bool,
-) -> anyhow::Result<(re_log_types::ApplicationId, Vec<Arc<re_chunk::Chunk>>)> {
-    use re_entity_db::EntityDb;
-    use re_log_types::StoreId;
+) -> anyhow::Result<(dl_log_types::ApplicationId, Vec<Arc<dl_chunk::Chunk>>)> {
+    use dl_entity_db::EntityDb;
+    use dl_log_types::StoreId;
 
     let rrd_file = std::fs::File::open(path_to_rrd).context("couldn't open rrd file contents")?;
     let rrd_file = std::io::BufReader::new(rrd_file);
@@ -204,19 +204,19 @@ fn load_chunks(
     // in `Decoder` requires `SetStoreInfo` to arrive before the corresponding `ArrowMsg`. Ideally
     // this tool would cache orphan `ArrowMsg` until a matching `SetStoreInfo` arrives.
     let mut stores: std::collections::HashMap<StoreId, EntityDb> = Default::default();
-    let decoder = re_log_encoding::DecoderApp::decode_lazy(rrd_file);
+    let decoder = dl_log_encoding::DecoderApp::decode_lazy(rrd_file);
     for msg in decoder {
         let msg = msg.context("decode rrd message")?;
         stores
             .entry(msg.store_id().clone())
             .or_insert_with(|| {
                 let enable_viewer_indexes = false; // that would just slow us down for no reason
-                re_entity_db::EntityDb::with_store_config(
+                dl_entity_db::EntityDb::with_store_config(
                     msg.store_id().clone(),
                     enable_viewer_indexes,
                     // We must make sure not to do any store-side compaction during comparisons, or
                     // this will result in flaky roundtrips in some instances.
-                    re_chunk_store::ChunkStoreConfig::ALL_DISABLED,
+                    dl_chunk_store::ChunkStoreConfig::ALL_DISABLED,
                 )
             })
             .add_log_msg(&msg)
@@ -225,7 +225,7 @@ fn load_chunks(
 
     let mut stores = stores
         .values()
-        .filter(|store| store.store_kind() == re_log_types::StoreKind::Recording)
+        .filter(|store| store.store_kind() == dl_log_types::StoreKind::Recording)
         .collect_vec();
 
     anyhow::ensure!(!stores.is_empty(), "no data recording found in rrd file");

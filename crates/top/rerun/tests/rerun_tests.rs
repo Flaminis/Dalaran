@@ -5,7 +5,7 @@
 /// See for instance <https://github.com/rerun-io/rerun/issues/4415>.
 #[test]
 fn test_row_id_order() {
-    let mut hooks = re_chunk::BatcherHooks::NONE;
+    let mut hooks = dl_chunk::BatcherHooks::NONE;
     hooks.on_insert = Some(std::sync::Arc::new(|rows| {
         if let [.., penultimate, ultimate] = rows {
             assert!(

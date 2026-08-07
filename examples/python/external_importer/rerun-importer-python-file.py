@@ -17,7 +17,7 @@ import rerun as rr  # pip install rerun-sdk
 # If you use it, the data will end up in the same recording as all other plugins interested in
 # that file, otherwise you can just create a dedicated recording for it. Or both.
 #
-# Check out `re_importer::ImporterSettings` documentation for an exhaustive listing of
+# Check out `dl_importer::ImporterSettings` documentation for an exhaustive listing of
 # the available CLI parameters.
 parser = argparse.ArgumentParser(
     description="""

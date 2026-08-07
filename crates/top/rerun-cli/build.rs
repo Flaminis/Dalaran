@@ -1,5 +1,5 @@
 fn main() {
-    re_build_tools::export_build_info_vars_for_crate("rerun-cli");
+    dl_build_tools::export_build_info_vars_for_crate("rerun-cli");
 
     // Warn about not using the `nasm` feature in a release build.
     let is_release = std::env::var("PROFILE") == Ok("release".to_owned());

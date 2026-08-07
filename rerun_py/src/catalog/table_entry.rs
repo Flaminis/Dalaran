@@ -7,8 +7,8 @@ use datafusion_ffi::table_provider::FFI_TableProvider;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::types::{PyAnyMethods as _, PyCapsule};
 use pyo3::{Bound, Py, PyAny, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
-use re_datafusion::TableEntryTableProvider;
-use re_protos::cloud::v1alpha1::ext::{
+use dl_datafusion::TableEntryTableProvider;
+use dl_protos::cloud::v1alpha1::ext::{
     EntryDetails, ProviderDetails, TableDetails, TableEntry, TableInsertMode,
 };
 

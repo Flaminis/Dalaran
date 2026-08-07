@@ -9,9 +9,9 @@ pub enum CallSource {
 
 impl CallSource {
     #[cfg(feature = "native_viewer")]
-    fn app_env(&self) -> re_viewer::AppEnvironment {
+    fn app_env(&self) -> dl_viewer::AppEnvironment {
         match self {
-            Self::Cli => re_viewer::AppEnvironment::RerunCli {
+            Self::Cli => dl_viewer::AppEnvironment::RerunCli {
                 rustc_version: env!("RE_BUILD_RUSTC_VERSION").into(),
                 llvm_version: env!("RE_BUILD_LLVM_VERSION").into(),
             },

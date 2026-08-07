@@ -4,7 +4,7 @@
 
 use rand::prelude::*;
 use rerun::EntityPath;
-use rerun::external::re_log;
+use rerun::external::dl_log;
 
 #[derive(Debug, Clone, clap::Parser)]
 pub struct ScalarsCommand {
@@ -29,13 +29,13 @@ struct Input {
 
 impl ScalarsCommand {
     pub fn run(self, rec: &rerun::RecordingStream) -> anyhow::Result<()> {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
         let input = std::hint::black_box(self.prepare());
         self.execute(rec, input)
     }
 
     fn prepare(&self) -> Input {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
 
         let mut current: TimeSnapshot = (0..self.num_entities)
             .map(|i| {
@@ -61,7 +61,7 @@ impl ScalarsCommand {
         }
 
         let total_log_calls = self.num_entities * self.num_time_steps;
-        re_log::info!(
+        dl_log::info!(
             "Logging {} scalars across {} time steps ({} total log calls)",
             self.num_entities,
             self.num_time_steps,
@@ -72,7 +72,7 @@ impl ScalarsCommand {
     }
 
     fn execute(self, rec: &rerun::RecordingStream, input: Input) -> anyhow::Result<()> {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
 
         let Input { time_steps } = input;
         let total_log_calls = self.num_entities * self.num_time_steps;
@@ -80,10 +80,10 @@ impl ScalarsCommand {
         let start = std::time::Instant::now();
 
         for (time_index, time_snapshot) in time_steps.into_iter().enumerate() {
-            re_tracing::profile_scope!("log_time_step");
+            dl_tracing::profile_scope!("log_time_step");
 
             for (entity_path, scalars) in time_snapshot {
-                re_tracing::profile_scope!("log_entity");
+                dl_tracing::profile_scope!("log_entity");
 
                 #[expect(clippy::cast_possible_wrap)] // usize -> i64 is fine
                 rec.set_time_sequence("frame", time_index as i64);
@@ -93,7 +93,7 @@ impl ScalarsCommand {
 
         let elapsed = start.elapsed();
         let scalars_per_second = total_log_calls as f64 / elapsed.as_secs_f64();
-        re_log::info!(
+        dl_log::info!(
             "Logged {} scalars in {:.2?} ({:.0} scalars/second)",
             total_log_calls,
             elapsed,

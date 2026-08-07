@@ -1,8 +1,8 @@
 use rerun::external::egui;
-use rerun::external::re_log_types::{EntityPath, Instance};
-use rerun::external::re_sdk_types::blueprint::components::VisualizerInstructionId;
-use rerun::external::re_view::{DataResultQuery, VisualizerInstructionQueryResults};
-use rerun::external::re_viewer_context::{
+use rerun::external::dl_log_types::{EntityPath, Instance};
+use rerun::external::dl_sdk_types::blueprint::components::VisualizerInstructionId;
+use rerun::external::dl_view::{DataResultQuery, VisualizerInstructionQueryResults};
+use rerun::external::dl_viewer_context::{
     AppOptions, IdentifiedViewSystem, SingleRequiredComponentConstraint, ViewContext,
     ViewContextCollection, ViewQuery, ViewSystemExecutionError, ViewSystemIdentifier,
     VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem,
@@ -91,9 +91,9 @@ impl VisualizerSystem for Points3DColorVisualizer {
             }
         }
 
-        // We're not using `re_renderer` here, so return an empty vector.
-        // If you want to draw additional primitives here, you can emit re_renderer draw data here directly,
-        // but your custom view's `ui` implementation has to set up an re_renderer output for this.
+        // We're not using `dl_renderer` here, so return an empty vector.
+        // If you want to draw additional primitives here, you can emit dl_renderer draw data here directly,
+        // but your custom view's `ui` implementation has to set up an dl_renderer output for this.
         Ok(output.with_visualizer_data(colors))
     }
 }

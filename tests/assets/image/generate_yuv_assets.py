@@ -3,7 +3,7 @@
 
 Previously this was the release checklist `check_chroma_subsampling.py`.
 The conversion functions are used to generate .bin assets for the Rust
-snapshot tests in `re_view_spatial`.
+snapshot tests in `dl_view_spatial`.
 
 Run with: pixi run uv run python3 tests/assets/image/generate_yuv_assets.py
 """
@@ -92,7 +92,7 @@ def bgra2yuy2(bgra: npt.NDArray[np.uint8]) -> npt.NDArray[np.uint8]:
 
 def main() -> None:
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    img_path = os.path.join(dir_path, "../../../crates/viewer/re_ui/data/logo_dark_mode.png")
+    img_path = os.path.join(dir_path, "../../../crates/viewer/dl_ui/data/logo_dark_mode.png")
     img_bgra = cv2.imread(img_path, cv2.IMREAD_UNCHANGED).astype(np.uint8)
 
     assets: dict[str, npt.NDArray[np.uint8]] = {

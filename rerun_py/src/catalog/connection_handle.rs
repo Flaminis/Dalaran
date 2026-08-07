@@ -7,23 +7,23 @@ use arrow::pyarrow::PyArrowType;
 use itertools::Itertools as _;
 use pyo3::exceptions::PyValueError;
 use pyo3::{PyResult, Python};
-use re_chunk_store::{QueryExpression, SparseFillStrategy};
-use re_datafusion::query_from_query_expression;
-use re_log::external::log::warn;
-use re_log_types::{EntryId, EntryName};
-use re_protos::cloud::v1alpha1::ext as cloud_ext;
-use re_protos::cloud::v1alpha1::ext::{
+use dl_chunk_store::{QueryExpression, SparseFillStrategy};
+use dl_datafusion::query_from_query_expression;
+use dl_log::external::log::warn;
+use dl_log_types::{EntryId, EntryName};
+use dl_protos::cloud::v1alpha1::ext as cloud_ext;
+use dl_protos::cloud::v1alpha1::ext::{
     DataSource, DatasetDetails, DatasetEntry, EntryDetails, QueryDatasetDataframe,
     QueryDatasetRequest, QueryTasksDataframe, RegisterWithDatasetTaskDescriptor, TableDetails,
     TableEntry, VersionResponse,
 };
-use re_protos::cloud::v1alpha1::{EntryFilter, QueryTasksResponse};
-use re_protos::common::v1alpha1::TaskId;
-use re_protos::common::v1alpha1::ext::{IfDuplicateBehavior, ScanParameters, SegmentId};
-use re_protos::headers::RerunHeadersInjectorExt as _;
-use re_protos::missing_field;
-use re_redap_client::{ApiError, Connection, ConnectionClient, ConnectionRegistryHandle, TraceId};
-use re_types_core::LayerName;
+use dl_protos::cloud::v1alpha1::{EntryFilter, QueryTasksResponse};
+use dl_protos::common::v1alpha1::TaskId;
+use dl_protos::common::v1alpha1::ext::{IfDuplicateBehavior, ScanParameters, SegmentId};
+use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::missing_field;
+use dl_redap_client::{ApiError, Connection, ConnectionClient, ConnectionRegistryHandle, TraceId};
+use dl_types_core::LayerName;
 
 use crate::catalog::table_entry::PyTableInsertModeInternal;
 use crate::catalog::to_py_err;
@@ -32,13 +32,13 @@ use crate::utils::wait_for_future;
 /// Connection handle to a catalog service.
 #[derive(Clone)]
 pub struct ConnectionHandle {
-    origin: re_uri::Origin,
+    origin: dl_uri::Origin,
 
     connection_registry: ConnectionRegistryHandle,
 }
 
 impl ConnectionHandle {
-    pub fn new(connection_registry: ConnectionRegistryHandle, origin: re_uri::Origin) -> Self {
+    pub fn new(connection_registry: ConnectionRegistryHandle, origin: dl_uri::Origin) -> Self {
         Self {
             origin,
             connection_registry,
@@ -56,7 +56,7 @@ impl ConnectionHandle {
         Ok(self.connection().await?.client)
     }
 
-    pub fn origin(&self) -> &re_uri::Origin {
+    pub fn origin(&self) -> &dl_uri::Origin {
         &self.origin
     }
 

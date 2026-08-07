@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
 use rerun::external::glam;
-use rerun::external::re_renderer::external::smallvec::smallvec;
-use rerun::external::re_renderer::external::wgpu;
-use rerun::external::re_renderer::{self};
+use rerun::external::dl_renderer::external::smallvec::smallvec;
+use rerun::external::dl_renderer::external::wgpu;
+use rerun::external::dl_renderer::{self};
 
 mod gpu_data {
-    use rerun::external::re_renderer::{self, wgpu_buffer_types};
+    use rerun::external::dl_renderer::{self, wgpu_buffer_types};
 
     /// Keep in sync with `UniformBuffer` in `height_field.wgsl`.
     #[repr(C)]
@@ -24,8 +24,8 @@ mod gpu_data {
         pub _pad0: f32,
         pub _pad1: f32,
 
-        pub picking_layer_object_id: re_renderer::PickingLayerObjectId,
-        pub picking_instance_id: re_renderer::PickingLayerInstanceId,
+        pub picking_layer_object_id: dl_renderer::PickingLayerObjectId,
+        pub picking_instance_id: dl_renderer::PickingLayerInstanceId,
 
         pub outline_mask: wgpu_buffer_types::UVec2RowPadded,
 
@@ -33,18 +33,18 @@ mod gpu_data {
     }
 }
 
-/// Implements a custom [`re_renderer::renderer::Renderer`] for drawing heightfield meshes.
+/// Implements a custom [`dl_renderer::renderer::Renderer`] for drawing heightfield meshes.
 ///
 /// The vertex shader receives a single `f32` height per vertex via a vertex buffer,
 /// derives grid row/col from `@builtin(vertex_index)` (fed by the index buffer),
 /// and computes positions and colormap colors. Normals are derived in the fragment
 /// shader from screen-space derivatives of the interpolated world position.
 pub struct HeightFieldRenderer {
-    bind_group_layout: re_renderer::GpuBindGroupLayoutHandle,
+    bind_group_layout: dl_renderer::GpuBindGroupLayoutHandle,
 
-    render_pipeline_color: re_renderer::GpuRenderPipelineHandle,
-    render_pipeline_picking_layer: re_renderer::GpuRenderPipelineHandle,
-    render_pipeline_outline_mask: re_renderer::GpuRenderPipelineHandle,
+    render_pipeline_color: dl_renderer::GpuRenderPipelineHandle,
+    render_pipeline_picking_layer: dl_renderer::GpuRenderPipelineHandle,
+    render_pipeline_outline_mask: dl_renderer::GpuRenderPipelineHandle,
 }
 
 /// Properties describing a single heightfield mesh to be rendered.
@@ -74,13 +74,13 @@ pub struct HeightFieldConfig<'a> {
     pub colormap: u32,
 
     /// Picking layer object ID for hit-testing.
-    pub picking_layer_object_id: re_renderer::PickingLayerObjectId,
+    pub picking_layer_object_id: dl_renderer::PickingLayerObjectId,
 
     /// Picking layer instance ID for hit-testing.
-    pub picking_instance_id: re_renderer::PickingLayerInstanceId,
+    pub picking_instance_id: dl_renderer::PickingLayerInstanceId,
 
     /// Outline mask for selection highlighting.
-    pub outline_mask: re_renderer::OutlineMaskPreference,
+    pub outline_mask: dl_renderer::OutlineMaskPreference,
 }
 
 /// GPU draw data for drawing heightfield meshes using [`HeightFieldRenderer`].
@@ -91,26 +91,26 @@ pub struct HeightFieldDrawData {
 
 #[derive(Clone)]
 struct MeshInstance {
-    bind_group: re_renderer::GpuBindGroup,
+    bind_group: dl_renderer::GpuBindGroup,
     vertex_buffer: Arc<wgpu::Buffer>,
     index_buffer: Arc<wgpu::Buffer>,
     num_indices: u32,
     has_outline: bool,
 }
 
-impl re_renderer::renderer::DrawData for HeightFieldDrawData {
+impl dl_renderer::renderer::DrawData for HeightFieldDrawData {
     type Renderer = HeightFieldRenderer;
 
     fn collect_drawables(
         &self,
-        _view_info: &re_renderer::renderer::DrawableCollectionViewInfo,
-        collector: &mut re_renderer::DrawableCollector<'_>,
+        _view_info: &dl_renderer::renderer::DrawableCollectionViewInfo,
+        collector: &mut dl_renderer::DrawableCollector<'_>,
     ) {
-        use re_renderer::renderer::DrawDataDrawable;
+        use dl_renderer::renderer::DrawDataDrawable;
 
         for (i, mesh) in self.meshes.iter().enumerate() {
             collector.add_drawable(
-                re_renderer::DrawPhase::Opaque | re_renderer::DrawPhase::PickingLayer,
+                dl_renderer::DrawPhase::Opaque | dl_renderer::DrawPhase::PickingLayer,
                 DrawDataDrawable {
                     distance_sort_key: 0.0,
                     secondary_sort_key: 0.0,
@@ -120,7 +120,7 @@ impl re_renderer::renderer::DrawData for HeightFieldDrawData {
 
             if mesh.has_outline {
                 collector.add_drawable(
-                    re_renderer::DrawPhase::OutlineMask,
+                    dl_renderer::DrawPhase::OutlineMask,
                     DrawDataDrawable {
                         distance_sort_key: 0.0,
                         secondary_sort_key: 0.0,
@@ -133,7 +133,7 @@ impl re_renderer::renderer::DrawData for HeightFieldDrawData {
 }
 
 impl HeightFieldDrawData {
-    pub fn new(ctx: &re_renderer::RenderContext) -> Self {
+    pub fn new(ctx: &dl_renderer::RenderContext) -> Self {
         let _ = ctx.renderer::<HeightFieldRenderer>();
         Self { meshes: Vec::new() }
     }
@@ -143,7 +143,7 @@ impl HeightFieldDrawData {
     /// Heights are uploaded as a vertex buffer with a single `f32` attribute per grid vertex.
     pub fn add_mesh(
         &mut self,
-        ctx: &re_renderer::RenderContext,
+        ctx: &dl_renderer::RenderContext,
         label: &str,
         config: &HeightFieldConfig<'_>,
     ) {
@@ -153,7 +153,7 @@ impl HeightFieldDrawData {
 
         let renderer = ctx.renderer::<HeightFieldRenderer>();
 
-        // --- Uniform buffer (via re_renderer helper) ----------------------------
+        // --- Uniform buffer (via dl_renderer helper) ----------------------------
 
         let uniform = gpu_data::UniformBuffer {
             world_from_obj: config.world_from_obj.into(),
@@ -171,7 +171,7 @@ impl HeightFieldDrawData {
             end_padding: Default::default(),
         };
         let uniform_buffer_entry =
-            re_renderer::create_and_fill_uniform_buffer(ctx, label.into(), uniform);
+            dl_renderer::create_and_fill_uniform_buffer(ctx, label.into(), uniform);
 
         // --- Heights vertex buffer (one f32 per grid vertex) --------------------
 
@@ -194,7 +194,7 @@ impl HeightFieldDrawData {
         let bind_group = ctx.gpu_resources.bind_groups.alloc(
             &ctx.device,
             &ctx.gpu_resources,
-            &re_renderer::BindGroupDesc {
+            &dl_renderer::BindGroupDesc {
                 label: label.into(),
                 entries: smallvec![uniform_buffer_entry],
                 layout: renderer.bind_group_layout,
@@ -244,20 +244,20 @@ impl HeightFieldDrawData {
     }
 }
 
-impl re_renderer::renderer::Renderer for HeightFieldRenderer {
+impl dl_renderer::renderer::Renderer for HeightFieldRenderer {
     type RendererDrawData = HeightFieldDrawData;
 
-    fn create_renderer(ctx: &re_renderer::RenderContext) -> Self {
+    fn create_renderer(ctx: &dl_renderer::RenderContext) -> Self {
         let shader_modules = &ctx.gpu_resources.shader_modules;
         let shader_module = shader_modules.get_or_create(
             ctx,
-            &re_renderer::include_shader_module!("../shader/height_field.wgsl"),
+            &dl_renderer::include_shader_module!("../shader/height_field.wgsl"),
         );
 
         // Bind group layout: uniform buffer only (heights come via vertex buffer).
         let bind_group_layout = ctx.gpu_resources.bind_group_layouts.get_or_create(
             &ctx.device,
-            &re_renderer::BindGroupLayoutDesc {
+            &dl_renderer::BindGroupLayoutDesc {
                 label: "HeightFieldRenderer::bind_group_layout".into(),
                 entries: vec![wgpu::BindGroupLayoutEntry {
                     binding: 0,
@@ -277,32 +277,32 @@ impl re_renderer::renderer::Renderer for HeightFieldRenderer {
 
         let pipeline_layout = ctx.gpu_resources.pipeline_layouts.get_or_create(
             ctx,
-            &re_renderer::PipelineLayoutDesc {
+            &dl_renderer::PipelineLayoutDesc {
                 label: "HeightFieldRenderer".into(),
                 entries: vec![ctx.global_bindings.layout, bind_group_layout],
             },
         );
 
         // Single vertex buffer: one f32 height per grid vertex.
-        let render_pipeline_desc_color = re_renderer::RenderPipelineDesc {
+        let render_pipeline_desc_color = dl_renderer::RenderPipelineDesc {
             label: "HeightFieldRenderer::color".into(),
             pipeline_layout,
             vertex_entrypoint: "vs_main".into(),
             vertex_handle: shader_module,
             fragment_entrypoint: "fs_main".into(),
             fragment_handle: shader_module,
-            vertex_buffers: re_renderer::VertexBufferLayout::from_formats(
+            vertex_buffers: dl_renderer::VertexBufferLayout::from_formats(
                 [wgpu::VertexFormat::Float32].into_iter(),
             ),
             render_targets: smallvec![Some(
-                re_renderer::ViewBuilder::MAIN_TARGET_COLOR_FORMAT.into()
+                dl_renderer::ViewBuilder::MAIN_TARGET_COLOR_FORMAT.into()
             )],
             primitive: wgpu::PrimitiveState {
                 topology: wgpu::PrimitiveTopology::TriangleList,
                 ..Default::default()
             },
-            depth_stencil: Some(re_renderer::ViewBuilder::MAIN_TARGET_DEFAULT_DEPTH_STATE),
-            multisample: re_renderer::ViewBuilder::main_target_default_msaa_state(
+            depth_stencil: Some(dl_renderer::ViewBuilder::MAIN_TARGET_DEFAULT_DEPTH_STATE),
+            multisample: dl_renderer::ViewBuilder::main_target_default_msaa_state(
                 ctx.render_config(),
                 false,
             ),
@@ -313,26 +313,26 @@ impl re_renderer::renderer::Renderer for HeightFieldRenderer {
             render_pipelines.get_or_create(ctx, &render_pipeline_desc_color);
         let render_pipeline_picking_layer = render_pipelines.get_or_create(
             ctx,
-            &re_renderer::RenderPipelineDesc {
+            &dl_renderer::RenderPipelineDesc {
                 label: "HeightFieldRenderer::picking_layer".into(),
                 fragment_entrypoint: "fs_main_picking_layer".into(),
                 render_targets: smallvec![Some(
-                    re_renderer::PickingLayerProcessor::PICKING_LAYER_FORMAT.into()
+                    dl_renderer::PickingLayerProcessor::PICKING_LAYER_FORMAT.into()
                 )],
-                depth_stencil: re_renderer::PickingLayerProcessor::PICKING_LAYER_DEPTH_STATE,
-                multisample: re_renderer::PickingLayerProcessor::PICKING_LAYER_MSAA_STATE,
+                depth_stencil: dl_renderer::PickingLayerProcessor::PICKING_LAYER_DEPTH_STATE,
+                multisample: dl_renderer::PickingLayerProcessor::PICKING_LAYER_MSAA_STATE,
                 ..render_pipeline_desc_color.clone()
             },
         );
         let render_pipeline_outline_mask = render_pipelines.get_or_create(
             ctx,
-            &re_renderer::RenderPipelineDesc {
+            &dl_renderer::RenderPipelineDesc {
                 label: "HeightFieldRenderer::outline_mask".into(),
                 fragment_entrypoint: "fs_main_outline_mask".into(),
                 render_targets: smallvec![Some(
-                    re_renderer::OutlineMaskProcessor::MASK_FORMAT.into()
+                    dl_renderer::OutlineMaskProcessor::MASK_FORMAT.into()
                 )],
-                depth_stencil: re_renderer::OutlineMaskProcessor::MASK_DEPTH_STATE,
+                depth_stencil: dl_renderer::OutlineMaskProcessor::MASK_DEPTH_STATE,
                 ..render_pipeline_desc_color
             },
         );
@@ -347,15 +347,15 @@ impl re_renderer::renderer::Renderer for HeightFieldRenderer {
 
     fn draw(
         &self,
-        render_pipelines: &re_renderer::GpuRenderPipelinePoolAccessor<'_>,
-        phase: re_renderer::DrawPhase,
+        render_pipelines: &dl_renderer::GpuRenderPipelinePoolAccessor<'_>,
+        phase: dl_renderer::DrawPhase,
         pass: &mut wgpu::RenderPass<'_>,
-        draw_instructions: &[re_renderer::renderer::DrawInstruction<'_, HeightFieldDrawData>],
-    ) -> Result<(), re_renderer::renderer::DrawError> {
+        draw_instructions: &[dl_renderer::renderer::DrawInstruction<'_, HeightFieldDrawData>],
+    ) -> Result<(), dl_renderer::renderer::DrawError> {
         let pipeline_handle = match phase {
-            re_renderer::DrawPhase::Opaque => self.render_pipeline_color,
-            re_renderer::DrawPhase::OutlineMask => self.render_pipeline_outline_mask,
-            re_renderer::DrawPhase::PickingLayer => self.render_pipeline_picking_layer,
+            dl_renderer::DrawPhase::Opaque => self.render_pipeline_color,
+            dl_renderer::DrawPhase::OutlineMask => self.render_pipeline_outline_mask,
+            dl_renderer::DrawPhase::PickingLayer => self.render_pipeline_picking_layer,
             _ => unreachable!("We were called on a phase we weren't subscribed to: {phase:?}"),
         };
 
@@ -366,7 +366,7 @@ impl re_renderer::renderer::Renderer for HeightFieldRenderer {
             for drawable in instruction.drawables {
                 let mesh_index = drawable.draw_data_payload as usize;
                 if let Some(mesh) = instruction.draw_data.meshes.get(mesh_index) {
-                    if phase == re_renderer::DrawPhase::OutlineMask && !mesh.has_outline {
+                    if phase == dl_renderer::DrawPhase::OutlineMask && !mesh.has_outline {
                         continue;
                     }
 

@@ -1,0 +1,45 @@
+[package]
+name = "dl_test_context"
+description = "A common context used for tests."
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_build_info.workspace = true
+dl_chunk.workspace = true
+dl_chunk_store.workspace = true
+dl_component_fallbacks.workspace = true
+dl_entity_db.workspace = true
+dl_log_channel.workspace = true
+dl_log_encoding.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_redap_client.workspace = true
+dl_renderer.workspace = true
+dl_tracing.workspace = true
+dl_sdk_types.workspace = true
+dl_types_core.workspace = true
+dl_ui = { workspace = true, features = ["testing"] }
+dl_uri.workspace = true
+dl_viewer_context.workspace = true
+
+# External dependencies
+ahash.workspace = true
+anyhow.workspace = true
+egui-wgpu.workspace = true
+egui.workspace = true
+egui_kittest.workspace = true
+jiff.workspace = true
+parking_lot.workspace = true
+pollster.workspace = true
+wgpu.workspace = true

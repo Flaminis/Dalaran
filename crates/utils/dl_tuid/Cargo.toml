@@ -1,0 +1,51 @@
+[package]
+name = "dl_tuid"
+authors.workspace = true
+description = "128-bit Time-based Unique Identifier"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+
+[features]
+default = []
+
+## Enable bytemuck support.
+bytemuck = ["dep:bytemuck"]
+
+
+[dependencies]
+dl_byte_size.workspace = true
+dl_log.workspace = true
+
+document-features.workspace = true
+getrandom.workspace = true
+quiver.workspace = true
+serde = { workspace = true, features = ["derive"] }
+web-time.workspace = true
+
+# Optional dependencies
+bytemuck = { workspace = true, optional = true, features = ["derive"] }
+
+[dev-dependencies]
+criterion.workspace = true
+rand = { workspace = true, features = ["std", "std_rng"] }
+
+[lib]
+bench = false
+
+[[bench]]
+name = "bench_tuid"
+harness = false

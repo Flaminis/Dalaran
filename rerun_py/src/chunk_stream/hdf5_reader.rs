@@ -4,8 +4,8 @@ use std::sync::Arc;
 use pyo3::exceptions::{PyFileNotFoundError, PyKeyError, PyRuntimeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use re_chunk::{Chunk, EntityPath};
-use re_hdf5::{AttrValue, Hdf5Config, Hdf5Error, IndexColumn, IndexType, TimeUnit};
+use dl_chunk::{Chunk, EntityPath};
+use dl_hdf5::{AttrValue, Hdf5Config, Hdf5Error, IndexColumn, IndexType, TimeUnit};
 
 use super::error::ChunkPipelineError;
 use super::py_stream::PyLazyChunkStreamInternal;
@@ -124,7 +124,7 @@ impl PyHdf5ReaderInternal {
         };
 
         // Per-stream structural validation: fail fast before spawning the worker.
-        re_hdf5::validate_layout(&self.path, &config)
+        dl_hdf5::validate_layout(&self.path, &config)
             .map_err(|err| validate_err_to_py(&err, &self.path))?;
 
         Ok(PyLazyChunkStreamInternal::new(
@@ -138,13 +138,13 @@ impl PyHdf5ReaderInternal {
     /// List the group paths under `path`, recursively.
     #[pyo3(signature = (path = "/"))]
     fn groups(&self, path: &str) -> PyResult<Vec<String>> {
-        re_hdf5::list_groups(&self.path, path).map_err(|err| accessor_err_to_py(&err))
+        dl_hdf5::list_groups(&self.path, path).map_err(|err| accessor_err_to_py(&err))
     }
 
     /// List the datasets under `path`, recursively, as `(path, shape, dtype)` tuples.
     #[pyo3(signature = (path = "/"))]
     fn datasets(&self, path: &str) -> PyResult<Vec<(String, Vec<u64>, String)>> {
-        Ok(re_hdf5::list_datasets(&self.path, path)
+        Ok(dl_hdf5::list_datasets(&self.path, path)
             .map_err(|err| accessor_err_to_py(&err))?
             .into_iter()
             .map(|info| (info.path, info.shape, info.dtype.to_string()))
@@ -155,7 +155,7 @@ impl PyHdf5ReaderInternal {
     #[pyo3(signature = (path = "/"))]
     fn attributes<'py>(&self, py: Python<'py>, path: &str) -> PyResult<Bound<'py, PyDict>> {
         let attrs =
-            re_hdf5::read_attributes(&self.path, path).map_err(|err| accessor_err_to_py(&err))?;
+            dl_hdf5::read_attributes(&self.path, path).map_err(|err| accessor_err_to_py(&err))?;
 
         let dict = PyDict::new(py);
         // `AttrValue` is `#[non_exhaustive]`: leave an unlisted attribute type out of
@@ -182,7 +182,7 @@ impl PyHdf5ReaderInternal {
         }
 
         if !unsupported.is_empty() {
-            re_log::warn_once!(
+            dl_log::warn_once!(
                 "Ignoring HDF5 attributes of {path:?} with unsupported types: {}\nFile path: {}",
                 unsupported.join(", "),
                 self.path.display(),
@@ -202,7 +202,7 @@ impl PyHdf5ReaderInternal {
 // TODO(RR-4850): this spawn-thread + bounded-channel block is hand-copied across
 // mp4/mcap/parquet/hdf5. Factor it into a shared `spawn_threaded_stream` adapter.
 // The iterator is created and consumed entirely on the worker thread, so nothing
-// here requires `re_hdf5`'s iterator (or `hdf5_pure::File`) to be `Send`.
+// here requires `dl_hdf5`'s iterator (or `hdf5_pure::File`) to be `Send`.
 impl ChunkStreamFactory for Hdf5StreamFactory {
     fn create(&self) -> Result<Box<dyn ChunkStream>, ChunkPipelineError> {
         let (tx, rx) = crossbeam::channel::bounded::<Result<Arc<Chunk>, ChunkPipelineError>>(
@@ -215,7 +215,7 @@ impl ChunkStreamFactory for Hdf5StreamFactory {
         std::thread::Builder::new()
             .name("hdf5-chunk-source".into())
             .spawn(move || {
-                match re_hdf5::load_hdf5(&path, &config) {
+                match dl_hdf5::load_hdf5(&path, &config) {
                     Ok(iter) => {
                         for chunk_result in iter {
                             let msg = match chunk_result {
@@ -224,13 +224,13 @@ impl ChunkStreamFactory for Hdf5StreamFactory {
                                     reason: err.to_string(),
                                 }),
                             };
-                            if re_quota_channel::send_crossbeam(&tx, msg).is_err() {
+                            if dl_quota_channel::send_crossbeam(&tx, msg).is_err() {
                                 break; // receiver dropped
                             }
                         }
                     }
                     Err(err) => {
-                        re_quota_channel::send_crossbeam(
+                        dl_quota_channel::send_crossbeam(
                             &tx,
                             Err(ChunkPipelineError::Hdf5 {
                                 reason: err.to_string(),

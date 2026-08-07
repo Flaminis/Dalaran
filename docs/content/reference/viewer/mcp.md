@@ -39,7 +39,7 @@ Or configure any MCP client manually. Most accept a `mcp.json` config like this:
       "command": "rerun",
       "args": ["viewer-mcp"],
       "env": {
-        "RUST_LOG": "re_viewer_mcp=info,warn"
+        "RUST_LOG": "dl_viewer_mcp=info,warn"
       }
     }
   }

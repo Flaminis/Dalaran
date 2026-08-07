@@ -1,0 +1,195 @@
+use std::{borrow::Cow, collections::BTreeMap};
+
+use dl_sdk_types::blueprint::components::VisualizerInstructionId;
+use vec1::Vec1;
+
+use super::{ViewerDiagnostic, ViewerReportSeverity, VisualizerInstructionReport};
+use crate::{
+    PerVisualizerTypeInViewClass, ViewContextCollection, ViewSystemExecutionError,
+    ViewSystemIdentifier, VisualizerExecutionOutput, VisualizerReportContext,
+};
+
+/// Output of view system execution.
+pub struct SystemExecutionOutput {
+    /// Executed context systems, may hold state that the ui method needs.
+    pub context_systems: ViewContextCollection,
+
+    /// Result of all visualizer executions for this view.
+    pub visualizer_execution_output:
+        PerVisualizerTypeInViewClass<Result<VisualizerExecutionOutput, ViewSystemExecutionError>>,
+}
+
+impl SystemExecutionOutput {
+    /// Were any required chunks missing?
+    ///
+    /// If so, we should probably show a loading indicator.
+    pub fn any_missing_chunks(&self) -> bool {
+        self.visualizer_execution_output
+            .per_visualizer
+            .values()
+            .filter_map(|result| result.as_ref().ok())
+            .any(|output| output.any_missing_chunks())
+    }
+
+    /// Removes & returns all successfully created draw data from all visualizer executions.
+    pub fn drain_draw_data(&mut self) -> impl Iterator<Item = dl_renderer::QueueableDrawData> {
+        self.visualizer_execution_output
+            .per_visualizer
+            .iter_mut()
+            .filter_map(|(_, result)| {
+                result
+                    .as_mut()
+                    .ok()
+                    .map(|output| output.draw_data.drain(..))
+            })
+            .flatten()
+    }
+
+    /// Get typed output data from a specific visualizer's execution result.
+    ///
+    /// Returns `None` when the visualizer was skipped because it had no active instructions in
+    /// the view. Consumers that want a present-but-empty value in that case should use
+    /// [`Self::visualizer_data_or_default`].
+    pub fn visualizer_data<T: 'static>(
+        &self,
+        id: ViewSystemIdentifier,
+    ) -> Result<Option<&T>, ViewSystemExecutionError> {
+        Ok(self
+            .visualizer_execution_output
+            .per_visualizer
+            .get(&id)
+            .ok_or_else(|| ViewSystemExecutionError::VisualizerSystemNotFound(id.as_str()))?
+            .as_ref()
+            .map_err(|err| err.clone())?
+            .get_visualizer_data::<T>())
+    }
+
+    /// Like [`Self::visualizer_data`], but substitutes `T::default()` when the visualizer was
+    /// skipped for having no active instructions, rather than returning an error.
+    pub fn visualizer_data_or_default<T: Default + Clone + 'static>(
+        &self,
+        id: ViewSystemIdentifier,
+    ) -> Result<Cow<'_, T>, ViewSystemExecutionError> {
+        match self.visualizer_data(id) {
+            Ok(Some(t)) => Ok(Cow::Borrowed(t)),
+            Ok(None) => Ok(Cow::Owned(T::default())),
+            Err(err) => Err(err),
+        }
+    }
+
+    /// Iterate over all visualizer output data that can be downcast to the given type.
+    pub fn iter_visualizer_data<T: 'static>(&self) -> impl Iterator<Item = &T> {
+        self.visualizer_execution_output
+            .per_visualizer
+            .values()
+            .filter_map(|result| result.as_ref().ok()?.get_visualizer_data::<T>())
+    }
+}
+
+/// Visualizer errors, grouped by view system.
+///
+/// In a `BTreeMap` to ensure stable sorting.
+pub type VisualizerViewReport = BTreeMap<ViewSystemIdentifier, VisualizerTypeReport>;
+
+/// Diagnostics from executing a single visualizer type within a view.
+///
+/// For a high-level failure handling overview, see the `dl_viewer` crate documentation.
+#[derive(Clone, Debug, dl_byte_size::SizeBytes)]
+pub enum VisualizerTypeReport {
+    /// The entire visualizer type failed to execute for this view.
+    ///
+    /// For example, "point cloud rendering broke down completely".
+    /// This is rare and almost always a bug in the Viewer itself.
+    /// (So rare, in fact, that today we sometimes lump these together with per-instruction
+    /// errors.)
+    // Assume small and/or rare.
+    OverallError(#[size_bytes(ignore)] VisualizerInstructionReport),
+
+    /// The visualizer executed, but produced per-instruction reports (errors and/or warnings).
+    ///
+    /// Keyed by instruction (≈ entity), each entry lists one or more
+    /// [`VisualizerInstructionReport`]s. These are somewhat common, practically never infect
+    /// other entities, and are often not completely fatal.
+    PerInstructionReport(BTreeMap<VisualizerInstructionId, Vec1<VisualizerInstructionReport>>),
+}
+
+impl VisualizerTypeReport {
+    pub fn from_result(
+        result: &Result<VisualizerExecutionOutput, ViewSystemExecutionError>,
+    ) -> Option<Self> {
+        match result {
+            Ok(output) => {
+                let reports = output.reports_per_instruction.lock();
+                if reports.is_empty() {
+                    None
+                } else {
+                    Some(Self::PerInstructionReport(reports.clone()))
+                }
+            }
+
+            Err(err) => Some(Self::OverallError(VisualizerInstructionReport {
+                diagnostic: ViewerDiagnostic {
+                    severity: ViewerReportSeverity::Error,
+                    summary: dl_error::format_ref(err),
+                    details: None,
+                },
+                context: VisualizerReportContext {
+                    component: None,
+                    extra: None,
+                },
+            })),
+        }
+    }
+
+    /// Get all reports for a specific instruction.
+    ///
+    /// Does **not** include the overall error.
+    pub fn reports_for(
+        &self,
+        instruction_id: &VisualizerInstructionId,
+    ) -> impl Iterator<Item = &VisualizerInstructionReport> {
+        match self {
+            Self::OverallError(report) => itertools::Either::Left(std::iter::once(report)),
+            Self::PerInstructionReport(reports) => itertools::Either::Right(
+                reports
+                    .get(instruction_id)
+                    .map_or([].as_slice(), |r| r.as_slice())
+                    .iter(),
+            ),
+        }
+    }
+
+    /// Get reports for a specific instruction that are associated with a specific component.
+    pub fn reports_for_component(
+        &self,
+        instruction_id: &VisualizerInstructionId,
+        component: dl_chunk::ComponentIdentifier,
+    ) -> impl Iterator<Item = &VisualizerInstructionReport> {
+        self.reports_for(instruction_id)
+            .filter(move |report| report.context.component == Some(component))
+    }
+
+    /// Get reports for a specific instruction that are NOT associated with any component.
+    pub fn reports_without_component(
+        &self,
+        instruction_id: &VisualizerInstructionId,
+    ) -> impl Iterator<Item = &VisualizerInstructionReport> {
+        self.reports_for(instruction_id)
+            .filter(|report| report.context.component.is_none())
+    }
+
+    /// Get the highest severity report for an instruction.
+    pub fn highest_severity_for(
+        &self,
+        instruction_id: &VisualizerInstructionId,
+    ) -> Option<ViewerReportSeverity> {
+        match self {
+            Self::OverallError(_) => Some(ViewerReportSeverity::Error),
+            Self::PerInstructionReport(reports) => reports
+                .get(instruction_id)?
+                .iter()
+                .map(|r| r.diagnostic.severity)
+                .max(),
+        }
+    }
+}

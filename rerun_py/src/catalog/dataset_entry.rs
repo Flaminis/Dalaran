@@ -5,14 +5,14 @@ use arrow::pyarrow::PyArrowType;
 use pyo3::exceptions::{PyOverflowError, PyRuntimeError, PyValueError};
 use pyo3::types::PyAnyMethods as _;
 use pyo3::{Bound, Py, PyAny, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
-use re_chunk_store::LazyStore;
-use re_datafusion::{DatasetManifestProvider, SegmentTableProvider};
-use re_log_types::EntryId;
-use re_protos::cloud::v1alpha1::ext::{DatasetDetails, DatasetEntry, EntryDetails};
-use re_protos::common::v1alpha1::ext::{DatasetHandle, IfDuplicateBehavior, SegmentId};
-use re_redap_client::SegmentChunkProvider;
-use re_sorbet::SorbetColumnDescriptors;
-use re_types_core::LayerName;
+use dl_chunk_store::LazyStore;
+use dl_datafusion::{DatasetManifestProvider, SegmentTableProvider};
+use dl_log_types::EntryId;
+use dl_protos::cloud::v1alpha1::ext::{DatasetDetails, DatasetEntry, EntryDetails};
+use dl_protos::common::v1alpha1::ext::{DatasetHandle, IfDuplicateBehavior, SegmentId};
+use dl_redap_client::SegmentChunkProvider;
+use dl_sorbet::SorbetColumnDescriptors;
+use dl_types_core::LayerName;
 
 use super::registration_handle::PyRegistrationHandleInternal;
 use super::{PyCatalogClientInternal, PyEntryDetails, PyTableProviderAdapterInternal, to_py_err};
@@ -347,33 +347,33 @@ impl PyDatasetEntryInternal {
 
         let timeline = timeline
             .map(|timeline| {
-                re_chunk::TimelineName::try_new(timeline)
+                dl_chunk::TimelineName::try_new(timeline)
                     .map_err(|err| PyValueError::new_err(err.to_string()))
             })
             .transpose()?;
 
-        Ok(re_uri::DatasetSegmentUri {
+        Ok(dl_uri::DatasetSegmentUri {
             origin: connection.origin().clone(),
             dataset_id: self_.entry_details.id.id,
             segment_id: SegmentId::from(segment_id),
-            fragment: re_uri::Fragment {
+            fragment: dl_uri::Fragment {
                 selection: None,
                 when: timeline.map(|timeline| {
                     (
                         timeline,
                         start_cell.unwrap_or_else(|| {
-                            re_sdk::TimeCell::new(
-                                re_log_types::TimeType::TimestampNs,
-                                re_log_types::NonMinI64::MIN,
+                            dl_sdk::TimeCell::new(
+                                dl_log_types::TimeType::TimestampNs,
+                                dl_log_types::NonMinI64::MIN,
                             )
                         }),
                     )
                 }),
                 time_selection: Option::zip(end_cell, timeline).map(|(end, timeline)| {
                     let start = start_cell.unwrap_or(end);
-                    re_uri::TimeSelection {
-                        timeline: re_chunk::Timeline::new(timeline, start.typ()),
-                        range: re_log_types::AbsoluteTimeRange::new(start.value, end.value),
+                    dl_uri::TimeSelection {
+                        timeline: dl_chunk::Timeline::new(timeline, start.typ()),
+                        range: dl_log_types::AbsoluteTimeRange::new(start.value, end.value),
                     }
                 }),
             },
@@ -727,16 +727,16 @@ fn py_object_to_i64(py: Python<'_>, obj: &Bound<'_, PyAny>) -> PyResult<i64> {
     converted.extract::<i64>()
 }
 
-/// Convert a Python object to a [`re_sdk::TimeCell`], inferring the time type from the Python type.
+/// Convert a Python object to a [`dl_sdk::TimeCell`], inferring the time type from the Python type.
 ///
 /// Plain `int` → [`TimeType::Sequence`]; `datetime.timedelta` → [`TimeType::DurationNs`];
 /// anything else (datetime, `numpy.datetime64`, …) → [`TimeType::TimestampNs`] via
 /// [`py_object_to_i64`].
-fn py_object_to_time_cell(py: Python<'_>, obj: &Bound<'_, PyAny>) -> PyResult<re_sdk::TimeCell> {
-    use re_log_types::TimeType;
+fn py_object_to_time_cell(py: Python<'_>, obj: &Bound<'_, PyAny>) -> PyResult<dl_sdk::TimeCell> {
+    use dl_log_types::TimeType;
 
     if let Ok(value) = obj.extract::<i64>() {
-        return Ok(re_sdk::TimeCell::new(TimeType::Sequence, value));
+        return Ok(dl_sdk::TimeCell::new(TimeType::Sequence, value));
     }
 
     if let Ok(duration) = obj.extract::<chrono::Duration>() {
@@ -744,9 +744,9 @@ fn py_object_to_time_cell(py: Python<'_>, obj: &Bound<'_, PyAny>) -> PyResult<re
             PyOverflowError::new_err("datetime.timedelta is out of nanosecond range")
         })?;
 
-        return Ok(re_sdk::TimeCell::new(TimeType::DurationNs, nanos));
+        return Ok(dl_sdk::TimeCell::new(TimeType::DurationNs, nanos));
     }
 
     let nanos = py_object_to_i64(py, obj)?;
-    Ok(re_sdk::TimeCell::new(TimeType::TimestampNs, nanos))
+    Ok(dl_sdk::TimeCell::new(TimeType::TimestampNs, nanos))
 }

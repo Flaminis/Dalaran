@@ -7,11 +7,11 @@ hidden: true
 
 ## ⚠️ Breaking changes
 
-### `re_query::Caches` -> `re_query::QueryCache` & `re_query::CacheKey` -> `re_query::QueryCacheKey`
+### `dl_query::Caches` -> `dl_query::QueryCache` & `dl_query::CacheKey` -> `dl_query::QueryCacheKey`
 
-`re_query::Caches` has been renamed `re_query::QueryCache`, and similarly for `re_query::CacheKey`.
+`dl_query::Caches` has been renamed `dl_query::QueryCache`, and similarly for `dl_query::CacheKey`.
 
-Note that this doesn't affect `re_dataframe`, where this type was already re-exported as `QueryCache`.
+Note that this doesn't affect `dl_dataframe`, where this type was already re-exported as `QueryCache`.
 
 ### Python `colors` change in behavior for single-dimensional lists
 

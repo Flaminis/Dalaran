@@ -83,43 +83,43 @@ pub struct GenerateTokenCommand {
 }
 
 impl AuthCommands {
-    pub fn run(self, runtime: &tokio::runtime::Handle) -> Result<(), re_auth::cli::Error> {
+    pub fn run(self, runtime: &tokio::runtime::Handle) -> Result<(), dl_auth::cli::Error> {
         match self {
             Self::Login(args) => {
-                let options = re_auth::cli::LoginOptions {
+                let options = dl_auth::cli::LoginOptions {
                     open_browser: !args.no_open_browser,
                     force_login: args.force,
                     org_id: args.org_id,
                 };
-                runtime.block_on(re_auth::cli::login(options))
+                runtime.block_on(dl_auth::cli::login(options))
             }
 
             Self::Logout(args) => {
-                let options = re_auth::cli::LogoutOptions {
+                let options = dl_auth::cli::LogoutOptions {
                     open_browser: !args.no_open_browser,
                 };
-                re_auth::cli::logout(&options)
+                dl_auth::cli::logout(&options)
             }
 
-            Self::Token(_) => runtime.block_on(re_auth::cli::token()),
+            Self::Token(_) => runtime.block_on(dl_auth::cli::token()),
 
             Self::GenerateToken(args) => {
                 let server = parse_http_or_rerun_uri(&args.server)
-                    .map_err(|err| re_auth::cli::Error::Generic(err.into()))?;
+                    .map_err(|err| dl_auth::cli::Error::Generic(err.into()))?;
                 let expiration = args
                     .expiration
                     .parse::<jiff::Span>()
-                    .map_err(|err| re_auth::cli::Error::Generic(err.into()))?;
+                    .map_err(|err| dl_auth::cli::Error::Generic(err.into()))?;
                 let permission = args
                     .permission
-                    .parse::<re_auth::Permission>()
-                    .map_err(|err| re_auth::cli::Error::Generic(err.into()))?;
-                let options = re_auth::cli::GenerateTokenOptions {
+                    .parse::<dl_auth::Permission>()
+                    .map_err(|err| dl_auth::cli::Error::Generic(err.into()))?;
+                let options = dl_auth::cli::GenerateTokenOptions {
                     server,
                     expiration,
                     permission,
                 };
-                runtime.block_on(re_auth::cli::generate_token(options))
+                runtime.block_on(dl_auth::cli::generate_token(options))
             }
         }
     }
@@ -140,7 +140,7 @@ impl std::fmt::Display for InvalidUri {
 impl std::error::Error for InvalidUri {}
 
 fn parse_http_or_rerun_uri(s: &str) -> Result<url::Origin, InvalidUri> {
-    if let Ok(url) = s.parse::<re_uri::Origin>() {
+    if let Ok(url) = s.parse::<dl_uri::Origin>() {
         Ok(url::Url::parse(&url.as_url()).expect("valid url").origin())
     } else if let Ok(url) = url::Url::parse(s) {
         Ok(url.origin())

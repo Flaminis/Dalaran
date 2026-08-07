@@ -1,0 +1,90 @@
+[package]
+authors.workspace = true
+description = "Views that show entities in a 2D or 3D spatial relationship."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_view_spatial"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+## Enable faster native video decoding with assembly.
+## You need to install [nasm](https://github.com/netwide-assembler/nasm) to compile with this feature.
+nasm = ["dl_video/nasm"]
+
+[dependencies]
+
+dl_byte_size = { workspace = true, features = ["ecolor", "egui", "glam", "macaw"] }
+dl_chunk_store.workspace = true
+dl_data_ui.workspace = true
+dl_entity_db.workspace = true
+dl_error.workspace = true
+dl_format.workspace = true
+dl_gamepad.workspace = true
+dl_int.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_query.workspace = true
+dl_renderer = { workspace = true, features = [
+  "import-gltf",
+  "import-obj",
+  "import-stl",
+  "import-dae",
+] }
+dl_rvl.workspace = true
+dl_sdk_types = { workspace = true, features = ["ecolor", "glam", "image"] }
+dl_tf.workspace = true
+dl_tracing.workspace = true
+dl_ui.workspace = true
+dl_video.workspace = true
+dl_view.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport_blueprint.workspace = true
+
+ahash.workspace = true
+anyhow.workspace = true
+arrow.workspace = true
+bitflags.workspace = true
+bytemuck.workspace = true
+egui = { workspace = true, features = ["serde"] }
+glam.workspace = true
+half.workspace = true
+hexasphere.workspace = true
+image = { workspace = true, features = [
+  "png",
+] } # For loading images/icons for the gui into textures.
+itertools.workspace = true
+macaw = { workspace = true, features = ["serde"] }
+nohash-hasher.workspace = true
+ordered-float.workspace = true
+parking_lot.workspace = true
+serde.workspace = true
+smallvec = { workspace = true, features = ["serde"] }
+thiserror.workspace = true
+vec1.workspace = true
+
+
+[dev-dependencies]
+dl_component_ui.workspace = true
+dl_test_context.workspace = true
+dl_test_viewport.workspace = true
+dl_viewport.workspace = true
+
+half.workspace = true
+insta.workspace = true
+ndarray.workspace = true
+re_mp4.workspace = true
+
+[lib]
+bench = false

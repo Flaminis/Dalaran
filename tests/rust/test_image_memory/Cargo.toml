@@ -10,8 +10,8 @@ publish = false
 workspace = true
 
 [dependencies]
-re_format.workspace = true
-re_memory.workspace = true
+dl_format.workspace = true
+dl_memory.workspace = true
 rerun = { workspace = true, features = ["sdk", "image"] }
 
 mimalloc.workspace = true

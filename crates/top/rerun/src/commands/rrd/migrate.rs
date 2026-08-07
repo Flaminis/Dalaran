@@ -5,8 +5,8 @@ use camino::Utf8PathBuf;
 use indicatif::ProgressBar;
 use itertools::Itertools as _;
 use rayon::prelude::*;
-use re_build_info::CrateVersion;
-use re_log_encoding::rrd::EncodingOptions;
+use dl_build_info::CrateVersion;
+use dl_log_encoding::rrd::EncodingOptions;
 
 #[derive(Debug, Clone, clap::Parser)]
 pub struct MigrateCommand {
@@ -70,7 +70,7 @@ impl MigrateCommand {
             eprintln!("❌ Failed to migrate {num_failures}/{num_files} file(s):");
             eprintln!();
             for (path, err) in &failures {
-                eprintln!("  {path}: {}\n", re_error::format(err));
+                eprintln!("  {path}: {}\n", dl_error::format(err));
             }
             anyhow::bail!("Failed to migrate {num_failures}/{num_files} file(s)");
         }
@@ -103,7 +103,7 @@ fn migrate_from_to(from_path: &Utf8PathBuf, to_path: &Utf8PathBuf) -> anyhow::Re
     let from_file =
         std::fs::File::open(from_path).with_context(|| format!("Failed to open {from_path:?}"))?;
 
-    let decoder = re_log_encoding::DecoderApp::decode_eager(std::io::BufReader::new(from_file))?;
+    let decoder = dl_log_encoding::DecoderApp::decode_eager(std::io::BufReader::new(from_file))?;
 
     let mut errors = indexmap::IndexSet::new();
 
@@ -115,16 +115,16 @@ fn migrate_from_to(from_path: &Utf8PathBuf, to_path: &Utf8PathBuf) -> anyhow::Re
     // this tool would cache orphan `ArrowMsg` until a matching `SetStoreInfo` arrives.
     let messages = decoder.into_iter().filter_map(|result| match result {
         Ok(msg) => match msg {
-            re_log_types::LogMsg::ArrowMsg(store_id, arrow_msg) => {
-                match re_sorbet::SorbetBatch::try_from_record_batch(
+            dl_log_types::LogMsg::ArrowMsg(store_id, arrow_msg) => {
+                match dl_sorbet::SorbetBatch::try_from_record_batch(
                     &arrow_msg.batch,
-                    re_sorbet::BatchType::Chunk,
+                    dl_sorbet::BatchType::Chunk,
                 ) {
                     Ok(batch) => {
                         let batch = arrow::array::RecordBatch::from(&batch);
-                        Some(Ok(re_log_types::LogMsg::ArrowMsg(
+                        Some(Ok(dl_log_types::LogMsg::ArrowMsg(
                             store_id,
-                            re_log_types::ArrowMsg {
+                            dl_log_types::ArrowMsg {
                                 chunk_id: arrow_msg.chunk_id,
                                 batch,
                                 on_release: None,
@@ -137,8 +137,8 @@ fn migrate_from_to(from_path: &Utf8PathBuf, to_path: &Utf8PathBuf) -> anyhow::Re
                     }
                 }
             }
-            re_log_types::LogMsg::BlueprintActivationCommand(..)
-            | re_log_types::LogMsg::SetStoreInfo(..) => Some(Ok(msg)),
+            dl_log_types::LogMsg::BlueprintActivationCommand(..)
+            | dl_log_types::LogMsg::SetStoreInfo(..) => Some(Ok(msg)),
         },
         Err(err) => {
             errors.insert(err.to_string());
@@ -151,7 +151,7 @@ fn migrate_from_to(from_path: &Utf8PathBuf, to_path: &Utf8PathBuf) -> anyhow::Re
 
     let mut buffered_writer = std::io::BufWriter::new(new_file);
 
-    re_log_encoding::Encoder::encode_into(
+    dl_log_encoding::Encoder::encode_into(
         CrateVersion::LOCAL,
         EncodingOptions::PROTOBUF_COMPRESSED,
         messages,

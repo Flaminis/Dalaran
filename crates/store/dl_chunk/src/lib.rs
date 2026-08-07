@@ -1,0 +1,55 @@
+#![allow(clippy::iter_over_hash_type)]
+
+//! A chunk of Rerun data, encoded using Arrow. Used for logging, transport, storage and compute.
+//!
+//! ## Feature flags
+#![doc = document_features::document_features!()]
+//!
+
+mod builder;
+mod chunk;
+mod iter;
+mod latest_at;
+mod merge;
+mod range;
+mod shuffle;
+mod slice;
+mod split;
+mod transport;
+mod unit_chunk;
+
+#[cfg(not(target_arch = "wasm32"))]
+mod batcher;
+
+// Re-exports
+#[doc(no_inline)]
+pub use {
+    arrow::array::Array as ArrowArray,
+    dl_log_types::{EntityPath, TimeInt, TimePoint, Timeline, TimelineName},
+    dl_span::Span,
+    dl_types_core::{ArchetypeName, ChunkId, ComponentIdentifier, ComponentType, RowId},
+};
+
+#[cfg(not(target_arch = "wasm32"))]
+pub use self::batcher::{
+    BatcherFlushError, BatcherHooks, ChunkBatcher, ChunkBatcherConfig, ChunkBatcherError,
+    ChunkBatcherResult, PendingRow,
+};
+pub use self::builder::{ChunkBuilder, TimeColumnBuilder};
+pub use self::chunk::{
+    Chunk, ChunkComponents, ChunkError, ChunkResult, TimeColumn, TimeColumnError,
+};
+pub use self::iter::{
+    BoolOptSliceIter, ChunkComponentIter, ChunkComponentIterItem, ChunkComponentSlicer,
+    ChunkIndicesIter, NativeOptSliceIter, StringOptSliceIter,
+};
+pub use self::latest_at::LatestAtQuery;
+pub use self::range::{RangeQuery, RangeQueryOptions};
+pub use self::split::ChunkSplitConfig;
+pub use self::unit_chunk::{ChunkShared, UnitChunkShared};
+
+pub mod external {
+    #[cfg(not(target_arch = "wasm32"))]
+    pub use crossbeam;
+    pub use {arrow, nohash_hasher, dl_byte_size, dl_log_types};
+}

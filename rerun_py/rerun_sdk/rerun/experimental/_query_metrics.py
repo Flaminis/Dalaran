@@ -1,7 +1,7 @@
 """
 Programmatic capture of DataFusion query metrics from Python.
 
-`re_datafusion` records plan-time and per-partition fetch metrics on every
+`dl_datafusion` records plan-time and per-partition fetch metrics on every
 dataset query (`query_chunks`, `filters_pushed_down`, `fetch_grpc_bytes`, …).
 On the Rust side these surface in `EXPLAIN ANALYZE`; from Python they
 *should* surface via `df.explain(analyze=True)`, but a bug in
@@ -66,7 +66,7 @@ class QueryMetrics:
     """
     One query's metrics, captured at the moment its last per-partition stream finished.
 
-    Mirrors the Rust-side `re_datafusion::QuerySnapshot`. The same numbers are
+    Mirrors the Rust-side `dl_datafusion::QuerySnapshot`. The same numbers are
     produced via three transports: this dataclass (Python), DataFusion's
     `EXPLAIN ANALYZE`, and the PostHog analytics OTLP span. Field naming
     differs across the three:
@@ -268,7 +268,7 @@ def query_metrics() -> Iterator[MetricsCollector]:
     `.queries` mid-scope or after the scope exits.
 
     The scope is bound to the current `contextvars.Context`: every
-    `re_datafusion` query built from `dataset.reader(…)` while this scope
+    `dl_datafusion` query built from `dataset.reader(…)` while this scope
     is open contributes a `QueryMetrics` record. Nested `query_metrics()`
     scopes each see queries built inside them. Queries built in another
     thread or `asyncio` task that did **not** inherit this context (e.g. a

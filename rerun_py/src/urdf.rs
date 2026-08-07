@@ -5,9 +5,9 @@ use arrow::array::{Array as _, ArrayData, ListArray, make_array};
 use arrow::pyarrow::{PyArrowType, ToPyArrow as _};
 use pyo3::exceptions::{PyNotImplementedError, PyRuntimeError, PyValueError};
 use pyo3::prelude::*;
-use re_sdk::external::re_importer::{UrdfTree, urdf_joint_transform};
-use re_sdk::external::urdf_rs::{Joint, JointType, Link, Mimic};
-use re_sdk::{EntityPath, TimePoint};
+use dl_sdk::external::dl_importer::{UrdfTree, urdf_joint_transform};
+use dl_sdk::external::urdf_rs::{Joint, JointType, Link, Mimic};
+use dl_sdk::{EntityPath, TimePoint};
 
 use crate::chunk_stream::PyLazyChunkStreamInternal;
 use crate::chunk_stream::stream::LazyChunkStream;

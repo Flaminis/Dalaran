@@ -33,7 +33,7 @@
                 "args": [
                     "test",
                     "--profile=debugging",
-                    "-p=re_log_encoding",
+                    "-p=dl_log_encoding",
                     "--no-run",
                     "--lib",
                     "--all-features"
@@ -139,7 +139,7 @@
             }
         },
         {
-            "name": "Debug re_renderer --example=multiview",
+            "name": "Debug dl_renderer --example=multiview",
             "type": "lldb",
             "request": "launch",
             "cargo": {
@@ -164,7 +164,7 @@
                 "args": [
                     "build",
                     "--profile=debugging",
-                    "--package=re_types_builder",
+                    "--package=dl_types_builder",
                 ],
                 "filter": {
                     "name": "build_re_types",

@@ -47,7 +47,7 @@ def _generate_session_id() -> str:
 
 
 def _is_valid_session_id(sid: str) -> bool:
-    """Mirror of `re_perf_telemetry::is_valid_rerun_session_id`."""
+    """Mirror of `dl_perf_telemetry::is_valid_rerun_session_id`."""
     if not sid.startswith(_SESSION_ID_PREFIX):
         return False
     rest = sid[len(_SESSION_ID_PREFIX) :]

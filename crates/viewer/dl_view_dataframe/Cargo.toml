@@ -1,0 +1,46 @@
+[package]
+authors.workspace = true
+description = "A view that shows the data contained in entities in a table."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_view_dataframe"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_byte_size = { workspace = true, features = ["egui"] }
+dl_chunk_store.workspace = true
+dl_dataframe.workspace = true
+dl_dataframe_ui.workspace = true
+dl_error.workspace = true
+dl_format.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_sorbet.workspace = true
+dl_tracing.workspace = true
+dl_types_core.workspace = true
+dl_sdk_types.workspace = true
+dl_ui.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport_blueprint.workspace = true
+
+anyhow.workspace = true
+arrow.workspace = true
+egui_dnd.workspace = true
+egui_table.workspace = true
+egui.workspace = true
+itertools.workspace = true
+
+[dev-dependencies]
+dl_chunk_store.workspace = true
+dl_component_ui.workspace = true
+dl_test_context.workspace = true
+dl_test_viewport.workspace = true

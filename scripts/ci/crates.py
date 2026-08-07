@@ -454,7 +454,7 @@ def publish_crate(crate: Crate, token: str, version: str, env: dict[str, Any], d
 
     # NOTE: `--quiet` here we run these in parallel
     publish_cmd = f"publish --quiet --locked --token {token}"
-    if name == "re_web_viewer_server":
+    if name == "dl_web_viewer_server":
         # For some reason, cargo complains about the web viewer .wasm and .js being "dirty",
         # despite them being in .gitignore.
         # We don't know why. But we still want to publish:

@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
-use re_chunk::Chunk;
-use re_log_types::TimePoint;
-use re_sdk::external::re_importer::UrdfTree;
+use dl_chunk::Chunk;
+use dl_log_types::TimePoint;
+use dl_sdk::external::dl_importer::UrdfTree;
 
 use super::error::ChunkPipelineError;
 use super::{ChunkStream, ChunkStreamFactory};
@@ -36,14 +36,14 @@ impl ChunkStreamFactory for UrdfTreeStreamFactory {
             .spawn(move || {
                 let result = tree.emit(
                     &mut |chunk| {
-                        re_quota_channel::send_crossbeam(&tx, Ok(Arc::new(chunk))).ok();
+                        dl_quota_channel::send_crossbeam(&tx, Ok(Arc::new(chunk))).ok();
                     },
                     &TimePoint::default(),
                     include_joint_transforms,
                 );
 
                 if let Err(err) = result {
-                    re_quota_channel::send_crossbeam(
+                    dl_quota_channel::send_crossbeam(
                         &tx,
                         Err(ChunkPipelineError::Urdf {
                             reason: format!("Failed to stream URDF: {err}"),

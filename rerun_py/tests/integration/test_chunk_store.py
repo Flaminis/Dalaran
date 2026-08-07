@@ -98,7 +98,7 @@ def _build_video_stream_rrd(tmp_dir: Path, filename: str, codec: rr.VideoCodec) 
 
         # Rerun's VideoStream expects AnnexB for H.264/H.265, but mp4 demuxing yields
         # AVCC-style length-prefixed NALs. Apply the matching bitstream filter so
-        # `re_video::is_start_of_gop` can parse the samples without spamming errors.
+        # `dl_video::is_start_of_gop` can parse the samples without spamming errors.
         filter_name = {
             rr.VideoCodec.H264: "h264_mp4toannexb",
             rr.VideoCodec.H265: "hevc_mp4toannexb",

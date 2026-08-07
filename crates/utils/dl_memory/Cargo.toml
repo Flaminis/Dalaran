@@ -1,0 +1,45 @@
+[package]
+name = "dl_memory"
+authors.workspace = true
+description = "Run-time memory tracking and profiling."
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+
+[dependencies]
+dl_format.workspace = true
+dl_log.workspace = true
+dl_quota_channel.workspace = true
+dl_tracing.workspace = true
+
+ahash.workspace = true
+crossbeam.workspace = true
+itertools.workspace = true
+nohash-hasher.workspace = true
+parking_lot.workspace = true
+serde.workspace = true
+smallvec.workspace = true
+web-time.workspace = true
+
+# native dependencies:
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+backtrace.workspace = true
+memory-stats = { workspace = true, features = ["always_use_statm"] }
+sysinfo = { workspace = true, features = ["system"] }
+
+# web dependencies:
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen.workspace = true

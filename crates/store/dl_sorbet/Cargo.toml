@@ -1,0 +1,40 @@
+[package]
+name = "dl_sorbet"
+authors.workspace = true
+description = "Rerun arrow metadata definitions"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+
+[dependencies]
+dl_arrow_util.workspace = true
+dl_byte_size.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_tracing.workspace = true
+dl_tuid.workspace = true
+dl_types_core.workspace = true
+
+arrow.workspace = true
+itertools.workspace = true
+nohash-hasher.workspace = true
+semver.workspace = true
+strum = { workspace = true, features = ["derive"] }
+thiserror.workspace = true
+tracing.workspace = true
+web-time.workspace = true
+
+# Keep this crate simple, with few dependencies.

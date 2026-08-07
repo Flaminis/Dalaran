@@ -11,11 +11,11 @@ use arrow::pyarrow::PyArrowType;
 use pyo3::exceptions::{PyRuntimeError, PyValueError};
 use pyo3::types::{PyAnyMethods as _, PyDict, PyDictMethods as _, PyString};
 use pyo3::{Bound, PyAny, PyResult};
-use re_arrow_util::ArrowArrayDowncastRef as _;
-use re_chunk::{Chunk, ChunkError, ChunkId, PendingRow, RowId, TimeColumn, TimelineName};
-use re_log_types::TimePoint;
-use re_sdk::external::nohash_hasher::IntMap;
-use re_sdk::{
+use dl_arrow_util::ArrowArrayDowncastRef as _;
+use dl_chunk::{Chunk, ChunkError, ChunkId, PendingRow, RowId, TimeColumn, TimelineName};
+use dl_log_types::TimePoint;
+use dl_sdk::external::nohash_hasher::IntMap;
+use dl_sdk::{
     ArchetypeName, ComponentDescriptor, ComponentIdentifier, ComponentType, EntityPath, Timeline,
 };
 
@@ -71,7 +71,7 @@ pub fn build_row_from_components(
     for (component_descr, array) in components_per_descr {
         let component_descr = descriptor_to_rust(&component_descr)?;
         let list_array = array_to_rust(&array)?;
-        let batch = re_sdk::SerializedComponentBatch::new(list_array, component_descr);
+        let batch = dl_sdk::SerializedComponentBatch::new(list_array, component_descr);
         components.insert(batch.descriptor.component, batch);
     }
 
@@ -106,7 +106,7 @@ pub fn build_chunk_from_components(
 
     let timelines: Result<Vec<_>, ChunkError> = std::iter::zip(arrays, timeline_names)
         .map(|(array, timeline_name)| {
-            let time_type = re_log_types::TimeType::from_arrow_datatype(array.data_type())
+            let time_type = dl_log_types::TimeType::from_arrow_datatype(array.data_type())
                 .ok_or_else(|| ChunkError::Malformed {
                     reason: format!("Invalid data_type for timeline: {timeline_name}"),
                 })?;

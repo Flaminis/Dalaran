@@ -1,5 +1,5 @@
 // @ts-ignore
-import type { WebHandle, wasm_bindgen } from "./re_viewer";
+import type { WebHandle, wasm_bindgen } from "./dl_viewer";
 
 let get_wasm_bindgen: (() => typeof wasm_bindgen) | null = null;
 let _wasm_module: WebAssembly.Module | null = null;
@@ -33,7 +33,7 @@ const UNSUPPORTED_BROWSER_MESSAGE =
 
 async function fetch_viewer_js(base_url?: string): Promise<(() => typeof wasm_bindgen)> {
   // @ts-ignore
-  return (await import("./re_viewer")).default;
+  return (await import("./dl_viewer")).default;
 }
 
 async function fetch_viewer_wasm(
@@ -59,7 +59,7 @@ async function fetch_viewer_wasm(
  * This is a rough estimate — do NOT use for truncation detection.
  */
 function estimate_total_bytes(response: Response): number | null {
-  // When served with `rerun-final-length`, use that (set by `re_web_viewer_server`).
+  // When served with `rerun-final-length`, use that (set by `dl_web_viewer_server`).
   const final_length = response.headers.get("rerun-final-length");
   if (final_length != null) return parseInt(final_length, 10);
 
@@ -230,8 +230,8 @@ export interface WebViewerOptions {
    * To use this:
    * 1. Host the `signed-in.html` and `signed-out.html` pages alongside your viewer.
    *    Templates can be found at:
-   *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/re_web_viewer_server/web_viewer/signed-in.html
-   *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/re_web_viewer_server/web_viewer/signed-out.html
+   *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-in.html
+   *    - https://github.com/rerun-io/rerun/blob/main/crates/viewer/dl_web_viewer_server/web_viewer/signed-out.html
    * 2. Set the URLs to those pages here.
    * 3. Contact your Rerun representative to have the redirect URLs
    *    and origin whitelisted in the OAuth configuration.
@@ -267,7 +267,7 @@ export interface AppOptions extends WebViewerOptions {
   fullscreen?: FullscreenOptions;
 }
 
-// Types are based on `crates/viewer/re_viewer/src/event.rs`.
+// Types are based on `crates/viewer/dl_viewer/src/event.rs`.
 // Important: The event names defined here are `snake_case` versions
 // of their `PascalCase` counterparts on the Rust side.
 /** An event produced in the Viewer. */

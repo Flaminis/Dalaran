@@ -3,7 +3,7 @@
 #
 # Run through pixi so the coverage tools are on PATH (auto-selects the `coverage` environment):
 #   pixi run rs-coverage                 # whole workspace
-#   pixi run rs-coverage re_dataframe    # scoped to one crate
+#   pixi run rs-coverage dl_dataframe    # scoped to one crate
 #
 # Runs the test suite once under source-based coverage instrumentation, then emits every
 # report format from that single run so the suite isn't executed more than once:
@@ -21,8 +21,8 @@
 #
 # `--ignore-run-fail` means a failing test still produces a coverage report (test failures
 # are printed but don't abort the run) — useful because a whole-workspace run includes GPU
-# image-snapshot tests (e.g. re_integration_test) that are environment-sensitive locally.
-# For fast, clean local coverage, scope to a crate: `pixi run rs-coverage re_dataframe`.
+# image-snapshot tests (e.g. dl_integration_test) that are environment-sensitive locally.
+# For fast, clean local coverage, scope to a crate: `pixi run rs-coverage dl_dataframe`.
 
 set -eu
 

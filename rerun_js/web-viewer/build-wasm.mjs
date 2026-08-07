@@ -28,7 +28,7 @@ function buildWebViewer(mode) {
   }
   return exec(
     [
-      "cargo run -p re_dev_tools -- build-web-viewer",
+      "cargo run -p dl_dev_tools -- build-web-viewer",
       modeFlags,
       "--target no-modules-base",
       "--no-default-features",
@@ -39,7 +39,7 @@ function buildWebViewer(mode) {
 }
 
 function re_viewer_js() {
-  let code = fs.readFileSync(path.join(__dirname, "re_viewer.js"), "utf-8");
+  let code = fs.readFileSync(path.join(__dirname, "dl_viewer.js"), "utf-8");
 
   // this transforms the module, wrapping it in a default-exported function.
   // calling the function produces a new "instance" of the module, because
@@ -57,10 +57,10 @@ function re_viewer_js() {
 })({ __proto__: null });`;
 
   if (code.indexOf(start) === -1) {
-    throw new Error("failed to run js build script: failed to patch re_viewer.js, could not find replace start marker");
+    throw new Error("failed to run js build script: failed to patch dl_viewer.js, could not find replace start marker");
   }
   if (code.indexOf(end) === -1) {
-    throw new Error("failed to run js build script: failed to patch re_viewer.js, could not find replace end marker");
+    throw new Error("failed to run js build script: failed to patch dl_viewer.js, could not find replace end marker");
   }
   code = code.replace(start, "").replace(end, "");
 
@@ -105,7 +105,7 @@ return Object.assign(__wbg_init, { initSync, deinit }, exports);
     });`;
 
   if (code.indexOf(closure_dtors_original) === -1) {
-    throw new Error("failed to run js build script: failed to patch re_viewer.js, could not find CLOSURE_DTORS block");
+    throw new Error("failed to run js build script: failed to patch dl_viewer.js, could not find CLOSURE_DTORS block");
   }
 
   code = code.replace(closure_dtors_original, closure_dtors_patch);
@@ -168,16 +168,16 @@ return Object.assign(__wbg_init, { initSync, deinit }, exports);
     }`;
 
   if (code.indexOf(make_mut_closure_original) === -1) {
-    throw new Error("failed to run js build script: failed to patch re_viewer.js, could not find makeMutClosure block");
+    throw new Error("failed to run js build script: failed to patch dl_viewer.js, could not find makeMutClosure block");
   }
 
   code = code.replace(make_mut_closure_original, make_mut_closure_patch);
 
-  fs.writeFileSync(path.join(__dirname, "re_viewer.js"), code);
+  fs.writeFileSync(path.join(__dirname, "dl_viewer.js"), code);
 }
 
 function re_viewer_d_ts() {
-  let code = fs.readFileSync(path.join(__dirname, "re_viewer.d.ts"), "utf-8");
+  let code = fs.readFileSync(path.join(__dirname, "dl_viewer.d.ts"), "utf-8");
 
   // this transformation just re-exports WebHandle and adds a default export inside the `.d.ts` file
 
@@ -187,7 +187,7 @@ export type WebHandle = wasm_bindgen.WebHandle;
 export default function(): wasm_bindgen;
 `;
 
-  fs.writeFileSync(path.join(__dirname, "re_viewer.d.ts"), code);
+  fs.writeFileSync(path.join(__dirname, "dl_viewer.d.ts"), code);
 }
 
 function main() {

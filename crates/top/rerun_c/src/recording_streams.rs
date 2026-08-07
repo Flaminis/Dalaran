@@ -1,5 +1,5 @@
 use parking_lot::Mutex;
-use re_sdk::{RecordingStream, StoreKind};
+use dl_sdk::{RecordingStream, StoreKind};
 
 use crate::{
     CError, CRecordingStream, RR_REC_STREAM_CURRENT_BLUEPRINT, RR_REC_STREAM_CURRENT_RECORDING,

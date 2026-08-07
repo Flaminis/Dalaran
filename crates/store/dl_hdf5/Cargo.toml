@@ -1,0 +1,33 @@
+[package]
+name = "dl_hdf5"
+authors.workspace = true
+description = "Core HDF5-to-chunk loading logic for Rerun"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+
+[dependencies]
+dl_chunk.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_sdk_types.workspace = true
+dl_tracing.workspace = true
+
+arrow.workspace = true
+hdf5-pure.workspace = true
+itertools.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+dl_chunk_store.workspace = true
+tempfile.workspace = true

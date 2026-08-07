@@ -4,9 +4,9 @@
 //! user-facing context manager. This file exposes:
 //!
 //! - [`PyQueryMetrics`]: a frozen, getter-only Python class mirroring
-//!   [`re_datafusion::QuerySnapshot`].
+//!   [`dl_datafusion::QuerySnapshot`].
 //! - [`PyMetricsCollectorHandle`]: opaque wrapper around
-//!   [`re_datafusion::MetricsCollector`] with `drain()` / `snapshot()` methods.
+//!   [`dl_datafusion::MetricsCollector`] with `drain()` / `snapshot()` methods.
 //! - [`new_metrics_collector`]: allocate a fresh handle. The Python wrapper
 //!   pushes it onto the `_active_collectors` `ContextVar` for the duration of
 //!   the `with` block.
@@ -15,15 +15,15 @@
 //!   `DataframeQueryTableProvider`.
 //!
 //! The actual snapshot-on-stream-completion logic lives in
-//! `re_datafusion::metrics_capture` and `re_datafusion::dataframe_query_provider`.
+//! `dl_datafusion::metrics_capture` and `dl_datafusion::dataframe_query_provider`.
 
 use std::time::Duration;
 
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
-use re_datafusion::{MetricsCollector, QuerySnapshot};
+use dl_datafusion::{MetricsCollector, QuerySnapshot};
 
-/// Frozen, getter-only mirror of [`re_datafusion::QuerySnapshot`].
+/// Frozen, getter-only mirror of [`dl_datafusion::QuerySnapshot`].
 ///
 /// One per query that ran inside a `query_metrics()` scope.
 #[pyclass(
@@ -390,12 +390,12 @@ impl PyQueryMetrics {
             qi.query_type.as_str(),
             qi.query_chunks,
             qi.query_segments,
-            re_format::format_bytes(qi.query_bytes as _),
+            dl_format::format_bytes(qi.query_bytes as _),
             qi.filters_pushed_down,
             qi.filters_applied_client_side,
             qi.entity_path_narrowing_applied,
-            re_format::format_bytes(self.snap.fetch_grpc_bytes as _),
-            re_format::format_bytes(self.snap.fetch_direct_bytes as _),
+            dl_format::format_bytes(self.snap.fetch_grpc_bytes as _),
+            dl_format::format_bytes(self.snap.fetch_direct_bytes as _),
             self.snap.total_duration,
             self.snap.error_kind,
         )
@@ -482,7 +482,7 @@ pub fn active_metrics_collectors(py: Python<'_>) -> Vec<MetricsCollector> {
     match read() {
         Ok(v) => v,
         Err(err) => {
-            re_log::debug_once!("Failed to read query_metrics ContextVar: {err}");
+            dl_log::debug_once!("Failed to read query_metrics ContextVar: {err}");
             Vec::new()
         }
     }

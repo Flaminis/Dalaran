@@ -1,0 +1,41 @@
+[package]
+authors.workspace = true
+description = "A view that shows state transitions as horizontal lanes over time."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_view_state_timeline"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+dl_byte_size.workspace = true
+dl_chunk_store.workspace = true
+dl_component_ui.workspace = true
+dl_log_types.workspace = true
+dl_sdk_types.workspace = true
+dl_selection_panel.workspace = true
+dl_time_ruler.workspace = true
+dl_tracing.workspace = true
+dl_ui.workspace = true
+dl_view.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport_blueprint.workspace = true
+
+egui.workspace = true
+nohash-hasher.workspace = true
+
+[dev-dependencies]
+dl_test_context.workspace = true
+dl_test_viewport.workspace = true
+dl_viewport.workspace = true

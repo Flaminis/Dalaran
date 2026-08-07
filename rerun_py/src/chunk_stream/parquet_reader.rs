@@ -3,8 +3,8 @@ use std::sync::Arc;
 
 use pyo3::exceptions::{PyFileNotFoundError, PyValueError};
 use pyo3::prelude::*;
-use re_chunk::{Chunk, EntityPath};
-use re_parquet::{ColumnGrouping, IndexColumn, IndexType, ParquetConfig, TimeUnit};
+use dl_chunk::{Chunk, EntityPath};
+use dl_parquet::{ColumnGrouping, IndexColumn, IndexType, ParquetConfig, TimeUnit};
 
 use super::error::ChunkPipelineError;
 use super::py_stream::PyLazyChunkStreamInternal;
@@ -143,7 +143,7 @@ impl PyParquetReaderInternal {
         // Per-stream config validation (schema/footer only): fail fast before
         // spawning the worker. Misconfiguration and open/parse failures of a present
         // file become `ValueError`.
-        re_parquet::validate_config(&self.path, &config).map_err(|err| {
+        dl_parquet::validate_config(&self.path, &config).map_err(|err| {
             PyValueError::new_err(format!("{err}\nFile path: {}", self.path.display()))
         })?;
 
@@ -186,14 +186,14 @@ impl ChunkStreamFactory for ParquetStreamFactory {
         let config = self.config.clone();
         let prefix = self.entity_path_prefix.clone();
 
-        // NOTE: `re_parquet::load_parquet` returns an iterator whose inner type
+        // NOTE: `dl_parquet::load_parquet` returns an iterator whose inner type
         // (`ParquetChunkIterator`) contains `Box<dyn Iterator<...>>` without a
         // `Send` bound. The iterator must therefore be created and consumed on
         // the same thread — we call `load_parquet` inside the spawned thread.
         std::thread::Builder::new()
             .name("parquet-chunk-source".into())
             .spawn(move || {
-                match re_parquet::load_parquet(&path, &config, &prefix) {
+                match dl_parquet::load_parquet(&path, &config, &prefix) {
                     Ok(iter) => {
                         for chunk_result in iter {
                             let msg = match chunk_result {
@@ -202,13 +202,13 @@ impl ChunkStreamFactory for ParquetStreamFactory {
                                     reason: err.to_string(),
                                 }),
                             };
-                            if re_quota_channel::send_crossbeam(&tx, msg).is_err() {
+                            if dl_quota_channel::send_crossbeam(&tx, msg).is_err() {
                                 break; // receiver dropped
                             }
                         }
                     }
                     Err(err) => {
-                        re_quota_channel::send_crossbeam(
+                        dl_quota_channel::send_crossbeam(
                             &tx,
                             Err(ChunkPipelineError::Parquet {
                                 reason: err.to_string(),

@@ -5,10 +5,10 @@ use anyhow::Context as _;
 use arrow::array::{RecordBatch as ArrowRecordBatch, RecordBatchOptions};
 use arrow::datatypes::{Field as ArrowField, Schema as ArrowSchema};
 use itertools::Either;
-use re_build_info::CrateVersion;
-use re_chunk::external::crossbeam;
-use re_sdk::EntityPath;
-use re_sdk::external::arrow;
+use dl_build_info::CrateVersion;
+use dl_chunk::external::crossbeam;
+use dl_sdk::EntityPath;
+use dl_sdk::external::arrow;
 
 use crate::commands::read_rrd_streams_from_file_or_stdin;
 
@@ -55,7 +55,7 @@ impl FilterCommand {
         }
 
         let now = std::time::Instant::now();
-        re_log::info!(srcs = ?path_to_input_rrds, ?dropped_timelines, "filter started");
+        dl_log::info!(srcs = ?path_to_input_rrds, ?dropped_timelines, "filter started");
 
         let dropped_timelines: HashSet<_> = dropped_timelines.iter().cloned().collect();
         let dropped_entity_paths: HashSet<EntityPath> = dropped_entity_paths
@@ -84,8 +84,8 @@ impl FilterCommand {
                 let mut encoder = {
                     // TODO(cmc): encoding options & version should match the original.
                     let version = CrateVersion::LOCAL;
-                    let options = re_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
-                    re_log_encoding::Encoder::new_eager(version, options, &mut rrd_out)
+                    let options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+                    dl_log_encoding::Encoder::new_eager(version, options, &mut rrd_out)
                         .context("couldn't init encoder")?
                 };
 
@@ -106,8 +106,8 @@ impl FilterCommand {
             match res {
                 Ok(msg) => {
                     let msg = match msg {
-                        re_log_types::LogMsg::ArrowMsg(store_id, mut msg) => {
-                            match re_sorbet::ChunkBatch::try_from(&msg.batch) {
+                        dl_log_types::LogMsg::ArrowMsg(store_id, mut msg) => {
+                            match dl_sorbet::ChunkBatch::try_from(&msg.batch) {
                                 Ok(batch) => {
                                     if dropped_entity_paths.contains(batch.entity_path()) {
                                         None
@@ -134,14 +134,14 @@ impl FilterCommand {
                                             )
                                         {
                                             msg.batch = new_batch;
-                                            Some(re_log_types::LogMsg::ArrowMsg(store_id, msg))
+                                            Some(dl_log_types::LogMsg::ArrowMsg(store_id, msg))
                                         } else {
                                             None // Probably failed because we filtered out everything
                                         }
                                     }
                                 }
                                 Err(err) => {
-                                    re_log::warn_once!("Failed to parse chunk schema: {err}");
+                                    dl_log::warn_once!("Failed to parse chunk schema: {err}");
                                     None
                                 }
                             }
@@ -151,12 +151,12 @@ impl FilterCommand {
                     };
 
                     if let Some(msg) = msg {
-                        re_quota_channel::send_crossbeam(&tx_encoder, msg).ok();
+                        dl_quota_channel::send_crossbeam(&tx_encoder, msg).ok();
                     }
                 }
 
                 Err(err) => {
-                    re_log::error!(err = re_error::format(err));
+                    dl_log::error!(err = dl_error::format(err));
                     is_success = false;
                 }
             }
@@ -188,11 +188,11 @@ impl FilterCommand {
         let file_size_to_string = |size: Option<u64>| {
             size.map_or_else(
                 || "<unknown>".to_owned(),
-                |size| re_format::format_bytes(size as _),
+                |size| dl_format::format_bytes(size as _),
             )
         };
 
-        re_log::info!(
+        dl_log::info!(
             dst_size_bytes = %file_size_to_string(Some(rrd_out_size)),
             time = ?now.elapsed(),
             size_reduction,
@@ -209,7 +209,7 @@ impl FilterCommand {
 
 // Does the given field represent a timeline that is in the given set?
 fn is_field_timeline_of(field: &ArrowField, dropped_timelines: &HashSet<String>) -> bool {
-    re_sorbet::IndexColumnDescriptor::try_from(field)
+    dl_sorbet::IndexColumnDescriptor::try_from(field)
         .ok()
         .is_some_and(|schema| dropped_timelines.contains(schema.column_name()))
 }

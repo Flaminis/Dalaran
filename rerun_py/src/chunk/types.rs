@@ -7,9 +7,9 @@ use pyo3::types::PyDict;
 
 use arrow::array::RecordBatch as ArrowRecordBatch;
 use arrow::pyarrow::{PyArrowType, ToPyArrow as _};
-use re_chunk::{Chunk, RowId};
-use re_log_types::{EntityPath, TimePoint};
-use re_sdk::EntityPathPart;
+use dl_chunk::{Chunk, RowId};
+use dl_log_types::{EntityPath, TimePoint};
+use dl_sdk::EntityPathPart;
 
 /// A single chunk of data from a recording.
 #[pyclass(
@@ -105,8 +105,8 @@ impl PyChunkInternal {
         index_columns: Vec<String>,
         entity_path: Option<String>,
     ) -> PyResult<Vec<Self>> {
-        use re_log_types::TimelineName;
-        use re_sorbet::DataframeIndex;
+        use dl_log_types::TimelineName;
+        use dl_sorbet::DataframeIndex;
 
         let index = match index_mode {
             "auto" => DataframeIndex::Auto,
@@ -193,7 +193,7 @@ impl PyChunkInternal {
         py: Python<'_>,
         lenses: Vec<crate::lenses::PyLens>,
     ) -> PyResult<Vec<Self>> {
-        use re_lenses_core::ChunkExt as _;
+        use dl_lenses_core::ChunkExt as _;
 
         let lenses: Vec<_> = lenses
             .iter()
@@ -201,7 +201,7 @@ impl PyChunkInternal {
             .collect::<PyResult<Vec<_>>>()?;
         match self
             .chunk
-            .apply_lenses(&lenses, &re_lenses::default_runtime())
+            .apply_lenses(&lenses, &dl_lenses::default_runtime())
         {
             Ok(chunks) => Ok(chunks
                 .into_iter()
@@ -227,8 +227,8 @@ impl PyChunkInternal {
         source: &str,
         selector: &crate::selector::PySelectorInternal,
     ) -> PyResult<Self> {
-        use re_lenses_core::ChunkExt as _;
-        use re_types_core::ComponentIdentifier;
+        use dl_lenses_core::ChunkExt as _;
+        use dl_types_core::ComponentIdentifier;
 
         let source_id = ComponentIdentifier::try_new(source)
             .map_err(|err| PyValueError::new_err(err.to_string()))?;
@@ -238,7 +238,7 @@ impl PyChunkInternal {
             .apply_selector(
                 source_id,
                 selector.selector(),
-                &re_lenses::default_runtime(),
+                &dl_lenses::default_runtime(),
             )
             .map_err(|err| PyValueError::new_err(err.to_string()))?;
 
@@ -253,13 +253,13 @@ impl PyChunkInternal {
             .chunk
             .to_record_batch()
             .map_err(|err| PyRuntimeError::new_err(err.to_string()))?;
-        let opts = re_arrow_util::RecordBatchFormatOpts {
+        let opts = dl_arrow_util::RecordBatchFormatOpts {
             width: Some(width),
             redact_non_deterministic: redact,
             trim_metadata_keys,
             ..Default::default()
         };
-        Ok(re_arrow_util::format_record_batch_opts(&batch, &opts).to_string())
+        Ok(dl_arrow_util::format_record_batch_opts(&batch, &opts).to_string())
     }
 
     fn __repr__(&self) -> String {

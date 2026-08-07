@@ -2,11 +2,11 @@ use std::io::{IsTerminal as _, Write as _};
 
 use anyhow::Context as _;
 use itertools::Either;
-use re_byte_size::SizeBytes as _;
-use re_chunk_store::{ChunkStoreConfig, CompactionOptions, IsStartOfGop, OptimizationProfile};
-use re_entity_db::EntityDb;
-use re_log_types::StoreId;
-use re_sdk::StoreKind;
+use dl_byte_size::SizeBytes as _;
+use dl_chunk_store::{ChunkStoreConfig, CompactionOptions, IsStartOfGop, OptimizationProfile};
+use dl_entity_db::EntityDb;
+use dl_log_types::StoreId;
+use dl_sdk::StoreKind;
 
 use crate::commands::read_rrd_streams_from_file_or_stdin;
 
@@ -64,7 +64,7 @@ impl MergeCommand {
 /// Accepts both binary (`KiB`/`MiB`/`GiB`/`TiB`) and decimal (`kB`/`MB`/`GB`/`TB`) units,
 /// as well as a plain `B` suffix (e.g. `1024B`).
 fn parse_size(s: &str) -> Result<u64, String> {
-    let bytes = re_format::parse_bytes(s).ok_or_else(|| {
+    let bytes = dl_format::parse_bytes(s).ok_or_else(|| {
         format!(
             "invalid size {s:?}; expected a value with a unit suffix, e.g. `2MiB`, `1GB`, `1024B`"
         )
@@ -253,7 +253,7 @@ impl OptimizeCommand {
         let split_size_ratio = split_size_ratio.or(profile.split_size_ratio);
 
         let is_start_of_gop: IsStartOfGop = std::sync::Arc::new(|data, codec| {
-            re_video::is_start_of_gop(data, codec.into()).map_err(|err| anyhow::anyhow!(err))
+            dl_video::is_start_of_gop(data, codec.into()).map_err(|err| anyhow::anyhow!(err))
         });
 
         let compaction_options = CompactionOptions {
@@ -349,7 +349,7 @@ fn optimize_dir_mirror(
         );
     }
 
-    re_log::info!(
+    dl_log::info!(
         num_files = pairs.len(),
         output_root = %output_root.display(),
         "optimizing files in directory mirror mode",
@@ -367,7 +367,7 @@ fn optimize_dir_mirror(
                     .with_context(|| format!("creating output dir {parent:?}"))?;
             }
             let idx = done.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
-            re_log::info!(
+            dl_log::info!(
                 "[{idx}/{total}] optimizing {} -> {}",
                 src.display(),
                 dst.display(),
@@ -425,12 +425,12 @@ fn merge_and_compact(
     let file_size_to_string = |size: Option<u64>| {
         size.map_or_else(
             || "<unknown>".to_owned(),
-            |size| re_format::format_bytes(size as _),
+            |size| dl_format::format_bytes(size as _),
         )
     };
 
     let now = std::time::Instant::now();
-    re_log::info!(
+    dl_log::info!(
         config = %store_config,
         srcs = ?path_to_input_rrds,
         "merge/compaction started"
@@ -440,7 +440,7 @@ fn merge_and_compact(
 
     let mut entity_dbs: std::collections::HashMap<StoreId, EntityDb> = Default::default();
 
-    re_log::info!("processing input…");
+    dl_log::info!("processing input…");
     let mut num_chunks_before = 0u64;
     let mut last_checkpoint = std::time::Instant::now();
     for (msg_nr, (_source, res)) in rx.iter().enumerate() {
@@ -448,23 +448,23 @@ fn merge_and_compact(
 
         match res {
             Ok(msg) => {
-                num_chunks_before += matches!(msg, re_log_types::LogMsg::ArrowMsg(_, _)) as u64;
+                num_chunks_before += matches!(msg, dl_log_types::LogMsg::ArrowMsg(_, _)) as u64;
                 let db = entity_dbs.entry(msg.store_id().clone()).or_insert_with(|| {
                     let enable_viewer_indexes = false; // that would just slow us down for no reason
-                    re_entity_db::EntityDb::with_store_config(
+                    dl_entity_db::EntityDb::with_store_config(
                         msg.store_id().clone(),
                         enable_viewer_indexes,
                         store_config.clone(),
                     )
                 });
                 if let Err(err) = db.add_log_msg(&msg) {
-                    re_log::error!(%err, "couldn't index corrupt chunk");
+                    dl_log::error!(%err, "couldn't index corrupt chunk");
                     is_success = false;
                 }
             }
 
             Err(err) => {
-                re_log::error!(err = re_error::format(err));
+                dl_log::error!(err = dl_error::format(err));
                 is_success = false;
             }
         }
@@ -480,10 +480,10 @@ fn merge_and_compact(
         if msg_count % check_in_interval == 0 {
             let msg_per_second = check_in_interval as f64 / last_checkpoint.elapsed().as_secs_f64();
             last_checkpoint = std::time::Instant::now();
-            re_log::info!(
+            dl_log::info!(
                 "processed {msg_count} messages so far, current speed is {msg_per_second:.2} msg/s"
             );
-            re_tracing::reexports::puffin::GlobalProfiler::lock().new_frame();
+            dl_tracing::reexports::puffin::GlobalProfiler::lock().new_frame();
         }
     }
 
@@ -514,7 +514,7 @@ fn merge_and_compact(
             100.0 - num_chunks_after as f64 / (num_chunks_before as f64 + f64::EPSILON) * 100.0
         );
 
-        re_log::info!(
+        dl_log::info!(
             num_chunks_before, num_chunks_after, num_chunks_reduction, time=?now.elapsed(),
             "compaction completed",
         );
@@ -530,7 +530,7 @@ fn merge_and_compact(
         Either::Right(std::io::BufWriter::new(std::io::stdout().lock()))
     };
 
-    re_log::info!("preparing output…");
+    dl_log::info!("preparing output…");
     let messages_rbl = entity_dbs
         .values()
         .filter(|entity_db| entity_db.store_kind() == StoreKind::Blueprint)
@@ -542,20 +542,20 @@ fn merge_and_compact(
         .filter(|entity_db| entity_db.store_kind() == StoreKind::Recording)
         .flat_map(|entity_db| entity_db.to_messages(None /* time selection */))
         .inspect(|msg| {
-            num_chunks_after += matches!(msg, Ok(re_log_types::LogMsg::ArrowMsg(_, _))) as u64;
+            num_chunks_after += matches!(msg, Ok(dl_log_types::LogMsg::ArrowMsg(_, _))) as u64;
         });
 
     // TODO(cmc): encoding options should match the original.
-    let encoding_options = re_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
     let version = entity_dbs
         .values()
         .next()
         .and_then(|db| db.store_info())
         .and_then(|info| info.store_version)
-        .unwrap_or(re_build_info::CrateVersion::LOCAL);
+        .unwrap_or(dl_build_info::CrateVersion::LOCAL);
 
-    re_log::info!("encoding…");
-    let rrd_out_size = re_log_encoding::Encoder::encode_into(
+    dl_log::info!("encoding…");
+    let rrd_out_size = dl_log_encoding::Encoder::encode_into(
         version,
         encoding_options,
         // NOTE: We want to make sure all blueprints come first, so that the viewer can immediately
@@ -581,12 +581,12 @@ fn merge_and_compact(
         "N/A".to_owned()
     };
 
-    re_log::info!(
+    dl_log::info!(
         srcs = ?path_to_input_rrds,
         time = ?now.elapsed(),
         "merge/compaction finished. Chunk count {} -> {} ({num_chunks_reduction}), size {} -> {} ({size_reduction})",
-        re_format::format_uint(num_chunks_before),
-        re_format::format_uint(num_chunks_after),
+        dl_format::format_uint(num_chunks_before),
+        dl_format::format_uint(num_chunks_after),
         file_size_to_string(rrds_in_size),
         file_size_to_string(Some(rrd_out_size)),
     );
@@ -659,17 +659,17 @@ fn log_chunk_size_stats(
 
     let rest_avg_bytes_str = rest_total_bytes
         .checked_div(rest_num_chunks)
-        .map_or_else(|| "N/A".to_owned(), |x| re_format::format_bytes(x as _));
+        .map_or_else(|| "N/A".to_owned(), |x| dl_format::format_bytes(x as _));
     let rest_avg_rows_str = rest_total_rows
         .checked_div(rest_num_chunks)
-        .map_or_else(|| "N/A".to_owned(), re_format::format_uint);
+        .map_or_else(|| "N/A".to_owned(), dl_format::format_uint);
 
-    re_log::info!(
+    dl_log::info!(
         num_chunks,
-        min = %re_format::format_bytes(min_bytes as _),
-        max = %re_format::format_bytes(max_bytes as _),
-        avg = %re_format::format_bytes(avg_bytes as _),
-        total = %re_format::format_bytes(total_bytes as _),
+        min = %dl_format::format_bytes(min_bytes as _),
+        max = %dl_format::format_bytes(max_bytes as _),
+        avg = %dl_format::format_bytes(avg_bytes as _),
+        total = %dl_format::format_bytes(total_bytes as _),
         rows_min = min_rows,
         rows_max = max_rows_seen,
         rows_avg = avg_rows,

@@ -20,12 +20,12 @@ use arrow::ffi::{FFI_ArrowArray, FFI_ArrowSchema};
 use arrow_utils::arrow_array_from_c_ffi;
 use component_type_registry::COMPONENT_TYPES;
 use itertools::Itertools as _;
-use re_arrow_util::ArrowArrayDowncastRef as _;
-use re_sdk::external::nohash_hasher::IntMap;
-use re_sdk::external::re_log_types::TimelineName;
-use re_sdk::log::{Chunk, ChunkId, PendingRow, TimeColumn};
-use re_sdk::time::TimeType;
-use re_sdk::{
+use dl_arrow_util::ArrowArrayDowncastRef as _;
+use dl_sdk::external::nohash_hasher::IntMap;
+use dl_sdk::external::dl_log_types::TimelineName;
+use dl_sdk::log::{Chunk, ChunkId, PendingRow, TimeColumn};
+use dl_sdk::time::TimeType;
+use dl_sdk::{
     ArchetypeName, ComponentDescriptor, ComponentIdentifier, ComponentType, EntityPath,
     RecordingStream, RecordingStreamBuilder, StoreKind, TimeCell, TimePoint, Timeline,
 };
@@ -53,7 +53,7 @@ impl CStringView {
         if self.is_empty() {
             Ok("")
         } else {
-            re_log::debug_assert!(
+            dl_log::debug_assert!(
                 1000 < self.string.addr() && self.length < 1_000_000,
                 "Suspected memory corruption when reading argument {argument_name:?}: {self:#?}"
             );
@@ -126,7 +126,7 @@ pub const RR_REC_STREAM_CURRENT_RECORDING: CRecordingStream = 0xFFFFFFFF;
 pub const RR_REC_STREAM_CURRENT_BLUEPRINT: CRecordingStream = 0xFFFFFFFE;
 pub const RR_COMPONENT_TYPE_HANDLE_INVALID: CComponentTypeHandle = 0xFFFFFFFF;
 
-/// C version of [`re_sdk::SpawnOptions`].
+/// C version of [`dl_sdk::SpawnOptions`].
 ///
 /// See `rr_spawn_options` in the C header.
 #[derive(Debug, Clone)]
@@ -143,7 +143,7 @@ pub struct CSpawnOptions {
 
 impl CSpawnOptions {
     #[expect(clippy::result_large_err)]
-    pub fn as_rust(&self) -> Result<re_sdk::SpawnOptions, CError> {
+    pub fn as_rust(&self) -> Result<dl_sdk::SpawnOptions, CError> {
         let Self {
             port,
             memory_limit,
@@ -154,7 +154,7 @@ impl CSpawnOptions {
             executable_path,
         } = self;
 
-        let mut spawn_opts = re_sdk::SpawnOptions::default();
+        let mut spawn_opts = dl_sdk::SpawnOptions::default();
 
         if *port != 0 {
             spawn_opts.port = *port;
@@ -278,7 +278,7 @@ impl CSortingStatus {
 }
 
 /// See `rr_time_type` in the C header.
-/// Equivalent to Rust [`re_sdk::time::TimeType`].
+/// Equivalent to Rust [`dl_sdk::time::TimeType`].
 #[repr(u32)]
 #[derive(Debug, Clone, Copy)]
 pub enum CTimeType {
@@ -293,7 +293,7 @@ pub enum CTimeType {
 }
 
 /// See `rr_timeline` in the C header.
-/// Equivalent to Rust [`re_sdk::Timeline`].
+/// Equivalent to Rust [`dl_sdk::Timeline`].
 #[repr(C)]
 #[derive(Debug, Clone)]
 pub struct CTimeline {
@@ -320,7 +320,7 @@ impl TryFrom<CTimeline> for Timeline {
 }
 
 /// See `rr_time_column` in the C header.
-/// Equivalent to Rust [`re_sdk::log::TimeColumn`].
+/// Equivalent to Rust [`dl_sdk::log::TimeColumn`].
 #[repr(C)]
 pub struct CTimeColumn {
     pub timeline: CTimeline,
@@ -458,7 +458,7 @@ pub struct CError {
 #[unsafe(no_mangle)]
 pub extern "C" fn rr_version_string() -> *const c_char {
     static VERSION: std::sync::LazyLock<CString> = std::sync::LazyLock::new(|| {
-        CString::new(re_sdk::build_info().version.to_string()).expect("CString::new failed")
+        CString::new(dl_sdk::build_info().version.to_string()).expect("CString::new failed")
     }); // unwrap: there won't be any NUL bytes in the string
 
     VERSION.as_ptr()
@@ -476,7 +476,7 @@ pub extern "C" fn rr_f16_from_f32(value: f32) -> u16 {
 #[expect(clippy::result_large_err)]
 fn rr_spawn_impl(spawn_opts: *const CSpawnOptions) -> Result<(), CError> {
     let spawn_opts = if spawn_opts.is_null() {
-        re_sdk::SpawnOptions::default()
+        dl_sdk::SpawnOptions::default()
     } else {
         let spawn_opts = ptr::try_ptr_as_ref(spawn_opts, "spawn_opts")?;
         spawn_opts.as_rust()?
@@ -484,7 +484,7 @@ fn rr_spawn_impl(spawn_opts: *const CSpawnOptions) -> Result<(), CError> {
 
     // Port is unused here — this function only spawns the viewer process.
     // The C SDK connects separately via `rr_recording_stream_spawn`.
-    re_sdk::spawn(&spawn_opts)
+    dl_sdk::spawn(&spawn_opts)
         .map(drop)
         .map_err(|err| CError::new(CErrorCode::RecordingStreamSpawnFailure, &err.to_string()))?;
 
@@ -561,9 +561,9 @@ fn rr_recording_stream_new_impl(
         use std::sync::Once;
         static INIT: Once = Once::new();
         INIT.call_once(|| {
-            re_log::setup_logging();
+            dl_log::setup_logging();
             if cfg!(debug_assertions) {
-                re_crash_handler::install_crash_handlers(re_build_info::build_info!());
+                dl_crash_handler::install_crash_handlers(dl_build_info::build_info!());
 
                 // Log a clear warning to inform users that (accidentally) use a debug build of the SDK.
                 // This should however _never_ cause a panic if RERUN_PANIC_ON_WARN is set, e.g. in test environments.
@@ -573,9 +573,9 @@ fn rr_recording_stream_new_impl(
                     .map(|value| value == "0")
                     .unwrap_or(true);
                 if can_log_warning {
-                    re_log::warn!(DEBUG_BUILD_WARNING);
+                    dl_log::warn!(DEBUG_BUILD_WARNING);
                 } else {
-                    re_log::info!(DEBUG_BUILD_WARNING);
+                    dl_log::info!(DEBUG_BUILD_WARNING);
                 }
             }
         });
@@ -589,14 +589,14 @@ fn rr_recording_stream_new_impl(
         store_kind,
     } = *store_info;
 
-    let application_id = re_sdk::ApplicationId::try_new(
+    let application_id = dl_sdk::ApplicationId::try_new(
         application_id.as_nonempty_str("store_info.application_id")?,
     )
     .map_err(|err| CError::new(CErrorCode::InvalidStringArgument, &err.to_string()))?;
 
     let mut rec_builder = RecordingStreamBuilder::new(application_id)
         //.store_id(recording_id.clone()) // TODO(andreas): Expose store id.
-        .store_source(re_sdk::external::re_log_types::StoreSource::CSdk)
+        .store_source(dl_sdk::external::dl_log_types::StoreSource::CSdk)
         .default_enabled(default_enabled);
 
     if let Some(recording_id) = recording_id.as_optional_str("recording_id")? {
@@ -676,7 +676,7 @@ pub extern "C" fn rr_recording_stream_free(id: CRecordingStream) {
             drop(stream);
         }
     } else {
-        // ⚠️ Don't use `re_log` here since it goes through `tracing` which _also_ may have shut down thread locals at this point, causing a panic when accessing them.
+        // ⚠️ Don't use `dl_log` here since it goes through `tracing` which _also_ may have shut down thread locals at this point, causing a panic when accessing them.
         eprintln!(
             "rr_recording_stream_free called on a thread that is shutting down and can no longer access thread locals. We can't handle this and have to ignore this call."
         );
@@ -747,8 +747,8 @@ pub unsafe extern "C" fn rr_recording_stream_flush_blocking(
             && let Some(error) = unsafe { error.as_mut() }
         {
             let code = match &err {
-                re_sdk::sink::SinkFlushError::Timeout => CErrorCode::RecordingStreamFlushTimeout,
-                re_sdk::sink::SinkFlushError::Failed { .. } => {
+                dl_sdk::sink::SinkFlushError::Timeout => CErrorCode::RecordingStreamFlushTimeout,
+                dl_sdk::sink::SinkFlushError::Failed { .. } => {
                     CErrorCode::RecordingStreamFlushFailure
                 }
             };
@@ -768,20 +768,20 @@ fn rr_recording_stream_set_sinks_impl(
 
     let raw_sinks = unsafe { std::slice::from_raw_parts_mut(raw_sinks, num_sinks as usize) };
 
-    let mut sinks: Vec<Box<dyn re_sdk::sink::LogSink>> = Vec::with_capacity(num_sinks as usize);
+    let mut sinks: Vec<Box<dyn dl_sdk::sink::LogSink>> = Vec::with_capacity(num_sinks as usize);
     for sink in raw_sinks {
         match sink {
             CLogSink::GrpcSink { grpc } => {
                 let uri = grpc
                     .url
                     .as_nonempty_str("url")?
-                    .parse::<re_sdk::external::re_uri::ProxyUri>()
+                    .parse::<dl_sdk::external::dl_uri::ProxyUri>()
                     .map_err(|err| CError::new(CErrorCode::InvalidServerUrl, &err.to_string()))?;
-                sinks.push(Box::new(re_sdk::sink::GrpcSink::new(uri)));
+                sinks.push(Box::new(dl_sdk::sink::GrpcSink::new(uri)));
             }
             CLogSink::FileSink { file } => {
                 let path = file.path.as_nonempty_str("path")?;
-                sinks.push(Box::new(re_sdk::sink::FileSink::new(path).map_err(
+                sinks.push(Box::new(dl_sdk::sink::FileSink::new(path).map_err(
                     |err| {
                         CError::new(
                             CErrorCode::RecordingStreamSaveFailure,
@@ -808,19 +808,19 @@ fn rr_recording_stream_set_sinks_impl(
                     .iter()
                     .map(|origin| Ok(origin.as_nonempty_str("cors_allow_origin")?.to_owned()))
                     .try_collect()?;
-                let server_options = re_sdk::ServerOptions {
-                    playback_behavior: re_sdk::PlaybackBehavior::from_newest_first(
+                let server_options = dl_sdk::ServerOptions {
+                    playback_behavior: dl_sdk::PlaybackBehavior::from_newest_first(
                         grpc_server.newest_first,
                     ),
                     memory_limit: grpc_server
                         .server_memory_limit
                         .as_maybe_empty_str("server_memory_limit")?
-                        .parse::<re_sdk::MemoryLimit>()
+                        .parse::<dl_sdk::MemoryLimit>()
                         .map_err(|err| CError::new(CErrorCode::InvalidMemoryLimit, &err))?,
                     cors_allowed_origins,
                 };
                 sinks.push(Box::new(
-                    re_sdk::grpc_server::GrpcServerSink::new(
+                    dl_sdk::grpc_server::GrpcServerSink::new(
                         bind_ip,
                         grpc_server.port,
                         server_options,
@@ -898,12 +898,12 @@ fn rr_recording_stream_serve_grpc_impl(
         .iter()
         .map(|s| Ok(s.as_nonempty_str("cors_allow_origin")?.to_owned()))
         .try_collect()?;
-    let server_options = re_sdk::ServerOptions {
-        playback_behavior: re_sdk::PlaybackBehavior::from_newest_first(newest_first),
+    let server_options = dl_sdk::ServerOptions {
+        playback_behavior: dl_sdk::PlaybackBehavior::from_newest_first(newest_first),
 
         memory_limit: server_memory_limit
             .as_maybe_empty_str("server_memory_limit")?
-            .parse::<re_sdk::MemoryLimit>()
+            .parse::<dl_sdk::MemoryLimit>()
             .map_err(|err| CError::new(CErrorCode::InvalidMemoryLimit, &err))?,
 
         cors_allowed_origins,
@@ -960,7 +960,7 @@ fn rr_recording_stream_spawn_impl(
     let stream = recording_stream(stream)?;
 
     let spawn_opts = if spawn_opts.is_null() {
-        re_sdk::SpawnOptions::default()
+        dl_sdk::SpawnOptions::default()
     } else {
         let spawn_opts = ptr::try_ptr_as_ref(spawn_opts, "spawn_opts")?;
         spawn_opts.as_rust()?
@@ -1125,7 +1125,7 @@ fn rr_recording_stream_log_impl(
 ) -> Result<(), CError> {
     // Create row-id as early as possible. It has a timestamp and is used to estimate e2e latency.
     // TODO(emilk): move to before we arrow-serialize the data
-    let row_id = re_sdk::log::RowId::new();
+    let row_id = dl_sdk::log::RowId::new();
 
     let stream = recording_stream(stream)?;
 
@@ -1156,7 +1156,7 @@ fn rr_recording_stream_log_impl(
             let array = unsafe { FFI_ArrowArray::from_raw(array) }; // Move out from `batches`
             let values = unsafe { arrow_array_from_c_ffi(array, datatype) }?;
             let batch =
-                re_sdk::SerializedComponentBatch::new(values, component_type.descriptor.clone());
+                dl_sdk::SerializedComponentBatch::new(values, component_type.descriptor.clone());
             components.insert(batch.descriptor.component, batch);
         }
     }
@@ -1398,7 +1398,7 @@ pub unsafe extern "C" fn _rr_escape_entity_path_part(part: CStringView) -> *cons
         return std::ptr::null();
     };
 
-    let part = re_sdk::EntityPathPart::from(part).escaped_string();
+    let part = dl_sdk::EntityPathPart::from(part).escaped_string();
 
     let Ok(part) = CString::new(part) else {
         return std::ptr::null();

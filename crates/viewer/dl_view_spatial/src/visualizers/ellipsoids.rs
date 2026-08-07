@@ -1,0 +1,236 @@
+use std::iter;
+
+use dl_chunk_store::external::dl_chunk::ChunkComponentIterItem;
+use dl_sdk_types::Archetype as _;
+use dl_sdk_types::archetypes::Ellipsoids3D;
+use dl_sdk_types::components::{ClassId, Color, FillMode, HalfSize3D, Radius, ShowLabels};
+use dl_sdk_types::reflection::Enum as _;
+use dl_sdk_types::{ArrowString, components};
+use dl_viewer_context::{
+    IdentifiedViewSystem, QueryContext, ViewClass as _, ViewContext, ViewContextCollection,
+    ViewQuery, ViewSystemExecutionError, VisualizerExecutionOutput, VisualizerQueryInfo,
+    VisualizerSystem,
+};
+
+use super::SpatialViewVisualizerData;
+use super::utilities::{ProcMeshBatch, ProcMeshDrawableBuilder};
+use crate::contexts::SpatialSceneVisualizerInstructionContext;
+use crate::proc_mesh;
+
+// ---
+#[derive(Default)]
+pub struct Ellipsoids3DVisualizer;
+
+// NOTE: Do not put profile scopes in these methods. They are called for all entities and all
+// timestamps within a time range -- it's _a lot_.
+impl Ellipsoids3DVisualizer {
+    fn process_data<'a>(
+        builder: &mut ProcMeshDrawableBuilder<'_>,
+        query_context: &QueryContext<'_>,
+        ent_context: &SpatialSceneVisualizerInstructionContext<'_>,
+        batches: impl Iterator<Item = Ellipsoids3DComponentData<'a>>,
+    ) -> Result<(), ViewSystemExecutionError> {
+        for batch in batches {
+            // TODO(kpreid): subdivisions should be configurable, and possibly dynamic based on
+            // either world size or screen size (depending on application).
+            let subdivisions = match batch.fill_mode {
+                FillMode::DenseWireframe => 2, // Don't make it too crowded - let the user see inside the mesh.
+                FillMode::Solid | FillMode::TransparentFillMajorWireframe => 6, // Smooth, but not too CPU/GPU intensive
+                FillMode::MajorWireframe => 12, // Three smooth ellipses
+            };
+            let proc_mesh_key = proc_mesh::ProcMeshKey::Sphere {
+                subdivisions,
+                axes_only: batch.fill_mode.axes_only(),
+            };
+
+            builder.add_batch(
+                query_context,
+                ent_context,
+                Ellipsoids3D::descriptor_colors().component,
+                Ellipsoids3D::descriptor_line_radii().component,
+                Ellipsoids3D::descriptor_show_labels().component,
+                glam::Affine3A::IDENTITY,
+                ProcMeshBatch {
+                    half_sizes: batch.half_sizes,
+                    centers: batch.centers,
+                    rotation_axis_angles: batch.rotation_axis_angles.as_slice(),
+                    quaternions: batch.quaternions,
+                    meshes: iter::repeat(proc_mesh_key),
+                    fill_modes: iter::repeat(batch.fill_mode),
+                    line_radii: batch.line_radii,
+                    colors: batch.colors,
+                    labels: &batch.labels,
+                    show_labels: batch.show_labels,
+                    class_ids: batch.class_ids,
+                },
+            )?;
+        }
+
+        Ok(())
+    }
+}
+
+// ---
+
+struct Ellipsoids3DComponentData<'a> {
+    // Point of views
+    half_sizes: &'a [HalfSize3D],
+
+    // Clamped to edge
+    centers: &'a [components::Translation3D],
+    rotation_axis_angles: ChunkComponentIterItem<components::RotationAxisAngle>,
+    quaternions: &'a [components::RotationQuat],
+    colors: &'a [Color],
+    line_radii: &'a [Radius],
+    labels: Vec<ArrowString>,
+    class_ids: &'a [ClassId],
+
+    // Non-repeated
+    show_labels: Option<ShowLabels>,
+    fill_mode: FillMode,
+}
+
+impl IdentifiedViewSystem for Ellipsoids3DVisualizer {
+    fn identifier() -> dl_viewer_context::ViewSystemIdentifier {
+        dl_viewer_context::external::dl_string_interner::intern_static!(
+            dl_viewer_context::ViewSystemIdentifier,
+            "Ellipsoids3D"
+        )
+    }
+}
+
+impl VisualizerSystem for Ellipsoids3DVisualizer {
+    fn visualizer_query_info(
+        &self,
+        _app_options: &dl_viewer_context::AppOptions,
+    ) -> VisualizerQueryInfo {
+        VisualizerQueryInfo::single_required_component::<HalfSize3D>(
+            &Ellipsoids3D::descriptor_half_sizes(),
+            &Ellipsoids3D::all_components(),
+        )
+    }
+
+    fn affinity(&self) -> Option<dl_sdk_types::ViewClassIdentifier> {
+        Some(crate::SpatialView3D::identifier())
+    }
+
+    fn execute(
+        &self,
+        ctx: &ViewContext<'_>,
+        view_query: &ViewQuery<'_>,
+        context_systems: &ViewContextCollection,
+    ) -> Result<VisualizerExecutionOutput, ViewSystemExecutionError> {
+        let output = VisualizerExecutionOutput::default();
+        let mut data = SpatialViewVisualizerData::default();
+        let mut builder = ProcMeshDrawableBuilder::new(
+            &mut data,
+            ctx.viewer_ctx.render_ctx(),
+            view_query,
+            &output,
+            "ellipsoids",
+        );
+
+        use super::entity_iterator::process_archetype;
+        process_archetype::<Ellipsoids3D, _, _>(
+            ctx,
+            view_query,
+            context_systems,
+            &output,
+            self,
+            |ctx, spatial_ctx, results| {
+                let all_half_sizes =
+                    results.iter_required(Ellipsoids3D::descriptor_half_sizes().component);
+                if all_half_sizes.is_empty() {
+                    return Ok(());
+                }
+
+                // TODO(andreas): Introduce a utility for this?
+                let num_ellipsoids: usize = all_half_sizes
+                    .chunks()
+                    .iter()
+                    .flat_map(|chunk| chunk.iter_slices::<[f32; 3]>())
+                    .map(|vectors| vectors.len())
+                    .sum();
+                if num_ellipsoids == 0 {
+                    return Ok(());
+                }
+
+                // Ideally we would reserve space here, but we don't know the mesh subdivision yet,
+                // and this will become moot when we switch to instanced meshes.
+                // line_builder.reserve_strips(num_ellipsoids * sphere_mesh.line_strips.len())?;
+                // line_builder.reserve_vertices(num_ellipsoids * sphere_mesh.vertex_count)?;
+                let all_centers =
+                    results.iter_optional(Ellipsoids3D::descriptor_centers().component);
+                let all_rotation_axis_angles = results
+                    .iter_optional(Ellipsoids3D::descriptor_rotation_axis_angles().component);
+                let all_quaternions =
+                    results.iter_optional(Ellipsoids3D::descriptor_quaternions().component);
+                let all_colors = results.iter_optional(Ellipsoids3D::descriptor_colors().component);
+                let all_line_radii =
+                    results.iter_optional(Ellipsoids3D::descriptor_line_radii().component);
+                let all_fill_modes =
+                    results.iter_optional(Ellipsoids3D::descriptor_fill_mode().component);
+                let all_labels = results.iter_optional(Ellipsoids3D::descriptor_labels().component);
+                let all_class_ids =
+                    results.iter_optional(Ellipsoids3D::descriptor_class_ids().component);
+                let all_show_labels =
+                    results.iter_optional(Ellipsoids3D::descriptor_show_labels().component);
+
+                let data = dl_query::range_zip_1x9(
+                    all_half_sizes.slice::<[f32; 3]>(),
+                    all_centers.slice::<[f32; 3]>(),
+                    all_rotation_axis_angles.component_slow::<components::RotationAxisAngle>(),
+                    all_quaternions.slice::<[f32; 4]>(),
+                    all_colors.slice::<u32>(),
+                    all_line_radii.slice::<f32>(),
+                    all_fill_modes.slice::<u8>(),
+                    all_labels.slice::<String>(),
+                    all_class_ids.slice::<u16>(),
+                    all_show_labels.slice::<bool>(),
+                )
+                .map(
+                    |(
+                        _index,
+                        half_sizes,
+                        centers,
+                        rotation_axis_angles,
+                        quaternions,
+                        colors,
+                        line_radii,
+                        fill_modes,
+                        labels,
+                        class_ids,
+                        show_labels,
+                    )| {
+                        Ellipsoids3DComponentData {
+                            half_sizes: bytemuck::cast_slice(half_sizes),
+                            centers: centers.map_or(&[], bytemuck::cast_slice),
+                            rotation_axis_angles: rotation_axis_angles.unwrap_or_default(),
+                            quaternions: quaternions.map_or(&[], bytemuck::cast_slice),
+                            colors: colors.map_or(&[], |colors| bytemuck::cast_slice(colors)),
+                            line_radii: line_radii
+                                .map_or(&[], |line_radii| bytemuck::cast_slice(line_radii)),
+                            // fill mode is currently a non-repeated component
+                            fill_mode: fill_modes
+                                .and_then(|s| FillMode::from_integer_slice(s).next()?)
+                                .unwrap_or_default(),
+                            labels: labels.unwrap_or_default(),
+                            class_ids: class_ids
+                                .map_or(&[], |class_ids| bytemuck::cast_slice(class_ids)),
+                            show_labels: show_labels
+                                .map(|b| !b.is_empty() && b.value(0))
+                                .map(Into::into),
+                        }
+                    },
+                );
+
+                Self::process_data(&mut builder, ctx, spatial_ctx, data)?;
+
+                Ok(())
+            },
+        )?;
+
+        let draw_data = builder.into_draw_data()?;
+        Ok(output.with_draw_data(draw_data).with_visualizer_data(data))
+    }
+}

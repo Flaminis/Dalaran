@@ -7,14 +7,14 @@ use anyhow::Context as _;
 use arrow::compute::kernels::cast_utils::Parser as _;
 use itertools::Itertools as _;
 
-use re_build_info::CrateVersion;
-use re_chunk::external::crossbeam;
-use re_chunk::{Chunk, ChunkId, RowId, TimeInt, TimelineName};
-use re_chunk_store::{ChunkStore, ChunkTrackingMode};
-use re_quota_channel::send_crossbeam;
-use re_sdk::external::arrow;
-use re_sdk::external::nohash_hasher::IntMap;
-use re_sdk::{Archetype as _, ComponentIdentifier, EntityPath, StoreId, StoreKind, Timeline};
+use dl_build_info::CrateVersion;
+use dl_chunk::external::crossbeam;
+use dl_chunk::{Chunk, ChunkId, RowId, TimeInt, TimelineName};
+use dl_chunk_store::{ChunkStore, ChunkTrackingMode};
+use dl_quota_channel::send_crossbeam;
+use dl_sdk::external::arrow;
+use dl_sdk::external::nohash_hasher::IntMap;
+use dl_sdk::{Archetype as _, ComponentIdentifier, EntityPath, StoreId, StoreKind, Timeline};
 
 use crate::commands::read_rrd_streams_from_file_or_stdin;
 
@@ -114,7 +114,7 @@ impl SplitCommand {
         }
 
         let now = std::time::Instant::now();
-        re_log::info!(srcs = ?path_to_input_rrd, "split started");
+        dl_log::info!(srcs = ?path_to_input_rrd, "split started");
 
         // TODO(RR-941): multi-recording RRD files need to go away.
         let mut stores = BTreeMap::new();
@@ -127,19 +127,19 @@ impl SplitCommand {
         // activations), so that we can properly rebuild the final RRD files.
         //
         // TODO(RR-1075): recordings should not contain anything but stateless data.
-        let mut meta_messages: HashMap<StoreId, Vec<re_log_types::LogMsg>> = HashMap::default();
+        let mut meta_messages: HashMap<StoreId, Vec<dl_log_types::LogMsg>> = HashMap::default();
 
         {
             // Load all the data & metadata for all the stores present in the file.
 
-            re_log::info!("processing input…");
+            dl_log::info!("processing input…");
 
             let mut current_store_id = None;
             let mut last_checkpoint = std::time::Instant::now();
             for (msg_nr, (_source, res)) in rx_decoder.iter().enumerate() {
                 match res {
                     Ok(msg) => match &msg {
-                        re_log_types::LogMsg::SetStoreInfo(set_store_info) => {
+                        dl_log_types::LogMsg::SetStoreInfo(set_store_info) => {
                             let store_id = set_store_info.info.store_id.clone();
                             current_store_id = Some(store_id.clone());
 
@@ -148,12 +148,12 @@ impl SplitCommand {
                             stores.entry(store_id.clone()).or_insert_with(|| {
                                 ChunkStore::new(
                                     store_id,
-                                    re_chunk_store::ChunkStoreConfig::ALL_DISABLED,
+                                    dl_chunk_store::ChunkStoreConfig::ALL_DISABLED,
                                 )
                             });
                         }
 
-                        re_log_types::LogMsg::ArrowMsg(store_id, msg) => {
+                        dl_log_types::LogMsg::ArrowMsg(store_id, msg) => {
                             let Some(store) = stores.get_mut(store_id) else {
                                 anyhow::bail!("unknown store ID: {store_id:?}");
                             };
@@ -161,9 +161,9 @@ impl SplitCommand {
                             store.insert_chunk(&Arc::new(chunk))?;
                         }
 
-                        re_log_types::LogMsg::BlueprintActivationCommand(_) => {
+                        dl_log_types::LogMsg::BlueprintActivationCommand(_) => {
                             let Some(current_store_id) = current_store_id.clone() else {
-                                re_log::warn!(
+                                dl_log::warn!(
                                     "found BlueprintActivationCommand without an active store, discarding"
                                 );
                                 continue;
@@ -174,7 +174,7 @@ impl SplitCommand {
                     },
 
                     Err(err) => {
-                        re_log::error!(err = re_error::format(err));
+                        dl_log::error!(err = dl_error::format(err));
                     }
                 }
 
@@ -184,22 +184,22 @@ impl SplitCommand {
                     let msg_per_second =
                         check_in_interval as f64 / last_checkpoint.elapsed().as_secs_f64();
                     last_checkpoint = std::time::Instant::now();
-                    re_log::info!(
+                    dl_log::info!(
                         "processed {msg_count} messages so far, current speed is {msg_per_second:.2} msg/s"
                     );
-                    re_tracing::reexports::puffin::GlobalProfiler::lock().new_frame();
+                    dl_tracing::reexports::puffin::GlobalProfiler::lock().new_frame();
                 }
             }
         }
 
         let (cutoff_timeline, cutoff_times) = self.compute_cutoff_times(&stores)?;
-        re_log::info!(
+        dl_log::info!(
             cutoff_timeline = %cutoff_timeline.name(),
             cutoff_times = cutoff_times.iter().map(|t| time_to_human_string(cutoff_timeline, *t)).join(", "),
             "extracted cutoff times",
         );
 
-        re_log::info!("extracting keyframes…");
+        dl_log::info!("extracting keyframes…");
         let mut keyframes_per_entity: IntMap<_, Vec<_>> = IntMap::default();
         for store in stores.values() {
             for entity in store.all_entities() {
@@ -212,7 +212,7 @@ impl SplitCommand {
                 }
             }
         }
-        re_log::info!(
+        dl_log::info!(
             timeline = %cutoff_timeline.name(),
             keyframes = ?keyframes_per_entity
                 .iter()
@@ -245,21 +245,21 @@ impl SplitCommand {
                 .collect_vec()
         };
 
-        re_log::debug_assert!(
+        dl_log::debug_assert!(
             cutoff_times.len() == path_to_output_rrds.len() + 1,
             "there must always be as many cutoff times as there are output paths (plus 1): got {} times for {} paths instead",
             cutoff_times.len(),
             path_to_output_rrds.len() + 1,
         );
 
-        re_log::info!(?path_to_output_rrds, "encoding…");
+        dl_log::info!(?path_to_output_rrds, "encoding…");
 
         let (txs_encoding, rxs_encoding): (Vec<_>, Vec<_>) =
             std::iter::repeat_with(|| crossbeam::channel::bounded(16))
                 .take(path_to_output_rrds.len())
                 .unzip();
 
-        type Receiver = re_log::Receiver<(StoreId, Vec<re_log_types::LogMsg>)>;
+        type Receiver = dl_log::Receiver<(StoreId, Vec<dl_log_types::LogMsg>)>;
         let spawn_encoding_thread = move |split_idx, path: String, msgs: Receiver| {
             std::thread::Builder::new()
                 .name(format!("rerun-rrd-split-out-{split_idx}"))
@@ -276,8 +276,8 @@ impl SplitCommand {
                             // TODO(cmc): encoding options & version should match the original.
                             let version = CrateVersion::LOCAL;
                             let options =
-                                re_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
-                            re_log_encoding::Encoder::new_eager(version, options, &mut rrd_out)
+                                dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+                            dl_log_encoding::Encoder::new_eager(version, options, &mut rrd_out)
                                 .context("couldn't init encoder")?
                         };
 
@@ -299,15 +299,15 @@ impl SplitCommand {
                             for mut msg in msgs {
                                 if new_store_id.kind() != StoreKind::Blueprint {
                                     match &mut msg {
-                                        re_log_types::LogMsg::SetStoreInfo(info) => {
+                                        dl_log_types::LogMsg::SetStoreInfo(info) => {
                                             info.info.store_id = new_store_id.clone();
                                         }
 
-                                        re_log_types::LogMsg::ArrowMsg(id, _) => {
+                                        dl_log_types::LogMsg::ArrowMsg(id, _) => {
                                             *id = new_store_id.clone();
                                         }
 
-                                        re_log_types::LogMsg::BlueprintActivationCommand(_) => {}
+                                        dl_log_types::LogMsg::BlueprintActivationCommand(_) => {}
                                     }
                                 }
 
@@ -342,9 +342,9 @@ impl SplitCommand {
                 let chunks = store
                     .iter_physical_chunks()
                     .map(|chunk| {
-                        Ok(re_log_types::LogMsg::ArrowMsg(
+                        Ok(dl_log_types::LogMsg::ArrowMsg(
                             store_id.clone(),
-                            re_log_types::ArrowMsg {
+                            dl_log_types::ArrowMsg {
                                 chunk_id: *chunk.id(),
                                 batch: chunk.to_record_batch()?,
                                 on_release: None,
@@ -377,7 +377,7 @@ impl SplitCommand {
         let file_size_to_string = |size: Option<u64>| {
             size.map_or_else(
                 || "<unknown>".to_owned(),
-                |size| re_format::format_bytes(size as _),
+                |size| dl_format::format_bytes(size as _),
             )
         };
 
@@ -392,7 +392,7 @@ impl SplitCommand {
             rrd_out_sizes.push(file_size_to_string(Some(rrd_out_size)));
         }
 
-        re_log::info!(
+        dl_log::info!(
             src = path_to_input_rrd,
             src_size_bytes = %file_size_to_string(rrd_in_size),
             dsts = ?rrd_out_paths,
@@ -459,7 +459,7 @@ impl SplitCommand {
             cutoff_timeline
         };
 
-        re_log::info!(
+        dl_log::info!(
             name = %cutoff_timeline.name(),
             typ = %cutoff_timeline.typ(),
             "extracted cutoff timeline information",
@@ -535,37 +535,37 @@ impl SplitCommand {
         cutoff_timeline: Timeline,
         cutoff_times: &[TimeInt],
         keyframes_per_entity: &IntMap<EntityPath, Vec<TimeInt>>,
-        txs_encoding: &[re_log::Sender<(StoreId, Vec<re_log_types::LogMsg>)>],
+        txs_encoding: &[dl_log::Sender<(StoreId, Vec<dl_log_types::LogMsg>)>],
     ) -> anyhow::Result<()> {
         // `VideoStream`s must be split on a keyframe, always.
         //
         // The solution is to find the closest past keyframe, and then duplicate the entire stream
         // from there up to the cutoff point. See `extract_keyframes`.
         let video_sample_identifier =
-            re_sdk_types::archetypes::VideoStream::descriptor_sample().component;
+            dl_sdk_types::archetypes::VideoStream::descriptor_sample().component;
 
         // `Transform3D`s can be multiplexed on a single entity stream using `CoordinateFrame`s,
         // making them completely opaque to the query engine.
         //
         // The solution is to always duplicate the entire stream up to the cutoff point whenever that happens.
         let transform_parent_frame_identifier =
-            re_sdk_types::archetypes::Transform3D::descriptor_parent_frame().component;
+            dl_sdk_types::archetypes::Transform3D::descriptor_parent_frame().component;
         let transform_child_frame_identifier =
-            re_sdk_types::archetypes::Transform3D::descriptor_child_frame().component;
+            dl_sdk_types::archetypes::Transform3D::descriptor_child_frame().component;
 
         // `Pinhole`s can be multiplexed on a single entity stream using `CoordinateFrame`s,
         // making them completely opaque to the query engine.
         //
         // The solution is to always duplicate the entire stream up to the cutoff point whenever that happens.
         let pinhole_parent_frame_identifier =
-            re_sdk_types::archetypes::Pinhole::descriptor_parent_frame().component;
+            dl_sdk_types::archetypes::Pinhole::descriptor_parent_frame().component;
         let pinhole_child_frame_identifier =
-            re_sdk_types::archetypes::Pinhole::descriptor_child_frame().component;
+            dl_sdk_types::archetypes::Pinhole::descriptor_child_frame().component;
 
         let special_components: HashSet<_> = itertools::chain!(
             [video_sample_identifier],
-            re_sdk_types::archetypes::Transform3D::all_component_identifiers(),
-            re_sdk_types::archetypes::Pinhole::all_component_identifiers(),
+            dl_sdk_types::archetypes::Transform3D::all_component_identifiers(),
+            dl_sdk_types::archetypes::Pinhole::all_component_identifiers(),
         )
         .collect();
 
@@ -588,7 +588,7 @@ impl SplitCommand {
         {
             let mut all_chunks_in_split = Vec::new();
 
-            re_log::debug!(
+            dl_log::debug!(
                 cutoff_timeline = %cutoff_timeline.name(),
                 cutoff_time = %time_to_human_string(cutoff_timeline, cutoff_time),
                 "splitting…"
@@ -648,7 +648,7 @@ impl SplitCommand {
                         let cutoff_time_revised = keyframes[p];
 
                         if cutoff_time_revised < cutoff_time {
-                            re_log::info!(
+                            dl_log::info!(
                                 %entity,
                                 cutoff_timeline = %cutoff_timeline.name(),
                                 cutoff_time = %time_to_human_string(cutoff_timeline, cutoff_time),
@@ -701,7 +701,7 @@ impl SplitCommand {
                 if entity_has_multiplexed_transforms_on_timeline
                     || entity_has_multiplexed_pinholes_on_timeline
                 {
-                    re_log::info!(
+                    dl_log::info!(
                         %entity,
                         cutoff_timeline = %cutoff_timeline.name(),
                         cutoff_time = %time_to_human_string(cutoff_timeline, cutoff_time),
@@ -709,8 +709,8 @@ impl SplitCommand {
                     );
 
                     let components = itertools::chain!(
-                        re_sdk_types::archetypes::Transform3D::all_component_identifiers(),
-                        re_sdk_types::archetypes::Pinhole::all_component_identifiers(),
+                        dl_sdk_types::archetypes::Transform3D::all_component_identifiers(),
+                        dl_sdk_types::archetypes::Pinhole::all_component_identifiers(),
                     )
                     .collect();
                     let bootstrap = false;
@@ -766,9 +766,9 @@ impl SplitCommand {
                         .map(move |(original_chunk_id, chunk)| {
                             (
                                 original_chunk_id,
-                                re_log_types::LogMsg::ArrowMsg(
+                                dl_log_types::LogMsg::ArrowMsg(
                                     store.id(),
-                                    re_log_types::ArrowMsg {
+                                    dl_log_types::ArrowMsg {
                                         chunk_id: *chunk.id(),
                                         batch: chunk
                                             .to_record_batch()
@@ -795,10 +795,10 @@ fn extract_keyframes(
     cutoff_timeline: Timeline,
 ) -> Vec<TimeInt> {
     let codec = {
-        let codec_identifier = re_sdk_types::archetypes::VideoStream::descriptor_codec().component;
+        let codec_identifier = dl_sdk_types::archetypes::VideoStream::descriptor_codec().component;
         let results = store.latest_at_relevant_chunks(
-            re_chunk_store::ChunkTrackingMode::PanicOnMissing,
-            &re_chunk_store::LatestAtQuery::new(*cutoff_timeline.name(), TimeInt::MAX),
+            dl_chunk_store::ChunkTrackingMode::PanicOnMissing,
+            &dl_chunk_store::LatestAtQuery::new(*cutoff_timeline.name(), TimeInt::MAX),
             entity_path,
             codec_identifier,
         );
@@ -807,7 +807,7 @@ fn extract_keyframes(
             .chunks
             .iter()
             .flat_map(|chunk| {
-                chunk.iter_component::<re_sdk_types::components::VideoCodec>(codec_identifier)
+                chunk.iter_component::<dl_sdk_types::components::VideoCodec>(codec_identifier)
             })
             .find_map(|data| data.as_slice().first().copied())
     };
@@ -816,10 +816,10 @@ fn extract_keyframes(
         return vec![];
     };
 
-    let sample_identifier = re_sdk_types::archetypes::VideoStream::descriptor_sample().component;
+    let sample_identifier = dl_sdk_types::archetypes::VideoStream::descriptor_sample().component;
     let results = store.range_relevant_chunks(
-        re_chunk_store::ChunkTrackingMode::PanicOnMissing,
-        &re_chunk_store::RangeQuery::everything(*cutoff_timeline.name()),
+        dl_chunk_store::ChunkTrackingMode::PanicOnMissing,
+        &dl_chunk_store::RangeQuery::everything(*cutoff_timeline.name()),
         entity_path,
         sample_identifier,
     );
@@ -828,7 +828,7 @@ fn extract_keyframes(
     for chunk in &results.chunks {
         let it = itertools::izip!(
             chunk.iter_indices(cutoff_timeline.name()),
-            chunk.iter_component::<re_sdk_types::components::VideoSample>(sample_identifier)
+            chunk.iter_component::<dl_sdk_types::components::VideoSample>(sample_identifier)
         );
 
         for ((time, _row_id), sample) in it {
@@ -837,9 +837,9 @@ fn extract_keyframes(
             };
 
             let sample = sample.0.inner().as_slice();
-            match re_video::is_start_of_gop(sample, codec.into()) {
+            match dl_video::is_start_of_gop(sample, codec.into()) {
                 Ok(true) => {
-                    re_log::debug!(
+                    dl_log::debug!(
                         entity = %entity_path,
                         time = %time_to_human_string(cutoff_timeline, time),
                         "detected video keyframe",
@@ -851,7 +851,7 @@ fn extract_keyframes(
                 Ok(false) => {}
 
                 Err(err) => {
-                    re_log::warn!(entity = %entity_path, chunk = %chunk.id(), %err, "keyframe detection failed");
+                    dl_log::warn!(entity = %entity_path, chunk = %chunk.id(), %err, "keyframe detection failed");
                 }
             }
         }
@@ -872,17 +872,17 @@ fn extract_chunks_for_single_split(
     end_exclusive: TimeInt,
     bootstrap: bool,
 ) -> impl Iterator<Item = (ChunkId, Chunk)> {
-    re_log::debug_assert!(
+    dl_log::debug_assert!(
         start_inclusive < end_exclusive,
         "start_inclusive={}, end_exclusive={}",
         time_to_human_string(timeline, start_inclusive),
         time_to_human_string(timeline, end_exclusive),
     );
 
-    let query_bootstrap = re_chunk_store::LatestAtQuery::new(*timeline.name(), start_inclusive);
-    let query = re_chunk_store::RangeQuery::new(
+    let query_bootstrap = dl_chunk_store::LatestAtQuery::new(*timeline.name(), start_inclusive);
+    let query = dl_chunk_store::RangeQuery::new(
         *timeline.name(),
-        re_log_types::AbsoluteTimeRange::new(start_inclusive, end_exclusive.saturating_sub(1)),
+        dl_log_types::AbsoluteTimeRange::new(start_inclusive, end_exclusive.saturating_sub(1)),
     );
 
     // TODO(cmc): There are certainly opportunities to do better on the bootstrap path, especially
@@ -916,7 +916,7 @@ fn extract_chunks_for_single_split(
                     return vec![];
                 };
 
-                re_log::debug_assert!(chunk.num_rows() == 1);
+                dl_log::debug_assert!(chunk.num_rows() == 1);
 
                 let (time, _row_id) = chunk
                     .iter_indices(timeline.name())
@@ -987,7 +987,7 @@ fn extract_chunks_for_single_split(
 
             let end_idx = end_idx_excl.saturating_sub(1);
 
-            re_log::debug_assert!(
+            dl_log::debug_assert!(
                 start_inclusive.as_i64() <= times[start_idx]
                     && times[start_idx] < end_exclusive.as_i64(),
                 "{} <= {} < {}",
@@ -995,7 +995,7 @@ fn extract_chunks_for_single_split(
                 time_to_human_string(timeline, TimeInt::new_temporal(times[start_idx])),
                 time_to_human_string(timeline, end_exclusive),
             );
-            re_log::debug_assert!(
+            dl_log::debug_assert!(
                 start_inclusive.as_i64() <= times[end_idx]
                     && times[end_idx] < end_exclusive.as_i64(),
                 "{} <= {} < {}",
@@ -1022,7 +1022,7 @@ fn extract_chunks_for_single_split(
             };
 
             let already_exists = chunks.insert(original_chunk_id, chunk).is_some();
-            re_log::debug_assert!(!already_exists);
+            dl_log::debug_assert!(!already_exists);
         }
     }
 
@@ -1036,11 +1036,11 @@ fn time_from_human_string(timeline: Timeline, time_str: &str) -> anyhow::Result<
     // display Arrow data, and therefore the best way to parse it is to use the appropriate
     // Arrow parser.
     let mut time_parsed = match timeline.typ() {
-        re_log_types::TimeType::Sequence => arrow::datatypes::Int64Type::parse(time_str),
-        re_log_types::TimeType::DurationNs => {
+        dl_log_types::TimeType::Sequence => arrow::datatypes::Int64Type::parse(time_str),
+        dl_log_types::TimeType::DurationNs => {
             arrow::datatypes::DurationNanosecondType::parse(time_str)
         }
-        re_log_types::TimeType::TimestampNs => {
+        dl_log_types::TimeType::TimestampNs => {
             arrow::datatypes::TimestampNanosecondType::parse(time_str)
         }
     };
@@ -1065,13 +1065,13 @@ fn time_to_human_string(timeline: Timeline, time: TimeInt) -> String {
     // Arrow doesn't expose any easy way to re-use its internal formatters for simple scalars, so
     // just do whatever we can. It's for the filenames anyway, so the more control we have the better.
     let s = match timeline.typ() {
-        re_log_types::TimeType::Sequence => time.as_i64().to_string(),
+        dl_log_types::TimeType::Sequence => time.as_i64().to_string(),
 
-        re_log_types::TimeType::DurationNs => {
+        dl_log_types::TimeType::DurationNs => {
             format!("{:?}", std::time::Duration::from_nanos(time.as_i64() as _))
         }
 
-        re_log_types::TimeType::TimestampNs => {
+        dl_log_types::TimeType::TimestampNs => {
             if let Ok(ts) = jiff::Timestamp::from_nanosecond(time.as_i64() as _) {
                 ts.to_string()
             } else {

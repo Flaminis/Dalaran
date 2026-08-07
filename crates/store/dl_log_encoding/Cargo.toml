@@ -1,0 +1,100 @@
+[package]
+name = "dl_log_encoding"
+authors.workspace = true
+description = "Encode/decode and serialize/deserialize RRD streams"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+
+[features]
+default = []
+
+## Enable loading data from an .rrd file.
+decoder = ["dep:bytes", "dep:dl_async"]
+
+## Enable encoding of log messages to an .rrd file/stream.
+encoder = []
+
+## Enable streaming of .rrd files from HTTP.
+stream_from_http = [
+  "decoder",
+  "dep:ehttp",
+  "dep:js-sys",
+  "dep:dl_async",
+  "dep:wasm-bindgen",
+  "dep:web-sys",
+  "dep:web-time",
+]
+
+[dependencies]
+
+# Rerun:
+dl_arrow_util.workspace = true
+dl_async = { workspace = true, optional = true }
+dl_build_info.workspace = true
+dl_byte_size.workspace = true
+dl_chunk.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_protos.workspace = true
+dl_quota_channel.workspace = true
+dl_sorbet.workspace = true
+dl_span.workspace = true
+dl_tracing.workspace = true
+dl_types_core.workspace = true
+
+# External:
+arrow = { workspace = true, features = ["ipc"] }
+async-trait.workspace = true
+crossbeam.workspace = true
+futures.workspace = true
+itertools.workspace = true
+jiff.workspace = true
+lz4_flex = { workspace = true }
+parking_lot.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+url.workspace = true
+xxhash-rust.workspace = true
+
+# Optional external dependencies:
+bytes = { workspace = true, optional = true }
+ehttp = { workspace = true, optional = true, features = ["streaming"] }
+web-time = { workspace = true, optional = true }
+
+# Web dependencies:
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+js-sys = { workspace = true, optional = true }
+wasm-bindgen = { workspace = true, optional = true }
+web-sys = { workspace = true, optional = true, features = ["Window", "MessageEvent"] }
+
+[dev-dependencies]
+dl_arrow_util = { workspace = true, features = ["test"] }
+dl_sdk_types.workspace = true
+
+tempfile.workspace = true
+criterion.workspace = true
+insta.workspace = true
+mimalloc.workspace = true
+similar-asserts.workspace = true
+
+[lib]
+bench = false
+
+[[bench]]
+name = "msg_encode_benchmark"
+harness = false

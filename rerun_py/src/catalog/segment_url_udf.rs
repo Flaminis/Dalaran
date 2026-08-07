@@ -13,13 +13,13 @@ use datafusion_ffi::udf::FFI_ScalarUDF;
 use pyo3::types::PyCapsule;
 use pyo3::{Bound, PyResult, Python, pyclass, pymethods};
 
-use re_log::ResultExt as _;
-use re_log_types::{
+use dl_log::ResultExt as _;
+use dl_log_types::{
     AbsoluteTimeRange, DataPath, NonMinI64, TimeCell, TimeType, Timeline, TimelineName,
 };
-use re_tuid::Tuid;
-use re_types_core::{Loggable as _, SegmentId};
-use re_uri::{DatasetSegmentUri, Fragment, Origin, TimeSelection};
+use dl_tuid::Tuid;
+use dl_types_core::{Loggable as _, SegmentId};
+use dl_uri::{DatasetSegmentUri, Fragment, Origin, TimeSelection};
 
 #[derive(Debug)]
 struct SegmentUrlUdf {

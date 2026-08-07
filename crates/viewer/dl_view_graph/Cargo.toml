@@ -1,0 +1,43 @@
+[package]
+authors.workspace = true
+description = "A view that shows a graph (node-link diagram)."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_view_graph"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include = ["../../LICENSE-APACHE", "../../LICENSE-MIT", "**/*.rs", "Cargo.toml"]
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_byte_size = { workspace = true, features = ["egui"] }
+dl_data_ui.workspace = true
+dl_chunk.workspace = true
+dl_entity_db.workspace = true
+dl_format.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_query.workspace = true
+dl_view.workspace = true
+dl_tracing.workspace = true
+dl_sdk_types.workspace = true
+dl_ui.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport_blueprint.workspace = true
+
+ahash.workspace = true
+egui.workspace = true
+fjadra.workspace = true
+itertools.workspace = true
+nohash-hasher.workspace = true
+
+[dev-dependencies]
+dl_chunk_store.workspace = true
+dl_test_context.workspace = true
+dl_test_viewport.workspace = true

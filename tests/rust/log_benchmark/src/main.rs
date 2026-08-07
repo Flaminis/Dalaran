@@ -98,7 +98,7 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    rerun::external::re_log::setup_logging();
+    rerun::external::dl_log::setup_logging();
 
     #[cfg(debug_assertions)]
     println!("WARNING: Debug build, timings will be inaccurate!");
@@ -111,7 +111,7 @@ fn main() -> anyhow::Result<()> {
     } = Args::parse();
 
     // Start profiler first thing:
-    let mut profiler = re_tracing::Profiler::default();
+    let mut profiler = dl_tracing::Profiler::default();
     if profile {
         profiler.start();
     }
@@ -143,16 +143,16 @@ fn main() -> anyhow::Result<()> {
     // other end, so make sure we can encode/decode everything that was logged.
     if check && let Some(storage) = storage {
         use itertools::Itertools as _;
-        use rerun::external::re_log_encoding;
-        use rerun::external::re_log_encoding::ToTransport as _;
+        use rerun::external::dl_log_encoding;
+        use rerun::external::dl_log_encoding::ToTransport as _;
         let msgs: Vec<_> = storage
             .take()
             .into_iter()
-            .map(|msg| anyhow::Ok(msg.to_transport(re_log_encoding::rrd::Compression::LZ4)?))
+            .map(|msg| anyhow::Ok(msg.to_transport(dl_log_encoding::rrd::Compression::LZ4)?))
             .try_collect()?;
 
-        use rerun::external::re_log_encoding::ToApplication as _;
-        let mut app_id_injector = re_log_encoding::DummyApplicationIdInjector::new("dummy");
+        use rerun::external::dl_log_encoding::ToApplication as _;
+        let mut app_id_injector = dl_log_encoding::DummyApplicationIdInjector::new("dummy");
         let msgs: Vec<_> = msgs
             .into_iter()
             .map(|msg| anyhow::Ok(msg.to_application((&mut app_id_injector, None))?))

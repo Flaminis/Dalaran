@@ -1,6 +1,6 @@
 //! Benchmark for logging `Transform3D`
 
-use rerun::external::re_log;
+use rerun::external::dl_log;
 
 use crate::lcg;
 
@@ -31,13 +31,13 @@ struct Input {
 
 impl Transform3DCommand {
     pub fn run(self, rec: &rerun::RecordingStream) -> anyhow::Result<()> {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
         let input = std::hint::black_box(self.prepare());
         self.execute(rec, input)
     }
 
     fn prepare(&self) -> Input {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
 
         let mut lcg_state: i64 = 12345;
 
@@ -74,7 +74,7 @@ impl Transform3DCommand {
             time_steps.push(transforms);
         }
 
-        re_log::info!(
+        dl_log::info!(
             "Logging {} transforms across {} time steps ({} total log calls)",
             self.num_entities,
             self.num_time_steps,
@@ -85,7 +85,7 @@ impl Transform3DCommand {
     }
 
     fn execute(self, rec: &rerun::RecordingStream, input: Input) -> anyhow::Result<()> {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
 
         let Input { time_steps } = input;
         let total_log_calls = self.num_entities * self.num_time_steps;
@@ -93,10 +93,10 @@ impl Transform3DCommand {
         let start = std::time::Instant::now();
 
         for (time_index, transforms) in time_steps.into_iter().enumerate() {
-            re_tracing::profile_scope!("log_time_step");
+            dl_tracing::profile_scope!("log_time_step");
 
             for (entity_index, transform) in transforms.into_iter().enumerate() {
-                re_tracing::profile_scope!("log_entity");
+                dl_tracing::profile_scope!("log_entity");
 
                 let entity_path = format!("transform_{entity_index}");
 
@@ -116,7 +116,7 @@ impl Transform3DCommand {
 
         let elapsed = start.elapsed();
         let transforms_per_second = total_log_calls as f64 / elapsed.as_secs_f64();
-        re_log::info!(
+        dl_log::info!(
             "Logged {} transforms in {:.2?} ({:.0} transforms/second)",
             total_log_calls,
             elapsed,

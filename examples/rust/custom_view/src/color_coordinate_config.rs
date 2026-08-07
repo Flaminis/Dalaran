@@ -5,11 +5,11 @@
 //! reflection, and register an editor UI.
 
 use rerun::external::egui;
-use rerun::external::re_sdk_types::reflection::{
+use rerun::external::dl_sdk_types::reflection::{
     ArchetypeFieldFlags, ArchetypeFieldReflection, ArchetypeReflection,
 };
-use rerun::external::re_sdk_types::{ArchetypeName, ComponentDescriptor};
-use rerun::external::re_viewer_context::MaybeMutRef;
+use rerun::external::dl_sdk_types::{ArchetypeName, ComponentDescriptor};
+use rerun::external::dl_viewer_context::MaybeMutRef;
 
 /// Blueprint properties for the color coordinates view.
 pub struct ColorCoordinatesConfiguration;
@@ -36,8 +36,8 @@ impl ColorCoordinatesConfiguration {
 
     /// Reflection metadata for the custom archetype.
     ///
-    /// Register once with [`rerun::external::re_viewer::App::add_archetype_reflection`] to enable
-    /// `re_view::view_property_ui::<ColorCoordinatesConfiguration>`.
+    /// Register once with [`rerun::external::dl_viewer::App::add_archetype_reflection`] to enable
+    /// `dl_view::view_property_ui::<ColorCoordinatesConfiguration>`.
     pub fn reflection() -> ArchetypeReflection {
         ArchetypeReflection {
             display_name: <Self as rerun::Archetype>::display_name(),
@@ -67,7 +67,7 @@ impl rerun::Archetype for ColorCoordinatesConfiguration {
     }
 }
 
-impl rerun::external::re_sdk_types::ArchetypeReflectionMarker for ColorCoordinatesConfiguration {}
+impl rerun::external::dl_sdk_types::ArchetypeReflectionMarker for ColorCoordinatesConfiguration {}
 
 /// The different modes for displaying color coordinates in the custom view.
 ///

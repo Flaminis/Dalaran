@@ -11,6 +11,6 @@
   },
   "include": [
     "index.js",
-    "re_viewer.js",
+    "dl_viewer.js",
   ]
 }

@@ -102,7 +102,7 @@ pixi run py-build && pixi run uvpy -m pytest rerun_py/tests/unit/test_tensor.py
 
 # Profiling the Python SDK
 
-Set `RERUN_PUFFIN=1` to spawn a [`puffin_viewer`](https://github.com/EmbarkStudios/puffin) attached to the SDK on startup. The Rust side of the SDK then streams scopes (anything wrapped in `re_tracing::profile_function!` / `profile_scope!`) to the viewer for the lifetime of the process.
+Set `RERUN_PUFFIN=1` to spawn a [`puffin_viewer`](https://github.com/EmbarkStudios/puffin) attached to the SDK on startup. The Rust side of the SDK then streams scopes (anything wrapped in `dl_tracing::profile_function!` / `profile_scope!`) to the viewer for the lifetime of the process.
 
 ```sh
 RERUN_PUFFIN=1 pixi run uvpy your_script.py

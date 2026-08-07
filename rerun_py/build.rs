@@ -2,7 +2,7 @@ fn main() {
     // Required for `cargo build` to work on mac: https://pyo3.rs/main/building-and-distribution#macos
     pyo3_build_config::add_extension_module_link_args();
 
-    re_build_tools::export_build_info_vars_for_crate("rerun_py");
+    dl_build_tools::export_build_info_vars_for_crate("rerun_py");
 
     // Prevent builds without PYO3_CONFIG_FILE in isolated environments.
     // When uv or pip builds a package, they create an isolated virtual environment
@@ -13,7 +13,7 @@ fn main() {
     // pixi activation scripts. If you see this error, either:
     // 1. Run any `pixi run` command first (generates the config automatically)
     // 2. Run `pixi run ensure-pyo3-build-cfg ` to generate it manually
-    if re_build_tools::is_tracked_env_var_set("RERUN_BUILDING_WHEEL")
+    if dl_build_tools::is_tracked_env_var_set("RERUN_BUILDING_WHEEL")
         && is_isolated_build_environment()
     {
         eprintln!();
@@ -34,8 +34,8 @@ fn main() {
     }
 
     // Fail if bin/rerun is missing and we haven't specified it's ok.
-    if re_build_tools::is_tracked_env_var_set("RERUN_BUILDING_WHEEL")
-        && !re_build_tools::is_tracked_env_var_set("RERUN_ALLOW_MISSING_BIN")
+    if dl_build_tools::is_tracked_env_var_set("RERUN_BUILDING_WHEEL")
+        && !dl_build_tools::is_tracked_env_var_set("RERUN_ALLOW_MISSING_BIN")
     {
         #[cfg(target_os = "windows")]
         #[expect(clippy::unwrap_used)]
@@ -81,12 +81,12 @@ fn main() {
 fn is_isolated_build_environment() -> bool {
     // If PYO3_CONFIG_FILE is set, pyo3 uses stable config regardless of PYO3_PYTHON,
     // so isolated builds won't cause cache invalidation.
-    if re_build_tools::get_and_track_env_var("PYO3_CONFIG_FILE").is_ok() {
+    if dl_build_tools::get_and_track_env_var("PYO3_CONFIG_FILE").is_ok() {
         return false;
     }
 
     let python_path =
-        re_build_tools::get_and_track_env_var("PYO3_PYTHON").unwrap_or_else(|_| String::new());
+        dl_build_tools::get_and_track_env_var("PYO3_PYTHON").unwrap_or_else(|_| String::new());
 
     if python_path.is_empty() {
         return false;

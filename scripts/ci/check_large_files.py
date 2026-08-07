@@ -9,20 +9,20 @@ from pathlib import Path
 FILES_ALLOWED_TO_BE_LARGE = {
     "Cargo.lock",
     "CHANGELOG.md",
-    "crates/build/re_types_builder/src/codegen/cpp/mod.rs",  # TODO(andreas): This file should really be split up.
-    "crates/build/re_types_builder/src/codegen/python/mod.rs",
-    "crates/build/re_types_builder/src/reflection.rs",
-    "crates/store/re_dataframe/src/query.rs",
-    "crates/store/re_protos/proto/schema_snapshot.yaml",
-    "crates/store/re_protos/src/v1alpha1/rerun.cloud.v1alpha1.rs",
-    "crates/store/re_protos/src/v1alpha1/rerun.cloud.v1alpha1.ext.rs",
-    "crates/store/re_query/src/range_zip/generated.rs",
-    "crates/store/re_sdk_types/src/datatypes/tensor_buffer.rs",
-    "crates/store/re_sdk_types/src/reflection/mod.rs",
-    "crates/top/re_sdk/src/recording_stream.rs",
-    "crates/viewer/re_ui/data/Inter-Medium.otf",
-    "crates/viewer/re_viewer/data/app_icon_mac.png",
-    "crates/viewer/re_viewer/src/app.rs",  # TODO(emilk): break this up into smaller files
+    "crates/build/dl_types_builder/src/codegen/cpp/mod.rs",  # TODO(andreas): This file should really be split up.
+    "crates/build/dl_types_builder/src/codegen/python/mod.rs",
+    "crates/build/dl_types_builder/src/reflection.rs",
+    "crates/store/dl_dataframe/src/query.rs",
+    "crates/store/dl_protos/proto/schema_snapshot.yaml",
+    "crates/store/dl_protos/src/v1alpha1/rerun.cloud.v1alpha1.rs",
+    "crates/store/dl_protos/src/v1alpha1/rerun.cloud.v1alpha1.ext.rs",
+    "crates/store/dl_query/src/range_zip/generated.rs",
+    "crates/store/dl_sdk_types/src/datatypes/tensor_buffer.rs",
+    "crates/store/dl_sdk_types/src/reflection/mod.rs",
+    "crates/top/dl_sdk/src/recording_stream.rs",
+    "crates/viewer/dl_ui/data/Inter-Medium.otf",
+    "crates/viewer/dl_viewer/data/app_icon_mac.png",
+    "crates/viewer/dl_viewer/src/app.rs",  # TODO(emilk): break this up into smaller files
     "docs/snippets/INDEX.md",
     "pixi.lock",
     "rerun_cpp/docs/Doxyfile",
@@ -34,12 +34,12 @@ FILES_ALLOWED_TO_BE_LARGE = {
 
 # Paths with the following prefixes are allowed to contain PNG files that are not checked into LFS
 PATH_PREFIXES_ALLOWED_TO_CONTAIN_NON_LFS_PNGS = (
-    "crates/viewer/re_ui/data/icons/",
-    "crates/viewer/re_ui/data/logo_dark_mode.png",
-    "crates/viewer/re_ui/data/logo_light_mode.png",
-    "crates/viewer/re_viewer/data/app_icon.png",
-    "crates/viewer/re_viewer/data/app_icon_mac.png",
-    "crates/viewer/re_web_viewer_server/web_viewer/apple-touch-icon.png",
+    "crates/viewer/dl_ui/data/icons/",
+    "crates/viewer/dl_ui/data/logo_dark_mode.png",
+    "crates/viewer/dl_ui/data/logo_light_mode.png",
+    "crates/viewer/dl_viewer/data/app_icon.png",
+    "crates/viewer/dl_viewer/data/app_icon_mac.png",
+    "crates/viewer/dl_web_viewer_server/web_viewer/apple-touch-icon.png",
     "docs/snippets/all/archetypes/ferris.png",
     "docs/snippets/all/archetypes/encoded_depth.png",
     "docs/snippets/src/snippets/ferris.png",

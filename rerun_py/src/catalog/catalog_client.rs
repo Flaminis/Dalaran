@@ -5,8 +5,8 @@ use arrow::pyarrow::PyArrowType;
 use pyo3::exceptions::{PyLookupError, PyRuntimeError, PyValueError};
 use pyo3::types::{PyAnyMethods as _, PyDict};
 use pyo3::{Py, PyAny, PyErr, PyResult, Python, pyclass, pymethods};
-use re_log_types::EntryName;
-use re_protos::cloud::v1alpha1::{EntryFilter, EntryKind};
+use dl_log_types::EntryName;
+use dl_protos::cloud::v1alpha1::{EntryFilter, EntryKind};
 
 use crate::catalog::datafusion_catalog::PyDataFusionCatalogProviderList;
 use crate::catalog::{
@@ -26,7 +26,7 @@ type VersionInfoTuple = (String, Option<String>, Option<String>, Vec<String>);
 )]
 
 pub struct PyCatalogClientInternal {
-    origin: re_uri::Origin,
+    origin: dl_uri::Origin,
 
     connection: ConnectionHandle,
 
@@ -46,7 +46,7 @@ fn setup_datafusion_context(py: Python<'_>) -> PyResult<Py<PyAny>> {
     let config_options = PyDict::new(py);
     config_options.set_item("datafusion.execution.coalesce_batches", "false")?;
 
-    if let Some(cores) = re_datafusion::rerun_sdk_num_cpus() {
+    if let Some(cores) = dl_datafusion::rerun_sdk_num_cpus() {
         config_options.set_item("datafusion.execution.target_partitions", cores.to_string())?;
     }
 
@@ -85,18 +85,18 @@ impl PyCatalogClientInternal {
         // but we removed that unused dependency, so now we must do it ourselves.
         _ = rustls::crypto::ring::default_provider().install_default();
 
-        let origin = url.as_str().parse::<re_uri::Origin>().map_err(to_py_err)?;
+        let origin = url.as_str().parse::<dl_uri::Origin>().map_err(to_py_err)?;
 
         let connection_registry =
-            re_redap_client::ConnectionRegistry::new_with_stored_credentials();
+            dl_redap_client::ConnectionRegistry::new_with_stored_credentials();
 
         let credentials = match token
             .map(TryFrom::try_from)
             .transpose()
             .map_err(to_py_err)?
         {
-            Some(token) => re_redap_client::Credentials::Token(token),
-            None => re_redap_client::Credentials::Stored,
+            Some(token) => dl_redap_client::Credentials::Token(token),
+            None => dl_redap_client::Credentials::Stored,
         };
         connection_registry.set_credentials(&origin, credentials);
 
@@ -312,7 +312,7 @@ impl PyCatalogClientInternal {
     ///
     /// NOTE: when provided, `url` is a _prefix_ for the table location, and we must ensure that
     /// the actual url is unique by inserting a UUID in the path. This is different from the
-    /// semantics of the layers below ([`re_redap_client::ConnectionClient::create_table_entry`] and
+    /// semantics of the layers below ([`dl_redap_client::ConnectionClient::create_table_entry`] and
     /// redap), which expect a full url that we must guarantee is free to use.
     fn create_table(
         self_: Py<Self>,
@@ -344,7 +344,7 @@ impl PyCatalogClientInternal {
                 }
                 url.path_segments_mut()
                     .expect("just checked with cannot_be_a_base()")
-                    .push(&re_tuid::Tuid::new().to_string());
+                    .push(&dl_tuid::Tuid::new().to_string());
                 Ok::<_, PyErr>(url)
             })
             .transpose()?;

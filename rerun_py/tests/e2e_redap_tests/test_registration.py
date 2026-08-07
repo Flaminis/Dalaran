@@ -633,7 +633,7 @@ def _get_points_data(ds: DatasetEntry) -> list[list[float]]:
 # Note on Union rejection: it's currently a conservative over-reject — any Union
 # anywhere in a *changed* field fails registration. See
 # `union_over_rejected_when_only_a_sibling_widens` in
-# `crates/utils/re_arrow_util/src/lib.rs` for the pinned edge case.
+# `crates/utils/dl_arrow_util/src/lib.rs` for the pinned edge case.
 #
 
 
@@ -725,7 +725,7 @@ def _schema_contract_cases() -> list[tuple[str, list[object], str]]:
     map_t_int32 = pa.map_(pa.string(), pa.int32())
     map_t_int64 = pa.map_(pa.string(), pa.int64())
 
-    # Union is covered by Rust unit tests in re_arrow_util — pyarrow has no
+    # Union is covered by Rust unit tests in dl_arrow_util — pyarrow has no
     # sequence-to-array path for unions, and Rerun's SDK doesn't emit them.
 
     return [

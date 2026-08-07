@@ -1,0 +1,58 @@
+use crate::components::VideoCodec;
+
+#[cfg(feature = "video")]
+impl TryFrom<dl_video::VideoCodec> for VideoCodec {
+    type Error = String;
+
+    fn try_from(value: dl_video::VideoCodec) -> Result<Self, Self::Error> {
+        match value {
+            dl_video::VideoCodec::H264 => Ok(Self::H264),
+            dl_video::VideoCodec::H265 => Ok(Self::H265),
+            dl_video::VideoCodec::AV1 => Ok(Self::AV1),
+            dl_video::VideoCodec::VP8 => Ok(Self::VP8),
+            dl_video::VideoCodec::VP9 => Ok(Self::VP9),
+            dl_video::VideoCodec::ImageSequence(_) => Err("Not a real video".to_owned()),
+        }
+    }
+}
+
+#[cfg(feature = "video")]
+impl From<VideoCodec> for dl_video::VideoCodec {
+    fn from(val: crate::components::VideoCodec) -> Self {
+        match val {
+            crate::components::VideoCodec::H264 => Self::H264,
+            crate::components::VideoCodec::H265 => Self::H265,
+            crate::components::VideoCodec::AV1 => Self::AV1,
+            crate::components::VideoCodec::VP8 => Self::VP8,
+            crate::components::VideoCodec::VP9 => Self::VP9,
+        }
+    }
+}
+
+impl VideoCodec {
+    /// Convert the base representation to this enum.
+    pub fn try_from_u32(value: u32) -> Option<Self> {
+        match value {
+            0x61763031 => Some(Self::AV1),
+            0x61766331 => Some(Self::H264),
+            0x68657631 => Some(Self::H265),
+            0x76703038 => Some(Self::VP8),
+            0x76703039 => Some(Self::VP9),
+            _ => None,
+        }
+    }
+}
+
+#[test]
+fn test_video_codec_u32_conversion() {
+    use dl_types_core::reflection::Enum as _;
+
+    let all = VideoCodec::variants();
+
+    for codec in all {
+        let repr = *codec as u32;
+        let codec_from_repr = VideoCodec::try_from_u32(repr).unwrap();
+
+        assert_eq!(codec_from_repr, *codec);
+    }
+}

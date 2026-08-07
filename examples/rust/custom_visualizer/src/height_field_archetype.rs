@@ -1,5 +1,5 @@
 use rerun::Component as _;
-use rerun::external::re_sdk_types::try_serialize_field;
+use rerun::external::dl_sdk_types::try_serialize_field;
 
 /// Custom archetype for rendering a 3D height field in the spatial view.
 ///

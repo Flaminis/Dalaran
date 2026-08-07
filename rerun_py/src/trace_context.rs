@@ -20,7 +20,7 @@
 //! 4. The [`TracingInjectorInterceptor`] picks up this span and injects
 //!    `traceparent` into the outgoing gRPC request.
 //!
-//! [`TracingInjectorInterceptor`]: re_perf_telemetry::TracingInjectorInterceptor
+//! [`TracingInjectorInterceptor`]: dl_perf_telemetry::TracingInjectorInterceptor
 //! [`ContextVar`]: https://docs.python.org/3/library/contextvars.html#contextvars.ContextVar
 
 use pyo3::{Py, PyAny, PyResult, Python, pyfunction};
@@ -79,10 +79,10 @@ pub fn get_trace_context_var(py: Python<'_>) -> PyResult<Py<PyAny>> {
 // ---
 // Python `ContextVar` plumbing for trace-context propagation.
 //
-// All pyo3 use lives in this crate so `re_perf_telemetry` stays
+// All pyo3 use lives in this crate so `dl_perf_telemetry` stays
 // language-agnostic. The boundary between the two is a plain Rust
 // `TraceHeaders` value: this side reads the `ContextVar` and hands the
-// struct over; `re_perf_telemetry` consumes it without ever touching the
+// struct over; `dl_perf_telemetry` consumes it without ever touching the
 // Python runtime.
 
 /// Name of the Python `ContextVar` used for trace-context propagation. The
@@ -121,14 +121,14 @@ fn trace_context_var(py: Python<'_>) -> PyResult<pyo3::Bound<'_, PyAny>> {
 
 /// Extract trace context from the Python `ContextVar` for cross-boundary propagation.
 ///
-/// Returns empty [`re_perf_telemetry::TraceHeaders`] if the `ContextVar` is unset or extraction fails.
+/// Returns empty [`dl_perf_telemetry::TraceHeaders`] if the `ContextVar` is unset or extraction fails.
 #[cfg(feature = "perf_telemetry")]
 pub(crate) fn extract_trace_context_from_contextvar(
     py: Python<'_>,
-) -> re_perf_telemetry::TraceHeaders {
+) -> dl_perf_telemetry::TraceHeaders {
     use pyo3::prelude::*;
     use pyo3::types::PyDict;
-    use re_perf_telemetry::TraceHeaders;
+    use dl_perf_telemetry::TraceHeaders;
 
     fn try_extract(py: Python<'_>) -> PyResult<TraceHeaders> {
         let context_var = trace_context_var(py)?;

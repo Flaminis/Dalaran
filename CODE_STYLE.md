@@ -47,15 +47,15 @@ Whenever you return a list or an iterator, sort it first.
 If you don't want to sort it for performance reasons, you MUST put `unsorted` in the  name as a warning.
 
 ### Error handling and logging
-We log problems using our own `re_log` crate (which is currently a wrapper around [`tracing`](https://crates.io/crates/tracing/)).
+We log problems using our own `dl_log` crate (which is currently a wrapper around [`tracing`](https://crates.io/crates/tracing/)).
 
 * An error should never happen in silence.
 * Validate code invariants using `assert!` or `debug_assert!`.
 * Validate user data and return errors using [`thiserror`](https://crates.io/crates/thiserror).
 * Attach context to errors as they bubble up the stack using [`anyhow`](https://crates.io/crates/anyhow).
-* Log errors using `re_log::error!` or `re_log::error_once!`.
-* If a problem is recoverable, use `re_log::warn!` or `re_log::warn_once!`.
-* If an event is of interest to the user, log it using `re_log::info!` or `re_log::info_once!`.
+* Log errors using `dl_log::error!` or `dl_log::error_once!`.
+* If a problem is recoverable, use `dl_log::warn!` or `dl_log::warn_once!`.
+* If an event is of interest to the user, log it using `dl_log::info!` or `dl_log::info_once!`.
 * The code should only panic if there is a bug in the code.
 * Never ignore an error: either pass it on, or log it.
 * Handle each error exactly once. If you log it, don't pass it on. If you pass it on, don't log it.
@@ -181,9 +181,9 @@ You can also use the `todo()!` macro during development, but again it won't pass
 
 
 ### Misc
-Use debug-formatting (`{:?}`) when logging strings in logs and error messages. This will surround the string with quotes and escape newlines, tabs, etc. For instance: `re_log::warn!("Unknown key: {key:?}");`.
+Use debug-formatting (`{:?}`) when logging strings in logs and error messages. This will surround the string with quotes and escape newlines, tabs, etc. For instance: `dl_log::warn!("Unknown key: {key:?}");`.
 
-Use `{:#}` or `re_error::format(err)` when displaying an error - NOT `Debug`/`{:?}`.
+Use `{:#}` or `dl_error::format(err)` when displaying an error - NOT `Debug`/`{:?}`.
 
 We make extensive use of snapshot testing. To work around non-deterministic values, such as TUIDs (time-prefixed unique IDs), many types (should) offer `std::fmt::Display` implementations with redactions that can be access via an overloaded `-` formatting option:
 

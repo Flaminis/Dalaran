@@ -1,0 +1,202 @@
+use dl_log_types::{EntityPath, Instance};
+use dl_renderer::PickingLayerInstanceId;
+use dl_renderer::renderer::{LineDrawDataError, LineStripFlags};
+use dl_sdk_types::Archetype as _;
+use dl_sdk_types::archetypes::GeoLineStrings;
+use dl_sdk_types::components::{Color, GeoLineString, Radius};
+use dl_view::{DataResultQuery as _, VisualizerInstructionQueryResults};
+use dl_viewer_context::{
+    IdentifiedViewSystem, ViewContext, ViewContextCollection, ViewHighlights, ViewQuery,
+    ViewSystemExecutionError, VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem,
+    typed_fallback_for,
+};
+
+#[derive(Debug, Default, Clone)]
+struct GeoLineStringsBatch {
+    lines: Vec<Vec<walkers::Position>>,
+    radii: Vec<Radius>,
+    colors: Vec<dl_renderer::Color32>,
+    instance_id: Vec<PickingLayerInstanceId>,
+}
+
+/// Output data from [`GeoLineStringsVisualizer`].
+#[derive(Default, Clone)]
+pub struct GeoLineStringsOutput {
+    batches: Vec<(EntityPath, GeoLineStringsBatch)>,
+}
+
+/// Visualizer for [`GeoLineStrings`].
+#[derive(Default)]
+pub struct GeoLineStringsVisualizer;
+
+impl IdentifiedViewSystem for GeoLineStringsVisualizer {
+    fn identifier() -> dl_viewer_context::ViewSystemIdentifier {
+        dl_viewer_context::external::dl_string_interner::intern_static!(
+            dl_viewer_context::ViewSystemIdentifier,
+            "GeoLineStrings"
+        )
+    }
+}
+
+impl VisualizerSystem for GeoLineStringsVisualizer {
+    fn visualizer_query_info(
+        &self,
+        _app_options: &dl_viewer_context::AppOptions,
+    ) -> VisualizerQueryInfo {
+        VisualizerQueryInfo::single_required_component::<GeoLineString>(
+            &GeoLineStrings::descriptor_line_strings(),
+            &GeoLineStrings::all_components(),
+        )
+    }
+
+    fn execute(
+        &self,
+        ctx: &ViewContext<'_>,
+        view_query: &ViewQuery<'_>,
+        _context_systems: &ViewContextCollection,
+    ) -> Result<VisualizerExecutionOutput, ViewSystemExecutionError> {
+        let output = VisualizerExecutionOutput::default();
+        let mut batches = Vec::new();
+
+        for (data_result, instruction) in
+            view_query.iter_visualizer_instruction_for(Self::identifier())
+        {
+            let results = data_result.query_archetype_with_history::<GeoLineStrings>(
+                ctx,
+                view_query,
+                instruction,
+            );
+            let results = VisualizerInstructionQueryResults::new(instruction, &results, &output);
+
+            let mut batch_data = GeoLineStringsBatch::default();
+
+            // gather all relevant chunks
+            let all_lines =
+                results.iter_required(GeoLineStrings::descriptor_line_strings().component);
+            let all_colors = results.iter_optional(GeoLineStrings::descriptor_colors().component);
+            let all_radii = results.iter_optional(GeoLineStrings::descriptor_radii().component);
+
+            // fallback component values
+            let query_context =
+                ctx.query_context(data_result, view_query.latest_at_query(), instruction.id);
+            let fallback_color: Color = typed_fallback_for(
+                &query_context,
+                GeoLineStrings::descriptor_colors().component,
+            );
+            let fallback_radius: Radius =
+                typed_fallback_for(&query_context, GeoLineStrings::descriptor_radii().component);
+
+            // iterate over each chunk and find all relevant component slices
+            for (_index, lines, colors, radii) in dl_query::range_zip_1x2(
+                all_lines.slice::<&[[f64; 2]]>(),
+                all_colors.slice::<u32>(),
+                all_radii.slice::<f32>(),
+            ) {
+                // required component
+                let lines = lines.as_slice();
+
+                // optional components
+                let colors = colors.unwrap_or(&[]);
+                let radii = radii.unwrap_or(&[]);
+
+                // optional components values to be used for instance clamping semantics
+                let last_color = colors.last().copied().unwrap_or(fallback_color.0.0);
+                let last_radii = radii.last().copied().unwrap_or(fallback_radius.0.0);
+
+                // iterate over all instances
+                for (instance_index, (line, color, radius)) in itertools::izip!(
+                    lines,
+                    std::iter::chain(colors, std::iter::repeat(&last_color)),
+                    std::iter::chain(radii, std::iter::repeat(&last_radii)),
+                )
+                .enumerate()
+                {
+                    batch_data.lines.push(
+                        line.iter()
+                            .map(|pos| walkers::lat_lon(pos[0], pos[1]))
+                            .collect(),
+                    );
+                    batch_data.radii.push(Radius((*radius).into()));
+                    batch_data.colors.push(Color::new(*color).into());
+                    batch_data
+                        .instance_id
+                        .push(dl_renderer::PickingLayerInstanceId(instance_index as _));
+                }
+            }
+
+            batches.push((data_result.entity_path.clone(), batch_data));
+        }
+
+        Ok(output.with_visualizer_data(GeoLineStringsOutput { batches }))
+    }
+}
+
+impl GeoLineStringsOutput {
+    /// Compute the [`super::GeoSpan`] of all the points in the visualizer.
+    pub fn span(&self) -> Option<super::GeoSpan> {
+        super::GeoSpan::from_lat_long(
+            self.batches
+                .iter()
+                .flat_map(|(_, batch)| batch.lines.iter())
+                .flatten()
+                .map(|pos| (pos.y(), pos.x())),
+        )
+    }
+
+    pub fn queue_draw_data(
+        &self,
+        render_ctx: &dl_renderer::RenderContext,
+        view_builder: &mut dl_renderer::ViewBuilder,
+        projector: &walkers::Projector,
+        highlight: &ViewHighlights,
+    ) -> Result<(), LineDrawDataError> {
+        let mut lines = dl_renderer::LineDrawableBuilder::new(render_ctx);
+        lines.radius_boost_in_ui_points_for_outlines(
+            dl_view::SIZE_BOOST_IN_POINTS_FOR_LINE_OUTLINES,
+        );
+
+        for (entity_path, batch) in &self.batches {
+            let outline = highlight.entity_outline_mask(entity_path.hash());
+
+            let mut line_batch = lines
+                .batch(entity_path.to_string())
+                .picking_object_id(dl_renderer::PickingLayerObjectId(entity_path.hash64()))
+                .outline_mask_ids(outline.overall);
+
+            let entity_highlight = highlight.entity_outline_mask(entity_path.hash());
+
+            for (strip, radius, color, instance) in itertools::izip!(
+                &batch.lines,
+                &batch.radii,
+                &batch.colors,
+                &batch.instance_id
+            ) {
+                line_batch
+                    .add_strip_2d(strip.iter().map(|pos| {
+                        let ui_position = projector.project(*pos);
+                        glam::vec2(ui_position.x, ui_position.y)
+                    }))
+                    //TODO(#8013): we use the first vertex's latitude because `dl_renderer` doesn't support per-vertex radii
+                    .radius(super::radius_to_size(
+                        *radius,
+                        projector,
+                        strip
+                            .first()
+                            .copied()
+                            .unwrap_or_else(|| walkers::lat_lon(0.0, 0.0)),
+                    ))
+                    // Looped lines should be connected with rounded corners, so we always add outward extending caps.
+                    .flags(LineStripFlags::STRIP_FLAGS_OUTWARD_EXTENDING_ROUND_CAPS)
+                    .color(*color)
+                    .picking_instance_id(*instance)
+                    .outline_mask_ids(
+                        entity_highlight.index_outline_mask(Instance::from(instance.0)),
+                    );
+            }
+        }
+
+        view_builder.queue_draw(render_ctx, lines.into_draw_data()?);
+
+        Ok(())
+    }
+}

@@ -2,11 +2,11 @@ use std::collections::BTreeMap;
 
 use ahash::{HashMap, HashMapExt as _};
 use itertools::Itertools as _;
-use re_chunk::Chunk;
-use re_log_encoding::ToApplication as _;
-use re_log_types::{EntityPath, TimelineName};
-use re_protos::log_msg::v1alpha1::log_msg::Msg;
-use re_quota_channel::send_crossbeam;
+use dl_chunk::Chunk;
+use dl_log_encoding::ToApplication as _;
+use dl_log_types::{EntityPath, TimelineName};
+use dl_protos::log_msg::v1alpha1::log_msg::Msg;
+use dl_quota_channel::send_crossbeam;
 
 use crate::commands::read_raw_rrd_streams_from_file_or_stdin;
 
@@ -71,8 +71,8 @@ impl StatsCommand {
                     let mut uncompressed = Vec::new();
 
                     const COMPRESSION_NONE: i32 =
-                        re_protos::common::v1alpha1::Compression::None as _;
-                    const COMPRESSION_LZ4: i32 = re_protos::common::v1alpha1::Compression::Lz4 as _;
+                        dl_protos::common::v1alpha1::Compression::None as _;
+                    const COMPRESSION_LZ4: i32 = dl_protos::common::v1alpha1::Compression::Lz4 as _;
 
                     let compressed_size = msg.payload.len() as u64;
 
@@ -81,7 +81,7 @@ impl StatsCommand {
 
                         COMPRESSION_LZ4 => {
                             uncompressed.resize(msg.uncompressed_size as _, 0);
-                            re_log_encoding::external::lz4_flex::block::decompress_into(
+                            dl_log_encoding::external::lz4_flex::block::decompress_into(
                                 &msg.payload,
                                 &mut uncompressed,
                             )?;
@@ -96,7 +96,7 @@ impl StatsCommand {
                         &tx_uncompressed,
                         (
                             compressed_size,
-                            Ok(re_protos::log_msg::v1alpha1::log_msg::Msg::ArrowMsg(msg)),
+                            Ok(dl_protos::log_msg::v1alpha1::log_msg::Msg::ArrowMsg(msg)),
                         ),
                     )?;
                 }
@@ -104,7 +104,7 @@ impl StatsCommand {
                 Ok(())
             })?;
 
-        re_log::info!("processing input…");
+        dl_log::info!("processing input…");
         let mut num_msgs = 0;
         let mut last_checkpoint = std::time::Instant::now();
         for (compressed_size, res) in rx_uncompressed {
@@ -154,14 +154,14 @@ impl StatsCommand {
                         Ok(None) => {}
 
                         Err(err) => {
-                            re_log::error_once!("{}", re_error::format(err));
+                            dl_log::error_once!("{}", dl_error::format(err));
                             is_success = false;
                         }
                     }
                 }
 
                 Err(err) => {
-                    re_log::error_once!("{}", re_error::format(err));
+                    dl_log::error_once!("{}", dl_error::format(err));
                     is_success = false;
                 }
             }
@@ -178,10 +178,10 @@ impl StatsCommand {
                 let msgs_per_sec =
                     check_in_interval as f64 / last_checkpoint.elapsed().as_secs_f64();
                 last_checkpoint = std::time::Instant::now();
-                re_log::info!(
+                dl_log::info!(
                     "processed {msg_count} messages so far, current speed is {msgs_per_sec:.2} msg/s"
                 );
-                re_tracing::reexports::puffin::GlobalProfiler::lock().new_frame();
+                dl_tracing::reexports::puffin::GlobalProfiler::lock().new_frame();
             }
         }
 
@@ -189,23 +189,23 @@ impl StatsCommand {
             .join()
             .expect("couldn't join thread")?;
 
-        re_log::info!("computing stats…");
+        dl_log::info!("computing stats…");
 
         println!("Overview");
         println!("----------");
 
-        println!("num_chunks = {}", re_format::format_uint(num_chunks));
+        println!("num_chunks = {}", dl_format::format_uint(num_chunks));
 
         if !*no_decode {
             println!(
                 "num_entity_paths = {}",
-                re_format::format_uint(num_chunks_per_entity.len())
+                dl_format::format_uint(num_chunks_per_entity.len())
             );
 
             let num_chunks_without_components = num_components.iter().filter(|v| **v == 0).count();
             println!(
                 "num_chunks_without_components = {} ({:.3}%)",
-                re_format::format_uint(num_chunks_without_components),
+                dl_format::format_uint(num_chunks_without_components),
                 num_chunks_without_components as f64 / num_chunks as f64 * 100.0,
             );
 
@@ -214,9 +214,9 @@ impl StatsCommand {
             let num_rows_max = num_rows.iter().copied().max().unwrap_or_default();
             let num_rows_avg = num_rows_total as f64 / num_rows.len() as f64;
 
-            println!("num_rows = {}", re_format::format_uint(num_rows_total));
-            println!("num_rows_min = {}", re_format::format_uint(num_rows_min));
-            println!("num_rows_max = {}", re_format::format_uint(num_rows_max));
+            println!("num_rows = {}", dl_format::format_uint(num_rows_total));
+            println!("num_rows_min = {}", dl_format::format_uint(num_rows_min));
+            println!("num_rows_max = {}", dl_format::format_uint(num_rows_max));
             println!("num_rows_avg = {num_rows_avg:.3}");
 
             let num_indexes_min = num_indexes.iter().copied().min().unwrap_or_default();
@@ -224,14 +224,14 @@ impl StatsCommand {
             let num_indexes_avg =
                 num_indexes.iter().copied().sum::<u64>() as f64 / num_indexes.len() as f64;
 
-            println!("num_static = {}", re_format::format_uint(num_static));
+            println!("num_static = {}", dl_format::format_uint(num_static));
             println!(
                 "num_indexes_min = {}",
-                re_format::format_uint(num_indexes_min)
+                dl_format::format_uint(num_indexes_min)
             );
             println!(
                 "num_indexes_max = {}",
-                re_format::format_uint(num_indexes_max)
+                dl_format::format_uint(num_indexes_max)
             );
             println!("num_indexes_avg = {num_indexes_avg:.3}");
 
@@ -242,11 +242,11 @@ impl StatsCommand {
 
             println!(
                 "num_components_min = {}",
-                re_format::format_uint(num_components_min)
+                dl_format::format_uint(num_components_min)
             );
             println!(
                 "num_components_max = {}",
-                re_format::format_uint(num_components_max)
+                dl_format::format_uint(num_components_max)
             );
             println!("num_components_avg = {num_components_avg:.3}");
 
@@ -255,7 +255,7 @@ impl StatsCommand {
                 num_chunks_per_xxx.sort_by(|(kl, _), (kr, _)| kl.cmp(kr));
 
                 for (xxx, num_chunks) in num_chunks_per_xxx {
-                    println!("{xxx}: {}", re_format::format_uint(num_chunks));
+                    println!("{xxx}: {}", dl_format::format_uint(num_chunks));
                 }
             };
 
@@ -288,19 +288,19 @@ impl StatsCommand {
 
             println!(
                 "ipc_size_bytes_total = {}",
-                re_format::format_bytes(ipc_size_bytes_total)
+                dl_format::format_bytes(ipc_size_bytes_total)
             );
             println!(
                 "ipc_size_bytes_min = {}",
-                re_format::format_bytes(ipc_size_bytes_min)
+                dl_format::format_bytes(ipc_size_bytes_min)
             );
             println!(
                 "ipc_size_bytes_max = {}",
-                re_format::format_bytes(ipc_size_bytes_max)
+                dl_format::format_bytes(ipc_size_bytes_max)
             );
             println!(
                 "ipc_size_bytes_avg = {}",
-                re_format::format_bytes(ipc_size_bytes_avg)
+                dl_format::format_bytes(ipc_size_bytes_avg)
             );
 
             let print_percentile = |pxx_name: &str, p: f64| {
@@ -310,7 +310,7 @@ impl StatsCommand {
 
                 println!(
                     "ipc_size_bytes_{pxx_name} = {}",
-                    re_format::format_bytes(pxx)
+                    dl_format::format_bytes(pxx)
                 );
             };
 
@@ -357,7 +357,7 @@ impl StatsCommand {
                 println!(
                     "{} entity(ies) had at least one chunk with an unsorted timeline. \
                      For each such entity, all of its timelines are listed below:",
-                    re_format::format_uint(entities_with_unsorted.len())
+                    dl_format::format_uint(entities_with_unsorted.len())
                 );
                 for entity in entities_with_unsorted {
                     println!("  {entity}");
@@ -391,7 +391,7 @@ impl StatsCommand {
 fn print_footer_stats(
     footers: Vec<(
         crate::commands::InputSource,
-        anyhow::Result<re_log_encoding::RawRrdManifest>,
+        anyhow::Result<dl_log_encoding::RawRrdManifest>,
     )>,
     continue_on_error: bool,
 ) -> anyhow::Result<()> {
@@ -403,16 +403,16 @@ fn print_footer_stats(
     let num_manifests = footers.iter().filter(|(_, res)| res.is_ok()).count();
     println!(
         "num_manifests = {} (one per recording)",
-        re_format::format_uint(num_manifests)
+        dl_format::format_uint(num_manifests)
     );
 
     for (source, res) in footers {
         let manifest = match res {
             Ok(manifest) => manifest,
             Err(err) => {
-                re_log::error_once!(
+                dl_log::error_once!(
                     "failed to parse footer from {source}: {}",
-                    re_error::format(err)
+                    dl_error::format(err)
                 );
                 if !continue_on_error {
                     anyhow::bail!(
@@ -439,32 +439,32 @@ fn print_footer_stats(
         println!("Footer manifest for {:?}", manifest.store_id);
         println!(
             "  num_chunks_indexed = {}",
-            re_format::format_uint(num_chunks)
+            dl_format::format_uint(num_chunks)
         );
         println!(
             "  num_static_chunks = {}",
-            re_format::format_uint(num_static_chunks)
+            dl_format::format_uint(num_static_chunks)
         );
         println!(
             "  num_entity_paths = {}",
-            re_format::format_uint(num_entity_paths)
+            dl_format::format_uint(num_entity_paths)
         );
         println!(
             "  manifest_num_columns = {}",
-            re_format::format_uint(manifest.data.num_columns())
+            dl_format::format_uint(manifest.data.num_columns())
         );
         println!(
             "  sorbet_schema_num_fields = {}",
-            re_format::format_uint(manifest.sorbet_schema.fields.len())
+            dl_format::format_uint(manifest.sorbet_schema.fields.len())
         );
         println!("  sorbet_schema_sha256 = {sha256}");
         println!(
             "  chunk_byte_size_total (native) = {}",
-            re_format::format_bytes(byte_size_total as f64)
+            dl_format::format_bytes(byte_size_total as f64)
         );
         println!(
             "  chunk_byte_size_uncompressed_total = {}",
-            re_format::format_bytes(byte_size_uncompressed_total as f64)
+            dl_format::format_bytes(byte_size_uncompressed_total as f64)
         );
     }
 
@@ -504,7 +504,7 @@ struct ChunkStatsApplication {
 
 fn compute_stats(app: bool, compressed_size: u64, msg: &Msg) -> anyhow::Result<Option<ChunkStats>> {
     if let Msg::ArrowMsg(arrow_msg) = msg {
-        let re_protos::log_msg::v1alpha1::ArrowMsg {
+        let dl_protos::log_msg::v1alpha1::ArrowMsg {
             store_id: _,
             chunk_id: _,
             compression: _,
@@ -551,7 +551,7 @@ fn compute_stats(app: bool, compressed_size: u64, msg: &Msg) -> anyhow::Result<O
             let entity_path = {
                 let entity_path = schema
                     .metadata()
-                    .get(re_sorbet::metadata::SORBET_ENTITY_PATH);
+                    .get(dl_sorbet::metadata::SORBET_ENTITY_PATH);
                 let entity_path =
                     entity_path.or_else(|| schema.metadata().get("rerun.entity_path"));
                 entity_path.map(ToOwned::to_owned).unwrap_or_default()
@@ -574,7 +574,7 @@ fn compute_stats(app: bool, compressed_size: u64, msg: &Msg) -> anyhow::Result<O
                 .filter(|&field| {
                     field
                         .metadata()
-                        .get(re_sorbet::metadata::RERUN_KIND)
+                        .get(dl_sorbet::metadata::RERUN_KIND)
                         .map(|s| s.as_str())
                         == Some("index")
                         || field.metadata().get("rerun.kind").map(|s| s.as_str()) == Some("index")
@@ -589,7 +589,7 @@ fn compute_stats(app: bool, compressed_size: u64, msg: &Msg) -> anyhow::Result<O
                 .filter(|&field| {
                     field
                         .metadata()
-                        .get(re_sorbet::metadata::RERUN_KIND)
+                        .get(dl_sorbet::metadata::RERUN_KIND)
                         .map(|s| s.as_str())
                         == Some("data")
                         || field.metadata().get("rerun.kind").map(|s| s.as_str()) == Some("data")
@@ -608,7 +608,7 @@ fn compute_stats(app: bool, compressed_size: u64, msg: &Msg) -> anyhow::Result<O
                     .map(|(name, tc)| (chunk.entity_path().clone(), *name, tc.is_sorted()))
                     .collect(),
                 Err(err) => {
-                    re_log::warn_once!(
+                    dl_log::warn_once!(
                         "Failed to promote ArrowMsg into a Chunk for sorted-timeline check: {err}"
                     );
                     Vec::new()

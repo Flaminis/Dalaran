@@ -7,9 +7,9 @@ rust-version.workspace = true
 version.workspace = true
 
 [dependencies]
-re_renderer.workspace = true
-re_sdk_types = { workspace = true, features = ["default"] }
-re_types_core.workspace = true
+dl_renderer.workspace = true
+dl_sdk_types = { workspace = true, features = ["default"] }
+dl_types_core.workspace = true
 
 anyhow.workspace = true
 clap.workspace = true

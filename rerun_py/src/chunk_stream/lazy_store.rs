@@ -3,11 +3,11 @@ use std::sync::Arc;
 
 use pyo3::prelude::*;
 
-use re_chunk::{Chunk, ChunkId};
-use re_chunk_store::LazyStore;
-use re_log_encoding::{RrdManifest, RrdManifestStaticMap, RrdManifestTemporalMap};
-use re_log_types::EntityPath;
-use re_types_core::{ComponentIdentifier, TimelineName};
+use dl_chunk::{Chunk, ChunkId};
+use dl_chunk_store::LazyStore;
+use dl_log_encoding::{RrdManifest, RrdManifestStaticMap, RrdManifestTemporalMap};
+use dl_log_types::EntityPath;
+use dl_types_core::{ComponentIdentifier, TimelineName};
 
 use super::engine::FilterStream;
 use super::error::ChunkPipelineError;
@@ -263,7 +263,7 @@ impl ChunkPredicateView for ManifestRow<'_> {
 
 /// Streaming loader for an indexed (lazy) [`ChunkStore`].
 ///
-/// Pulls chunks from the underlying [`ChunkProvider`][re_log_encoding::ChunkProvider] in
+/// Pulls chunks from the underlying [`ChunkProvider`][dl_log_encoding::ChunkProvider] in
 /// byte-budgeted batches so resident memory stays bounded regardless of total recording size.
 //TODO(RR-4545): this is hardly an optimal strategy. We need the ChunkProvider to expose a streaming
 // API so that specific optimizations can be applied (e.g. adjacency for RRD, parallelism for
@@ -353,13 +353,13 @@ mod pushdown_tests {
     use std::fs::File;
     use std::path::Path;
 
-    use re_chunk::{Chunk, RowId, TimePoint, Timeline};
-    use re_log_encoding::{EncodingOptions, RrdChunkProvider};
-    use re_log_types::example_components::{MyColor, MyPoint, MyPoints};
-    use re_log_types::{
+    use dl_chunk::{Chunk, RowId, TimePoint, Timeline};
+    use dl_log_encoding::{EncodingOptions, RrdChunkProvider};
+    use dl_log_types::example_components::{MyColor, MyPoint, MyPoints};
+    use dl_log_types::{
         EntityPath, LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind, StoreSource,
     };
-    use re_types_core::{ComponentDescriptor, ComponentIdentifier, TimelineName};
+    use dl_types_core::{ComponentDescriptor, ComponentIdentifier, TimelineName};
 
     use super::*;
 
@@ -466,8 +466,8 @@ mod pushdown_tests {
         }
 
         let mut file = std::fs::File::create(path).unwrap();
-        let mut encoder = re_log_encoding::Encoder::new_eager(
-            re_log_encoding::CrateVersion::LOCAL,
+        let mut encoder = dl_log_encoding::Encoder::new_eager(
+            dl_log_encoding::CrateVersion::LOCAL,
             EncodingOptions::PROTOBUF_COMPRESSED,
             &mut file,
         )
@@ -487,7 +487,7 @@ mod pushdown_tests {
         encoder.finish().unwrap();
 
         let reader = File::open(path).unwrap();
-        let footer = futures::executor::block_on(re_log_encoding::read_rrd_footer(&reader))
+        let footer = futures::executor::block_on(dl_log_encoding::read_rrd_footer(&reader))
             .unwrap()
             .unwrap();
         let raw = Arc::new(footer.manifests[&store_id].clone());
@@ -498,8 +498,8 @@ mod pushdown_tests {
         Arc::new(LazyStore::new(provider))
     }
 
-    fn epf(rules: &str) -> re_log_types::ResolvedEntityPathFilter {
-        re_log_types::EntityPathFilter::parse_forgiving(rules).resolve_without_substitutions()
+    fn epf(rules: &str) -> dl_log_types::ResolvedEntityPathFilter {
+        dl_log_types::EntityPathFilter::parse_forgiving(rules).resolve_without_substitutions()
     }
 
     fn ids_for_entity(store: &LazyStore, entity: &str) -> Vec<ChunkId> {

@@ -1,5 +1,5 @@
 use pyo3::{pyclass, pymethods};
-use re_sorbet::{ComponentColumnDescriptor, ComponentColumnSelector};
+use dl_sorbet::{ComponentColumnDescriptor, ComponentColumnSelector};
 
 /// The descriptor of a component column.
 ///
@@ -103,7 +103,7 @@ impl PyComponentColumnDescriptor {
     /// This property is read-only.
     #[getter]
     fn name(&self) -> String {
-        self.0.column_name(re_sorbet::BatchType::Dataframe)
+        self.0.column_name(dl_sorbet::BatchType::Dataframe)
     }
 }
 

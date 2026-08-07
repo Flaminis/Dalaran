@@ -10,4 +10,4 @@ publish = false
 rerun = { path = "../../../crates/top/rerun", features = ["native_viewer", "run"] }
 
 [build-dependencies]
-re_build_tools = { path = "../../../crates/build/re_build_tools" }
+dl_build_tools = { path = "../../../crates/build/dl_build_tools" }

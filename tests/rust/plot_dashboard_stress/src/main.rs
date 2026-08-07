@@ -15,7 +15,7 @@
 #![expect(clippy::cast_possible_wrap)]
 #![expect(clippy::disallowed_methods)]
 
-use rerun::external::re_log;
+use rerun::external::dl_log;
 
 #[derive(Debug, clap::ValueEnum, Clone)]
 enum Order {
@@ -68,7 +68,7 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     use clap::Parser as _;
     let args = Args::parse();

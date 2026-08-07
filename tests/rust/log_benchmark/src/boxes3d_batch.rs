@@ -1,4 +1,4 @@
-use rerun::external::re_log;
+use rerun::external::dl_log;
 
 const W: usize = 200;
 const H: usize = 200;
@@ -24,13 +24,13 @@ fn prepare() -> Input {
         }
     }
 
-    re_log::info!("Logging {} boxes", centers.len());
+    dl_log::info!("Logging {} boxes", centers.len());
 
     Input { centers }
 }
 
 fn execute(rec: &rerun::RecordingStream, input: Input) -> anyhow::Result<()> {
-    re_tracing::profile_function!();
+    dl_tracing::profile_function!();
 
     let Input { centers } = input;
 
@@ -46,7 +46,7 @@ fn execute(rec: &rerun::RecordingStream, input: Input) -> anyhow::Result<()> {
 
 /// Emulate a voxel occupancy grid
 pub fn run(rec: &rerun::RecordingStream) -> anyhow::Result<()> {
-    re_tracing::profile_function!();
+    dl_tracing::profile_function!();
     let input = std::hint::black_box(prepare());
     execute(rec, input)
 }

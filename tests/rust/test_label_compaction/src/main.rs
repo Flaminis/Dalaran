@@ -16,7 +16,7 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     use clap::Parser as _;
     let args = Args::parse();

@@ -5,9 +5,9 @@
 //! generates a 3D triangle mesh from the heightfield data each frame, with
 //! GPU-side colormap application.
 
-use rerun::external::re_sdk_types::{self, View as _};
+use rerun::external::dl_sdk_types::{self, View as _};
 use rerun::external::{
-    glam, re_crash_handler, re_grpc_server, re_log, re_log_channel, re_memory, re_viewer, tokio,
+    glam, dl_crash_handler, dl_grpc_server, dl_log, dl_log_channel, dl_memory, dl_viewer, tokio,
 };
 
 mod height_field_archetype;
@@ -16,56 +16,56 @@ mod height_field_visualizer;
 
 use height_field_visualizer::HeightFieldVisualizer;
 
-// By using `re_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
+// By using `dl_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.
 // By using `mimalloc` we get faster allocations.
 #[global_allocator]
-static GLOBAL: re_memory::AccountingAllocator<mimalloc::MiMalloc> =
-    re_memory::AccountingAllocator::new(mimalloc::MiMalloc);
+static GLOBAL: dl_memory::AccountingAllocator<mimalloc::MiMalloc> =
+    dl_memory::AccountingAllocator::new(mimalloc::MiMalloc);
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let main_thread_token = re_viewer::MainThreadToken::i_promise_i_am_on_the_main_thread();
+    let main_thread_token = dl_viewer::MainThreadToken::i_promise_i_am_on_the_main_thread();
 
     // Direct calls using the `log` crate to stderr. Control with `RUST_LOG=debug` etc.
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     // Install handlers for panics and crashes that prints to stderr and send
     // them to Rerun analytics (if the `analytics` feature is on in `Cargo.toml`).
-    re_crash_handler::install_crash_handlers(re_viewer::build_info());
+    dl_crash_handler::install_crash_handlers(dl_viewer::build_info());
 
     // Listen for gRPC connections from Rerun's logging SDKs.
-    // There are other ways of "feeding" the viewer though - all you need is a `re_log_channel::LogReceiver`.
-    let (grpc_rx, _grpc_server_handle) = re_grpc_server::spawn_with_recv(
+    // There are other ways of "feeding" the viewer though - all you need is a `dl_log_channel::LogReceiver`.
+    let (grpc_rx, _grpc_server_handle) = dl_grpc_server::spawn_with_recv(
         "0.0.0.0:9876".parse()?,
-        re_grpc_server::ServerOptions::default(),
-        re_grpc_server::shutdown::never(),
+        dl_grpc_server::ServerOptions::default(),
+        dl_grpc_server::shutdown::never(),
     );
 
     // Provide a builtin recording with an example recording using the custom archetype.
     let builtin_recording_rx = builtin_recording()?;
 
-    let startup_options = re_viewer::StartupOptions::default();
+    let startup_options = dl_viewer::StartupOptions::default();
 
     // This is used for analytics, if the `analytics` feature is on in `Cargo.toml`
-    let app_env = re_viewer::AppEnvironment::Custom("My extended Rerun Viewer".to_owned());
+    let app_env = dl_viewer::AppEnvironment::Custom("My extended Rerun Viewer".to_owned());
 
     println!("This example starts a custom Rerun Viewer with a built-in recording.");
     println!(
         "You can also connect through the SDK, e.g.: `cargo run -p minimal_options -- --connect`"
     );
 
-    re_viewer::run_native_app(
+    dl_viewer::run_native_app(
         main_thread_token,
         Box::new(move |cc| {
-            let mut app = re_viewer::App::new(
+            let mut app = dl_viewer::App::new(
                 main_thread_token,
-                re_viewer::build_info(),
+                dl_viewer::build_info(),
                 app_env,
                 startup_options,
                 cc,
                 None,
-                re_viewer::AsyncRuntimeHandle::from_current_tokio_runtime_or_wasmbindgen().expect(
+                dl_viewer::AsyncRuntimeHandle::from_current_tokio_runtime_or_wasmbindgen().expect(
                     "Could not get a runtime handle from the current Tokio runtime or Wasm bindgen.",
                 ),
             );
@@ -74,7 +74,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             // Register the custom heightfield visualizer for the builtin 3D view.
             app.extend_view_class(
-                re_sdk_types::blueprint::views::Spatial3DView::identifier(),
+                dl_sdk_types::blueprint::views::Spatial3DView::identifier(),
                 |registrator| {
                     registrator.register_visualizer::<HeightFieldVisualizer>()?;
 
@@ -97,7 +97,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn builtin_recording() -> Result<re_log_channel::LogReceiver, rerun::RecordingStreamError> {
+fn builtin_recording() -> Result<dl_log_channel::LogReceiver, rerun::RecordingStreamError> {
     let (rec, memory_sink) =
         rerun::RecordingStreamBuilder::new("rerun_example_custom_visualizer").memory()?;
 
@@ -169,11 +169,11 @@ fn builtin_recording() -> Result<re_log_channel::LogReceiver, rerun::RecordingSt
 
     // Forward the content of the memory recording to a log channel.
     let (builtin_recording_tx, builtin_recording_rx) =
-        re_log_channel::log_channel(re_log_channel::LogSource::Sdk);
+        dl_log_channel::log_channel(dl_log_channel::LogSource::Sdk);
     rec.flush_blocking().ok();
     for msg in memory_sink.take() {
         builtin_recording_tx
-            .send(re_log_channel::DataSourceMessage::LogMsg(msg))
+            .send(dl_log_channel::DataSourceMessage::LogMsg(msg))
             .expect("Failed to send message to builtin recording");
     }
 

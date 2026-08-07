@@ -29,7 +29,7 @@ similar-asserts.workspace = true
 
 
 [build-dependencies]
-re_build_tools.workspace = true
+dl_build_tools.workspace = true
 
 itertools.workspace = true
 

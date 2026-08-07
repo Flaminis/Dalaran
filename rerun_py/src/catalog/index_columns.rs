@@ -1,6 +1,6 @@
 use pyo3::exceptions::PyValueError;
 use pyo3::{PyResult, pyclass, pymethods};
-use re_sorbet::{IndexColumnDescriptor, TimeColumnSelector};
+use dl_sorbet::{IndexColumnDescriptor, TimeColumnSelector};
 
 /// The descriptor of an index column.
 ///
@@ -83,7 +83,7 @@ impl PyIndexColumnSelector {
     #[new]
     #[pyo3(text_signature = "(self, index)")]
     fn new(index: &str) -> PyResult<Self> {
-        let timeline = re_chunk::TimelineName::try_new(index)
+        let timeline = dl_chunk::TimelineName::try_new(index)
             .map_err(|err| PyValueError::new_err(err.to_string()))?;
         Ok(Self(TimeColumnSelector::from(timeline)))
     }

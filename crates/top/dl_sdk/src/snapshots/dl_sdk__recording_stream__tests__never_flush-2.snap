@@ -1,0 +1,9 @@
+---
+source: crates/top/dl_sdk/src/recording_stream.rs
+expression: DisplayDescrs(chunk)
+---
+[
+    "example.MyPoints:colors",
+    "example.MyPoints:labels",
+    "example.MyPoints:points",
+]

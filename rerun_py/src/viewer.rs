@@ -3,9 +3,9 @@
 use arrow::array::RecordBatch;
 use pyo3::prelude::*;
 use pyo3::{Bound, PyResult};
-use re_grpc_client::write_table::channel;
-use re_protos::sdk_comms::v1alpha1::message_proxy_service_client::MessageProxyServiceClient;
-use re_protos::sdk_comms::v1alpha1::viewer_control_service_client::ViewerControlServiceClient;
+use dl_grpc_client::write_table::channel;
+use dl_protos::sdk_comms::v1alpha1::message_proxy_service_client::MessageProxyServiceClient;
+use dl_protos::sdk_comms::v1alpha1::viewer_control_service_client::ViewerControlServiceClient;
 
 use crate::catalog::to_py_err;
 use crate::utils::wait_for_future;
@@ -30,7 +30,7 @@ impl PyViewerClientInternal {
     #[new]
     #[pyo3(text_signature = "(self, addr)")]
     fn new(py: Python<'_>, addr: &str) -> PyResult<Self> {
-        let origin = addr.parse::<re_uri::Origin>().map_err(to_py_err)?;
+        let origin = addr.parse::<dl_uri::Origin>().map_err(to_py_err)?;
 
         let conn = ViewerConnectionHandle::new(py, origin.clone())?;
 
@@ -79,13 +79,13 @@ pub struct ViewerConnectionHandle {
 }
 
 impl ViewerConnectionHandle {
-    pub fn new(py: Python<'_>, origin: re_uri::Origin) -> PyResult<Self> {
+    pub fn new(py: Python<'_>, origin: dl_uri::Origin) -> PyResult<Self> {
         let channel = wait_for_future(py, channel(origin.clone())).map_err(to_py_err)?;
 
         let client = MessageProxyServiceClient::new(channel.clone())
-            .max_decoding_message_size(re_grpc_client::MAX_DECODING_MESSAGE_SIZE);
+            .max_decoding_message_size(dl_grpc_client::MAX_DECODING_MESSAGE_SIZE);
         let control_client = ViewerControlServiceClient::new(channel)
-            .max_decoding_message_size(re_grpc_client::MAX_DECODING_MESSAGE_SIZE);
+            .max_decoding_message_size(dl_grpc_client::MAX_DECODING_MESSAGE_SIZE);
 
         Ok(Self {
             client,
@@ -104,8 +104,8 @@ impl ViewerConnectionHandle {
         wait_for_future(
             py,
             self.client
-                .write_table(re_protos::sdk_comms::v1alpha1::WriteTableRequest {
-                    id: Some(re_protos::common::v1alpha1::TableId { id }),
+                .write_table(dl_protos::sdk_comms::v1alpha1::WriteTableRequest {
+                    id: Some(dl_protos::common::v1alpha1::TableId { id }),
                     data: Some(table.0.into()),
                 }),
         )
@@ -123,7 +123,7 @@ impl ViewerConnectionHandle {
         wait_for_future(
             py,
             self.control_client.save_screenshot(
-                re_protos::sdk_comms::v1alpha1::SaveScreenshotRequest { view_id, file_path },
+                dl_protos::sdk_comms::v1alpha1::SaveScreenshotRequest { view_id, file_path },
             ),
         )
         .map_err(to_py_err)?;

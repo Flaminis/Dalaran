@@ -1,0 +1,159 @@
+use dl_log_types::{StoreId, StoreKind};
+
+use crate::EntityDb;
+
+#[derive(thiserror::Error, Debug)]
+pub enum StoreLoadError {
+    #[error(transparent)]
+    Decode(#[from] dl_log_encoding::DecodeError),
+
+    #[error(transparent)]
+    ChunkStore(#[from] crate::Error),
+}
+
+// ---
+
+/// Stores many [`EntityDb`]s of recordings and blueprints.
+///
+/// The stores are kept and iterated in insertion order to allow the UI to display them by default
+/// in opening order.
+#[derive(Default)]
+pub struct StoreBundle {
+    // `indexmap` is used to keep track of the insertion order.
+    stores: indexmap::IndexMap<StoreId, EntityDb>,
+}
+
+impl StoreBundle {
+    /// Decode an rrd stream.
+    /// It can theoretically contain multiple recordings, and blueprints.
+    pub fn from_rrd<R: std::io::Read>(
+        reader: std::io::BufReader<R>,
+        data_source: &dl_log_channel::LogSource,
+    ) -> Result<Self, StoreLoadError> {
+        dl_tracing::profile_function!();
+
+        let decoder = dl_log_encoding::DecoderApp::decode_eager(reader)?;
+
+        let mut slf = Self::default();
+
+        for msg in decoder {
+            let msg = msg?;
+            let entity_db = slf.stores.entry(msg.store_id().clone()).or_insert_with(|| {
+                let mut db = EntityDb::new(msg.store_id().clone());
+                db.data_source = Some(data_source.clone());
+                db
+            });
+            entity_db.add_log_msg(&msg)?;
+        }
+        Ok(slf)
+    }
+
+    /// All loaded [`EntityDb`], both recordings and blueprints, in insertion order.
+    pub fn entity_dbs(&self) -> impl Iterator<Item = &EntityDb> {
+        self.stores.values()
+    }
+
+    /// All loaded [`EntityDb`], both recordings and blueprints, in insertion order.
+    pub fn entity_dbs_mut(&mut self) -> impl Iterator<Item = &mut EntityDb> {
+        self.stores.values_mut()
+    }
+
+    pub fn remove(&mut self, id: &StoreId) -> Option<EntityDb> {
+        self.stores.shift_remove(id)
+    }
+
+    // --
+
+    pub fn contains(&self, id: &StoreId) -> bool {
+        self.stores.contains_key(id)
+    }
+
+    pub fn get(&self, id: &StoreId) -> Option<&EntityDb> {
+        self.stores.get(id)
+    }
+
+    pub fn get_mut(&mut self, id: &StoreId) -> Option<&mut EntityDb> {
+        self.stores.get_mut(id)
+    }
+
+    /// Returns either a recording or blueprint [`EntityDb`].
+    /// One is created if it doesn't already exist.
+    // NOTE(grtlr): We should clean this up, it's much too easy to create an
+    // entry in without the required book-keeping for new stores.
+    pub fn entry(&mut self, id: &StoreId) -> &mut EntityDb {
+        self.stores.entry(id.clone()).or_insert_with(|| {
+            dl_log::trace!("Creating new store: '{id:?}'");
+            EntityDb::new(id.clone())
+        })
+    }
+
+    /// Creates one if it doesn't exist.
+    ///
+    /// Like [`Self::entry`] but also sets `StoreInfo` to a default value.
+    pub fn blueprint_entry(&mut self, id: &StoreId) -> &mut EntityDb {
+        dl_log::debug_assert!(id.is_blueprint());
+
+        self.stores.entry(id.clone()).or_insert_with(|| {
+            // TODO(jleibs): If the blueprint doesn't exist this probably means we are
+            // initializing a new default-blueprint for the application in question.
+            // Make sure it's marked as a blueprint.
+
+            let mut blueprint_db = EntityDb::new(id.clone());
+
+            dl_log::trace!("Creating a new blueprint '{id:?}'");
+
+            blueprint_db.set_store_info(dl_log_types::SetStoreInfo {
+                row_id: *dl_chunk::RowId::new(),
+                info: dl_log_types::StoreInfo::new(
+                    id.clone(),
+                    dl_log_types::StoreSource::Other("viewer".to_owned()),
+                ),
+            });
+
+            blueprint_db
+        })
+    }
+
+    pub fn insert(&mut self, entity_db: EntityDb) {
+        self.stores.insert(entity_db.store_id().clone(), entity_db);
+    }
+
+    /// In insertion order.
+    pub fn recordings(&self) -> impl Iterator<Item = &EntityDb> {
+        self.stores
+            .values()
+            .filter(|log| log.store_kind() == StoreKind::Recording)
+    }
+
+    /// In insertion order.
+    pub fn recordings_mut(&mut self) -> impl Iterator<Item = &mut EntityDb> {
+        self.stores
+            .values_mut()
+            .filter(|log| log.store_kind() == StoreKind::Recording)
+    }
+
+    /// Recordings for a redap origin
+    pub fn recordings_for_origin(
+        &self,
+        origin: &dl_uri::Origin,
+    ) -> impl Iterator<Item = &EntityDb> {
+        self.recordings()
+            .filter(|db| {
+                matches!(
+                    &db.data_source,
+                    Some(dl_log_channel::LogSource::RedapGrpcStream { uri, .. }) if uri.origin == *origin
+                )
+            })
+    }
+
+    // --
+
+    pub fn retain(&mut self, mut f: impl FnMut(&EntityDb) -> bool) {
+        self.stores.retain(|_, db| f(db));
+    }
+
+    /// In insertion order.
+    pub fn drain_entity_dbs(&mut self) -> impl Iterator<Item = EntityDb> + '_ {
+        self.stores.drain(..).map(|(_, store)| store)
+    }
+}

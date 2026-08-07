@@ -40,10 +40,10 @@ ignore = [
   # `paste` is a proc-macro: it expands at compile time and contributes no runtime code, so being
   # unmaintained is a supply-chain concern rather than a reachability one.
   # Direct parents include DataFusion 54 crates, `lance-bitpacking`, `mcap`, `parquet`, `re_rav1d`,
-  # and our own `re_query` and `re_string_interner`.
-  { id = "RUSTSEC-2024-0436", reason = "paste 1.0.15 unmaintained — proc-macro only, no runtime code (see comment above). Remove when the upstream crates move to `pastey` and `re_query`/`re_string_interner` follow. No ticket yet." },
-  { id = "RUSTSEC-2025-0141", reason = "bincode 1.3.3 unmaintained, via http-cache → http-cache-reqwest → walkers → re_view_map and via puffin, plus direct use by re_server and the custom_callback example. Remove when `walkers` drops the http-cache stack (same exit as RUSTSEC-2026-0186) and our own uses move to bincode 2. No ticket yet." },
-  # pyo3 0.28.3 is reached by `rerun_py`, `re_protos`, `arrow-pyarrow` 58.3.0 and `numpy` 0.28.0,
+  # and our own `dl_query` and `dl_string_interner`.
+  { id = "RUSTSEC-2024-0436", reason = "paste 1.0.15 unmaintained — proc-macro only, no runtime code (see comment above). Remove when the upstream crates move to `pastey` and `dl_query`/`dl_string_interner` follow. No ticket yet." },
+  { id = "RUSTSEC-2025-0141", reason = "bincode 1.3.3 unmaintained, via http-cache → http-cache-reqwest → walkers → dl_view_map and via puffin, plus direct use by dl_server and the custom_callback example. Remove when `walkers` drops the http-cache stack (same exit as RUSTSEC-2026-0186) and our own uses move to bincode 2. No ticket yet." },
+  # pyo3 0.28.3 is reached by `rerun_py`, `dl_protos`, `arrow-pyarrow` 58.3.0 and `numpy` 0.28.0,
   # so both advisories sit in the shipped Python SDK rather than in dev tooling.
   # The `numpy` half of RR-4865 is done: `numpy` 0.29.0 (2026-06-13) requires `pyo3 ^0.29.0`.
   # What remains is the Arrow half. `arrow-pyarrow` only moved to `pyo3 ^0.29.0` in 59.1.0, while
@@ -51,14 +51,14 @@ ignore = [
   { id = "RUSTSEC-2026-0176", reason = "pyo3 0.28.3 out-of-bounds read in `nth`/`nth_back` for PyList and PyTuple iterators; blocked by arrow-pyarrow 58.3.0 requiring pyo3 ^0.28 (see comment above). Remove when arrow-rs 59.1+ and compatible DataFusion and Lance versions are adopted. RR-4865" },
   { id = "RUSTSEC-2026-0177", reason = "pyo3 0.28.3 missing `Sync` bound on `PyCFunction::new_closure` closures; blocked by arrow-pyarrow 58.3.0 requiring pyo3 ^0.28 (see comment above). Remove when arrow-rs 59.1+ and compatible DataFusion and Lance versions are adopted. RR-4865" },
   # Two independent quick-xml paths, both below the 0.41 fix:
-  #  - 0.36.2 via `minidom-14` 0.17 → `dae-parser` 0.11 → `re_renderer`. This one is exercised — it parses
+  #  - 0.36.2 via `minidom-14` 0.17 → `dae-parser` 0.11 → `dl_renderer`. This one is exercised — it parses
   #    COLLADA files the user opens. Both advisories are parser denial-of-service, so the exposure is a
   #    malformed `.dae` stalling or ballooning the Viewer, not memory unsafety.
   #  - 0.39.4 via `wayland-scanner` 0.31.10, a proc-macro reached through eframe on Linux/Wayland. Build
   #    time only, and its input is the Wayland protocol XML shipped inside the crate.
-  { id = "RUSTSEC-2026-0194", reason = "quick-xml <0.41 quadratic parse on duplicate attributes, reachable through dae-parser in re_renderer (see comment above). Remove when `minidom-14` and `wayland-scanner` allow 0.41. No ticket yet." },
-  { id = "RUSTSEC-2026-0195", reason = "quick-xml <0.41 unbounded namespace-decl allocation, reachable through dae-parser in re_renderer (see comment above). Remove when `minidom-14` and `wayland-scanner` allow 0.41. No ticket yet." },
-  # memmap2 0.5.10 via cacache -> http-cache -> http-cache-reqwest -> walkers -> re_view_map.
+  { id = "RUSTSEC-2026-0194", reason = "quick-xml <0.41 quadratic parse on duplicate attributes, reachable through dae-parser in dl_renderer (see comment above). Remove when `minidom-14` and `wayland-scanner` allow 0.41. No ticket yet." },
+  { id = "RUSTSEC-2026-0195", reason = "quick-xml <0.41 unbounded namespace-decl allocation, reachable through dae-parser in dl_renderer (see comment above). Remove when `minidom-14` and `wayland-scanner` allow 0.41. No ticket yet." },
+  # memmap2 0.5.10 via cacache -> http-cache -> http-cache-reqwest -> walkers -> dl_view_map.
   # The advisory is scoped to `advise_range`/`unchecked_advise_range`/`flush_range`/`flush_async_range`;
   # cacache only ever calls `MmapMut::map_mut` (content/write.rs), so none of the affected functions run.
   # Remove when `cacache` bumps memmap2 to >= 0.9.11, or when `walkers` drops the http-cache stack.
@@ -82,7 +82,7 @@ deny = [
   # We have to allow egui_kittest since we use it behind a `testing` feature flag, rather than just as a dev-dependency.
   #{ name = "egui_kittest", reason = "Only allowed as a dev-dependency for testing." },
 
-  # We have to allow insta because it's used by `re_redap_tests`, which contains test code
+  # We have to allow insta because it's used by `dl_redap_tests`, which contains test code
   #{ name = "insta", reason = "Only allowed as a dev-dependency for testing." },
 ]
 skip = [
@@ -109,7 +109,7 @@ skip = [
   { name = "objc2" }, # `accesskit_macos` uses a different version than `arboard`
   { name = "ordered-float" }, # Old version being used by parquet, but super small!
   { name = "pollster" }, # `rfd` still uses 0.4, we use 1.0
-  { name = "prettyplease" }, # `prost-build`/`tonic-build` use 0.2; `re_types_builder` uses 0.3, which takes the `syn` 3 AST. Build-time only.
+  { name = "prettyplease" }, # `prost-build`/`tonic-build` use 0.2; `dl_types_builder` uses 0.3, which takes the `syn` 3 AST. Build-time only.
   { name = "quick-xml" }, # because of urdf-rs
   { name = "redox_syscall" }, # Plenty of versions in the wild
   { name = "rustc-hash" }, # numpy with compatible pyo3 requires different version than wgpu

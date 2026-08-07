@@ -2,12 +2,12 @@
 //!
 //! ## Guide
 //!
-//! - For each encountered error (e.g. `re_uri::Error` when parsing), define a new variant in the
+//! - For each encountered error (e.g. `dl_uri::Error` when parsing), define a new variant in the
 //!   `Error` enum, and implement a mapping to a user-facing Python error in the `to_py_err`
 //!   function. Then, use `?`.
 //!
 //! - For errors at the API boundaries between client and server, prefer mapping to
-//!   [`re_redap_client::ApiError`] rather than wrapping the error in a new enum variant.
+//!   [`dl_redap_client::ApiError`] rather than wrapping the error in a new enum variant.
 //!
 //! - Don't hesitate to introduce new error classes if this could help the user catch specific
 //!   errors. Use the [`pyo3::create_exception`] macro for that and update [`super::register`] to
@@ -20,7 +20,7 @@ use pyo3::PyErr;
 use pyo3::exceptions::{
     PyConnectionError, PyException, PyPermissionError, PyRuntimeError, PyTimeoutError, PyValueError,
 };
-use re_redap_client::{ApiErrorKind, TonicStatusError};
+use dl_redap_client::{ApiErrorKind, TonicStatusError};
 
 pyo3::create_exception!(
     rerun_bindings.rerun_bindings,
@@ -50,16 +50,16 @@ enum ExternalError {
     TonicTransportError(Box<tonic::transport::Error>),
 
     #[error("{0}")]
-    UriError(#[from] re_uri::Error),
+    UriError(#[from] dl_uri::Error),
 
     #[error("{0}")]
-    ChunkError(Box<re_chunk::ChunkError>),
+    ChunkError(Box<dl_chunk::ChunkError>),
 
     #[error("{0}")]
-    ChunkStoreError(Box<re_chunk_store::ChunkStoreError>),
+    ChunkStoreError(Box<dl_chunk_store::ChunkStoreError>),
 
     #[error("{0}")]
-    ApiError(Box<re_redap_client::ApiError>),
+    ApiError(Box<dl_redap_client::ApiError>),
 
     #[error("{0}")]
     ArrowError(#[from] arrow::error::ArrowError),
@@ -68,25 +68,25 @@ enum ExternalError {
     UrlParseError(#[from] url::ParseError),
 
     #[error(transparent)]
-    CodecError(#[from] re_log_encoding::rrd::CodecError),
+    CodecError(#[from] dl_log_encoding::rrd::CodecError),
 
     #[error(transparent)]
-    SorbetError(#[from] re_sorbet::SorbetError),
+    SorbetError(#[from] dl_sorbet::SorbetError),
 
     #[error(transparent)]
-    ColumnSelectorParseError(#[from] re_sorbet::ColumnSelectorParseError),
+    ColumnSelectorParseError(#[from] dl_sorbet::ColumnSelectorParseError),
 
     #[error(transparent)]
-    ColumnSelectorResolveError(#[from] re_sorbet::ColumnSelectorResolveError),
+    ColumnSelectorResolveError(#[from] dl_sorbet::ColumnSelectorResolveError),
 
     #[error(transparent)]
-    TypeConversionError(Box<re_protos::TypeConversionError>),
+    TypeConversionError(Box<dl_protos::TypeConversionError>),
 
     #[error(transparent)]
-    TokenError(#[from] re_auth::TokenError),
+    TokenError(#[from] dl_auth::TokenError),
 
     #[error(transparent)]
-    InvalidLayerNameError(#[from] re_types_core::InvalidLayerNameError),
+    InvalidLayerNameError(#[from] dl_types_core::InvalidLayerNameError),
 }
 
 const _: () = assert!(
@@ -104,11 +104,11 @@ macro_rules! impl_from_boxed {
     };
 }
 
-impl_from_boxed!(re_chunk::ChunkError, ChunkError);
-impl_from_boxed!(re_chunk_store::ChunkStoreError, ChunkStoreError);
-impl_from_boxed!(re_redap_client::ApiError, ApiError);
+impl_from_boxed!(dl_chunk::ChunkError, ChunkError);
+impl_from_boxed!(dl_chunk_store::ChunkStoreError, ChunkStoreError);
+impl_from_boxed!(dl_redap_client::ApiError, ApiError);
 impl_from_boxed!(tonic::transport::Error, TonicTransportError);
-impl_from_boxed!(re_redap_client::TonicStatusError, TonicStatusError);
+impl_from_boxed!(dl_redap_client::TonicStatusError, TonicStatusError);
 
 impl From<tonic::Status> for ExternalError {
     fn from(value: tonic::Status) -> Self {
@@ -135,11 +135,11 @@ fn apierror_kind_for_df_error(err: &datafusion::error::DataFusionError) -> ApiEr
 
 impl From<datafusion::error::DataFusionError> for ExternalError {
     fn from(value: datafusion::error::DataFusionError) -> Self {
-        // Via `re_datafusion::errors`, `DataFusionError::External`
+        // Via `dl_datafusion::errors`, `DataFusionError::External`
         // can wrap an `ApiError`. Walk the source chain; if we find one,
         // surface it directly. Otherwise synthesize a typed ApiError with a kind
         // inferred from the DataFusionError variant
-        if let Some(api) = re_error::downcast_source::<re_redap_client::ApiError>(&value) {
+        if let Some(api) = dl_error::downcast_source::<dl_redap_client::ApiError>(&value) {
             return Self::ApiError(Box::new(api.clone()));
         }
         let kind = apierror_kind_for_df_error(&value);
@@ -149,13 +149,13 @@ impl From<datafusion::error::DataFusionError> for ExternalError {
             ApiErrorKind::ResourcesExhausted => "DataFusion resources exhausted",
             _ => "DataFusion error",
         };
-        Self::ApiError(Box::new(re_redap_client::ApiError::with_kind_and_source(
+        Self::ApiError(Box::new(dl_redap_client::ApiError::with_kind_and_source(
             kind, None, value, message,
         )))
     }
 }
 
-impl_from_boxed!(re_protos::TypeConversionError, TypeConversionError);
+impl_from_boxed!(dl_protos::TypeConversionError, TypeConversionError);
 
 impl From<ExternalError> for PyErr {
     fn from(err: ExternalError) -> Self {
@@ -240,7 +240,7 @@ pub fn to_py_err(err: impl Into<ExternalError>) -> PyErr {
 mod tests {
     use super::*;
     use datafusion::error::DataFusionError;
-    use re_redap_client::{ApiError, ApiErrorKind, TraceId};
+    use dl_redap_client::{ApiError, ApiErrorKind, TraceId};
 
     /// A `DataFusionError::External` wrapping an `ApiError` must be recovered
     /// as `ExternalError::ApiError`, with the trace-id and kind preserved.

@@ -1,6 +1,6 @@
 version: v2
 modules:
-  - path: crates/store/re_protos/proto
+  - path: crates/store/dl_protos/proto
   - path: examples/python/objectron/objectron/proto
 lint:
   use:

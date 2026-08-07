@@ -1,4 +1,4 @@
-//! Renders a gaussian splat `.ply` with `re_renderer`'s gaussian splat renderer from a fixed
+//! Renders a gaussian splat `.ply` with `dl_renderer`'s gaussian splat renderer from a fixed
 //! camera, offscreen, and compares the result against a reference image (e.g. from brush).
 //!
 //! Run with no arguments to render the checked-in `cactus.ply` from a fixed camera, so
@@ -8,14 +8,14 @@ use std::path::PathBuf;
 
 use clap::Parser as _;
 
-use re_renderer::renderer::SH_TEXELS_PER_GAUSSIAN;
-use re_renderer::view_builder::{Projection, TargetConfiguration, ViewBuilder};
-use re_renderer::{
+use dl_renderer::renderer::SH_TEXELS_PER_GAUSSIAN;
+use dl_renderer::view_builder::{Projection, TargetConfiguration, ViewBuilder};
+use dl_renderer::{
     GaussianShCoefficient, GaussianSplatBuilder, RenderConfig, RenderContext, Rgba, Rgba32Unmul,
     ScreenshotProcessor, device_caps,
 };
-use re_sdk_types::archetypes::GaussianSplats3D;
-use re_types_core::Loggable as _;
+use dl_sdk_types::archetypes::GaussianSplats3D;
+use dl_types_core::Loggable as _;
 
 /// Defaults render the checked-in `cactus.ply` from a fixed camera.
 #[derive(clap::Parser)]
@@ -76,23 +76,23 @@ fn main() -> anyhow::Result<()> {
     // --- Load the .ply through our actual loader ---
     let gaussians = GaussianSplats3D::from_ply_file_path(&ply_path)?;
 
-    let field = |name: &str, opt: &Option<re_sdk_types::SerializedComponentBatch>| {
+    let field = |name: &str, opt: &Option<dl_sdk_types::SerializedComponentBatch>| {
         opt.as_ref()
             .map(|col| col.array.clone())
             .ok_or_else(|| anyhow::anyhow!("PLY has no {name}"))
     };
 
     let centers: Vec<glam::Vec3> =
-        re_sdk_types::components::Position3D::from_arrow(&field("centers", &gaussians.centers)?)?
+        dl_sdk_types::components::Position3D::from_arrow(&field("centers", &gaussians.centers)?)?
             .into_iter()
             .map(|p| glam::Vec3::from_array(p.0.0))
             .collect();
     let scales: Vec<glam::Vec3> =
-        re_sdk_types::components::Scale3D::from_arrow(&field("scales", &gaussians.scales)?)?
+        dl_sdk_types::components::Scale3D::from_arrow(&field("scales", &gaussians.scales)?)?
             .into_iter()
             .map(|s| glam::Vec3::from_array(s.0.0))
             .collect();
-    let rotations: Vec<glam::Quat> = re_sdk_types::components::RotationQuat::from_arrow(&field(
+    let rotations: Vec<glam::Quat> = dl_sdk_types::components::RotationQuat::from_arrow(&field(
         "quaternions",
         &gaussians.quaternions,
     )?)?
@@ -100,7 +100,7 @@ fn main() -> anyhow::Result<()> {
     .map(|q| glam::Quat::from_array(q.0.0))
     .collect();
     let colors: Vec<Rgba32Unmul> =
-        re_sdk_types::components::Color::from_arrow(&field("colors", &gaussians.colors)?)?
+        dl_sdk_types::components::Color::from_arrow(&field("colors", &gaussians.colors)?)?
             .into_iter()
             .map(|c| Rgba32Unmul::from_rgba_unmul_array(c.to_array()))
             .collect();
@@ -108,7 +108,7 @@ fn main() -> anyhow::Result<()> {
         .sh_coefficients
         .as_ref()
         .map(|sh| {
-            re_sdk_types::components::SphericalHarmonics3Rgb::from_arrow(&sh.array).map(|v| {
+            dl_sdk_types::components::SphericalHarmonics3Rgb::from_arrow(&sh.array).map(|v| {
                 v.into_iter()
                     .map(|sh| std::array::from_fn(|i| GaussianShCoefficient::from_rgb(sh.0.0[i])))
                     .collect::<Vec<_>>()
@@ -151,7 +151,7 @@ fn main() -> anyhow::Result<()> {
             },
             ..Default::default()
         },
-        re_renderer::ViewBuilderId::new(0),
+        dl_renderer::ViewBuilderId::new(0),
     )?;
 
     let mut splat_builder = GaussianSplatBuilder::new(&ctx);

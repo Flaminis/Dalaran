@@ -13,9 +13,9 @@ Unfortunately, this script under-counts compared to what `cargo build` outputs.
 There is also `cargo deps-list`, which also under-counts.
 For instance:
 
-* `scripts/ci/count_dependencies.py -p re_sdk --no-default-features`  => 118
-* `cargo deps-list -p re_sdk --no-default-features`                   => 165
-* `cargo check -p re_sdk --no-default-features`                       => 213
+* `scripts/ci/count_dependencies.py -p dl_sdk --no-default-features`  => 118
+* `cargo deps-list -p dl_sdk --no-default-features`                   => 165
+* `cargo check -p dl_sdk --no-default-features`                       => 213
 
 So this script is more of a heurristic than an exact count.
 """

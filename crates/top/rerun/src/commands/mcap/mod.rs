@@ -7,11 +7,11 @@ use std::io::BufWriter;
 
 use clap::Subcommand;
 use clap::builder::TypedValueParser as _;
-use re_log_encoding::Encoder;
-use re_log_types::{Duration, LogMsg, RecordingId, TimeType, Timestamp};
-use re_mcap::{DecoderIdentifier, SelectedDecoders, TopicFilter};
-use re_sdk::external::re_importer::{McapImporter, supported_mcap_decoder_identifiers};
-use re_sdk::{ApplicationId, ImportedData, Importer, ImporterSettings};
+use dl_log_encoding::Encoder;
+use dl_log_types::{Duration, LogMsg, RecordingId, TimeType, Timestamp};
+use dl_mcap::{DecoderIdentifier, SelectedDecoders, TopicFilter};
+use dl_sdk::external::dl_importer::{McapImporter, supported_mcap_decoder_identifiers};
+use dl_sdk::{ApplicationId, ImportedData, Importer, ImporterSettings};
 
 use check::CheckCommand;
 use info::InfoCommand;
@@ -258,7 +258,7 @@ impl ConvertCommand {
             process_mcap(writer, &rx)?;
         }
 
-        re_log::info!("Processing took {}s", start_time.elapsed().as_secs());
+        dl_log::info!("Processing took {}s", start_time.elapsed().as_secs());
 
         Ok(())
     }
@@ -296,8 +296,8 @@ fn process_mcap<W: std::io::Write>(
 ) -> anyhow::Result<()> {
     let mut num_total_msgs = 0;
     let mut topics = BTreeSet::new();
-    let options = re_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
-    let version = re_build_info::CrateVersion::LOCAL;
+    let options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let version = dl_build_info::CrateVersion::LOCAL;
     let mut encoder = Encoder::new_eager(version, options, writer)?;
 
     while let Ok(res) = receiver.recv() {
@@ -315,7 +315,7 @@ fn process_mcap<W: std::io::Write>(
         encoder.append(&log_msg)?;
     }
 
-    re_log::info_once!("Processed {num_total_msgs} messages.");
-    re_log::info_once!("Entities: {topics:#?}");
+    dl_log::info_once!("Processed {num_total_msgs} messages.");
+    dl_log::info_once!("Entities: {topics:#?}");
     Ok(())
 }

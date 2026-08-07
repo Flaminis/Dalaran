@@ -3,13 +3,13 @@ use std::sync::Arc;
 use pyo3::exceptions::PyRuntimeError;
 use pyo3::prelude::*;
 
-use re_chunk::Chunk;
-use re_chunk_store::{
+use dl_chunk::Chunk;
+use dl_chunk_store::{
     ChunkStore, ChunkStoreConfig, ChunkStoreHandle, QueryExpression, SparseFillStrategy,
     StaticColumnSelection, ViewContentsSelector,
 };
-use re_datafusion::LocalChunkStoreTableProvider;
-use re_log_types::{EntityPathFilter, StoreId, StoreKind};
+use dl_datafusion::LocalChunkStoreTableProvider;
+use dl_log_types::{EntityPathFilter, StoreId, StoreKind};
 
 use super::error::ChunkPipelineError;
 use super::py_stream::PyLazyChunkStreamInternal;
@@ -167,7 +167,7 @@ impl PyChunkStoreInternal {
             },
             filtered_index: index
                 .map(|index| {
-                    re_chunk::TimelineName::try_new(index)
+                    dl_chunk::TimelineName::try_new(index)
                         .map_err(|err| pyo3::exceptions::PyValueError::new_err(err.to_string()))
                 })
                 .transpose()?,

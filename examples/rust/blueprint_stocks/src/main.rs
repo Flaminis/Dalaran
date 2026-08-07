@@ -6,7 +6,7 @@ use rerun::{
         Blueprint, ContainerLike, Horizontal, SelectionPanel, TextDocumentView, TimePanel,
         TimeSeriesView, Vertical,
     },
-    external::re_sdk_types::blueprint::components::PanelState,
+    external::dl_sdk_types::blueprint::components::PanelState,
 };
 use serde::Deserialize;
 use std::collections::{BTreeSet, HashMap};

@@ -12,7 +12,7 @@ members = [
   "run_wasm",
   "tests/rust/log_benchmark",
   "tests/rust/plot_dashboard_stress",
-  "tests/rust/re_integration_test",
+  "tests/rust/dl_integration_test",
   "tests/rust/test_*",
 ]
 exclude = ["examples/rust/revy", "examples/rust/chess_robby_fischer"]
@@ -37,15 +37,15 @@ version = "0.36.0-alpha.1+dev"
 ignored = [
   # rerun crates
   "rerun_c",
-  "re_dev_tools",
+  "dl_dev_tools",
   "rerun-cli",
-  "re_types_builder",
-  "re_protos_builder",
-  "re_renderer_examples",
+  "dl_types_builder",
+  "dl_protos_builder",
+  "dl_renderer_examples",
 
   # used for specific targets or features
   "profiling",
-  "wayland-sys", # only enabled via the `server` feature of `re_tracing`
+  "wayland-sys", # only enabled via the `server` feature of `dl_tracing`
   "windows-core",
 ]
 ignored-paths = [
@@ -56,123 +56,123 @@ ignored-paths = [
 # When using alpha-release, always use exact version, e.g. `version = "=0.x.y-alpha.z"
 # This is because we treat alpha-releases as incompatible, but semver doesn't.
 # In particular: if we compile rerun 0.3.0-alpha.0 we only want it to use
-# re_log_types 0.3.0-alpha.0, NOT 0.3.0-alpha.4 even though it is newer and semver-compatible.
+# dl_log_types 0.3.0-alpha.0, NOT 0.3.0-alpha.4 even though it is newer and semver-compatible.
 
 # crates/build:
-re_build_info = { path = "crates/build/re_build_info", version = "=0.36.0-alpha.1", default-features = false }
-re_build_tools = { path = "crates/build/re_build_tools", version = "=0.36.0-alpha.1", default-features = false }
-re_dev_tools = { path = "crates/build/re_dev_tools", version = "=0.36.0-alpha.1", default-features = false }
-re_protos_builder = { path = "crates/build/re_protos_builder", version = "=0.36.0-alpha.1", default-features = false }
-re_types_builder = { path = "crates/build/re_types_builder", version = "=0.36.0-alpha.1", default-features = false }
-re_types_builder_macros = { path = "crates/build/re_types_builder_macros", version = "=0.36.0-alpha.1", default-features = false }
-# NOTE: `re_types_builder_prelude` gets its entry here once the type definitions depend on it.
+dl_build_info = { path = "crates/build/dl_build_info", version = "=0.36.0-alpha.1", default-features = false }
+dl_build_tools = { path = "crates/build/dl_build_tools", version = "=0.36.0-alpha.1", default-features = false }
+dl_dev_tools = { path = "crates/build/dl_dev_tools", version = "=0.36.0-alpha.1", default-features = false }
+dl_protos_builder = { path = "crates/build/dl_protos_builder", version = "=0.36.0-alpha.1", default-features = false }
+dl_types_builder = { path = "crates/build/dl_types_builder", version = "=0.36.0-alpha.1", default-features = false }
+dl_types_builder_macros = { path = "crates/build/dl_types_builder_macros", version = "=0.36.0-alpha.1", default-features = false }
+# NOTE: `dl_types_builder_prelude` gets its entry here once the type definitions depend on it.
 # Listing it before then trips `cargo shear` as an unused workspace dependency.
 
 # crates/store:
-re_lenses_core = { path = "crates/store/re_lenses_core", version = "=0.36.0-alpha.1", default-features = false }
-re_chunk = { path = "crates/store/re_chunk", version = "=0.36.0-alpha.1", default-features = false }
-re_chunk_store = { path = "crates/store/re_chunk_store", version = "=0.36.0-alpha.1", default-features = false }
-re_importer = { path = "crates/store/re_importer", version = "=0.36.0-alpha.1", default-features = false }
-re_data_source = { path = "crates/store/re_data_source", version = "=0.36.0-alpha.1", default-features = false }
-re_dataframe = { path = "crates/store/re_dataframe", version = "=0.36.0-alpha.1", default-features = false }
-re_datafusion = { path = "crates/store/re_datafusion", version = "=0.36.0-alpha.1", default-features = false }
-re_entity_db = { path = "crates/store/re_entity_db", version = "=0.36.0-alpha.1", default-features = false }
-re_grpc_client = { path = "crates/store/re_grpc_client", version = "=0.36.0-alpha.1", default-features = false }
-re_grpc_server = { path = "crates/store/re_grpc_server", version = "=0.36.0-alpha.1", default-features = false }
-re_hdf5 = { path = "crates/store/re_hdf5", version = "=0.36.0-alpha.1", default-features = false }
-re_lenses = { path = "crates/store/re_lenses", version = "=0.36.0-alpha.1", default-features = false }
-re_log_channel = { path = "crates/store/re_log_channel", version = "=0.36.0-alpha.1", default-features = false }
-re_log_encoding = { path = "crates/store/re_log_encoding", version = "=0.36.0-alpha.1", default-features = false }
-re_log_types = { path = "crates/store/re_log_types", version = "=0.36.0-alpha.1", default-features = false }
-re_mcap = { path = "crates/store/re_mcap", version = "=0.36.0-alpha.1", default-features = false }
-re_mp4_reader = { path = "crates/store/re_mp4_reader", version = "=0.36.0-alpha.1", default-features = false }
-re_parquet = { path = "crates/store/re_parquet", version = "=0.36.0-alpha.1", default-features = false }
-re_protos = { path = "crates/store/re_protos", version = "=0.36.0-alpha.1", default-features = false }
-re_query = { path = "crates/store/re_query", version = "=0.36.0-alpha.1", default-features = false }
-re_redap_client = { path = "crates/store/re_redap_client", version = "=0.36.0-alpha.1", default-features = false }
-re_redap_tests = { path = "crates/store/re_redap_tests", version = "=0.36.0-alpha.1", default-features = false }
-re_sdk_types = { path = "crates/store/re_sdk_types", version = "=0.36.0-alpha.1", default-features = false }
-re_server = { path = "crates/store/re_server", version = "=0.36.0-alpha.1", default-features = false }
-re_sorbet = { path = "crates/store/re_sorbet", version = "=0.36.0-alpha.1", default-features = false }
-re_tf = { path = "crates/store/re_tf", version = "=0.36.0-alpha.1", default-features = false }
-re_types_core = { path = "crates/store/re_types_core", version = "=0.36.0-alpha.1", default-features = false }
-re_uri = { path = "crates/store/re_uri", version = "=0.36.0-alpha.1", default-features = false }
+dl_lenses_core = { path = "crates/store/dl_lenses_core", version = "=0.36.0-alpha.1", default-features = false }
+dl_chunk = { path = "crates/store/dl_chunk", version = "=0.36.0-alpha.1", default-features = false }
+dl_chunk_store = { path = "crates/store/dl_chunk_store", version = "=0.36.0-alpha.1", default-features = false }
+dl_importer = { path = "crates/store/dl_importer", version = "=0.36.0-alpha.1", default-features = false }
+dl_data_source = { path = "crates/store/dl_data_source", version = "=0.36.0-alpha.1", default-features = false }
+dl_dataframe = { path = "crates/store/dl_dataframe", version = "=0.36.0-alpha.1", default-features = false }
+dl_datafusion = { path = "crates/store/dl_datafusion", version = "=0.36.0-alpha.1", default-features = false }
+dl_entity_db = { path = "crates/store/dl_entity_db", version = "=0.36.0-alpha.1", default-features = false }
+dl_grpc_client = { path = "crates/store/dl_grpc_client", version = "=0.36.0-alpha.1", default-features = false }
+dl_grpc_server = { path = "crates/store/dl_grpc_server", version = "=0.36.0-alpha.1", default-features = false }
+dl_hdf5 = { path = "crates/store/dl_hdf5", version = "=0.36.0-alpha.1", default-features = false }
+dl_lenses = { path = "crates/store/dl_lenses", version = "=0.36.0-alpha.1", default-features = false }
+dl_log_channel = { path = "crates/store/dl_log_channel", version = "=0.36.0-alpha.1", default-features = false }
+dl_log_encoding = { path = "crates/store/dl_log_encoding", version = "=0.36.0-alpha.1", default-features = false }
+dl_log_types = { path = "crates/store/dl_log_types", version = "=0.36.0-alpha.1", default-features = false }
+dl_mcap = { path = "crates/store/dl_mcap", version = "=0.36.0-alpha.1", default-features = false }
+dl_mp4_reader = { path = "crates/store/dl_mp4_reader", version = "=0.36.0-alpha.1", default-features = false }
+dl_parquet = { path = "crates/store/dl_parquet", version = "=0.36.0-alpha.1", default-features = false }
+dl_protos = { path = "crates/store/dl_protos", version = "=0.36.0-alpha.1", default-features = false }
+dl_query = { path = "crates/store/dl_query", version = "=0.36.0-alpha.1", default-features = false }
+dl_redap_client = { path = "crates/store/dl_redap_client", version = "=0.36.0-alpha.1", default-features = false }
+dl_redap_tests = { path = "crates/store/dl_redap_tests", version = "=0.36.0-alpha.1", default-features = false }
+dl_sdk_types = { path = "crates/store/dl_sdk_types", version = "=0.36.0-alpha.1", default-features = false }
+dl_server = { path = "crates/store/dl_server", version = "=0.36.0-alpha.1", default-features = false }
+dl_sorbet = { path = "crates/store/dl_sorbet", version = "=0.36.0-alpha.1", default-features = false }
+dl_tf = { path = "crates/store/dl_tf", version = "=0.36.0-alpha.1", default-features = false }
+dl_types_core = { path = "crates/store/dl_types_core", version = "=0.36.0-alpha.1", default-features = false }
+dl_uri = { path = "crates/store/dl_uri", version = "=0.36.0-alpha.1", default-features = false }
 
 # crates/top:
-re_sdk = { path = "crates/top/re_sdk", version = "=0.36.0-alpha.1", default-features = false }
+dl_sdk = { path = "crates/top/dl_sdk", version = "=0.36.0-alpha.1", default-features = false }
 rerun = { path = "crates/top/rerun", version = "=0.36.0-alpha.1", default-features = false }
 rerun_c = { path = "crates/top/rerun_c", version = "=0.36.0-alpha.1", default-features = false }
 rerun-cli = { path = "crates/top/rerun-cli", version = "=0.36.0-alpha.1", default-features = false }
 
 # crates/utils:
-re_analytics = { path = "crates/utils/re_analytics", version = "=0.36.0-alpha.1", default-features = false }
-re_async = { path = "crates/utils/re_async", version = "=0.36.0-alpha.1", default-features = false }
-re_arrow_util = { path = "crates/utils/re_arrow_util", version = "=0.36.0-alpha.1", default-features = false }
-re_auth = { path = "crates/utils/re_auth", version = "=0.36.0-alpha.1", default-features = false }
-re_backoff = { path = "crates/utils/re_backoff", version = "=0.36.0-alpha.1", default-features = false }
-re_byte_size = { path = "crates/utils/re_byte_size", version = "=0.36.0-alpha.1", default-features = false }
-re_byte_size_derive = { path = "crates/utils/re_byte_size_derive", version = "=0.36.0-alpha.1", default-features = false }
-re_capabilities = { path = "crates/utils/re_capabilities", version = "=0.36.0-alpha.1", default-features = false }
-re_case = { path = "crates/utils/re_case", version = "=0.36.0-alpha.1", default-features = false }
-re_crash_handler = { path = "crates/utils/re_crash_handler", version = "=0.36.0-alpha.1", default-features = false }
-re_error = { path = "crates/utils/re_error", version = "=0.36.0-alpha.1", default-features = false }
-re_format = { path = "crates/utils/re_format", version = "=0.36.0-alpha.1", default-features = false }
-re_grpc_headers = { path = "crates/utils/re_grpc_headers", version = "=0.36.0-alpha.1", default-features = false }
-re_int = { path = "crates/utils/re_int", version = "=0.36.0-alpha.1", default-features = false }
-re_log = { path = "crates/utils/re_log", version = "=0.36.0-alpha.1", default-features = false }
-re_memory = { path = "crates/utils/re_memory", version = "=0.36.0-alpha.1", default-features = false }
-re_mutex = { path = "crates/utils/re_mutex", version = "=0.36.0-alpha.1", default-features = false }
-re_perf_telemetry = { path = "crates/utils/re_perf_telemetry", version = "=0.36.0-alpha.1", default-features = false }
-re_quota_channel = { path = "crates/utils/re_quota_channel", version = "=0.36.0-alpha.1", default-features = false }
-re_ros_msg = { path = "crates/utils/re_ros_msg", version = "=0.36.0-alpha.1", default-features = false }
-re_rvl = { path = "crates/utils/re_rvl", version = "=0.36.0-alpha.1", default-features = false }
-re_span = { path = "crates/utils/re_span", version = "=0.36.0-alpha.1", default-features = false }
-re_string_interner = { path = "crates/utils/re_string_interner", version = "=0.36.0-alpha.1", default-features = false }
-re_test_mocks = { path = "crates/utils/re_test_mocks", version = "=0.36.0-alpha.1", default-features = false }
-re_tracing = { path = "crates/utils/re_tracing", version = "=0.36.0-alpha.1", default-features = false }
-re_tuid = { path = "crates/utils/re_tuid", version = "=0.36.0-alpha.1", default-features = false }
-re_video = { path = "crates/utils/re_video", version = "=0.36.0-alpha.1", default-features = false }
-re_web = { path = "crates/utils/re_web", version = "=0.36.0-alpha.1", default-features = false }
+dl_analytics = { path = "crates/utils/dl_analytics", version = "=0.36.0-alpha.1", default-features = false }
+dl_async = { path = "crates/utils/dl_async", version = "=0.36.0-alpha.1", default-features = false }
+dl_arrow_util = { path = "crates/utils/dl_arrow_util", version = "=0.36.0-alpha.1", default-features = false }
+dl_auth = { path = "crates/utils/dl_auth", version = "=0.36.0-alpha.1", default-features = false }
+dl_backoff = { path = "crates/utils/dl_backoff", version = "=0.36.0-alpha.1", default-features = false }
+dl_byte_size = { path = "crates/utils/dl_byte_size", version = "=0.36.0-alpha.1", default-features = false }
+dl_byte_size_derive = { path = "crates/utils/dl_byte_size_derive", version = "=0.36.0-alpha.1", default-features = false }
+dl_capabilities = { path = "crates/utils/dl_capabilities", version = "=0.36.0-alpha.1", default-features = false }
+dl_case = { path = "crates/utils/dl_case", version = "=0.36.0-alpha.1", default-features = false }
+dl_crash_handler = { path = "crates/utils/dl_crash_handler", version = "=0.36.0-alpha.1", default-features = false }
+dl_error = { path = "crates/utils/dl_error", version = "=0.36.0-alpha.1", default-features = false }
+dl_format = { path = "crates/utils/dl_format", version = "=0.36.0-alpha.1", default-features = false }
+dl_grpc_headers = { path = "crates/utils/dl_grpc_headers", version = "=0.36.0-alpha.1", default-features = false }
+dl_int = { path = "crates/utils/dl_int", version = "=0.36.0-alpha.1", default-features = false }
+dl_log = { path = "crates/utils/dl_log", version = "=0.36.0-alpha.1", default-features = false }
+dl_memory = { path = "crates/utils/dl_memory", version = "=0.36.0-alpha.1", default-features = false }
+dl_mutex = { path = "crates/utils/dl_mutex", version = "=0.36.0-alpha.1", default-features = false }
+dl_perf_telemetry = { path = "crates/utils/dl_perf_telemetry", version = "=0.36.0-alpha.1", default-features = false }
+dl_quota_channel = { path = "crates/utils/dl_quota_channel", version = "=0.36.0-alpha.1", default-features = false }
+dl_ros_msg = { path = "crates/utils/dl_ros_msg", version = "=0.36.0-alpha.1", default-features = false }
+dl_rvl = { path = "crates/utils/dl_rvl", version = "=0.36.0-alpha.1", default-features = false }
+dl_span = { path = "crates/utils/dl_span", version = "=0.36.0-alpha.1", default-features = false }
+dl_string_interner = { path = "crates/utils/dl_string_interner", version = "=0.36.0-alpha.1", default-features = false }
+dl_test_mocks = { path = "crates/utils/dl_test_mocks", version = "=0.36.0-alpha.1", default-features = false }
+dl_tracing = { path = "crates/utils/dl_tracing", version = "=0.36.0-alpha.1", default-features = false }
+dl_tuid = { path = "crates/utils/dl_tuid", version = "=0.36.0-alpha.1", default-features = false }
+dl_video = { path = "crates/utils/dl_video", version = "=0.36.0-alpha.1", default-features = false }
+dl_web = { path = "crates/utils/dl_web", version = "=0.36.0-alpha.1", default-features = false }
 
 # crates/viewer:
-re_arrow_ui = { path = "crates/viewer/re_arrow_ui", version = "=0.36.0-alpha.1", default-features = false }
-re_blueprint_tree = { path = "crates/viewer/re_blueprint_tree", version = "=0.36.0-alpha.1", default-features = false }
-re_chunk_store_ui = { path = "crates/viewer/re_chunk_store_ui", version = "=0.36.0-alpha.1", default-features = false }
-re_component_fallbacks = { path = "crates/viewer/re_component_fallbacks", version = "=0.36.0-alpha.1", default-features = false }
-re_component_ui = { path = "crates/viewer/re_component_ui", version = "=0.36.0-alpha.1", default-features = false }
-re_context_menu = { path = "crates/viewer/re_context_menu", version = "=0.36.0-alpha.1", default-features = false }
-re_data_ui = { path = "crates/viewer/re_data_ui", version = "=0.36.0-alpha.1", default-features = false }
-re_dataframe_ui = { path = "crates/viewer/re_dataframe_ui", version = "=0.36.0-alpha.1", default-features = false }
-re_gamepad = { path = "crates/viewer/re_gamepad", version = "=0.36.0-alpha.1", default-features = false }
-re_memory_view = { path = "crates/viewer/re_memory_view", version = "=0.36.0-alpha.1", default-features = false }
-re_plot = { path = "crates/viewer/re_plot", version = "=0.36.0-alpha.1", default-features = false }
-re_recording_panel = { path = "crates/viewer/re_recording_panel", version = "=0.36.0-alpha.1", default-features = false }
-re_redap_browser = { path = "crates/viewer/re_redap_browser", version = "=0.36.0-alpha.1", default-features = false }
-re_renderer = { path = "crates/viewer/re_renderer", version = "=0.36.0-alpha.1", default-features = false }
-re_renderer_examples = { path = "crates/viewer/re_renderer_examples", version = "=0.36.0-alpha.1", default-features = false }
-re_selection_panel = { path = "crates/viewer/re_selection_panel", version = "=0.36.0-alpha.1", default-features = false }
-re_test_context = { path = "crates/viewer/re_test_context", version = "=0.36.0-alpha.1", default-features = false }
-re_test_viewport = { path = "crates/viewer/re_test_viewport", version = "=0.36.0-alpha.1", default-features = false }
-re_time_panel = { path = "crates/viewer/re_time_panel", version = "=0.36.0-alpha.1", default-features = false }
-re_time_ruler = { path = "crates/viewer/re_time_ruler", version = "=0.36.0-alpha.1", default-features = false }
-re_ui = { path = "crates/viewer/re_ui", version = "=0.36.0-alpha.1", default-features = false }
-re_view = { path = "crates/viewer/re_view", version = "=0.36.0-alpha.1", default-features = false }
-re_view_bar_chart = { path = "crates/viewer/re_view_bar_chart", version = "=0.36.0-alpha.1", default-features = false }
-re_view_dataframe = { path = "crates/viewer/re_view_dataframe", version = "=0.36.0-alpha.1", default-features = false }
-re_view_graph = { path = "crates/viewer/re_view_graph", version = "=0.36.0-alpha.1", default-features = false }
-re_view_map = { path = "crates/viewer/re_view_map", version = "=0.36.0-alpha.1", default-features = false }
-re_view_spatial = { path = "crates/viewer/re_view_spatial", version = "=0.36.0-alpha.1", default-features = false }
-re_view_state_timeline = { path = "crates/viewer/re_view_state_timeline", version = "=0.36.0-alpha.1", default-features = false }
-re_view_tensor = { path = "crates/viewer/re_view_tensor", version = "=0.36.0-alpha.1", default-features = false }
-re_view_text_document = { path = "crates/viewer/re_view_text_document", version = "=0.36.0-alpha.1", default-features = false }
-re_view_text_log = { path = "crates/viewer/re_view_text_log", version = "=0.36.0-alpha.1", default-features = false }
-re_view_time_series = { path = "crates/viewer/re_view_time_series", version = "=0.36.0-alpha.1", default-features = false }
-re_viewer = { path = "crates/viewer/re_viewer", version = "=0.36.0-alpha.1", default-features = false }
-re_viewer_context = { path = "crates/viewer/re_viewer_context", version = "=0.36.0-alpha.1", default-features = false }
-re_viewer_mcp = { path = "crates/viewer/re_viewer_mcp", version = "=0.36.0-alpha.1", default-features = false }
-re_viewport = { path = "crates/viewer/re_viewport", version = "=0.36.0-alpha.1", default-features = false }
-re_viewport_blueprint = { path = "crates/viewer/re_viewport_blueprint", version = "=0.36.0-alpha.1", default-features = false }
-re_web_viewer_server = { path = "crates/viewer/re_web_viewer_server", version = "=0.36.0-alpha.1", default-features = false }
+dl_arrow_ui = { path = "crates/viewer/dl_arrow_ui", version = "=0.36.0-alpha.1", default-features = false }
+dl_blueprint_tree = { path = "crates/viewer/dl_blueprint_tree", version = "=0.36.0-alpha.1", default-features = false }
+dl_chunk_store_ui = { path = "crates/viewer/dl_chunk_store_ui", version = "=0.36.0-alpha.1", default-features = false }
+dl_component_fallbacks = { path = "crates/viewer/dl_component_fallbacks", version = "=0.36.0-alpha.1", default-features = false }
+dl_component_ui = { path = "crates/viewer/dl_component_ui", version = "=0.36.0-alpha.1", default-features = false }
+dl_context_menu = { path = "crates/viewer/dl_context_menu", version = "=0.36.0-alpha.1", default-features = false }
+dl_data_ui = { path = "crates/viewer/dl_data_ui", version = "=0.36.0-alpha.1", default-features = false }
+dl_dataframe_ui = { path = "crates/viewer/dl_dataframe_ui", version = "=0.36.0-alpha.1", default-features = false }
+dl_gamepad = { path = "crates/viewer/dl_gamepad", version = "=0.36.0-alpha.1", default-features = false }
+dl_memory_view = { path = "crates/viewer/dl_memory_view", version = "=0.36.0-alpha.1", default-features = false }
+dl_plot = { path = "crates/viewer/dl_plot", version = "=0.36.0-alpha.1", default-features = false }
+dl_recording_panel = { path = "crates/viewer/dl_recording_panel", version = "=0.36.0-alpha.1", default-features = false }
+dl_redap_browser = { path = "crates/viewer/dl_redap_browser", version = "=0.36.0-alpha.1", default-features = false }
+dl_renderer = { path = "crates/viewer/dl_renderer", version = "=0.36.0-alpha.1", default-features = false }
+dl_renderer_examples = { path = "crates/viewer/dl_renderer_examples", version = "=0.36.0-alpha.1", default-features = false }
+dl_selection_panel = { path = "crates/viewer/dl_selection_panel", version = "=0.36.0-alpha.1", default-features = false }
+dl_test_context = { path = "crates/viewer/dl_test_context", version = "=0.36.0-alpha.1", default-features = false }
+dl_test_viewport = { path = "crates/viewer/dl_test_viewport", version = "=0.36.0-alpha.1", default-features = false }
+dl_time_panel = { path = "crates/viewer/dl_time_panel", version = "=0.36.0-alpha.1", default-features = false }
+dl_time_ruler = { path = "crates/viewer/dl_time_ruler", version = "=0.36.0-alpha.1", default-features = false }
+dl_ui = { path = "crates/viewer/dl_ui", version = "=0.36.0-alpha.1", default-features = false }
+dl_view = { path = "crates/viewer/dl_view", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_bar_chart = { path = "crates/viewer/dl_view_bar_chart", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_dataframe = { path = "crates/viewer/dl_view_dataframe", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_graph = { path = "crates/viewer/dl_view_graph", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_map = { path = "crates/viewer/dl_view_map", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_spatial = { path = "crates/viewer/dl_view_spatial", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_state_timeline = { path = "crates/viewer/dl_view_state_timeline", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_tensor = { path = "crates/viewer/dl_view_tensor", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_text_document = { path = "crates/viewer/dl_view_text_document", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_text_log = { path = "crates/viewer/dl_view_text_log", version = "=0.36.0-alpha.1", default-features = false }
+dl_view_time_series = { path = "crates/viewer/dl_view_time_series", version = "=0.36.0-alpha.1", default-features = false }
+dl_viewer = { path = "crates/viewer/dl_viewer", version = "=0.36.0-alpha.1", default-features = false }
+dl_viewer_context = { path = "crates/viewer/dl_viewer_context", version = "=0.36.0-alpha.1", default-features = false }
+dl_viewer_mcp = { path = "crates/viewer/dl_viewer_mcp", version = "=0.36.0-alpha.1", default-features = false }
+dl_viewport = { path = "crates/viewer/dl_viewport", version = "=0.36.0-alpha.1", default-features = false }
+dl_viewport_blueprint = { path = "crates/viewer/dl_viewport_blueprint", version = "=0.36.0-alpha.1", default-features = false }
+dl_web_viewer_server = { path = "crates/viewer/dl_web_viewer_server", version = "=0.36.0-alpha.1", default-features = false }
 
 # Rerun crates in other repos:
 quiver = { version = "0.5.0", default-features = false }
@@ -237,7 +237,7 @@ camino = "1.2"
 cargo_metadata = "0.23.1"
 cargo-run-wasm = "0.4.0"
 cfg_aliases = "0.2.2"
-chrono = { version = "0.4.45", default-features = false } # Needed for datafusion, see `re_datafusion`'s Cargo.toml
+chrono = { version = "0.4.45", default-features = false } # Needed for datafusion, see `dl_datafusion`'s Cargo.toml
 clap = { version = "4.6", features = ["derive"] }
 clean-path = "0.2.1"
 colored = "2.2" # 3.1 would duplicate the 2.2 that `dify` (via egui_kittest) requires. Bump once `dify` moves to colored 3.
@@ -465,7 +465,7 @@ walkdir = "2.5"
 wildmatch = "2.6"
 # TODO(#8766): `rerun_js/web-viewer/build-wasm.mjs` is HIGHLY sensitive to changes in `wasm-bindgen`.
 #     Whenever updating `wasm-bindgen`, update the exact version constraints in
-#     `crates/viewer/re_redap_browser/Cargo.toml` and `crates/viewer/re_viewer/Cargo.toml`, then make
+#     `crates/viewer/dl_redap_browser/Cargo.toml` and `crates/viewer/dl_viewer/Cargo.toml`, then make
 #     sure that notebooks still work:
 #         See `rerun_notebook/README.md` for how to run notebooks.
 #         Try running a cell which starts a viewer, and then running it again.
@@ -487,7 +487,7 @@ windows-core = { version = "0.62.2", default-features = false, features = [
   "std",
 ] } # Ensure `std` is enabled so `windows-result::Error` impls `core::error::Error` (needed by wgpu-hal gles on Windows)
 winit = { version = "0.30.13", default-features = false }
-# TODO(andreas): Try to get rid of `fragile-send-sync-non-atomic-wasm`. This requires re_renderer being aware of single-thread restriction on resources.
+# TODO(andreas): Try to get rid of `fragile-send-sync-non-atomic-wasm`. This requires dl_renderer being aware of single-thread restriction on resources.
 # See also https://gpuweb.github.io/gpuweb/explainer/#multithreading-transfer (unsolved part of the Spec as of writing!)
 wgpu = { version = "30.0", default-features = false, features = [
   # `std` is a default feature of `wgpu`, and we need it since we don't target `no_std`.
@@ -533,87 +533,87 @@ debug = false
 # There is, as far we know, no way to do this without enumerating all crates manually.
 
 [profile.dev.package]
-"re_analytics".debug = true
-"re_arrow_ui".debug = true
-"re_arrow_util".debug = true
-"re_auth".debug = true
-"re_blueprint_tree".debug = true
-"re_build_info".debug = true
-"re_build_tools".debug = true
-"re_byte_size".debug = true
-"re_byte_size_derive".debug = true
-"re_capabilities".debug = true
-"re_case".debug = true
-"re_chunk_store_ui".debug = true
-"re_chunk_store".debug = true
-"re_chunk".debug = true
-"re_component_ui".debug = true
-"re_context_menu".debug = true
-"re_crash_handler".debug = true
-"re_importer".debug = true
-"re_data_source".debug = true
-"re_data_ui".debug = true
-"re_dataframe_ui".debug = true
-"re_dataframe".debug = true
-"re_datafusion".debug = true
-"re_dev_tools".debug = true
-"re_entity_db".debug = true
-"re_error".debug = true
-"re_format".debug = true
-"re_gamepad".debug = true
-"re_grpc_client".debug = true
-"re_grpc_server".debug = true
-"re_int".debug = true
-"re_integration_test".debug = true
-"re_log_channel".debug = true
-"re_log_encoding".debug = true
-"re_log_types".debug = true
-"re_log".debug = true
-"re_mcap".debug = true
-"re_memory".debug = true
-"re_perf_telemetry".debug = true
-"re_protos_builder".debug = true
-"re_protos".debug = true
-"re_query".debug = true
-"re_recording_panel".debug = true
-"re_redap_browser".debug = true
-"re_redap_client".debug = true
-"re_renderer_examples".debug = true
-"re_renderer".debug = true
-"re_sdk".debug = true
-"re_selection_panel".debug = true
-"re_server".debug = true
-"re_sorbet".debug = true
-"re_span".debug = true
-"re_string_interner".debug = true
-"re_test_context".debug = true
-"re_test_viewport".debug = true
-"re_tf".debug = true
-"re_time_panel".debug = true
-"re_tracing".debug = true
-"re_tuid".debug = true
-"re_types_builder".debug = true
-"re_types_core".debug = true
-"re_sdk_types".debug = true
-"re_ui".debug = true
-"re_uri".debug = true
-"re_video".debug = true
-"re_view_bar_chart".debug = true
-"re_view_dataframe".debug = true
-"re_view_graph".debug = true
-"re_view_map".debug = true
-"re_view_spatial".debug = true
-"re_view_state_timeline".debug = true
-"re_view_tensor".debug = true
-"re_view_text_document".debug = true
-"re_view_text_log".debug = true
-"re_view_time_series".debug = true
-"re_view".debug = true
-"re_viewer_context".debug = true
-"re_viewer".debug = true
-"re_viewport_blueprint".debug = true
-"re_viewport".debug = true
-"re_web_viewer_server".debug = true
+"dl_analytics".debug = true
+"dl_arrow_ui".debug = true
+"dl_arrow_util".debug = true
+"dl_auth".debug = true
+"dl_blueprint_tree".debug = true
+"dl_build_info".debug = true
+"dl_build_tools".debug = true
+"dl_byte_size".debug = true
+"dl_byte_size_derive".debug = true
+"dl_capabilities".debug = true
+"dl_case".debug = true
+"dl_chunk_store_ui".debug = true
+"dl_chunk_store".debug = true
+"dl_chunk".debug = true
+"dl_component_ui".debug = true
+"dl_context_menu".debug = true
+"dl_crash_handler".debug = true
+"dl_importer".debug = true
+"dl_data_source".debug = true
+"dl_data_ui".debug = true
+"dl_dataframe_ui".debug = true
+"dl_dataframe".debug = true
+"dl_datafusion".debug = true
+"dl_dev_tools".debug = true
+"dl_entity_db".debug = true
+"dl_error".debug = true
+"dl_format".debug = true
+"dl_gamepad".debug = true
+"dl_grpc_client".debug = true
+"dl_grpc_server".debug = true
+"dl_int".debug = true
+"dl_integration_test".debug = true
+"dl_log_channel".debug = true
+"dl_log_encoding".debug = true
+"dl_log_types".debug = true
+"dl_log".debug = true
+"dl_mcap".debug = true
+"dl_memory".debug = true
+"dl_perf_telemetry".debug = true
+"dl_protos_builder".debug = true
+"dl_protos".debug = true
+"dl_query".debug = true
+"dl_recording_panel".debug = true
+"dl_redap_browser".debug = true
+"dl_redap_client".debug = true
+"dl_renderer_examples".debug = true
+"dl_renderer".debug = true
+"dl_sdk".debug = true
+"dl_selection_panel".debug = true
+"dl_server".debug = true
+"dl_sorbet".debug = true
+"dl_span".debug = true
+"dl_string_interner".debug = true
+"dl_test_context".debug = true
+"dl_test_viewport".debug = true
+"dl_tf".debug = true
+"dl_time_panel".debug = true
+"dl_tracing".debug = true
+"dl_tuid".debug = true
+"dl_types_builder".debug = true
+"dl_types_core".debug = true
+"dl_sdk_types".debug = true
+"dl_ui".debug = true
+"dl_uri".debug = true
+"dl_video".debug = true
+"dl_view_bar_chart".debug = true
+"dl_view_dataframe".debug = true
+"dl_view_graph".debug = true
+"dl_view_map".debug = true
+"dl_view_spatial".debug = true
+"dl_view_state_timeline".debug = true
+"dl_view_tensor".debug = true
+"dl_view_text_document".debug = true
+"dl_view_text_log".debug = true
+"dl_view_time_series".debug = true
+"dl_view".debug = true
+"dl_viewer_context".debug = true
+"dl_viewer".debug = true
+"dl_viewport_blueprint".debug = true
+"dl_viewport".debug = true
+"dl_web_viewer_server".debug = true
 
 # panic = "abort" leads to better optimizations and smaller binaries (and is the default in Wasm anyways),
 # but it also means backtraces don't work with the `backtrace` library (https://github.com/rust-lang/backtrace-rs/issues/397).

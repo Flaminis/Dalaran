@@ -1,5 +1,5 @@
 # This file controls snippet testing and documentation indexing.
-# It is read in `compare_snippet_output.py` and the `snippets` command in `re_dev_tools`/`build_examples`.
+# It is read in `compare_snippet_output.py` and the `snippets` command in `dl_dev_tools`/`build_examples`.
 #
 # Sections:
 #   [snippets_ref.snippets.opt_out]  — snippets excluded from the documentation index
@@ -185,7 +185,7 @@ backwards_check = [
   # and `opt_out.backwards_check` isn't an escape hatch, since it also stops the snippet from
   # saving its output at all (it would then spawn a real Viewer and hang).
   # The `.ply` → `GaussianSplats3D` path is covered end-to-end instead by
-  # `crates/store/re_importer/tests/test_ply_importer.rs`, which runs against that same file.
+  # `crates/store/dl_importer/tests/test_ply_importer.rs`, which runs against that same file.
   "py",
   "cpp",
   "rust",

@@ -6,11 +6,11 @@ use pyo3::types::{
     PyStringMethods as _,
 };
 use pyo3::{Bound, PyResult, Python, pyclass, pymethods};
-use re_server::{self, Args as ServerArgs, NamedPathCollection};
+use dl_server::{self, Args as ServerArgs, NamedPathCollection};
 
 #[pyclass(name = "_ServerInternal", module = "rerun_bindings.rerun_bindings")]
 pub struct PyServerInternal {
-    handle: Option<re_server::ServerHandle>,
+    handle: Option<dl_server::ServerHandle>,
     host: std::net::IpAddr,
     url: String,
 }
@@ -119,13 +119,13 @@ impl PyServerInternal {
     }
 }
 
-fn extract_named_paths(dict: &Bound<'_, PyDict>) -> Vec<re_server::NamedPath> {
+fn extract_named_paths(dict: &Bound<'_, PyDict>) -> Vec<dl_server::NamedPath> {
     dict.iter()
         .filter_map(|(k, v)| {
             let name = k.cast::<PyString>().ok()?;
             let path = v.extract::<&str>().ok()?;
 
-            Some(re_server::NamedPath {
+            Some(dl_server::NamedPath {
                 name: Some(name.to_string_lossy().to_string()),
                 path: std::path::PathBuf::from(path),
             })
@@ -140,7 +140,7 @@ fn extract_named_collections(dict: &Bound<'_, PyDict>) -> Vec<NamedPathCollectio
             let paths: Vec<String> = v.extract().ok()?;
 
             let entry_name =
-                re_log_types::EntryName::new(name.to_string_lossy().to_string()).ok()?;
+                dl_log_types::EntryName::new(name.to_string_lossy().to_string()).ok()?;
 
             Some(NamedPathCollection {
                 name: entry_name,

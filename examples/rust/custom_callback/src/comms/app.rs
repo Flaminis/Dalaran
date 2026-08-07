@@ -3,7 +3,7 @@ use std::result::Result;
 use std::sync::Arc;
 
 use parking_lot::RwLock;
-use rerun::external::{re_error, re_log};
+use rerun::external::{dl_error, dl_log};
 use tokio::io::{AsyncReadExt, AsyncWriteExt, ReadHalf, WriteHalf};
 use tokio::net::{TcpListener, TcpSocket, TcpStream};
 use tokio::sync::Mutex;
@@ -49,7 +49,7 @@ impl ControlApp {
     }
 
     pub fn run(self) -> ControlAppHandle {
-        re_log::info!(
+        dl_log::info!(
             "Server running on {:?}",
             self.listener.local_addr().unwrap()
         );
@@ -59,20 +59,20 @@ impl ControlApp {
 
         tokio::spawn(async move {
             loop {
-                re_log::info!("Waiting for connection…");
+                dl_log::info!("Waiting for connection…");
                 let app = app.clone();
                 match app.listener.accept().await {
                     Ok((socket, addr)) => {
-                        re_log::info!("Accepted connection from {:?}", addr);
+                        dl_log::info!("Accepted connection from {:?}", addr);
 
                         tokio::spawn(async move {
                             app.handle_connection(socket).await;
                         });
                     }
                     Err(err) => {
-                        re_log::error!(
+                        dl_log::error!(
                             "Error accepting connection: {}",
-                            re_error::format_ref(&err)
+                            dl_error::format_ref(&err)
                         );
                     }
                 }
@@ -113,25 +113,25 @@ impl ControlApp {
         loop {
             match read_half.read(&mut buf).await {
                 Ok(0) => {
-                    re_log::info!("Connection closed by client");
+                    dl_log::info!("Connection closed by client");
                     break;
                 }
                 Ok(n) => match Message::decode(&buf[..n]) {
                     Ok(message) => {
-                        re_log::info!("Received message: {:?}", message);
+                        dl_log::info!("Received message: {:?}", message);
                         let handlers = &self.handlers.read();
                         for handler in handlers.iter() {
                             handler(&message);
                         }
                     }
                     Err(err) => {
-                        re_log::error!("Failed to decode message: {}", re_error::format_ref(&err));
+                        dl_log::error!("Failed to decode message: {}", dl_error::format_ref(&err));
                     }
                 },
                 Err(err) => {
-                    re_log::error!(
+                    dl_log::error!(
                         "Error reading from socket: {:?}",
-                        re_error::format_ref(&err),
+                        dl_error::format_ref(&err),
                     );
                     break;
                 }
@@ -146,7 +146,7 @@ impl ControlApp {
     ) {
         while let Some(message) = rx.recv().await {
             if matches!(message, Message::Disconnect) {
-                re_log::info!("Received disconnect message, closing connection");
+                dl_log::info!("Received disconnect message, closing connection");
                 break;
             }
 
@@ -154,7 +154,7 @@ impl ControlApp {
             if let Ok(data) = message.encode()
                 && write_half.write_all(&data).await.is_err()
             {
-                re_log::info!("Failed to send response to client");
+                dl_log::info!("Failed to send response to client");
                 break;
             }
         }

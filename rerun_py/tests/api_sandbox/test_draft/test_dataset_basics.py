@@ -285,7 +285,7 @@ def test_manifest_diagnostic_data(complex_dataset_prefix: Path) -> None:
         column_names_diag = [f.name for f in manifest_diag.schema()]
         assert "rerun_registration_status" in column_names_diag
 
-        # In re_server, all registrations are successful (Done=1)
+        # In dl_server, all registrations are successful (Done=1)
         # since schema conflicts fail synchronously
         statuses = manifest_diag.select("rerun_registration_status").to_arrow_table().to_pydict()
         assert all(s == "done" for s in statuses["rerun_registration_status"])

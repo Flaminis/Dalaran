@@ -42,7 +42,7 @@ where
     // it in a tokio task_local for the duration of `f`. Every gRPC injection
     // inside `f` then reads the cached value without touching Python.
     #[cfg(feature = "perf_telemetry")]
-    let f = re_perf_telemetry::with_current_tracing_session(f);
+    let f = dl_perf_telemetry::with_current_tracing_session(f);
     py.detach(|| runtime.block_on(f))
 }
 
@@ -68,9 +68,9 @@ pub fn py_rerun_warn(msg: &str) -> PyResult<()> {
 /// Each part is treated as a single literal (escaped) path part, so this is the one
 /// place that defines the escaping rules for property names.
 pub fn property_entity_path(
-    parts: impl IntoIterator<Item = re_log_types::EntityPathPart>,
-) -> re_log_types::EntityPath {
-    re_log_types::EntityPath::properties().join(&re_log_types::EntityPath::from(
+    parts: impl IntoIterator<Item = dl_log_types::EntityPathPart>,
+) -> dl_log_types::EntityPath {
+    dl_log_types::EntityPath::properties().join(&dl_log_types::EntityPath::from(
         parts.into_iter().collect::<Vec<_>>(),
     ))
 }

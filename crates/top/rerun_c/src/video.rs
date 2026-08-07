@@ -33,13 +33,13 @@ pub extern "C" fn rr_video_asset_read_frame_timestamps_nanos(
     else {
         CError::new(
             CErrorCode::VideoLoadError,
-            &re_video::VideoLoadError::UnrecognizedMimeType.to_string(),
+            &dl_video::VideoLoadError::UnrecognizedMimeType.to_string(),
         )
         .write_error(error);
         return std::ptr::null_mut();
     };
 
-    let video = match re_video::VideoDataDescription::load_from_bytes(
+    let video = match dl_video::VideoDataDescription::load_from_bytes(
         video_bytes,
         media_type_str,
         "AssetVideo",
@@ -63,7 +63,7 @@ pub extern "C" fn rr_video_asset_read_frame_timestamps_nanos(
     let Some(video_timestamps_iter) = video.frame_timestamps_nanos() else {
         CError::new(
             CErrorCode::VideoLoadError,
-            &re_video::VideoLoadError::NoTimescale.to_string(),
+            &dl_video::VideoLoadError::NoTimescale.to_string(),
         )
         .write_error(error);
         return std::ptr::null_mut();

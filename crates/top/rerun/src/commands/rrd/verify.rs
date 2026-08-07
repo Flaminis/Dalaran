@@ -3,9 +3,9 @@ use std::collections::{HashMap, HashSet};
 use arrow::array::AsArray as _;
 use itertools::Itertools as _;
 
-use re_log_encoding::{Decodable as _, RawRrdManifest, RrdFooter};
-use re_log_types::LogMsg;
-use re_sdk_types::reflection::{ComponentDescriptorExt as _, Reflection};
+use dl_log_encoding::{Decodable as _, RawRrdManifest, RrdFooter};
+use dl_log_types::LogMsg;
+use dl_sdk_types::reflection::{ComponentDescriptorExt as _, Reflection};
 
 use crate::commands::{read_rrd_streams_from_file_or_stdin, stdio::InputSource};
 
@@ -117,7 +117,7 @@ struct Verifier {
 impl Verifier {
     fn new() -> anyhow::Result<Self> {
         Ok(Self {
-            reflection: re_sdk_types::reflection::generate_reflection()?,
+            reflection: dl_sdk_types::reflection::generate_reflection()?,
             errors: HashSet::new(),
         })
     }
@@ -133,7 +133,7 @@ impl Verifier {
     }
 
     fn verify_record_batch(&mut self, source: &str, batch: &arrow::array::RecordBatch) {
-        match re_sorbet::ChunkBatch::try_from(batch) {
+        match dl_sorbet::ChunkBatch::try_from(batch) {
             Ok(chunk_batch) => self.verify_chunk_batch(source, &chunk_batch),
             Err(err) => {
                 self.errors
@@ -142,13 +142,13 @@ impl Verifier {
         }
     }
 
-    fn verify_chunk_batch(&mut self, source: &str, chunk_batch: &re_sorbet::ChunkBatch) {
+    fn verify_chunk_batch(&mut self, source: &str, chunk_batch: &dl_sorbet::ChunkBatch) {
         for (component_descriptor, column) in chunk_batch.component_columns() {
             if let Err(err) = self.verify_component_column(component_descriptor, column) {
                 self.errors.insert(format!(
                     "{source}: Failed to deserialize column {}: {}. Column metadata: {:?}",
-                    component_descriptor.column_name(re_sorbet::BatchType::Dataframe),
-                    re_error::format(err),
+                    component_descriptor.column_name(dl_sorbet::BatchType::Dataframe),
+                    dl_error::format(err),
                     chunk_batch.arrow_batch_metadata()
                 ));
             }
@@ -157,17 +157,17 @@ impl Verifier {
 
     fn verify_component_column(
         &self,
-        column_descriptor: &re_sorbet::ComponentColumnDescriptor,
+        column_descriptor: &dl_sorbet::ComponentColumnDescriptor,
         column: &dyn arrow::array::Array,
     ) -> anyhow::Result<()> {
-        let re_sdk::ComponentDescriptor {
+        let dl_sdk::ComponentDescriptor {
             component_type,
             archetype: archetype_name,
             component,
         } = column_descriptor.component_descriptor();
 
         let Some(component_type) = component_type else {
-            re_log::debug_once!(
+            dl_log::debug_once!(
                 "Encountered component descriptor without component type: '{}'",
                 column_descriptor.component_descriptor()
             );
@@ -175,14 +175,14 @@ impl Verifier {
         };
 
         if !component_type.full_name().starts_with("rerun.") {
-            re_log::debug_once!("Ignoring non-Rerun component {component_type:?}");
+            dl_log::debug_once!("Ignoring non-Rerun component {component_type:?}");
             return Ok(());
         }
 
         if component.starts_with("rerun.components.") && component.ends_with("Indicator") {
             // Lacks reflection and data
             anyhow::bail!(
-                "Indicators are deprecated and should be removed on ingestion in re_sorbet."
+                "Indicators are deprecated and should be removed on ingestion in dl_sorbet."
             );
         } else {
             // Verify data
@@ -194,7 +194,7 @@ impl Verifier {
 
             if let Some(deprecation_summary) = component_reflection.deprecation_summary {
                 anyhow::bail!(
-                    "Component is deprecated. Deprecated types should be migrated on ingestion in re_sorbet. Deprecation notice: {deprecation_summary:?}"
+                    "Component is deprecated. Deprecated types should be migrated on ingestion in dl_sorbet. Deprecation notice: {deprecation_summary:?}"
                 );
             }
 
@@ -222,7 +222,7 @@ impl Verifier {
 
                 if let Some(deprecation_summary) = archetype_reflection.deprecation_summary {
                     anyhow::bail!(
-                        "Archetype {archetype_name:?} is deprecated. Deprecated types should be migrated on ingestion in re_sorbet. Deprecation summary: {deprecation_summary:?}"
+                        "Archetype {archetype_name:?} is deprecated. Deprecated types should be migrated on ingestion in dl_sorbet. Deprecation summary: {deprecation_summary:?}"
                     );
                 }
 
@@ -244,7 +244,7 @@ impl Verifier {
                     ));
                 }
             } else {
-                re_log::debug_once!("Ignoring non-Rerun archetype {archetype_name:?}");
+                dl_log::debug_once!("Ignoring non-Rerun archetype {archetype_name:?}");
             }
         }
 
@@ -265,7 +265,7 @@ fn load_from_rrd_filepath_with_rrd_manifest(
 
     let path_to_rrd = path_to_rrd.as_ref();
 
-    re_tracing::profile_function!(path_to_rrd.to_string_lossy());
+    dl_tracing::profile_function!(path_to_rrd.to_string_lossy());
 
     let mut file = std::fs::File::open(path_to_rrd)?;
 
@@ -280,10 +280,10 @@ fn load_from_rrd_filepath_with_rrd_manifest(
         buf.resize(size as usize, 0u8);
         file.read_exact(&mut buf)?;
 
-        let chunk = re_protos::log_msg::v1alpha1::ArrowMsg::from_rrd_bytes(&buf)?;
+        let chunk = dl_protos::log_msg::v1alpha1::ArrowMsg::from_rrd_bytes(&buf)?;
         anyhow::ensure!(
             chunk_id
-                == re_chunk::ChunkId::from_tuid(
+                == dl_chunk::ChunkId::from_tuid(
                     chunk
                         .chunk_id
                         .expect("must have chunk ID")

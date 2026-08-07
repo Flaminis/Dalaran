@@ -75,11 +75,11 @@ jobs:
         run: |
           pixi run cargo bench \
             --all-features \
-            -p re_entity_db \
-            -p re_log_encoding \
-            -p re_query \
-            -p re_tuid \
-            -p re_video \
+            -p dl_entity_db \
+            -p dl_log_encoding \
+            -p dl_query \
+            -p dl_tuid \
+            -p dl_video \
             -- --output-format=bencher | tee /tmp/${{ env.SHORT_SHA }}
 
       - name: "Set up Cloud SDK"

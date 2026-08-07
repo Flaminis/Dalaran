@@ -1,0 +1,66 @@
+[package]
+authors.workspace = true
+description = "The time panel of the Rerun Viewer, allowing to control the displayed timeline & time."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_time_panel"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+testing = ["smallvec/serde"]
+
+[dependencies]
+dl_byte_size.workspace = true
+dl_chunk.workspace = true
+dl_chunk_store.workspace = true
+dl_context_menu.workspace = true
+dl_data_ui.workspace = true
+dl_entity_db.workspace = true
+dl_format.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_sdk_types.workspace = true
+dl_time_ruler.workspace = true
+dl_tracing.workspace = true
+dl_ui.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport_blueprint.workspace = true
+
+ahash.workspace = true
+egui.workspace = true
+itertools.workspace = true
+nohash-hasher.workspace = true
+serde.workspace = true
+smallvec.workspace = true
+vec1.workspace = true
+
+[dev-dependencies]
+dl_chunk.workspace = true
+dl_log_encoding.workspace = true
+dl_test_context.workspace = true
+
+anyhow.workspace = true
+criterion.workspace = true
+insta = { workspace = true, features = ["redactions", "yaml"] }
+rand.workspace = true
+smallvec = { workspace = true, features = ["serde"] }
+
+[lib]
+bench = false
+
+[[bench]]
+name = "bench_density_graph"
+harness = false

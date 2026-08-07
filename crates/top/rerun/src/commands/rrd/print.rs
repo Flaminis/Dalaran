@@ -1,10 +1,10 @@
 use anyhow::Context as _;
 use arrow::array::RecordBatch;
 use itertools::Itertools as _;
-use re_arrow_util::RecordBatchExt as _;
-use re_byte_size::SizeBytes as _;
-use re_log_types::{LogMsg, SetStoreInfo};
-use re_sdk::EntityPath;
+use dl_arrow_util::RecordBatchExt as _;
+use dl_byte_size::SizeBytes as _;
+use dl_log_types::{LogMsg, SetStoreInfo};
+use dl_sdk::EntityPath;
 
 use crate::commands::read_rrd_streams_from_file_or_stdin;
 
@@ -112,13 +112,13 @@ impl PrintCommand {
             match res {
                 Ok(msg) => {
                     if let Err(err) = print_msg(&options, msg) {
-                        re_log::error_once!("{}", re_error::format(err));
+                        dl_log::error_once!("{}", dl_error::format(err));
                         is_success = false;
                     }
                 }
 
                 Err(err) => {
-                    re_log::error_once!("{}", re_error::format(err));
+                    dl_log::error_once!("{}", dl_error::format(err));
                     is_success = false;
                 }
             }
@@ -164,9 +164,9 @@ impl PrintCommand {
                         filter_lod_0(f) || filter_lod_1(f) || filter_lod_2(f)
                     })?;
 
-                    let formatted = re_arrow_util::format_record_batch_opts(
+                    let formatted = dl_arrow_util::format_record_batch_opts(
                         &filtered,
-                        &re_arrow_util::RecordBatchFormatOpts {
+                        &dl_arrow_util::RecordBatchFormatOpts {
                             max_cell_content_width: 32,
                             ..Default::default()
                         },
@@ -191,7 +191,7 @@ struct Options {
 
 impl Options {
     fn format_record_batch(&self, full_batch: &RecordBatch) -> impl std::fmt::Display {
-        let format_options = re_arrow_util::RecordBatchFormatOpts {
+        let format_options = dl_arrow_util::RecordBatchFormatOpts {
             transposed: self.transposed,
             max_cell_content_width: 100,
             trim_field_names: !self.full_metadata,
@@ -202,9 +202,9 @@ impl Options {
 
         if self.verbose <= 2 {
             let empty_batch = full_batch.slice(0, 0);
-            re_arrow_util::format_record_batch_opts(&empty_batch, &format_options)
+            dl_arrow_util::format_record_batch_opts(&empty_batch, &format_options)
         } else {
-            re_arrow_util::format_record_batch_opts(full_batch, &format_options)
+            dl_arrow_util::format_record_batch_opts(full_batch, &format_options)
         }
     }
 }
@@ -221,7 +221,7 @@ fn print_msg(options: &Options, msg: LogMsg) -> anyhow::Result<()> {
 
             if options.migrate {
                 let migrared_chunk =
-                    re_sorbet::ChunkBatch::try_from(original_batch).context("corrupt chunk")?;
+                    dl_sorbet::ChunkBatch::try_from(original_batch).context("corrupt chunk")?;
 
                 if let Some(only_this_entity) = &options.entity
                     && migrared_chunk.entity_path() != only_this_entity
@@ -233,7 +233,7 @@ fn print_msg(options: &Options, msg: LogMsg) -> anyhow::Result<()> {
                     "Chunk({}) with {} rows ({}) - {:?} - ",
                     migrared_chunk.chunk_id(),
                     migrared_chunk.num_rows(),
-                    re_format::format_bytes(migrared_chunk.total_size_bytes() as _),
+                    dl_format::format_bytes(migrared_chunk.total_size_bytes() as _),
                     migrared_chunk.entity_path(),
                 );
 
@@ -241,7 +241,7 @@ fn print_msg(options: &Options, msg: LogMsg) -> anyhow::Result<()> {
                     0 => {
                         let column_names = migrared_chunk
                             .component_columns()
-                            .map(|(descr, _)| descr.column_name(re_sorbet::BatchType::Chunk)) // short column name without entity-path prefix
+                            .map(|(descr, _)| descr.column_name(dl_sorbet::BatchType::Chunk)) // short column name without entity-path prefix
                             .join(" ");
                         println!("data columns: [{column_names}]");
                     }
@@ -261,7 +261,7 @@ fn print_msg(options: &Options, msg: LogMsg) -> anyhow::Result<()> {
                 if let Some(only_this_entity) = &options.entity
                     && let metadata = original_batch.schema_ref().metadata()
                     && let Some(chunk_entity_path) = metadata
-                        .get(re_sorbet::metadata::SORBET_ENTITY_PATH)
+                        .get(dl_sorbet::metadata::SORBET_ENTITY_PATH)
                         .or_else(|| metadata.get("rerun.entity_path"))
                     && only_this_entity != &EntityPath::parse_forgiving(chunk_entity_path)
                 {
@@ -271,7 +271,7 @@ fn print_msg(options: &Options, msg: LogMsg) -> anyhow::Result<()> {
                 print!(
                     "Chunk with {} rows ({})",
                     original_batch.num_rows(),
-                    re_format::format_bytes(original_batch.total_size_bytes() as _),
+                    dl_format::format_bytes(original_batch.total_size_bytes() as _),
                 );
 
                 match options.verbose {
@@ -291,7 +291,7 @@ fn print_msg(options: &Options, msg: LogMsg) -> anyhow::Result<()> {
             }
         }
 
-        LogMsg::BlueprintActivationCommand(re_log_types::BlueprintActivationCommand {
+        LogMsg::BlueprintActivationCommand(dl_log_types::BlueprintActivationCommand {
             blueprint_id,
             make_active,
             make_default,

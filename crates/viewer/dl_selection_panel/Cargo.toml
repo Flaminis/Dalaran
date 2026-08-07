@@ -1,0 +1,49 @@
+[package]
+authors.workspace = true
+description = "The UI for the selection panel."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_selection_panel"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_lenses_core.workspace = true
+dl_case.workspace = true
+dl_chunk_store.workspace = true
+dl_chunk.workspace = true
+dl_context_menu.workspace = true
+dl_data_ui.workspace = true
+dl_entity_db.workspace = true
+dl_format.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_tracing.workspace = true
+dl_types_core.workspace = true
+dl_sdk_types.workspace = true
+dl_ui.workspace = true
+dl_view.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport_blueprint.workspace = true
+
+arrow.workspace = true
+egui_tiles.workspace = true
+egui.workspace = true
+itertools.workspace = true
+nohash-hasher.workspace = true
+serde = { workspace = true, features = ["derive"] }
+smallvec.workspace = true
+static_assertions.workspace = true
+
+[dev-dependencies]
+dl_component_ui.workspace = true
+dl_test_context.workspace = true
+dl_test_viewport.workspace = true

@@ -10,7 +10,7 @@ pub struct Point3DInput {
 }
 
 pub fn prepare_points3d(mut lcg_state: i64, num_points: usize) -> Point3DInput {
-    re_tracing::profile_function!();
+    dl_tracing::profile_function!();
 
     Point3DInput {
         positions: (0..num_points)

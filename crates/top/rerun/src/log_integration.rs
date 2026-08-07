@@ -1,8 +1,8 @@
 //! Integrates the Rerun SDK with the [`log`] crate.
 
 use log::Log as _;
-use re_sdk_types::archetypes::TextLog;
-use re_sdk_types::components::TextLogLevel;
+use dl_sdk_types::archetypes::TextLog;
+use dl_sdk_types::components::TextLogLevel;
 
 use crate::RecordingStream;
 
@@ -32,7 +32,7 @@ pub struct Logger {
 fn build_filter(filter: &str) -> env_filter::Filter {
     let mut builder = env_filter::Builder::new();
     if let Err(err) = builder.try_parse(filter) {
-        re_log::warn!("Ignoring invalid log filter: {err}\nFilter: {filter}");
+        dl_log::warn!("Ignoring invalid log filter: {err}\nFilter: {filter}");
     }
     builder.build()
 }
@@ -79,7 +79,7 @@ impl Logger {
     /// All calls to [`log`] macros will go through this [`Logger`] from this point on.
     pub fn init(mut self) -> Result<(), log::SetLoggerError> {
         if self.filter.is_none() {
-            self.filter = Some(build_filter(&re_log::default_log_filter()));
+            self.filter = Some(build_filter(&dl_log::default_log_filter()));
         }
 
         // NOTE: We will have to make filtering decisions on a per-crate/module basis, therefore

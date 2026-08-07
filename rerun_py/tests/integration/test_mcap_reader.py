@@ -18,7 +18,7 @@ MCAP_ASSETS_DIR = (
     Path(__file__).resolve().parents[3]
     / "crates"
     / "store"
-    / "re_importer"
+    / "dl_importer"
     / "src"
     / "importer_mcap"
     / "tests"

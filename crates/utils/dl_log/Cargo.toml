@@ -1,0 +1,45 @@
+[package]
+name = "dl_log"
+authors.workspace = true
+description = "Helpers for setting up and doing text logging in the Rerun crates."
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[package.metadata.cargo-shear]
+ignored = []
+
+
+[features]
+default = []
+
+## Feature to set up logging in binaries,
+## i.e. from `main` or in a web-app.
+setup = ["dep:tracing-log", "dep:tracing-web"]
+
+
+[dependencies]
+log = { workspace = true, features = ["std"] }
+crossbeam.workspace = true
+log-once.workspace = true
+parking_lot.workspace = true
+
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tracing-log = { workspace = true, optional = true }
+
+# web dependencies:
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+tracing-web = { workspace = true, optional = true }

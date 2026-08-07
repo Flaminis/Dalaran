@@ -1858,7 +1858,7 @@ class LazyChunkStreamIterator:
 #####################################################################################################################
 
 class _QueryMetrics:
-    """Frozen mirror of `re_datafusion::QuerySnapshot`. One per query."""
+    """Frozen mirror of `dl_datafusion::QuerySnapshot`. One per query."""
 
     # Plan-time
     dataset_id: str

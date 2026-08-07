@@ -13,7 +13,7 @@ const NUM_POINTS: usize = NUM_TIMESTAMPS * NUM_POINTS_PER_TIMESTAMP;
 ///
 /// See <https://github.com/rerun-io/rerun/issues/11516> for more context.
 pub fn run(rec: &rerun::RecordingStream) -> anyhow::Result<()> {
-    re_tracing::profile_function!();
+    dl_tracing::profile_function!();
 
     let default_point = (1.0_f32, 2.0_f32, 3.0_f32);
 

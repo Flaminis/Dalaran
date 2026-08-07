@@ -12,20 +12,20 @@
 
 use std::collections::{BTreeMap, HashMap};
 
-use rerun::external::re_byte_size::{MemUsageTree, MemUsageTreeCapture};
-use rerun::external::re_log_types::{AbsoluteTimeRange, TimelineName};
-use rerun::external::{anyhow, re_build_info, re_chunk_store, re_log};
+use rerun::external::dl_byte_size::{MemUsageTree, MemUsageTreeCapture};
+use rerun::external::dl_log_types::{AbsoluteTimeRange, TimelineName};
+use rerun::external::{anyhow, dl_build_info, dl_chunk_store, dl_log};
 use rerun::time::{TimeInt, TimeType};
 use rerun::{ChunkStoreEvent, ChunkStoreSubscriber, ComponentDescriptor, EntityPath, StoreId};
 
 fn main() -> anyhow::Result<std::process::ExitCode> {
     let main_thread_token = rerun::MainThreadToken::i_promise_i_am_on_the_main_thread();
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
-    let _handle = re_chunk_store::ChunkStore::register_subscriber(Box::<Orchestrator>::default());
+    let _handle = dl_chunk_store::ChunkStore::register_subscriber(Box::<Orchestrator>::default());
     // Could use the returned handle to get a reference to the view if needed.
 
-    let build_info = re_build_info::build_info!();
+    let build_info = dl_build_info::build_info!();
     rerun::run(
         main_thread_token,
         build_info,

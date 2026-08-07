@@ -31,7 +31,7 @@ impl InfoCommand {
                 path.display()
             )
         })?;
-        let mcap_file = re_mcap::McapFile::new(mmap, *recover);
+        let mcap_file = dl_mcap::McapFile::new(mmap, *recover);
         let info = mcap_file.info().with_context(|| {
             format!("Failed to inspect MCAP file\nFile path: {}", path.display())
         })?;
@@ -41,7 +41,7 @@ impl InfoCommand {
     }
 }
 
-fn print_info(path: &std::path::Path, info: &re_mcap::McapInfo) {
+fn print_info(path: &std::path::Path, info: &dl_mcap::McapInfo) {
     println!("{}", path.display());
     println!();
     println!("Recording");
@@ -58,8 +58,8 @@ fn print_info(path: &std::path::Path, info: &re_mcap::McapInfo) {
     print_property(
         "Summary",
         match info.summary_source {
-            re_mcap::McapSummarySource::Embedded => "embedded".to_owned(),
-            re_mcap::McapSummarySource::Reconstructed => "reconstructed".to_owned(),
+            dl_mcap::McapSummarySource::Embedded => "embedded".to_owned(),
+            dl_mcap::McapSummarySource::Reconstructed => "reconstructed".to_owned(),
         },
     );
 
@@ -98,8 +98,8 @@ fn print_info(path: &std::path::Path, info: &re_mcap::McapInfo) {
                         compression.codec.clone()
                     },
                     compression.chunk_count.to_string(),
-                    re_format::format_bytes(compression.compressed_size_bytes as f64),
-                    re_format::format_bytes(compression.uncompressed_size_bytes as f64),
+                    dl_format::format_bytes(compression.compressed_size_bytes as f64),
+                    dl_format::format_bytes(compression.uncompressed_size_bytes as f64),
                     compression
                         .savings_ratio()
                         .map_or_else(|| "—".to_owned(), |ratio| format!("{:.1}%", ratio * 100.0)),
@@ -110,7 +110,7 @@ fn print_info(path: &std::path::Path, info: &re_mcap::McapInfo) {
                             |duration| {
                                 let bytes_per_second = compression.compressed_size_bytes as f64
                                     / (duration as f64 / 1_000_000_000.0);
-                                format!("{}/s", re_format::format_bytes(bytes_per_second))
+                                format!("{}/s", dl_format::format_bytes(bytes_per_second))
                             },
                         ),
                 ]
@@ -183,7 +183,7 @@ fn format_optional_uint(value: Option<u64>) -> String {
 fn format_optional_bytes(value: Option<u64>) -> String {
     value.map_or_else(
         || "—".to_owned(),
-        |bytes| re_format::format_bytes(bytes as f64),
+        |bytes| dl_format::format_bytes(bytes as f64),
     )
 }
 
@@ -193,7 +193,7 @@ fn format_duration(duration_ns: Option<u64>) -> String {
         .map_or_else(
             || "—".to_owned(),
             |duration| {
-                re_format::DurationFormatOptions::default()
+                dl_format::DurationFormatOptions::default()
                     .with_max_decimals(3)
                     .format_nanos(duration)
             },
@@ -205,7 +205,7 @@ fn format_timestamp(timestamp_ns: Option<u64>) -> String {
         .and_then(|timestamp| i64::try_from(timestamp).ok())
         .map_or_else(
             || "—".to_owned(),
-            |timestamp| re_log_types::Timestamp::from_nanos_since_epoch(timestamp).format_iso(),
+            |timestamp| dl_log_types::Timestamp::from_nanos_since_epoch(timestamp).format_iso(),
         )
 }
 

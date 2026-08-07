@@ -16,7 +16,7 @@ use std::time::Duration;
 
 use anyhow::Context as _;
 use rerun::TimeCell;
-use rerun::external::re_log;
+use rerun::external::dl_log;
 
 // --- Rerun logging ---
 
@@ -92,7 +92,7 @@ fn log_baseline_objects(
     let boxes = objects.iter().filter_map(|object| {
         Some({
             if object.r#type != objectron::object::Type::BoundingBox as i32 {
-                re_log::warn!(object.r#type, "unsupported type");
+                dl_log::warn!(object.r#type, "unsupported type");
                 return None;
             }
 
@@ -378,7 +378,7 @@ fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
 }
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     use clap::Parser as _;
     let args = Args::parse();
@@ -432,7 +432,7 @@ impl Recording {
 fn read_ar_frames(path: &Path) -> impl Iterator<Item = anyhow::Result<objectron::ArFrame>> + '_ {
     use prost::Message as _;
 
-    re_log::info!(?path, "reading AR frame data");
+    dl_log::info!(?path, "reading AR frame data");
 
     let file = std::fs::File::open(path).unwrap();
     let mut reader = std::io::BufReader::with_capacity(1024, file);
@@ -452,7 +452,7 @@ fn read_ar_frames(path: &Path) -> impl Iterator<Item = anyhow::Result<objectron:
 
 fn read_annotations(path: &Path) -> anyhow::Result<objectron::Sequence> {
     use prost::Message as _;
-    re_log::info!(?path, "reading annotation data");
+    dl_log::info!(?path, "reading annotation data");
     let annotations = objectron::Sequence::decode(std::fs::read(path)?.as_slice())?;
     Ok(annotations)
 }

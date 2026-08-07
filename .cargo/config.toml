@@ -1,7 +1,7 @@
 [alias]
 # Run the codegen. Optionally pass `--profile` to it.
 # NOTE: there are several CI jobs with `command: codegen` with the cargo action
-codegen = "run --package re_types_builder --"
+codegen = "run --package dl_types_builder --"
 
 # To easily run examples on the web, see https://github.com/rukai/cargo-run-wasm.
 # Temporary solution while we wait for our own xtasks!

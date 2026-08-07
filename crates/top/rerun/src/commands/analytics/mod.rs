@@ -27,20 +27,20 @@ pub enum AnalyticsCommands {
 }
 
 impl AnalyticsCommands {
-    pub fn run(&self) -> Result<(), re_analytics::cli::CliError> {
-        let build_info = re_build_info::build_info!();
+    pub fn run(&self) -> Result<(), dl_analytics::cli::CliError> {
+        let build_info = dl_build_info::build_info!();
         match self {
             #[expect(clippy::unit_arg)]
-            Self::Details => Ok(re_analytics::cli::print_details(
+            Self::Details => Ok(dl_analytics::cli::print_details(
                 &build_info.git_hash_or_tag(),
             )),
-            Self::Clear => re_analytics::cli::clear(),
+            Self::Clear => dl_analytics::cli::clear(),
             Self::Email { email } => {
-                re_analytics::cli::set([("email".to_owned(), email.clone().into())])
+                dl_analytics::cli::set([("email".to_owned(), email.clone().into())])
             }
-            Self::Enable => re_analytics::cli::opt(true),
-            Self::Disable => re_analytics::cli::opt(false),
-            Self::Config => re_analytics::cli::print_config(),
+            Self::Enable => dl_analytics::cli::opt(true),
+            Self::Disable => dl_analytics::cli::opt(false),
+            Self::Config => dl_analytics::cli::print_config(),
         }
     }
 }

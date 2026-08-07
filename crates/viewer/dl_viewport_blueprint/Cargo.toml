@@ -1,0 +1,55 @@
+[package]
+authors.workspace = true
+description = "The data model describing the layout of the viewport."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_viewport_blueprint"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+dl_chunk.workspace = true
+dl_chunk_store.workspace = true
+dl_entity_db.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_mutex.workspace = true
+dl_tracing.workspace = true
+dl_types_core.workspace = true
+dl_sdk_types.workspace = true
+dl_ui.workspace = true
+dl_viewer_context.workspace = true
+
+ahash.workspace = true
+arrow.workspace = true
+egui_tiles.workspace = true
+egui.workspace = true
+itertools.workspace = true
+nohash-hasher.workspace = true
+slotmap.workspace = true
+smallvec.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+dl_test_context.workspace = true
+criterion.workspace = true
+mimalloc.workspace = true
+rand = { workspace = true, features = ["std", "std_rng"] }
+
+[lib]
+bench = false
+
+[[bench]]
+name = "data_query"
+harness = false

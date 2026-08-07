@@ -37,9 +37,9 @@
       "types": "./index.d.ts",
       "import": "./index.js"
     },
-    "./re_viewer.js": {
-      "types": "./re_viewer.d.ts",
-      "import": "./re_viewer.js"
+    "./dl_viewer.js": {
+      "types": "./dl_viewer.d.ts",
+      "import": "./dl_viewer.js"
     },
     "./inlined.js": {
       "types": "./inlined.d.ts",
@@ -55,8 +55,8 @@
     "package.json",
     "re_viewer_bg.wasm",
     "re_viewer_bg.wasm.d.ts",
-    "re_viewer.d.ts",
-    "re_viewer.js",
+    "dl_viewer.d.ts",
+    "dl_viewer.js",
     "tsconfig.json"
   ],
   "devDependencies": {

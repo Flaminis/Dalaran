@@ -1,0 +1,101 @@
+[package]
+authors.workspace = true
+description = "Rerun viewer state that is shared with the viewer's code components."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_viewer_context"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+default = []
+testing = []
+
+[dependencies]
+dl_lenses_core.workspace = true
+dl_arrow_ui.workspace = true
+dl_arrow_util.workspace = true
+dl_byte_size.workspace = true
+dl_capabilities.workspace = true
+dl_chunk_store.workspace = true
+dl_chunk.workspace = true
+dl_data_source.workspace = true
+dl_entity_db.workspace = true
+dl_error.workspace = true
+dl_format.workspace = true
+dl_log_channel.workspace = true
+dl_log_encoding = { workspace = true, features = ["decoder", "encoder", "stream_from_http"] }
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_memory.workspace = true
+dl_mutex.workspace = true
+dl_query.workspace = true
+dl_quota_channel.workspace = true
+dl_redap_client.workspace = true
+dl_renderer.workspace = true
+dl_rvl.workspace = true
+dl_string_interner.workspace = true
+dl_tf.workspace = true
+dl_tracing.workspace = true
+dl_sdk_types = { workspace = true, features = ["ecolor", "glam", "image"] }
+dl_types_core.workspace = true
+dl_ui.workspace = true
+dl_uri.workspace = true
+dl_video.workspace = true
+
+ahash.workspace = true
+anyhow.workspace = true
+arrow.workspace = true
+bitflags.workspace = true
+bytemuck.workspace = true
+camino.workspace = true
+crossbeam.workspace = true
+datafusion.workspace = true
+directories.workspace = true
+egui_tiles.workspace = true
+egui-wgpu.workspace = true
+egui.workspace = true
+emath.workspace = true
+glam = { workspace = true, features = ["serde"] }
+half.workspace = true
+image = { workspace = true, features = ["jpeg", "png"] }
+indexmap = { workspace = true, features = ["std", "serde"] }
+itertools.workspace = true
+linked-hash-map.workspace = true
+macaw.workspace = true
+ndarray.workspace = true
+nohash-hasher.workspace = true
+parking_lot = { workspace = true, features = ["serde"] }
+rayon.workspace = true
+rfd.workspace = true
+serde.workspace = true
+slotmap.workspace = true
+smallvec.workspace = true
+static_assertions.workspace = true
+strum_macros.workspace = true
+thiserror.workspace = true
+uuid = { workspace = true, features = ["serde", "v4", "js"] }
+wgpu.workspace = true
+vec1.workspace = true
+
+# Native dependencies:
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+dl_async.workspace = true
+dl_web.workspace = true
+
+[dev-dependencies]
+dl_ui = { workspace = true, features = ["testing"] }
+
+egui_kittest.workspace = true
+rand = { workspace = true, features = ["std_rng"] }

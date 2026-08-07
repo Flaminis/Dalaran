@@ -8,7 +8,7 @@
 use std::path::PathBuf;
 
 use bytes::Bytes;
-use rerun::external::re_log;
+use rerun::external::dl_log;
 use rerun::{Color, Mesh3D, RecordingStream, Rgba32};
 
 // TODO(cmc): This example needs to support animations to showcase Rerun's time capabilities.
@@ -162,7 +162,7 @@ fn run(rec: &RecordingStream, args: &Args) -> anyhow::Result<()> {
 
     // Log raw glTF nodes and their transforms with Rerun
     for root in nodes {
-        re_log::info!(scene = root.name, "logging glTF scene");
+        dl_log::info!(scene = root.name, "logging glTF scene");
         rec.log_static(
             root.name.as_str(),
             &rerun::ViewCoordinates::RIGHT_HAND_Y_UP(),
@@ -174,7 +174,7 @@ fn run(rec: &RecordingStream, args: &Args) -> anyhow::Result<()> {
 }
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     use clap::Parser as _;
     let args = Args::parse();
@@ -295,7 +295,7 @@ fn load_gltf<'data>(
             .name()
             .map_or_else(|| format!("scene_{}", scene.index()), ToOwned::to_owned);
 
-        re_log::info!(scene = name, "parsing glTF scene");
+        dl_log::info!(scene = name, "parsing glTF scene");
 
         GltfNode {
             name,

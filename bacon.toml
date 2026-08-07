@@ -19,7 +19,7 @@ watch = ["tests", "benches", "examples"]
 command = [
   "cargo",
   "clippy",
-  "-p=re_viewer",
+  "-p=dl_viewer",
   "--target=wasm32-unknown-unknown",
   "--target-dir=target_wasm",
   "--all-features",

@@ -4,7 +4,7 @@
 
 use std::f32::consts::TAU;
 
-use rerun::external::re_log;
+use rerun::external::dl_log;
 use rerun::{
     Angle, Color, EntityPath, LineStrips3D, Points3D, Position3D, RecordingStream,
     RotationAxisAngle, Transform3D, TransformRelation, ViewCoordinates,
@@ -143,7 +143,7 @@ fn run(rec: &RecordingStream, args: &Args) -> anyhow::Result<()> {
                 .saturating_sub(duration);
 
             if time_to_sleep.is_zero() {
-                re_log::warn_once!("Can't keep up with desired log frequency.");
+                dl_log::warn_once!("Can't keep up with desired log frequency.");
             } else {
                 // A bit crude, but good enough.
                 std::thread::sleep(time_to_sleep);
@@ -154,7 +154,7 @@ fn run(rec: &RecordingStream, args: &Args) -> anyhow::Result<()> {
 }
 
 fn main() -> anyhow::Result<()> {
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     use clap::Parser as _;
     let args = Args::parse();

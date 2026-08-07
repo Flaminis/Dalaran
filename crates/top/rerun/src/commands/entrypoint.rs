@@ -4,10 +4,10 @@ use std::time::Duration;
 
 use clap::{CommandFactory as _, Subcommand};
 use itertools::Itertools as _;
-use re_data_source::{AuthErrorHandler, LogDataSource};
-use re_log_channel::{DataSourceMessage, LogReceiver, LogReceiverSet, SmartMessagePayload};
+use dl_data_source::{AuthErrorHandler, LogDataSource};
+use dl_log_channel::{DataSourceMessage, LogReceiver, LogReceiverSet, SmartMessagePayload};
 #[cfg(feature = "web_viewer")]
-use re_sdk::web_viewer::WebViewerConfig;
+use dl_sdk::web_viewer::WebViewerConfig;
 use tokio::runtime::Runtime;
 
 #[cfg(feature = "auth")]
@@ -193,7 +193,7 @@ When persisted, the state will be stored at the following locations:
     /// What port do we listen to for SDKs to connect to over gRPC.
     ///
     /// Use `auto` to always start a new viewer with a free port if the default is taken.
-    // Default is `re_grpc_server::DEFAULT_SERVER_PORT`, can't use symbollically if `server` feature is disabled
+    // Default is `dl_grpc_server::DEFAULT_SERVER_PORT`, can't use symbollically if `server` feature is disabled
     #[clap(long, default_value_t = PortArg::Port(9876))]
     port: PortArg,
 
@@ -294,7 +294,7 @@ If no arguments are given, a server will be hosted which a Rerun SDK can connect
 
     /// What port do we listen to for hosting the web viewer over HTTP.
     /// A port of 0 will pick a random port.
-    // Default is `re_web_viewer_server::DEFAULT_WEB_VIEWER_SERVER_PORT`, can't use symbollically if `web_viewer` feature is disabled
+    // Default is `dl_web_viewer_server::DEFAULT_WEB_VIEWER_SERVER_PORT`, can't use symbollically if `web_viewer` feature is disabled
     #[clap(long, default_value_t = 9090)]
     web_viewer_port: u16,
 
@@ -660,7 +660,7 @@ enum Command {
     /// In-memory Rerun data server
     #[cfg(feature = "oss_server")]
     #[command(name = "server")]
-    Server(re_server::Args),
+    Server(dl_server::Args),
 }
 
 /// Run the Rerun application and return an exit code.
@@ -681,7 +681,7 @@ enum Command {
 // then there's no good way to get back at the exit code from python
 pub fn run<I, T>(
     main_thread_token: crate::MainThreadToken,
-    build_info: re_build_info::BuildInfo,
+    build_info: dl_build_info::BuildInfo,
     call_source: CallSource,
     args: I,
 ) -> anyhow::Result<u8>
@@ -690,18 +690,18 @@ where
     T: Into<std::ffi::OsString> + Clone,
 {
     #[cfg(feature = "native_viewer")]
-    re_memory::accounting_allocator::turn_on_tracking_if_env_var(
-        re_viewer::env_vars::RERUN_TRACK_ALLOCATIONS,
+    dl_memory::accounting_allocator::turn_on_tracking_if_env_var(
+        dl_viewer::env_vars::RERUN_TRACK_ALLOCATIONS,
     );
 
     #[cfg(not(target_arch = "wasm32"))]
-    if cfg!(feature = "perf_telemetry") && re_log::env_var_is_truthy("TELEMETRY_ENABLED") {
+    if cfg!(feature = "perf_telemetry") && dl_log::env_var_is_truthy("TELEMETRY_ENABLED") {
         eprintln!("Disabling crash handler because of perf_telemetry/TELEMETRY_ENABLED"); // Ask Clement why
     } else {
-        re_crash_handler::install_crash_handlers(build_info.clone());
+        dl_crash_handler::install_crash_handlers(build_info.clone());
     }
 
-    // There is always value in setting this, even if `re_perf_telemetry` is disabled. For example,
+    // There is always value in setting this, even if `dl_perf_telemetry` is disabled. For example,
     // the Rerun versioning headers will automatically pick it up.
     //
     // Safety: anything touching the env is unsafe, tis what it is.
@@ -734,7 +734,7 @@ where
         println!("{build_info}");
         println!(
             "Video features: {}",
-            re_video::enabled_features().iter().join(" ")
+            dl_video::enabled_features().iter().join(" ")
         );
         return Ok(0);
     }
@@ -778,10 +778,10 @@ where
             Command::Mcap(mcap) => mcap.run(),
 
             #[cfg(feature = "native_viewer")]
-            Command::ViewerMcp => tokio_runtime.block_on(re_viewer_mcp::serve()),
+            Command::ViewerMcp => tokio_runtime.block_on(dl_viewer_mcp::serve()),
 
             #[cfg(feature = "native_viewer")]
-            Command::Reset => re_viewer::reset_viewer_persistence(),
+            Command::Reset => dl_viewer::reset_viewer_persistence(),
 
             Command::Rrd(rrd) => rrd.run(),
 
@@ -792,14 +792,14 @@ where
         #[cfg(all(not(target_arch = "wasm32"), feature = "perf_telemetry"))]
         let mut _telemetry = {
             // NOTE: We're just parsing the environment, hence the `vec![]` for CLI flags.
-            use re_perf_telemetry::external::clap::Parser as _;
-            let args = re_perf_telemetry::TelemetryArgs::parse_from::<_, String>(vec![]);
+            use dl_perf_telemetry::external::clap::Parser as _;
+            let args = dl_perf_telemetry::TelemetryArgs::parse_from::<_, String>(vec![]);
 
             // Remember: telemetry must be init in a Tokio context.
             tokio_runtime.block_on(async {
-                re_perf_telemetry::Telemetry::init(
+                dl_perf_telemetry::Telemetry::init(
                     args,
-                    re_perf_telemetry::TelemetryDropBehavior::Shutdown,
+                    dl_perf_telemetry::TelemetryDropBehavior::Shutdown,
                 )
                 // Perf telemetry is a developer tool, it's not compiled into final user builds.
                 .expect("could not start perf telemetry")
@@ -818,7 +818,7 @@ where
             //
             // Since this is a very niche feature only meant to be used for deep performance work,
             // I think this is fine for now (and I don't think there's anything we can do from
-            // userspace anyhow, this is a pure `tracing` issue, unrelated to `re_perf_telemetry`).
+            // userspace anyhow, this is a pure `tracing` issue, unrelated to `dl_perf_telemetry`).
         };
 
         run_impl(
@@ -842,7 +842,7 @@ where
                 .downcast_ref::<std::io::Error>()
                 .is_some_and(|io_err| io_err.kind() == std::io::ErrorKind::AddrInUse) =>
         {
-            re_log::warn!("{err}");
+            dl_log::warn!("{err}");
             Ok(1)
         }
 
@@ -961,15 +961,15 @@ fn relaunch_detached(raw_args: &[std::ffi::OsString]) -> anyhow::Result<()> {
 
 fn run_impl(
     _main_thread_token: crate::MainThreadToken,
-    _build_info: re_build_info::BuildInfo,
+    _build_info: dl_build_info::BuildInfo,
     _call_source: CallSource,
     args: Args,
     tokio_runtime_handle: &tokio::runtime::Handle,
-    #[cfg(feature = "native_viewer")] profiler: re_tracing::Profiler,
+    #[cfg(feature = "native_viewer")] profiler: dl_tracing::Profiler,
 ) -> anyhow::Result<()> {
     //TODO(#10068): populate token passed with `--token`
-    let connection_registry = re_redap_client::ConnectionRegistry::new_with_stored_credentials();
-    let async_runtime = re_async::AsyncRuntimeHandle::new_native(tokio_runtime_handle.clone());
+    let connection_registry = dl_redap_client::ConnectionRegistry::new_with_stored_credentials();
+    let async_runtime = dl_async::AsyncRuntimeHandle::new_native(tokio_runtime_handle.clone());
 
     let wants_new = args.new || args.port.is_auto();
     let port = args.port.port();
@@ -979,7 +979,7 @@ fn run_impl(
     {
         let default_port = port;
         let free_port = find_free_port(args.bind)?;
-        re_log::info!(
+        dl_log::info!(
             "Default port {default_port} is already in use, using port {free_port} instead."
         );
         std::net::SocketAddr::new(args.bind, free_port)
@@ -988,14 +988,14 @@ fn run_impl(
     };
 
     #[cfg(feature = "server")]
-    let server_options = re_sdk::ServerOptions {
-        playback_behavior: re_sdk::PlaybackBehavior::from_newest_first(args.newest_first),
+    let server_options = dl_sdk::ServerOptions {
+        playback_behavior: dl_sdk::PlaybackBehavior::from_newest_first(args.newest_first),
 
         memory_limit: {
-            re_log::debug!("Parsing --server-memory-limit (for gRPC server)");
+            dl_log::debug!("Parsing --server-memory-limit (for gRPC server)");
             let limit = args.server_memory_limit.as_str();
-            re_log::debug!("Server memory limit: {limit}");
-            re_memory::MemoryLimit::parse(limit)
+            dl_log::debug!("Server memory limit: {limit}");
+            dl_memory::MemoryLimit::parse(limit)
                 .map_err(|err| anyhow::format_err!("Bad --server-memory-limit: {err}"))?
         },
 
@@ -1010,7 +1010,7 @@ fn run_impl(
     #[cfg(feature = "server")]
     if let Some(url) = args.connect.clone() {
         let url = url.unwrap_or_else(|| format!("rerun+http://{server_addr}/proxy"));
-        if let Err(err) = url.as_str().parse::<re_uri::RedapUri>() {
+        if let Err(err) = url.as_str().parse::<dl_uri::RedapUri>() {
             anyhow::bail!("expected `/proxy` endpoint: {err}");
         }
         url_or_paths.push(url);
@@ -1124,18 +1124,18 @@ fn run_impl(
 fn start_native_viewer(
     args: &Args,
     url_or_paths: Vec<String>,
-    _main_thread_token: re_viewer::MainThreadToken,
-    _build_info: re_build_info::BuildInfo,
+    _main_thread_token: dl_viewer::MainThreadToken,
+    _build_info: dl_build_info::BuildInfo,
     call_source: CallSource,
-    async_runtime: re_async::AsyncRuntimeHandle,
-    profiler: re_tracing::Profiler,
-    connection_registry: re_redap_client::ConnectionRegistryHandle,
+    async_runtime: dl_async::AsyncRuntimeHandle,
+    profiler: dl_tracing::Profiler,
+    connection_registry: dl_redap_client::ConnectionRegistryHandle,
     #[cfg(feature = "server")] server_addr: std::net::SocketAddr,
-    #[cfg(feature = "server")] server_options: re_sdk::ServerOptions,
+    #[cfg(feature = "server")] server_options: dl_sdk::ServerOptions,
 ) -> anyhow::Result<()> {
-    use re_viewer::external::{eframe, re_viewer_context};
+    use dl_viewer::external::{eframe, dl_viewer_context};
 
-    use crate::external::re_ui::{UICommand, UICommandSender as _};
+    use crate::external::dl_ui::{UICommand, UICommandSender as _};
 
     let startup_options = native_startup_options_from_args(args)?;
 
@@ -1145,21 +1145,21 @@ fn start_native_viewer(
         .memory_limit
         .as_ref()
         .map(|memory_limit| {
-            re_log::debug!("Parsing --memory-limit (for Viewer)");
-            re_memory::MemoryLimit::parse(memory_limit)
+            dl_log::debug!("Parsing --memory-limit (for Viewer)");
+            dl_memory::MemoryLimit::parse(memory_limit)
         })
         .transpose()
         .map_err(|err| anyhow::format_err!("Bad --memory-limit: {err}"))?;
 
-    let (command_tx, command_rx) = re_viewer_context::command_channel();
+    let (command_tx, command_rx) = dl_viewer_context::command_channel();
 
-    let auth_error_handler = re_viewer::App::auth_error_handler(command_tx.clone());
+    let auth_error_handler = dl_viewer::App::auth_error_handler(command_tx.clone());
 
-    // Start catching `re_log::info/warn/error` messages
+    // Start catching `dl_log::info/warn/error` messages
     // so we can show them in the notification panel.
     // In particular: create this before calling `run_native_app`
     // so we catch any warnings produced during startup.
-    let text_log_rx = re_viewer::register_text_log_receiver();
+    let text_log_rx = dl_viewer::register_text_log_receiver();
 
     #[allow(clippy::allow_attributes, unused_mut)]
     let ReceiversFromUrlParams {
@@ -1173,7 +1173,7 @@ fn start_native_viewer(
         Some(auth_error_handler),
     )?;
 
-    let create_app = move |cc: &eframe::CreationContext<'_>| -> re_viewer::App {
+    let create_app = move |cc: &eframe::CreationContext<'_>| -> dl_viewer::App {
         {
             let tx = command_tx.clone();
             let egui_ctx = cc.egui_ctx.clone();
@@ -1182,17 +1182,17 @@ fn start_native_viewer(
                 // Without this, recent state changes might not be persisted.
                 match tokio::signal::ctrl_c().await {
                     Ok(()) => {
-                        re_log::info!("Caught Ctrl-C, quitting Rerun Viewer…");
+                        dl_log::info!("Caught Ctrl-C, quitting Rerun Viewer…");
                         tx.send_ui(UICommand::Quit);
                         egui_ctx.request_repaint();
                     }
                     Err(err) => {
-                        re_log::error!("Failed to listen for ctrl-c signal: {err}");
+                        dl_log::error!("Failed to listen for ctrl-c signal: {err}");
                     }
                 }
             });
         }
-        let mut app = re_viewer::App::with_commands(
+        let mut app = dl_viewer::App::with_commands(
             _main_thread_token,
             _build_info,
             call_source.app_env(),
@@ -1214,7 +1214,7 @@ fn start_native_viewer(
             // The internal catalog is served (loopback-only) on the proxy server's port below, and
             // also reached in-process by the viewer.
             #[cfg(not(target_arch = "wasm32"))]
-            let internal_catalog = re_viewer::internal_catalog::build(server_addr);
+            let internal_catalog = dl_viewer::internal_catalog::build(server_addr);
             #[cfg(not(target_arch = "wasm32"))]
             connection_registry.set_internal((
                 internal_catalog.origin.clone(),
@@ -1222,29 +1222,29 @@ fn start_native_viewer(
             ));
 
             #[cfg_attr(target_arch = "wasm32", expect(unused_mut))]
-            let mut extra_services = re_grpc_server::LoopbackServices::default();
+            let mut extra_services = dl_grpc_server::LoopbackServices::default();
 
             #[cfg(not(target_arch = "wasm32"))]
             extra_services.add_service(internal_catalog.grpc_service());
 
-            let (log_receiver, grpc_server_handle) = re_grpc_server::spawn_with_recv_and_services(
+            let (log_receiver, grpc_server_handle) = dl_grpc_server::spawn_with_recv_and_services(
                 server_addr,
                 server_options,
-                re_grpc_server::shutdown::never(),
+                dl_grpc_server::shutdown::never(),
                 extra_services,
             );
 
             log_receivers.push(log_receiver);
 
             struct ProxyHandleWrapper {
-                handle: re_grpc_server::MessageProxyHandle,
+                handle: dl_grpc_server::MessageProxyHandle,
             }
 
-            impl re_viewer::ExternalMemoryUser for ProxyHandleWrapper {
-                fn capture(&mut self) -> Option<re_byte_size::NamedMemUsageTree> {
+            impl dl_viewer::ExternalMemoryUser for ProxyHandleWrapper {
+                fn capture(&mut self) -> Option<dl_byte_size::NamedMemUsageTree> {
                     self.handle
                         .capture_memory()
-                        .map(|tree| re_byte_size::NamedMemUsageTree {
+                        .map(|tree| dl_byte_size::NamedMemUsageTree {
                             name: "GRPC Server".to_owned(),
                             value: tree,
                         })
@@ -1276,12 +1276,12 @@ fn start_native_viewer(
             .as_deref()
             .map(parse_size)
             .transpose()?
-            .map(|[w, h]| re_viewer::external::egui::Vec2::new(w, h));
+            .map(|[w, h]| dl_viewer::external::egui::Vec2::new(w, h));
 
-        re_viewer::run_headless_app(Box::new(create_app), renderer, window_size)
+        dl_viewer::run_headless_app(Box::new(create_app), renderer, window_size)
             .map_err(|err| err.into())
     } else {
-        re_viewer::run_native_app(
+        dl_viewer::run_native_app(
             _main_thread_token,
             Box::new(move |cc| Ok(Box::new(create_app(cc)))),
             renderer,
@@ -1291,18 +1291,18 @@ fn start_native_viewer(
 }
 
 #[cfg(feature = "native_viewer")]
-fn native_startup_options_from_args(args: &Args) -> anyhow::Result<re_viewer::StartupOptions> {
-    re_tracing::profile_function!();
+fn native_startup_options_from_args(args: &Args) -> anyhow::Result<dl_viewer::StartupOptions> {
+    dl_tracing::profile_function!();
 
     let video_decoder_hw_acceleration = args.video_decoder.as_ref().and_then(|s| match s.parse() {
         Err(()) => {
-            re_log::warn_once!("Failed to parse --video-decoder value: {s}. Ignoring.");
+            dl_log::warn_once!("Failed to parse --video-decoder value: {s}. Ignoring.");
             None
         }
         Ok(hw_accell) => Some(hw_accell),
     });
 
-    Ok(re_viewer::StartupOptions {
+    Ok(dl_viewer::StartupOptions {
         hide_welcome_screen: args.hide_welcome_screen,
         detach_process: args.detach_process,
         persist_state: args.persist_state,
@@ -1332,13 +1332,13 @@ fn connect_to_existing_server(
     receivers: ReceiversFromUrlParams,
     server_addr: std::net::SocketAddr,
 ) -> anyhow::Result<()> {
-    use re_sdk::sink::LogSink as _;
+    use dl_sdk::sink::LogSink as _;
 
-    let uri: re_uri::ProxyUri = format!("rerun+http://{server_addr}/proxy").parse()?;
-    re_log::info!(%uri, "Another viewer is already running, streaming data to it. Use --port auto to force a new viewer.");
-    let sink = re_sdk::sink::GrpcSink::new(uri);
+    let uri: dl_uri::ProxyUri = format!("rerun+http://{server_addr}/proxy").parse()?;
+    dl_log::info!(%uri, "Another viewer is already running, streaming data to it. Use --port auto to force a new viewer.");
+    let sink = dl_sdk::sink::GrpcSink::new(uri);
     if !receivers.urls_to_pass_on_to_viewer.is_empty() {
-        re_log::warn!(
+        dl_log::warn!(
             "The following URLs can't be passed to already open viewers yet: {:?}",
             receivers.urls_to_pass_on_to_viewer
         );
@@ -1352,7 +1352,7 @@ fn connect_to_existing_server(
                             sink.send(log_msg);
                         }
                         unsupported => {
-                            re_log::error_once!(
+                            dl_log::error_once!(
                                 "Can't pass on {} to the server",
                                 unsupported.variant_name()
                             );
@@ -1374,7 +1374,7 @@ fn serve_web(
     force_wgpu_backend: Option<String>,
     video_decoder: Option<String>,
     server_addr: std::net::SocketAddr,
-    server_options: re_sdk::ServerOptions,
+    server_options: dl_sdk::ServerOptions,
     open_browser: bool,
 ) -> anyhow::Result<()> {
     let ReceiversFromUrlParams {
@@ -1396,10 +1396,10 @@ fn serve_web(
         // Spawn a server which the Web Viewer can connect to.
         // All `rxs` are consumed by the server.
         // We don't render a dev panel here so we don't need to keep the handle.
-        let _ = re_grpc_server::spawn_from_rx_set(
+        let _ = dl_grpc_server::spawn_from_rx_set(
             server_addr,
             server_options,
-            re_grpc_server::shutdown::never(),
+            dl_grpc_server::shutdown::never(),
             LogReceiverSet::new(log_receivers),
         );
 
@@ -1410,8 +1410,8 @@ fn serve_web(
             format!("rerun+http://{server_addr}/proxy")
         };
 
-        re_log::debug_assert!(
-            proxy_url.parse::<re_uri::RedapUri>().is_ok(),
+        dl_log::debug_assert!(
+            proxy_url.parse::<dl_uri::RedapUri>().is_ok(),
             "Expected a proper proxy URI, but got {proxy_url:?}"
         );
 
@@ -1421,7 +1421,7 @@ fn serve_web(
     // This is the server that serves the Wasm+HTML:
     WebViewerConfig {
         bind_ip: server_addr.ip().to_string(),
-        web_port: re_web_viewer_server::WebViewerServerPort(web_viewer_port),
+        web_port: dl_web_viewer_server::WebViewerServerPort(web_viewer_port),
         connect_to: urls_to_pass_on_to_viewer,
         force_wgpu_backend,
         video_decoder,
@@ -1439,7 +1439,7 @@ fn serve_grpc(
     receivers: ReceiversFromUrlParams,
     tokio_runtime_handle: &tokio::runtime::Handle,
     server_addr: std::net::SocketAddr,
-    server_options: re_sdk::ServerOptions,
+    server_options: dl_sdk::ServerOptions,
 ) -> anyhow::Result<()> {
     if !cfg!(feature = "server") {
         anyhow::bail!("Can't host server - rerun was not compiled with the 'server' feature");
@@ -1447,10 +1447,10 @@ fn serve_grpc(
 
     receivers.error_on_unhandled_urls("--serve-grpc")?;
 
-    let (signal, shutdown) = re_grpc_server::shutdown::shutdown();
+    let (signal, shutdown) = dl_grpc_server::shutdown::shutdown();
     // Spawn a server which the Web Viewer can connect to.
     // No dev panel in this mode, so we drop the handle.
-    let _ = re_grpc_server::spawn_from_rx_set(
+    let _ = dl_grpc_server::spawn_from_rx_set(
         server_addr,
         server_options,
         shutdown,
@@ -1469,7 +1469,7 @@ fn save_or_test_receive(
     save: Option<String>,
     receivers: ReceiversFromUrlParams,
     #[cfg(feature = "server")] server_addr: std::net::SocketAddr,
-    #[cfg(feature = "server")] server_options: re_sdk::ServerOptions,
+    #[cfg(feature = "server")] server_options: dl_sdk::ServerOptions,
 ) -> anyhow::Result<()> {
     receivers.error_on_unhandled_urls(if save.is_none() {
         "--test-receive"
@@ -1482,10 +1482,10 @@ fn save_or_test_receive(
 
     #[cfg(feature = "server")]
     {
-        let (log_rx, _handle) = re_grpc_server::spawn_with_recv(
+        let (log_rx, _handle) = dl_grpc_server::spawn_with_recv(
             server_addr,
             server_options,
-            re_grpc_server::shutdown::never(),
+            dl_grpc_server::shutdown::never(),
         );
 
         log_receivers.push(log_rx);
@@ -1509,7 +1509,7 @@ fn is_another_server_already_running(server_addr: std::net::SocketAddr) -> bool 
     // Check if there is already a viewer running and if so, send the data to it.
     use std::net::TcpStream;
     if TcpStream::connect_timeout(&server_addr, std::time::Duration::from_secs(1)).is_ok() {
-        re_log::info!(
+        dl_log::info!(
             %server_addr,
             "A process is already listening at this address. Assuming it's a Rerun Viewer."
         );
@@ -1520,11 +1520,11 @@ fn is_another_server_already_running(server_addr: std::net::SocketAddr) -> bool 
 }
 
 // NOTE: This is only used as part of end-to-end tests.
-fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<re_entity_db::EntityDb> {
-    re_log::info!("Receiving messages into a EntityDb…");
+fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<dl_entity_db::EntityDb> {
+    dl_log::info!("Receiving messages into a EntityDb…");
 
-    let mut rec: Option<re_entity_db::EntityDb> = None;
-    let mut bp: Option<re_entity_db::EntityDb> = None;
+    let mut rec: Option<dl_entity_db::EntityDb> = None;
+    let mut bp: Option<dl_entity_db::EntityDb> = None;
 
     let mut num_messages = 0;
 
@@ -1536,20 +1536,20 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<re_entit
         }
 
         if let Some((_, msg)) = rx.recv_timeout(timeout) {
-            re_log::info_once!("Received first message.");
+            dl_log::info_once!("Received first message.");
 
             match msg.payload {
                 SmartMessagePayload::Msg(msg) => {
                     match msg {
                         DataSourceMessage::RrdManifest(store_id, manifest) => {
                             let mut_db = match store_id.kind() {
-                                re_log_types::StoreKind::Recording => {
+                                dl_log_types::StoreKind::Recording => {
                                     rec.get_or_insert_with(|| {
-                                        re_entity_db::EntityDb::new(store_id.clone())
+                                        dl_entity_db::EntityDb::new(store_id.clone())
                                     })
                                 }
-                                re_log_types::StoreKind::Blueprint => bp.get_or_insert_with(|| {
-                                    re_entity_db::EntityDb::new(store_id.clone())
+                                dl_log_types::StoreKind::Blueprint => bp.get_or_insert_with(|| {
+                                    dl_entity_db::EntityDb::new(store_id.clone())
                                 }),
                             };
 
@@ -1558,13 +1558,13 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<re_entit
 
                         DataSourceMessage::RrdManifestComplete(store_id) => {
                             let mut_db = match store_id.kind() {
-                                re_log_types::StoreKind::Recording => {
+                                dl_log_types::StoreKind::Recording => {
                                     rec.get_or_insert_with(|| {
-                                        re_entity_db::EntityDb::new(store_id.clone())
+                                        dl_entity_db::EntityDb::new(store_id.clone())
                                     })
                                 }
-                                re_log_types::StoreKind::Blueprint => bp.get_or_insert_with(|| {
-                                    re_entity_db::EntityDb::new(store_id.clone())
+                                dl_log_types::StoreKind::Blueprint => bp.get_or_insert_with(|| {
+                                    dl_entity_db::EntityDb::new(store_id.clone())
                                 }),
                             };
 
@@ -1573,13 +1573,13 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<re_entit
 
                         DataSourceMessage::LogMsg(msg) => {
                             let mut_db = match msg.store_id().kind() {
-                                re_log_types::StoreKind::Recording => {
+                                dl_log_types::StoreKind::Recording => {
                                     rec.get_or_insert_with(|| {
-                                        re_entity_db::EntityDb::new(msg.store_id().clone())
+                                        dl_entity_db::EntityDb::new(msg.store_id().clone())
                                     })
                                 }
-                                re_log_types::StoreKind::Blueprint => bp.get_or_insert_with(|| {
-                                    re_entity_db::EntityDb::new(msg.store_id().clone())
+                                dl_log_types::StoreKind::Blueprint => bp.get_or_insert_with(|| {
+                                    dl_entity_db::EntityDb::new(msg.store_id().clone())
                                 }),
                             };
 
@@ -1602,7 +1602,7 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<re_entit
                     num_messages += 1;
                 }
 
-                re_log_channel::SmartMessagePayload::Flush { on_flush_done } => {
+                dl_log_channel::SmartMessagePayload::Flush { on_flush_done } => {
                     on_flush_done();
                 }
 
@@ -1611,7 +1611,7 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<re_entit
                         anyhow::bail!("data source has disconnected unexpectedly: {err}")
                     } else if let Some(db) = rec {
                         anyhow::ensure!(0 < num_messages, "No messages received");
-                        re_log::info!("Successfully ingested {num_messages} messages.");
+                        dl_log::info!("Successfully ingested {num_messages} messages.");
                         return Ok(db);
                     } else {
                         anyhow::bail!("EntityDb never initialized");
@@ -1621,7 +1621,7 @@ fn assert_receive_into_entity_db(rx: &LogReceiverSet) -> anyhow::Result<re_entit
         } else {
             if let Some(db) = rec {
                 // TODO(RR-3373): find a proper way to detect client disconnect without timing out.
-                re_log::info!(
+                dl_log::info!(
                     "Timed out after successfully receiving {num_messages} messages. Assuming the client disconnected cleanly.",
                 );
                 return Ok(db);
@@ -1644,11 +1644,11 @@ fn initialize_thread_pool(threads_args: i32) {
         match std::thread::available_parallelism() {
             Ok(cores) => {
                 let threads = cores.get().saturating_sub((-threads_args) as _).max(1);
-                re_log::debug!("Detected {cores} cores. Using {threads} compute threads.");
+                dl_log::debug!("Detected {cores} cores. Using {threads} compute threads.");
                 builder = builder.num_threads(threads);
             }
             Err(err) => {
-                re_log::warn!("Failed to query system of the number of cores: {err}.");
+                dl_log::warn!("Failed to query system of the number of cores: {err}.");
                 // Let rayon decide for itself how many threads to use.
                 // Its default is to use as many threads as we have cores,
                 // (if rayon manages to figure out how many cores we have).
@@ -1660,14 +1660,14 @@ fn initialize_thread_pool(threads_args: i32) {
         // because that causes deadlocks when code does `rayon::spawn()`
         // followed by blocking on the result (e.g. in `load_file.rs`).
         builder = builder.num_threads(1);
-        re_log::info!("Running in single-threaded mode.");
+        dl_log::info!("Running in single-threaded mode.");
     } else {
         // 0 means "use all cores", and rayon understands that
         builder = builder.num_threads(threads_args as usize);
     }
 
     if let Err(err) = builder.build_global() {
-        re_log::warn!("Failed to initialize rayon thread pool: {err}");
+        dl_log::warn!("Failed to initialize rayon thread pool: {err}");
     }
 }
 
@@ -1698,8 +1698,8 @@ fn initialize_tokio_runtime(threads_args: i32) -> std::io::Result<Runtime> {
 }
 
 #[cfg(feature = "native_viewer")]
-fn run_profiler(args: &Args) -> re_tracing::Profiler {
-    let mut profiler = re_tracing::Profiler::default();
+fn run_profiler(args: &Args) -> dl_tracing::Profiler {
+    let mut profiler = dl_tracing::Profiler::default();
     if args.profile {
         profiler.start();
     }
@@ -1724,24 +1724,24 @@ fn parse_size(size: &str) -> anyhow::Result<[f32; 2]> {
 // TODO(cmc): dedicated module for io utils, especially stdio streaming in and out.
 
 fn stream_to_rrd_on_disk(
-    rx: &re_log_channel::LogReceiverSet,
+    rx: &dl_log_channel::LogReceiverSet,
     path: &std::path::PathBuf,
-) -> Result<(), re_log_encoding::FileSinkError> {
-    use re_log_encoding::FileSinkError;
+) -> Result<(), dl_log_encoding::FileSinkError> {
+    use dl_log_encoding::FileSinkError;
 
     if path.exists() {
-        re_log::warn!(?path, "Overwriting existing file");
+        dl_log::warn!(?path, "Overwriting existing file");
     }
 
-    re_log::info!("Saving incoming log stream to {path:?}. Abort with Ctrl-C.");
+    dl_log::info!("Saving incoming log stream to {path:?}. Abort with Ctrl-C.");
 
-    let encoding_options = re_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
     let file = std::fs::File::create(path).map_err(|err| FileSinkError::CreateFile {
         path: path.clone(),
         source: err,
     })?;
-    let mut encoder = re_log_encoding::Encoder::new_eager(
-        re_build_info::CrateVersion::LOCAL,
+    let mut encoder = dl_log_encoding::Encoder::new_eager(
+        dl_build_info::CrateVersion::LOCAL,
         encoding_options,
         file,
     )?;
@@ -1754,7 +1754,7 @@ fn stream_to_rrd_on_disk(
                         encoder.append(&log_msg)?;
                     }
                     unsupported => {
-                        re_log::error_once!(
+                        dl_log::error_once!(
                             "Received a {} which can't be stored in a file",
                             unsupported.variant_name()
                         );
@@ -1762,12 +1762,12 @@ fn stream_to_rrd_on_disk(
                 }
             }
         } else {
-            re_log::info!("Log stream disconnected, stopping.");
+            dl_log::info!("Log stream disconnected, stopping.");
             break;
         }
     }
 
-    re_log::info!("File saved to {path:?}");
+    dl_log::info!("File saved to {path:?}");
 
     Ok(())
 }
@@ -1829,8 +1829,8 @@ impl ReceiversFromUrlParams {
     fn new(
         input_urls: Vec<String>,
         config: &UrlParamProcessingConfig,
-        connection_registry: &re_redap_client::ConnectionRegistryHandle,
-        async_runtime: &re_async::AsyncRuntimeHandle,
+        connection_registry: &dl_redap_client::ConnectionRegistryHandle,
+        async_runtime: &dl_async::AsyncRuntimeHandle,
         auth_error_handler: Option<AuthErrorHandler>,
     ) -> anyhow::Result<Self> {
         let mut data_sources = Vec::new();
@@ -1838,9 +1838,9 @@ impl ReceiversFromUrlParams {
 
         for url in input_urls {
             if let Some(data_source) = LogDataSource::from_uri(
-                re_log_types::FileSource::Cli,
+                dl_log_types::FileSource::Cli,
                 &url,
-                &re_data_source::FromUriOptions {
+                &dl_data_source::FromUriOptions {
                     accept_extensionless_http: true,
                 },
             ) {
@@ -1881,7 +1881,7 @@ impl ReceiversFromUrlParams {
 
         let auth_error_handler = auth_error_handler.unwrap_or_else(|| {
             std::sync::Arc::new(|uri, err| {
-                re_log::error!(?uri, "Authentication error for data source: {err}");
+                dl_log::error!(?uri, "Authentication error for data source: {err}");
             })
         });
 
@@ -1917,7 +1917,7 @@ impl ReceiversFromUrlParams {
 /// Records analytics for the CLI command invocation.
 #[cfg(feature = "analytics")]
 fn record_cli_command_analytics(args: &Args) {
-    let Some(analytics) = re_analytics::Analytics::global_or_init() else {
+    let Some(analytics) = dl_analytics::Analytics::global_or_init() else {
         return;
     };
 
@@ -2008,7 +2008,7 @@ fn record_cli_command_analytics(args: &Args) {
         None => ("viewer", None),
     };
 
-    analytics.record(re_analytics::event::CliCommandInvoked {
+    analytics.record(dl_analytics::event::CliCommandInvoked {
         command,
         subcommand,
         web_viewer: *web_viewer,

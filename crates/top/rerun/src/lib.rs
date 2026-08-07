@@ -83,7 +83,7 @@
 //! You can buffer the log messages in memory and then show them in an embedded viewer:
 //!
 //! ```no_run
-//! # let main_thread_token = re_capabilities::MainThreadToken::i_promise_i_am_on_the_main_thread();
+//! # let main_thread_token = dl_capabilities::MainThreadToken::i_promise_i_am_on_the_main_thread();
 //! # fn log_to(rec: &rerun::RecordingStream) {}
 //! let (rec, storage) = rerun::RecordingStreamBuilder::new("rerun_example_app").memory()?;
 //! log_to(&rec);
@@ -130,35 +130,35 @@ pub use commands::{CallSource, run};
 #[cfg(feature = "log")]
 pub use log_integration::Logger;
 #[cfg(feature = "log")]
-pub use re_log::default_log_filter;
+pub use dl_log::default_log_filter;
 #[cfg(feature = "sdk")]
 pub use sdk::*;
 
 /// All the types required by the dataframe API.
 #[cfg(feature = "dataframe")]
 pub mod dataframe {
-    pub use re_dataframe::*;
+    pub use dl_dataframe::*;
 }
 
-pub use re_capabilities::MainThreadToken;
+pub use dl_capabilities::MainThreadToken;
 
 /// Everything needed to build custom `ChunkStoreSubscriber`s.
-pub use re_entity_db::external::re_chunk_store::{
+pub use dl_entity_db::external::dl_chunk_store::{
     ChunkStore, ChunkStoreConfig, ChunkStoreDiff, ChunkStoreDiffAddition, ChunkStoreDiffDeletion,
     ChunkStoreDiffVirtualAddition, ChunkStoreEvent, ChunkStoreGeneration, ChunkStoreHandle,
     ChunkStoreSubscriber,
 };
-pub use re_log_types::StoreKind;
+pub use dl_log_types::StoreKind;
 
 /// To register a new external importer, simply add an executable in your $PATH whose name
 /// starts with this prefix.
-// NOTE: this constant is duplicated in `re_data_source` to avoid an extra dependency here.
+// NOTE: this constant is duplicated in `dl_data_source` to avoid an extra dependency here.
 pub const EXTERNAL_IMPORTER_PREFIX: &str = "rerun-importer-";
 
 /// When an external importer is asked to load some data that it doesn't know
 /// how to load, it should exit with this exit code.
 // NOTE: Always keep in sync with other languages.
-// NOTE: this constant is duplicated in `re_data_source` to avoid an extra dependency here.
+// NOTE: this constant is duplicated in `dl_data_source` to avoid an extra dependency here.
 pub const EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE: i32 = 66;
 
 /// Deprecated alias for [`EXTERNAL_IMPORTER_PREFIX`].
@@ -175,30 +175,30 @@ pub const EXTERNAL_DATA_LOADER_INCOMPATIBLE_EXIT_CODE: i32 =
 
 /// Re-exports of other crates.
 pub mod external {
-    pub use ::re_entity_db::external::*;
+    pub use ::dl_entity_db::external::*;
     #[cfg(feature = "oss_server")]
-    pub use ::re_server;
+    pub use ::dl_server;
     #[cfg(feature = "clap")]
     #[cfg(not(target_arch = "wasm32"))]
     pub use clap;
     #[cfg(any(feature = "run", feature = "native_viewer"))]
-    pub use re_crash_handler;
+    pub use dl_crash_handler;
     #[cfg(feature = "run")]
-    pub use re_data_source;
+    pub use dl_data_source;
     #[cfg(any(feature = "sdk", feature = "server"))]
-    pub use re_sdk::external::*;
+    pub use dl_sdk::external::*;
     #[cfg(feature = "sdk")]
-    pub use re_sdk_types;
+    pub use dl_sdk_types;
     #[cfg(feature = "sdk")]
-    pub use re_sdk_types::external::*;
+    pub use dl_sdk_types::external::*;
     #[cfg(feature = "native_viewer")]
-    pub use re_viewer;
+    pub use dl_viewer;
     #[cfg(feature = "native_viewer")]
     // Work around for a nightly rust ICE
     // TODO(isse): Remove once https://github.com/rust-lang/rust/issues/158686 is fixed.
     #[doc(no_inline)]
-    pub use re_viewer::external::*;
+    pub use dl_viewer::external::*;
     pub use {
-        ::re_arrow_util, ::re_build_info, ::re_entity_db, ::re_error, ::re_format, anyhow, arrow,
+        ::dl_arrow_util, ::dl_build_info, ::dl_entity_db, ::dl_error, ::dl_format, anyhow, arrow,
     };
 }

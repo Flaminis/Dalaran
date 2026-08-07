@@ -1,0 +1,212 @@
+use egui::NumExt as _;
+use dl_log_types::{AbsoluteTimeRange, TimeType};
+use dl_sdk_types::blueprint::components::TimeRange;
+use dl_sdk_types::datatypes::{TimeInt, TimeRangeBoundary};
+use dl_ui::list_item::LabelContent;
+use dl_ui::{
+    RelativeTimeRange, TimeDragValue, UiExt as _, relative_time_range_boundary_label_text,
+    relative_time_range_label_text,
+};
+use dl_viewer_context::{
+    AppContext, MaybeMutRef, TimeControlCommand, TimeRangeHighlight, TimeRangeHighlightKind,
+};
+
+struct RecordingTimeContext {
+    time_type: TimeType,
+    time_drag_value: TimeDragValue,
+    current_time: TimeInt,
+}
+
+/// Resolve the recording's time context from a (possibly blueprint) store view context.
+///
+/// The `TimeRange` component is stored in the blueprint but represents a range on the
+/// recording timeline, so we need the active recording's time control and data.
+fn recording_time_context(ctx: &AppContext<'_>) -> Option<RecordingTimeContext> {
+    let time_ctrl = ctx.active_time_ctrl()?;
+    let time_type = time_ctrl.time_type()?;
+
+    let time_drag_value = if let Some(range) = ctx
+        .active_recording()
+        .and_then(|r| r.time_range_for(time_ctrl.timeline_name()))
+    {
+        TimeDragValue::from_abs_time_range(range)
+    } else {
+        TimeDragValue::from_time_range(0..=0)
+    };
+
+    let current_time = TimeInt(
+        time_ctrl
+            .time_i64()
+            .unwrap_or_default()
+            .at_least(time_drag_value.range.start),
+    ); // accounts for static time (TimeInt::MIN)
+
+    Some(RecordingTimeContext {
+        time_type,
+        time_drag_value,
+        current_time,
+    })
+}
+
+pub fn time_range_multiline_edit_or_view_ui(
+    ctx: &AppContext<'_>,
+    ui: &mut egui::Ui,
+    value: &mut MaybeMutRef<'_, TimeRange>,
+) -> egui::Response {
+    let Some(RecordingTimeContext {
+        time_type,
+        time_drag_value,
+        current_time,
+    }) = recording_time_context(ctx)
+    else {
+        return ui.weak("No active timeline");
+    };
+
+    let response = match value {
+        MaybeMutRef::Ref(value) => {
+            let response_x = ui.list_item().interactive(false).show_hierarchical(
+                ui,
+                dl_ui::list_item::PropertyContent::new("start").value_fn(|ui, _| {
+                    view_visible_history_boundary_ui(ctx, ui, &value.start, time_type, true);
+                }),
+            );
+
+            let response_y = ui.list_item().interactive(false).show_hierarchical(
+                ui,
+                dl_ui::list_item::PropertyContent::new("end").value_fn(|ui, _| {
+                    view_visible_history_boundary_ui(ctx, ui, &value.end, time_type, false);
+                }),
+            );
+
+            let (text, on_hover) = relative_time_range_label_text(
+                current_time,
+                time_type,
+                value,
+                ctx.app_options.timestamp_format,
+            );
+
+            let mut response_z = ui
+                .list_item()
+                .interactive(false)
+                .show_hierarchical(ui, LabelContent::new(text));
+
+            if let Some(on_hover) = on_hover {
+                response_z = response_z.on_hover_text(on_hover);
+            }
+
+            response_x | response_y | response_z
+        }
+        MaybeMutRef::MutRef(value) => {
+            let current_start = value.start.start_boundary_time(current_time);
+            let current_end = value.end.end_boundary_time(current_time);
+
+            let old_value: TimeRange = **value;
+
+            let mut response = RelativeTimeRange {
+                time_drag_value: &time_drag_value,
+                value,
+                resolved_range: AbsoluteTimeRange::new(current_start, current_end),
+                time_type,
+                timestamp_format: ctx.app_options.timestamp_format,
+                current_time,
+            }
+            .ui(ui);
+
+            if **value != old_value {
+                response.mark_changed();
+            }
+
+            response
+        }
+    };
+
+    if ui.rect_contains_pointer(response.rect)
+        && let Some(time_ctrl) = ctx.active_time_ctrl()
+    {
+        let absolute_range = AbsoluteTimeRange::from_relative_time_range(value, current_time);
+        ctx.send_time_commands_to_active_recording([TimeControlCommand::HighlightRange(
+            TimeRangeHighlight {
+                range: absolute_range,
+                timeline: *time_ctrl.timeline_name(),
+                kind: TimeRangeHighlightKind::TimeRangeConfiguration,
+                color: None,
+            },
+        )]);
+    }
+
+    response
+}
+
+pub fn time_range_singleline_view_ui(
+    ctx: &AppContext<'_>,
+    ui: &mut egui::Ui,
+    value: &mut MaybeMutRef<'_, TimeRange>,
+) -> egui::Response {
+    let Some(RecordingTimeContext {
+        time_type,
+        current_time,
+        ..
+    }) = recording_time_context(ctx)
+    else {
+        return ui.weak("No active timeline");
+    };
+
+    let (text, on_hover) = relative_time_range_label_text(
+        current_time,
+        time_type,
+        value,
+        ctx.app_options.timestamp_format.with_short(true),
+    );
+
+    let mut res = ui.label(text);
+
+    if let Some(on_hover) = on_hover {
+        res = res.on_hover_text(on_hover);
+    }
+
+    if res.hovered()
+        && let Some(time_ctrl) = ctx.active_time_ctrl()
+    {
+        let absolute_range = AbsoluteTimeRange::from_relative_time_range(value, current_time);
+        ctx.send_time_commands_to_active_recording([TimeControlCommand::HighlightRange(
+            TimeRangeHighlight {
+                range: absolute_range,
+                timeline: *time_ctrl.timeline_name(),
+                kind: TimeRangeHighlightKind::TimeRangeConfiguration,
+                color: None,
+            },
+        )]);
+    }
+
+    res
+}
+
+fn view_visible_history_boundary_ui(
+    ctx: &AppContext<'_>,
+    ui: &mut egui::Ui,
+    visible_history_boundary: &TimeRangeBoundary,
+    time_type: TimeType,
+    low_bound: bool,
+) {
+    ui.label(relative_time_range_boundary_label_text(
+        *visible_history_boundary,
+        time_type,
+        low_bound,
+    ));
+
+    match visible_history_boundary {
+        TimeRangeBoundary::CursorRelative(time_int) => {
+            ui.label(
+                match time_type {
+                    TimeType::Sequence => TimeType::Sequence,
+                    TimeType::DurationNs | TimeType::TimestampNs => TimeType::DurationNs,
+                }
+                .format(*time_int, ctx.app_options.timestamp_format),
+            );
+        }
+        TimeRangeBoundary::Absolute(time_int) => {
+            ui.label(time_type.format(*time_int, ctx.app_options.timestamp_format));
+        }
+        TimeRangeBoundary::Infinite => {}
+    }
+}

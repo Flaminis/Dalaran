@@ -53,7 +53,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: web_viewer
-          path: "crates/viewer/re_web_viewer_server/web_viewer"
+          path: "crates/viewer/dl_web_viewer_server/web_viewer"
 
       - name: Download examples
         if: ${{ inputs.WITH_EXAMPLES }}
@@ -94,8 +94,8 @@ jobs:
         run: |
           entries=()
 
-          entries+=("Wasm:crates/viewer/re_web_viewer_server/web_viewer/re_viewer_bg.wasm:MiB")
-          entries+=("JS:crates/viewer/re_web_viewer_server/web_viewer/re_viewer.js:kiB")
+          entries+=("Wasm:crates/viewer/dl_web_viewer_server/web_viewer/re_viewer_bg.wasm:MiB")
+          entries+=("JS:crates/viewer/dl_web_viewer_server/web_viewer/dl_viewer.js:kiB")
 
           if [ ${{ inputs.WITH_EXAMPLES }} = "true" ]; then
             for file in example_data/*.rrd; do
@@ -106,8 +106,8 @@ jobs:
 
           python3 scripts/ci/count_bytes.py "${entries[@]}"  > /tmp/sizes.json
 
-          python3 scripts/ci/count_dependencies.py -p re_sdk    --no-default-features > /tmp/deps1.json
-          python3 scripts/ci/count_dependencies.py -p re_viewer --all-features        > /tmp/deps2.json
+          python3 scripts/ci/count_dependencies.py -p dl_sdk    --no-default-features > /tmp/deps1.json
+          python3 scripts/ci/count_dependencies.py -p dl_viewer --all-features        > /tmp/deps2.json
           python3 scripts/ci/count_dependencies.py -p rerun     --all-features        > /tmp/deps3.json
 
           # Merge the results, putting dependencies first (on top):

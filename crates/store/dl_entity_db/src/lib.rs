@@ -1,0 +1,55 @@
+#![allow(clippy::iter_over_hash_type)]
+
+//! This is how we store and index logging data.
+//!
+//! ## Feature flags
+#![doc = document_features::document_features!()]
+//!
+
+mod chunk_requests;
+mod data_meta_per_timeline;
+pub mod entity_db;
+mod ingestion_statistics;
+mod instance_path;
+mod rrd_manifest_index;
+mod sorted_range_map;
+mod store_bundle;
+mod versioned_instance_path;
+
+#[doc(no_inline)]
+pub use dl_log_types::{EntityPath, EntityPathPart, TimeInt, Timeline};
+
+pub use self::entity_db::{DEFAULT_GC_TIME_BUDGET, EntityDb};
+pub use self::ingestion_statistics::{IngestionStatistics, LatencySnapshot, LatencyStats};
+pub use self::instance_path::{InstancePath, InstancePathHash};
+pub use self::rrd_manifest_index::{
+    ChunkFetcher, ChunkPrefetchOptions, ChunkPromise, ChunkRequests, FetchStage, PrefetchError,
+    PrefetchTimeCursor, PrioritizationState, ProtectedChunks, RemainingByteBudget, RequestInfo,
+    RrdManifestIndex,
+};
+pub use self::store_bundle::{StoreBundle, StoreLoadError};
+pub use self::versioned_instance_path::{VersionedInstancePath, VersionedInstancePathHash};
+
+pub use dl_chunk_store::EntityTree;
+pub use dl_log_channel::LogSource;
+
+pub mod external {
+    pub use {dl_chunk_store, dl_query};
+}
+
+// ----------------------------------------------------------------------------
+
+/// The errors that can occur when misusing the chunk store.
+///
+/// Most of these indicate a problem with either the logging SDK,
+/// or how the logging SDK is being used (PEBKAC).
+#[derive(thiserror::Error, Debug)]
+pub enum Error {
+    #[error(transparent)]
+    Write(#[from] dl_chunk_store::ChunkStoreError),
+
+    #[error(transparent)]
+    Chunk(#[from] dl_chunk::ChunkError),
+}
+
+pub type Result<T> = std::result::Result<T, Error>;

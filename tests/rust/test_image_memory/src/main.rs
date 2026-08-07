@@ -4,7 +4,7 @@
 #![expect(clippy::unwrap_used)]
 
 use mimalloc::MiMalloc;
-use re_memory::AccountingAllocator;
+use dl_memory::AccountingAllocator;
 use rerun::archetypes::Image;
 use rerun::external::image;
 
@@ -12,7 +12,7 @@ use rerun::external::image;
 static GLOBAL: AccountingAllocator<MiMalloc> = AccountingAllocator::new(MiMalloc);
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    re_memory::accounting_allocator::turn_on_tracking_if_env_var("RERUN_TRACK_ALLOCATIONS");
+    dl_memory::accounting_allocator::turn_on_tracking_if_env_var("RERUN_TRACK_ALLOCATIONS");
 
     let rec = rerun::RecordingStreamBuilder::new("rerun_example_image_memory").spawn()?;
     log_images(&rec).unwrap();
@@ -40,14 +40,14 @@ fn log_images(rec: &rerun::RecordingStream) -> Result<(), Box<dyn std::error::Er
 
     eprintln!(
         "Logged {n} {w}x{h} RGBA images = {}",
-        re_format::format_bytes((n * w * h * 4) as _)
+        dl_format::format_bytes((n * w * h * 4) as _)
     );
 
     // Give viewer time to load it:
     std::thread::sleep(std::time::Duration::from_secs(2));
 
-    if let Some(allocs) = re_memory::accounting_allocator::global_allocs() {
-        eprintln!("{} RAM used", re_format::format_bytes(allocs.size as _));
+    if let Some(allocs) = dl_memory::accounting_allocator::global_allocs() {
+        eprintln!("{} RAM used", dl_format::format_bytes(allocs.size as _));
     }
 
     Ok(())

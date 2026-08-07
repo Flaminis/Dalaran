@@ -2,10 +2,10 @@ use std::str::FromStr as _;
 
 use pyo3::exceptions::PyTypeError;
 use pyo3::{Py, PyErr, PyResult, Python, pyclass, pymethods};
-use re_log_types::EntryId;
-use re_protos::cloud::v1alpha1::EntryKind;
-use re_protos::cloud::v1alpha1::ext;
-use re_protos::cloud::v1alpha1::ext::EntryDetails;
+use dl_log_types::EntryId;
+use dl_protos::cloud::v1alpha1::EntryKind;
+use dl_protos::cloud::v1alpha1::ext;
+use dl_protos::cloud::v1alpha1::ext::EntryDetails;
 
 use crate::catalog::PyCatalogClientInternal;
 
@@ -28,7 +28,7 @@ impl PyEntryId {
     #[pyo3(text_signature = "(self, id)")]
     pub fn new(id: String) -> PyResult<Self> {
         Ok(Self {
-            id: re_tuid::Tuid::from_str(id.as_str())
+            id: dl_tuid::Tuid::from_str(id.as_str())
                 .map_err(|err| PyTypeError::new_err(format!("invalid Tuid: {err}")))?
                 .into(),
         })
@@ -183,7 +183,7 @@ pub fn set_entry_name(
     let entry_id = entry_details.id;
     let connection = client.borrow_mut(py).connection().clone();
 
-    let entry_name = re_protos::EntryName::new(name)
+    let entry_name = dl_protos::EntryName::new(name)
         .map_err(|err| pyo3::exceptions::PyValueError::new_err(err.to_string()))?;
     let entry_details_update = ext::EntryDetailsUpdate {
         name: Some(entry_name),

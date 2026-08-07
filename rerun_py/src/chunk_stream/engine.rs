@@ -15,7 +15,7 @@ use std::sync::Arc;
 use pyo3::exceptions::PyStopIteration;
 use pyo3::prelude::*;
 
-use re_chunk::Chunk;
+use dl_chunk::Chunk;
 
 use super::error::{ChunkPipelineError, PythonException, py_callable_err};
 use super::stream::{
@@ -129,14 +129,14 @@ impl CompileContext {
 
                                 if match_alive
                                     && let Some(m) = matching
-                                    && re_quota_channel::send_crossbeam(&tx_match, Ok(m)).is_err()
+                                    && dl_quota_channel::send_crossbeam(&tx_match, Ok(m)).is_err()
                                 {
                                     match_alive = false;
                                 }
 
                                 if nomatch_alive
                                     && let Some(c) = complement
-                                    && re_quota_channel::send_crossbeam(&tx_nomatch, Ok(c)).is_err()
+                                    && dl_quota_channel::send_crossbeam(&tx_nomatch, Ok(c)).is_err()
                                 {
                                     nomatch_alive = false;
                                 }
@@ -152,12 +152,12 @@ impl CompileContext {
                                 // Send the error to both live branches so the sink
                                 // sees it regardless of which branch it reads first.
                                 if match_alive {
-                                    re_quota_channel::send_crossbeam(&tx_match, Err(err.clone()))
+                                    dl_quota_channel::send_crossbeam(&tx_match, Err(err.clone()))
                                         .ok();
                                 }
 
                                 if nomatch_alive {
-                                    re_quota_channel::send_crossbeam(&tx_nomatch, Err(err)).ok();
+                                    dl_quota_channel::send_crossbeam(&tx_nomatch, Err(err)).ok();
                                 }
 
                                 break;
@@ -365,7 +365,7 @@ fn compile_merged(streams: &[LazyChunkStream], ctx: &mut CompileContext) -> Box<
                 loop {
                     match stream.next() {
                         Ok(Some(chunk)) => {
-                            if re_quota_channel::send_crossbeam(&tx, Ok(chunk)).is_err() {
+                            if dl_quota_channel::send_crossbeam(&tx, Ok(chunk)).is_err() {
                                 break; // receiver dropped
                             }
                         }
@@ -373,7 +373,7 @@ fn compile_merged(streams: &[LazyChunkStream], ctx: &mut CompileContext) -> Box<
                         Ok(None) => break,
 
                         Err(err) => {
-                            re_quota_channel::send_crossbeam(&tx, Err(err)).ok();
+                            dl_quota_channel::send_crossbeam(&tx, Err(err)).ok();
                             break;
                         }
                     }
@@ -397,7 +397,7 @@ fn compile_split_branch(
         Box::new(ChannelStream::new(rx))
     } else {
         // Only one branch is reachable: degenerate to filter/drop.
-        re_log::warn!(
+        dl_log::warn!(
             "Only one branch of a split is connected to the pipeline. \
              The split has been optimized into a filter/drop operation."
         );
@@ -511,16 +511,16 @@ impl ChunkStream for DropStream {
 
 struct LensesStream {
     inner: Box<dyn ChunkStream>,
-    lenses: re_lenses_core::Lenses,
-    content: Option<re_log_types::ResolvedEntityPathFilter>,
+    lenses: dl_lenses_core::Lenses,
+    content: Option<dl_log_types::ResolvedEntityPathFilter>,
     buffer: std::collections::VecDeque<Arc<Chunk>>,
 }
 
 impl LensesStream {
     pub fn new(
         inner: Box<dyn ChunkStream>,
-        lenses: re_lenses_core::Lenses,
-        content: Option<re_log_types::ResolvedEntityPathFilter>,
+        lenses: dl_lenses_core::Lenses,
+        content: Option<dl_log_types::ResolvedEntityPathFilter>,
     ) -> Self {
         Self {
             inner,
@@ -553,7 +553,7 @@ impl ChunkStream for LensesStream {
             }
 
             // Apply lenses — may produce 0..N output chunks.
-            for result in self.lenses.apply(&chunk, &re_lenses::default_runtime()) {
+            for result in self.lenses.apply(&chunk, &dl_lenses::default_runtime()) {
                 match result {
                     Ok(out) => self.buffer.push_back(Arc::new(out)),
                     Err(partial) => {

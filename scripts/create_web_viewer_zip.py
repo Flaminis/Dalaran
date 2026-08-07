@@ -2,7 +2,7 @@
 """
 Create a zip archive of the web viewer assets.
 
-The archive can be served by `re_web_viewer_server` at runtime (`WebViewerServer::with_archive`).
+The archive can be served by `dl_web_viewer_server` at runtime (`WebViewerServer::with_archive`).
 It is used both for appending to CLI binaries built with `RERUN_TRAILING_WEB_VIEWER=1`
 (see `scripts/append_web_viewer.py`) and for shipping inside Python wheels built with
 `RERUN_EXTERNAL_WEB_VIEWER=1` (as `rerun_sdk/web_viewer.zip`).
@@ -11,7 +11,7 @@ Usage:
     python3 scripts/create_web_viewer_zip.py <web_viewer_dir> <output_zip>
 
 Example:
-    python3 scripts/create_web_viewer_zip.py crates/viewer/re_web_viewer_server/web_viewer web_viewer.zip
+    python3 scripts/create_web_viewer_zip.py crates/viewer/dl_web_viewer_server/web_viewer web_viewer.zip
 """
 
 from __future__ import annotations
@@ -22,13 +22,13 @@ import sys
 import zipfile
 from pathlib import Path
 
-# The files `re_web_viewer_server` serves. Must match the list in its `lib.rs`.
+# The files `dl_web_viewer_server` serves. Must match the list in its `lib.rs`.
 REQUIRED_FILES = [
     "index.html",
     "favicon.ico",
     "apple-touch-icon.png",
     "sw.js",
-    "re_viewer.js",
+    "dl_viewer.js",
     "re_viewer_bg.wasm",
     "signed-in.html",
     "signed-out.html",

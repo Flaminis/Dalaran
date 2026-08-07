@@ -1,0 +1,167 @@
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+
+use ahash::HashMap;
+use dl_byte_size::SizeBytes as _;
+use dl_chunk::RowId;
+use dl_chunk_store::ChunkStoreEvent;
+use dl_entity_db::EntityDb;
+use dl_log_types::hash::Hash64;
+use dl_renderer::external::dl_video::VideoLoadError;
+use dl_renderer::video::Video;
+use dl_sdk_types::ComponentIdentifier;
+use dl_sdk_types::components::MediaType;
+use dl_video::DecodeSettings;
+
+use crate::Cache;
+use crate::cache::filter_blob_removed_events;
+use crate::image_info::StoredBlobCacheKey;
+
+// ----------------------------------------------------------------------------
+
+#[derive(dl_byte_size::SizeBytes)]
+struct Entry {
+    // `AtomicBool` doesn't impl `SizeBytes`; it's POD (no heap).
+    #[size_bytes(ignore)]
+    used_this_frame: AtomicBool,
+
+    /// Keeps failed loads around, so we can don't try again and again.
+    video: Arc<Result<Video, VideoLoadError>>,
+
+    /// Debug name for this video entry (typically the entity path).
+    debug_name: String,
+}
+
+/// Caches videos assets and their players based on media type & row id.
+#[derive(Default)]
+pub struct VideoAssetCache(HashMap<StoredBlobCacheKey, HashMap<Hash64, Entry>>);
+
+impl VideoAssetCache {
+    /// Read in some video data and cache the result.
+    ///
+    /// You may use the `RowId` as cache key if any.
+    /// NOTE: videos are never batched atm (they are mono-archetypes),
+    /// so we don't need the instance id here.
+    pub fn entry(
+        &mut self,
+        debug_name: String,
+        blob_row_id: RowId,
+        blob_component: ComponentIdentifier,
+        video_buffer: &dl_sdk_types::datatypes::Blob,
+        media_type: Option<&MediaType>,
+        decode_settings: DecodeSettings,
+    ) -> Arc<Result<Video, VideoLoadError>> {
+        dl_tracing::profile_function!(&debug_name);
+
+        // The component should always be the one in the video asset archetype, but in the future
+        // we may allow overrides such that it is sourced from somewhere else.
+        let blob_cache_key = StoredBlobCacheKey::new(blob_row_id, blob_component);
+
+        // In order to avoid loading the same video multiple times with
+        // known and unknown media type, we have to resolve the media type before
+        // loading & building the cache key.
+        let Some(media_type) = media_type
+            .cloned()
+            .or_else(|| MediaType::guess_from_data(video_buffer))
+        else {
+            return Arc::new(Err(VideoLoadError::UnrecognizedMimeType));
+        };
+
+        let inner_key = Hash64::hash((media_type.as_str(), decode_settings.hw_acceleration));
+
+        let entry = self
+            .0
+            .entry(blob_cache_key)
+            .or_default()
+            .entry(inner_key)
+            .or_insert_with(|| {
+                let _ = blob_row_id; // used to be the source id, now unused
+                let video = dl_video::VideoDataDescription::load_from_bytes(
+                    video_buffer,
+                    &media_type,
+                    &debug_name,
+                )
+                .map(|data| Video::load(debug_name.clone(), data, decode_settings));
+                Entry {
+                    used_this_frame: AtomicBool::new(true),
+                    video: Arc::new(video),
+                    debug_name,
+                }
+            });
+
+        // Using acquire/release here to be on the safe side and for semantical soundness:
+        // Whatever thread is acquiring the fact that this was used, should also see/acquire
+        // the side effect of having the entry contained in the cache.
+        entry.used_this_frame.store(true, Ordering::Release);
+        entry.video.clone()
+    }
+}
+
+impl Cache for VideoAssetCache {
+    fn name(&self) -> &'static str {
+        "VideoAssetCache"
+    }
+
+    fn begin_frame(&mut self) {
+        dl_tracing::profile_function!();
+
+        // Clean up unused video data.
+        self.0.retain(|_row_id, per_key| {
+            per_key.retain(|_, v| v.used_this_frame.load(Ordering::Acquire));
+            !per_key.is_empty()
+        });
+
+        // Of the remaining video data, remove all unused decoders.
+        #[expect(clippy::iter_over_hash_type)]
+        for per_key in self.0.values() {
+            for v in per_key.values() {
+                v.used_this_frame.store(false, Ordering::Release);
+                if let Ok(video) = v.video.as_ref() {
+                    video.begin_frame();
+                }
+            }
+        }
+    }
+
+    fn purge_memory(&mut self) {
+        // We aggressively purge all unused video data every frame.
+        // The expectation here is that parsing video data is fairly fast,
+        // since decoding happens separately.
+        //
+        // As of writing, in a debug wasm build with Chrome loading a 600MiB 1h video
+        // this assumption holds up fine: There is a (sufferable) delay,
+        // but it's almost entirely due to the decoder trying to retrieve a frame.
+    }
+
+    fn on_store_events(&mut self, events: &[&ChunkStoreEvent], _entity_db: &EntityDb) {
+        dl_tracing::profile_function!();
+
+        let cache_key_removed = filter_blob_removed_events(events);
+        self.0
+            .retain(|cache_key, _per_key| !cache_key_removed.contains(cache_key));
+    }
+}
+
+impl dl_byte_size::MemUsageTreeCapture for VideoAssetCache {
+    fn capture_mem_usage_tree(&self) -> dl_byte_size::MemUsageTree {
+        let mut node = dl_byte_size::MemUsageNode::new();
+
+        // Collect all entries with their debug names and sizes
+        let mut items: Vec<_> = self
+            .0
+            .values()
+            .flat_map(|per_key| per_key.values())
+            .map(|entry| {
+                let size = entry.heap_size_bytes();
+                (entry.debug_name.as_str(), size)
+            })
+            .collect();
+        items.sort_by(|a, b| a.0.cmp(b.0));
+
+        for (debug_name, size) in items {
+            node.add(debug_name, dl_byte_size::MemUsageTree::Bytes(size));
+        }
+
+        node.with_total_size_bytes(self.0.total_size_bytes())
+    }
+}

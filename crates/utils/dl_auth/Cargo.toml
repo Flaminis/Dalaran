@@ -1,0 +1,81 @@
+[package]
+name = "dl_auth"
+description = "Authentication helpers for Rerun"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+include = [
+  "../../Cargo.lock", # So that users can pass `--locked` to `cargo install rerun-cli`
+  "../../LICENSE-APACHE",
+  "../../LICENSE-MIT",
+  "**/*.rs",
+  "Cargo.toml",
+  "src/status_page.html",
+]
+license.workspace = true
+publish = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[features]
+cli = ["dep:indicatif", "dep:webbrowser", "oauth"]
+
+oauth = ["dep:directories", "dep:ehttp", "dep:getrandom", "dep:ring", "dep:tiny_http", "dep:uuid"]
+
+[package.metadata.cargo-shear]
+ignored = [
+  "getrandom", # used by `oauth/api.rs`, only when the `oauth` feature is enabled
+  "getrandom02", # transitive dependency
+]
+
+
+[dependencies]
+dl_analytics.workspace = true
+dl_log.workspace = true
+dl_int.workspace = true
+
+async-trait.workspace = true
+base64.workspace = true
+http.workspace = true
+jiff = { workspace = true, features = ["serde"] }
+hmac.workspace = true
+jsonwebtoken.workspace = true
+ring = { workspace = true, optional = true }
+parking_lot.workspace = true
+sha2.workspace = true
+signature.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, features = ["time"] }
+tonic.workspace = true
+tower.workspace = true
+url.workspace = true
+
+## Optional dependencies
+getrandom = { workspace = true, optional = true }
+indicatif = { workspace = true, optional = true }
+uuid = { workspace = true, optional = true, features = ["v4"] }
+webbrowser = { workspace = true, optional = true }
+
+# Native:
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+directories = { workspace = true, optional = true }
+ehttp = { workspace = true, optional = true, features = ["json", "native-async"] }
+rand = { workspace = true, features = ["std", "std_rng", "os_rng"] }
+serde.workspace = true
+tiny_http = { workspace = true, optional = true }
+
+# Web:
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+ehttp = { workspace = true, optional = true, features = ["json"] }
+dl_web.workspace = true
+web-sys = { workspace = true, features = ["Location", "Storage", "Window"] }
+getrandom02 = { workspace = true, features = ["js"] }
+
+[dev-dependencies]
+rand = { workspace = true, features = ["std", "std_rng"] }

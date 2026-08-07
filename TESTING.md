@@ -76,24 +76,24 @@ Redap stands for "Rerun data protocol." It is the interface between clients such
 
 We have several test harnesses related to redap.
 
-### `re_redap_tests`
+### `dl_redap_tests`
 
 This is a Rust-based compliance test suite that builds directly against the server's service handler. It is run both against the OSS server in this repository, and our Rerun's proprietary implementation Rerun Hub. This test suite does not run through an actual gRPC connection. It directly links to the servers' code.
 
 This test suite is executed by the OSS server tests, so you can run it locally with:
 
 ```
-cargo nextest run -p re_server --all-features
+cargo nextest run -p dl_server --all-features
 ```
 
-### `re_integration_test`
+### `dl_integration_test`
 
 This is a Rust-based test suite that runs both our Rust-based client and the OSS server. The harness spins up a local server and the tests connect to it.
 
 Run it with:
 
 ```
-cargo nextest run -p re_integration_test --all-features
+cargo nextest run -p dl_integration_test --all-features
 ```
 
 

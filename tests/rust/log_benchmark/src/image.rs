@@ -22,13 +22,13 @@ pub struct ImageCommand {
 impl ImageCommand {
     /// Log a single large image.
     pub fn run(self, rec: &rerun::RecordingStream) -> anyhow::Result<()> {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
         let input = std::hint::black_box(self.prepare());
         self.execute(rec, input)
     }
 
     fn prepare(&self) -> Vec<u8> {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
 
         vec![0u8; (self.width * self.height * IMAGE_CHANNELS) as usize]
 
@@ -48,7 +48,7 @@ impl ImageCommand {
         rec: &rerun::RecordingStream,
         mut raw_image_data: Vec<u8>,
     ) -> anyhow::Result<()> {
-        re_tracing::profile_function!();
+        dl_tracing::profile_function!();
 
         let entity_path = if self.static_ {
             "static_test_image"
@@ -60,7 +60,7 @@ impl ImageCommand {
             raw_image_data[i] = 255; // Change a single pixel of the image data, just to make sure we transmit something different each time.
 
             let image = {
-                re_tracing::profile_scope!("rerun::Image::from_rgba32");
+                dl_tracing::profile_scope!("rerun::Image::from_rgba32");
                 rerun::Image::from_rgba32(
                     // TODO(andreas): We have to copy the image every time since the tensor buffer wants to
                     // take ownership of it.
@@ -71,7 +71,7 @@ impl ImageCommand {
                 )
             };
 
-            re_tracing::profile_scope!("log");
+            dl_tracing::profile_scope!("log");
             rec.log_with_static(entity_path, self.static_, &image)?;
         }
 

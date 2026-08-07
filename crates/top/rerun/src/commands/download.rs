@@ -3,8 +3,8 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 use parking_lot::Mutex;
 
-use re_data_source::{FromUriOptions, LogDataSource};
-use re_log_channel::DataSourceMessage;
+use dl_data_source::{FromUriOptions, LogDataSource};
+use dl_log_channel::DataSourceMessage;
 
 /// Download recordings and save them as `.rrd` files.
 ///
@@ -25,7 +25,7 @@ pub struct DownloadCommand {
 
 impl DownloadCommand {
     pub fn run(self, tokio_runtime: &tokio::runtime::Handle) -> anyhow::Result<()> {
-        let async_runtime = re_async::AsyncRuntimeHandle::new_native(tokio_runtime.clone());
+        let async_runtime = dl_async::AsyncRuntimeHandle::new_native(tokio_runtime.clone());
         let output_dir = self
             .output_dir
             .unwrap_or_else(|| std::path::PathBuf::from("."));
@@ -35,11 +35,11 @@ impl DownloadCommand {
         }
 
         let connection_registry =
-            re_redap_client::ConnectionRegistry::new_with_stored_credentials();
+            dl_redap_client::ConnectionRegistry::new_with_stored_credentials();
 
         for url in &self.urls {
             let data_source = LogDataSource::from_uri(
-                re_log_types::FileSource::Cli,
+                dl_log_types::FileSource::Cli,
                 url,
                 &FromUriOptions {
                     accept_extensionless_http: true,
@@ -60,7 +60,7 @@ impl DownloadCommand {
             let auth_error: Arc<Mutex<Option<String>>> = Arc::new(Mutex::new(None));
             let auth_error_capture = auth_error.clone();
 
-            let on_auth_err: re_data_source::AuthErrorHandler = Arc::new(move |uri, err| {
+            let on_auth_err: dl_data_source::AuthErrorHandler = Arc::new(move |uri, err| {
                 let msg = format!("Authentication failed for {uri}: {err}");
                 *auth_error_capture.lock() = Some(msg);
             });
@@ -68,9 +68,9 @@ impl DownloadCommand {
             let downloaded = Arc::new(AtomicU64::new(0));
             let downloaded_for_progress = downloaded.clone();
 
-            let streaming_options = re_redap_client::StreamingOptions {
+            let streaming_options = dl_redap_client::StreamingOptions {
                 force_full_download: true,
-                download: re_redap_client::SegmentDownload::default(),
+                download: dl_redap_client::SegmentDownload::default(),
                 on_progress: Some(Arc::new(move |bytes_downloaded, total_bytes| {
                     downloaded_for_progress.store(bytes_downloaded, Ordering::Relaxed);
                     match total_bytes {
@@ -83,12 +83,12 @@ impl DownloadCommand {
                             eprint!(
                                 "\r  {:.1}% ({} / {})",
                                 percent,
-                                re_format::format_bytes(bytes_downloaded as _),
-                                re_format::format_bytes(total as _),
+                                dl_format::format_bytes(bytes_downloaded as _),
+                                dl_format::format_bytes(total as _),
                             );
                         }
                         None => {
-                            eprint!("\r  {}", re_format::format_bytes(bytes_downloaded as _));
+                            eprint!("\r  {}", dl_format::format_bytes(bytes_downloaded as _));
                         }
                     }
                 })),
@@ -137,15 +137,15 @@ impl DownloadCommand {
 #[cfg(feature = "auth")]
 fn ensure_credentials(
     tokio_runtime: &tokio::runtime::Handle,
-    connection_registry: &re_redap_client::ConnectionRegistryHandle,
-    origin: &re_uri::Origin,
+    connection_registry: &dl_redap_client::ConnectionRegistryHandle,
+    origin: &dl_uri::Origin,
 ) -> anyhow::Result<()> {
-    use re_auth::oauth::login_flow::DeviceCodeFlowState;
+    use dl_auth::oauth::login_flow::DeviceCodeFlowState;
 
-    match tokio_runtime.block_on(re_auth::oauth::load_and_refresh_credentials()) {
+    match tokio_runtime.block_on(dl_auth::oauth::load_and_refresh_credentials()) {
         Ok(Some(_credentials)) => {
             // Credentials are valid.
-            connection_registry.set_credentials(origin, re_redap_client::Credentials::Stored);
+            connection_registry.set_credentials(origin, dl_redap_client::Credentials::Stored);
         }
 
         Ok(None) => {
@@ -153,15 +153,15 @@ fn ensure_credentials(
         }
 
         Err(err) => {
-            re_log::debug!("Credential refresh failed: {err}");
+            dl_log::debug!("Credential refresh failed: {err}");
             eprintln!("Session expired. Logging in again…");
 
             // Trigger interactive device-code login flow.
-            match tokio_runtime.block_on(re_auth::DeviceCodeFlow::init(true)) {
+            match tokio_runtime.block_on(dl_auth::DeviceCodeFlow::init(true)) {
                 Ok(DeviceCodeFlowState::AlreadyLoggedIn(_)) => {
                     // Shouldn't happen with force_login=true, but handle it gracefully.
                     connection_registry
-                        .set_credentials(origin, re_redap_client::Credentials::Stored);
+                        .set_credentials(origin, dl_redap_client::Credentials::Stored);
                 }
 
                 Ok(DeviceCodeFlowState::LoginFlowStarted(mut flow)) => {
@@ -178,7 +178,7 @@ fn ensure_credentials(
                             // Clear the cached client so a new one is created with fresh credentials.
                             connection_registry.remove_credentials(origin);
                             connection_registry
-                                .set_credentials(origin, re_redap_client::Credentials::Stored);
+                                .set_credentials(origin, dl_redap_client::Credentials::Stored);
                         }
                         Err(err) => {
                             anyhow::bail!(
@@ -203,10 +203,10 @@ fn ensure_credentials(
 #[cfg(not(feature = "auth"))]
 fn ensure_credentials(
     _tokio_runtime: &tokio::runtime::Handle,
-    connection_registry: &re_redap_client::ConnectionRegistryHandle,
-    origin: &re_uri::Origin,
+    connection_registry: &dl_redap_client::ConnectionRegistryHandle,
+    origin: &dl_uri::Origin,
 ) -> anyhow::Result<()> {
-    connection_registry.set_credentials(origin, re_redap_client::Credentials::Stored);
+    connection_registry.set_credentials(origin, dl_redap_client::Credentials::Stored);
     Ok(())
 }
 
@@ -234,7 +234,7 @@ fn output_filename(data_source: &LogDataSource, original_url: &str) -> std::path
         }
 
         _ => {
-            re_log::warn!("Cannot derive filename from {original_url:?}, using fallback");
+            dl_log::warn!("Cannot derive filename from {original_url:?}, using fallback");
             "output.rrd".into()
         }
     }
@@ -242,13 +242,13 @@ fn output_filename(data_source: &LogDataSource, original_url: &str) -> std::path
 
 /// Receive all messages from the channel and write them to an `.rrd` file.
 fn save_to_rrd(
-    rx: &re_log_channel::LogReceiver,
+    rx: &dl_log_channel::LogReceiver,
     output_path: &std::path::Path,
 ) -> anyhow::Result<()> {
-    let encoding_options = re_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
+    let encoding_options = dl_log_encoding::rrd::EncodingOptions::PROTOBUF_COMPRESSED;
     let file = std::fs::File::create(output_path)?;
-    let mut encoder = re_log_encoding::Encoder::new_eager(
-        re_build_info::CrateVersion::LOCAL,
+    let mut encoder = dl_log_encoding::Encoder::new_eager(
+        dl_build_info::CrateVersion::LOCAL,
         encoding_options,
         file,
     )?;
@@ -260,7 +260,7 @@ fn save_to_rrd(
                     encoder.append(&log_msg)?;
                 }
                 other => {
-                    re_log::trace!("Skipping {} (not storable in .rrd)", other.variant_name());
+                    dl_log::trace!("Skipping {} (not storable in .rrd)", other.variant_name());
                 }
             }
         }

@@ -5,13 +5,13 @@ use futures::StreamExt as _;
 use parking_lot::Mutex;
 use pyo3::exceptions::{PyStopIteration, PyValueError};
 use pyo3::{Py, PyErr, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
-use re_protos::{
+use dl_protos::{
     cloud::v1alpha1::ext::{
         QueryTasksDataframe, QueryTasksOnCompletionResponse, RegisterWithDatasetTaskDescriptor,
     },
     common::v1alpha1::TaskId,
 };
-use re_redap_client::TraceId;
+use dl_redap_client::TraceId;
 use tokio::sync::mpsc;
 use tracing::Instrument as _;
 

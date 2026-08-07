@@ -1,0 +1,48 @@
+[package]
+name = "dl_mcap"
+description = "Convert MCAP into Rerun-compatible data"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_chunk.workspace = true
+dl_int.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_quota_channel.workspace = true
+dl_ros_msg.workspace = true
+dl_sdk_types = { workspace = true, features = ["ecolor", "glam", "image", "video"] }
+dl_tracing.workspace = true
+
+ahash.workspace = true
+anyhow.workspace = true
+arrow.workspace = true
+byteorder.workspace = true
+crossbeam.workspace = true
+itertools.workspace = true
+mcap.workspace = true
+parking_lot.workspace = true
+prost-reflect.workspace = true
+rayon.workspace = true
+re_cdr.workspace = true
+regex-lite.workspace = true
+serde.workspace = true
+serde_bytes.workspace = true
+strum = { workspace = true, features = ["derive"] }
+thiserror.workspace = true
+
+[dev-dependencies]
+insta = { workspace = true, features = ["filters", "redactions"] }
+prost-reflect = { workspace = true, features = ["text-format"] }
+dl_arrow_util.workspace = true
+dl_log = { workspace = true, features = ["setup"] }

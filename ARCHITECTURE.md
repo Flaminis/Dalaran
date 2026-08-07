@@ -34,7 +34,7 @@ The easiest way to launch the Viewer is directly from the logging API with `rr.i
 
 You can try running the Viewer in a browser using `rr.serve()` in Python, or using `rerun --web-viewer mydata.rrd`.
 
-The web viewer consists of just a few small files - a thin `.html`, a `.wasm` blob, and an auto-generated `.js` bridge for the wasm. These files are served using the [`re_web_viewer_server`](https://github.com/rerun-io/rerun/tree/latest/crates/viewer/re_web_viewer_server) crate.
+The web viewer consists of just a few small files - a thin `.html`, a `.wasm` blob, and an auto-generated `.js` bridge for the wasm. These files are served using the [`dl_web_viewer_server`](https://github.com/rerun-io/rerun/tree/latest/crates/viewer/dl_web_viewer_server) crate.
 
 The web viewer can load `.rrd` files (just drag-drop them into the browser), or read logging data streamed over gRPC.
 
@@ -48,7 +48,7 @@ NOTE: `.rrd` files do not yet offer full backwards or forwards compatibility. Ho
 
 ### Apache Arrow
 
-[Apache Arrow](https://arrow.apache.org/) is a language-independent columnar memory format for arbitrary data. We use it to encode the log data when transmitting it over the network or storing it in an `.rrd` file. We also use it in our in-RAM data store, [`re_chunk_store`](crates/store/re_chunk_store/README.md).
+[Apache Arrow](https://arrow.apache.org/) is a language-independent columnar memory format for arbitrary data. We use it to encode the log data when transmitting it over the network or storing it in an `.rrd` file. We also use it in our in-RAM data store, [`dl_chunk_store`](crates/store/dl_chunk_store/README.md).
 
 In Rust, we use the [`arrow` crate](https://crates.io/crates/arrow).
 
@@ -58,7 +58,7 @@ The Rerun Viewer uses the [`wgpu`](https://github.com/gfx-rs/wgpu) graphics API.
 
 On web builds, we use WebGPU when available on the Web, but automatically fall back to a WebGL based emulation layer (with a more limited feature set).
 
-We have written our own high-level rendering crate on top of `wgpu`, called [`re_renderer`](crates/viewer/re_renderer/README.md).
+We have written our own high-level rendering crate on top of `wgpu`, called [`dl_renderer`](crates/viewer/dl_renderer/README.md).
 
 ### `egui`
 
@@ -127,7 +127,7 @@ Update instructions:
 | Rerun     | Rerun Rust SDK and Viewer shim crate |
 | rerun_c   | Rerun C SDK                          |
 | rerun_py  | Rerun Python SDK                     |
-| re_sdk    | Rerun logging SDK                    |
+| dl_sdk    | Rerun logging SDK                    |
 
 ### Viewer crates
 
@@ -135,149 +135,149 @@ Update instructions:
 
 | Crate                  | Description                                                                                                |
 | ---------------------- |------------------------------------------------------------------------------------------------------------|
-| re_arrow_ui            | Show arrow data in a tree of rerun list_items and format arrow with syntax highlighting.                   |
-| re_blueprint_tree      | The UI for the blueprint tree in the left panel.                                                           |
-| re_chunk_store_ui      | A chunk store browser UI.                                                                                  |
-| re_component_fallbacks | Provides default fallbacks for Rerun components in the fallback provider registry.                         |
-| re_component_ui        | Provides UI editors for Rerun component data for registration with the Rerun Viewer component UI registry. |
-| re_dataframe_ui        | Rich table widget over DataFusion.                                                                         |
-| re_gamepad             | Gamepad input handling for the Rerun viewer.                                                               |
-| re_memory_view         | Flamegraph visualization for memory usage trees                                                            |
-| re_plot                | Plot ui components shared between time series and bar chart view.                                          |
-| re_recording_panel     | The UI for the recording panel.                                                                            |
-| re_redap_browser       | The UI and communication to implement the in-viewer redap server browser.                                  |
-| re_selection_panel     | The UI for the selection panel.                                                                            |
-| re_time_panel          | The time panel of the Rerun Viewer, allowing to control the displayed timeline & time.                     |
-| re_time_ruler          | Time ruler widget shared by the time panel and time-aware views.                                           |
-| re_view                | Types & utilities for defining View classes and communicating with the Viewport.                           |
-| re_view_bar_chart      | A View that shows a single bar chart.                                                                      |
-| re_view_dataframe      | A View that shows the data contained in entities in a table.                                               |
-| re_view_graph          | A View that shows a graph (node-link diagram).                                                             |
-| re_view_map            | A View that shows geospatial data on a map.                                                                |
-| re_view_spatial        | Views that show entities in a 2D or 3D spatial relationship.                                               |
-| re_view_state_timeline | A view that shows state transitions as horizontal lanes over time.                                         |
-| re_view_tensor         | A View dedicated to visualizing tensors with arbitrary dimensionality.                                     |
-| re_view_text_document  | A simple View that shows a single text box.                                                                |
-| re_view_text_log       | A View that shows text entries in a table and scrolls with the active time.                                |
-| re_view_time_series    | A View that shows plots over Rerun timelines.                                                              |
-| re_viewer              | The Rerun Viewer                                                                                           |
-| re_viewer_mcp          | MCP server that allows agents to interact with the viewer.                                                 |
-| re_viewport            | The central viewport panel of the Rerun viewer.                                                            |
+| dl_arrow_ui            | Show arrow data in a tree of rerun list_items and format arrow with syntax highlighting.                   |
+| dl_blueprint_tree      | The UI for the blueprint tree in the left panel.                                                           |
+| dl_chunk_store_ui      | A chunk store browser UI.                                                                                  |
+| dl_component_fallbacks | Provides default fallbacks for Rerun components in the fallback provider registry.                         |
+| dl_component_ui        | Provides UI editors for Rerun component data for registration with the Rerun Viewer component UI registry. |
+| dl_dataframe_ui        | Rich table widget over DataFusion.                                                                         |
+| dl_gamepad             | Gamepad input handling for the Rerun viewer.                                                               |
+| dl_memory_view         | Flamegraph visualization for memory usage trees                                                            |
+| dl_plot                | Plot ui components shared between time series and bar chart view.                                          |
+| dl_recording_panel     | The UI for the recording panel.                                                                            |
+| dl_redap_browser       | The UI and communication to implement the in-viewer redap server browser.                                  |
+| dl_selection_panel     | The UI for the selection panel.                                                                            |
+| dl_time_panel          | The time panel of the Rerun Viewer, allowing to control the displayed timeline & time.                     |
+| dl_time_ruler          | Time ruler widget shared by the time panel and time-aware views.                                           |
+| dl_view                | Types & utilities for defining View classes and communicating with the Viewport.                           |
+| dl_view_bar_chart      | A View that shows a single bar chart.                                                                      |
+| dl_view_dataframe      | A View that shows the data contained in entities in a table.                                               |
+| dl_view_graph          | A View that shows a graph (node-link diagram).                                                             |
+| dl_view_map            | A View that shows geospatial data on a map.                                                                |
+| dl_view_spatial        | Views that show entities in a 2D or 3D spatial relationship.                                               |
+| dl_view_state_timeline | A view that shows state transitions as horizontal lanes over time.                                         |
+| dl_view_tensor         | A View dedicated to visualizing tensors with arbitrary dimensionality.                                     |
+| dl_view_text_document  | A simple View that shows a single text box.                                                                |
+| dl_view_text_log       | A View that shows text entries in a table and scrolls with the active time.                                |
+| dl_view_time_series    | A View that shows plots over Rerun timelines.                                                              |
+| dl_viewer              | The Rerun Viewer                                                                                           |
+| dl_viewer_mcp          | MCP server that allows agents to interact with the viewer.                                                 |
+| dl_viewport            | The central viewport panel of the Rerun viewer.                                                            |
 
 ##### UI support crates
 
 | Crate                 | Description                                                          |
 | --------------------- | -------------------------------------------------------------------- |
-| re_context_menu       | Support crate for context menu and actions.                          |
-| re_data_ui            | Provides UI elements for Rerun component data for the Rerun Viewer.  |
-| re_renderer           | A wgpu-based renderer for all your visualization needs.              |
-| re_renderer_examples  | Examples for re_renderer                                             |
-| re_ui                 | Rerun GUI theme and helpers, built around egui                       |
-| re_viewer_context     | Rerun Viewer state that is shared with the viewer's code components. |
-| re_viewport_blueprint | The data model description of the viewport panel.                    |
+| dl_context_menu       | Support crate for context menu and actions.                          |
+| dl_data_ui            | Provides UI elements for Rerun component data for the Rerun Viewer.  |
+| dl_renderer           | A wgpu-based renderer for all your visualization needs.              |
+| dl_renderer_examples  | Examples for dl_renderer                                             |
+| dl_ui                 | Rerun GUI theme and helpers, built around egui                       |
+| dl_viewer_context     | Rerun Viewer state that is shared with the viewer's code components. |
+| dl_viewport_blueprint | The data model description of the viewport panel.                    |
 
 ### Application-level store
 
 | Crate           | Description                                                     |
 | --------------- | --------------------------------------------------------------- |
-| re_dataframe    | The Rerun public data APIs.                                     |
-| re_datafusion   | DataFusion interfaces to Rerun gRPC queries                     |
-| re_entity_db    | In-memory storage of Rerun entities                             |
-| re_log_encoding | Helpers for encoding and transporting Rerun log messages        |
-| re_protos       | Rerun remote store gRPC API types                               |
-| re_query        | Querying data in the re_chunk_store                             |
-| re_server       | In-memory data server                                           |
-| re_tf           | Dealing with spatial transforms & transform frames              |
-| re_sdk_types    | The built-in Rerun data types, component types, and archetypes. |
+| dl_dataframe    | The Rerun public data APIs.                                     |
+| dl_datafusion   | DataFusion interfaces to Rerun gRPC queries                     |
+| dl_entity_db    | In-memory storage of Rerun entities                             |
+| dl_log_encoding | Helpers for encoding and transporting Rerun log messages        |
+| dl_protos       | Rerun remote store gRPC API types                               |
+| dl_query        | Querying data in the dl_chunk_store                             |
+| dl_server       | In-memory data server                                           |
+| dl_tf           | Dealing with spatial transforms & transform frames              |
+| dl_sdk_types    | The built-in Rerun data types, component types, and archetypes. |
 
 ### Low-level store
 
 | Crate          | Description                                                                                   |
 | -------------- | --------------------------------------------------------------------------------------------- |
-| re_chunk       | A chunk of Rerun data, encoded using Arrow. Used for logging, transport, storage and compute. |
-| re_chunk_store | An in-memory time series database for Rerun log data, based on Apache Arrow.                  |
-| re_log_types   | The basic building blocks of the Rerun data types and tables.                                 |
-| re_sorbet      | Rerun arrow metadata and record batch definitions.                                            |
-| re_types_core  | The core traits and types that power Rerun's data model.                                      |
+| dl_chunk       | A chunk of Rerun data, encoded using Arrow. Used for logging, transport, storage and compute. |
+| dl_chunk_store | An in-memory time series database for Rerun log data, based on Apache Arrow.                  |
+| dl_log_types   | The basic building blocks of the Rerun data types and tables.                                 |
+| dl_sorbet      | Rerun arrow metadata and record batch definitions.                                            |
+| dl_types_core  | The core traits and types that power Rerun's data model.                                      |
 
 ### Data flow
 
 | Crate                | Description                                                       |
 | -------------------- | ----------------------------------------------------------------- |
-| re_redap_client      | Official client for the Rerun Data Protocol                       |
-| re_redap_tests       | Official test suite for the Rerun Data Protocol                   |
-| re_importer          | Handles importing of Rerun data from file using importer plugins  |
-| re_parquet           | Parquet file loading with configurable column grouping            |
-| re_hdf5              | HDF5 file loading into Rerun chunks                               |
-| re_mp4_reader        | Mp4 video file loading into Rerun chunks                          |
-| re_data_source       | Handles loading of Rerun data from different sources              |
-| re_grpc_client       | Client for the legacy StoreHub API                                |
-| re_grpc_server       | Server for the legacy StoreHub API                                |
-| re_web_viewer_server | Serves the Rerun web viewer (Wasm and HTML) over HTTP             |
+| dl_redap_client      | Official client for the Rerun Data Protocol                       |
+| dl_redap_tests       | Official test suite for the Rerun Data Protocol                   |
+| dl_importer          | Handles importing of Rerun data from file using importer plugins  |
+| dl_parquet           | Parquet file loading with configurable column grouping            |
+| dl_hdf5              | HDF5 file loading into Rerun chunks                               |
+| dl_mp4_reader        | Mp4 video file loading into Rerun chunks                          |
+| dl_data_source       | Handles loading of Rerun data from different sources              |
+| dl_grpc_client       | Client for the legacy StoreHub API                                |
+| dl_grpc_server       | Server for the legacy StoreHub API                                |
+| dl_web_viewer_server | Serves the Rerun web viewer (Wasm and HTML) over HTTP             |
 
 ### Build support
 
 | Crate                    | Description                                                          |
 | ------------------------ | -------------------------------------------------------------------- |
-| re_build_info            | Information about the build. Use together with re_build_tools        |
-| re_build_tools           | build.rs helpers for generating build info                           |
-| re_dev_tools             | Various tools for Rerun development. Each tool has a subcommand.     |
-| re_protos_builder        | Generates code for Rerun remote store gRPC API                       |
-| re_types_builder         | Generates code for Rerun's SDKs from flatbuffers definitions.        |
-| re_types_builder_macros  | The `#[rerun_type]` attribute macro used by Rerun's IDL definitions. |
-| re_types_builder_prelude | The vocabulary that Rerun's IDL definitions are written against.     |
-| re_web_tests             | Discovers and runs browser-based Wasm tests.                         |
+| dl_build_info            | Information about the build. Use together with dl_build_tools        |
+| dl_build_tools           | build.rs helpers for generating build info                           |
+| dl_dev_tools             | Various tools for Rerun development. Each tool has a subcommand.     |
+| dl_protos_builder        | Generates code for Rerun remote store gRPC API                       |
+| dl_types_builder         | Generates code for Rerun's SDKs from flatbuffers definitions.        |
+| dl_types_builder_macros  | The `#[rerun_type]` attribute macro used by Rerun's IDL definitions. |
+| dl_types_builder_prelude | The vocabulary that Rerun's IDL definitions are written against.     |
+| dl_web_tests             | Discovers and runs browser-based Wasm tests.                         |
 
 ### Utilities
 
 | Crate                | Description                                                                                   |
 | -------------------- | --------------------------------------------------------------------------------------------- |
-| re_analytics         | Rerun's analytics SDK                                                                         |
-| re_async             | Async runtime abstractions for native and WebAssembly targets.                                |
-| re_arrow_util        | Helpers for working with arrow                                                                |
-| re_auth              | Authentication and authorization helpers                                                      |
-| re_backoff           | Simple backoff logic used for retries.                                                        |
-| re_byte_size         | Calculate the heap-allocated size of values at runtime                                        |
-| re_byte_size_derive  | Derive macro for `re_byte_size::SizeBytes`                                                    |
-| re_capabilities      | Capability tokens                                                                             |
-| re_case              | Case conversions, the way Rerun likes them                                                    |
-| re_crash_handler     | Detect panics and signals, logging them and optionally sending them to analytics.             |
-| re_error             | Helpers for handling errors.                                                                  |
-| re_format            | Miscellaneous tools to format and parse numbers, durations, etc.                              |
-| re_grpc_headers      | Rerun gRPC header conventions (`x-rerun-*` consts, version interceptor, tower layers).        |
-| re_int               | Small numeric helper traits: saturating integer casts and unsigned absolute value.            |
-| re_lenses            | A collection of lenses for mapping component data to Rerun semantic types.                    |
-| re_lenses_core       | Core lens types and composable Arrow array transformations                                    |
-| re_log               | Helpers for setting up and doing text logging in the Rerun crates.                            |
-| re_log_channel       | An in-memory channel of Rerun data messages                                                   |
-| re_mcap              | Convert MCAP into Rerun-compatible data.                                                      |
-| re_memory            | Run-time memory tracking and profiling.                                                       |
-| re_mutex             | A wrapper around `parking_lot::Mutex` useful for debugging deadlocks.                         |
-| re_perf_telemetry    | In and out of process performance profiling utilities for Rerun & Redap                       |
-| re_quota_channel     | A mpsc channel that applies backpressure based on byte size                                   |
-| re_ros_msg           | Parsing and deserializing ROS   messages                                                      |
-| re_rvl               | Codecs for depth compression including RVL and PNG.                                           |
-| re_span              | An integer range that always has a non-negative length                                        |
-| re_string_interner   | Yet another string interning library                                                          |
-| re_test_mocks        | In-process server doubles (`MockOtlpCollector`, `MockPostHog`) for OTel/PostHog test capture. |
-| re_tracing           | Helpers for tracing/spans/flamegraphs and such.                                               |
-| re_tuid              | 128-bit Time-based Unique Identifier                                                          |
-| re_uri               | Parsing and constructing of Rerun URIs                                                        |
-| re_video             | Video decoding library                                                                        |
-| re_web               | Utilities for interacting with Web APIs                                                       |
+| dl_analytics         | Rerun's analytics SDK                                                                         |
+| dl_async             | Async runtime abstractions for native and WebAssembly targets.                                |
+| dl_arrow_util        | Helpers for working with arrow                                                                |
+| dl_auth              | Authentication and authorization helpers                                                      |
+| dl_backoff           | Simple backoff logic used for retries.                                                        |
+| dl_byte_size         | Calculate the heap-allocated size of values at runtime                                        |
+| dl_byte_size_derive  | Derive macro for `dl_byte_size::SizeBytes`                                                    |
+| dl_capabilities      | Capability tokens                                                                             |
+| dl_case              | Case conversions, the way Rerun likes them                                                    |
+| dl_crash_handler     | Detect panics and signals, logging them and optionally sending them to analytics.             |
+| dl_error             | Helpers for handling errors.                                                                  |
+| dl_format            | Miscellaneous tools to format and parse numbers, durations, etc.                              |
+| dl_grpc_headers      | Rerun gRPC header conventions (`x-rerun-*` consts, version interceptor, tower layers).        |
+| dl_int               | Small numeric helper traits: saturating integer casts and unsigned absolute value.            |
+| dl_lenses            | A collection of lenses for mapping component data to Rerun semantic types.                    |
+| dl_lenses_core       | Core lens types and composable Arrow array transformations                                    |
+| dl_log               | Helpers for setting up and doing text logging in the Rerun crates.                            |
+| dl_log_channel       | An in-memory channel of Rerun data messages                                                   |
+| dl_mcap              | Convert MCAP into Rerun-compatible data.                                                      |
+| dl_memory            | Run-time memory tracking and profiling.                                                       |
+| dl_mutex             | A wrapper around `parking_lot::Mutex` useful for debugging deadlocks.                         |
+| dl_perf_telemetry    | In and out of process performance profiling utilities for Rerun & Redap                       |
+| dl_quota_channel     | A mpsc channel that applies backpressure based on byte size                                   |
+| dl_ros_msg           | Parsing and deserializing ROS   messages                                                      |
+| dl_rvl               | Codecs for depth compression including RVL and PNG.                                           |
+| dl_span              | An integer range that always has a non-negative length                                        |
+| dl_string_interner   | Yet another string interning library                                                          |
+| dl_test_mocks        | In-process server doubles (`MockOtlpCollector`, `MockPostHog`) for OTel/PostHog test capture. |
+| dl_tracing           | Helpers for tracing/spans/flamegraphs and such.                                               |
+| dl_tuid              | 128-bit Time-based Unique Identifier                                                          |
+| dl_uri               | Parsing and constructing of Rerun URIs                                                        |
+| dl_video             | Video decoding library                                                                        |
+| dl_web               | Utilities for interacting with Web APIs                                                       |
 
 ### Test crates
 
 | Crate            | Description                                                   |
 | ---------------- | ------------------------------------------------------------- |
-| re_test_context  | Provides a test context that builds on `re_viewer_context.    |
-| re_test_viewport | Extends the `re_test_context` with viewport-related features. |
+| dl_test_context  | Provides a test context that builds on `dl_viewer_context.    |
+| dl_test_viewport | Extends the `dl_test_context` with viewport-related features. |
 
 ### Deprecated crates
 
 | Crate    | Description                |
 | -------- | -------------------------- |
-| re_types | Old name of `re_sdk_types` |
+| dl_types | Old name of `dl_sdk_types` |
 
 ### Dependencies and docs
 

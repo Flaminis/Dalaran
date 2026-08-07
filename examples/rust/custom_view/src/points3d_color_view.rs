@@ -1,13 +1,13 @@
 #![expect(clippy::disallowed_methods)] // It's just an example
 
 use rerun::external::egui;
-use rerun::external::re_data_ui::{DataUi, item_ui};
-use rerun::external::re_entity_db::InstancePath;
-use rerun::external::re_log_types::EntityPath;
-use rerun::external::re_sdk_types::ViewClassIdentifier;
-use rerun::external::re_ui::{self, Help};
-use rerun::external::re_view;
-use rerun::external::re_viewer_context::{
+use rerun::external::dl_data_ui::{DataUi, item_ui};
+use rerun::external::dl_entity_db::InstancePath;
+use rerun::external::dl_log_types::EntityPath;
+use rerun::external::dl_sdk_types::ViewClassIdentifier;
+use rerun::external::dl_ui::{self, Help};
+use rerun::external::dl_view;
+use rerun::external::dl_viewer_context::{
     DataResultInteractionAddress, HoverHighlight, IdentifiedViewSystem as _, IndicatedEntities,
     Item, MissingChunkReporter, PerVisualizerType, RecommendedVisualizers, SelectionHighlight,
     SystemExecutionOutput, UiLayout, ViewClass, ViewClassExt as _, ViewClassLayoutPriority,
@@ -15,7 +15,7 @@ use rerun::external::re_viewer_context::{
     ViewSystemExecutionError, ViewSystemIdentifier, ViewSystemRegistrator, ViewerContext,
     VisualizableReason,
 };
-use rerun::external::re_viewport_blueprint::ViewProperty;
+use rerun::external::dl_viewport_blueprint::ViewProperty;
 
 use crate::color_coordinate_config::{ColorCoordinatesConfiguration, ColorCoordinatesMode};
 use crate::points3d_color_visualizer::{ColorWithInstance, Points3DColorVisualizer};
@@ -32,8 +32,8 @@ impl ViewClass for ColorCoordinatesView {
         "Color coordinates"
     }
 
-    fn icon(&self) -> &'static re_ui::Icon {
-        &re_ui::icons::VIEW_GENERIC
+    fn icon(&self) -> &'static dl_ui::Icon {
+        &dl_ui::icons::VIEW_GENERIC
     }
 
     fn help(&self, _os: egui::os::OperatingSystem) -> Help {
@@ -118,7 +118,7 @@ impl ViewClass for ColorCoordinatesView {
         view_id: ViewId,
     ) -> Result<(), ViewSystemExecutionError> {
         let view_ctx = self.view_context(ctx, view_id, state, space_origin);
-        re_view::view_property_ui::<ColorCoordinatesConfiguration>(&view_ctx, ui);
+        dl_view::view_property_ui::<ColorCoordinatesConfiguration>(&view_ctx, ui);
 
         Ok(())
     }

@@ -1,0 +1,38 @@
+[package]
+name = "dl_test_viewport"
+description = "A viewport used for tests"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_byte_size.workspace = true
+dl_log_types.workspace = true
+dl_test_context.workspace = true
+dl_sdk_types.workspace = true
+dl_ui.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport.workspace = true
+dl_viewport_blueprint.workspace = true
+
+# External dependencies
+ahash.workspace = true
+egui.workspace = true
+
+[dev-dependencies]
+# These context-menu tests live here instead of in `dl_context_menu` because
+# dev-dependencies are included in the publishable-crate dependency DAG check.
+# If `dl_context_menu` depended on this crate for tests, it would create the
+# cycle `dl_context_menu -> dl_test_viewport -> dl_viewport -> dl_context_menu`.
+dl_context_menu.workspace = true
+dl_chunk.workspace = true
+dl_entity_db.workspace = true

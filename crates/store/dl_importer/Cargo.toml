@@ -1,0 +1,70 @@
+[package]
+name = "dl_importer"
+authors.workspace = true
+description = "Handles importing of Rerun data from file using importer plugins"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+
+[features]
+default = []
+
+
+[dependencies]
+dl_arrow_util.workspace = true
+dl_chunk.workspace = true
+dl_error.workspace = true
+dl_format.workspace = true
+dl_lenses.workspace = true
+dl_log_channel.workspace = true
+dl_log_encoding = { workspace = true, features = ["decoder"] }
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_mcap.workspace = true
+dl_mp4_reader.workspace = true
+dl_quota_channel.workspace = true
+dl_sdk_types = { workspace = true, features = ["ecolor", "glam", "image", "video"] }
+dl_tracing.workspace = true
+dl_video.workspace = true
+
+ahash.workspace = true
+anyhow.workspace = true
+arrow.workspace = true
+memmap2.workspace = true
+crossbeam.workspace = true
+image.workspace = true
+indexmap.workspace = true
+itertools.workspace = true
+mcap.workspace = true
+parking_lot.workspace = true
+rayon.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+urdf-rs.workspace = true
+walkdir.workspace = true
+
+[target.'cfg(not(any(target_arch = "wasm32")))'.dependencies]
+parquet = { workspace = true, features = ["arrow", "snap", "zstd"] }
+dl_parquet.workspace = true
+ureq.workspace = true
+
+[dev-dependencies]
+dl_chunk_store.workspace = true
+dl_log_encoding = { workspace = true, features = ["decoder", "encoder"] }
+
+insta = { workspace = true, features = ["filters", "glob"] }
+tempfile.workspace = true

@@ -9,8 +9,8 @@ use numpy::PyArrayMethods as _;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::PyAnyMethods as _;
 use pyo3::{Borrowed, Bound, FromPyObject, PyAny, PyErr, PyResult, pyclass, pymethods};
-use re_arrow_util::ArrowArrayDowncastRef as _;
-use re_sorbet::ComponentColumnSelector;
+use dl_arrow_util::ArrowArrayDowncastRef as _;
+use dl_sorbet::ComponentColumnSelector;
 
 use crate::catalog::{PyComponentColumnDescriptor, PyComponentColumnSelector};
 
@@ -126,22 +126,22 @@ fn as_int64_array(array: &ArrayRef) -> PyResult<Int64Array> {
 }
 
 impl IndexValuesLike<'_> {
-    pub fn to_index_values(&self) -> PyResult<BTreeSet<re_chunk_store::TimeInt>> {
+    pub fn to_index_values(&self) -> PyResult<BTreeSet<dl_chunk_store::TimeInt>> {
         match self {
             Self::PyArrow(array) => {
                 let array = make_array(array.0.clone());
 
                 let int_array = as_int64_array(&array)?;
 
-                let values: BTreeSet<re_chunk_store::TimeInt> = int_array
+                let values: BTreeSet<dl_chunk_store::TimeInt> = int_array
                     .iter()
                     .map(|v| {
                         v.map_or_else(
-                            || re_chunk_store::TimeInt::STATIC,
+                            || dl_chunk_store::TimeInt::STATIC,
                             // The use of temporal here should be fine even if the data is
                             // not actually temporal. The important thing is we are converting
                             // from an i64 input
-                            re_chunk_store::TimeInt::new_temporal,
+                            dl_chunk_store::TimeInt::new_temporal,
                         )
                     })
                     .collect();
@@ -153,14 +153,14 @@ impl IndexValuesLike<'_> {
                 Ok(values)
             }
             Self::NumPy(array) => {
-                let values: BTreeSet<re_chunk_store::TimeInt> = array
+                let values: BTreeSet<dl_chunk_store::TimeInt> = array
                     .readonly()
                     .as_array()
                     .iter()
                     // The use of temporal here should be fine even if the data is
                     // not actually temporal. The important thing is we are converting
                     // from an i64 input
-                    .map(|v| re_chunk_store::TimeInt::new_temporal(*v))
+                    .map(|v| dl_chunk_store::TimeInt::new_temporal(*v))
                     .collect();
 
                 if values.len() != array.len()? {
@@ -185,11 +185,11 @@ impl IndexValuesLike<'_> {
                                     .iter()
                                     .map(|v| {
                                         v.map_or_else(
-                                            || re_chunk_store::TimeInt::STATIC,
+                                            || dl_chunk_store::TimeInt::STATIC,
                                             // The use of temporal here should be fine even if the data is
                                             // not actually temporal. The important thing is we are converting
                                             // from an i64 input
-                                            re_chunk_store::TimeInt::new_temporal,
+                                            dl_chunk_store::TimeInt::new_temporal,
                                         )
                                     })
                                     .collect::<BTreeSet<_>>(),
@@ -225,7 +225,7 @@ impl IndexValuesLike<'_> {
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct PyIndexValuesLikeInternal {
     // Store the converted values instead of the lifetime-bound enum
-    values: BTreeSet<re_chunk_store::TimeInt>,
+    values: BTreeSet<dl_chunk_store::TimeInt>,
 }
 
 #[pymethods]

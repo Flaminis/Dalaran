@@ -1,0 +1,255 @@
+//! Extends the `dl_test_context` with viewport-related features.
+
+mod test_view;
+
+use ahash::HashMap;
+use dl_test_context::TestContext;
+use dl_test_context::external::egui_kittest::{SnapshotOptions, SnapshotResult};
+use dl_viewer_context::{
+    Contents, MissingChunkReporter, ViewId, ViewerContext, VisitorControlFlow,
+};
+use dl_viewport::execute_systems_for_view;
+use dl_viewport_blueprint::{ViewBlueprint, ViewportBlueprint};
+pub use test_view::TestView;
+
+/// Extension trait to [`TestContext`] for blueprint-related features.
+pub trait TestContextExt {
+    /// See docstring on the implementation below.
+    fn setup_viewport_blueprint<R>(
+        &mut self,
+        setup_blueprint: impl FnOnce(&ViewerContext<'_>, &mut ViewportBlueprint) -> R,
+    ) -> R;
+
+    /// Displays the UI for a single given view.
+    fn ui_for_single_view(&self, ui: &mut egui::Ui, ctx: &ViewerContext<'_>, view_id: ViewId);
+
+    /// [`TestContext::run`] inside a central panel that displays the ui for a single given view.
+    fn run_with_single_view(&self, ui: &mut egui::Ui, view_id: ViewId);
+
+    fn run_view_ui_and_save_snapshot(
+        &self,
+        view_id: ViewId,
+        snapshot_name: &str,
+        size: egui::Vec2,
+        snapshot_options: Option<SnapshotOptions>,
+    ) -> SnapshotResult;
+
+    /// Like [`Self::run_view_ui_and_save_snapshot`], but for a view that draws with `dl_renderer`.
+    fn run_view_ui_and_save_renderer_snapshot(
+        &self,
+        view_id: ViewId,
+        snapshot_name: &str,
+        size: egui::Vec2,
+        snapshot_options: Option<SnapshotOptions>,
+    ) -> SnapshotResult;
+}
+
+impl TestContextExt for TestContext {
+    /// Inspect or update the blueprint of a [`TestContext`].
+    ///
+    /// This helper works by deserializing the current blueprint, providing it to the provided
+    /// closure, and saving it back to the blueprint store. The closure should call the appropriate
+    /// methods of [`ViewportBlueprint`] to inspect and/or create views and containers as required.
+    ///
+    /// Each time [`TestContextExt::setup_viewport_blueprint`] is called, it entirely recomputes the
+    /// "query results", i.e., the [`dl_viewer_context::DataResult`]s that each view contains, based
+    /// on the current content of the recording store.
+    ///
+    /// Important pre-requisite:
+    /// - The current timeline must already be set to the timeline of interest, because some
+    ///   updates are timeline-dependant (in particular those related to visible time range).
+    /// - The data store must be already populated for the views to have any content (see, e.g.,
+    ///   [`TestContext::log_entity`]).
+    ///
+    fn setup_viewport_blueprint<R>(
+        &mut self,
+        setup_blueprint: impl FnOnce(&ViewerContext<'_>, &mut ViewportBlueprint) -> R,
+    ) -> R {
+        let mut setup_blueprint: Option<_> = Some(setup_blueprint);
+
+        let mut result = None;
+
+        egui::__run_test_ctx(|egui_ctx| {
+            // We use `take` to ensure that the blueprint is setup only once, since egui forces
+            // us to a `FnMut` closure.
+            if let Some(setup_blueprint) = setup_blueprint.take() {
+                self.run(egui_ctx, |ctx| {
+                    let mut viewport_blueprint =
+                        ViewportBlueprint::from_db(ctx.blueprint_db(), &self.blueprint_query);
+                    result = Some(setup_blueprint(ctx, &mut viewport_blueprint));
+                    viewport_blueprint.save_to_blueprint_store(ctx);
+                });
+
+                self.handle_system_commands(egui_ctx);
+
+                // Reload the blueprint store and execute all view queries.
+                let blueprint_query = self.blueprint_query.clone();
+                let viewport_blueprint =
+                    ViewportBlueprint::from_db(self.active_blueprint(), &blueprint_query);
+
+                let mut query_results = HashMap::default();
+
+                self.run(egui_ctx, |ctx| {
+                    let _ignored = viewport_blueprint.visit_contents::<()>(&mut |contents, _| {
+                        if let Contents::View(view_id) = contents {
+                            let view_blueprint = viewport_blueprint
+                                .view(view_id)
+                                .expect("view is known to exist");
+
+                            let class_registry = ctx.view_class_registry();
+                            let class_identifier = view_blueprint.class_identifier();
+                            let class = class_registry.get_class_or_log_error(class_identifier);
+
+                            let query_range = view_blueprint.query_range(
+                                ctx.blueprint_db(),
+                                ctx.blueprint_query,
+                                ctx.time_ctrl.timeline(),
+                                class_registry,
+                                self.view_states.lock().get_mut_or_create(
+                                    ctx.store_id(),
+                                    *view_id,
+                                    class,
+                                ),
+                            );
+
+                            let data_query_result = view_blueprint.contents.build_data_result_tree(
+                                ctx.store_context,
+                                ctx.time_ctrl.timeline(),
+                                class_registry,
+                                ctx.blueprint_query,
+                                &query_range,
+                                ctx.visualizable_entities_per_visualizer,
+                                ctx.indicated_entities_per_visualizer,
+                                ctx.app_options(),
+                            );
+
+                            query_results.insert(*view_id, data_query_result);
+                        }
+
+                        VisitorControlFlow::Continue
+                    });
+                });
+
+                self.query_results = query_results;
+            }
+        });
+
+        result.expect("The `setup_closure` is expected to be called at least once")
+    }
+
+    /// Displays the UI for a single given view.
+    fn ui_for_single_view(&self, ui: &mut egui::Ui, ctx: &ViewerContext<'_>, view_id: ViewId) {
+        let view_blueprint =
+            ViewBlueprint::try_from_db(view_id, ctx.store_context.blueprint, ctx.blueprint_query)
+                .expect("expected the view id to be known to the blueprint store");
+
+        let class_registry = ctx.view_class_registry();
+        let class_identifier = view_blueprint.class_identifier();
+        let view_class = class_registry.get_class_or_log_error(class_identifier);
+
+        let mut view_states = self.view_states.lock();
+        view_states.reset_visualizer_reports();
+        let view_state = view_states.get_mut_or_create(ctx.store_id(), view_id, view_class);
+
+        let context_system_once_per_frame_results = class_registry
+            .run_once_per_frame_context_systems(ctx, std::iter::once(class_identifier));
+        let (view_query, system_execution_output) = execute_systems_for_view(
+            ctx,
+            &view_blueprint,
+            view_state,
+            &context_system_once_per_frame_results,
+        );
+        view_states.add_visualizer_reports_from_output(
+            ctx.store_id(),
+            view_id,
+            &system_execution_output,
+        );
+
+        let missing_chunk_reporter =
+            MissingChunkReporter::new(system_execution_output.any_missing_chunks());
+
+        let view_state = view_states.get_mut_or_create(ctx.store_id(), view_id, view_class);
+        let view_ui_output = view_class
+            .ui(
+                ctx,
+                &missing_chunk_reporter,
+                ui,
+                view_state,
+                &view_query,
+                system_execution_output,
+            )
+            .expect("failed to run view ui");
+        view_states.set_view_reports(ctx.store_id(), view_id, view_ui_output.reports);
+
+        // We intentionally ignore missing_chunk_reporter in this test… for now.
+    }
+
+    /// [`TestContext::run`] for a single view.
+    fn run_with_single_view(&self, ui: &mut egui::Ui, view_id: ViewId) {
+        self.run_ui(ui, |ctx, ui| {
+            self.ui_for_single_view(ui, ctx, view_id);
+        });
+
+        self.handle_system_commands(ui.ctx());
+    }
+
+    fn run_view_ui_and_save_snapshot(
+        &self,
+        view_id: ViewId,
+        snapshot_name: &str,
+        size: egui::Vec2,
+        snapshot_options: Option<SnapshotOptions>,
+    ) -> SnapshotResult {
+        run_view_ui_and_save_snapshot_with_test_options(
+            self,
+            view_id,
+            snapshot_name,
+            size,
+            snapshot_options,
+            dl_ui::testing::TestOptions::Gui,
+        )
+    }
+
+    fn run_view_ui_and_save_renderer_snapshot(
+        &self,
+        view_id: ViewId,
+        snapshot_name: &str,
+        size: egui::Vec2,
+        snapshot_options: Option<SnapshotOptions>,
+    ) -> SnapshotResult {
+        run_view_ui_and_save_snapshot_with_test_options(
+            self,
+            view_id,
+            snapshot_name,
+            size,
+            snapshot_options,
+            dl_ui::testing::TestOptions::Rendering3D,
+        )
+    }
+}
+
+fn run_view_ui_and_save_snapshot_with_test_options(
+    test_context: &TestContext,
+    view_id: ViewId,
+    snapshot_name: &str,
+    size: egui::Vec2,
+    snapshot_options: Option<SnapshotOptions>,
+    test_options: dl_ui::testing::TestOptions,
+) -> SnapshotResult {
+    let harness_builder = match test_options {
+        dl_ui::testing::TestOptions::Gui => test_context.setup_kittest_for_rendering_ui(size),
+        dl_ui::testing::TestOptions::Rendering3D => {
+            test_context.setup_kittest_for_rendering_3d(size)
+        }
+    };
+    let mut harness = harness_builder.build_ui(|ui| {
+        test_context.run_with_single_view(ui, view_id);
+    });
+    harness.run();
+
+    if let Some(snapshot_options) = snapshot_options {
+        harness.try_snapshot_options(snapshot_name, &snapshot_options)
+    } else {
+        harness.try_snapshot(snapshot_name)
+    }
+}

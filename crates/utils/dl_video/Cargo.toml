@@ -1,0 +1,135 @@
+[package]
+name = "dl_video"
+authors.workspace = true
+description = "Rerun video processing utilities."
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+
+[package.metadata.docs.rs]
+all-features = true
+
+
+[features]
+default = ["av1", "ffmpeg"]
+
+## Native AV1 decoding.
+av1 = ["dep:dav1d"]
+
+## Decode H.264 using ffmpeg over CLI.
+ffmpeg = ["dep:ffmpeg-sidecar"]
+
+## Enable faster native video decoding with assembly.
+## You need to install [nasm](https://github.com/netwide-assembler/nasm) to compile with this feature.
+nasm = [
+  # The default feature set of our dav1d fork has asm enabled
+  "dav1d?/default",
+]
+
+
+[package.metadata.cargo-shear]
+ignored = ["getrandom"]
+
+[dependencies]
+dl_byte_size.workspace = true
+dl_int.workspace = true
+dl_log.workspace = true
+dl_mutex.workspace = true
+dl_quota_channel.workspace = true
+dl_rvl.workspace = true
+dl_span.workspace = true
+dl_tracing.workspace = true
+dl_tuid.workspace = true
+
+ahash.workspace = true
+bit-vec.workspace = true
+cros-codecs.workspace = true
+econtext.workspace = true
+h264-reader.workspace = true
+itertools.workspace = true
+poll-promise.workspace = true
+re_mp4.workspace = true
+scuffle-av1.workspace = true
+scuffle-bytes-util.workspace = true
+smallvec.workspace = true
+serde = { workspace = true, features = ["derive"] }
+thiserror.workspace = true
+web-time.workspace = true
+
+ffmpeg-sidecar = { workspace = true, optional = true }
+# On web we only need PNG for non-8-bit PNGs, since there is no browser decoder path that preserves them.
+# Other web images should go through browser decoding instead.
+image = { workspace = true, default-features = false, features = ["png"] }
+bytemuck.workspace = true
+
+# We enable re_rav1d on native, UNLESS we're on Linux Arm64
+# See https://github.com/rerun-io/rerun/issues/7755
+[target.'cfg(all(not(target_arch = "wasm32"), not(all(target_os = "linux", target_arch = "aarch64"))))'.dependencies]
+
+
+# If this package fails to build, install `nasm` locally, or build through `pixi`.
+# NOTE: we use `dav1d` as an alias for our own re_rav1d crate
+# See https://github.com/rerun-io/re_rav1d/pull/2
+dav1d = { workspace = true, optional = true, default-features = false, features = [
+  # We opt-out of wasm features so we don't need `nasm` installed. It's still pretty fast.
+  "bitdepth_8",
+] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+image = { workspace = true, default-features = false, features = ["jpeg"] }
+
+# web
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+getrandom = { workspace = true, features = ["wasm_js"] }
+js-sys.workspace = true
+dl_async.workspace = true
+dl_web.workspace = true
+wasm-bindgen.workspace = true
+web-sys = { workspace = true, features = [
+  "Blob",
+  "BlobPropertyBag",
+  "CodecState",
+  "DomException",
+  "EncodedVideoChunk",
+  "EncodedVideoChunkInit",
+  "EncodedVideoChunkType",
+  "HardwareAcceleration",
+  "ImageBitmap",
+  "Navigator",
+  "VideoDecoder",
+  "VideoDecoderConfig",
+  "VideoDecoderInit",
+  "VideoFrame",
+  "VideoFrameInit",
+  "Window",
+] }
+
+[dev-dependencies]
+# For the `frames` example:
+indicatif.workspace = true
+criterion.workspace = true
+dl_log = { workspace = true, features = ["setup"] }
+
+# For build.rs:
+[build-dependencies]
+cfg_aliases.workspace = true
+
+[[example]]
+name = "frames"
+
+[lib]
+bench = false
+
+[[bench]]
+name = "video_load_bench"
+harness = false

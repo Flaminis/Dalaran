@@ -1,0 +1,34 @@
+[package]
+name = "dl_mp4_reader"
+authors.workspace = true
+description = "Core mp4-to-chunk loading logic for Rerun"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+
+[dependencies]
+dl_chunk.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_sdk_types = { workspace = true, features = ["video"] }
+dl_tracing.workspace = true
+dl_video.workspace = true
+
+arrow.workspace = true
+itertools.workspace = true
+thiserror.workspace = true
+
+# Native only: stream mode transcodes B-frame mp4s with the `ffmpeg` CLI.
+# dl_video is native-only and ffmpeg-sidecar isn't needed on web.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+dl_video = { workspace = true, features = ["ffmpeg"] }

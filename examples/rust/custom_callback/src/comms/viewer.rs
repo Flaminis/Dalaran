@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 use std::sync::Arc;
 use std::time::Duration;
 
-use rerun::external::{re_error, re_log};
+use rerun::external::{dl_error, dl_log};
 use tokio::io::{AsyncReadExt, AsyncWriteExt, ReadHalf, WriteHalf};
 use tokio::net::TcpStream;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender, unbounded_channel};
@@ -81,7 +81,7 @@ impl ControlViewer {
     }
 
     pub async fn run(self) {
-        re_log::info!("Starting client");
+        dl_log::info!("Starting client");
 
         // Spawn a background task to handle messages from the global channel.
         {
@@ -96,7 +96,7 @@ impl ControlViewer {
         loop {
             match TcpStream::connect(self.address.clone()).await {
                 Ok(socket) => {
-                    re_log::info!("Connected to {}", self.address);
+                    dl_log::info!("Connected to {}", self.address);
                     let (read_half, write_half) = tokio::io::split(socket);
 
                     // Spawn tasks to handle read and write
@@ -113,23 +113,23 @@ impl ControlViewer {
                     tokio::select! {
                         result = reader_task => {
                             if let Err(err) = result {
-                                re_log::error!("Reader task ended with error: {}", re_error::format_ref(&err));
+                                dl_log::error!("Reader task ended with error: {}", dl_error::format_ref(&err));
                             }
                         }
                         result = writer_task => {
                             if let Err(err) = result {
-                                re_log::error!("Writer task ended with error: {}", re_error::format_ref(&err));
+                                dl_log::error!("Writer task ended with error: {}", dl_error::format_ref(&err));
                             }
                         }
                     }
 
-                    re_log::info!("Connection lost. Attempting to reconnect…");
+                    dl_log::info!("Connection lost. Attempting to reconnect…");
                 }
                 Err(err) => {
-                    re_log::error!(
+                    dl_log::error!(
                         "Failed to connect to {}: {}",
                         self.address,
-                        re_error::format_ref(&err)
+                        dl_error::format_ref(&err)
                     );
                 }
             }
@@ -152,7 +152,7 @@ impl ControlViewer {
             drop(queue_guard);
             notify.notify_one();
         }
-        re_log::info!("Global message channel closed");
+        dl_log::info!("Global message channel closed");
     }
 
     async fn handle_read(mut read: ReadHalf<TcpStream>) {
@@ -160,25 +160,25 @@ impl ControlViewer {
         loop {
             match read.read(&mut buf).await {
                 Ok(0) => {
-                    re_log::info!("Server closed connection");
+                    dl_log::info!("Server closed connection");
                     break;
                 }
                 Ok(n) => match Message::decode(&buf[..n]) {
                     Ok(message) => {
                         // we received a message from the server, we can process it here if needed
-                        re_log::info!("Received message from server: {:?}", message);
+                        dl_log::info!("Received message from server: {:?}", message);
                     }
                     Err(err) => {
-                        re_log::error!(
+                        dl_log::error!(
                             "Failed to decode message: {:?}",
-                            re_error::format_ref(&err)
+                            dl_error::format_ref(&err)
                         );
                     }
                 },
                 Err(err) => {
-                    re_log::error!(
+                    dl_log::error!(
                         "Error reading from server: {:?}",
-                        re_error::format_ref(&err)
+                        dl_error::format_ref(&err)
                     );
                     break;
                 }
@@ -201,16 +201,16 @@ impl ControlViewer {
             match message_option {
                 Some(message) => match message {
                     Message::Disconnect => {
-                        re_log::info!("Disconnecting…");
+                        dl_log::info!("Disconnecting…");
                         break;
                     }
                     _ => {
                         if let Ok(data) = message.encode()
                             && let Err(err) = write.write_all(&data).await
                         {
-                            re_log::error!(
+                            dl_log::error!(
                                 "Failed to send message error: {}",
-                                re_error::format_ref(&err)
+                                dl_error::format_ref(&err)
                             );
                             break;
                         }

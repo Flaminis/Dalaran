@@ -1,0 +1,39 @@
+//! Official test suite for the Rerun Data Protocol ("redap").
+//!
+//! ## Usage
+//!
+//! In the crate containing your implementation of the
+//! [`dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService`] trait, add an
+//! integration test with the following content:
+//!
+//! ```ignore
+//! async fn build() -> YourRerunCloudServiceImpl {
+//!     YourRerunCloudServiceImpl::new()
+//! }
+//!
+//! dl_redap_tests::generate_redap_tests!(build);
+//! ```
+
+// this is a test suite
+#![expect(clippy::unwrap_used, clippy::disallowed_methods)]
+
+mod tests;
+mod utils;
+
+pub use ::dl_arrow_util::{FieldsTestExt, RecordBatchTestExt, SchemaTestExt};
+
+pub use self::tests::common::{
+    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt, entry_name, register_and_wait,
+};
+pub use self::tests::*;
+pub use self::utils::path::TempPath;
+pub use self::utils::rerun::{
+    TuidPrefix, create_blueprint_with_static_components,
+    create_divergent_component_ranges_recording, create_minimal_binary_recording_in,
+    create_minimal_static_recording, create_nasty_recording, create_recording_with_embeddings,
+    create_recording_with_properties, create_recording_with_scalars,
+    create_recording_with_static_components, create_recording_with_text, create_simple_blueprint,
+    create_simple_recording, create_simple_recording_in,
+    create_simple_recording_one_chunk_per_frame, create_simple_recording_one_chunk_per_frame_in,
+    multi_chunked_entities_recording,
+}; // convenience

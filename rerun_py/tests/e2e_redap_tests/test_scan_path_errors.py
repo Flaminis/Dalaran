@@ -28,7 +28,7 @@ import pytest
 import rerun as rr
 from rerun.server import Server
 
-# In debug builds, re_server injects this fixed trace-id into every response.
+# In debug builds, dl_server injects this fixed trace-id into every response.
 DUMMY_TRACE_ID = "abba000000000000000000000000abba"
 
 

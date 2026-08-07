@@ -1,0 +1,61 @@
+//! Viewer caches
+//!
+//! Caches are registered lazily upon first use, see [`Memoizers::entry`].
+//! The concrete caches exposed here are always available for all viewer crates.
+
+mod app_caches;
+mod cache_trait;
+mod encoded_depth_image_stats_cache;
+mod image_decode_cache;
+mod image_histogram_cache;
+mod image_stats_cache;
+mod memoizers;
+mod store_cache;
+mod tensor_stats_cache;
+mod transform_database_store;
+mod video_asset_cache;
+mod video_stream_cache;
+
+pub use app_caches::AppCaches;
+pub use cache_trait::{Cache, CacheEntryAccess};
+pub use memoizers::Memoizers;
+pub use store_cache::StoreCache;
+// TODO(andreas): Do we _really_ have to have all these caches in `dl_viewer_context`?
+// Caches are fully dynamic and registration based, so they can be added at runtime by any crate.
+// The reason this happens it that various viewer crates wants to access these, mostly for ui purposes.
+// Ideally, they would only depend on the ones needed.
+pub use encoded_depth_image_stats_cache::EncodedDepthImageStatsCache;
+pub use image_decode_cache::ImageDecodeCache;
+pub use image_histogram_cache::{ImageHistogramCache, Rgb8Histogram};
+pub use image_stats_cache::ImageStatsCache;
+pub use tensor_stats_cache::{TensorStatsAccessor, TensorStatsCache};
+pub use transform_database_store::TransformDatabaseStoreCache;
+pub use video_asset_cache::VideoAssetCache;
+pub use video_stream_cache::{
+    SharablePlayableVideoStream, VideoStoreSource, VideoStreamCache, VideoStreamProcessingError,
+};
+
+// ----
+
+fn filter_blob_removed_events(
+    events: &[&dl_chunk_store::ChunkStoreEvent],
+) -> ahash::HashSet<crate::StoredBlobCacheKey> {
+    use dl_sdk_types::Component as _;
+
+    events
+        .iter()
+        .filter_map(|e| e.to_deletion())
+        .flat_map(|del| {
+            del.chunk
+                .component_descriptors()
+                .filter(|descr| {
+                    descr.component_type == Some(dl_sdk_types::components::Blob::name())
+                })
+                .flat_map(|descr| {
+                    del.chunk
+                        .row_ids()
+                        .map(move |row_id| crate::StoredBlobCacheKey::new(row_id, descr.component))
+                })
+        })
+        .collect()
+}

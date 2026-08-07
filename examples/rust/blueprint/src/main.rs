@@ -3,8 +3,8 @@ use rerun::{
         Blueprint, BlueprintPanel, ContainerLike, Grid, SelectionPanel, Spatial2DView, TimePanel,
     },
     external::{
-        re_log_types::TimeInt,
-        re_sdk_types::blueprint::components::{LoopMode, PanelState, PlayState},
+        dl_log_types::TimeInt,
+        dl_sdk_types::blueprint::components::{LoopMode, PanelState, PlayState},
     },
 };
 

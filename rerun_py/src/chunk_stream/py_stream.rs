@@ -5,13 +5,13 @@ use pyo3::exceptions::{PyRuntimeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
-use re_log::ResultExt as _;
-use re_log_types::{
+use dl_log::ResultExt as _;
+use dl_log_types::{
     EntityPathFilter, LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind, StoreSource,
 };
-use re_types_core::ComponentIdentifier;
+use dl_types_core::ComponentIdentifier;
 
-use re_chunk_store::{
+use dl_chunk_store::{
     ChunkStore, ChunkStoreConfig, CompactionOptions, IsStartOfGop, OptimizationProfile,
 };
 
@@ -141,7 +141,7 @@ impl PyLazyChunkStreamInternal {
     ) -> PyResult<Self> {
         let stream = self.take_inner()?;
         let mode = crate::lenses::parse_output_mode(output_mode)?;
-        let mut collection = re_lenses_core::Lenses::new(mode);
+        let mut collection = dl_lenses_core::Lenses::new(mode);
         for py_lens in &lenses {
             collection = collection.add_lens(py_lens.build(py)?);
         }
@@ -220,7 +220,7 @@ impl PyLazyChunkStreamInternal {
             };
             let is_start_of_gop: Option<IsStartOfGop> = if gop_batching {
                 Some(std::sync::Arc::new(|data, codec| {
-                    re_video::is_start_of_gop(data, codec.into())
+                    dl_video::is_start_of_gop(data, codec.into())
                         .map_err(|err| anyhow::anyhow!(err))
                 }))
             } else {
@@ -263,7 +263,7 @@ impl PyLazyChunkStreamInternal {
     /// Run the pipeline and return all chunks as a list.
     fn to_chunks(&self, py: Python<'_>) -> PyResult<Vec<PyChunkInternal>> {
         let mut compiled = self.compile_inner()?;
-        let chunks: Vec<Arc<re_chunk::Chunk>> = py
+        let chunks: Vec<Arc<dl_chunk::Chunk>> = py
             .detach(move || -> Result<_, ChunkPipelineError> {
                 let mut result = Vec::new();
                 while let Some(chunk) = compiled.next()? {
@@ -374,7 +374,7 @@ fn build_structured_filter(
 
     let has_timeline = has_timeline
         .map(|s| {
-            re_types_core::TimelineName::try_new(s)
+            dl_types_core::TimelineName::try_new(s)
                 .map_err(|err| pyo3::exceptions::PyValueError::new_err(err.to_string()))
         })
         .transpose()?;
@@ -400,7 +400,7 @@ fn write_rrd_compiled(
     app_id: &str,
     rec_id: &str,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let app_id = re_log_types::ApplicationId::try_new(app_id)?;
+    let app_id = dl_log_types::ApplicationId::try_new(app_id)?;
     let store_id = StoreId::new(StoreKind::Recording, app_id, rec_id);
     let store_info = StoreInfo::new(
         store_id.clone(),
@@ -408,14 +408,14 @@ fn write_rrd_compiled(
     );
 
     let file = std::fs::File::create(path)?;
-    let mut encoder = re_log_encoding::Encoder::new_eager(
-        re_build_info::CrateVersion::LOCAL,
-        re_log_encoding::EncodingOptions::PROTOBUF_COMPRESSED,
+    let mut encoder = dl_log_encoding::Encoder::new_eager(
+        dl_build_info::CrateVersion::LOCAL,
+        dl_log_encoding::EncodingOptions::PROTOBUF_COMPRESSED,
         file,
     )?;
 
     encoder.append(&LogMsg::SetStoreInfo(SetStoreInfo {
-        row_id: re_tuid::Tuid::new(),
+        row_id: dl_tuid::Tuid::new(),
         info: store_info,
     }))?;
 

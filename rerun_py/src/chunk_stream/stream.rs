@@ -12,8 +12,8 @@ use std::sync::Arc;
 
 use pyo3::{Py, PyAny, Python};
 
-use re_chunk::Chunk;
-use re_types_core::ComponentIdentifier;
+use dl_chunk::Chunk;
+use dl_types_core::ComponentIdentifier;
 
 use super::{ChunkStream, ChunkStreamFactory};
 
@@ -35,10 +35,10 @@ use super::{ChunkStream, ChunkStreamFactory};
 #[derive(Clone, Debug, Default)]
 pub struct StructuredFilter {
     /// Entity path filter (include/exclude rules with subtree matching).
-    pub content: Option<re_log_types::ResolvedEntityPathFilter>,
+    pub content: Option<dl_log_types::ResolvedEntityPathFilter>,
 
     /// Chunk must have a column for this timeline.
-    pub has_timeline: Option<re_types_core::TimelineName>,
+    pub has_timeline: Option<dl_types_core::TimelineName>,
 
     /// `true` -> static only; `false` -> temporal only; `None` -> both.
     pub is_static: Option<bool>,
@@ -71,14 +71,14 @@ pub enum MergeResult {
 /// This is used such that the same [`StructuredFilter::matches`] code path can be applied
 /// to both actual chunk filtering, and manifest filtering during pushdown.
 pub(super) trait ChunkPredicateView {
-    fn entity_path(&self) -> &re_log_types::EntityPath;
+    fn entity_path(&self) -> &dl_log_types::EntityPath;
     fn is_static(&self) -> bool;
-    fn has_timeline(&self, name: &re_types_core::TimelineName) -> bool;
+    fn has_timeline(&self, name: &dl_types_core::TimelineName) -> bool;
     fn has_any_component(&self, components: &[ComponentIdentifier]) -> bool;
 }
 
 impl ChunkPredicateView for Chunk {
-    fn entity_path(&self) -> &re_log_types::EntityPath {
+    fn entity_path(&self) -> &dl_log_types::EntityPath {
         Self::entity_path(self)
     }
 
@@ -86,7 +86,7 @@ impl ChunkPredicateView for Chunk {
         Self::is_static(self)
     }
 
-    fn has_timeline(&self, name: &re_types_core::TimelineName) -> bool {
+    fn has_timeline(&self, name: &dl_types_core::TimelineName) -> bool {
         self.timelines().contains_key(name)
     }
 
@@ -111,7 +111,7 @@ impl StructuredFilter {
     /// | `components`   | intersect; empty intersection → [`MergeResult::Empty`]        |
     ///
     /// `content` falls back to `Conflict` (rather than `Empty`) when the two filters differ
-    /// because [`re_log_types::ResolvedEntityPathFilter`] uses a specificity-ordered rule set
+    /// because [`dl_log_types::ResolvedEntityPathFilter`] uses a specificity-ordered rule set
     /// ("most specific match wins"); intersecting two such rule sets is not concatenation and
     /// cannot be computed structurally. Equal filters are trivially their own intersection.
     pub fn try_merge(&self, other: &Self) -> MergeResult {
@@ -323,11 +323,11 @@ pub enum PipelineStep {
     Filter(StructuredFilter),
     Drop(StructuredFilter),
     Lenses {
-        lenses: re_lenses_core::Lenses,
+        lenses: dl_lenses_core::Lenses,
 
         /// Optional content filter: when set, lenses are applied only to chunks
         /// whose entity path matches; non-matching chunks pass through unchanged.
-        content: Option<re_log_types::ResolvedEntityPathFilter>,
+        content: Option<dl_log_types::ResolvedEntityPathFilter>,
     },
     Map(Py<PyAny>),
     FlatMap(Py<PyAny>),
@@ -436,8 +436,8 @@ impl LazyChunkStream {
 
     pub fn lenses(
         mut self,
-        lenses: re_lenses_core::Lenses,
-        content: Option<re_log_types::ResolvedEntityPathFilter>,
+        lenses: dl_lenses_core::Lenses,
+        content: Option<dl_log_types::ResolvedEntityPathFilter>,
     ) -> Self {
         self.steps.push(PipelineStep::Lenses { lenses, content });
         self
@@ -516,8 +516,8 @@ impl LazyChunkStream {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use re_log_types::{EntityPathFilter, ResolvedEntityPathFilter};
-    use re_types_core::{ComponentIdentifier, TimelineName};
+    use dl_log_types::{EntityPathFilter, ResolvedEntityPathFilter};
+    use dl_types_core::{ComponentIdentifier, TimelineName};
 
     fn epf(s: &str) -> ResolvedEntityPathFilter {
         EntityPathFilter::parse_forgiving(s).resolve_without_substitutions()

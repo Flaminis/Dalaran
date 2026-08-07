@@ -1,0 +1,29 @@
+[package]
+name = "dl_uri"
+description = "Parsing and constructing Rerun URIs"
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_byte_size.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_tuid.workspace = true
+dl_types_core.workspace = true
+
+# External
+percent-encoding.workspace = true
+serde.workspace = true
+static_assertions.workspace = true
+thiserror.workspace = true
+url = { workspace = true, features = ["serde"] }

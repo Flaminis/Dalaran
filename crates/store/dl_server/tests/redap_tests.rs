@@ -1,0 +1,45 @@
+#![cfg(feature = "lance")]
+
+use dl_server::{RerunCloudHandler, RerunCloudHandlerBuilder};
+
+// The lint fires locally but not on CI, so we use `allow` instead of `expect`:
+#[allow(clippy::unused_async, clippy::allow_attributes)] // needed by the macro
+async fn build() -> RerunCloudHandler {
+    RerunCloudHandlerBuilder::new().build()
+}
+
+dl_redap_tests::generate_redap_tests!(build);
+dl_redap_tests::generate_oss_only_redap_tests!(build);
+
+#[tokio::test(flavor = "multi_thread")]
+async fn version() {
+    let handle = dl_server::Args {
+        host: "127.0.0.1".into(),
+        port: 0,
+        ..Default::default()
+    }
+    .create_server_handle()
+    .await
+    .expect("failed to start server");
+
+    let addr = handle.connect_addr();
+    let response = ehttp::fetch_async(ehttp::Request::get(format!("http://{addr}/version")))
+        .await
+        .expect("failed to get `/version`");
+    let text = response.text();
+    if !response.ok {
+        eprintln!(
+            "failed to get `/version`, error: {} {} {text:?}",
+            response.status, response.status_text
+        );
+        handle.shutdown_and_wait().await;
+        panic!();
+    }
+
+    assert_eq!(
+        text,
+        Some(dl_build_info::build_info!().to_string().as_str())
+    );
+
+    handle.shutdown_and_wait().await;
+}

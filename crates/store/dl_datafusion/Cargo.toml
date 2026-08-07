@@ -1,0 +1,83 @@
+[package]
+name = "dl_datafusion"
+authors.workspace = true
+description = "High-level query APIs"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+
+[lints]
+workspace = true
+
+
+[package.metadata.docs.rs]
+all-features = true
+
+[package.metadata.cargo-shear]
+# Needed for Datafusion on wasm, see note below.
+ignored = ["chrono", "getrandom"]
+
+
+[features]
+default = []
+
+[dependencies]
+# Rerun dependencies:
+dl_analytics.workspace = true
+dl_async.workspace = true
+dl_arrow_util.workspace = true
+dl_backoff.workspace = true
+dl_dataframe.workspace = true
+dl_format.workspace = true
+dl_int.workspace = true
+dl_log_encoding = { workspace = true, features = ["decoder"] }
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_protos.workspace = true
+dl_redap_client.workspace = true
+dl_sorbet.workspace = true
+dl_byte_size.workspace = true
+dl_tracing.workspace = true
+dl_types_core.workspace = true
+dl_uri.workspace = true
+
+# External dependencies:
+ahash.workspace = true
+arrow.workspace = true
+async-stream.workspace = true
+async-trait.workspace = true
+datafusion.workspace = true
+futures.workspace = true
+futures-util.workspace = true
+getrandom = { workspace = true, features = ["wasm_js"] }
+itertools.workspace = true
+opentelemetry.workspace = true
+opentelemetry-proto = { workspace = true, features = ["gen-tonic-messages", "trace"] }
+parking_lot.workspace = true
+quiver.workspace = true
+tokio.workspace = true
+jiff.workspace = true
+tokio-stream.workspace = true
+tonic.workspace = true
+tracing.workspace = true
+web-time.workspace = true
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+dl_perf_telemetry.workspace = true
+bytes.workspace = true
+reqwest.workspace = true
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# These are used by Datafusion but the required features are not set for wasm build.
+chrono = { workspace = true, features = ["wasmbind"] }
+
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "signal"] }

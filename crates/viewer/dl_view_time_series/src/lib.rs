@@ -1,0 +1,155 @@
+//! Rerun time series View
+//!
+//! A View that shows plots over Rerun timelines.
+
+mod aggregation;
+mod fallbacks;
+mod line_visualizer_system;
+mod markers;
+mod naming;
+mod point_visualizer_system;
+mod series_query;
+mod util;
+mod view_class;
+mod visualizer_ui;
+
+use dl_sdk_types::{
+    blueprint::components::VisualizerInstructionId,
+    components::{AggregationPolicy, MarkerShape, Range1D},
+};
+use dl_viewer_context::external::dl_entity_db::InstancePath;
+pub use view_class::TimeSeriesView;
+
+/// Maximum number of time series shown per entity when the scalar component
+/// has a non-identity mapping (e.g. sourced from a different component or using a selector).
+///
+/// This limit is NOT applied when the scalar component has an identity mapping,
+/// since in that case the user explicitly logged `Scalars` data and knows how many series to expect.
+pub(crate) const MAX_NUM_SERIES_FOR_REMAPPED_SCALARS: usize = 100;
+pub const MAX_NUM_NON_INDICATED_RECOMMENDED_VISUALIZERS_PER_ENTITY: usize = 4;
+
+// ---
+
+#[derive(Clone, Debug)]
+pub struct PlotPointAttrs {
+    pub color: egui::Color32,
+
+    /// Radius of markers, or stroke radius for lines.
+    pub radius_ui: f32,
+
+    pub kind: PlotSeriesKind,
+}
+
+#[derive(Clone, Copy, Default, Debug, PartialEq, Eq)]
+pub struct ScatterAttrs {
+    pub marker: MarkerShape,
+}
+
+impl PartialEq for PlotPointAttrs {
+    fn eq(&self, rhs: &Self) -> bool {
+        let Self {
+            color,
+            radius_ui,
+            kind,
+        } = self;
+        color.eq(&rhs.color) && radius_ui.total_cmp(&rhs.radius_ui).is_eq() && kind.eq(&rhs.kind)
+    }
+}
+
+impl Eq for PlotPointAttrs {}
+
+#[derive(Clone, Debug, PartialEq)]
+struct PlotPoint {
+    time: i64,
+    value: f64,
+    attrs: PlotPointAttrs,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum StepMode {
+    #[default]
+    After,
+    Before,
+    Mid,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PlotSeriesKind {
+    Continuous,
+    Stepped(StepMode),
+    Scatter(ScatterAttrs),
+    Clear,
+}
+
+#[derive(Clone, Debug)]
+pub struct PlotSeries {
+    pub instance_path: InstancePath,
+
+    /// Id of the visualizer instruction that is responsible for this series.
+    pub visualizer_instruction_id: VisualizerInstructionId,
+
+    /// Whether the individual series is visible.
+    ///
+    /// If this is false, [`PlotSeries::points`] is allowed to be empty.
+    pub visible: bool,
+
+    /// Label of the series.
+    pub label: String,
+
+    pub color: egui::Color32,
+
+    /// Radius of markers, or stroke radius for lines.
+    pub radius_ui: f32,
+
+    pub kind: PlotSeriesKind,
+    pub points: Vec<(i64, f64)>,
+
+    /// Range of finite y-values across [`PlotSeries::points`].
+    ///
+    /// `None` if the series has no finite values. Non-finite values (NaN, ±inf)
+    /// are excluded so a single ±inf can't blow up the range and flatten all
+    /// finite data.
+    ///
+    /// This is automatically updated via [`PlotSeries::push_point`].
+    pub value_range: Option<Range1D>,
+
+    /// Earliest time an entity was recorded at on the current timeline.
+    pub min_time: i64,
+
+    /// What kind of aggregation was used to compute the graph?
+    pub aggregator: AggregationPolicy,
+
+    /// `1.0` for raw data.
+    ///
+    /// How many raw data points were aggregated into a single step of the graph?
+    /// This is an average.
+    pub aggregation_factor: f64,
+}
+
+impl PlotSeries {
+    /// Returns a unique id for a given plot series.
+    ///
+    /// NOTE: A single visualizer instruction can be responsible for multiple series,
+    /// so we use the instance path number as an additional differentiator.
+    pub fn id(&self) -> egui::Id {
+        egui::Id::new((&self.visualizer_instruction_id, self.instance_path.instance))
+    }
+
+    /// Push a point and update [`PlotSeries::value_range`] if `value` is finite.
+    pub fn push_point(&mut self, time: i64, value: f64) {
+        self.points.push((time, value));
+        if value.is_finite() {
+            match &mut self.value_range {
+                Some(range) => {
+                    if value < range.start() {
+                        *range.start_mut() = value;
+                    }
+                    if value > range.end() {
+                        *range.end_mut() = value;
+                    }
+                }
+                None => self.value_range = Some(Range1D::new(value, value)),
+            }
+        }
+    }
+}

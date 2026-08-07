@@ -1,0 +1,33 @@
+[package]
+name = "dl_parquet"
+authors.workspace = true
+description = "Core parquet-to-chunk loading logic for Rerun"
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+publish = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+dl_chunk.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_sdk_types.workspace = true
+dl_tracing.workspace = true
+
+arrow.workspace = true
+anyhow.workspace = true
+bytes.workspace = true
+parquet = { workspace = true, features = ["arrow", "snap", "zstd"] }
+thiserror.workspace = true
+
+[dev-dependencies]
+dl_lenses.workspace = true
+dl_lenses_core.workspace = true
+
+itertools.workspace = true

@@ -16,7 +16,7 @@ use itertools::Itertools as _;
 
 fn main() {
     let crate_path = Path::new(
-        &re_build_tools::get_and_track_env_var("CARGO_MANIFEST_DIR").unwrap(),
+        &dl_build_tools::get_and_track_env_var("CARGO_MANIFEST_DIR").unwrap(),
     )
     .to_owned();
     let all_path = crate_path.join("all");
@@ -30,7 +30,7 @@ fn main() {
 
     let mut snippets = Vec::new();
 
-    re_build_tools::rerun_if_changed(&all_path);
+    dl_build_tools::rerun_if_changed(&all_path);
     for subdir in fs::read_dir(&all_path).unwrap().flatten() {
         if !subdir.path().is_dir() {
             continue;
@@ -65,7 +65,7 @@ fn main() {
                         let target_path =
                             snippets_path.join(format!("{snippet_name}.rs"));
                         println!("{}", target_path.display());
-                        re_build_tools::write_file_if_necessary(
+                        dl_build_tools::write_file_if_necessary(
                             target_path,
                             contents.as_bytes(),
                         )
@@ -148,9 +148,9 @@ fn main() {
     );
 
     let source =
-        re_build_tools::rustfmt_str(&source).expect("Failed to format");
+        dl_build_tools::rustfmt_str(&source).expect("Failed to format");
 
-    re_build_tools::write_file_if_necessary(
+    dl_build_tools::write_file_if_necessary(
         snippets_path.join("mod.rs"),
         source.as_bytes(),
     )

@@ -10,11 +10,11 @@ use itertools::Itertools as _;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::PyAnyMethods as _;
 use pyo3::{Bound, Py, PyAny, PyRef, PyResult, Python, pyclass, pymethods};
-use re_chunk_store::{QueryExpression, SparseFillStrategy, TimeInt, ViewContentsSelector};
-use re_datafusion::DataframeQueryTableProvider;
-use re_log_types::{EntityPathFilter, ResolvedEntityPathFilter};
-use re_sorbet::{ColumnDescriptor, SorbetColumnDescriptors};
-use re_types_core::SegmentId;
+use dl_chunk_store::{QueryExpression, SparseFillStrategy, TimeInt, ViewContentsSelector};
+use dl_datafusion::DataframeQueryTableProvider;
+use dl_log_types::{EntityPathFilter, ResolvedEntityPathFilter};
+use dl_sorbet::{ColumnDescriptor, SorbetColumnDescriptors};
+use dl_types_core::SegmentId;
 
 use crate::catalog::{
     IndexValuesLike, PyDatasetEntryInternal, PySchemaInternal, PyTableProviderAdapterInternal,
@@ -352,7 +352,7 @@ fn build_dataframe_query_table_provider(
         let known_index = schema.field_with_name(index).ok().is_some_and(|field| {
             field
                 .metadata()
-                .get(re_sorbet::metadata::RERUN_KIND)
+                .get(dl_sorbet::metadata::RERUN_KIND)
                 .is_some_and(|value| value == "index")
         });
 
@@ -376,13 +376,13 @@ fn build_dataframe_query_table_provider(
         include_semantically_empty_columns,
         include_tombstone_columns,
         include_static_columns: if static_only {
-            re_chunk_store::StaticColumnSelection::StaticOnly
+            dl_chunk_store::StaticColumnSelection::StaticOnly
         } else {
-            re_chunk_store::StaticColumnSelection::Both
+            dl_chunk_store::StaticColumnSelection::Both
         },
         filtered_index: index
             .map(|index| {
-                re_chunk::TimelineName::try_new(index)
+                dl_chunk::TimelineName::try_new(index)
                     .map_err(|err| PyValueError::new_err(err.to_string()))
             })
             .transpose()?,

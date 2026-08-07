@@ -71,12 +71,12 @@ exclude_path = [
 
   # Actually ignored files beyond .gitignore
   "lychee.toml", # Contains regex patterns with URL-like strings that aren't actual links.
-  "crates/store/re_uri/src/lib.rs", # Contains some malformed URLs, but they are not actual links.
-  "crates/store/re_uri/src/redap_uri.rs", # Same as above.
-  "crates/store/re_grpc_server/src/lib.rs", # Contains CORS tests with fake origin URLs
-  "crates/utils/re_analytics/src/event.rs", # Contains test with malformed urls
-  "crates/utils/re_perf_telemetry/src/telemetry.rs", # Contains `parse_rerun_endpoint` docs/tests with fake `rerun://host…` URLs
-  "crates/viewer/re_viewer/src/reflection/mod.rs", # Checker struggles how links from examples are escaped here. They are all checked elsewhere, so not an issue.
+  "crates/store/dl_uri/src/lib.rs", # Contains some malformed URLs, but they are not actual links.
+  "crates/store/dl_uri/src/redap_uri.rs", # Same as above.
+  "crates/store/dl_grpc_server/src/lib.rs", # Contains CORS tests with fake origin URLs
+  "crates/utils/dl_analytics/src/event.rs", # Contains test with malformed urls
+  "crates/utils/dl_perf_telemetry/src/telemetry.rs", # Contains `parse_rerun_endpoint` docs/tests with fake `rerun://host…` URLs
+  "crates/viewer/dl_viewer/src/reflection/mod.rs", # Checker struggles how links from examples are escaped here. They are all checked elsewhere, so not an issue.
   "docs/content/changelog/upcoming", # Transient per-PR changeset entries; their relative links resolve from changelog/ once merged at release, and the merged changeset is link-checked then.
   "docs/snippets/INDEX.md", # The snippet index is guaranteed should be correct by design.
   "scripts/lint.py", # Contains url-matching regexes that aren't actual urls
@@ -107,7 +107,7 @@ exclude = [
   'http://127.0.0.1',
   'http://127.0.0.2',
   'http://localhost',
-  're_viewer.js', # Build artifact that html is linking to.
+  'dl_viewer.js', # Build artifact that html is linking to.
   'recording:/', # rrd recording link.
   'ws:/',
 

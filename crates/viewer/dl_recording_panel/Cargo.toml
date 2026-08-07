@@ -1,0 +1,48 @@
+[package]
+authors.workspace = true
+description = "The UI for the recording panel."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_recording_panel"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+testing = ["dep:serde", "dl_viewer_context/testing"]
+
+[dependencies]
+dl_data_ui.workspace = true
+dl_entity_db.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_redap_browser.workspace = true
+dl_log_channel.workspace = true
+dl_sdk_types.workspace = true
+dl_tracing.workspace = true
+dl_ui.workspace = true
+dl_uri.workspace = true
+dl_viewer_context.workspace = true
+
+ahash.workspace = true
+egui.workspace = true
+itertools.workspace = true
+serde = { workspace = true, optional = true }
+
+
+[dev-dependencies]
+dl_log_channel.workspace = true
+dl_test_context.workspace = true
+
+insta = { workspace = true, features = ["redactions", "yaml"] }

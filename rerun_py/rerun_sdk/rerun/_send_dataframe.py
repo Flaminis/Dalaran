@@ -16,7 +16,7 @@ class _AutoIndex:
 AUTO_INDEX = _AutoIndex()
 """Sentinel for the `index=…` argument: derive index columns from metadata."""
 
-# The following constants mirror the Rerun Arrow metadata keys (see `re_sorbet::metadata`). They are
+# The following constants mirror the Rerun Arrow metadata keys (see `dl_sorbet::metadata`). They are
 # kept here for backwards compatibility; the dataframe → chunk interpretation now lives in Rust.
 SORBET_INDEX_NAME = b"rerun:index_name"
 SORBET_ENTITY_PATH = b"rerun:entity_path"
@@ -29,7 +29,7 @@ RERUN_KIND_CONTROL = b"control"
 RERUN_KIND_INDEX = b"index"
 
 # Root entity path used for recording-scope properties (e.g. `start_time`).
-# Mirrors `re_log_types::EntityPath::properties()` on the Rust side.
+# Mirrors `dl_log_types::EntityPath::properties()` on the Rust side.
 RECORDING_PROPERTIES_PATH = "/__properties"
 
 

@@ -1,9 +1,9 @@
 use std::time::Instant;
 
 use rerun::external::egui::{self, ScrollArea};
-use rerun::external::re_log::ResultExt;
-use rerun::external::re_ui::{UiExt, list_item};
-use rerun::external::{eframe, re_viewer};
+use rerun::external::dl_log::ResultExt;
+use rerun::external::dl_ui::{UiExt, list_item};
+use rerun::external::{eframe, dl_viewer};
 
 use crate::comms::protocol::Message;
 use crate::comms::viewer::ControlViewerHandle;
@@ -43,7 +43,7 @@ pub struct ControlsView {
 }
 
 pub struct Control {
-    app: re_viewer::App,
+    app: dl_viewer::App,
     states: ControlStates,
     handle: ControlViewerHandle,
 }
@@ -74,7 +74,7 @@ impl eframe::App for Control {
 }
 
 impl Control {
-    pub fn new(app: re_viewer::App, handle: ControlViewerHandle) -> Self {
+    pub fn new(app: dl_viewer::App, handle: ControlViewerHandle) -> Self {
         Control {
             app,
             states: ControlStates {

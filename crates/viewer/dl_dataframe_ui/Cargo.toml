@@ -1,0 +1,72 @@
+[package]
+authors.workspace = true
+description = "Rich table widget over DataFusion."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_dataframe_ui"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+dl_async.workspace = true
+dl_arrow_util.workspace = true
+dl_chunk_store.workspace = true
+dl_component_ui.workspace = true
+dl_data_source.workspace = true
+dl_dataframe.workspace = true
+dl_entity_db.workspace = true
+dl_format.workspace = true
+dl_log.workspace = true
+dl_log_types.workspace = true
+dl_mutex.workspace = true
+dl_protos.workspace = true
+dl_quota_channel.workspace = true
+dl_redap_client.workspace = true
+dl_sdk_types.workspace = true
+dl_sorbet.workspace = true
+dl_tracing.workspace = true
+dl_types_core.workspace = true
+dl_ui.workspace = true
+dl_uri.workspace = true
+dl_viewer_context.workspace = true
+dl_viewport_blueprint.workspace = true
+dl_viewport.workspace = true
+
+
+ahash.workspace = true
+arrow.workspace = true
+async-trait.workspace = true
+crossbeam.workspace = true
+datafusion.workspace = true
+egui.workspace = true
+egui_dnd.workspace = true
+egui_table.workspace = true
+futures.workspace = true
+itertools.workspace = true
+jiff.workspace = true
+nohash-hasher.workspace = true
+ordered-float.workspace = true
+serde.workspace = true
+strum.workspace = true
+thiserror.workspace = true
+
+
+[dev-dependencies]
+dl_test_context.workspace = true
+
+egui_kittest.workspace = true
+insta.workspace = true
+itertools.workspace = true
+static_assertions.workspace = true
+tokio.workspace = true

@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 
 # Filter classification — encodes which expression kinds we expect the
 # server-side pushdown to handle today. Used by the assertions below; update
-# alongside any change to `re_datafusion::pushdown_expressions`.
+# alongside any change to `dl_datafusion::pushdown_expressions`.
 #
 # - "pushable": expected to land entirely on the server. `filters_pushed_down >= 1`
 #   and `filters_applied_client_side == 0`.

@@ -1,0 +1,57 @@
+[package]
+name = "dl_grpc_server"
+authors.workspace = true
+description = "Server for the legacy StoreHub API"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+
+[dependencies]
+dl_byte_size.workspace = true
+dl_chunk.workspace = true
+dl_error.workspace = true
+dl_format.workspace = true
+dl_log = { workspace = true, features = ["setup"] }
+dl_log_channel.workspace = true
+dl_log_encoding = { workspace = true, features = ["encoder", "decoder"] }
+dl_log_types.workspace = true
+dl_memory.workspace = true
+dl_protos.workspace = true
+dl_quota_channel = { workspace = true, features = ["tokio"] }
+dl_sorbet.workspace = true
+dl_tracing.workspace = true
+dl_sdk_types.workspace = true
+dl_uri.workspace = true
+
+# External
+anyhow.workspace = true
+async-stream.workspace = true
+futures.workspace = true
+itertools.workspace = true
+parking_lot.workspace = true
+tonic = { workspace = true, default-features = false, features = ["transport", "router"] }
+tonic-web.workspace = true
+tower-http = { workspace = true, features = ["cors"] }
+wildmatch.workspace = true
+
+# Native dependencies:
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio.workspace = true
+tokio-stream = { workspace = true, features = ["sync"] }
+tokio-util.workspace = true
+
+[dev-dependencies]
+similar-asserts.workspace = true

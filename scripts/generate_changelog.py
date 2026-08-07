@@ -552,9 +552,9 @@ def main() -> None:
                     docs.append(summary)
                 elif "ui" in labels:
                     ui.append(summary)
-                elif "📺 re_viewer" in labels:
+                elif "📺 dl_viewer" in labels:
                     viewer.append(summary)
-                elif "🔺 re_renderer" in labels:
+                elif "🔺 dl_renderer" in labels:
                     renderer.append(summary)
                 elif "🕸️ web" in labels:
                     web.append(summary)

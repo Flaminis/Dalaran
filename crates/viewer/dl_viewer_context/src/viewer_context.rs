@@ -1,0 +1,310 @@
+use ahash::HashMap;
+use dl_chunk::EntityPath;
+use dl_chunk_store::LatestAtQuery;
+use dl_entity_db::entity_db::EntityDb;
+use dl_log_types::{EntryId, TableId};
+use dl_query::StorageEngineReadGuard;
+use dl_sdk_types::ViewClassIdentifier;
+
+use crate::query_context::DataQueryResult;
+use crate::time_control::TimeControlCommand;
+use crate::{
+    ActiveStoreContext, AppContext, AppOptions, ApplicationSelectionState, CommandSender,
+    ComponentUiRegistry, DragAndDropManager, FallbackProviderRegistry, IndicatedEntities, Item,
+    ItemCollection, PerVisualizerType, StoreHub, StoreViewContext, SystemCommand,
+    SystemCommandSender as _, TimeControl, ViewClassRegistry, ViewId, VisualizableEntities,
+};
+
+/// The most powerful context, when you need to know the active blueprint and views.
+///
+/// Never use [`ViewerContext`] where [`StoreViewContext`] would suffice.
+pub struct ViewerContext<'a> {
+    /// App context shared across all parts of the viewer.
+    pub app_ctx: AppContext<'a>,
+
+    /// For each visualizer, the set of entities that are known to have all its required components.
+    // TODO(andreas): This could have a generation id, allowing to update heuristics entities etc. more lazily.
+    pub visualizable_entities_per_visualizer: &'a PerVisualizerType<&'a VisualizableEntities>,
+
+    /// For each visualizer, the set of entities with relevant archetypes.
+    ///
+    /// TODO(andreas): Should we always do the intersection with `maybe_visualizable_entities_per_visualizer`
+    ///                 or are we ever interested in a (definitely-)non-visualizable but archetype-matching entity?
+    pub indicated_entities_per_visualizer: &'a PerVisualizerType<&'a IndicatedEntities>,
+
+    /// All the query results for this frame.
+    pub query_results: &'a HashMap<ViewId, DataQueryResult>,
+
+    /// UI config for the current recording (found in [`EntityDb`]).
+    pub time_ctrl: &'a TimeControl,
+
+    /// UI config for the current blueprint.
+    pub blueprint_time_ctrl: &'a TimeControl,
+
+    /// The blueprint query used for resolving blueprint in this frame
+    pub blueprint_query: &'a LatestAtQuery,
+
+    /// The active recording and blueprint.
+    pub store_context: &'a ActiveStoreContext<'a>,
+}
+
+// Forwarding of `AppContext` methods to `ViewerContext`. Leaving this as a
+// separate block for easier refactoring (i.e. macros) in the future.
+impl ViewerContext<'_> {
+    /// Global options for the whole viewer.
+    pub fn app_options(&self) -> &AppOptions {
+        self.app_ctx.app_options
+    }
+
+    pub fn tokens(&self) -> &'static dl_ui::DesignTokens {
+        self.app_ctx.tokens()
+    }
+
+    /// Runtime info about components and archetypes.
+    pub fn reflection(&self) -> &dl_types_core::reflection::Reflection {
+        self.app_ctx.reflection
+    }
+
+    /// How to display components.
+    pub fn component_ui_registry(&self) -> &ComponentUiRegistry {
+        self.app_ctx.component_ui_registry
+    }
+
+    /// Registry of all known classes of views.
+    pub fn view_class_registry(&self) -> &ViewClassRegistry {
+        self.app_ctx.view_class_registry
+    }
+
+    /// Defaults for components in various contexts.
+    pub fn component_fallback_registry(&self) -> &FallbackProviderRegistry {
+        self.app_ctx.component_fallback_registry
+    }
+
+    /// The [`egui::Context`].
+    pub fn egui_ctx(&self) -> &egui::Context {
+        self.app_ctx.egui_ctx
+    }
+
+    /// The global `dl_renderer` context, holds on to all GPU resources.
+    pub fn render_ctx(&self) -> &dl_renderer::RenderContext {
+        self.app_ctx.render_ctx
+    }
+
+    /// How to configure the renderer.
+    #[inline]
+    pub fn render_mode(&self) -> dl_renderer::RenderMode {
+        self.app_ctx.render_mode()
+    }
+
+    /// Interface for sending commands back to the app
+    pub fn command_sender(&self) -> &CommandSender {
+        self.app_ctx.command_sender
+    }
+
+    /// The active route
+    pub fn route(&self) -> &crate::Route {
+        self.app_ctx.route
+    }
+
+    /// The [`StoreHub`].
+    pub fn store_hub(&self) -> &StoreHub {
+        self.app_ctx.store_hub()
+    }
+
+    /// All loaded recordings, blueprints, etc.
+    pub fn store_bundle(&self) -> &dl_entity_db::StoreBundle {
+        self.app_ctx.store_bundle()
+    }
+
+    /// All loaded tables.
+    pub fn table_stores(&self) -> &crate::TableStores {
+        self.app_ctx.table_stores()
+    }
+}
+
+impl<'a> ViewerContext<'a> {
+    /// Create a [`crate::StoreViewContext`] for the active recording.
+    pub fn active_recording_store_view_context(&'a self) -> StoreViewContext<'a> {
+        StoreViewContext {
+            app_ctx: &self.app_ctx,
+            db: self.store_context.recording,
+            time_ctrl: self.time_ctrl,
+            caches: self.store_context.caches,
+        }
+    }
+
+    /// Create a [`crate::StoreViewContext`] for the active blueprint.
+    pub fn blueprint_store_view_ctx(&self) -> StoreViewContext<'_> {
+        StoreViewContext {
+            app_ctx: &self.app_ctx,
+            db: self.store_context.blueprint,
+            time_ctrl: self.blueprint_time_ctrl,
+            caches: self.store_context.caches,
+        }
+    }
+
+    /// If the user is inspecting the blueprint, and the `entity_path` is on the blueprint
+    /// timeline, then use the blueprint. Otherwise, use the recording.
+    // TODO(jleibs): Ideally this wouldn't be necessary and we could make the assessment
+    // directly from the entity_path.
+    pub fn guess_store_view_context_for_entity(
+        &self,
+        entity_path: &EntityPath,
+    ) -> StoreViewContext<'_> {
+        if self.app_options().inspect_blueprint_timeline
+            && self.store_context.blueprint.is_logged_entity(entity_path)
+        {
+            self.blueprint_store_view_ctx()
+        } else {
+            self.active_recording_store_view_context()
+        }
+    }
+
+    /// The active recording.
+    #[inline]
+    pub fn recording(&self) -> &EntityDb {
+        self.store_context.recording
+    }
+
+    /// The active blueprint.
+    #[inline]
+    pub fn blueprint_db(&self) -> &dl_entity_db::EntityDb {
+        self.store_context.blueprint
+    }
+
+    /// The `StorageEngine` for the active recording.
+    #[inline]
+    pub fn recording_engine(&self) -> StorageEngineReadGuard<'_> {
+        self.store_context.recording.storage_engine()
+    }
+
+    /// The `StorageEngine` for the active blueprint.
+    #[inline]
+    pub fn blueprint_engine(&self) -> StorageEngineReadGuard<'_> {
+        self.store_context.blueprint.storage_engine()
+    }
+
+    /// The `StoreId` of the active recording.
+    #[inline]
+    pub fn store_id(&self) -> &dl_log_types::StoreId {
+        self.store_context.recording.store_id()
+    }
+
+    /// Returns the current selection.
+    pub fn selection(&self) -> &ItemCollection {
+        self.app_ctx.selection()
+    }
+
+    /// Returns if this item should be displayed as selected or not.
+    pub fn is_selected_or_loading(&self, item: &Item) -> bool {
+        self.app_ctx.is_selected_or_loading(item)
+    }
+
+    /// Returns the currently hovered objects.
+    pub fn hovered(&self) -> &ItemCollection {
+        self.app_ctx.hovered()
+    }
+
+    pub fn selection_state(&self) -> &ApplicationSelectionState {
+        self.app_ctx.selection_state()
+    }
+
+    /// The current active Redap entry id, if any.
+    pub fn active_redap_entry(&self) -> Option<EntryId> {
+        self.app_ctx.active_redap_entry()
+    }
+
+    /// The current active local table, if any.
+    pub fn active_table_id(&self) -> Option<&TableId> {
+        self.app_ctx.active_table_id()
+    }
+
+    /// Item that got focused on the last frame if any.
+    pub fn focused_item(&self) -> Option<&crate::FocusTarget> {
+        self.app_ctx.focused_item()
+    }
+
+    /// Helper object to manage drag-and-drop operations.
+    pub fn drag_and_drop_manager(&self) -> &DragAndDropManager {
+        self.app_ctx.drag_and_drop_manager()
+    }
+
+    /// The current time cursor
+    pub fn current_query(&self) -> dl_chunk_store::LatestAtQuery {
+        self.time_ctrl.current_query()
+    }
+
+    /// Helper function to send a [`SystemCommand::TimeControlCommands`] command
+    /// with the current store id.
+    pub fn send_time_commands(&self, commands: impl IntoIterator<Item = TimeControlCommand>) {
+        let commands: Vec<_> = commands.into_iter().collect();
+
+        if !commands.is_empty() {
+            self.command_sender()
+                .send_system(SystemCommand::TimeControlCommands {
+                    store_id: self.store_id().clone(),
+                    time_commands: commands,
+                });
+        }
+    }
+
+    /// Consistently handle the selection, hover, drag start interactions for a given set of items.
+    ///
+    /// See [`AppContext::handle_select_hover_drag_interactions`] for details.
+    pub fn handle_select_hover_drag_interactions(
+        &self,
+        response: &egui::Response,
+        interacted_items: impl Into<ItemCollection>,
+        draggable: bool,
+    ) {
+        self.app_ctx
+            .handle_select_hover_drag_interactions(response, interacted_items, draggable);
+    }
+
+    /// Helper to synchronize item selection with egui focus.
+    ///
+    /// Call if _this_ is where the user would expect keyboard focus to be
+    /// when the item is selected (e.g. blueprint tree for views, recording panel for recordings).
+    pub fn handle_select_focus_sync(
+        &self,
+        response: &egui::Response,
+        interacted_items: impl Into<ItemCollection>,
+    ) {
+        self.app_ctx
+            .handle_select_focus_sync(response, interacted_items);
+    }
+
+    /// This returns `true` if we have an active recording.
+    ///
+    /// It excludes the globally hardcoded welcome screen app ID.
+    pub fn has_active_recording(&self) -> bool {
+        self.recording().application_id() != StoreHub::welcome_screen_app_id()
+    }
+
+    /// Reverts to the default route.
+    pub fn revert_to_default_route(&self) {
+        self.app_ctx.revert_to_default_route();
+    }
+
+    /// Iterates over all entities that are visualizeable for a given view class.
+    ///
+    /// This is a subset of [`Self::visualizable_entities_per_visualizer`], filtered to only include entities
+    /// that are relevant for the visualizers used in the given view class.
+    pub fn iter_visualizable_entities_for_view_class(
+        &self,
+        class: ViewClassIdentifier,
+    ) -> impl Iterator<Item = (crate::ViewSystemIdentifier, &VisualizableEntities)> {
+        let Some(view_class_entry) = self.view_class_registry().class_entry(class) else {
+            return itertools::Either::Left(std::iter::empty());
+        };
+
+        itertools::Either::Right(
+            self.visualizable_entities_per_visualizer
+                .iter()
+                .filter(|(viz_id, _entities)| {
+                    view_class_entry.visualizer_system_ids.contains(viz_id)
+                })
+                .map(|(viz_id, entities)| (*viz_id, *entities)),
+        )
+    }
+}

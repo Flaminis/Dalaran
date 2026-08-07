@@ -10,7 +10,7 @@ use rerun::external::glam;
 const NUM_POINTS: usize = 100;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    rerun::external::re_log::setup_logging();
+    rerun::external::dl_log::setup_logging();
 
     let rec = rerun::RecordingStreamBuilder::new("rerun_example_dna_abacus").spawn()?;
 

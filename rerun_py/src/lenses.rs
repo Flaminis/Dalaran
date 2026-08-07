@@ -5,8 +5,8 @@ use pyo3::prelude::*;
 use pyo3::types::PyModule;
 use pyo3::{Borrowed, FromPyObject};
 
-use re_lenses_core::{CastTo, DynExpr, Lens, OutputMode, Selector};
-use re_types_core::{ComponentDescriptor, ComponentIdentifier, TimelineName};
+use dl_lenses_core::{CastTo, DynExpr, Lens, OutputMode, Selector};
+use dl_types_core::{ComponentDescriptor, ComponentIdentifier, TimelineName};
 
 use crate::python_bridge::PyComponentDescriptor;
 use crate::selector::PySelectorInternal;
@@ -28,7 +28,7 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
 )]
 pub struct PyDeriveLensInternal {
     components: Vec<(ComponentDescriptor, Selector<DynExpr>, Option<CastTo>)>,
-    times: Vec<(String, re_log_types::TimeType, Selector<DynExpr>)>,
+    times: Vec<(String, dl_log_types::TimeType, Selector<DynExpr>)>,
     input_component: ComponentIdentifier,
     output_entity: Option<String>,
     scatter: bool,
@@ -221,11 +221,11 @@ fn parse_cast_to(cast_to: Option<Bound<'_, PyAny>>) -> PyResult<Option<CastTo>> 
     Ok(Some(CastTo::Type(datatype)))
 }
 
-fn parse_timeline_type(s: &str) -> PyResult<re_log_types::TimeType> {
+fn parse_timeline_type(s: &str) -> PyResult<dl_log_types::TimeType> {
     match s {
-        "sequence" => Ok(re_log_types::TimeType::Sequence),
-        "duration_ns" => Ok(re_log_types::TimeType::DurationNs),
-        "timestamp_ns" => Ok(re_log_types::TimeType::TimestampNs),
+        "sequence" => Ok(dl_log_types::TimeType::Sequence),
+        "duration_ns" => Ok(dl_log_types::TimeType::DurationNs),
+        "timestamp_ns" => Ok(dl_log_types::TimeType::TimestampNs),
         _ => Err(PyValueError::new_err(format!(
             "Unknown timeline type '{s}', expected 'sequence', 'duration_ns', or 'timestamp_ns'"
         ))),

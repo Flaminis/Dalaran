@@ -481,7 +481,7 @@ Reports timelines that disagree on row ordering, whole-topic ordering conflicts,
 **Options**
 
 * `--full <FULL>`
-> Check timelines produced by the full `re_mcap` decoder pipeline.
+> Check timelines produced by the full `dl_mcap` decoder pipeline.
 >
 > This decodes message payloads to include derived timelines, such as `ros2_timestamp` for ROS 2 data, and increases processing time.
 >

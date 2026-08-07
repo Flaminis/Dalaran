@@ -1,0 +1,1909 @@
+use std::collections::BTreeSet;
+use std::sync::Arc;
+
+use itertools::{Either, Itertools as _};
+use nohash_hasher::IntSet;
+use dl_int::SaturatingCast as _;
+use dl_log::debug_assert;
+
+use dl_chunk::{
+    Chunk, ChunkId, ComponentIdentifier, LatestAtQuery, RangeQuery, TimeColumn, TimelineName,
+};
+use dl_log_types::{AbsoluteTimeRange, EntityPath, TimeInt};
+use dl_types_core::{ComponentSet, UnorderedComponentSet};
+
+use crate::{ChunkStore, ChunkTrackingMode};
+// Used all over in docstrings.
+#[expect(unused_imports)]
+use crate::RowId;
+use crate::store::ChunkIdSetPerTime;
+
+// ---
+
+// These APIs often have `temporal` and `static` variants.
+// It is sometimes useful to be able to separately query either,
+// such as when we want to tell the user that they logged a component
+// as both static and temporal, which is probably wrong.
+
+// Meta queries
+impl ChunkStore {
+    /// Retrieve all [`EntityPath`]s in the store.
+    #[inline]
+    pub fn all_entities(&self) -> IntSet<EntityPath> {
+        std::iter::chain(
+            self.static_chunk_ids_per_entity.keys().cloned(),
+            self.temporal_chunk_ids_per_entity.keys().cloned(),
+        )
+        .collect()
+    }
+
+    /// Returns a vector with all the chunks in this store, sorted in descending order relative to
+    /// their distance from the given `(timeline, time)` cursor.
+    pub fn find_temporal_chunks_furthest_from(
+        &self,
+        timeline: &TimelineName,
+        time: TimeInt,
+    ) -> Vec<Arc<Chunk>> {
+        dl_tracing::profile_function!();
+
+        self.physical_chunks_per_chunk_id
+            .values()
+            .filter_map(|chunk| {
+                let times = chunk.timelines().get(timeline)?;
+
+                let min_dist = if times.is_sorted() {
+                    let pivot = times.times_raw().partition_point(|t| *t < time.as_i64());
+                    let min_value1 = times
+                        .times_raw()
+                        .get(pivot.saturating_sub(1))
+                        .map(|t| t.abs_diff(time.as_i64()));
+                    let min_value2 = times
+                        .times_raw()
+                        .get(pivot)
+                        .map(|t| t.abs_diff(time.as_i64()));
+
+                    // NOTE: Do *not* compare these options directly, if any of them turns out to
+                    // be None, it'll be a disaster.
+                    // min_value1.min(min_value2);
+                    [min_value1, min_value2].into_iter().flatten().min()
+                } else {
+                    times
+                        .times()
+                        .map(|t| t.as_i64().abs_diff(time.as_i64()))
+                        .min()
+                };
+
+                min_dist.map(|max_dist| (chunk, max_dist))
+            })
+            .sorted_by(|(_chunk1, dist1), (_chunk2, dist2)| std::cmp::Ord::cmp(dist2, dist1)) // descending
+            .map(|(chunk, _dist)| chunk.clone())
+            .collect_vec()
+    }
+
+    /// An implementation of `find_temporal_chunk_furthest_from` that focuses solely on correctness.
+    ///
+    /// Used to compare with results obtained from the optimized implementation.
+    pub(crate) fn find_temporal_chunks_furthest_from_slow(
+        &self,
+        timeline: &TimelineName,
+        time: TimeInt,
+    ) -> Vec<Arc<Chunk>> {
+        dl_tracing::profile_function!();
+
+        self.physical_chunks_per_chunk_id
+            .values()
+            .filter_map(|chunk| {
+                let times = chunk.timelines().get(timeline)?;
+
+                let min_dist = times
+                    .times()
+                    .map(|t| t.as_i64().abs_diff(time.as_i64()))
+                    .min();
+
+                min_dist.map(|max_dist| (chunk, max_dist))
+            })
+            .sorted_by(|(_chunk1, dist1), (_chunk2, dist2)| std::cmp::Ord::cmp(dist2, dist1)) // descending
+            .map(|(chunk, _dist)| chunk.clone())
+            .collect_vec()
+    }
+
+    /// Retrieve all [`EntityPath`]s in the store.
+    #[inline]
+    pub fn all_entities_sorted(&self) -> BTreeSet<EntityPath> {
+        std::iter::chain(
+            self.static_chunk_ids_per_entity.keys().cloned(),
+            self.temporal_chunk_ids_per_entity.keys().cloned(),
+        )
+        .collect()
+    }
+
+    /// Retrieve all [`ComponentIdentifier`]s in the store.
+    ///
+    /// See also [`Self::all_components_sorted`].
+    pub fn all_components(&self) -> UnorderedComponentSet {
+        std::iter::chain(
+            self.static_chunk_ids_per_entity
+                .values()
+                .flat_map(|static_chunks_per_component| static_chunks_per_component.keys()),
+            self.temporal_chunk_ids_per_entity_per_component
+                .values()
+                .flat_map(|temporal_chunk_ids_per_timeline| {
+                    temporal_chunk_ids_per_timeline.values().flat_map(
+                        |temporal_chunk_ids_per_component| temporal_chunk_ids_per_component.keys(),
+                    )
+                }),
+        )
+        .copied()
+        .collect()
+    }
+
+    /// Retrieve all [`ComponentIdentifier`]s in the store.
+    ///
+    /// See also [`Self::all_components`].
+    pub fn all_components_sorted(&self) -> ComponentSet {
+        std::iter::chain(
+            self.static_chunk_ids_per_entity
+                .values()
+                .flat_map(|static_chunks_per_component| static_chunks_per_component.keys()),
+            self.temporal_chunk_ids_per_entity_per_component
+                .values()
+                .flat_map(|temporal_chunk_ids_per_timeline| {
+                    temporal_chunk_ids_per_timeline.values().flat_map(
+                        |temporal_chunk_ids_per_component| temporal_chunk_ids_per_component.keys(),
+                    )
+                }),
+        )
+        .copied()
+        .collect()
+    }
+
+    /// Retrieve all the [`ComponentIdentifier`]s that have been written to for a given [`EntityPath`] on
+    /// the specified [`dl_chunk::Timeline`].
+    ///
+    /// Static components are always included in the results.
+    ///
+    /// A `None` timeline (a static-only query) yields only the static components.
+    ///
+    /// Returns `None` if the entity doesn't exist at all on this `timeline`.
+    pub fn all_components_on_timeline(
+        &self,
+        timeline: Option<&TimelineName>,
+        entity_path: &EntityPath,
+    ) -> Option<UnorderedComponentSet> {
+        dl_tracing::profile_function!();
+
+        let static_components: Option<UnorderedComponentSet> = self
+            .static_chunk_ids_per_entity
+            .get(entity_path)
+            .map(|static_chunks_per_component| {
+                static_chunks_per_component
+                    .keys()
+                    .copied()
+                    .collect::<UnorderedComponentSet>()
+            })
+            .filter(|names| !names.is_empty());
+
+        let temporal_components: Option<UnorderedComponentSet> = self
+            .temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .map(|temporal_chunk_ids_per_timeline| {
+                timeline
+                    .and_then(|timeline| temporal_chunk_ids_per_timeline.get(timeline))
+                    .map(|temporal_chunk_ids_per_component| {
+                        temporal_chunk_ids_per_component
+                            .keys()
+                            .copied()
+                            .collect::<UnorderedComponentSet>()
+                    })
+                    .unwrap_or_default()
+            })
+            .filter(|names| !names.is_empty());
+
+        match (static_components, temporal_components) {
+            (None, None) => None,
+            (None, Some(comps)) | (Some(comps), None) => Some(comps),
+            (Some(static_comps), Some(temporal_comps)) => {
+                Some(std::iter::chain(static_comps, temporal_comps).collect())
+            }
+        }
+    }
+
+    /// Retrieve all the [`ComponentIdentifier`]s that have been written to for a given [`EntityPath`] on
+    /// the specified [`dl_chunk::Timeline`].
+    ///
+    /// Static components are always included in the results.
+    ///
+    /// Returns `None` if the entity doesn't exist at all on this `timeline`.
+    pub fn all_components_on_timeline_sorted(
+        &self,
+        timeline: &TimelineName,
+        entity_path: &EntityPath,
+    ) -> Option<ComponentSet> {
+        dl_tracing::profile_function!();
+
+        let static_components: Option<ComponentSet> = self
+            .static_chunk_ids_per_entity
+            .get(entity_path)
+            .map(|static_chunks_per_component| {
+                static_chunks_per_component
+                    .keys()
+                    .copied()
+                    .collect::<ComponentSet>()
+            })
+            .filter(|names| !names.is_empty());
+
+        let temporal_components: Option<ComponentSet> = self
+            .temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .map(|temporal_chunk_ids_per_timeline| {
+                temporal_chunk_ids_per_timeline
+                    .get(timeline)
+                    .map(|temporal_chunk_ids_per_component| {
+                        temporal_chunk_ids_per_component
+                            .keys()
+                            .copied()
+                            .collect::<ComponentSet>()
+                    })
+                    .unwrap_or_default()
+            })
+            .filter(|names| !names.is_empty());
+
+        match (static_components, temporal_components) {
+            (None, None) => None,
+            (None, Some(comps)) | (Some(comps), None) => Some(comps),
+            (Some(static_comps), Some(temporal_comps)) => {
+                Some(std::iter::chain(static_comps, temporal_comps).collect())
+            }
+        }
+    }
+
+    /// Check whether an entity has a static component or a temporal component on the specified timeline.
+    ///
+    /// This does _not_ check if the entity actually currently holds any data for that component.
+    #[inline]
+    pub fn entity_has_component_on_timeline(
+        &self,
+        timeline: Option<&TimelineName>,
+        entity_path: &EntityPath,
+        component: ComponentIdentifier,
+    ) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.entity_has_static_component(entity_path, component)
+            || timeline.is_some_and(|timeline| {
+                self.entity_has_temporal_component_on_timeline(timeline, entity_path, component)
+            })
+    }
+
+    /// Check whether an entity has a static component or a temporal component on any timeline.
+    ///
+    /// This does _not_ check if the entity actually currently holds any data for that component.
+    pub fn entity_has_component(
+        &self,
+        entity_path: &EntityPath,
+        component: ComponentIdentifier,
+    ) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.entity_has_static_component(entity_path, component)
+            || self.entity_has_temporal_component(entity_path, component)
+    }
+
+    /// Check whether an entity has a specific static component.
+    ///
+    /// This does _not_ check if the entity actually currently holds any data for that component.
+    #[inline]
+    pub fn entity_has_static_component(
+        &self,
+        entity_path: &EntityPath,
+        component: ComponentIdentifier,
+    ) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.static_chunk_ids_per_entity
+            .get(entity_path)
+            .is_some_and(|static_chunk_ids_per_component| {
+                static_chunk_ids_per_component.contains_key(&component)
+            })
+    }
+
+    /// Check whether an entity has a temporal component on any timeline.
+    ///
+    /// This does _not_ check if the entity actually currently holds any data for that component.
+    #[inline]
+    pub fn entity_has_temporal_component(
+        &self,
+        entity_path: &EntityPath,
+        component: ComponentIdentifier,
+    ) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .iter()
+            .flat_map(|temporal_chunk_ids_per_timeline| temporal_chunk_ids_per_timeline.values())
+            .any(|temporal_chunk_ids_per_component| {
+                temporal_chunk_ids_per_component.contains_key(&component)
+            })
+    }
+
+    /// Check whether an entity has a temporal component on a specific timeline.
+    ///
+    /// This does _not_ check if the entity actually currently holds any data for that component.
+    #[inline]
+    pub fn entity_has_temporal_component_on_timeline(
+        &self,
+        timeline: &TimelineName,
+        entity_path: &EntityPath,
+        component: ComponentIdentifier,
+    ) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .iter()
+            .filter_map(|temporal_chunk_ids_per_timeline| {
+                temporal_chunk_ids_per_timeline.get(timeline)
+            })
+            .any(|temporal_chunk_ids_per_component| {
+                temporal_chunk_ids_per_component.contains_key(&component)
+            })
+    }
+
+    /// Check whether an entity has any physical data on a specific timeline, or any static data.
+    ///
+    /// This is different from checking if the entity has any component, it also ensures
+    /// that some _data_ currently exists in the store for this entity.
+    #[inline]
+    pub fn entity_has_physical_data_on_timeline(
+        &self,
+        timeline: &TimelineName,
+        entity_path: &EntityPath,
+    ) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.entity_has_physical_static_data(entity_path)
+            || self.entity_has_physical_temporal_data_on_timeline(entity_path, timeline)
+    }
+
+    /// Check whether an entity has any indexed data, physical or virtual.
+    ///
+    /// Returns true if the entity has any static or temporal chunk IDs,
+    /// regardless of whether those chunks are currently loaded in memory.
+    ///
+    /// An entity path can exist in the schema/entity tree but return `false` here
+    /// if all of its chunks have been removed by garbage collection or otherwise removed.
+    #[inline]
+    pub fn entity_has_data(&self, entity_path: &EntityPath) -> bool {
+        self.static_chunk_ids_per_entity.contains_key(entity_path)
+            || self.temporal_chunk_ids_per_entity.contains_key(entity_path)
+    }
+
+    /// Check whether an entity has any physical data.
+    ///
+    /// This is different from checking if the entity has any component, it also ensures
+    /// that some _data_ currently exists in the store for this entity.
+    #[inline]
+    pub fn entity_has_physical_data(&self, entity_path: &EntityPath) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.entity_has_physical_static_data(entity_path)
+            || self.entity_has_physical_temporal_data(entity_path)
+    }
+
+    /// Check whether an entity has any static data.
+    ///
+    /// This is different from checking if the entity has any component, it also ensures
+    /// that some _data_ currently exists in the store for this entity.
+    #[inline]
+    pub fn entity_has_physical_static_data(&self, entity_path: &EntityPath) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.static_chunk_ids_per_entity
+            .get(entity_path)
+            .is_some_and(|static_chunk_ids_per_component| {
+                static_chunk_ids_per_component
+                    .values()
+                    .any(|chunk_id| self.physical_chunks_per_chunk_id.contains_key(chunk_id))
+            })
+    }
+
+    /// Check whether an entity has any temporal data.
+    ///
+    /// This is different from checking if the entity has any component, it also ensures
+    /// that some _data_ currently exists in the store for this entity.
+    #[inline]
+    pub fn entity_has_physical_temporal_data(&self, entity_path: &EntityPath) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .is_some_and(|temporal_chunks_per_timeline| {
+                temporal_chunks_per_timeline
+                    .values()
+                    .flat_map(|temporal_chunks_per_component| {
+                        temporal_chunks_per_component.values()
+                    })
+                    .flat_map(|chunk_id_sets| chunk_id_sets.per_start_time.values())
+                    .flat_map(|chunk_id_set| chunk_id_set.iter())
+                    .any(|chunk_id| self.physical_chunks_per_chunk_id.contains_key(chunk_id))
+            })
+    }
+
+    /// Check whether an entity has any physical temporal data on any timeline.
+    ///
+    /// This is different from checking if the entity has any component, it also ensures
+    /// that some _data_ currently exists in the store for this entity.
+    #[inline]
+    pub fn entity_has_physical_temporal_data_on_timeline(
+        &self,
+        entity_path: &EntityPath,
+        timeline: &TimelineName,
+    ) -> bool {
+        // dl_tracing::profile_function!(); // This function is too fast; profiling will only add overhead
+
+        self.temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .and_then(|temporal_chunks_per_timeline| temporal_chunks_per_timeline.get(timeline))
+            .is_some_and(|temporal_chunks_per_component| {
+                temporal_chunks_per_component
+                    .values()
+                    .flat_map(|chunk_id_sets| chunk_id_sets.per_start_time.values())
+                    .flat_map(|chunk_id_set| chunk_id_set.iter())
+                    .any(|chunk_id| self.physical_chunks_per_chunk_id.contains_key(chunk_id))
+            })
+    }
+
+    /// Check whether an entity has any physical temporal data for a given component.
+    ///
+    /// This is different from checking if the entity has any component, it also ensures
+    /// that some _data_ currently exists in the store for this entity.
+    ///
+    /// See [`Self::entity_has_physical_temporal_data_on_timeline`] if you don't care about any particular component.
+    pub fn entity_has_physical_temporal_data_on_timeline_for_component(
+        &self,
+        entity_path: &dl_chunk::EntityPath,
+        timeline: &TimelineName,
+        component: &dl_chunk::ComponentIdentifier,
+    ) -> bool {
+        self.temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .and_then(|temporal_chunks_per_timeline| temporal_chunks_per_timeline.get(timeline))
+            .is_some_and(|temporal_chunks_per_component| {
+                temporal_chunks_per_component
+                    .get(component)
+                    .is_some_and(|chunk_id_sets| {
+                        let chunk_id_sets = chunk_id_sets.per_start_time.values();
+                        chunk_id_sets
+                            .flat_map(|chunk_id_set| chunk_id_set.iter())
+                            .any(|chunk_id| {
+                                self.physical_chunks_per_chunk_id.contains_key(chunk_id)
+                            })
+                    })
+            })
+    }
+
+    /// Find the earliest time at which something was logged for a given entity on the specified
+    /// timeline.
+    ///
+    /// This includes both physical & virtual chunks.
+    /// Ignores static data.
+    #[inline]
+    pub fn entity_min_time(
+        &self,
+        timeline: &TimelineName,
+        entity_path: &EntityPath,
+    ) -> Option<TimeInt> {
+        let temporal_chunk_ids_per_timeline = self
+            .temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)?;
+        let temporal_chunk_ids_per_component = temporal_chunk_ids_per_timeline.get(timeline)?;
+
+        let mut time_min = TimeInt::MAX;
+        for temporal_chunk_ids_per_time in temporal_chunk_ids_per_component.values() {
+            let Some(time) = temporal_chunk_ids_per_time
+                .per_start_time
+                .first_key_value()
+                .map(|(time, _)| *time)
+            else {
+                continue;
+            };
+            time_min = TimeInt::min(time_min, time);
+        }
+
+        (time_min != TimeInt::MAX).then_some(time_min)
+    }
+
+    /// Returns the min and max times at which data was logged for an entity on a specific timeline.
+    ///
+    /// This includes both physical & virtual chunks.
+    /// This ignores static data.
+    pub fn entity_time_range(
+        &self,
+        timeline: &TimelineName,
+        entity_path: &EntityPath,
+    ) -> Option<AbsoluteTimeRange> {
+        dl_tracing::profile_function!();
+
+        let temporal_chunk_ids_per_timeline =
+            self.temporal_chunk_ids_per_entity.get(entity_path)?;
+        let chunk_id_sets = temporal_chunk_ids_per_timeline.get(timeline)?;
+
+        let start = chunk_id_sets.per_start_time.first_key_value()?.0;
+        let end = chunk_id_sets.per_end_time.last_key_value()?.0;
+
+        Some(AbsoluteTimeRange::new(*start, *end))
+    }
+
+    fn search_chunk_by_time(
+        &self,
+        timeline: &TimelineName,
+        chunk_id: &ChunkId,
+        search: impl Fn(&TimeColumn) -> Option<TimeInt>,
+    ) -> Option<TimeInt> {
+        let chunk = self.physical_chunks_per_chunk_id.get(chunk_id)?;
+        let time_col = chunk.timelines().get(timeline)?;
+        search(time_col)
+    }
+
+    /// Returns the next non-static time with data on the given timeline, strictly after `after`.
+    ///
+    /// Searches physical chunks across all entities. Returns `None` if there is no later temporal data.
+    ///
+    /// This scales linearly with the number of chunks on the timeline.
+    pub fn next_time_on_timeline(
+        &self,
+        timeline: &TimelineName,
+        after: TimeInt,
+    ) -> Option<TimeInt> {
+        dl_tracing::profile_function!();
+
+        let mut result: Option<TimeInt> = None;
+
+        for per_timeline in self.temporal_chunk_ids_per_entity.values() {
+            let Some(per_time) = per_timeline.get(timeline) else {
+                continue;
+            };
+
+            // Check chunks whose start time is after our cursor.
+            for (&start_time, chunk_ids) in per_time
+                .per_start_time
+                .range((std::ops::Bound::Excluded(after), std::ops::Bound::Unbounded))
+            {
+                if result.is_some_and(|r| r <= start_time) {
+                    break;
+                }
+                for chunk_id in chunk_ids {
+                    result = opt_min(
+                        result,
+                        self.search_chunk_by_time(timeline, chunk_id, |tc| {
+                            tc.find_next_time(after)
+                        }),
+                    );
+                }
+            }
+
+            // Also check chunks that start at or before `after` but may contain times after it.
+            for (_start_time, chunk_ids) in per_time.per_start_time.range(..=after).rev() {
+                for chunk_id in chunk_ids {
+                    result = opt_min(
+                        result,
+                        self.search_chunk_by_time(timeline, chunk_id, |tc| {
+                            tc.find_next_time(after)
+                        }),
+                    );
+                }
+            }
+        }
+
+        result
+    }
+
+    /// Returns the previous non-static time with data on the given timeline, strictly before `before`.
+    ///
+    /// Searches physical chunks across all entities. Returns `None` if there is no earlier temporal data.
+    ///
+    /// This scales linearly with the number of chunks on the timeline.
+    pub fn prev_time_on_timeline(
+        &self,
+        timeline: &TimelineName,
+        before: TimeInt,
+    ) -> Option<TimeInt> {
+        dl_tracing::profile_function!();
+
+        let mut result: Option<TimeInt> = None;
+
+        for per_timeline in self.temporal_chunk_ids_per_entity.values() {
+            let Some(per_time) = per_timeline.get(timeline) else {
+                continue;
+            };
+
+            // Check chunks whose end time is before our cursor.
+            for (&end_time, chunk_ids) in per_time.per_end_time.range(..before).rev() {
+                if result.is_some_and(|r| r >= end_time) {
+                    break;
+                }
+                for chunk_id in chunk_ids {
+                    result = opt_max(
+                        result,
+                        self.search_chunk_by_time(timeline, chunk_id, |tc| {
+                            tc.find_prev_time(before)
+                        }),
+                    );
+                }
+            }
+
+            // Also check chunks that end after `before` but may contain times before it.
+            for (_end_time, chunk_ids) in per_time.per_end_time.range(before..) {
+                for chunk_id in chunk_ids {
+                    result = opt_max(
+                        result,
+                        self.search_chunk_by_time(timeline, chunk_id, |tc| {
+                            tc.find_prev_time(before)
+                        }),
+                    );
+                }
+            }
+        }
+
+        result
+    }
+
+    /// Returns the min and max times at which data was logged on a specific timeline, considering
+    /// all entities.
+    ///
+    /// This includes both physical & virtual chunks.
+    /// This ignores static data.
+    pub fn time_range(&self, timeline: &TimelineName) -> Option<AbsoluteTimeRange> {
+        dl_tracing::profile_function!();
+
+        self.temporal_chunk_ids_per_entity
+            .values()
+            .filter_map(|temporal_chunk_ids_per_timeline| {
+                let per_time = temporal_chunk_ids_per_timeline.get(timeline)?;
+                let start = per_time.per_start_time.first_key_value()?.0;
+                let end = per_time.per_end_time.last_key_value()?.0;
+                Some(AbsoluteTimeRange::new(*start, *end))
+            })
+            .reduce(|r1, r2| r1.union(r2))
+    }
+}
+
+fn opt_min(a: Option<TimeInt>, b: Option<TimeInt>) -> Option<TimeInt> {
+    match (a, b) {
+        (Some(a), Some(b)) => Some(a.min(b)),
+        (a, b) => a.or(b),
+    }
+}
+
+fn opt_max(a: Option<TimeInt>, b: Option<TimeInt>) -> Option<TimeInt> {
+    match (a, b) {
+        (Some(a), Some(b)) => Some(a.max(b)),
+        (a, b) => a.or(b),
+    }
+}
+
+// ---
+
+/// The results of a latest-at and/or range relevancy query.
+///
+/// Since the introduction of virtual/offloaded chunks, it is possible for a query to detect that
+/// it is missing some data in order to compute accurate results.
+/// This lack of data is communicated using a non-empty [`QueryResults::missing_virtual`] field.
+#[derive(Debug, Clone, PartialEq)]
+pub struct QueryResults {
+    /// The relevant *physical* chunks that were found for this query.
+    ///
+    /// If [`Self::missing_virtual`] is non-empty, then these chunks are not enough to compute accurate query results.
+    pub chunks: Vec<Arc<Chunk>>,
+
+    /// The relevant *virtual* chunks that were found for this query.
+    ///
+    /// Until these chunks have been fetched and inserted into the appropriate [`ChunkStore`], the
+    /// results of this query cannot accurately be computed.
+    ///
+    /// Note, these are NOT necessarily _root_ chunks.
+    /// Use [`ChunkStore::find_root_chunks`] to get those.
+    //
+    // TODO(cmc): Once lineage tracking is in place, make sure that this only reports missing
+    // chunks using their root-level IDs, so downstream consumers don't have to redundantly build
+    // their own tracking. And document it so.
+    pub missing_virtual: Vec<ChunkId>,
+}
+
+impl std::fmt::Display for QueryResults {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let Self {
+            chunks,
+            missing_virtual,
+        } = self;
+
+        let chunk_ids = chunks.iter().map(|c| c.id().to_string()).join(",");
+
+        if self.is_partial() {
+            let missing_ids = missing_virtual.iter().map(|id| id.to_string()).join(",");
+            f.write_fmt(format_args!("chunks:[{chunk_ids}] missing:[{missing_ids}]"))
+        } else {
+            f.write_fmt(format_args!("chunks:[{chunk_ids}]"))
+        }
+    }
+}
+
+impl QueryResults {
+    fn from_chunk_ids(
+        store: &ChunkStore,
+        entity_path: &EntityPath,
+        report_mode: ChunkTrackingMode,
+        chunk_ids: impl Iterator<Item = ChunkId>,
+    ) -> Self {
+        let mut this = Self {
+            chunks: vec![],
+            missing_virtual: vec![],
+        };
+
+        for chunk_id in chunk_ids {
+            if let Some(chunk) = store.physical_chunks_per_chunk_id.get(&chunk_id) {
+                this.chunks.push(chunk.clone());
+            } else {
+                match report_mode {
+                    ChunkTrackingMode::Ignore => {}
+                    ChunkTrackingMode::Report | ChunkTrackingMode::ReportTransient => {
+                        this.missing_virtual.push(chunk_id);
+                    }
+                    ChunkTrackingMode::PanicOnMissing => {
+                        panic!("ChunkStore is missing chunk ID: {chunk_id}");
+                    }
+                }
+            }
+        }
+
+        if report_mode == ChunkTrackingMode::Report
+            || report_mode == ChunkTrackingMode::ReportTransient
+        {
+            let mut tracker = store.queried_chunk_id_tracker.write();
+
+            for chunk_id in &this.missing_virtual {
+                debug_assert!(
+                    store.chunks_lineage.contains_key(chunk_id),
+                    "A chunk was reported missing, with no known lineage: {entity_path} {chunk_id}"
+                );
+                if store.split_on_ingest.contains(chunk_id) {
+                    if cfg!(debug_assertions) {
+                        dl_log::warn_once!(
+                            "Tried to report a chunk missing on {entity_path} that was the source of a split (query)"
+                        );
+                    }
+                    dl_log::debug_once!(
+                        "Tried to report a chunk missing on {entity_path} that was the source of a split: {chunk_id} (query)"
+                    );
+                }
+            }
+
+            if report_mode == ChunkTrackingMode::Report {
+                tracker
+                    .missing_virtual
+                    .extend(this.missing_virtual.iter().copied());
+
+                tracker
+                    .used_physical
+                    .extend(this.chunks.iter().map(|c| c.id()));
+            } else {
+                tracker
+                    .transient_missing_virtual
+                    .extend(this.missing_virtual.iter().copied());
+
+                tracker
+                    .transient_used_physical
+                    .extend(this.chunks.iter().map(|c| c.id()));
+            }
+        }
+
+        debug_assert!(
+            std::iter::chain(
+                this.chunks.iter().map(|chunk| chunk.id()),
+                this.missing_virtual.iter().copied(),
+            )
+            .all_unique()
+        );
+
+        this
+    }
+}
+
+impl QueryResults {
+    /// Returns true if these are partial results.
+    ///
+    /// Partial results happen when some of the chunks required to accurately compute the query are
+    /// currently missing/offloaded.
+    /// It is then the responsibility of the caller to look into the [missing chunk IDs], fetch
+    /// them, load them, and then try the query again.
+    ///
+    /// [missing chunk IDs]: `Self::missing_virtual`
+    pub fn is_partial(&self) -> bool {
+        !self.missing_virtual.is_empty()
+    }
+
+    /// Returns true if the results are *completely* empty.
+    ///
+    /// I.e. neither physical/loaded nor virtual/offloaded chunks could be found.
+    pub fn is_empty(&self) -> bool {
+        let Self {
+            chunks,
+            missing_virtual,
+        } = self;
+        chunks.is_empty() && missing_virtual.is_empty()
+    }
+
+    /// Attempts to iterate over the returned chunks.
+    ///
+    /// If the results contain partial data, returns `None`.
+    /// It is then the responsibility of the caller to look into the [missing chunk IDs], fetch
+    /// them, load them, and then try the query again.
+    ///
+    /// [missing chunk IDs]: `Self::missing_virtual`
+    pub fn to_iter(&self) -> Option<impl Iterator<Item = &Arc<Chunk>>> {
+        if self.missing_virtual.is_empty() {
+            return Some(self.chunks.iter());
+        }
+
+        None
+    }
+
+    /// Attempts to iterate over the returned chunks.
+    ///
+    /// If the results contain partial data:
+    /// * prints a debug log in release builds.
+    /// * prints a warning in debug builds.
+    ///
+    /// It is the responsibility of the caller to look into the [missing chunk IDs], fetch
+    /// them, load them, and then try the query again.
+    ///
+    /// [missing chunk IDs]: `Self::missing_virtual`
+    #[track_caller]
+    pub fn into_iter_verbose(self) -> impl Iterator<Item = Arc<Chunk>> {
+        if self.is_partial() {
+            let location = std::panic::Location::caller();
+            dl_log::debug_warn_once!(
+                "{}:{}: iterating partial query results: some data has been silently discarded",
+                location.file(),
+                location.line()
+            );
+        }
+
+        self.chunks.into_iter()
+    }
+}
+
+// LatestAt
+impl ChunkStore {
+    /// Returns the most-relevant chunk(s) for the given [`LatestAtQuery`] and [`ComponentIdentifier`].
+    ///
+    /// The returned vector is guaranteed free of duplicates, by definition.
+    ///
+    /// The [`ChunkStore`] always work at the [`Chunk`] level (as opposed to the row level): it is
+    /// oblivious to the data therein.
+    /// For that reason, and because [`Chunk`]s are allowed to temporally overlap, it is possible
+    /// that a query has more than one relevant chunk.
+    ///
+    /// The caller should filter the returned chunks further (see [`Chunk::latest_at`]) in order to
+    /// determine what exact row contains the final result.
+    ///
+    /// If the entity has static component data associated with it, it will unconditionally
+    /// override any temporal component data.
+    pub fn latest_at_relevant_chunks(
+        &self,
+        report_mode: ChunkTrackingMode,
+        query: &LatestAtQuery,
+        entity_path: &EntityPath,
+        component: ComponentIdentifier,
+    ) -> QueryResults {
+        // Don't do a profile scope here, this can have a lot of overhead when executing many small queries.
+        //dl_tracing::profile_function!(format!("{query:?}"));
+
+        // Reminder: if a chunk has been indexed for a given component, then it must contain at
+        // least one non-null value for that column.
+
+        if let Some(static_chunk_id) = self
+            .static_chunk_ids_per_entity
+            .get(entity_path)
+            .and_then(|static_chunks_per_component| static_chunks_per_component.get(&component))
+        {
+            return QueryResults::from_chunk_ids(
+                self,
+                entity_path,
+                report_mode,
+                std::iter::once(*static_chunk_id),
+            );
+        }
+
+        let chunk_ids = self
+            .temporal_chunk_ids_per_entity_per_component
+            .get(entity_path)
+            .and_then(|temporal_chunk_ids_per_timeline| {
+                let timeline = query.timeline()?;
+                temporal_chunk_ids_per_timeline.get(&timeline)
+            })
+            .and_then(|temporal_chunk_ids_per_component| {
+                temporal_chunk_ids_per_component.get(&component)
+            })
+            .and_then(|temporal_chunk_ids_per_time| {
+                Self::latest_at(query, temporal_chunk_ids_per_time)
+            })
+            .unwrap_or_default();
+
+        QueryResults::from_chunk_ids(self, entity_path, report_mode, chunk_ids.into_iter())
+    }
+
+    /// Returns the most-relevant chunk(s) for the given [`LatestAtQuery`].
+    ///
+    /// Optionally include static data.
+    ///
+    /// The [`ChunkStore`] always work at the [`Chunk`] level (as opposed to the row level): it is
+    /// oblivious to the data therein.
+    /// For that reason, and because [`Chunk`]s are allowed to temporally overlap, it is possible
+    /// that a query has more than one relevant chunk.
+    ///
+    /// The returned vector is free of duplicates.
+    ///
+    /// The caller should filter the returned chunks further (see [`Chunk::latest_at`]) in order to
+    /// determine what exact row contains the final result.
+    pub fn latest_at_relevant_chunks_for_all_components(
+        &self,
+        report_mode: ChunkTrackingMode,
+        query: &LatestAtQuery,
+        entity_path: &EntityPath,
+        include_static: bool,
+    ) -> QueryResults {
+        dl_tracing::profile_function!(format!("{query:?}"));
+
+        let chunk_ids = if include_static {
+            let empty = Default::default();
+            let static_chunks_per_component = self
+                .static_chunk_ids_per_entity
+                .get(entity_path)
+                .unwrap_or(&empty);
+
+            // All static chunk IDs for the given entity
+            let static_chunk_ids = static_chunks_per_component.values().copied();
+
+            // All temporal chunk IDs for the given entity, filtered by components
+            // for which we already have static chunk IDs.
+            let temporal_chunk_ids = self
+                .temporal_chunk_ids_per_entity_per_component
+                .get(entity_path)
+                .and_then(|temporal_chunk_ids_per_timeline_per_component| {
+                    let timeline = query.timeline()?;
+                    temporal_chunk_ids_per_timeline_per_component.get(&timeline)
+                })
+                .map(|temporal_chunk_ids_per_component| {
+                    temporal_chunk_ids_per_component
+                        .iter()
+                        .filter(|(component_type, _)| {
+                            !static_chunks_per_component.contains_key(component_type)
+                        })
+                        .map(|(_, chunk_id_set)| chunk_id_set)
+                })
+                .into_iter()
+                .flatten()
+                .filter_map(|temporal_chunk_ids_per_time| {
+                    Self::latest_at(query, temporal_chunk_ids_per_time)
+                })
+                .flatten();
+
+            // Deduplicate before passing it along.
+            // Both temporal and static chunk "sets" here may have duplicates in them,
+            // so we de-duplicate them together to reduce the number of allocations.
+            std::iter::chain(static_chunk_ids, temporal_chunk_ids)
+                .unique()
+                .collect_vec()
+        } else {
+            // This cannot yield duplicates by definition.
+            self.temporal_chunk_ids_per_entity
+                .get(entity_path)
+                .and_then(|temporal_chunk_ids_per_timeline| {
+                    let timeline = query.timeline()?;
+                    temporal_chunk_ids_per_timeline.get(&timeline)
+                })
+                .and_then(|temporal_chunk_ids_per_time| {
+                    Self::latest_at(query, temporal_chunk_ids_per_time)
+                })
+                .unwrap_or_default()
+        };
+
+        QueryResults::from_chunk_ids(self, entity_path, report_mode, chunk_ids.into_iter())
+    }
+
+    fn latest_at(
+        query: &LatestAtQuery,
+        temporal_chunk_ids_per_time: &ChunkIdSetPerTime,
+    ) -> Option<Vec<ChunkId>> {
+        // Don't do a profile scope here, this can have a lot of overhead when executing many small queries.
+        //dl_tracing::profile_function!();
+
+        let upper_bound = temporal_chunk_ids_per_time
+            .per_start_time
+            .range(..=query.at())
+            .next_back()
+            .map(|(time, _)| *time)?;
+
+        // Overlapped chunks
+        // =================
+        //
+        // To deal with potentially overlapping chunks, we keep track of the longest
+        // interval in the entire map, which gives us an upper bound on how much we
+        // would need to walk backwards in order to find all potential overlaps.
+        //
+        // This is a fairly simple solution that scales much better than interval-tree
+        // based alternatives, both in terms of complexity and performance, in the normal
+        // case where most chunks in a collection have similar lengths.
+        //
+        // The most degenerate case -- a single chunk overlaps everything else -- results
+        // in `O(n)` performance, which gets amortized by the query cache.
+        // If that turns out to be a problem in practice, we can experiment with more
+        // complex solutions then.
+        let lower_bound = upper_bound.as_i64().saturating_sub(
+            temporal_chunk_ids_per_time
+                .max_interval_length
+                .saturating_cast(),
+        );
+
+        let temporal_chunk_ids = temporal_chunk_ids_per_time
+            .per_start_time
+            .range(..=query.at())
+            .rev()
+            .take_while(|(time, _)| time.as_i64() >= lower_bound)
+            .flat_map(|(_time, chunk_ids)| chunk_ids.iter())
+            .copied()
+            .collect_vec();
+
+        Some(temporal_chunk_ids)
+    }
+}
+
+// Range
+impl ChunkStore {
+    /// Returns the most-relevant chunk(s) for the given [`RangeQuery`] and [`ComponentIdentifier`].
+    ///
+    /// The returned vector is guaranteed free of duplicates, by definition.
+    ///
+    /// The criteria for returning a chunk is only that it may contain data that overlaps with
+    /// the queried range.
+    ///
+    /// The caller should filter the returned chunks further (see [`Chunk::range`]) in order to
+    /// determine how exactly each row of data fit with the rest.
+    ///
+    /// If the entity has static component data associated with it, it will unconditionally
+    /// override any temporal component data.
+    pub fn range_relevant_chunks(
+        &self,
+        report_mode: ChunkTrackingMode,
+        query: &RangeQuery,
+        entity_path: &EntityPath,
+        component: ComponentIdentifier,
+    ) -> QueryResults {
+        dl_tracing::profile_function!(format!("{query:?}"));
+
+        if let Some(static_chunk_id) = self
+            .static_chunk_ids_per_entity
+            .get(entity_path)
+            .and_then(|static_chunks_per_component| static_chunks_per_component.get(&component))
+        {
+            return QueryResults::from_chunk_ids(
+                self,
+                entity_path,
+                report_mode,
+                std::iter::once(*static_chunk_id),
+            );
+        }
+
+        let chunk_ids = Self::range(
+            query,
+            self.temporal_chunk_ids_per_entity_per_component
+                .get(entity_path)
+                .and_then(|temporal_chunk_ids_per_timeline| {
+                    temporal_chunk_ids_per_timeline.get(query.timeline())
+                })
+                .and_then(|temporal_chunk_ids_per_component| {
+                    temporal_chunk_ids_per_component.get(&component)
+                })
+                .into_iter(),
+        );
+
+        let mut results =
+            QueryResults::from_chunk_ids(self, entity_path, report_mode, chunk_ids.into_iter());
+        results.chunks = results
+            .chunks
+            .into_iter()
+            // Post-processing: `Self::range` doesn't have access to the chunk metadata, so now we
+            // need to make sure that the resulting chunks' per-component time range intersects with the
+            // time range of the query itself.
+            .filter(|chunk| {
+                chunk
+                    .timelines()
+                    .get(query.timeline())
+                    .is_some_and(|time_column| {
+                        time_column
+                            .time_range_per_component(chunk.components())
+                            .get(&component)
+                            .is_some_and(|time_range| time_range.intersects(query.range()))
+                    })
+            })
+            .collect_vec();
+
+        results
+    }
+
+    /// Returns the most-relevant chunk(s) for the given [`RangeQuery`].
+    ///
+    /// The criteria for returning a chunk is only that it may contain data that overlaps with
+    /// the queried range, or that it is static.
+    ///
+    /// The returned vector is free of duplicates.
+    ///
+    /// The caller should filter the returned chunks further (see [`Chunk::range`]) in order to
+    /// determine how exactly each row of data fit with the rest.
+    pub fn range_relevant_chunks_for_all_components(
+        &self,
+        report_mode: ChunkTrackingMode,
+        query: &RangeQuery,
+        entity_path: &EntityPath,
+        include_static: bool,
+    ) -> QueryResults {
+        dl_tracing::profile_function!(format!("{query:?}"));
+
+        let empty = Default::default();
+        let chunk_ids = if include_static {
+            let static_chunks_per_component = self
+                .static_chunk_ids_per_entity
+                .get(entity_path)
+                .unwrap_or(&empty);
+
+            // All static chunk IDs for the given entity
+            let static_chunk_ids = static_chunks_per_component.values().copied();
+
+            // All temporal chunk IDs for the given entity, filtered by components for which we
+            // already have static chunk IDs.
+            let temporal_chunk_ids = Self::range(
+                query,
+                self.temporal_chunk_ids_per_entity_per_component
+                    .get(entity_path)
+                    .and_then(|temporal_chunk_ids_per_timeline_per_component| {
+                        temporal_chunk_ids_per_timeline_per_component.get(query.timeline())
+                    })
+                    .map(|temporal_chunk_ids_per_component| {
+                        temporal_chunk_ids_per_component
+                            .iter()
+                            .filter(|(component_type, _)| {
+                                !static_chunks_per_component.contains_key(component_type)
+                            })
+                            .map(|(_, chunk_id_set)| chunk_id_set)
+                    })
+                    .into_iter()
+                    .flatten(),
+            )
+            .into_iter();
+
+            // Deduplicate before passing it along.
+            // Both temporal and static chunk "sets" here may have duplicates in them,
+            // so we de-duplicate them together to reduce the number of allocations.
+            Either::Left(std::iter::chain(static_chunk_ids, temporal_chunk_ids).unique())
+        } else {
+            // This cannot yield duplicates by definition.
+            Either::Right(Self::range(
+                query,
+                self.temporal_chunk_ids_per_entity
+                    .get(entity_path)
+                    .and_then(|temporal_chunk_ids_per_timeline| {
+                        temporal_chunk_ids_per_timeline.get(query.timeline())
+                    })
+                    .into_iter(),
+            ))
+        };
+
+        let mut results =
+            QueryResults::from_chunk_ids(self, entity_path, report_mode, chunk_ids.into_iter());
+        results.chunks = results
+            .chunks
+            .into_iter()
+            // Post-processing: `Self::range` doesn't have access to the chunk metadata, so now we
+            // need to make sure that the resulting chunks' per-component time range intersects with the
+            // time range of the query itself.
+            .filter(|chunk| {
+                (chunk.is_static() && include_static) || {
+                    chunk
+                        .timelines()
+                        .get(query.timeline())
+                        .is_some_and(|time_column| {
+                            time_column.time_range().intersects(query.range())
+                        })
+                }
+            })
+            .collect_vec();
+
+        results
+    }
+
+    fn range<'a>(
+        query: &RangeQuery,
+        temporal_chunk_ids_per_times: impl Iterator<Item = &'a ChunkIdSetPerTime>,
+    ) -> Vec<ChunkId> {
+        // Too small & frequent for profiling scopes.
+        //dl_tracing::profile_function!();
+
+        temporal_chunk_ids_per_times
+            .map(|temporal_chunk_ids_per_time| {
+                // See `RangeQueryOptions::include_extended_bounds` for more information.
+                let query_min = if query.options().include_extended_bounds {
+                    dl_log_types::TimeInt::new_temporal(
+                        query.range.min().as_i64().saturating_sub(1),
+                    )
+                } else {
+                    query.range.min()
+                };
+                let query_max = if query.options().include_extended_bounds {
+                    dl_log_types::TimeInt::new_temporal(
+                        query.range.max().as_i64().saturating_add(1),
+                    )
+                } else {
+                    query.range.max()
+                };
+
+                // Overlapped chunks
+                // =================
+                //
+                // To deal with potentially overlapping chunks, we keep track of the longest
+                // interval in the entire map, which gives us an upper bound on how much we
+                // would need to walk backwards in order to find all potential overlaps.
+                //
+                // This is a fairly simple solution that scales much better than interval-tree
+                // based alternatives, both in terms of complexity and performance, in the normal
+                // case where most chunks in a collection have similar lengths.
+                //
+                // The most degenerate case -- a single chunk overlaps everything else -- results
+                // in `O(n)` performance, which gets amortized by the query cache.
+                // If that turns out to be a problem in practice, we can experiment with more
+                // complex solutions then.
+                let query_min = TimeInt::new_temporal(
+                    query_min.as_i64().saturating_sub(
+                        temporal_chunk_ids_per_time
+                            .max_interval_length
+                            .saturating_cast(),
+                    ),
+                );
+
+                let start_time = temporal_chunk_ids_per_time
+                    .per_start_time
+                    .range(..=query_min)
+                    .next_back()
+                    .map_or(TimeInt::MIN, |(&time, _)| time);
+
+                let end_time = temporal_chunk_ids_per_time
+                    .per_start_time
+                    .range(..=query_max)
+                    .next_back()
+                    .map_or(start_time, |(&time, _)| time);
+
+                // NOTE: Just being extra cautious because, even though this shouldnt possibly ever happen,
+                // indexing a std map with a backwards range is an instant crash.
+                let end_time = TimeInt::max(start_time, end_time);
+
+                (start_time, end_time, temporal_chunk_ids_per_time)
+            })
+            .flat_map(|(start_time, end_time, temporal_chunk_ids_per_time)| {
+                temporal_chunk_ids_per_time
+                    .per_start_time
+                    .range(start_time..=end_time)
+                    .map(|(_time, chunk_ids)| chunk_ids)
+            })
+            .flatten()
+            .copied()
+            .collect()
+    }
+}
+
+#[cfg(test)]
+#[expect(clippy::bool_assert_comparison)] // I like it that way, sue me
+mod tests {
+    use std::sync::Arc;
+
+    use dl_chunk::{Chunk, RowId};
+    use dl_log_types::example_components::{MyPoint, MyPoints};
+    use dl_log_types::external::dl_tuid::Tuid;
+    use dl_log_types::{EntityPath, TimePoint, Timeline};
+
+    use super::*;
+
+    // Make sure queries yield partial results when we expect them to.
+    #[test]
+    fn partial_data_basics() {
+        let store_id =
+            dl_log_types::StoreId::random(dl_log_types::StoreKind::Recording, "test_app");
+        let mut store = ChunkStore::new(store_id.clone(), crate::ChunkStoreConfig::ALL_DISABLED);
+
+        let entity_path: EntityPath = "some_entity".into();
+
+        let timeline_frame = Timeline::new_sequence("frame");
+        let timepoint1 = TimePoint::from_iter([(timeline_frame, 1)]);
+        let timepoint2 = TimePoint::from_iter([(timeline_frame, 2)]);
+        let timepoint3 = TimePoint::from_iter([(timeline_frame, 3)]);
+
+        let point1 = MyPoint::new(1.0, 1.0);
+        let point2 = MyPoint::new(2.0, 2.0);
+        let point3 = MyPoint::new(3.0, 3.0);
+
+        let mut next_chunk_id = next_chunk_id_generator(0x1337);
+
+        let chunk1 = create_chunk_with_point(
+            next_chunk_id(),
+            entity_path.clone(),
+            timepoint1.clone(),
+            point1,
+        );
+        let chunk2 = create_chunk_with_point(
+            next_chunk_id(),
+            entity_path.clone(),
+            timepoint2.clone(),
+            point2,
+        );
+        let chunk3 = create_chunk_with_point(
+            next_chunk_id(),
+            entity_path.clone(),
+            timepoint3.clone(),
+            point3,
+        );
+
+        // We haven't inserted anything yet, so we just expect empty results across the board.
+        {
+            let results = store.latest_at_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &LatestAtQuery::new(*timeline_frame.name(), 3),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            assert!(results.is_empty());
+
+            let results = store.range_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &RangeQuery::new(*timeline_frame.name(), AbsoluteTimeRange::new(0, 3)),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            assert!(results.is_empty());
+
+            assert!(store.take_tracked_chunk_ids().missing_virtual.is_empty());
+        }
+
+        // Back the chunks with an RRD manifest. That way, once they get garbage collected, they
+        // stay recoverable and keep being reported as missing (partial results) instead of
+        // vanishing from the virtual indices entirely.
+        let rrd_manifest = dl_log_encoding::RrdManifest::build_in_memory_from_chunks(
+            store_id,
+            [&*chunk1, &*chunk2, &*chunk3].into_iter(),
+        )
+        .unwrap();
+        _ = store.insert_rrd_manifest(rrd_manifest);
+
+        store.insert_chunk(&chunk1).unwrap();
+        store.insert_chunk(&chunk2).unwrap();
+        store.insert_chunk(&chunk3).unwrap();
+
+        // Now we've inserted everything, so we expect complete results across the board.
+        {
+            let results = store.latest_at_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &LatestAtQuery::new(*timeline_frame.name(), 3),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![chunk3.clone()],
+                missing_virtual: vec![],
+            };
+            assert_eq!(false, results.is_partial());
+            assert_eq!(expected, results);
+
+            let results = store.range_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &RangeQuery::new(*timeline_frame.name(), AbsoluteTimeRange::new(0, 3)),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![chunk1.clone(), chunk2.clone(), chunk3.clone()],
+                missing_virtual: vec![],
+            };
+            assert_eq!(false, results.is_partial());
+            assert_eq!(expected, results);
+
+            assert!(store.take_tracked_chunk_ids().missing_virtual.is_empty());
+        }
+
+        store.gc(&crate::GarbageCollectionOptions {
+            target: crate::GarbageCollectionTarget::Everything,
+            time_budget: std::time::Duration::MAX,
+            protect_latest: 1,
+            protected_time_ranges: Default::default(),
+            protected_chunks: Default::default(),
+            furthest_from: None,
+            perform_deep_deletions: false,
+        });
+
+        // We've GC'd the past-most half of the store:
+        // * latest-at results should still be complete
+        // * range results should now be partial
+        {
+            let results_latest_at = store.latest_at_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &LatestAtQuery::new(*timeline_frame.name(), 3),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![chunk3.clone()],
+                missing_virtual: vec![],
+            };
+            assert_eq!(false, results_latest_at.is_partial());
+            assert_eq!(expected, results_latest_at);
+
+            let results_range = store.range_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &RangeQuery::new(*timeline_frame.name(), AbsoluteTimeRange::new(0, 3)),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![chunk3.clone()],
+                missing_virtual: vec![chunk1.id(), chunk2.id()],
+            };
+            assert_eq!(true, results_range.is_partial());
+            assert_eq!(expected, results_range);
+
+            assert_eq!(
+                store.take_tracked_chunk_ids().missing_virtual,
+                itertools::chain!(
+                    results_latest_at.missing_virtual,
+                    results_range.missing_virtual
+                )
+                .collect()
+            );
+        }
+
+        store.gc(&crate::GarbageCollectionOptions::gc_everything());
+
+        // Now we've GC'd absolutely everything: we should only get partial results.
+        {
+            let results_latest_at = store.latest_at_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &LatestAtQuery::new(*timeline_frame.name(), 3),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![],
+                missing_virtual: vec![chunk3.id()],
+            };
+            assert_eq!(true, results_latest_at.is_partial());
+            assert_eq!(expected, results_latest_at);
+
+            let results_range = store.range_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &RangeQuery::new(*timeline_frame.name(), AbsoluteTimeRange::new(0, 3)),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![],
+                missing_virtual: vec![chunk1.id(), chunk2.id(), chunk3.id()],
+            };
+            assert_eq!(true, results_range.is_partial());
+            assert_eq!(expected, results_range);
+
+            assert_eq!(
+                store.take_tracked_chunk_ids().missing_virtual,
+                itertools::chain!(
+                    results_latest_at.missing_virtual,
+                    results_range.missing_virtual
+                )
+                .collect()
+            );
+        }
+
+        store.insert_chunk(&chunk1).unwrap();
+        store.insert_chunk(&chunk2).unwrap();
+        store.insert_chunk(&chunk3).unwrap();
+
+        // We've inserted everything back: all results should be complete once again.
+        {
+            let results = store.latest_at_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &LatestAtQuery::new(*timeline_frame.name(), 3),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![chunk3.clone()],
+                missing_virtual: vec![],
+            };
+            assert_eq!(false, results.is_partial());
+            assert_eq!(expected, results);
+
+            let results = store.range_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &RangeQuery::new(*timeline_frame.name(), AbsoluteTimeRange::new(0, 3)),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            let expected = QueryResults {
+                chunks: vec![chunk1.clone(), chunk2.clone(), chunk3.clone()],
+                missing_virtual: vec![],
+            };
+            assert_eq!(false, results.is_partial());
+            assert_eq!(expected, results);
+
+            assert!(store.take_tracked_chunk_ids().missing_virtual.is_empty());
+        }
+    }
+
+    // Make sure compacted chunks don't linger on in virtual indices, leading to false partial result positives.
+    #[test]
+    fn partial_data_compaction() {
+        let mut store = ChunkStore::new(
+            dl_log_types::StoreId::random(dl_log_types::StoreKind::Recording, "test_app"),
+            crate::ChunkStoreConfig::default(), // with compaction!
+        );
+
+        let entity_path: EntityPath = "some_entity".into();
+
+        let timeline_frame = Timeline::new_sequence("frame");
+        let timepoint1 = TimePoint::from_iter([(timeline_frame, 1)]);
+        let timepoint2 = TimePoint::from_iter([(timeline_frame, 2)]);
+        let timepoint3 = TimePoint::from_iter([(timeline_frame, 3)]);
+
+        let point1 = MyPoint::new(1.0, 1.0);
+        let point2 = MyPoint::new(2.0, 2.0);
+        let point3 = MyPoint::new(3.0, 3.0);
+
+        let mut next_chunk_id = next_chunk_id_generator(0x1337);
+
+        let chunk1 = create_chunk_with_point(
+            next_chunk_id(),
+            entity_path.clone(),
+            timepoint1.clone(),
+            point1,
+        );
+        let chunk2 = create_chunk_with_point(
+            next_chunk_id(),
+            entity_path.clone(),
+            timepoint2.clone(),
+            point2,
+        );
+        let chunk3 = create_chunk_with_point(
+            next_chunk_id(),
+            entity_path.clone(),
+            timepoint3.clone(),
+            point3,
+        );
+
+        {
+            let results = store.latest_at_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &LatestAtQuery::new(*timeline_frame.name(), 3),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            assert!(results.is_empty());
+
+            let results = store.range_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &RangeQuery::new(*timeline_frame.name(), AbsoluteTimeRange::new(0, 3)),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            assert!(results.is_empty());
+        }
+
+        store.insert_chunk(&chunk1).unwrap();
+        store.insert_chunk(&chunk2).unwrap();
+        store.insert_chunk(&chunk3).unwrap();
+
+        // We cannot possibly know what to expect since the IDs will depend on the result of running
+        // compaction, but we definitely know that all results should be complete at this point.
+        //
+        // This used to fail because the compacted IDs would linger on in the internal virtual indices.
+        {
+            let results = store.latest_at_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &LatestAtQuery::new(*timeline_frame.name(), 3),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            assert_eq!(false, results.is_partial());
+
+            let results = store.range_relevant_chunks(
+                ChunkTrackingMode::Report,
+                &RangeQuery::new(*timeline_frame.name(), AbsoluteTimeRange::new(0, 3)),
+                &entity_path,
+                MyPoints::descriptor_points().component,
+            );
+            assert_eq!(false, results.is_partial());
+        }
+    }
+
+    #[test]
+    fn next_and_prev_time_on_timeline_single_row_chunks() {
+        let mut store = ChunkStore::new(
+            dl_log_types::StoreId::random(dl_log_types::StoreKind::Recording, "test_app"),
+            crate::ChunkStoreConfig::ALL_DISABLED,
+        );
+
+        let entity_path: EntityPath = "entity".into();
+        let timeline = Timeline::new_sequence("frame");
+        let tl = timeline.name();
+        let point = MyPoint::new(1.0, 1.0);
+        let mut next_chunk_id = next_chunk_id_generator(0xAA);
+
+        // Insert single-row chunks at times 10, 20, 30.
+        for t in [10, 20, 30] {
+            let chunk = create_chunk_with_point(
+                next_chunk_id(),
+                entity_path.clone(),
+                TimePoint::from_iter([(timeline, t)]),
+                point,
+            );
+            store.insert_chunk(&chunk).unwrap();
+        }
+
+        // Empty store on a different timeline.
+        let other = TimelineName::from("other");
+        assert_eq!(
+            store.next_time_on_timeline(&other, TimeInt::new_temporal(0)),
+            None
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(&other, TimeInt::new_temporal(99)),
+            None
+        );
+
+        // next: before all data
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(0)),
+            Some(TimeInt::new_temporal(10))
+        );
+
+        // next: exactly on a data point returns the following one
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(10)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(20)),
+            Some(TimeInt::new_temporal(30))
+        );
+
+        // next: between data points
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(15)),
+            Some(TimeInt::new_temporal(20))
+        );
+
+        // next: at or after last data point
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(30)),
+            None
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(99)),
+            None
+        );
+
+        // prev: after all data
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(99)),
+            Some(TimeInt::new_temporal(30))
+        );
+
+        // prev: exactly on a data point returns the preceding one
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(30)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(20)),
+            Some(TimeInt::new_temporal(10))
+        );
+
+        // prev: between data points
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(25)),
+            Some(TimeInt::new_temporal(20))
+        );
+
+        // prev: at or before first data point
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(10)),
+            None
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(0)),
+            None
+        );
+    }
+
+    #[test]
+    fn next_and_prev_time_on_timeline_multi_row_chunk() {
+        let mut store = ChunkStore::new(
+            dl_log_types::StoreId::random(dl_log_types::StoreKind::Recording, "test_app"),
+            crate::ChunkStoreConfig::ALL_DISABLED,
+        );
+
+        let entity_path: EntityPath = "entity".into();
+        let timeline = Timeline::new_sequence("frame");
+        let tl = timeline.name();
+        let point = MyPoint::new(1.0, 1.0);
+        let mut next_chunk_id = next_chunk_id_generator(0xBB);
+
+        // One chunk with three rows at times 10, 20, 30.
+        let chunk = Arc::new(
+            Chunk::builder_with_id(next_chunk_id(), entity_path.clone())
+                .with_component_batch(
+                    RowId::new(),
+                    TimePoint::from_iter([(timeline, 10)]),
+                    (
+                        MyPoints::descriptor_points(),
+                        &[point] as &dyn dl_types_core::ComponentBatch,
+                    ),
+                )
+                .with_component_batch(
+                    RowId::new(),
+                    TimePoint::from_iter([(timeline, 20)]),
+                    (
+                        MyPoints::descriptor_points(),
+                        &[point] as &dyn dl_types_core::ComponentBatch,
+                    ),
+                )
+                .with_component_batch(
+                    RowId::new(),
+                    TimePoint::from_iter([(timeline, 30)]),
+                    (
+                        MyPoints::descriptor_points(),
+                        &[point] as &dyn dl_types_core::ComponentBatch,
+                    ),
+                )
+                .build()
+                .unwrap(),
+        );
+        store.insert_chunk(&chunk).unwrap();
+
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(0)),
+            Some(TimeInt::new_temporal(10))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(10)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(15)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(30)),
+            None
+        );
+
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(99)),
+            Some(TimeInt::new_temporal(30))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(30)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(25)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(10)),
+            None
+        );
+    }
+
+    #[test]
+    fn next_and_prev_time_on_timeline_multiple_entities() {
+        let mut store = ChunkStore::new(
+            dl_log_types::StoreId::random(dl_log_types::StoreKind::Recording, "test_app"),
+            crate::ChunkStoreConfig::ALL_DISABLED,
+        );
+
+        let timeline = Timeline::new_sequence("frame");
+        let tl = timeline.name();
+        let point = MyPoint::new(1.0, 1.0);
+        let mut next_chunk_id = next_chunk_id_generator(0xCC);
+
+        // Entity A has data at 10, 30.
+        // Entity B has data at 20, 40.
+        for (entity, times) in [("a", vec![10, 30]), ("b", vec![20, 40])] {
+            let entity_path: EntityPath = entity.into();
+            for t in times {
+                let chunk = create_chunk_with_point(
+                    next_chunk_id(),
+                    entity_path.clone(),
+                    TimePoint::from_iter([(timeline, t)]),
+                    point,
+                );
+                store.insert_chunk(&chunk).unwrap();
+            }
+        }
+
+        // next should find the global minimum across entities.
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(0)),
+            Some(TimeInt::new_temporal(10))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(10)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(20)),
+            Some(TimeInt::new_temporal(30))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(30)),
+            Some(TimeInt::new_temporal(40))
+        );
+        assert_eq!(
+            store.next_time_on_timeline(tl, TimeInt::new_temporal(40)),
+            None
+        );
+
+        // prev should find the global maximum across entities.
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(50)),
+            Some(TimeInt::new_temporal(40))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(40)),
+            Some(TimeInt::new_temporal(30))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(30)),
+            Some(TimeInt::new_temporal(20))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(20)),
+            Some(TimeInt::new_temporal(10))
+        );
+        assert_eq!(
+            store.prev_time_on_timeline(tl, TimeInt::new_temporal(10)),
+            None
+        );
+    }
+
+    fn next_chunk_id_generator(prefix: u64) -> impl FnMut() -> dl_chunk::ChunkId {
+        let mut chunk_id = dl_chunk::ChunkId::from_tuid(Tuid::from_nanos_and_inc(prefix, 0));
+        move || {
+            chunk_id = chunk_id.next();
+            chunk_id
+        }
+    }
+
+    fn create_chunk_with_point(
+        chunk_id: ChunkId,
+        entity_path: EntityPath,
+        timepoint: TimePoint,
+        point: MyPoint,
+    ) -> Arc<Chunk> {
+        Arc::new(
+            Chunk::builder_with_id(chunk_id, entity_path)
+                .with_component_batch(
+                    RowId::new(),
+                    timepoint,
+                    (MyPoints::descriptor_points(), &[point]),
+                )
+                .build()
+                .unwrap(),
+        )
+    }
+}

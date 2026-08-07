@@ -1,13 +1,13 @@
 use rerun::Archetype as _;
 use rerun::components::{Colormap, ImageBuffer, ImageFormat};
-use rerun::external::re_sdk_types::reflection::Enum as _;
-use rerun::external::re_view::{DataResultQuery as _, VisualizerInstructionQueryResults};
-use rerun::external::re_viewer_context::{
+use rerun::external::dl_sdk_types::reflection::Enum as _;
+use rerun::external::dl_view::{DataResultQuery as _, VisualizerInstructionQueryResults};
+use rerun::external::dl_viewer_context::{
     self, IdentifiedViewSystem, ViewContext, ViewContextCollection, ViewQuery,
     ViewSystemExecutionError, ViewSystemIdentifier, VisualizerExecutionOutput, VisualizerQueryInfo,
     VisualizerSystem,
 };
-use rerun::external::{re_query, re_renderer, re_view_spatial};
+use rerun::external::{dl_query, dl_renderer, dl_view_spatial};
 
 use crate::height_field_archetype::HeightField;
 use crate::height_field_renderer::{HeightFieldConfig, HeightFieldDrawData};
@@ -27,7 +27,7 @@ impl IdentifiedViewSystem for HeightFieldVisualizer {
 impl VisualizerSystem for HeightFieldVisualizer {
     fn visualizer_query_info(
         &self,
-        _app_options: &re_viewer_context::AppOptions,
+        _app_options: &dl_viewer_context::AppOptions,
     ) -> VisualizerQueryInfo {
         VisualizerQueryInfo::buffer_and_format::<ImageBuffer, ImageFormat>(
             &HeightField::descriptor_buffer(),
@@ -45,7 +45,7 @@ impl VisualizerSystem for HeightFieldVisualizer {
         let render_ctx = ctx.render_ctx();
 
         let mut output = VisualizerExecutionOutput::default();
-        let transforms = context_systems.get::<re_view_spatial::TransformTreeContext>(&output)?;
+        let transforms = context_systems.get::<dl_view_spatial::TransformTreeContext>(&output)?;
         let mut draw_data = HeightFieldDrawData::new(render_ctx);
 
         for (data_result, instruction) in query.iter_visualizer_instruction_for(Self::identifier())
@@ -67,11 +67,11 @@ impl VisualizerSystem for HeightFieldVisualizer {
             let all_formats = results.iter_optional(HeightField::descriptor_format().component);
             let all_colormaps = results.iter_optional(HeightField::descriptor_colormap().component);
 
-            let picking_layer_object_id = re_renderer::PickingLayerObjectId(ent_path.hash64());
+            let picking_layer_object_id = dl_renderer::PickingLayerObjectId(ent_path.hash64());
             let entity_outline_mask = query.highlights.entity_outline_mask(ent_path.hash());
             let outline_mask = entity_outline_mask.index_outline_mask(0u64.into());
 
-            for (_index, buffer, format, colormap) in re_query::range_zip_1x2(
+            for (_index, buffer, format, colormap) in dl_query::range_zip_1x2(
                 all_buffers.slice::<&[u8]>(),
                 all_formats.component_slow::<ImageFormat>(),
                 all_colormaps.slice::<u8>(),
@@ -126,7 +126,7 @@ impl VisualizerSystem for HeightFieldVisualizer {
                         max_height,
                         colormap: colormap_id,
                         picking_layer_object_id,
-                        picking_instance_id: re_renderer::PickingLayerInstanceId(0),
+                        picking_instance_id: dl_renderer::PickingLayerInstanceId(0),
                         outline_mask,
                     },
                 );

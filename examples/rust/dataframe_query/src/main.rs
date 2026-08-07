@@ -4,7 +4,7 @@ use itertools::Itertools;
 use rerun::ChunkStoreConfig;
 use rerun::dataframe::{QueryEngine, QueryExpression, SparseFillStrategy, TimelineName};
 use rerun::external::arrow;
-use rerun::external::re_arrow_util::format_record_batch;
+use rerun::external::dl_arrow_util::format_record_batch;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().collect_vec();

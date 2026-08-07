@@ -36,10 +36,10 @@ error_map_err_name = re.compile(r"map_err\(\|(\w+)\|")
 
 # Detect log macros with inline sensitive data (URLs, paths) in the format string.
 # Sensitive data should be passed as structured fields instead.
-# Bad:  re_log::warn!("Failed to open URL {url}: {err}");
-# Good: re_log::warn!(?url, "Failed to open URL: {err}");
+# Bad:  dl_log::warn!("Failed to open URL {url}: {err}");
+# Good: dl_log::warn!(?url, "Failed to open URL: {err}");
 log_with_inline_sensitive_data = re.compile(
-    r're_log::(error|warn)(_once)?!\s*\(\s*"[^"]*\{(url|path|filepath|file_path|uri|file|filename|dir|directory|folder)[^}]*\}'
+    r'dl_log::(error|warn)(_once)?!\s*\(\s*"[^"]*\{(url|path|filepath|file_path|uri|file|filename|dir|directory|folder)[^}]*\}'
 )
 
 # Detect thiserror #[error(...)] with multiple unnamed tuple fields like {0}, {1}
@@ -301,21 +301,21 @@ def lint_line(
     if file_extension == "rs" and is_in_oss_rerun_repo and tokio_runtime_creation.search(line):
         return (
             "Create Tokio runtimes only at audited process or thread ownership boundaries. "
-            "Library code should accept `re_async::AsyncRuntimeHandle`. Add a NOLINT with the ownership reason if this runtime is required."
+            "Library code should accept `dl_async::AsyncRuntimeHandle`. Add a NOLINT with the ownership reason if this runtime is required."
         )
 
     if file_extension == "rs" and "SnapshotOptions::default(" in line:
         # `clippy.toml` forbids `SnapshotOptions::new` instead - clippy cannot refer to trait methods.
-        return "Use `re_ui::testing::default_snapshot_options_for_ui/_3d` instead, so that snapshot tests get strict thresholds on CI"
+        return "Use `dl_ui::testing::default_snapshot_options_for_ui/_3d` instead, so that snapshot tests get strict thresholds on CI"
 
     if debug_formatted_error.search(line) or debug_format_of_err.search(line):
-        return "Format errors with re_error::format or using Display - NOT Debug formatting!"
+        return "Format errors with dl_error::format or using Display - NOT Debug formatting!"
 
     if debug_tracing_error.search(line):
         return "Use `%err` (Display) instead of `?err` (Debug) in tracing macros"
 
     if log_with_inline_sensitive_data.search(line):
-        return 'URLs and paths should be passed as structured fields, not inline in log messages. Use e.g. `re_log::warn!(?url, "message: {err}")` instead of `re_log::warn!("message {url}: {err}")`'
+        return 'URLs and paths should be passed as structured fields, not inline in log messages. Use e.g. `dl_log::warn!(?url, "message: {err}")` instead of `dl_log::warn!("message {url}: {err}")`'
 
     if "{1" in line and "#[error(" in line:
         return "Use named fields for complex errors instead of multiple unnamed tuple fields like {0}, {1}"
@@ -550,26 +550,26 @@ def test_lint_line() -> None:
         "We use the catalog server in production.",
         # %err (Display) in tracing macros is good
         'tracing::warn!(%err, "something failed");',
-        're_log::error!(%err, "something failed");',
+        'dl_log::error!(%err, "something failed");',
         # Structured logging with sensitive data as fields (good pattern)
-        're_log::warn!(?url, "Failed to open URL: {err}");',
-        're_log::error!(?path, "Failed to read file: {err}");',
-        're_log::info!(?filepath, loader = ?exe, "Loading data…");',
-        're_log::debug!(url = ?url, "Fetching data");',
+        'dl_log::warn!(?url, "Failed to open URL: {err}");',
+        'dl_log::error!(?path, "Failed to read file: {err}");',
+        'dl_log::info!(?filepath, loader = ?exe, "Loading data…");',
+        'dl_log::debug!(url = ?url, "Fetching data");',
         # _once variants with structured fields (good)
-        're_log::warn_once!(?url, "Failed to open URL: {err}");',
-        're_log::error_once!(?path, "Cannot read file: {err}");',
+        'dl_log::warn_once!(?url, "Failed to open URL: {err}");',
+        'dl_log::error_once!(?path, "Cannot read file: {err}");',
         # Log messages without sensitive inline data (also fine)
-        're_log::info!("Starting server on port {port}");',
-        're_log::warn!("Connection failed: {err}");',
+        'dl_log::info!("Starting server on port {port}");',
+        'dl_log::warn!("Connection failed: {err}");',
         # info! is allowed to have inline paths (user-facing)
-        're_log::info!("Saving to {filepath}");',
-        're_log::info!("Scanning {dir}");',
+        'dl_log::info!("Saving to {filepath}");',
+        'dl_log::info!("Scanning {dir}");',
         # debug! and trace! are allowed to have inline paths (developer-facing)
-        're_log::debug!("Loading {file_path}");',
-        're_log::trace!("Connecting to {uri}");',
-        're_log::debug!("Entering {directory}");',
-        're_log::trace!("Created {folder}");',
+        'dl_log::debug!("Loading {file_path}");',
+        'dl_log::trace!("Connecting to {uri}");',
+        'dl_log::debug!("Entering {directory}");',
+        'dl_log::trace!("Created {folder}");',
         # thiserror with named fields (good)
         '#[error("Failed to open {path}: {err}")]',
         '#[error("Something went wrong: {0}")]',  # single unnamed is fine
@@ -621,9 +621,9 @@ def test_lint_line() -> None:
         'eprintln!("{:#?}", js_err)',
         # ?err (Debug) in tracing macros (bad - use %err for Display):
         'tracing::warn!(?err, "something failed");',
-        're_log::error!(?err, "something failed");',
+        'dl_log::error!(?err, "something failed");',
         'tracing::warn!(?js_err, "something failed");',
-        're_log::error!(?js_err, "something failed");',
+        'dl_log::error!(?js_err, "something failed");',
         "if let Err(error) = foo",
         "Ok(Err(status))",
         "map_err(|e| …)",
@@ -644,7 +644,7 @@ def test_lint_line() -> None:
         "let options = SnapshotOptions::default();",
         "The the problem with double words",
         "More than meets the eye...",
-        're_log::trace!("Performing migrations...");',
+        'dl_log::trace!("Performing migrations...");',
         'rr.log("/", rr.TextLog("Logging things..."))',
         'logging.info("Detection finished...")',
         'RecordingStreamBuilder::new("missing_prefix")',
@@ -684,13 +684,13 @@ def test_lint_line() -> None:
         "Use rerun hub for catalogs.",
         "USE RERUN HUB FOR CATALOGS.",
         # Inline sensitive data in log messages (bad pattern) - only error/warn are linted
-        're_log::warn!("Failed to open URL {url}: {err}");',
-        're_log::error!("Failed to read file at {path}: {err}");',
-        're_log::warn!("Cannot find {file}");',
-        're_log::error!("Missing {filename}");',
+        'dl_log::warn!("Failed to open URL {url}: {err}");',
+        'dl_log::error!("Failed to read file at {path}: {err}");',
+        'dl_log::warn!("Cannot find {file}");',
+        'dl_log::error!("Missing {filename}");',
         # _once variants should also be linted
-        're_log::warn_once!("Failed to open URL {url}: {err}");',
-        're_log::error_once!("Cannot read {path}");',
+        'dl_log::warn_once!("Failed to open URL {url}: {err}");',
+        'dl_log::error_once!("Cannot read {path}");',
         # thiserror with multiple unnamed fields (bad)
         '#[error("Failed to do {0}: {1}")]',
         '#[error("{0} failed with {1} at {2}")]',
@@ -1944,12 +1944,12 @@ def main() -> None:
         rerun(".nox"),
         rerun(".pytest_cache"),
         rerun("CODE_STYLE.md"),
-        rerun("crates/build/re_types_builder/src/reflection.rs"),  # auto-generated
-        rerun("crates/store/re_protos/proto/schema_snapshot.yaml"),  # auto-generated
-        rerun("crates/store/re_protos/src/v0"),  # auto-generated
-        rerun("crates/store/re_protos/src/v1alpha1"),  # auto-generated
-        rerun("crates/viewer/re_ui/data/Inter-README.txt"),  # third-party font readme (Inter)
-        rerun("crates/viewer/re_web_viewer_server/web_viewer/re_viewer.js"),  # auto-generated by wasm_bindgen
+        rerun("crates/build/dl_types_builder/src/reflection.rs"),  # auto-generated
+        rerun("crates/store/dl_protos/proto/schema_snapshot.yaml"),  # auto-generated
+        rerun("crates/store/dl_protos/src/v0"),  # auto-generated
+        rerun("crates/store/dl_protos/src/v1alpha1"),  # auto-generated
+        rerun("crates/viewer/dl_ui/data/Inter-README.txt"),  # third-party font readme (Inter)
+        rerun("crates/viewer/dl_web_viewer_server/web_viewer/dl_viewer.js"),  # auto-generated by wasm_bindgen
         rerun("docs/content/concepts/app-model.md"),  # this really needs custom letter casing
         rerun("docs/content/reference/cli.md"),  # auto-generated
         rerun("docs/snippets/all/tutorials/custom-application-id.cpp"),  # nuh-uh, I don't want rerun_example_ here
@@ -1970,7 +1970,7 @@ def main() -> None:
         rerun("rerun_js/web-viewer/inlined.js"),
         rerun("rerun_js/web-viewer/node_modules"),
         rerun("rerun_js/web-viewer/re_viewer_bg.js"),  # auto-generated by wasm_bindgen
-        rerun("rerun_js/web-viewer/re_viewer.js"),
+        rerun("rerun_js/web-viewer/dl_viewer.js"),
         rerun("rerun_notebook/node_modules"),
         rerun("rerun_notebook/src/rerun_notebook/static"),
         rerun("rerun_py/.pytest_cache/"),

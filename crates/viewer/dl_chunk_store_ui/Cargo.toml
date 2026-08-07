@@ -1,0 +1,36 @@
+[package]
+authors.workspace = true
+description = "Display the contents of chunk stores."
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+name = "dl_chunk_store_ui"
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+include.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+dl_arrow_ui.workspace = true
+dl_arrow_util.workspace = true
+dl_byte_size.workspace = true
+dl_chunk_store.workspace = true
+dl_format.workspace = true
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_types_core.workspace = true
+dl_ui.workspace = true
+dl_viewer_context.workspace = true
+
+arrow.workspace = true
+egui.workspace = true
+egui_extras.workspace = true
+itertools.workspace = true

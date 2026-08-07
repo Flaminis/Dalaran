@@ -7,7 +7,7 @@ use custom_callback::comms::app::ControlApp;
 use custom_callback::comms::protocol::Message;
 use rerun::RecordingStream;
 use rerun::external::glam::Vec3;
-use rerun::external::{re_log, tokio};
+use rerun::external::{dl_log, tokio};
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
 #[tokio::main]
@@ -32,7 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Keep the server running
     tokio::signal::ctrl_c().await?;
-    re_log::info!("Shutting down");
+    dl_log::info!("Shutting down");
     snake_handle.abort();
 
     Ok(())
@@ -63,7 +63,7 @@ fn handle_message(rec: &RecordingStream, message: &Message) {
             &rerun::Boxes3D::from_half_sizes([half_size]).with_centers([position]),
         ),
         Message::Disconnect => {
-            re_log::info!("Client disconnected");
+            dl_log::info!("Client disconnected");
             Ok(())
         }
         _ => Ok(()),

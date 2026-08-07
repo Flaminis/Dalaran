@@ -222,7 +222,7 @@ def _major_minor_patch(version: str) -> tuple[int, int, int]:
     Parse the first `major.minor.patch` in a version string, ignoring pre-release/build suffixes.
 
     Servers report either a bare semver (deployments set `EXPOSED_VERSION`) or a
-    `build:0.16.0-alpha.1[ branch:… hash:…]` string (see `re_build_info::exposed_version!`).
+    `build:0.16.0-alpha.1[ branch:… hash:…]` string (see `dl_build_info::exposed_version!`).
 
     Raises `ValueError` if there is no version to find. Use `_server_major_minor_patch` for
     server-reported strings, which have a third form this cannot parse.

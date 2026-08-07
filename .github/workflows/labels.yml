@@ -40,7 +40,7 @@ jobs:
           mode: minimum
           count: 1
           #NOLINT_START: skip lint rules on labels (dataplatform)
-          labels: "📊 analytics, 🟦 blueprint, 🪳 bug, CLI, codegen/idl, 🧑‍💻 dev experience, dependencies, 📖 documentation, 💬 discussion, examples, exclude from changelog, 🪵 Log & send APIs, 📉 performance, sdk-python, sdk-cpp, sdk-rust, ⛃ re_datastore, 🔍 re_query, 📺 re_viewer, 🔺 re_renderer, 🚜 refactor, ⛴ release, 🔨 testing, ui, 🕸️ web, 🧢 MCAP, OSS-server, dataplatform"
+          labels: "📊 analytics, 🟦 blueprint, 🪳 bug, CLI, codegen/idl, 🧑‍💻 dev experience, dependencies, 📖 documentation, 💬 discussion, examples, exclude from changelog, 🪵 Log & send APIs, 📉 performance, sdk-python, sdk-cpp, sdk-rust, ⛃ re_datastore, 🔍 dl_query, 📺 dl_viewer, 🔺 dl_renderer, 🚜 refactor, ⛴ release, 🔨 testing, ui, 🕸️ web, 🧢 MCAP, OSS-server, dataplatform"
           #NOLINT_END
 
   wasm-bindgen-check:
@@ -60,7 +60,7 @@ jobs:
       - name: Get current wasm-bindgen version
         id: current-version
         run: |
-          version=$(pixi run taplo get -f crates/viewer/re_viewer/Cargo.toml "target.*.dependencies.wasm-bindgen")
+          version=$(pixi run taplo get -f crates/viewer/dl_viewer/Cargo.toml "target.*.dependencies.wasm-bindgen")
           echo "current_version=$version" >> $GITHUB_OUTPUT
 
       - name: Get previous wasm-bindgen version
@@ -69,7 +69,7 @@ jobs:
           prev_ref=$(git rev-parse --abbrev-ref HEAD)
           git checkout main
 
-          version=$(pixi run taplo get -f crates/viewer/re_viewer/Cargo.toml "target.*.dependencies.wasm-bindgen")
+          version=$(pixi run taplo get -f crates/viewer/dl_viewer/Cargo.toml "target.*.dependencies.wasm-bindgen")
           echo "previous_version=$version" >> $GITHUB_OUTPUT
 
           git checkout $prev_ref

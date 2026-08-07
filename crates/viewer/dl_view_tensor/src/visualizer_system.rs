@@ -1,0 +1,115 @@
+use dl_chunk_store::{LatestAtQuery, RowId};
+use dl_sdk_types::Archetype as _;
+use dl_sdk_types::archetypes::Tensor;
+use dl_sdk_types::components::{TensorData, ValueRange};
+use dl_view::latest_at_with_blueprint_resolved_data;
+use dl_viewer_context::{
+    IdentifiedViewSystem, ViewContext, ViewContextCollection, ViewQuery, ViewSystemExecutionError,
+    VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem, typed_fallback_for,
+};
+
+#[derive(Clone, dl_byte_size::SizeBytes)]
+pub struct TensorVisualization {
+    pub tensor_row_id: RowId,
+    // Tensor is already counted as part of the store.
+    #[size_bytes(ignore)]
+    pub tensor: TensorData,
+    pub data_range: ValueRange,
+}
+
+#[derive(Default)]
+pub struct TensorSystem;
+
+impl IdentifiedViewSystem for TensorSystem {
+    fn identifier() -> dl_viewer_context::ViewSystemIdentifier {
+        dl_viewer_context::external::dl_string_interner::intern_static!(
+            dl_viewer_context::ViewSystemIdentifier,
+            "Tensor"
+        )
+    }
+}
+
+impl VisualizerSystem for TensorSystem {
+    fn visualizer_query_info(
+        &self,
+        _app_options: &dl_viewer_context::AppOptions,
+    ) -> VisualizerQueryInfo {
+        VisualizerQueryInfo::single_required_component::<TensorData>(
+            &Tensor::descriptor_data(),
+            &Tensor::all_components(),
+        )
+    }
+
+    fn execute(
+        &self,
+        ctx: &ViewContext<'_>,
+        query: &ViewQuery<'_>,
+        _context_systems: &ViewContextCollection,
+    ) -> Result<VisualizerExecutionOutput, ViewSystemExecutionError> {
+        dl_tracing::profile_function!();
+
+        let output = VisualizerExecutionOutput::default();
+        let mut tensors = Vec::new();
+
+        for (data_result, instruction) in query.iter_visualizer_instruction_for(Self::identifier())
+        {
+            let timeline_query = LatestAtQuery::new(query.timeline, query.latest_at);
+
+            let annotations = None;
+            let latest_at_results = latest_at_with_blueprint_resolved_data(
+                ctx,
+                annotations,
+                &timeline_query,
+                data_result,
+                Tensor::all_component_identifiers(),
+                Some(instruction),
+            );
+            let results =
+                dl_view::BlueprintResolvedResults::from((timeline_query, latest_at_results));
+            let results =
+                dl_view::VisualizerInstructionQueryResults::new(instruction, &results, &output);
+
+            let all_tensor_chunks = results.iter_required(Tensor::descriptor_data().component);
+            if all_tensor_chunks.is_empty() {
+                continue;
+            }
+
+            let all_tensors_indexed = all_tensor_chunks.chunks().iter().flat_map(move |chunk| {
+                std::iter::zip(
+                    chunk.iter_component_indices(query.timeline),
+                    chunk.iter_component::<TensorData>(),
+                )
+            });
+            let all_ranges = results.iter_optional(Tensor::descriptor_value_range().component);
+
+            for ((_, tensor_row_id), tensor_values, data_ranges) in
+                dl_query::range_zip_1x1(all_tensors_indexed, all_ranges.slice::<[f64; 2]>())
+            {
+                let Some(tensor) = tensor_values.first() else {
+                    continue;
+                };
+                let data_range = data_ranges
+                    .and_then(|ranges| {
+                        ranges
+                            .first()
+                            .copied()
+                            .map(|range| ValueRange(range.into()))
+                    })
+                    .unwrap_or_else(|| {
+                        typed_fallback_for(
+                            results.query_context(),
+                            Tensor::descriptor_value_range().component,
+                        )
+                    });
+
+                tensors.push(TensorVisualization {
+                    tensor_row_id,
+                    tensor: tensor.clone(),
+                    data_range,
+                });
+            }
+        }
+
+        Ok(output.with_visualizer_data(tensors))
+    }
+}

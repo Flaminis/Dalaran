@@ -135,13 +135,13 @@ coverage = ["base", "coverage"]
 check-env = "python scripts/check_env.py"
 
 # Run the codegen. Optionally pass `--profile` argument if you want.
-codegen = "cargo run --package re_types_builder -- "
+codegen = "cargo run --package dl_types_builder -- "
 
 # Run the codegen for protobuf types.
-codegen-protos = { cmd = "cargo run --package re_protos_builder && cargo fmt -p re_protos", depends-on = [
+codegen-protos = { cmd = "cargo run --package dl_protos_builder && cargo fmt -p dl_protos", depends-on = [
   # "pb-snapshot",  # TODO(cmc): reenable if we ever go back to snapshot-based BW compat for protobuf
 ] }
-codegen-protos-check = "before=$(./scripts/ci/compare_path_digest.py crates/store/re_protos) ;  pixi run codegen-protos && ./scripts/ci/compare_path_digest.py crates/store/re_protos $before"
+codegen-protos-check = "before=$(./scripts/ci/compare_path_digest.py crates/store/dl_protos) ;  pixi run codegen-protos && ./scripts/ci/compare_path_digest.py crates/store/dl_protos $before"
 
 # Generate the Rerun CLI manual.
 
@@ -203,10 +203,10 @@ rerun-web = { cmd = "cargo run --package rerun-cli --no-default-features --featu
 ] }
 
 # Compile the web-viewer wasm, does not include the cli.
-rerun-build-web = "cargo run -p re_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug"
+rerun-build-web = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug"
 
 # Compile the web-viewer wasm and the cli.
-rerun-build-web-cli = "cargo run -p re_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug && cargo build --package rerun-cli --no-default-features --features web_viewer"
+rerun-build-web-cli = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug && cargo build --package rerun-cli --no-default-features --features web_viewer"
 
 # Compile and run the web-viewer in release mode via rerun-cli.
 #
@@ -216,7 +216,7 @@ rerun-web-release = { cmd = "cargo run --package rerun-cli --no-default-features
 ] }
 
 # Compile the web-viewer wasm in release mode.
-rerun-build-web-release = "cargo run -p re_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --release"
+rerun-build-web-release = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --release"
 
 rs-check = "python scripts/ci/rust_checks.py"
 
@@ -224,7 +224,7 @@ rs-check = "python scripts/ci/rust_checks.py"
 # See tests/assets/rrd/README.md for more.
 # Note that we run with `--check-footers=false`: it is expected that these RRDs do not have proper footers (they predate them).
 check-backwards-compatibility = { cmd = "find tests/assets/rrd -name '*.rrd' -type f -print0 | xargs -0 cargo run --package rerun-cli --no-default-features rrd verify --check-footers=false" }
-web-test = "cargo run --package re_web_tests --"
+web-test = "cargo run --package dl_web_tests --"
 
 # `cargo fmt --all` only sees files reachable from each crate's lib.rs/main.rs.
 # Snippets in `docs/snippets/all/*.rs` are copied into the crate by `build.rs`,
@@ -246,7 +246,7 @@ link-check = 'lychee --cache --max-cache-age 1d . --root-dir "$PIXI_PROJECT_ROOT
 
 # Assorted linting tasks
 fast-lint = "python scripts/fast_lint.py"
-lint-codegen = "cargo run --package re_types_builder -- --check"
+lint-codegen = "cargo run --package dl_types_builder -- --check"
 lint-clang-tidy-config = "clang-tidy --config-file rerun_cpp/.clang-tidy --verify-config"
 lint-cpp-files = { cmd = "run-clang-tidy -p build/debug -config-file rerun_cpp/.clang-tidy -quiet -use-color -warnings-as-errors '*' 'rerun_cpp/.*'", depends-on = [
   "lint-clang-tidy-config",
@@ -289,14 +289,14 @@ pb-lint = "buf lint --config scripts/ci/buf.yaml --error-format=json"
 # NOTE(cmc): I'm keeping all the snapshot machinery around if it turns out we need something more robust
 # than a pure git solution in the future. For now, convenience wins.
 #
-# pb-snapshot-check = "before=$(./scripts/ci/compare_path_digest.py crates/store/re_protos/proto/schema_snapshot.yaml) ; pixi run pb-snapshot && ./scripts/ci/compare_path_digest.py crates/store/re_protos/proto/schema_snapshot.yaml $before"
+# pb-snapshot-check = "before=$(./scripts/ci/compare_path_digest.py crates/store/dl_protos/proto/schema_snapshot.yaml) ; pixi run pb-snapshot && ./scripts/ci/compare_path_digest.py crates/store/dl_protos/proto/schema_snapshot.yaml $before"
 # # TODO(cmc): I'd like to avoid the extra noise from source info and imports, but they are required for
 # # `buf breaking` to not crash.
-# # pb-snapshot = "buf build --output crates/store/re_protos/proto/schema_snapshot.yaml --exclude-source-info --exclude-imports"
-# pb-snapshot = "buf build --error-format=json --output crates/store/re_protos/proto/schema_snapshot.yaml"
-# pb-snapshot-main = "git show origin/main:crates/store/re_protos/proto/schema_snapshot.yaml > crates/store/re_protos/proto/schema_snapshot.main.yaml"
+# # pb-snapshot = "buf build --output crates/store/dl_protos/proto/schema_snapshot.yaml --exclude-source-info --exclude-imports"
+# pb-snapshot = "buf build --error-format=json --output crates/store/dl_protos/proto/schema_snapshot.yaml"
+# pb-snapshot-main = "git show origin/main:crates/store/dl_protos/proto/schema_snapshot.yaml > crates/store/dl_protos/proto/schema_snapshot.main.yaml"
 #
-# pb-breaking = { cmd = "buf breaking --error-format=json --against crates/store/re_protos/proto/schema_snapshot.main.yaml", depends-on = [
+# pb-breaking = { cmd = "buf breaking --error-format=json --against crates/store/dl_protos/proto/schema_snapshot.main.yaml", depends-on = [
 #   "pb-snapshot",
 #   "pb-snapshot-main",
 # ]}
@@ -349,8 +349,8 @@ py-lint = { depends-on = [
 
 rs-plot-dashboard = { cmd = "cargo r -p plot_dashboard_stress --release --" }
 
-dev-tools = "cargo run --locked -p re_dev_tools --"
-build-examples = "uv run cargo run --locked -p re_dev_tools -- build-examples"
+dev-tools = "cargo run --locked -p dl_dev_tools --"
+build-examples = "uv run cargo run --locked -p dl_dev_tools -- build-examples"
 
 # Start a local meilisearch instance at `localhost:7700` with master key `test`.
 # This should only be used for testing the search index locally.
@@ -399,7 +399,7 @@ js-install = { cmd = "yarn install --cwd rerun_js", depends-on = ["js-setup"] }
 js-build-base = { cmd = "yarn --cwd rerun_js/web-viewer run build", depends-on = ["js-install"] }
 js-build-all = { cmd = "yarn --cwd rerun_js workspaces run build", depends-on = ["js-install"] }
 
-# Build web-viewer and web-viewer-react without rebuilding re_viewer Wasm
+# Build web-viewer and web-viewer-react without rebuilding dl_viewer Wasm
 js-build-no-wasm = { cmd = "yarn --cwd rerun_js workspaces run build:js", depends-on = [
   "js-install",
 ] }
@@ -455,9 +455,9 @@ py-build-web-viewer-release = { cmd = "uv run maturin develop --uv --release --m
   "rerun-build-native-and-web-release",
 ], env = { RERUN_ALLOW_MISSING_BIN = "1" } }
 # Dedicated alias for building the python bindings for the `py` environment with performance telemetry including Tracy profiler.
-py-build-perf-debug = { cmd = "uv run maturin develop --uv --manifest-path rerun_py/Cargo.toml --features re_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
+py-build-perf-debug = { cmd = "uv run maturin develop --uv --manifest-path rerun_py/Cargo.toml --features dl_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
 # Dedicated alias for building the python bindings in release mode for the `py` environment with performance telemetry including Tracy profiler.
-py-build-perf-release = { cmd = "uv run maturin develop --uv --release --manifest-path rerun_py/Cargo.toml --features re_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
+py-build-perf-release = { cmd = "uv run maturin develop --uv --release --manifest-path rerun_py/Cargo.toml --features dl_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
 
 py-test = { cmd = "uvpy -m pytest -vv rerun_py/tests", depends-on = ["py-build"] }
 py-test-no-build = { cmd = "uvpy -m pytest -vv rerun_py/tests" }
@@ -474,7 +474,7 @@ py-check-signatures = { cmd = "uvpy scripts/ci/python_check_signatures.py", depe
   "py-build",
 ] }
 
-# Build the JS parts of `rerun-notebook` without rebuilding re_viewer Wasm in the process
+# Build the JS parts of `rerun-notebook` without rebuilding dl_viewer Wasm in the process
 py-build-notebook-js = { cmd = "npm --prefix rerun_notebook run build", depends-on = [
   "js-build-no-wasm",
 ] }
@@ -493,7 +493,7 @@ py-plot-dashboard = { cmd = "uvpy tests/python/plot_dashboard_stress/main.py", d
 
 # Build the documentation search index.
 # See `pixi run search-index --help` for more information.
-search-index = "uv run --group docs cargo run --locked -p re_dev_tools -- search-index"
+search-index = "uv run --group docs cargo run --locked -p dl_dev_tools -- search-index"
 
 # Serve python docs locally (uses mkdocs from uv docs dependency group)
 py-docs-serve = "uv run --group docs mkdocs serve -f rerun_py/mkdocs.yml -w rerun_py"
@@ -505,7 +505,7 @@ py-docs-build = "uv run --group docs mkdocs build -f rerun_py/mkdocs.yml"
 # Codegen backend config is in .cargo/cranelift.toml (loaded via config-include on nightly).
 # Requires: rustup component add rustc-codegen-cranelift-preview --toolchain nightly
 [tasks.rerun-build-fast]
-cmd = """cargo +nightly build --package re_viewer --bin viewer --profile dev-fast \
+cmd = """cargo +nightly build --package dl_viewer --bin viewer --profile dev-fast \
   --config 'include=[".cargo/cranelift.toml"]'"""
 [tasks.rerun-build-fast.env]
 RUSTFLAGS = "-Z threads=0"
@@ -527,7 +527,7 @@ depends-on = ["rerun-build-fast"]
 # summary table in the terminal.
 #
 # With no argument it covers the whole workspace; pass a crate to scope it, e.g.
-#   pixi run rs-coverage re_dataframe
+#   pixi run rs-coverage dl_dataframe
 [feature.coverage.tasks.rs-coverage]
 args = [{ arg = "crate", default = "--workspace" }]
 cmd = "bash scripts/rs_coverage.sh {{ crate }}"

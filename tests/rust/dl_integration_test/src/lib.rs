@@ -1,0 +1,139 @@
+//! Integration tests for rerun and the in memory server.
+
+mod kittest_harness_ext;
+mod test_data;
+mod viewer_section;
+
+use std::net::TcpListener;
+
+pub use kittest_harness_ext::HarnessExt;
+use dl_redap_client::{ApiResult, ConnectionClient, ConnectionRegistry};
+use dl_sdk_types::SegmentId;
+use dl_server::ServerHandle;
+use dl_uri::external::url::Host;
+pub use test_data::register_table_blueprint;
+// pub use viewer_section::GetSection;
+pub use viewer_section::ViewerSection;
+
+pub struct TestServer {
+    server_handle: Option<ServerHandle>,
+    port: u16,
+}
+
+impl TestServer {
+    pub async fn spawn() -> Self {
+        // Get a random free port
+        let port = get_free_port();
+
+        let args = dl_server::Args {
+            host: "127.0.0.1".to_owned(),
+            port,
+            ..Default::default()
+        };
+        let server_handle = args
+            .create_server_handle()
+            .await
+            .expect("Can't create server");
+
+        Self {
+            server_handle: Some(server_handle),
+            port,
+        }
+    }
+
+    pub async fn with_test_data(self) -> (Self, SegmentId) {
+        let url = self.add_test_data().await;
+        (self, url)
+    }
+
+    pub async fn with_named_test_data(
+        self,
+        dataset_name: &str,
+        dataset_id: &str,
+        new_recording_id: &str,
+    ) -> (Self, SegmentId) {
+        let segment_id = {
+            let this = &self;
+            async move {
+                let mut client = this.client().await.expect("Failed to connect");
+                test_data::load_test_data_with_name(
+                    &mut client,
+                    dataset_name,
+                    dataset_id,
+                    new_recording_id,
+                )
+                .await
+                .expect("Failed to load test data")
+            }
+            .await
+        };
+        (self, segment_id)
+    }
+
+    /// Register `count` recordings with time-invariant data in a fresh dataset, suitable for
+    /// stable segment-preview snapshots. Returns the segment ids in registration order.
+    pub async fn with_static_preview_data(
+        self,
+        dataset_name: &str,
+        dataset_id: &str,
+        recording_id_prefix: &str,
+        count: usize,
+    ) -> (Self, Vec<SegmentId>) {
+        let segment_ids = {
+            let mut client = self.client().await.expect("Failed to connect");
+            test_data::load_static_preview_data(
+                &mut client,
+                dataset_name,
+                dataset_id,
+                recording_id_prefix,
+                count,
+            )
+            .await
+            .expect("Failed to load static preview data")
+        };
+        (self, segment_ids)
+    }
+
+    pub fn port(&self) -> u16 {
+        self.port
+    }
+
+    pub async fn client(&self) -> ApiResult<ConnectionClient> {
+        let origin = dl_uri::Origin {
+            host: Host::Domain("localhost".to_owned()),
+            port: self.port,
+            scheme: dl_uri::Scheme::RerunHttp,
+        };
+        ConnectionRegistry::new_without_stored_credentials()
+            .client(origin)
+            .await
+    }
+
+    pub async fn add_test_data(&self) -> SegmentId {
+        let client = self.client().await.expect("Failed to connect");
+        test_data::load_test_data(client)
+            .await
+            .expect("Failed to load test data")
+    }
+}
+
+impl Drop for TestServer {
+    fn drop(&mut self) {
+        let server_handle = self
+            .server_handle
+            .take()
+            .expect("Server handle not initialized");
+        tokio::task::block_in_place(move || {
+            tokio::runtime::Handle::current().block_on(async move {
+                server_handle.shutdown_and_wait().await;
+            });
+        });
+    }
+}
+
+/// Get a free port from the OS.
+fn get_free_port() -> u16 {
+    let listener = TcpListener::bind("127.0.0.1:0").expect("Failed to bind to a random port");
+    let addr = listener.local_addr().expect("Failed to get local address");
+    addr.port()
+}

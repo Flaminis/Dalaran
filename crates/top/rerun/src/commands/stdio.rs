@@ -3,9 +3,9 @@ use std::path::PathBuf;
 use anyhow::Context as _;
 use crossbeam::channel;
 use itertools::Itertools as _;
-use re_chunk::external::crossbeam;
-use re_log_encoding::RawRrdManifest;
-use re_quota_channel::send_crossbeam;
+use dl_chunk::external::crossbeam;
+use dl_log_encoding::RawRrdManifest;
+use dl_quota_channel::send_crossbeam;
 
 // ---
 
@@ -42,10 +42,10 @@ impl std::fmt::Display for InputSource {
 pub fn read_rrd_streams_from_file_or_stdin(
     paths: &[String],
 ) -> (
-    channel::Receiver<(InputSource, anyhow::Result<re_log_types::LogMsg>)>,
+    channel::Receiver<(InputSource, anyhow::Result<dl_log_types::LogMsg>)>,
     channel::Receiver<(u64, Vec<(InputSource, anyhow::Result<RawRrdManifest>)>)>,
 ) {
-    read_any_rrd_streams_from_file_or_stdin::<re_log_types::LogMsg>(paths)
+    read_any_rrd_streams_from_file_or_stdin::<dl_log_types::LogMsg>(paths)
 }
 
 /// Asynchronously decodes potentially multiplexed RRD streams from the given `paths`, or standard
@@ -78,16 +78,16 @@ pub fn read_raw_rrd_streams_from_file_or_stdin(
 ) -> (
     channel::Receiver<(
         InputSource,
-        anyhow::Result<re_protos::log_msg::v1alpha1::log_msg::Msg>,
+        anyhow::Result<dl_protos::log_msg::v1alpha1::log_msg::Msg>,
     )>,
     channel::Receiver<(u64, Vec<(InputSource, anyhow::Result<RawRrdManifest>)>)>,
 ) {
-    read_any_rrd_streams_from_file_or_stdin::<re_protos::log_msg::v1alpha1::log_msg::Msg>(paths)
+    read_any_rrd_streams_from_file_or_stdin::<dl_protos::log_msg::v1alpha1::log_msg::Msg>(paths)
 }
 
 #[expect(clippy::type_complexity)] // internal private API for the CLI impl
 fn read_any_rrd_streams_from_file_or_stdin<
-    T: re_log_encoding::DecoderEntrypoint + Send + std::fmt::Debug + 'static,
+    T: dl_log_encoding::DecoderEntrypoint + Send + std::fmt::Debug + 'static,
 >(
     paths: &[String],
 ) -> (
@@ -115,7 +115,7 @@ fn read_any_rrd_streams_from_file_or_stdin<
 
                 let source = InputSource::Stdin;
                 let stdin = std::io::BufReader::new(std::io::stdin().lock());
-                let mut decoder = re_log_encoding::Decoder::decode_lazy(stdin);
+                let mut decoder = dl_log_encoding::Decoder::decode_lazy(stdin);
 
                 for res in &mut decoder {
                     let res = res.context("couldn't decode message from stdin -- skipping");
@@ -148,7 +148,7 @@ fn read_any_rrd_streams_from_file_or_stdin<
 
                     let source = InputSource::File(rrd_path.clone());
                     let rrd_file = std::io::BufReader::new(rrd_file);
-                    let mut decoder = re_log_encoding::Decoder::decode_lazy(rrd_file);
+                    let mut decoder = dl_log_encoding::Decoder::decode_lazy(rrd_file);
                     for res in &mut decoder {
                         let res = res.context("decode rrd message").with_context(|| {
                             format!("couldn't decode message {rrd_path:?} -- skipping")

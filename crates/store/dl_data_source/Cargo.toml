@@ -1,0 +1,47 @@
+[package]
+name = "dl_data_source"
+authors.workspace = true
+description = "Handles loading of Rerun data"
+edition.workspace = true
+homepage.workspace = true
+include.workspace = true
+license.workspace = true
+publish = true
+readme = "README.md"
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+default = []
+
+
+[dependencies]
+dl_async.workspace = true
+dl_importer.workspace = true
+dl_format.workspace = true
+dl_grpc_client.workspace = true
+dl_log_channel.workspace = true
+dl_log_encoding = { workspace = true, features = ["decoder", "stream_from_http"] }
+dl_log_types.workspace = true
+dl_log.workspace = true
+dl_redap_client.workspace = true
+dl_tracing.workspace = true
+dl_uri.workspace = true
+
+anyhow.workspace = true
+ehttp.workspace = true
+itertools.workspace = true
+rayon.workspace = true
+url.workspace = true
+
+# web dependencies:
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+dl_web.workspace = true
+web-sys = { workspace = true, features = ["File"] }

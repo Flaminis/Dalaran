@@ -59,7 +59,7 @@ Tests marked `@pytest.mark.cloud_only` only run against cloud stacks (`dpf-stack
 The `e2e-tests-oldest-hub` CI leg runs the *current* tests against an *old* hub server, so tests exercising newer server behavior must declare their requirements:
 
 - `@pytest.mark.requires_server_feature("some_feature")` — preferred.
-  Skips unless the server advertises the feature in its `Version` RPC response (see the `features` module in `re_protos` for the canonical feature name constants).
+  Skips unless the server advertises the feature in its `Version` RPC response (see the `features` module in `dl_protos` for the canonical feature name constants).
   Old servers that predate feature advertising return an empty list and are skipped automatically.
 - `@pytest.mark.min_hub_version("0.16.0")` — for behavior changes without a feature flag.
   Only enforced when the target is a hub (any profile except `local`), because the OSS server is versioned on the rerun scheme, not the hub scheme.
@@ -70,4 +70,4 @@ The leg is advisory, so an unmarked new test blocks nobody while it's being tria
 
 ## Related test suites
 
-There are more e2e tests in [`re_redap_tests`](../../../crates/store/re_redap_tests/README.md), written in Rust.
+There are more e2e tests in [`dl_redap_tests`](../../../crates/store/dl_redap_tests/README.md), written in Rust.

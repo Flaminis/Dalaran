@@ -2,7 +2,7 @@
 
 use std::path::PathBuf;
 
-use re_sdk::{RecordingStream, RecordingStreamBuilder};
+use dl_sdk::{RecordingStream, RecordingStreamBuilder};
 
 // ---
 
@@ -114,49 +114,49 @@ impl RerunArgs {
     #[track_caller] // track_caller so that we can see if we are being called from an official example.
     pub fn init(
         &self,
-        application_id: impl Into<re_sdk::ApplicationId>,
+        application_id: impl Into<dl_sdk::ApplicationId>,
     ) -> anyhow::Result<(RecordingStream, ServeGuard)> {
         self.init_with_blueprint_opts(application_id, None)
     }
 
-    /// Creates a new [`RecordingStream`] with a [`re_sdk::blueprint::Blueprint`] that activates immediately.
+    /// Creates a new [`RecordingStream`] with a [`dl_sdk::blueprint::Blueprint`] that activates immediately.
     ///
     /// For a default blueprint that only activates on reset, see [`Self::init_with_default_blueprint`].
     #[track_caller]
     pub fn init_with_blueprint(
         &self,
-        application_id: impl Into<re_sdk::ApplicationId>,
-        blueprint: re_sdk::blueprint::Blueprint,
+        application_id: impl Into<dl_sdk::ApplicationId>,
+        blueprint: dl_sdk::blueprint::Blueprint,
     ) -> anyhow::Result<(RecordingStream, ServeGuard)> {
-        let activation = re_sdk::blueprint::BlueprintActivation {
+        let activation = dl_sdk::blueprint::BlueprintActivation {
             make_active: true,
             make_default: true,
         };
         self.init_with_blueprint_opts(
             application_id,
-            Some(re_sdk::blueprint::BlueprintOpts {
+            Some(dl_sdk::blueprint::BlueprintOpts {
                 blueprint,
                 activation,
             }),
         )
     }
 
-    /// Creates a new [`RecordingStream`] with a default [`re_sdk::blueprint::Blueprint`].
+    /// Creates a new [`RecordingStream`] with a default [`dl_sdk::blueprint::Blueprint`].
     ///
     /// The blueprint activates only when the user resets. For immediate activation, see [`Self::init_with_blueprint`].
     #[track_caller]
     pub fn init_with_default_blueprint(
         &self,
-        application_id: impl Into<re_sdk::ApplicationId>,
-        blueprint: re_sdk::blueprint::Blueprint,
+        application_id: impl Into<dl_sdk::ApplicationId>,
+        blueprint: dl_sdk::blueprint::Blueprint,
     ) -> anyhow::Result<(RecordingStream, ServeGuard)> {
-        let activation = re_sdk::blueprint::BlueprintActivation {
+        let activation = dl_sdk::blueprint::BlueprintActivation {
             make_active: false,
             make_default: true,
         };
         self.init_with_blueprint_opts(
             application_id,
-            Some(re_sdk::blueprint::BlueprintOpts {
+            Some(dl_sdk::blueprint::BlueprintOpts {
                 blueprint,
                 activation,
             }),
@@ -167,13 +167,13 @@ impl RerunArgs {
     #[track_caller]
     fn init_with_blueprint_opts(
         &self,
-        application_id: impl Into<re_sdk::ApplicationId>,
-        blueprint_opts: Option<re_sdk::blueprint::BlueprintOpts>,
+        application_id: impl Into<dl_sdk::ApplicationId>,
+        blueprint_opts: Option<dl_sdk::blueprint::BlueprintOpts>,
     ) -> anyhow::Result<(RecordingStream, ServeGuard)> {
         let mut builder = RecordingStreamBuilder::new(application_id);
 
         // Add blueprint to builder if provided
-        if let Some(re_sdk::blueprint::BlueprintOpts {
+        if let Some(dl_sdk::blueprint::BlueprintOpts {
             blueprint,
             activation,
         }) = blueprint_opts
@@ -198,12 +198,12 @@ impl RerunArgs {
 
             #[cfg(feature = "web_viewer")]
             RerunBehavior::Serve => {
-                let server_options = re_sdk::ServerOptions {
-                    playback_behavior: re_sdk::PlaybackBehavior::from_newest_first(
+                let server_options = dl_sdk::ServerOptions {
+                    playback_behavior: dl_sdk::PlaybackBehavior::from_newest_first(
                         self.newest_first,
                     ),
 
-                    memory_limit: re_sdk::MemoryLimit::parse(&self.server_memory_limit)
+                    memory_limit: dl_sdk::MemoryLimit::parse(&self.server_memory_limit)
                         .map_err(|err| anyhow::format_err!("Bad --server-memory-limit: {err}"))?,
 
                     cors_allowed_origins: vec![],
@@ -251,7 +251,7 @@ impl RerunArgs {
             Some(Some(url)) => return Ok(RerunBehavior::Connect(url.clone())),
             Some(None) => {
                 return Ok(RerunBehavior::Connect(
-                    re_sdk::DEFAULT_CONNECT_URL.to_owned(),
+                    dl_sdk::DEFAULT_CONNECT_URL.to_owned(),
                 ));
             }
             None => {}

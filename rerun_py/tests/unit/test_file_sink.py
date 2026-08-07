@@ -13,7 +13,7 @@ APP_ID = "rerun_example_test_file_sink"
 
 # The trailing RRD `StreamFooter` frame always ends with the bytes `RRF2` followed by
 # `FOOT`, located at `file_len - 12 .. file_len - 4`.
-# See `re_log_encoding::rrd::frames::StreamFooter` for the definition.
+# See `dl_log_encoding::rrd::frames::StreamFooter` for the definition.
 _STREAM_FOOTER_FOURCC = b"RRF2"
 _STREAM_FOOTER_IDENTIFIER = b"FOOT"
 

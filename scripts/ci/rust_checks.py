@@ -236,9 +236,9 @@ def sdk_variations(results: list[Result]) -> None:
     results.append(run_cargo("check", "-p rerun --no-default-features"))
     results.append(run_cargo("check", "-p rerun --no-default-features --features sdk"))
 
-    # `re_server` is built without the optional `lance` feature in many configurations
-    # (e.g. when pulled in by `rerun`'s `--all-features`, which does not propagate `re_server/lance`).
-    results.append(run_cargo("check", "-p re_server"))
+    # `dl_server` is built without the optional `lance` feature in many configurations
+    # (e.g. when pulled in by `rerun`'s `--all-features`, which does not propagate `dl_server/lance`).
+    results.append(run_cargo("check", "-p dl_server"))
 
 
 # Targets to check for leaked UI dependencies in `denied_sdk_deps`.
@@ -277,10 +277,10 @@ def denied_sdk_deps(results: list[Result]) -> None:
 
     # Sampling of dependencies that should never show up in the SDK, unless the viewer is enabled.
     # They are ordered from "big to small" to make sure the bigger leaks are caught & reported first.
-    # (e.g. `re_viewer` depends on `rfd` which is also disallowed, but if re_viewer is leaking, only report `re_viewer`)
+    # (e.g. `dl_viewer` depends on `rfd` which is also disallowed, but if dl_viewer is leaking, only report `dl_viewer`)
     disallowed_dependencies = [
         "eframe",
-        "re_viewer",
+        "dl_viewer",
         "wgpu",
         "egui",
         "winit",
@@ -319,15 +319,15 @@ def wasm(results: list[Result]) -> None:
     results.append(
         run_cargo(
             "clippy",
-            "--all-features --target wasm32-unknown-unknown --target-dir target_wasm -p re_viewer -- --deny warnings",
+            "--all-features --target wasm32-unknown-unknown --target-dir target_wasm -p dl_viewer -- --deny warnings",
             clippy_conf="scripts/clippy_wasm",  # Use ./scripts/clippy_wasm/clippy.toml
         ),
     )
-    # Check re_renderer examples for wasm32.
+    # Check dl_renderer examples for wasm32.
     results.append(
         run_cargo(
             "clippy",
-            "--target wasm32-unknown-unknown --target-dir target_wasm -p re_renderer_examples",
+            "--target wasm32-unknown-unknown --target-dir target_wasm -p dl_renderer_examples",
             clippy_conf="scripts/clippy_wasm",  # Use ./scripts/clippy_wasm/clippy.toml
         ),
     )

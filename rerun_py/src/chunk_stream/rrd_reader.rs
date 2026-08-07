@@ -4,10 +4,10 @@ use std::sync::Arc;
 use pyo3::exceptions::PyValueError;
 use pyo3::prelude::*;
 
-use re_chunk::Chunk;
-use re_chunk_store::LazyStore;
-use re_log_encoding::{RawRrdManifest, RrdChunkProvider};
-use re_log_types::{LogMsg, StoreId, StoreKind};
+use dl_chunk::Chunk;
+use dl_chunk_store::LazyStore;
+use dl_log_encoding::{RawRrdManifest, RrdChunkProvider};
+use dl_log_types::{LogMsg, StoreId, StoreKind};
 
 use crate::utils::wait_for_future;
 
@@ -98,7 +98,7 @@ impl PyRrdReaderInternal {
         // so it's worth surfacing this up-front rather than at first use.
         if let Ok(file) = std::fs::File::open(&path)
             && matches!(
-                wait_for_future(py, re_log_encoding::read_rrd_footer(&file)),
+                wait_for_future(py, dl_log_encoding::read_rrd_footer(&file)),
                 Ok(None)
             )
         {
@@ -164,7 +164,7 @@ impl PyRrdReaderInternal {
                 reason: err.to_string(),
             })?;
 
-            match re_log_encoding::read_rrd_footer(&reader).await {
+            match dl_log_encoding::read_rrd_footer(&reader).await {
                 Ok(Some(rrd_footer)) => {
                     let raw = pick_manifest(&rrd_footer, &path, &target_store_id)?;
                     let provider = Arc::new(
@@ -282,7 +282,7 @@ enum RrdStream {
     /// Normal operation: lazily decode messages from the file.
     Live {
         path: PathBuf,
-        decoder: Box<dyn Iterator<Item = Result<LogMsg, re_log_encoding::DecodeError>> + Send>,
+        decoder: Box<dyn Iterator<Item = Result<LogMsg, dl_log_encoding::DecodeError>> + Send>,
 
         /// The `StoreId` of the store whose chunks we yield. Everything else is skipped.
         target_store_id: StoreId,
@@ -297,7 +297,7 @@ impl RrdStream {
         match std::fs::File::open(path) {
             Ok(file) => {
                 let reader = std::io::BufReader::new(file);
-                let decoder = re_log_encoding::Decoder::<LogMsg>::decode_lazy(reader);
+                let decoder = dl_log_encoding::Decoder::<LogMsg>::decode_lazy(reader);
                 Self::Live {
                     path: path.to_path_buf(),
                     decoder: Box::new(decoder),
@@ -361,7 +361,7 @@ fn enumerate_rrd_stores(py: Python<'_>, path: &Path) -> Result<Vec<StoreId>, Chu
         path: path.to_path_buf(),
         reason: err.to_string(),
     })?;
-    wait_for_future(py, re_log_encoding::enumerate_rrd_stores(&reader)).map_err(|err| {
+    wait_for_future(py, dl_log_encoding::enumerate_rrd_stores(&reader)).map_err(|err| {
         ChunkPipelineError::RrdRead {
             path: path.to_path_buf(),
             reason: err.to_string(),
@@ -371,7 +371,7 @@ fn enumerate_rrd_stores(py: Python<'_>, path: &Path) -> Result<Vec<StoreId>, Chu
 
 /// Look up `target`'s manifest in an RRD footer.
 fn pick_manifest(
-    rrd_footer: &re_log_encoding::RrdFooter,
+    rrd_footer: &dl_log_encoding::RrdFooter,
     path: &Path,
     target: &StoreId,
 ) -> Result<RawRrdManifest, ChunkPipelineError> {

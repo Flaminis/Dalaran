@@ -1,0 +1,159 @@
+#![expect(clippy::unwrap_used)]
+
+use arrow::array::{ListBuilder, StringBuilder};
+use itertools::Itertools as _;
+use dl_chunk::{Chunk, ChunkId, TimeColumn, TimelineName};
+use dl_log_types::EntityPathFilter;
+use dl_sdk::lenses::{Lens, Lenses, OutputMode, Selector};
+use dl_sdk_types::ComponentDescriptor;
+
+/// Helper to create a simple chunk with string data for testing
+fn create_test_chunk(entity_path: &str, component_name: &'static str) -> Chunk {
+    let mut builder = ListBuilder::new(StringBuilder::new());
+    builder.values().append_value("test");
+    builder.append(true);
+    builder.values().append_value("data");
+    builder.append(true);
+    let list_array = builder.finish();
+
+    let components = std::iter::once((ComponentDescriptor::partial(component_name), list_array));
+
+    let time_column = TimeColumn::new_sequence("tick", 0..2);
+
+    Chunk::from_auto_row_ids(
+        ChunkId::new(),
+        entity_path.into(),
+        std::iter::once((TimelineName::from("tick"), time_column)).collect(),
+        components.collect(),
+    )
+    .unwrap()
+}
+
+#[test]
+fn test_output_mode_forward_all() {
+    // Create two chunks: one that matches the lens and one that doesn't
+    let matching_chunk = create_test_chunk("matched/entity", "test_component");
+    let unmatched_chunk = create_test_chunk("other/entity", "other_component");
+
+    // Create a lens that only matches the first chunk
+    let lens = Lens::derive("test_component")
+        .output_entity("matched/output")
+        .to_component(
+            ComponentDescriptor::partial("transformed"),
+            Selector::parse(".").unwrap(),
+        )
+        .build()
+        .unwrap();
+
+    let lenses = Lenses::new(OutputMode::ForwardAll)
+        .add_lens_with_filter(EntityPathFilter::parse_forgiving("matched/**"), lens);
+
+    // Apply to matching chunk
+    let matching_results: Vec<_> = lenses
+        .apply(&matching_chunk, &dl_lenses::default_runtime())
+        .try_collect()
+        .unwrap();
+
+    // Should get the original chunk first, then the transformed chunk
+    assert_eq!(matching_results.len(), 2);
+    assert_eq!(
+        matching_results[0].entity_path(),
+        matching_chunk.entity_path()
+    );
+    assert_eq!(matching_results[1].entity_path(), &"matched/output".into());
+
+    // Apply to unmatched chunk
+    let unmatched_results: Vec<_> = lenses
+        .apply(&unmatched_chunk, &dl_lenses::default_runtime())
+        .try_collect()
+        .unwrap();
+
+    // Should get only the original chunk (no lens matched)
+    assert_eq!(unmatched_results.len(), 1);
+    assert_eq!(
+        unmatched_results[0].entity_path(),
+        unmatched_chunk.entity_path()
+    );
+}
+
+#[test]
+fn test_output_mode_forward_unmatched() {
+    // Create two chunks: one that matches the lens and one that doesn't
+    let matching_chunk = create_test_chunk("matched/entity", "test_component");
+    let unmatched_chunk = create_test_chunk("other/entity", "other_component");
+
+    // Create a lens that only matches the first chunk
+    let lens = Lens::derive("test_component")
+        .output_entity("matched/output")
+        .to_component(
+            ComponentDescriptor::partial("transformed"),
+            Selector::parse(".").unwrap(),
+        )
+        .build()
+        .unwrap();
+
+    let lenses = Lenses::new(OutputMode::ForwardUnmatched)
+        .add_lens_with_filter(EntityPathFilter::parse_forgiving("matched/**"), lens);
+
+    // Apply to matching chunk (all components are matched, so no untouched remainder)
+    let matching_results: Vec<_> = lenses
+        .apply(&matching_chunk, &dl_lenses::default_runtime())
+        .try_collect()
+        .unwrap();
+
+    // Should get only the transformed chunk (no empty untouched remainder)
+    assert_eq!(matching_results.len(), 1);
+    assert_eq!(matching_results[0].entity_path(), &"matched/output".into());
+
+    // Apply to unmatched chunk
+    let unmatched_results: Vec<_> = lenses
+        .apply(&unmatched_chunk, &dl_lenses::default_runtime())
+        .try_collect()
+        .unwrap();
+
+    // Should get the original chunk forwarded
+    assert_eq!(unmatched_results.len(), 1);
+    assert_eq!(
+        unmatched_results[0].entity_path(),
+        unmatched_chunk.entity_path()
+    );
+}
+
+#[test]
+fn test_output_mode_drop_unmatched() {
+    // Create two chunks: one that matches the lens and one that doesn't
+    let matching_chunk = create_test_chunk("matched/entity", "test_component");
+    let unmatched_chunk = create_test_chunk("other/entity", "other_component");
+
+    // Create a lens that only matches the first chunk
+    let lens = Lens::derive("test_component")
+        .output_entity("matched/output")
+        .to_component(
+            ComponentDescriptor::partial("transformed"),
+            Selector::parse(".").unwrap(),
+        )
+        .build()
+        .unwrap();
+
+    let lenses = Lenses::new(OutputMode::DropUnmatched)
+        .add_lens_with_filter(EntityPathFilter::parse_forgiving("matched/**"), lens);
+
+    // Apply to matching chunk
+    let matching_results: Vec<_> = lenses
+        .apply(&matching_chunk, &dl_lenses::default_runtime())
+        .try_collect()
+        .unwrap();
+
+    // Should get only the transformed chunk
+    assert_eq!(matching_results.len(), 1);
+    assert_eq!(matching_results[0].entity_path(), &"matched/output".into());
+
+    // Apply to unmatched chunk
+    let unmatched_results: Vec<_> = lenses
+        .apply(&unmatched_chunk, &dl_lenses::default_runtime())
+        .try_collect()
+        .unwrap();
+
+    // Should get nothing (unmatched data is dropped)
+    assert_eq!(unmatched_results.len(), 0);
+}

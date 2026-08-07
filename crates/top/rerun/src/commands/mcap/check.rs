@@ -2,7 +2,7 @@
 //!
 //! Each MCAP chunk holds messages from many topics interleaved together.
 //! When loaded into Rerun, an MCAP chunk is split into one Rerun chunk per topic, and each Rerun
-//! chunk is reordered using [`re_chunk::Chunk::from_auto_row_ids`].
+//! chunk is reordered using [`dl_chunk::Chunk::from_auto_row_ids`].
 //! A chunk's timelines remain sorted only if every timeline agrees on the row order.
 //!
 //! This command groups messages by topic and checks timeline ordering both per chunk and across the
@@ -15,8 +15,8 @@ use std::path::PathBuf;
 use anyhow::Context as _;
 use parking_lot::Mutex;
 
-use re_log_types::{TimeType, TimelineName};
-use re_mcap::decoders::{DecoderRegistry, TopicFilter};
+use dl_log_types::{TimeType, TimelineName};
+use dl_mcap::decoders::{DecoderRegistry, TopicFilter};
 
 use super::info::print_table;
 
@@ -25,7 +25,7 @@ pub struct CheckCommand {
     /// Path to the .mcap file to check.
     path: PathBuf,
 
-    /// Check timelines produced by the full `re_mcap` decoder pipeline.
+    /// Check timelines produced by the full `dl_mcap` decoder pipeline.
     ///
     /// This decodes message payloads to include derived timelines, such as `ros2_timestamp` for
     /// ROS 2 data, and increases processing time.
@@ -55,7 +55,7 @@ impl CheckCommand {
                 path.display()
             )
         })?;
-        let mcap_file = re_mcap::McapFile::new(mmap, *recover);
+        let mcap_file = dl_mcap::McapFile::new(mmap, *recover);
         let summary = mcap_file.summary().with_context(|| {
             format!("Failed to inspect MCAP file\nFile path: {}", path.display())
         })?;
@@ -167,7 +167,7 @@ impl TimeColumns {
     }
 
     /// Stable lex sort permutation across all timelines (matching
-    /// [`re_chunk::Chunk::from_auto_row_ids`]).
+    /// [`dl_chunk::Chunk::from_auto_row_ids`]).
     fn sorted_permutation(&self) -> Vec<usize> {
         let count = self.len();
         let cols: Vec<&Vec<i64>> = self.columns.values().collect();
@@ -188,7 +188,7 @@ impl TimeColumns {
     ///
     /// Equivalent to: after lex-sorting rows by all timelines, is every individual
     /// timeline non-decreasing? If false, no row permutation can keep all
-    /// [`re_chunk::TimeColumn`]s sorted simultaneously: they conflict.
+    /// [`dl_chunk::TimeColumn`]s sorted simultaneously: they conflict.
     fn timelines_agree(&self) -> bool {
         if self.len() < 2 {
             return true;
@@ -238,7 +238,7 @@ fn collect_by_topic_full(bytes: &[u8], summary: &mcap::Summary) -> anyhow::Resul
     let plan =
         DecoderRegistry::all_with_raw_fallback().plan(bytes, summary, &TopicFilter::default())?;
 
-    let chunks: Mutex<Vec<re_chunk::Chunk>> = Mutex::new(Vec::new());
+    let chunks: Mutex<Vec<dl_chunk::Chunk>> = Mutex::new(Vec::new());
     plan.run(bytes, summary, TimeType::TimestampNs, &|chunk| {
         chunks.lock().push(chunk);
     })?;

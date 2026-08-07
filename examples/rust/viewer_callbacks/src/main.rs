@@ -4,43 +4,43 @@ use std::rc::Rc;
 use std::sync::Arc;
 
 use rerun::external::parking_lot::Mutex;
-use rerun::external::re_viewer::{self, ViewerEvent, ViewerEventKind};
-use rerun::external::{eframe, egui, re_crash_handler, re_grpc_server, re_log, re_memory, tokio};
+use rerun::external::dl_viewer::{self, ViewerEvent, ViewerEventKind};
+use rerun::external::{eframe, egui, dl_crash_handler, dl_grpc_server, dl_log, dl_memory, tokio};
 
-// By using `re_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
+// By using `dl_memory::AccountingAllocator` Rerun can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.
 // By using `mimalloc` we get faster allocations.
 #[global_allocator]
-static GLOBAL: re_memory::AccountingAllocator<mimalloc::MiMalloc> =
-    re_memory::AccountingAllocator::new(mimalloc::MiMalloc);
+static GLOBAL: dl_memory::AccountingAllocator<mimalloc::MiMalloc> =
+    dl_memory::AccountingAllocator::new(mimalloc::MiMalloc);
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let main_thread_token = re_viewer::MainThreadToken::i_promise_i_am_on_the_main_thread();
+    let main_thread_token = dl_viewer::MainThreadToken::i_promise_i_am_on_the_main_thread();
 
     // Direct calls using the `log` crate to stderr. Control with `RUST_LOG=debug` etc.
-    re_log::setup_logging();
+    dl_log::setup_logging();
 
     // Install handlers for panics and crashes that prints to stderr and send
     // them to Rerun analytics (if the `analytics` feature is on in `Cargo.toml`).
-    re_crash_handler::install_crash_handlers(re_viewer::build_info());
+    dl_crash_handler::install_crash_handlers(dl_viewer::build_info());
 
     // Listen for gRPC connections from Rerun's logging SDKs.
-    // There are other ways of "feeding" the viewer though - all you need is a `re_log_channel::LogReceiver`.
-    let (rx, _grpc_server_handle) = re_grpc_server::spawn_with_recv(
+    // There are other ways of "feeding" the viewer though - all you need is a `dl_log_channel::LogReceiver`.
+    let (rx, _grpc_server_handle) = dl_grpc_server::spawn_with_recv(
         "0.0.0.0:9876".parse()?,
         Default::default(),
-        re_grpc_server::shutdown::never(),
+        dl_grpc_server::shutdown::never(),
     );
 
-    let mut native_options = re_viewer::native::eframe_options(None);
+    let mut native_options = dl_viewer::native::eframe_options(None);
     native_options.viewport = native_options
         .viewport
         .with_app_id("rerun_extend_viewer_ui_example");
 
     let shared_state: Arc<Mutex<SharedState>> = Default::default();
 
-    let startup_options = re_viewer::StartupOptions {
+    let startup_options = dl_viewer::StartupOptions {
         on_event: Some({
             let shared_state = shared_state.clone();
             Rc::new(move |event: ViewerEvent| {
@@ -68,23 +68,23 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     // This is used for analytics, if the `analytics` feature is on in `Cargo.toml`
-    let app_env = re_viewer::AppEnvironment::Custom("My Wrapper".to_owned());
+    let app_env = dl_viewer::AppEnvironment::Custom("My Wrapper".to_owned());
 
     let window_title = "My Customized Viewer";
     eframe::run_native(
         window_title,
         native_options,
         Box::new(move |cc| {
-            re_viewer::customize_eframe_and_setup_renderer(cc)?;
+            dl_viewer::customize_eframe_and_setup_renderer(cc)?;
 
-            let mut rerun_app = re_viewer::App::new(
+            let mut rerun_app = dl_viewer::App::new(
                 main_thread_token,
-                re_viewer::build_info(),
+                dl_viewer::build_info(),
                 app_env,
                 startup_options,
                 cc,
                 None,
-                re_viewer::AsyncRuntimeHandle::from_current_tokio_runtime_or_wasmbindgen()?,
+                dl_viewer::AsyncRuntimeHandle::from_current_tokio_runtime_or_wasmbindgen()?,
             );
             rerun_app.add_log_receiver(rx);
             Ok(Box::new(MyApp {
@@ -99,13 +99,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 #[derive(Default)]
 struct SharedState {
-    current_selection: Vec<re_viewer::event::SelectionChangeItem>,
+    current_selection: Vec<dl_viewer::event::SelectionChangeItem>,
     current_time: f64,
     current_timeline: String,
 }
 
 struct MyApp {
-    rerun_app: re_viewer::App,
+    rerun_app: dl_viewer::App,
     shared_state: Arc<Mutex<SharedState>>,
 }
 
@@ -157,9 +157,9 @@ impl MyApp {
     }
 }
 
-fn selection_item_ui(ui: &mut egui::Ui, item: &re_viewer::SelectionChangeItem) {
+fn selection_item_ui(ui: &mut egui::Ui, item: &dl_viewer::SelectionChangeItem) {
     match item {
-        re_viewer::SelectionChangeItem::Entity {
+        dl_viewer::SelectionChangeItem::Entity {
             entity_path,
             instance_id,
             view_name,
@@ -189,14 +189,14 @@ fn selection_item_ui(ui: &mut egui::Ui, item: &re_viewer::SelectionChangeItem) {
                 });
             });
         }
-        re_viewer::SelectionChangeItem::View { view_id, view_name } => {
+        dl_viewer::SelectionChangeItem::View { view_id, view_name } => {
             ui.label(format!("View {view_name}"));
             ui.horizontal(|ui| {
                 ui.add_space(16.0);
                 ui.label(format!("View ID: {}", view_id.uuid()));
             });
         }
-        re_viewer::SelectionChangeItem::Container {
+        dl_viewer::SelectionChangeItem::Container {
             container_id,
             container_name,
         } => {
