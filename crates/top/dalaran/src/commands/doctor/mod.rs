@@ -1,5 +1,6 @@
 //! `dalaran doctor`: diagnose a Dalaran installation from the viewer binary itself.
 
+mod endpoint;
 mod environment;
 mod graphics;
 mod recording;
@@ -104,10 +105,36 @@ impl DoctorCommand {
                 .map(|path| recording::check_recording(path)),
         );
 
+        checks.push(self.check_endpoint());
+
         Report {
             dalaran_version: build_info.version.to_string(),
             checks,
         }
+    }
+}
+
+impl DoctorCommand {
+    /// Probes `--endpoint`, unless there is nothing to probe or we are not allowed to.
+    fn check_endpoint(&self) -> Check {
+        let Some(endpoint) = &self.endpoint else {
+            return Check::new(
+                "endpoint",
+                Status::Skip,
+                "no --endpoint given, so no connection was attempted",
+            );
+        };
+
+        if self.no_network {
+            return Check::new(
+                "endpoint",
+                Status::Skip,
+                "network probe skipped (--no-network)",
+            )
+            .with_detail("endpoint", endpoint.as_str());
+        }
+
+        endpoint::check_endpoint(endpoint)
     }
 }
 
