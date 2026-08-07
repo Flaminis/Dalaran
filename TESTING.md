@@ -18,8 +18,9 @@ This is an overview of our testing infrastructure.
 We use the standard Rust test framework.
 We like to use [nextest](https://nexte.st) because it's faster, but `cargo test` should work fine.
 
-While developing, default to using `--all-features`.
-(Our CI runs checks and tests with many feature configurations.)
+While developing, default to using `--all-features`. There is no CI in this
+repository, so `--all-features` locally is what actually catches feature-gated
+breakage — see [`.github/workflows/README.md`](.github/workflows/README.md).
 
 Typically:
 
@@ -51,10 +52,11 @@ We use [`egui_kittest`](https://github.com/emilk/egui/tree/main/crates/egui_kitt
 To create or update snapshots, you may use:
 
 ```
-UPDATE_SNAPSHOTS=1 cargo nextest run -p re_XXX --all-features
+UPDATE_SNAPSHOTS=1 cargo nextest run -p dl_XXX --all-features
 ```
 
-Our CI automatically provides a link in PR for [kitdiff](https://github.com/rerun-io/kitdiff), our custom visual image diff tool.
+Inspect failures locally: each failing image test writes a `diff.png` next to
+its reference under `tests/snapshots/`.
 
 
 ## Python unit tests

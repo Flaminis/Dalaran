@@ -1,5 +1,9 @@
 * text=auto eol=lf
 *.zip -text diff
+# Dalaran recordings and blueprints are binary containers.
+*.dlr -text diff
+*.dbl -text diff
+*.dlrpack -text diff
 Cargo.lock linguist-generated=false
 pixi.lock linguist-generated=true
 # git-lfs:

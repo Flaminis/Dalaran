@@ -45,7 +45,7 @@ Dalaran: time-aware multimodal data stack + visualization for robotics, spatial 
 - **Image comparison tests**: Render image vs checked-in reference. Uses `egui_kittest`'s `Harness::snapshot` + `TestContext` for mocking viewer.
   - Results saved to `tests/snapshots/`, failures produce `diff.png`
   - Update refs: `UPDATE_SNAPSHOTS=1`
-  - Update from failed CI run: `./scripts/update_snapshots_from_ci.sh`
+  - There is no CI here, so snapshots are always updated locally
   - Best practices: see [egui_kittest README](https://github.com/emilk/egui/tree/master/crates/egui_kittest#snapshot-testing)
 
 ## Code generation system

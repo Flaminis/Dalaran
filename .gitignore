@@ -68,7 +68,7 @@ perf.data*
 # Screenshots from samples etc.
 screenshot*.png
 
-# Saved example `.dlr` files
+# Saved example `.dlr` recordings and `.dlrpack` bundles
 example_data
 
 # Various builds
@@ -92,6 +92,7 @@ icd.json
 
 # Temporary DLR files. Don't blanket ignore them since we check in some for backwards compatibility tests.
 docs/snippets/**/*.dlr
+*.dlrpack
 
 /meilisearch
 

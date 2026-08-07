@@ -6,6 +6,31 @@ This file provides guidance to Claude Code (claude.ai/code) and other LLMs when 
 
 Dalaran is a time-aware multimodal data stack and visualizations tool used in robotics, spatial AI, computer vision, and similar domains. It provides SDKs (Python, Rust, C++) for logging rich data (images, point clouds, tensors, etc.) and a Viewer for visualization.
 
+## Verification in this repository
+
+There is **no CI**. Nothing runs automatically on push, so anything you change
+must be verified locally before it is committed. See
+[`.github/workflows/README.md`](.github/workflows/README.md) for why.
+
+The commands that actually gate a change:
+
+```sh
+# Rust — must be 0 errors and 0 warnings
+export PROTOC=$(which protoc)
+pixi run ensure-pyo3-build-cfg     # required before any cargo build (pyo3)
+cargo check --workspace --all-features
+cargo fmt --all --check
+
+# Python — the pure-Python packages need no native build
+python3 -m pytest dalaran_py/tests/unit/ros2 dalaran_py/tests/unit/tools \
+                 dalaran_py/tests/unit/test_robot_*.py -q
+ruff check . && ruff format --check .
+```
+
+`dalaran.robot`, `dalaran.ros2` and `dalaran.tools` are deliberately pure Python
+plus numpy, and import `dalaran` lazily, so their tests run in a bare checkout
+without building the pyo3 extension. Keep it that way when extending them.
+
 ## Build system
 
 We use `pixi` for task management and dependency installation. Check `pixi.toml` for a full list of tasks.
