@@ -83,6 +83,10 @@ repository = "https://github.com/Flaminis/Dalaran"
 
 [project.scripts]
 dalaran = "dalaran_cli.__main__:main"
+dalaran-doctor = "dalaran.tools.doctor:main"
+dalaran-init = "dalaran.tools.scaffold:main"
+dalaran-pack = "dalaran.tools.bundle:main_pack"
+dalaran-unpack = "dalaran.tools.bundle:main_unpack"
 
 
 ######################
