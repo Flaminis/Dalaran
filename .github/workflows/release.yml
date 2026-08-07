@@ -106,7 +106,7 @@ jobs:
           - runner: windows-latest
             target: x86_64-pc-windows-msvc
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: arduino/setup-protoc@v3
         with:
@@ -127,7 +127,7 @@ jobs:
           key: release-${{ matrix.platform.target }}
           save-if: false
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -139,7 +139,7 @@ jobs:
           args: --release --manifest-path dalaran_py/Cargo.toml --out dist
           target: ${{ matrix.platform.target }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: wheels-${{ matrix.platform.target }}
           path: dist/*.whl
@@ -151,7 +151,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: wheels-*
           merge-multiple: true
@@ -166,7 +166,7 @@ jobs:
           echo "Not publishing: dry_run=${{ needs.config.outputs.dry_run }}," \
                "PYPI_API_TOKEN present=${{ needs.config.outputs.has_pypi_token }}." >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: needs.config.outputs.dry_run == 'false' && needs.config.outputs.has_pypi_token == 'true'
         with:
           python-version: "3.11"
@@ -186,7 +186,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: arduino/setup-protoc@v3
         with:
@@ -233,9 +233,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"

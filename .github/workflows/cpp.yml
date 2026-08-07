@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install system dependencies
         run: |
@@ -55,7 +55,7 @@ jobs:
       # Arrow is built from source by `download_and_build_arrow.cmake`, which is
       # by far the most expensive part of the build, so it is worth caching.
       - name: Cache the CMake build directory
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: build
           key: cpp-${{ runner.os }}-${{ hashFiles('dalaran_cpp/CMakeLists.txt', 'dalaran_cpp/download_and_build_arrow.cmake') }}
