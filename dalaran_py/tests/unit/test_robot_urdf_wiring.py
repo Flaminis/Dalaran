@@ -337,9 +337,16 @@ def test_urdf_joints_publish_frame_transforms(monkeypatch: pytest.MonkeyPatch) -
             self.fields = fields
 
     logged: list[tuple[str, Any]] = []
-    monkeypatch.setattr(dl, "log", lambda path, arch, **kw: logged.append((path, arch)), raising=False)
+
+    def _record(path: str, archetype: Any, **_kwargs: Any) -> None:
+        logged.append((path, archetype))
+
+    def _ignore(*_args: Any, **_kwargs: Any) -> None:
+        return None
+
+    monkeypatch.setattr(dl, "log", _record, raising=False)
     monkeypatch.setattr(dl, "Transform3D", _FakeTransform3D, raising=False)
-    monkeypatch.setattr(dl, "Scalars", lambda *a, **k: None, raising=False)
+    monkeypatch.setattr(dl, "Scalars", _ignore, raising=False)
 
     with pytest.warns(UserWarning, match="URDF geometry was not logged"):
         # No native bindings in a source checkout, so geometry logging is skipped;
