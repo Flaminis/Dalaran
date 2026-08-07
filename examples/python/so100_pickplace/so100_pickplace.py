@@ -46,8 +46,8 @@ JOINT_FOR_MOTOR = {
 
 # Camera frames. The overhead camera is bolted to the world; the wrist camera rides
 # the gripper link, so it has to hang off that frame to move with the arm.
-TOP_CAM = ("world/camera_top", "camera_top", "base")
-WRIST_CAM = ("world/camera_wrist", "camera_wrist", "gripper")
+TOP_CAM = ("cameras/top", "top.mp4")
+WRIST_CAM = ("cameras/wrist", "wrist.mp4")
 
 
 def fetch_dataset(root: Path) -> None:
@@ -61,61 +61,18 @@ def fetch_dataset(root: Path) -> None:
         urllib.request.urlretrieve(f"{BASE}/{remote}", target)  # noqa: S310
 
 
-def quaternion_from_rpy(roll: float, pitch: float, yaw: float) -> tuple[float, float, float, float]:
-    """Fixed-axis RPY to an `xyzw` quaternion, matching REP-103 and URDF."""
-    cr, sr = np.cos(roll / 2), np.sin(roll / 2)
-    cp, sp = np.cos(pitch / 2), np.sin(pitch / 2)
-    cy, sy = np.cos(yaw / 2), np.sin(yaw / 2)
-    return (
-        float(sr * cp * cy - cr * sp * sy),
-        float(cr * sp * cy + sr * cp * sy),
-        float(cr * cp * sy - sr * sp * cy),
-        float(cr * cp * cy + sr * sp * sy),
-    )
+def log_camera(entity: str, video_path: Path, *, n_frames: int) -> None:
+    """Log a video stream as a 2D camera view.
 
-
-def log_camera(
-    entity: str,
-    frame: str,
-    parent_frame: str,
-    video_path: Path,
-    *,
-    translation: tuple[float, float, float],
-    rpy: tuple[float, float, float],
-    n_frames: int,
-) -> None:
-    """Log a video stream as a camera that is part of the robot's frame graph.
-
-    A camera has to be reachable in the FRAME graph, not just the entity hierarchy:
-    the URDF publishes frame-based transforms, and the 3D view resolves against
-    those. An entity without a `CoordinateFrame` and a `parent_frame`/`child_frame`
-    transform shows up as "No transform path from ... to the view's target frame".
+    The cameras deliberately live outside `/world`, next to the robot rather than
+    inside it. Placing them in the 3D scene means joining the transform frame
+    graph, and an entity that is not reachable from the 3D view's target frame is
+    reported as "Pinhole is not connected to the view's target frame" - a broken
+    looking view for no benefit, since what you want from these streams is the
+    footage, not a frustum. See the README for what placing them properly needs.
     """
-    dl.log(
-        "tf_static",
-        dl.Transform3D(
-            translation=translation,
-            quaternion=quaternion_from_rpy(*rpy),
-            parent_frame=parent_frame,
-            child_frame=frame,
-        ),
-        static=True,
-    )
-    dl.log(entity, dl.CoordinateFrame(frame=frame), static=True)
-
     video = dl.AssetVideo(path=video_path)
     dl.log(entity, video, static=True)
-    dl.log(
-        entity,
-        dl.Pinhole(
-            width=640,
-            height=480,
-            focal_length=430.0,
-            camera_xyz=dl.ViewCoordinates.RDF,
-            image_plane_distance=0.12,
-        ),
-        static=True,
-    )
     nanos = video.read_frame_timestamps_nanos()
     take = min(len(nanos), n_frames)
     dl.send_columns(
@@ -204,12 +161,8 @@ def main() -> None:
     robot = Robot("so100", base_frame="base", root_frame="world", urdf=urdf, timeline="time")
 
     n = int(mask.sum())
-    log_camera(
-        *TOP_CAM, args.dataset_dir / "top.mp4", translation=(0.32, 0.0, 0.42), rpy=(0.0, 1.15, np.pi), n_frames=n
-    )
-    log_camera(
-        *WRIST_CAM, args.dataset_dir / "wrist.mp4", translation=(0.0, 0.0, 0.04), rpy=(0.0, 0.0, 0.0), n_frames=n
-    )
+    log_camera(TOP_CAM[0], args.dataset_dir / TOP_CAM[1], n_frames=n)
+    log_camera(WRIST_CAM[0], args.dataset_dir / WRIST_CAM[1], n_frames=n)
 
     for i, t in enumerate(stamps):
         with robot.timestep(float(t)):
