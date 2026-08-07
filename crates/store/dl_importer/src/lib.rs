@@ -5,9 +5,9 @@
 use std::collections::BTreeSet;
 use std::sync::{Arc, LazyLock};
 
-use itertools::chain;
 use dl_chunk::{Chunk, ChunkResult};
 use dl_log_types::{ArrowMsg, EntityPath, LogMsg, RecordingId, StoreId, TimePoint};
+use itertools::chain;
 
 // ----------------------------------------------------------------------------
 
@@ -35,8 +35,8 @@ pub mod importer_parquet;
 pub use self::import_file::{import_from_file_contents, prepare_store_info};
 pub use self::importer_archetype::ArchetypeImporter;
 pub use self::importer_directory::DirectoryImporter;
-pub use self::importer_mcap::McapImporter;
 pub use self::importer_dlr::RrdImporter;
+pub use self::importer_mcap::McapImporter;
 pub use self::importer_urdf::{UrdfImporter, UrdfTree, joint_transform as urdf_joint_transform};
 #[cfg(not(target_arch = "wasm32"))]
 pub use self::{
@@ -574,6 +574,43 @@ pub const SUPPORTED_POINT_CLOUD_EXTENSIONS: &[&str] = &["ply"];
 
 pub const SUPPORTED_DALARAN_EXTENSIONS: &[&str] = &["dbl", "dlr"];
 
+/// The recording/blueprint file extensions used by upstream Rerun.
+///
+/// Dalaran forked Rerun and renamed `.rrd` to [`.dlr`] and `.rbl` to `.dbl`, but the on-disk
+/// framing (the `RRF2` fourcc and everything after it) was deliberately left untouched. Legacy
+/// files are therefore byte-compatible and can be opened natively, without any conversion step.
+///
+/// `rrd` is the legacy counterpart of `dlr` (recordings), `rbl` the legacy counterpart of `dbl`
+/// (blueprints).
+///
+/// [`.dlr`]: crate::SUPPORTED_DALARAN_EXTENSIONS
+pub const LEGACY_RERUN_EXTENSIONS: &[&str] = &["rrd", "rbl"];
+
+/// Is this the file extension of a legacy (upstream Rerun) recording or blueprint?
+///
+/// The extension is expected without a leading period, and is matched case-insensitively.
+pub fn is_legacy_recording_extension(extension: &str) -> bool {
+    dl_log::debug_assert!(
+        !extension.starts_with('.'),
+        "Expected extension without period, but got {extension:?}"
+    );
+    let extension = extension.to_lowercase();
+    LEGACY_RERUN_EXTENSIONS.iter().any(|ext| *ext == extension)
+}
+
+/// Maps a legacy (upstream Rerun) extension onto its Dalaran equivalent.
+///
+/// Returns `None` for anything that isn't a legacy extension.
+///
+/// `rrd` maps to `dlr` (recording), `rbl` maps to `dbl` (blueprint).
+pub fn dalaran_extension_for_legacy(extension: &str) -> Option<&'static str> {
+    match extension.to_lowercase().as_str() {
+        "rrd" => Some("dlr"),
+        "rbl" => Some("dbl"),
+        _ => None,
+    }
+}
+
 /// 3rd party formats with built-in support.
 pub const SUPPORTED_THIRD_PARTY_FORMATS: &[&str] = &["mcap", "urdf"];
 
@@ -583,9 +620,13 @@ pub const SUPPORTED_PARQUET_EXTENSIONS: &[&str] = &["parquet"];
 pub const SUPPORTED_TEXT_EXTENSIONS: &[&str] = &["txt", "md"];
 
 /// All file extension supported by our builtin [`Importer`]s.
+///
+/// This includes the legacy Rerun extensions ([`LEGACY_RERUN_EXTENSIONS`]), which Dalaran reads
+/// natively.
 pub fn supported_extensions() -> impl Iterator<Item = &'static str> {
     chain!(
         SUPPORTED_DALARAN_EXTENSIONS,
+        LEGACY_RERUN_EXTENSIONS,
         SUPPORTED_THIRD_PARTY_FORMATS,
         SUPPORTED_IMAGE_EXTENSIONS,
         SUPPORTED_DEPTH_IMAGE_EXTENSIONS,
@@ -644,6 +685,43 @@ fn test_supported_extensions() {
     assert!(is_supported_file_extension("mcap"));
     assert!(is_supported_file_extension("png"));
     assert!(is_supported_file_extension("urdf"));
+}
+
+#[test]
+fn test_legacy_rerun_extensions_are_supported() {
+    // Upstream Rerun files are byte-compatible with Dalaran, so they must be openable
+    // everywhere a `.dlr`/`.dbl` is.
+    for extension in LEGACY_RERUN_EXTENSIONS {
+        assert!(
+            is_supported_file_extension(extension),
+            "{extension} should be a supported extension"
+        );
+        assert!(is_legacy_recording_extension(extension));
+        assert!(is_legacy_recording_extension(&extension.to_uppercase()));
+    }
+
+    assert!(!is_legacy_recording_extension("dlr"));
+    assert!(!is_legacy_recording_extension("dbl"));
+    assert!(!is_legacy_recording_extension("mcap"));
+}
+
+#[test]
+fn test_legacy_and_dalaran_extensions_resolve_to_the_same_format() {
+    assert_eq!(dalaran_extension_for_legacy("rrd"), Some("dlr"));
+    assert_eq!(dalaran_extension_for_legacy("RRD"), Some("dlr"));
+    assert_eq!(dalaran_extension_for_legacy("rbl"), Some("dbl"));
+    assert_eq!(dalaran_extension_for_legacy("dlr"), None);
+
+    // Both spellings must be inferred as the very same media type.
+    use dl_sdk_types::components::MediaType;
+    assert_eq!(
+        MediaType::guess_from_path("recording.rrd"),
+        MediaType::guess_from_path("recording.dlr")
+    );
+    assert_eq!(
+        MediaType::guess_from_path("blueprint.rbl"),
+        MediaType::guess_from_path("blueprint.dbl")
+    );
 }
 
 #[test]
