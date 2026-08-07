@@ -36,6 +36,8 @@ examples = [
   "droid_semantic_search",
   "animated_urdf",
   "nav2_costmap",
+  "ros2_turtlebot",
+  "robot_arm_teleop",
   "robot_data_preprocessing",
   "dalaran_export",
   "ros_node",
