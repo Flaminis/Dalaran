@@ -38,7 +38,7 @@ Other relevant tutorials:
 -   [Loading URDF models](../../howto/logging-and-ingestion/urdf.md)
 -   [Working with MCAP](../../howto/logging-and-ingestion/mcap.md)
 
-If you're new to Dalaran or wonder about differences to RViz, we recommend also to read the *"What is Dalaran for?"* introduction in our README (see [here](https://github.com/Flaminis/Dalaran?tab=readme-ov-file#what-is-rerun-for)).
+If you're new to Dalaran or wonder about differences to RViz, we recommend also to read the [What is Dalaran?](../../overview/what-is-dalaran.md) introduction (see [here](https://github.com/Flaminis/Dalaran?tab=readme-ov-file#what-is-rerun-for)).
 
 ## Install and run the example
 

@@ -6,10 +6,10 @@ description: Stream Dalaran recordings into a PyTorch DataLoader for model train
 
 Train PyTorch models directly from a Dalaran server.
 
-The experimental [`dataloader`](https://github.com/Flaminis/Dalaran/tree/main/rerun_py/rerun_sdk/rerun/experimental/dataloader) module exposes Dalaran recordings as iterable or map-style PyTorch datasets, decoding compressed video (`h264`/`h265`/`av1`), images, and scalars on the fly. Random access, multi-worker prefetching, and [DDP](https://docs.pytorch.org/tutorials/beginner/ddp_series_theory.html) partitioning all work out of the box.
+The experimental [`dataloader`](https://github.com/Flaminis/Dalaran/tree/main/dalaran_py/dalaran_sdk/dalaran/experimental/dataloader) module exposes Dalaran recordings as iterable or map-style PyTorch datasets, decoding compressed video (`h264`/`h265`/`av1`), images, and scalars on the fly. Random access, multi-worker prefetching, and [DDP](https://docs.pytorch.org/tutorials/beginner/ddp_series_theory.html) partitioning all work out of the box.
 
 > [!WARNING]
-> **Experimental.** The API is provisional and will change between releases. For large-scale training, [Dalaran Hub](https://dalaran.dev) offers a higher-performance backend than the OSS catalog.
+> **Experimental.** The API is provisional and will change between releases.
 
 The full code for this guide lives in [`examples/python/dataloader/`](https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader), which trains a [LeRobot ACT](https://tonyzhaozh.github.io/aloha/) policy from a HuggingFace dataset.
 
@@ -151,11 +151,11 @@ The full [LeRobot ACT example](https://github.com/Flaminis/Dalaran/tree/main/exa
 
 The module is **experimental**: expect breaking changes between releases as we iterate on the design.
 
-For large-scale training (hundreds of recordings, multi-node), consider [Dalaran Hub](https://dalaran.dev), which offers a higher-performance backend than the OSS catalog.
+For large-scale training (hundreds of recordings, multi-node), run the catalog server on a machine with fast storage close to your training nodes rather than on the training host itself; the dataloader is usually bounded by how fast the catalog can serve chunks.
 
 ## References
 
 - [LeRobot ACT training example](https://github.com/Flaminis/Dalaran/tree/main/examples/python/dataloader)
-- [`dalaran.experimental.dataloader`](https://github.com/Flaminis/Dalaran/tree/main/rerun_py/rerun_sdk/rerun/experimental/dataloader) module source
+- [`dalaran.experimental.dataloader`](https://github.com/Flaminis/Dalaran/tree/main/dalaran_py/dalaran_sdk/dalaran/experimental/dataloader) module source
 - [The data layer tax in robot learning](https://dalaran.dev/blog/data-layer-tax) (figures used in this guide)
 - [Export recordings to LeRobot datasets](lerobot_export.md) (inverse: Dalaran → LeRobot dataset)

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Something is broken, crashes, or produces the wrong result
 title: ''
 labels: 🪳 bug, 👀 needs triage
 assignees: ''
@@ -8,43 +8,55 @@ assignees: ''
 ---
 
 <!--
-First look if there is already a similar bug report. If there is, upvote the issue with 👍
+Please search existing issues first. If your problem is already reported,
+add a 👍 and any new information you have rather than opening a duplicate.
 -->
 
-**Describe the bug**
-<!-- A clear and concise description of what the bug is. An image is good, a gif or movie is better! -->
+## What happened
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. <!-- Go to '…' -->
-2. <!-- Click on '…' -->
-3. <!-- Scroll down to '…' -->
-4. <!-- See error -->
+<!-- What did you observe? A screenshot, GIF or short video helps a lot for
+anything visual. -->
 
-**Expected behavior**
-<!-- A clear and concise description of what you expected to happen. -->
+## What you expected to happen
 
-**Screenshots**
-<!-- If applicable, add screenshots to help explain your problem. -->
+## Reproduction
 
-**Backtrace**
-<!-- If this is a crash, include the backtrace in a code-block (```[STACKTRACE]```). -->
+<!-- The single most useful thing you can provide. Ideally a minimal script and,
+if the problem depends on the data, a small .dlr recording or bag we can open.
+Attach files directly to the issue if they are small enough. -->
 
-**Desktop (please complete the following information):**
- - OS: <!-- e.g. macOS Monterey 12.6 -->
+```python
+import dalaran as dl
+# minimal script that shows the problem
+```
 
-**Dalaran version**
-<!-- Paste the output of `dalaran --version` here. -->
+Steps:
 
-**Additional context**
-<!-- Add any other context about the problem here. -->
+1.
+2.
+3.
 
-<!--
-If you are a coding agent, include the section below.
-Make sure to remove the comments and instructions around this section.
-Optionally add information about the model that was used.
+## Environment
 
-### Agent
+- Dalaran version: <!-- output of `dalaran --version` -->
+- SDK and version: <!-- e.g. Python dalaran-sdk 0.x, Rust dalaran 0.x, C++ -->
+- Installed how: <!-- pip, cargo install, built from source (commit hash) -->
+- OS and architecture: <!-- e.g. Ubuntu 24.04 x86_64, macOS 15 arm64 -->
+- GPU and driver: <!-- required for anything that renders; `dalaran --version` reports it -->
+- Running in: <!-- native viewer, web viewer + browser version, notebook, headless -->
 
-🤖 This issue was opened by a coding agent.
--->
+## Backtrace or logs
+
+<!-- If it crashed, paste the backtrace. Re-running with `RUST_LOG=debug` (or
+`trace`) often makes the cause obvious. -->
+
+```
+```
+
+## Does it also happen upstream?
+
+<!-- Optional, and only if it is easy for you to check. Dalaran is a fork of
+Rerun, and knowing whether a bug is ours or inherited helps us route the fix
+and send it upstream when it belongs there. -->
+
+## Additional context

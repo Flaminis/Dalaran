@@ -1,12 +1,13 @@
 ---
-title: The Data Layer for Physical AI
+title: What is Dalaran?
 order: 0
 ---
 
-Dalaran covers the whole journey from raw recordings to training, on a single unified data layer for multi-rate, multimodal robotics data.
+Dalaran is an Apache-2.0, robotics-first observability and visualization stack for multimodal time-series data. It covers the whole journey from raw recordings to training on one data layer, and every part of it runs on your own hardware.
 
-It's comprised of **Dalaran SDK**: an open source library and tools for logging, storing, querying, visualizing, and training on multi-rate, multimodal data; and
-**Dalaran Hub**: a data catalog and backend for large scale storage, access, and streaming of robotics data from object storage.
+It consists of the **Dalaran SDK** (Python, Rust, C++) for logging, storing, and querying multi-rate multimodal data; the **Dalaran Viewer**, which renders all of it in sync on a shared timeline; and a **catalog server** for organizing many recordings into queryable datasets. All three are in [this repository](https://github.com/Flaminis/Dalaran) under the same licence — there is no hosted tier holding features back.
+
+Dalaran is a hard fork of [Rerun](https://github.com/rerun-io/rerun); see [ATTRIBUTION.md](https://github.com/Flaminis/Dalaran/blob/main/ATTRIBUTION.md) for what we inherited and why the fork exists.
 
 ## The problem
 
@@ -51,14 +52,12 @@ You can log directly to the viewer, [open](../getting-started/data-in/open-any-f
 ### Query and transform
 The Dalaran file format supports both high performance visualization and querying over the same data source.
 
-You can use the open source [catalog](../concepts/query-and-transform/catalog-object-model.md) server for running local [laptop scale examples](../getting-started/data-out).
-We also offer **Dalaran Hub**, a scalable catalog for robotic data, for teams that need collaborative dataset management, version control, and cloud storage ([reach out](https://5li7zhj98k8.typeform.com/to/a5XDpBkZ?typeform-source=docs) to learn more).
-These are API compatible so the only difference from our examples to **Dalaran Hub** is that you connect to an existing server instead of launching your own.
+Use the [catalog](../concepts/query-and-transform/catalog-object-model.md) server for everything from local [laptop scale examples](../getting-started/data-out) to a shared instance on your own infrastructure. It is the same server in both cases; the only difference is whether you launch it yourself or connect to one that is already running.
 
 #### Prepare catalog
 Before querying or viewing recordings on the catalog we have to register them.
 We group recordings as [datasets](../concepts/query-and-transform/catalog-object-model.md#datasets).
-Since Dalaran indexes existing data in place, registration needs paths to RRDs to index: in object store for **Dalaran Hub** or on disk for local catalog server.
+Since Dalaran indexes existing data in place, registration needs paths to the recordings to index: on disk, or in an object store the server can reach.
 
 <div class="d2-diagram">
   <img class="d2-dark" src="https://static.rerun.io/40ada7a9f3834208554b8de80a0bab3fb8e5f108_d2.svg" alt="">
@@ -93,5 +92,5 @@ Ready to speed up your iteration cycle?
 
 ## Can't find what you're looking for?
 
-- Join us in the [Dalaran Community Discord](https://discord.gg/xwcxHUjD35)
-- [Submit an issue](https://github.com/Flaminis/Dalaran/issues) in the Dalaran GitHub project
+- Ask in [GitHub Discussions](https://github.com/Flaminis/Dalaran/discussions)
+- [Submit an issue](https://github.com/Flaminis/Dalaran/issues) on the Dalaran repository

@@ -23,6 +23,6 @@ There are many ways to install the viewer. Please pick whatever works best for y
 In any case you should be able to run `dalaran` afterwards to start the Viewer.
 You'll be welcomed by an overview page that allows you to jump into some examples.
 
-If you're facing any difficulties, don't hesitate to [open an issue](https://github.com/Flaminis/Dalaran/issues/new/choose) or [join the Discord server](https://discord.gg/PXtCgFBSmH).
+If you're facing any difficulties, don't hesitate to [open an issue](https://github.com/Flaminis/Dalaran/issues/new/choose) or ask in [GitHub Discussions](https://github.com/Flaminis/Dalaran/discussions).
 
 The Dalaran Viewer has built-in support for opening many kinds of files, and can be [extended to open any other file type](../../getting-started/data-in/open-any-file.md) without needing to modify the Dalaran codebase itself.

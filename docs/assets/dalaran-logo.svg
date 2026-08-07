@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Dalaran logo">
+  <title>Dalaran</title>
+  <!-- Observatory dome: outer ring -->
+  <circle cx="32" cy="32" r="26" fill="none" stroke="#6C4CF1" stroke-width="3" />
+  <!-- Two ley-line orbits, mirrored -->
+  <ellipse cx="32" cy="32" rx="26" ry="10" fill="none" stroke="#2BB8D9" stroke-width="2"
+           transform="rotate(-32 32 32)" />
+  <ellipse cx="32" cy="32" rx="26" ry="10" fill="none" stroke="#2BB8D9" stroke-width="2"
+           transform="rotate(32 32 32)" />
+  <!-- Arcane focus: the lens you look through -->
+  <polygon points="32,17 41,32 32,47 23,32" fill="#6C4CF1" />
+  <polygon points="32,24 36.5,32 32,40 27.5,32" fill="#E8B44A" />
+  <!-- Anchor nodes on the horizon -->
+  <circle cx="6" cy="32" r="3" fill="#2BB8D9" />
+  <circle cx="58" cy="32" r="3" fill="#2BB8D9" />
+</svg>

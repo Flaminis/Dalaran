@@ -111,7 +111,7 @@ The `dalaran-lerobot` package includes a CLI that implements this workflow for b
 dalaran-lerobot \
   --dlr-dir ./tests/assets/dlr/sample_5 \
   --output ./lerobot_dataset \
-  --dataset-name rerun-example-droid \
+  --dataset-name dalaran-example-droid \
   --fps 15 \
   --action /action/joint_positions:Scalars:scalars \
   --state /observation/joint_positions:Scalars:scalars \
