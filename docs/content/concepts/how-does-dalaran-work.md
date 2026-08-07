@@ -34,15 +34,13 @@ The catalog server provides persistent storage and indexing for large-scale data
 - **Datasets**: Named collections of related recordings
 - **Segments**: Individual `.dlr` files registered to a dataset
 
-Data is served via the **redap** protocol (**Re**run **Da**ta **P**rotocol).
+Data is served via the **redap** protocol. The name is inherited from upstream, where it stood for the remote data platform protocol; we kept it because it is baked into the wire protocol and crate names (`dl_redap_client`).
 
-The catalog server is available as:
-- Open-source server for local development (`dalaran server`)
-- **Dalaran Hub**, our managed offering for production deployments
+The catalog server ships in this repository and is run with `dalaran server`, both for local development and for a shared, persistent deployment on your own infrastructure. There is no separate managed edition with extra features.
 
 ### Catalog SDK
 
-The Catalog SDK (`dalaran.catalog`) is a Python library for querying and manipulating the data stored on a catalog server. Combined with Dalaran Hub, it allows building complex data transformation pipelines.
+The Catalog SDK (`dalaran.catalog`) is a Python library for querying and manipulating the data stored on a catalog server. It is how you build data transformation pipelines on top of a catalog.
 
 
 ## How they connect
