@@ -293,7 +293,8 @@ def test_repr_mentions_the_urdf() -> None:
 
 
 def test_inline_urdf_markup_is_not_treated_as_a_path() -> None:
-    """`Robot(urdf=...)` accepts URDF markup directly, not just a path.
+    """
+    `Robot(urdf=...)` accepts URDF markup directly, not just a path.
 
     Passing a small inline URDF is common in tests and snippets. Before this was
     handled, the string was passed to `Path.read_text` and the OS raised a

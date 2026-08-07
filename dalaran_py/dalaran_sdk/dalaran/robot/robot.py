@@ -82,7 +82,11 @@ def _axis_angle_to_matrix(axis: npt.NDArray[np.float64], angle: float) -> npt.ND
 
 
 def _looks_like_urdf_xml(source: str) -> bool:
-    """Is this URDF markup rather than a path to a file containing it?"""
+    """
+    Detect URDF markup, as opposed to a path to a file containing it.
+
+    Markup is recognized by its leading `<` after stripping whitespace.
+    """
     return source.lstrip()[:1] == "<"
 
 

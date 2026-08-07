@@ -35,11 +35,18 @@ impl PyUrdfTree {
         frame_prefix: Option<String>,
         static_transform_entity_path: Option<String>,
     ) -> PyResult<Self> {
-        let mut tree =
-            UrdfTree::from_file_path(path, entity_path_prefix.map(EntityPath::from_single_string))
-                .map_err(|err| {
-                    PyRuntimeError::new_err(format!("Failed to load URDF file: {err}"))
-                })?;
+        // Parse the prefix as an entity *path*, which is what the parameter name
+        // promises: `"world/robot"` has to nest under `/world`. Using
+        // `from_single_string` here escaped the slash into a single part named
+        // `world\/robot`, so the geometry landed in a sibling of `/world` and was
+        // invisible to any view rooted there.
+        let mut tree = UrdfTree::from_file_path(
+            path,
+            entity_path_prefix
+                .as_deref()
+                .map(EntityPath::parse_forgiving),
+        )
+        .map_err(|err| PyRuntimeError::new_err(format!("Failed to load URDF file: {err}")))?;
         if let Some(prefix) = frame_prefix {
             tree = tree.with_frame_prefix(prefix);
         }
