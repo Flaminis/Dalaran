@@ -1,5 +1,6 @@
 //! `dalaran doctor`: diagnose a Dalaran installation from the viewer binary itself.
 
+mod environment;
 mod report;
 
 use std::path::PathBuf;
@@ -77,7 +78,14 @@ impl DoctorCommand {
 
     /// Runs every check, without printing anything.
     fn diagnose(&self, build_info: &dl_build_info::BuildInfo) -> Report {
-        let checks = vec![check_build(build_info)];
+        let env = environment::snapshot();
+
+        let checks = vec![
+            check_build(build_info),
+            environment::check_environment(&env),
+            environment::check_display(&env),
+            environment::check_ros2(&env),
+        ];
 
         Report {
             dalaran_version: build_info.version.to_string(),

@@ -150,6 +150,17 @@ impl Check {
         self
     }
 
+    /// Overrides the status and summary, keeping the details gathered so far.
+    ///
+    /// Checks generally collect all their evidence first and only then decide what it means, so
+    /// this lets them build the details once instead of once per outcome.
+    #[must_use]
+    pub fn with_status(mut self, status: Status, summary: impl Into<String>) -> Self {
+        self.status = status;
+        self.summary = summary.into();
+        self
+    }
+
     /// Attaches the actionable advice shown under a `warn` or `fail` line.
     #[must_use]
     pub fn with_hint(mut self, hint: impl Into<String>) -> Self {
