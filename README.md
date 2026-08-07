@@ -127,9 +127,14 @@ depend on yet; unmarked items work today.
   (`x`-forward `z`-up, ENU vs. NED, `map`/`odom`/`base_link` frame semantics)
   as first-class helpers, because silently mismatched axis conventions are the
   single most common way a robotics visualization ends up wrong.
-- **Occupancy grids and costmaps** *(in progress)* — `nav_msgs/OccupancyGrid`
-  and layered costmaps as a real archetype with proper origin/resolution
-  handling, instead of being flattened into an untyped image.
+- **Occupancy grids and costmaps** — `nav_msgs/OccupancyGrid`, `nav2_msgs/Costmap`
+  and nav2's `/global_costmap` and `/local_costmap` topics land on the `GridMap`
+  archetype with proper origin/resolution handling, instead of being flattened
+  into an untyped image. nav2's cost semantics are modelled properly, so
+  `INSCRIBED_INFLATED_OBSTACLE` and `LETHAL_OBSTACLE` are drawn as the categories
+  they are rather than as points on the cost gradient, a costmap's layers stack
+  as separate entities with their own draw order and opacity, and the rolling
+  local window keeps one entity while its origin moves.
 - **`dalaran doctor`** *(in progress)* — a diagnostic subcommand that inspects
   your environment (GPU and driver, viewer/SDK version skew, ROS 2 setup,
   recording integrity) and tells you what is wrong in plain language.
