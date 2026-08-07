@@ -1,5 +1,5 @@
-use itertools::Itertools as _;
 use dl_chunk::{Chunk, ComponentIdentifier};
+use itertools::Itertools as _;
 
 use crate::{DynExpr, Lens, LensError, LensRuntimeError, Lenses, OutputMode, Runtime, Selector};
 

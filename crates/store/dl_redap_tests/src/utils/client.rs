@@ -1,10 +1,10 @@
-use futures::Stream;
 use dl_datafusion::DataframeClientAPI;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     FetchChunksRequest, FetchChunksResponse, GetDatasetSchemaRequest, GetDatasetSchemaResponse,
     QueryDatasetRequest, QueryDatasetResponse,
 };
+use futures::Stream;
 use std::collections::VecDeque;
 use std::fmt::Formatter;
 use std::sync::Arc;

@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use arrow::array::ArrayRef;
-use itertools::Itertools as _;
 use dl_chunk::{Chunk, ChunkId, RowId, TimePoint, TimelineName};
 use dl_chunk_store::{
     AbsoluteTimeRange, ChunkStore, ChunkStoreConfig, ChunkTrackingMode, LatestAtQuery, RangeQuery,
@@ -11,6 +10,7 @@ use dl_log_types::example_components::{MyColor, MyIndex, MyPoint, MyPoints};
 use dl_log_types::{EntityPath, TimeType, Timeline, build_frame_nr};
 use dl_sdk_types::testing::{build_some_large_structs, large_struct_descriptor};
 use dl_sdk_types::{ComponentDescriptor, ComponentSet};
+use itertools::Itertools as _;
 
 // ---
 

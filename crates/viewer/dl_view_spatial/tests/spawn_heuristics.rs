@@ -1,10 +1,10 @@
 #![expect(clippy::unwrap_used)]
 
-use ndarray::{Array, ShapeBuilder as _};
 use dl_log_types::{EntityPath, Timeline};
 use dl_sdk_types::{AsComponents, archetypes};
 use dl_test_context::TestContext;
 use dl_viewer_context::{ViewClass as _, ViewSpawnHeuristics};
+use ndarray::{Array, ShapeBuilder as _};
 
 enum ImageSize {
     Small,

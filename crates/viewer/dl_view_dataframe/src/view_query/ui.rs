@@ -1,7 +1,5 @@
 use std::collections::{BTreeSet, HashSet};
 
-use egui::PopupCloseBehavior;
-use egui::containers::menu::{MenuButton, MenuConfig};
 use dl_chunk_store::ColumnDescriptor;
 use dl_log_types::{
     AbsoluteTimeRange, EntityPath, TimeInt, TimeType, Timeline, TimelineName, TimestampFormat,
@@ -14,6 +12,8 @@ use dl_viewer_context::{
     TimeControlCommand, TimeRangeHighlight, TimeRangeHighlightKind, ViewId,
     ViewSystemExecutionError, ViewerContext,
 };
+use egui::PopupCloseBehavior;
+use egui::containers::menu::{MenuButton, MenuConfig};
 
 use crate::view_query::Query;
 

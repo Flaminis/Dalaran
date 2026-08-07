@@ -1,7 +1,6 @@
 use std::sync::OnceLock;
 
 use ahash::HashMap;
-use nohash_hasher::{IntMap, IntSet};
 use dl_chunk_store::{
     ChunkStore, ChunkStoreDiff, ChunkStoreEvent, ChunkStoreSubscriber, ChunkStoreSubscriberHandle,
 };
@@ -9,6 +8,7 @@ use dl_log::debug_assert;
 use dl_log_types::{EntityPath, EntityPathHash, StoreId};
 use dl_sdk_types::Component as _;
 use dl_sdk_types::components::{PinholeProjection, ViewCoordinates};
+use nohash_hasher::{IntMap, IntSet};
 
 bitflags::bitflags! {
     #[derive(PartialEq, Eq, Debug, Copy, Clone)]

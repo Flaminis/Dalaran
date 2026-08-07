@@ -1,5 +1,3 @@
-use egui::RichText;
-use itertools::Itertools as _;
 use dl_capabilities::MainThreadToken;
 use dl_chunk_store::{ChunkTrackingMode, UnitChunkShared};
 use dl_entity_db::InstancePath;
@@ -11,6 +9,8 @@ use dl_sdk_types::{ArchetypeName, Component as _, ComponentDescriptor, component
 use dl_ui::list_item::{ListItemContentButtonsExt as _, PropertyContent};
 use dl_ui::{UiExt as _, design_tokens_of_visuals, list_item};
 use dl_viewer_context::{HoverHighlight, Item, StoreViewContext, UiLayout};
+use egui::RichText;
+use itertools::Itertools as _;
 
 use super::DataUi;
 use crate::{

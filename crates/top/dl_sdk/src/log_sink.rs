@@ -2,11 +2,11 @@ use std::fmt;
 use std::sync::Arc;
 use std::time::Duration;
 
-use parking_lot::Mutex;
 use dl_chunk::ChunkBatcherConfig;
 use dl_grpc_client::write::{Client as MessageProxyClient, GrpcFlushError, Options};
 use dl_log_encoding::{EncodeError, Encoder};
 use dl_log_types::{BlueprintActivationCommand, LogMsg, StoreId};
+use parking_lot::Mutex;
 
 use crate::RecordingStream;
 

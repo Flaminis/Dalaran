@@ -1,8 +1,8 @@
 //! Integrates the Dalaran SDK with the [`log`] crate.
 
-use log::Log as _;
 use dl_sdk_types::archetypes::TextLog;
 use dl_sdk_types::components::TextLogLevel;
+use log::Log as _;
 
 use crate::RecordingStream;
 

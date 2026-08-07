@@ -9,9 +9,9 @@
 //! To go from a freshly decoded transport-level type to its application-level equivalent, use [`ToApplication`].
 //! To prepare an application-level type for encoding, use [`ToTransport`].
 
-use itertools::Itertools as _;
 use dl_build_info::CrateVersion;
 use dl_log_types::{BlueprintActivationCommand, SetStoreInfo};
+use itertools::Itertools as _;
 
 use crate::ApplicationIdInjector;
 use crate::dlr::CodecError;

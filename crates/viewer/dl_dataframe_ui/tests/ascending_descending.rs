@@ -5,11 +5,11 @@ use std::sync::Arc;
 use arrow::array::{Array as _, ListArray, RecordBatch, StringBuilder};
 use arrow::datatypes::{Field, Schema};
 use datafusion::prelude::SessionContext;
-use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
 use dl_async::AsyncRuntimeHandle;
 use dl_dataframe_ui::{DataFusionTableWidget, SortBy, TableBlueprint};
 use dl_test_context::TestContext;
+use egui::accesskit::Role;
+use egui_kittest::kittest::Queryable as _;
 
 use common::run_async_harness;
 

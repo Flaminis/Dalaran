@@ -4,8 +4,6 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 use ahash::HashMap;
-use egui_tiles::{SimplificationOptions, TileId};
-use nohash_hasher::IntSet;
 use dl_chunk_store::LatestAtQuery;
 use dl_entity_db::EntityPath;
 use dl_log_types::{EntityPathHash, EntityPathSubs};
@@ -19,6 +17,8 @@ use dl_viewer_context::{
     BlueprintContext as _, ContainerId, Contents, Item, ViewId, ViewerContext, VisitorControlFlow,
     blueprint_id_to_tile_id,
 };
+use egui_tiles::{SimplificationOptions, TileId};
+use nohash_hasher::IntSet;
 use smallvec::SmallVec;
 
 use crate::container::ContainerBlueprint;

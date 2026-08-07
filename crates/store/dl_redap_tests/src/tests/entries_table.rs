@@ -1,14 +1,14 @@
-use futures::TryStreamExt as _;
-use itertools::Itertools as _;
 use dl_log_types::EntryId;
 use dl_protos::EntryName;
-use dl_protos::cloud::v1alpha1::ext::EntryDetails;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
+use dl_protos::cloud::v1alpha1::ext::EntryDetails;
 use dl_protos::cloud::v1alpha1::{
     DeleteEntryRequest, FindEntriesRequest, GetTableSchemaRequest, ReadDatasetEntryRequest,
     ReadTableEntryRequest, ScanTableRequest,
 };
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
+use futures::TryStreamExt as _;
+use itertools::Itertools as _;
 
 use crate::tests::common::{DalaranCloudServiceExt as _, create_table_entry_with_name};
 use crate::{RecordBatchTestExt as _, SchemaTestExt as _};

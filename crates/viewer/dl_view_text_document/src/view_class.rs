@@ -1,4 +1,3 @@
-use egui::{Label, Sense};
 use dl_sdk_types::blueprint::archetypes::TextDocumentFormat;
 use dl_sdk_types::blueprint::components::Enabled;
 use dl_sdk_types::{View as _, ViewClassIdentifier};
@@ -10,6 +9,7 @@ use dl_viewer_context::{
     ViewSystemExecutionError, ViewerContext, suggest_view_for_each_entity,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::{Label, Sense};
 
 use crate::visualizer_system::{TextDocumentEntry, TextDocumentSystem};
 

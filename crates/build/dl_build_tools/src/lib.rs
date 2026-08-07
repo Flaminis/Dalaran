@@ -25,8 +25,9 @@ pub use self::hashing::{
 };
 pub(crate) use self::rebuild_detector::Packages;
 pub use self::rebuild_detector::{
-    get_and_track_env_var, is_tracked_env_var_set, rebuild_if_crate_changed, dalaran_if_changed,
-    dalaran_if_changed_glob, dalaran_if_changed_or_doesnt_exist, write_file_if_necessary,
+    dalaran_if_changed, dalaran_if_changed_glob, dalaran_if_changed_or_doesnt_exist,
+    get_and_track_env_var, is_tracked_env_var_set, rebuild_if_crate_changed,
+    write_file_if_necessary,
 };
 pub use self::rustfmt::rustfmt_str;
 

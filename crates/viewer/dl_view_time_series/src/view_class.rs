@@ -1,8 +1,4 @@
 use ahash::HashMap;
-use egui::{NumExt as _, Vec2, Vec2b, emath::fast_midpoint};
-use egui_plot::{Plot, PlotPoint};
-use itertools::{Either, Itertools as _, chain};
-use nohash_hasher::{IntMap, IntSet};
 use dl_chunk_store::TimeType;
 use dl_format::time::next_grid_tick_magnitude_nanos;
 use dl_log_types::external::arrow::datatypes::DataType;
@@ -28,6 +24,10 @@ use dl_viewer_context::{
     VisualizerComponentSource,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::{NumExt as _, Vec2, Vec2b, emath::fast_midpoint};
+use egui_plot::{Plot, PlotPoint};
+use itertools::{Either, Itertools as _, chain};
+use nohash_hasher::{IntMap, IntSet};
 use smallvec::SmallVec;
 use vec1::Vec1;
 

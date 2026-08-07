@@ -83,7 +83,11 @@ mod test {
     fn without_archetype() {
         let values = AnyValues::default()
             .with_component::<components::Scalar>("confidence", [1.2f64, 3.4, 5.6])
-            .with_component_override::<Utf8>("homepage", "user.url", vec!["https://www.dalaran.dev"])
+            .with_component_override::<Utf8>(
+                "homepage",
+                "user.url",
+                vec!["https://www.dalaran.dev"],
+            )
             .with_component_from_data(
                 "description",
                 std::sync::Arc::new(arrow::array::StringArray::from(vec!["Bla bla bla…"])),

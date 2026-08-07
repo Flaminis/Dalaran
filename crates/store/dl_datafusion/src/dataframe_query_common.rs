@@ -16,9 +16,6 @@ use datafusion::common::{Column, DataFusionError, downcast_value, exec_datafusio
 use datafusion::datasource::TableType;
 use datafusion::logical_expr::{Expr, Operator, TableProviderFilterPushDown};
 use datafusion::physical_plan::ExecutionPlan;
-use futures::StreamExt as _;
-use itertools::Itertools as _;
-use parking_lot::Mutex;
 use dl_async::AsyncRuntimeHandle;
 use dl_dataframe::external::dl_chunk_store::ChunkStore;
 use dl_dataframe::{Index, IndexValue, QueryExpression, SparseFillStrategy};
@@ -35,6 +32,9 @@ use dl_protos::{
     common::v1alpha1::ext::SegmentId,
 };
 use dl_redap_client::{ApiError, ApiResult, ConnectionClient, ConnectionRegistryHandle};
+use futures::StreamExt as _;
+use itertools::Itertools as _;
+use parking_lot::Mutex;
 
 use crate::{IntoDfError as _, SegmentStreamExec};
 use dl_sorbet::{

@@ -67,7 +67,7 @@ pub use self::footer::{
 };
 #[cfg(feature = "decoder")]
 pub use self::footer_reader::{
-    RrdMetadata, enumerate_legacy_metadata, enumerate_dlr_stores, read_dlr_footer,
+    RrdMetadata, enumerate_dlr_stores, enumerate_legacy_metadata, read_dlr_footer,
 };
 pub use self::frames::{
     Compression, CrateVersion, EncodingOptions, MessageHeader, MessageKind, Serializer,

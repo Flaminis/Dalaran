@@ -6,8 +6,8 @@ use arrow::array::{Array, ArrayRef, AsArray as _, ListArray};
 use arrow::datatypes::{DataType, Field, Fields};
 use arrow::util::display::{ArrayFormatter, FormatOptions};
 use comfy_table::{Cell, Row, Table, presets};
-use itertools::{Either, Itertools as _};
 use dl_tuid::Tuid;
+use itertools::{Either, Itertools as _};
 
 use crate::ArrowArrayDowncastRef as _;
 

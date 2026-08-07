@@ -6,13 +6,13 @@
 
 use core::range::RangeInclusive;
 
-use egui::emath::Rangef;
-use egui::{NumExt as _, lerp, remap};
-use itertools::Itertools as _;
 use dl_log::debug_assert;
 use dl_log_types::{AbsoluteTimeRange, AbsoluteTimeRangeF, TimeInt, TimeReal};
 use dl_sdk_types::blueprint::components::PlayState;
 use dl_viewer_context::{TimeControlCommand, TimeView};
+use egui::emath::Rangef;
+use egui::{NumExt as _, lerp, remap};
+use itertools::Itertools as _;
 
 /// The ideal gap between time segments.
 ///

@@ -1,6 +1,4 @@
 use ahash::HashMap;
-use egui::NumExt as _;
-use itertools::izip;
 use dl_log_types::{EntityPath, EntityPathHash};
 use dl_sdk_types::blueprint::archetypes::{PlotBackground, PlotLegend};
 use dl_sdk_types::blueprint::components::{Corner2D, Enabled};
@@ -17,6 +15,8 @@ use dl_viewer_context::{
     VisualizableReason, suggest_view_for_each_entity,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::NumExt as _;
+use itertools::izip;
 
 use super::visualizer_system::{BarChartData, BarChartVisualizerSystem};
 

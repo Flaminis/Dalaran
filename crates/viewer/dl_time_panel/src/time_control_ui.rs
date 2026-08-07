@@ -1,4 +1,3 @@
-use egui::{NumExt as _, Popup, RectAlign};
 use dl_entity_db::EntityDb;
 use dl_log_types::TimeType;
 use dl_sdk_types::blueprint::components::{LoopMode, PlayState};
@@ -7,6 +6,7 @@ use dl_ui::{
     ComboItem, ReButton, RecordingCommandKind, Size, UiExt as _, Variant, icons, list_item,
 };
 use dl_viewer_context::{TimeControl, TimeControlCommand};
+use egui::{NumExt as _, Popup, RectAlign};
 
 #[derive(serde::Deserialize, serde::Serialize, Default)]
 pub struct TimeControlUi;

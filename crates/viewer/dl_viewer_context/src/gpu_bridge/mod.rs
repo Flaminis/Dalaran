@@ -1,8 +1,8 @@
 //! Bridge to `dl_renderer`
 
 mod colormap;
-mod image_to_gpu;
 mod dl_renderer_callback;
+mod image_to_gpu;
 
 pub use colormap::{
     colormap_edit_or_view_ui, colormap_edit_or_view_ui_with_selection, colormap_to_re_renderer,

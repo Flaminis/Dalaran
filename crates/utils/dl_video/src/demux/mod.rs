@@ -10,10 +10,10 @@ pub mod mp4;
 use std::collections::BTreeMap;
 
 use bit_vec::BitVec;
-use itertools::Itertools as _;
 use dl_log::{debug_assert, debug_panic};
 use dl_span::Span;
 use dl_tuid::Tuid;
+use itertools::Itertools as _;
 use web_time::Instant;
 
 use super::{Time, Timescale};

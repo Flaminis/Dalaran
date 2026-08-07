@@ -1,10 +1,10 @@
+use dl_sdk_types::datatypes::Rgba32;
+use dl_ui::UiExt as _;
+use dl_viewer_context::MaybeMutRef;
 use egui::{
     Color32, Popup, PopupCloseBehavior, Response, Ui, Vec2, Widget,
     color_picker::{Alpha, color_picker_color32},
 };
-use dl_sdk_types::datatypes::Rgba32;
-use dl_ui::UiExt as _;
-use dl_viewer_context::MaybeMutRef;
 
 /// A simple colored square with rounded corners and a stroke outline.
 pub struct ColorSwatch<'a> {

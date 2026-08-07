@@ -2,9 +2,9 @@ use std::hash::{Hash as _, Hasher as _};
 use std::sync::Arc;
 
 use ahash::{HashMap, HashSet};
-use itertools::Itertools as _;
 use dl_byte_size::SizeBytes;
 use dl_string_interner::InternedString;
+use itertools::Itertools as _;
 
 use crate::EntityPathPart;
 use crate::hash::Hash64;

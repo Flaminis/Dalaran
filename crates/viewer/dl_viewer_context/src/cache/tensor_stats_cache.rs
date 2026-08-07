@@ -1,11 +1,11 @@
 use ahash::{HashMap, HashSet};
-use itertools::Either;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::ChunkStoreEvent;
 use dl_entity_db::EntityDb;
 use dl_log_types::hash::Hash64;
 use dl_sdk_types::archetypes::Tensor;
 use dl_sdk_types::datatypes::TensorData;
+use itertools::Either;
 
 use crate::{Cache, CacheEntryAccess, TensorStats};
 

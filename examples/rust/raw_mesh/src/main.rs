@@ -152,7 +152,10 @@ fn run(rec: &RecordingStream, args: &Args) -> anyhow::Result<()> {
 
     if args.asset3d {
         rec.log_static("world", &dalaran::ViewCoordinates::RIGHT_HAND_Y_UP())?;
-        rec.log("world/asset", &dalaran::Asset3D::from_file_path(scene_path)?)?;
+        rec.log(
+            "world/asset",
+            &dalaran::Asset3D::from_file_path(scene_path)?,
+        )?;
         return Ok(());
     }
 

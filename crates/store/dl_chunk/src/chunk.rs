@@ -7,8 +7,6 @@ use arrow::array::{
     ListArray as ArrowListArray,
 };
 use arrow::buffer::{NullBuffer as ArrowNullBuffer, ScalarBuffer as ArrowScalarBuffer};
-use itertools::{Either, Itertools as _, izip};
-use nohash_hasher::IntMap;
 use dl_arrow_util::{ArrowArrayDowncastRef as _, widen_binary_arrays};
 use dl_byte_size::SizeBytes as _;
 use dl_log::debug_assert;
@@ -19,6 +17,8 @@ use dl_types_core::{
     ComponentDescriptor, ComponentIdentifier, ComponentType, DeserializationError, Loggable as _,
     SerializationError, SerializedComponentColumn,
 };
+use itertools::{Either, Itertools as _, izip};
+use nohash_hasher::IntMap;
 
 use crate::{ChunkId, RowId};
 

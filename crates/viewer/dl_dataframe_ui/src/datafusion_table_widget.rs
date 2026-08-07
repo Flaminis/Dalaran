@@ -5,10 +5,6 @@ use arrow::array::{Array as _, BooleanArray};
 use arrow::datatypes::Field;
 use datafusion::prelude::SessionContext;
 use datafusion::sql::TableReference;
-use egui::containers::menu::MenuConfig;
-use egui::{Frame, Id, Margin, OpenUrl, Panel, RichText, Ui};
-use egui_table::{CellInfo, HeaderCellInfo};
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_async::AsyncRuntimeHandle;
 use dl_format::{format_plural_s, format_uint};
@@ -20,16 +16,20 @@ use dl_ui::egui_ext::response_ext::ResponseExt as _;
 use dl_ui::menu::menu_style;
 use dl_ui::{UiExt as _, UiLayout, icons};
 use dl_viewer_context::{AppContext, SystemCommand, SystemCommandSender as _};
+use egui::containers::menu::MenuConfig;
+use egui::{Frame, Id, Margin, OpenUrl, Panel, RichText, Ui};
+use egui_table::{CellInfo, HeaderCellInfo};
+use itertools::Itertools as _;
 
 use crate::StreamingCacheTableProvider;
 use crate::datafusion_adapter::{DataFusionAdapter, DataFusionQueryResult};
 use crate::display_record_batch::DisplayColumn;
+use crate::dl_table::ReTable;
+use crate::dl_table_utils::{ColumnConfig, TableConfig};
 use crate::filters::{ColumnFilter, FilterState};
 use crate::grid_view::FlagChangeEvent;
 use crate::header_tooltip::column_header_tooltip_ui;
 use crate::preview_renderer::PreviewRecording;
-use crate::dl_table::ReTable;
-use crate::dl_table_utils::{ColumnConfig, TableConfig};
 use crate::table_blueprint::{
     ColumnBlueprint, EntryLinksSpec, SegmentLinksSpec, SortBy, SortDirection, TableBlueprint,
 };

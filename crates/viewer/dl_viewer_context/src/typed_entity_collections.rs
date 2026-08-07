@@ -1,12 +1,12 @@
 //! Various strongly typed sets of entities to express intent and avoid mistakes.
 
 use ahash::HashMap;
-use nohash_hasher::{IntMap, IntSet};
 use dl_chunk::ComponentIdentifier;
 use dl_lenses_core::Selector;
 use dl_log_types::EntityPath;
 use dl_sdk_types::blueprint::components::VisualizerInstructionId;
 use dl_types_core::ViewClassIdentifier;
+use nohash_hasher::{IntMap, IntSet};
 
 use crate::ViewSystemIdentifier;
 

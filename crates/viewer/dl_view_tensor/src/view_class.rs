@@ -1,6 +1,3 @@
-use egui::epaint::TextShape;
-use egui::{Align2, NumExt as _, Vec2};
-use ndarray::Axis;
 use dl_data_ui::tensor_summary_ui_grid_contents;
 use dl_log_types::EntityPath;
 use dl_log_types::hash::Hash64;
@@ -21,6 +18,9 @@ use dl_viewer_context::{
     VisualizableReason, gpu_bridge, suggest_view_for_each_entity,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::epaint::TextShape;
+use egui::{Align2, NumExt as _, Vec2};
+use ndarray::Axis;
 
 use crate::TensorDimension;
 use crate::dimension_mapping::TensorSliceSelection;

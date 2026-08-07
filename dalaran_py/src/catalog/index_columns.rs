@@ -1,6 +1,6 @@
+use dl_sorbet::{IndexColumnDescriptor, TimeColumnSelector};
 use pyo3::exceptions::PyValueError;
 use pyo3::{PyResult, pyclass, pymethods};
-use dl_sorbet::{IndexColumnDescriptor, TimeColumnSelector};
 
 /// The descriptor of an index column.
 ///

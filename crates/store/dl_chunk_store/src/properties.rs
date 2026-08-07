@@ -5,12 +5,12 @@ use arrow::array::{
 };
 use arrow::datatypes::{Field, Schema};
 use arrow::error::ArrowError;
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_chunk::{Chunk, ChunkId, LatestAtQuery};
 use dl_log_types::{EntityPath, TimeInt, TimelineName};
 use dl_sorbet::ComponentColumnDescriptor;
 use dl_types_core::ComponentDescriptor;
+use itertools::Itertools as _;
 
 use crate::{ChunkStore, ChunkTrackingMode, QueryResults};
 

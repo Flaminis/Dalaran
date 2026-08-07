@@ -6,13 +6,13 @@ use arrow::array::{
     StringBuilder, StructBuilder, UInt32Builder, UInt64Builder,
 };
 use arrow::datatypes::{DataType, Field, Fields};
+use dl_chunk::{Chunk, ChunkId};
+use dl_sdk_types::reflection::ComponentDescriptorExt as _;
+use dl_sdk_types::{ArchetypeName, ComponentDescriptor};
 use prost_reflect::{
     DescriptorPool, DynamicMessage, FieldDescriptor, Kind, MapKey, MessageDescriptor,
     OneofDescriptor, ReflectMessage as _, Value,
 };
-use dl_chunk::{Chunk, ChunkId};
-use dl_sdk_types::reflection::ComponentDescriptorExt as _;
-use dl_sdk_types::{ArchetypeName, ComponentDescriptor};
 
 use crate::parsers::{MessageParser, ParserContext};
 use crate::{DecoderIdentifier, Error, MessageDecoder};
@@ -653,6 +653,7 @@ mod unit_tests {
 mod integration_tests {
     use std::io;
 
+    use dl_chunk::Chunk;
     use prost_reflect::prost::Message as _;
     use prost_reflect::prost_types::{
         DescriptorProto, EnumDescriptorProto, EnumValueDescriptorProto, FieldDescriptorProto,
@@ -660,7 +661,6 @@ mod integration_tests {
         field_descriptor_proto,
     };
     use prost_reflect::{DescriptorPool, DynamicMessage, MessageDescriptor};
-    use dl_chunk::Chunk;
 
     use dl_log_types::TimeType;
 
@@ -968,7 +968,10 @@ mod integration_tests {
                 .expect("failed to parse text format");
                 let mut tags = std::collections::HashMap::new();
                 tags.insert(MapKey::String("role".into()), Value::String("admin".into()));
-                tags.insert(MapKey::String("org".into()), Value::String("dalaran".into()));
+                tags.insert(
+                    MapKey::String("org".into()),
+                    Value::String("dalaran".into()),
+                );
                 msg.set_field_by_name("tags", Value::Map(tags));
                 msg
             },

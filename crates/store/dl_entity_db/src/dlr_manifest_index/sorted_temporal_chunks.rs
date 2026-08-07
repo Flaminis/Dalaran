@@ -15,10 +15,10 @@
 
 use std::collections::BTreeMap;
 
-use nohash_hasher::IntMap;
 use dl_chunk::{ChunkId, TimelineName};
 use dl_chunk_store::EntityTree;
 use dl_log_types::{AbsoluteTimeRange, EntityPathHash};
+use nohash_hasher::IntMap;
 
 /// Summary information about a chunk for display/query purposes.
 #[derive(Clone, dl_byte_size::SizeBytes)]

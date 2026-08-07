@@ -260,7 +260,8 @@ where
     // need to pass a layered service via `with_channel`, which the OTLP
     // builder doesn't allow.
     let token_for_interceptor: Arc<parking_lot::RwLock<String>> = Arc::clone(&token_cache);
-    let mut version_interceptor = dl_grpc_headers::DalaranVersionInterceptor::new_client(None, None);
+    let mut version_interceptor =
+        dl_grpc_headers::DalaranVersionInterceptor::new_client(None, None);
     // Rising-edge gate so a malformed cached token warns once per failure run,
     // not on every export. Mirrors `refresh_failing` on the wrapping struct.
     // Arc because the interceptor closure has to be `Clone` for `with_interceptor`.
@@ -1289,18 +1290,20 @@ mod tests {
     async fn authed_exporter_sends_bearer_metadata() {
         use std::time::Duration;
 
-        use opentelemetry::trace::{Tracer as _, TracerProvider as _};
-        use opentelemetry_sdk::trace::{BatchSpanProcessor, SdkTracerProvider};
         use dl_auth::credentials::StaticCredentialsProvider;
         use dl_test_mocks::otlp::MockOtlpCollector;
+        use opentelemetry::trace::{Tracer as _, TracerProvider as _};
+        use opentelemetry_sdk::trace::{BatchSpanProcessor, SdkTracerProvider};
 
         let collector = MockOtlpCollector::spawn().await;
         let jwt = dl_auth::Jwt::try_from(TEST_JWT.to_owned()).unwrap();
         let provider = super::Arc::new(StaticCredentialsProvider::new(jwt));
 
-        let exporter =
-            super::build_dalaran_authed_span_exporter_with_provider(&collector.endpoint(), provider)
-                .unwrap();
+        let exporter = super::build_dalaran_authed_span_exporter_with_provider(
+            &collector.endpoint(),
+            provider,
+        )
+        .unwrap();
 
         let tracer_provider = SdkTracerProvider::builder()
             .with_span_processor(BatchSpanProcessor::builder(exporter).build())

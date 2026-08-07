@@ -1,7 +1,5 @@
 use std::str::FromStr as _;
 
-use egui::{Direction, Layout, OpenUrl, RichText};
-use egui_extras::{Size, StripBuilder};
 use dl_auth::Jwt;
 use dl_redap_client::ConnectionRegistryHandle;
 use dl_ui::modal::{ModalHandler, ModalWrapper};
@@ -10,6 +8,8 @@ use dl_uri::Scheme;
 use dl_viewer_context::{
     AppContext, EditRedapServerModalCommand, Route, SystemCommand, SystemCommandSender as _,
 };
+use egui::{Direction, Layout, OpenUrl, RichText};
+use egui_extras::{Size, StripBuilder};
 
 use crate::context::Context;
 use crate::servers::Command;

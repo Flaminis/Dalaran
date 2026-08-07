@@ -4,13 +4,13 @@ use arrow::ffi_stream::ArrowArrayStreamReader;
 use arrow::pyarrow::FromPyArrow as _;
 use datafusion::catalog::TableProvider;
 use datafusion_ffi::table_provider::FFI_TableProvider;
-use pyo3::exceptions::PyRuntimeError;
-use pyo3::types::{PyAnyMethods as _, PyCapsule};
-use pyo3::{Bound, Py, PyAny, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
 use dl_datafusion::TableEntryTableProvider;
 use dl_protos::cloud::v1alpha1::ext::{
     EntryDetails, ProviderDetails, TableDetails, TableEntry, TableInsertMode,
 };
+use pyo3::exceptions::PyRuntimeError;
+use pyo3::types::{PyAnyMethods as _, PyCapsule};
+use pyo3::{Bound, Py, PyAny, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
 
 use crate::catalog::entry::set_entry_name;
 use crate::catalog::table_provider_adapter::ffi_logical_codec_from_pycapsule;
@@ -22,7 +22,10 @@ use crate::utils::{get_tokio_runtime, wait_for_future};
 ///
 /// Note: this object acts as a table provider for DataFusion.
 //TODO(ab): expose metadata about the table (e.g. stuff found in `provider_details`).
-#[pyclass(name = "TableEntryInternal", module = "dalaran_bindings.dalaran_bindings")]
+#[pyclass(
+    name = "TableEntryInternal",
+    module = "dalaran_bindings.dalaran_bindings"
+)]
 pub struct PyTableEntryInternal {
     client: Py<PyCatalogClientInternal>,
     entry_details: EntryDetails,

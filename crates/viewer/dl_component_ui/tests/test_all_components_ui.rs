@@ -7,9 +7,6 @@ use std::sync::Arc;
 
 use arrow::array::ArrayRef;
 use arrow::datatypes::DataType;
-use egui_kittest::{SnapshotError, SnapshotOptions};
-use itertools::Itertools as _;
-use nohash_hasher::IntSet;
 use dl_component_ui::create_component_ui_registry;
 use dl_log_types::EntityPath;
 use dl_sdk_types::ComponentDescriptor;
@@ -22,6 +19,9 @@ use dl_types_core::{Component, ComponentBatch, ComponentType};
 use dl_ui::{UiExt as _, list_item};
 use dl_viewer_context::external::dl_chunk_store::external::dl_chunk;
 use dl_viewer_context::{UiLayout, ViewerContext};
+use egui_kittest::{SnapshotError, SnapshotOptions};
+use itertools::Itertools as _;
+use nohash_hasher::IntSet;
 
 /// Test case master list.
 ///

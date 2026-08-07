@@ -1,11 +1,11 @@
 #![expect(clippy::needless_pass_by_value)] // A lot of arguments to #[pyfunction] need to be by value
 
 use arrow::array::RecordBatch;
-use pyo3::prelude::*;
-use pyo3::{Bound, PyResult};
 use dl_grpc_client::write_table::channel;
 use dl_protos::sdk_comms::v1alpha1::message_proxy_service_client::MessageProxyServiceClient;
 use dl_protos::sdk_comms::v1alpha1::viewer_control_service_client::ViewerControlServiceClient;
+use pyo3::prelude::*;
+use pyo3::{Bound, PyResult};
 
 use crate::catalog::to_py_err;
 use crate::utils::wait_for_future;

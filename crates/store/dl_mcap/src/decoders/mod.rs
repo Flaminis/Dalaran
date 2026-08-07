@@ -10,12 +10,12 @@ mod stats;
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use itertools::Itertools as _;
 #[cfg(not(target_arch = "wasm32"))]
 use dl_chunk::RowId;
 use dl_chunk::external::nohash_hasher::IntMap;
 use dl_chunk::{Chunk, EntityPath};
 use dl_log_types::TimeType;
+use itertools::Itertools as _;
 
 pub use self::attachments::McapAttachmentsDecoder;
 pub use self::metadata::McapMetadataDecoder;

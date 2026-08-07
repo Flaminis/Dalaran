@@ -1,6 +1,6 @@
 use crate::RecordBatchTestExt as _;
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, concat_record_batches,
 };
 use crate::utils::client::{TestClient, create_test_client};
 use arrow::array::RecordBatch;
@@ -8,11 +8,11 @@ use datafusion::datasource::TableProvider as _;
 use datafusion::execution::SessionState;
 use datafusion::physical_plan::ExecutionPlanProperties as _;
 use datafusion::prelude::{Expr, SessionConfig, SessionContext, col, lit};
-use futures::{StreamExt as _, TryStreamExt as _};
-use itertools::Itertools as _;
 use dl_datafusion::{DataframeClientAPI, DataframeQueryTableProvider};
 use dl_log_types::{EntityPath, EntryId};
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
+use futures::{StreamExt as _, TryStreamExt as _};
+use itertools::Itertools as _;
 use std::sync::Arc;
 
 pub async fn query_dataset_simple_filter(service: impl DalaranCloudService) {

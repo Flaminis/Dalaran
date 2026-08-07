@@ -5,8 +5,6 @@
 
 use std::sync::Arc;
 
-use egui::{Color32, NumExt as _, Rangef, Rect, Shape, lerp, pos2, remap};
-use egui::{emath::fast_midpoint, epaint::Vertex};
 use dl_chunk::TimelineName;
 use dl_chunk_store::{ChunkTrackingMode, RangeQuery};
 use dl_entity_db::EntityDb;
@@ -14,6 +12,8 @@ use dl_log::debug_assert;
 use dl_log_types::{AbsoluteTimeRange, ComponentPath, TimeInt, TimeReal};
 use dl_ui::UiExt as _;
 use dl_viewer_context::{AppContext, Item, StoreViewContext, UiLayout};
+use egui::{Color32, NumExt as _, Rangef, Rect, Shape, lerp, pos2, remap};
+use egui::{emath::fast_midpoint, epaint::Vertex};
 
 use crate::recursive_chunks_per_timeline_subscriber::PathRecursiveChunksPerTimelineStoreSubscriber;
 use crate::time_panel::TimePanelItem;

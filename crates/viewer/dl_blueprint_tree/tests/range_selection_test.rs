@@ -1,7 +1,5 @@
 #![cfg(feature = "testing")]
 
-use egui::Modifiers;
-use egui_kittest::kittest::Queryable as _;
 use dl_blueprint_tree::BlueprintTree;
 use dl_chunk_store::RowId;
 use dl_chunk_store::external::dl_chunk::ChunkBuilder;
@@ -11,6 +9,8 @@ use dl_test_context::TestContext;
 use dl_test_viewport::TestContextExt as _;
 use dl_viewer_context::{Contents, ViewClass as _, VisitorControlFlow};
 use dl_viewport_blueprint::{ViewBlueprint, ViewportBlueprint};
+use egui::Modifiers;
+use egui_kittest::kittest::Queryable as _;
 
 #[test]
 fn test_range_selection_in_blueprint_tree() {

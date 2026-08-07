@@ -12,7 +12,6 @@
 //! The bread crumbs hierarchy should be identical to the hierarchy in the
 //! either the blueprint tree panel, or the streams/time panel.
 
-use egui::Color32;
 use dl_chunk::EntityPath;
 use dl_data_ui::item_ui::{cursor_interact_with_selectable, guess_instance_path_icon};
 use dl_entity_db::InstancePath;
@@ -20,6 +19,7 @@ use dl_log_types::EntityPathPart;
 use dl_ui::{SyntaxHighlighting as _, UiExt as _, icons, list_item};
 use dl_viewer_context::{Contents, Item, ViewId, ViewerContext};
 use dl_viewport_blueprint::ViewportBlueprint;
+use egui::Color32;
 
 use crate::item_title::ItemTitle;
 

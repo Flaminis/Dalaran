@@ -4,11 +4,11 @@ use std::sync::Arc;
 use arrow::array::{BinaryArray, RecordBatch, RecordBatchOptions};
 use arrow::datatypes::Schema;
 use arrow::error::ArrowError;
-use itertools::Itertools as _;
 use dl_byte_size::SizeBytes as _;
 use dl_log_encoding::RawRrdManifest;
 use dl_log_types::{AbsoluteTimeRange, Timeline};
 use dl_protos::cloud::v1alpha1::ext::DataSourceKind;
+use itertools::Itertools as _;
 
 use crate::store::LayerInfo;
 

@@ -2,12 +2,12 @@ use std::path::Path;
 use std::sync::Arc;
 
 use arrow::array::RecordBatch;
-use nohash_hasher::IntSet;
 use dl_chunk_store::{
     ChunkStoreHandle, ChunkStoreHandleWeak, ChunkTrackingMode, LazyStore, QueryResults, StoreSchema,
 };
 use dl_log_encoding::{RrdChunkProvider, RrdManifest};
 use dl_log_types::{EntityPath, StoreId, StoreKind};
+use nohash_hasher::IntSet;
 
 /// A store backend: either an in-memory eager store or a provider-backed lazy store.
 ///

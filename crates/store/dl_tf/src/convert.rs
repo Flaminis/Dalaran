@@ -4,8 +4,8 @@
 //! we have proper data type generics. We put them here to make future generic refactoring
 //! easier.
 
-use glam::{DAffine3, DMat3, DQuat, DVec3};
 use dl_sdk_types::{components, datatypes};
+use glam::{DAffine3, DMat3, DQuat, DVec3};
 
 // ---------------------------------------------------------------------------
 // Helper functions for datatypes

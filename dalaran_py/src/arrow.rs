@@ -8,9 +8,6 @@ use arrow::array::{
 use arrow::buffer::OffsetBuffer as ArrowOffsetBuffer;
 use arrow::datatypes::Field as ArrowField;
 use arrow::pyarrow::PyArrowType;
-use pyo3::exceptions::{PyRuntimeError, PyValueError};
-use pyo3::types::{PyAnyMethods as _, PyDict, PyDictMethods as _, PyString};
-use pyo3::{Bound, PyAny, PyResult};
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_chunk::{Chunk, ChunkError, ChunkId, PendingRow, RowId, TimeColumn, TimelineName};
 use dl_log_types::TimePoint;
@@ -18,6 +15,9 @@ use dl_sdk::external::nohash_hasher::IntMap;
 use dl_sdk::{
     ArchetypeName, ComponentDescriptor, ComponentIdentifier, ComponentType, EntityPath, Timeline,
 };
+use pyo3::exceptions::{PyRuntimeError, PyValueError};
+use pyo3::types::{PyAnyMethods as _, PyDict, PyDictMethods as _, PyString};
+use pyo3::{Bound, PyAny, PyResult};
 
 /// Perform Python-to-Rust conversion for a `ComponentDescriptor`.
 pub fn descriptor_to_rust(component_descr: &Bound<'_, PyAny>) -> PyResult<ComponentDescriptor> {

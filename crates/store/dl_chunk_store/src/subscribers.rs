@@ -1,8 +1,8 @@
 use ahash::HashMap;
-use itertools::Itertools as _;
-use parking_lot::RwLock;
 use dl_byte_size::{MemUsageNode, MemUsageTree, MemUsageTreeCapture};
 use dl_log_types::StoreId;
+use itertools::Itertools as _;
+use parking_lot::RwLock;
 
 use crate::{ChunkStore, ChunkStoreEvent};
 

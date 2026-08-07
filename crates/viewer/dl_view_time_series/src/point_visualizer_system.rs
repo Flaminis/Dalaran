@@ -1,5 +1,3 @@
-use itertools::Itertools as _;
-use rayon::prelude::*;
 use dl_sdk_types::archetypes::SeriesPoints;
 use dl_sdk_types::components::{self, MarkerShape, MarkerSize};
 use dl_sdk_types::{Archetype as _, Loggable as _, archetypes};
@@ -10,6 +8,8 @@ use dl_viewer_context::{
     ViewStateExt as _, ViewSystemExecutionError, ViewerReportSeverity, VisualizerExecutionOutput,
     VisualizerQueryInfo, VisualizerSystem, typed_fallback_for,
 };
+use itertools::Itertools as _;
+use rayon::prelude::*;
 
 use crate::series_query::{
     all_scalars_indices, allocate_plot_points, collect_colors, collect_radius_ui, collect_scalars,

@@ -8,13 +8,13 @@ use datafusion::execution::SendableRecordBatchStream;
 use datafusion::functions::expr_fn::concat;
 use datafusion::logical_expr::{binary_expr, col as datafusion_col, lit};
 use datafusion::prelude::{SessionContext, cast, encode};
-use futures::{StreamExt as _, TryStreamExt as _};
 use dl_async::AsyncRuntimeHandle;
 use dl_log::{error, warn};
 use dl_log_types::Timestamp;
 use dl_mutex::Mutex;
 use dl_quota_channel::send_crossbeam;
 use dl_sorbet::{BatchType, SorbetBatch, SorbetSchema};
+use futures::{StreamExt as _, TryStreamExt as _};
 
 use crate::ColumnFilter;
 use crate::grid_view::FlagChangeEvent;

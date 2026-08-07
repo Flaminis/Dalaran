@@ -4,11 +4,11 @@ use std::sync::Arc;
 
 use arrow::array::{ArrayRef, FixedSizeListArray, Float32Array};
 use arrow::datatypes::Field;
-use itertools::Itertools as _;
 use dl_log_types::{EntityPath, TimePoint, TimeType, Timeline, build_index_value};
 use dl_sdk::RecordingStreamBuilder;
 use dl_tuid::Tuid;
 use dl_types_core::AsComponents;
+use itertools::Itertools as _;
 
 use crate::TempPath;
 

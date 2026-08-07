@@ -3,11 +3,11 @@ use std::sync::Arc;
 
 use arrow::array::{Array as _, ArrayData, ListArray, make_array};
 use arrow::pyarrow::{PyArrowType, ToPyArrow as _};
-use pyo3::exceptions::{PyNotImplementedError, PyRuntimeError, PyValueError};
-use pyo3::prelude::*;
 use dl_sdk::external::dl_importer::{UrdfTree, urdf_joint_transform};
 use dl_sdk::external::urdf_rs::{Joint, JointType, Link, Mimic};
 use dl_sdk::{EntityPath, TimePoint};
+use pyo3::exceptions::{PyNotImplementedError, PyRuntimeError, PyValueError};
+use pyo3::prelude::*;
 
 use crate::chunk_stream::PyLazyChunkStreamInternal;
 use crate::chunk_stream::stream::LazyChunkStream;
@@ -15,7 +15,10 @@ use crate::chunk_stream::urdf_tree_stream::UrdfTreeStreamFactory;
 use crate::python_bridge::{PyRecordingStream, get_data_recording};
 
 /// A `.urdf` file loaded into memory (excluding any mesh files).
-#[pyclass(name = "_UrdfTreeInternal", module = "dalaran_bindings.dalaran_bindings")]
+#[pyclass(
+    name = "_UrdfTreeInternal",
+    module = "dalaran_bindings.dalaran_bindings"
+)]
 pub struct PyUrdfTree(Arc<UrdfTree>);
 
 #[pymethods]

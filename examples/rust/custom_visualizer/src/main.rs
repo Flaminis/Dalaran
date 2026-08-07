@@ -7,7 +7,7 @@
 
 use dalaran::external::dl_sdk_types::{self, View as _};
 use dalaran::external::{
-    glam, dl_crash_handler, dl_grpc_server, dl_log, dl_log_channel, dl_memory, dl_viewer, tokio,
+    dl_crash_handler, dl_grpc_server, dl_log, dl_log_channel, dl_memory, dl_viewer, glam, tokio,
 };
 
 mod height_field_archetype;
@@ -105,11 +105,12 @@ fn builtin_recording() -> Result<dl_log_channel::LogReceiver, dalaran::Recording
     let cols = 512u32;
     let rows = 512u32;
     let num_terrain_frames = 60;
-    let format = dalaran::components::ImageFormat(dalaran::datatypes::ImageFormat::from_color_model(
-        [cols, rows],
-        dalaran::datatypes::ColorModel::L,
-        dalaran::datatypes::ChannelDatatype::F32,
-    ));
+    let format =
+        dalaran::components::ImageFormat(dalaran::datatypes::ImageFormat::from_color_model(
+            [cols, rows],
+            dalaran::datatypes::ColorModel::L,
+            dalaran::datatypes::ChannelDatatype::F32,
+        ));
 
     for frame in 0..num_terrain_frames {
         let t = frame as f32 / num_terrain_frames as f32 * std::f32::consts::TAU;

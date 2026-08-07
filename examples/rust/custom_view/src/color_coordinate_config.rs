@@ -4,12 +4,12 @@
 //! define a component, make it [`dalaran::Loggable`], group it in an [`dalaran::Archetype`], provide
 //! reflection, and register an editor UI.
 
-use dalaran::external::egui;
 use dalaran::external::dl_sdk_types::reflection::{
     ArchetypeFieldFlags, ArchetypeFieldReflection, ArchetypeReflection,
 };
 use dalaran::external::dl_sdk_types::{ArchetypeName, ComponentDescriptor};
 use dalaran::external::dl_viewer_context::MaybeMutRef;
+use dalaran::external::egui;
 
 /// Blueprint properties for the color coordinates view.
 pub struct ColorCoordinatesConfiguration;

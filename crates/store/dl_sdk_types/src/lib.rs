@@ -284,7 +284,7 @@ pub mod external {
     pub use glam;
     #[cfg(feature = "image")]
     pub use image;
-    pub use {arrow, ndarray, dl_types_core, uuid};
+    pub use {arrow, dl_types_core, ndarray, uuid};
 }
 
 // Has to live here because otherwise we can't use it to implement `Hash` for `crate::components::TransformFrameId`.

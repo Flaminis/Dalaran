@@ -5,7 +5,6 @@ use std::sync::Arc;
 use std::task::Poll;
 
 use ahash::HashMap;
-use itertools::Itertools as _;
 use dl_entity_db::EntityDb;
 use dl_entity_db::entity_db::EntityDbClass;
 use dl_log_channel::LogSource;
@@ -15,6 +14,7 @@ use dl_sdk_types::archetypes::RecordingInfo;
 use dl_sdk_types::components::{Name, Timestamp};
 use dl_uri::{DATASET_HIERARCHY_SEPARATOR, split_dataset_hierarchy_path};
 use dl_viewer_context::{AppContext, Item, Route};
+use itertools::Itertools as _;
 
 /// Short-lived structure containing all the data that will be displayed in the recording panel.
 #[derive(Debug)]

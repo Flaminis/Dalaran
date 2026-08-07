@@ -23,10 +23,9 @@ mod utils;
 pub use ::dl_arrow_util::{FieldsTestExt, RecordBatchTestExt, SchemaTestExt};
 
 pub use self::tests::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt, entry_name, register_and_wait,
+    DalaranCloudServiceExt, DataSourcesDefinition, LayerDefinition, entry_name, register_and_wait,
 };
 pub use self::tests::*;
-pub use self::utils::path::TempPath;
 pub use self::utils::dalaran::{
     TuidPrefix, create_blueprint_with_static_components,
     create_divergent_component_ranges_recording, create_minimal_binary_recording_in,
@@ -36,4 +35,5 @@ pub use self::utils::dalaran::{
     create_simple_recording, create_simple_recording_in,
     create_simple_recording_one_chunk_per_frame, create_simple_recording_one_chunk_per_frame_in,
     multi_chunked_entities_recording,
-}; // convenience
+};
+pub use self::utils::path::TempPath; // convenience

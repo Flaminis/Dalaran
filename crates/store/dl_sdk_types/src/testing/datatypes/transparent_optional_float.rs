@@ -84,12 +84,16 @@ impl ::dl_types_core::Loggable for TransparentOptionalFloat {
                 let actual = arrow_data.data_type().clone();
                 DeserializationError::datatype_mismatch(expected, actual)
             })
-            .with_context("dalaran.testing.datatypes.TransparentOptionalFloat#single_float_optional")?
+            .with_context(
+                "dalaran.testing.datatypes.TransparentOptionalFloat#single_float_optional",
+            )?
             .into_iter()
             .map(Ok)
             .map(|res| res.map(|v| Some(Self(v))))
             .collect::<DeserializationResult<Vec<Option<_>>>>()
-            .with_context("dalaran.testing.datatypes.TransparentOptionalFloat#single_float_optional")
+            .with_context(
+                "dalaran.testing.datatypes.TransparentOptionalFloat#single_float_optional",
+            )
             .with_context("dalaran.testing.datatypes.TransparentOptionalFloat")?)
     }
 }

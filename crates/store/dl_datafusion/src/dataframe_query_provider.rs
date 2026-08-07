@@ -30,13 +30,13 @@ use datafusion::physical_expr::{
 use datafusion::physical_plan::execution_plan::{Boundedness, EmissionType};
 use datafusion::physical_plan::metrics::MetricsSet;
 use datafusion::physical_plan::{DisplayAs, DisplayFormatType, ExecutionPlan, PlanProperties};
+use dl_dataframe::{Index, QueryExpression, TimelineName};
+use dl_protos::cloud::v1alpha1::ext::{QueryDatasetDataframe, ScanSegmentTableDataframe};
+use dl_types_core::SegmentId;
 use futures::FutureExt as _;
 use futures_util::Stream;
 use io_loop::chunk_stream_io_loop;
 use itertools::Itertools as _;
-use dl_dataframe::{Index, QueryExpression, TimelineName};
-use dl_protos::cloud::v1alpha1::ext::{QueryDatasetDataframe, ScanSegmentTableDataframe};
-use dl_types_core::SegmentId;
 
 use dl_redap_client::{ApiError, ApiResult};
 

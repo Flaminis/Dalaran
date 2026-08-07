@@ -1,6 +1,5 @@
 use std::sync::OnceLock;
 
-use nohash_hasher::IntMap;
 use dl_chunk_store::{ChunkStore, ChunkStoreSubscriberHandle, PerStoreChunkSubscriber};
 use dl_log_types::{EntityPath, EntityPathHash, StoreId};
 use dl_sdk_types::components::MediaType;
@@ -9,6 +8,7 @@ use dl_sdk_types::{
     Archetype as _, ArchetypeName, Component as _, Loggable as _, SerializedComponentColumn,
     archetypes, components,
 };
+use nohash_hasher::IntMap;
 
 bitflags::bitflags! {
     #[derive(Debug, Clone, Copy, Default)]

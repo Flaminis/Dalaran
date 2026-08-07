@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
 use ahash::{HashMap, HashSet};
-use itertools::Itertools as _;
-use nohash_hasher::{IntMap, IntSet};
 use dl_chunk::{ComponentIdentifier, ComponentType};
 use dl_sdk_types::ViewClassIdentifier;
+use itertools::Itertools as _;
+use nohash_hasher::{IntMap, IntSet};
 
 use super::view_class_placeholder::ViewClassPlaceholder;
 use super::visualizer_entity_subscriber::{VisualizerEntityConfig, VisualizerEntitySubscriber};

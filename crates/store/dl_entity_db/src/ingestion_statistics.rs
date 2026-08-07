@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
 
-use emath::History;
 use dl_chunk::Chunk;
 use dl_chunk_store::{ChunkStoreDiffAddition, ChunkStoreEvent};
 use dl_mutex::Mutex;
 use dl_sorbet::{TimestampLocation, TimestampMetadata};
+use emath::History;
 use web_time::SystemTime;
 
 /// Statistics about the latency of incoming data to a store.

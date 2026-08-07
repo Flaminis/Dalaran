@@ -1,9 +1,9 @@
 use std::str::FromStr;
 use std::sync::LazyLock;
 
+use dl_types_core::ComponentIdentifier;
 use nohash_hasher::IntMap;
 use parking_lot::RwLock;
-use dl_types_core::ComponentIdentifier;
 
 use crate::{ComponentPath, DataPath, EntityPath, EntityPathPart, Instance, hash::Hash64};
 

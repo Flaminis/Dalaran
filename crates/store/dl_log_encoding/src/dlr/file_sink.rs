@@ -2,9 +2,9 @@ use std::fmt;
 use std::path::PathBuf;
 
 use crossbeam::channel::{Receiver, RecvTimeoutError, SendError, Sender};
-use parking_lot::Mutex;
 use dl_log_types::LogMsg;
 use dl_quota_channel::send_crossbeam;
+use parking_lot::Mutex;
 
 /// An error that can occur when flushing.
 #[derive(Debug, thiserror::Error)]

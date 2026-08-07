@@ -5,8 +5,6 @@ use std::{
     sync::Arc,
 };
 
-use itertools::chain;
-use nohash_hasher::IntMap;
 use dl_byte_size::{MemUsageNode, MemUsageTree, MemUsageTreeCapture, SizeBytes as _};
 use dl_chunk::{
     Chunk, ChunkBuilder, ChunkId, ChunkResult, ComponentIdentifier, LatestAtQuery, RowId, TimeInt,
@@ -27,10 +25,12 @@ use dl_mutex::Mutex;
 use dl_query::{
     QueryCache, QueryCacheHandle, StorageEngine, StorageEngineArcReadGuard, StorageEngineReadGuard,
 };
+use itertools::chain;
+use nohash_hasher::IntMap;
 
 use crate::Error;
-use crate::ingestion_statistics::IngestionStatistics;
 use crate::dlr_manifest_index::RrdManifestIndex;
+use crate::ingestion_statistics::IngestionStatistics;
 
 // ----------------------------------------------------------------------------
 

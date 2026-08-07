@@ -2,10 +2,10 @@
 
 use std::f32::consts::TAU;
 
-use itertools::Itertools as _;
-use rand::Rng as _;
 use dalaran::demo_util::{bounce_lerp, color_spiral};
 use dalaran::external::glam;
+use itertools::Itertools as _;
+use rand::Rng as _;
 
 const NUM_POINTS: usize = 100;
 

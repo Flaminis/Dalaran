@@ -37,10 +37,10 @@
 
 use std::fmt::{Display, Formatter};
 
-use itertools::Itertools as _;
 use dl_entity_db::InstancePath;
 use dl_log_types::{ComponentPath, EntityPath};
 use dl_ui::UiExt as _;
+use itertools::Itertools as _;
 
 use crate::{Contents, DataResultInteractionAddress, Item, ItemCollection};
 

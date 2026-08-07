@@ -2,8 +2,6 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
 
 use ahash::HashMap;
-use nohash_hasher::IntSet;
-use parking_lot::RwLock;
 use dl_byte_size::{MemUsageTreeCapture, SizeBytes as _};
 use dl_chunk::{ChunkId, ComponentIdentifier};
 use dl_chunk_store::{
@@ -12,6 +10,8 @@ use dl_chunk_store::{
 };
 use dl_log_types::{AbsoluteTimeRange, EntityPath, StoreId, TimeInt, TimelineName};
 use dl_types_core::archetypes;
+use nohash_hasher::IntSet;
+use parking_lot::RwLock;
 
 use crate::{LatestAtCache, RangeCache};
 

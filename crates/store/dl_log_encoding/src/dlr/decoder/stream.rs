@@ -124,10 +124,10 @@ impl<T: DecoderEntrypoint + Unpin, R: AsyncBufRead + Unpin> Stream for DecoderSt
 
 #[cfg(all(test, feature = "encoder"))]
 mod tests {
-    use futures::StreamExt as _;
     use dl_build_info::CrateVersion;
     use dl_chunk::RowId;
     use dl_log_types::{LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind, StoreSource};
+    use futures::StreamExt as _;
 
     use crate::DecoderApp;
     use crate::dlr::{Compression, EncodingOptions, Serializer};

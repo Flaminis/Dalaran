@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use egui::NumExt as _;
-use egui_extras::Column;
 use dl_chunk_store::ChunkTrackingMode;
 use dl_format::time::format_relative_timestamp_secs;
 use dl_renderer::external::dl_video::VideoLoadError;
@@ -18,6 +16,8 @@ use dl_viewer_context::{
     SharablePlayableVideoStream, StoreViewContext, SystemCommandSender as _, UiLayout,
     VideoStoreSource, VideoStreamCache, VideoStreamProcessingError, video_stream_time_from_query,
 };
+use egui::NumExt as _;
+use egui_extras::Column;
 
 use crate::image_ui::texture_preview_size;
 

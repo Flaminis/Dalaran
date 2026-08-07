@@ -1,9 +1,9 @@
 use arrow::array::{Array as _, ListArray as ArrowListArray, RecordBatch as ArrowRecordBatch};
-use itertools::Itertools as _;
-use nohash_hasher::IntMap;
 use dl_arrow_util::{ArrowArrayDowncastRef as _, into_arrow_ref};
 use dl_types_core::arrow_helpers::as_array_ref;
 use dl_types_core::{ComponentDescriptor, SerializedComponentColumn};
+use itertools::Itertools as _;
+use nohash_hasher::IntMap;
 
 use crate::chunk::ChunkComponents;
 use crate::{Chunk, ChunkError, ChunkResult, TimeColumn};

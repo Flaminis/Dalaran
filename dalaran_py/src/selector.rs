@@ -12,7 +12,10 @@ pub fn register(m: &Bound<'_, PyModule>) -> PyResult<()> {
     Ok(())
 }
 
-#[pyclass(name = "SelectorInternal", module = "dalaran_bindings.dalaran_bindings")]
+#[pyclass(
+    name = "SelectorInternal",
+    module = "dalaran_bindings.dalaran_bindings"
+)]
 pub struct PySelectorInternal {
     selector: Selector<DynExpr>,
 }

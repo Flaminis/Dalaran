@@ -3,10 +3,10 @@ use std::io::Cursor;
 use cros_codecs::codec::h265::parser::{
     Nalu as H265Nalu, NaluType as H265NaluType, Parser as H265Parser,
 };
-use h264_reader::nal::{self, Nal as _};
-use itertools::Itertools as _;
 use dl_int::SaturatingCast as _;
 use dl_span::Span;
+use h264_reader::nal::{self, Nal as _};
+use itertools::Itertools as _;
 
 use super::{SampleMetadata, VideoDataDescription, VideoLoadError};
 use crate::demux::{

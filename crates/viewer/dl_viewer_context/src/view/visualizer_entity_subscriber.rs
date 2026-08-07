@@ -1,11 +1,11 @@
 use std::collections::hash_map::Entry;
 use std::sync::Arc;
 
-use nohash_hasher::IntSet;
 use dl_chunk::{ArchetypeName, ComponentIdentifier, ComponentType};
 use dl_chunk_store::ChunkStoreEvent;
 use dl_log::debug_panic;
 use dl_log_types::{EntityPath, StoreId};
+use nohash_hasher::IntSet;
 
 use nohash_hasher::IntMap;
 

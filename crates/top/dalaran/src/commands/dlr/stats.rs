@@ -1,12 +1,12 @@
 use std::collections::BTreeMap;
 
 use ahash::{HashMap, HashMapExt as _};
-use itertools::Itertools as _;
 use dl_chunk::Chunk;
 use dl_log_encoding::ToApplication as _;
 use dl_log_types::{EntityPath, TimelineName};
 use dl_protos::log_msg::v1alpha1::log_msg::Msg;
 use dl_quota_channel::send_crossbeam;
+use itertools::Itertools as _;
 
 use crate::commands::read_raw_dlr_streams_from_file_or_stdin;
 

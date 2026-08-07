@@ -1,9 +1,6 @@
 use std::borrow::Cow;
 
 use ahash::HashMap;
-use egui::Ui;
-use egui::text_edit::TextEditState;
-use egui::text_selection::LabelSelectionState;
 use dl_async::AsyncRuntimeHandle;
 use dl_chunk_store::LatestAtQuery;
 use dl_entity_db::EntityDb;
@@ -24,6 +21,9 @@ use dl_viewer_context::{
 use dl_viewport::ViewportUi;
 use dl_viewport_blueprint::ViewportBlueprint;
 use dl_viewport_blueprint::ui::add_view_or_container_modal_ui;
+use egui::Ui;
+use egui::text_edit::TextEditState;
+use egui::text_selection::LabelSelectionState;
 
 use crate::app_blueprint::AppBlueprint;
 use crate::navigation::Navigation;

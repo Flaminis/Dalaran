@@ -4,9 +4,9 @@
 
 use std::collections::BTreeMap;
 
-use itertools::Itertools as _;
 use dl_sdk_types::ViewClassIdentifier;
 use dl_viewer_context::ViewId;
+use itertools::Itertools as _;
 
 use crate::ViewBlueprint;
 

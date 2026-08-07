@@ -204,7 +204,9 @@ impl ::dl_types_core::Loggable for TensorDimensionSelection {
                                 )?,
                             invert: invert
                                 .ok_or_else(DeserializationError::missing_data)
-                                .with_context("dalaran.datatypes.TensorDimensionSelection#invert")?,
+                                .with_context(
+                                    "dalaran.datatypes.TensorDimensionSelection#invert",
+                                )?,
                         })
                     })
                     .transpose()

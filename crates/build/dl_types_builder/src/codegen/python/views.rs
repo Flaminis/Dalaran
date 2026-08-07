@@ -4,7 +4,7 @@ use super::ExtensionClass;
 use crate::codegen::Target;
 use crate::codegen::common::StringExt as _;
 use crate::codegen::python::{quote_doc_lines, quote_obj_docs};
-use crate::{ATTR_PYTHON_ALIASES, ATTR_DALARAN_VIEW_IDENTIFIER, Object, Objects, Reporter};
+use crate::{ATTR_DALARAN_VIEW_IDENTIFIER, ATTR_PYTHON_ALIASES, Object, Objects, Reporter};
 
 pub fn code_for_view(
     reporter: &Reporter,

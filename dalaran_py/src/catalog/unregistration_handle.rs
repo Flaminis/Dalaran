@@ -1,11 +1,11 @@
 // This whole module should really be shared with `registration_handle`,
 // but there are result handling differences that make it impossible currently.
-use pyo3::{Py, PyResult, Python, exceptions::PyValueError, pyclass, pymethods};
 use dl_protos::{
     cloud::v1alpha1::ext::{QueryTasksDataframe, QueryTasksOnCompletionResponse},
     common::v1alpha1::TaskId,
 };
 use dl_redap_client::TraceId;
+use pyo3::{Py, PyResult, Python, exceptions::PyValueError, pyclass, pymethods};
 use tokio_stream::StreamExt as _;
 use tracing::Instrument as _;
 

@@ -2,8 +2,6 @@ use std::sync::Arc;
 
 use arrow::array::{ArrayRef, RecordBatch, RecordBatchOptions};
 use arrow::datatypes::{DataType, Field, Fields, Schema};
-use egui::vec2;
-use egui_kittest::{Harness, SnapshotResults};
 use dl_dataframe_ui::column_header_tooltip_ui;
 use dl_log_types::{EntityPath, Timeline};
 use dl_sorbet::{
@@ -11,6 +9,8 @@ use dl_sorbet::{
 };
 use dl_types_core::reflection::generic_placeholder_for_datatype;
 use dl_types_core::{ArchetypeName, ComponentIdentifier, ComponentType};
+use egui::vec2;
+use egui_kittest::{Harness, SnapshotResults};
 
 #[test]
 fn test_column_header_tooltips() {

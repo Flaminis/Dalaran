@@ -1,6 +1,5 @@
 use std::fmt::Write as _;
 
-use egui::{NumExt as _, Ui};
 use dl_chunk::Timeline;
 use dl_log_types::{AbsoluteTimeRange, EntityPath, TimeType, TimelineName};
 use dl_sdk_types::Archetype as _;
@@ -14,6 +13,7 @@ use dl_viewer_context::{
     TimeRangeHighlightKind, ViewClass, ViewState, ViewerContext,
 };
 use dl_viewport_blueprint::{ViewBlueprint, entity_path_for_view_property};
+use egui::{NumExt as _, Ui};
 
 pub fn visible_time_range_ui_for_view(
     ctx: &ViewerContext<'_>,

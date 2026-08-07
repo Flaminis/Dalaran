@@ -234,8 +234,7 @@ mod tests {
     /// Test that `partition_id` still works for backward compatibility.
     #[test]
     fn test_dataset_data_url_legacy_partition_id() {
-        let url =
-            "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid";
+        let url = "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid";
         let address: RedapUri = url.parse().unwrap();
 
         let RedapUri::DatasetData(DatasetSegmentUri { segment_id, .. }) = address else {

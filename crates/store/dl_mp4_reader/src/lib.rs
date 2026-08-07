@@ -19,8 +19,8 @@ mod error;
 mod stream;
 
 pub use config::{Mode, Mp4Config};
-pub use error::Mp4Error;
 pub use dl_video::{HwAccel, Mp4TranscodeOptions, VideoCodec};
+pub use error::Mp4Error;
 
 use itertools::Either;
 

@@ -1,6 +1,6 @@
+use dl_sdk_types::tensor_data::TensorDataType;
 use half::f16;
 use ndarray::ArrayViewD;
-use dl_sdk_types::tensor_data::TensorDataType;
 
 /// Stats about a tensor or image.
 #[derive(Clone, Copy, Debug, dl_byte_size::SizeBytes)]

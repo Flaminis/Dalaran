@@ -7,7 +7,6 @@ use std::str::FromStr as _;
 
 use ahash::HashMap;
 use arrow::array::RecordBatch;
-use itertools::Itertools as _;
 use dl_async::AsyncRuntimeHandle;
 use dl_log::ResultExt as _;
 use dl_log_channel::{LogSender, RecordingOpenBehavior};
@@ -15,6 +14,7 @@ use dl_log_types::{TableId, TableMsg, TimelineName};
 use dl_memory::AccountingAllocator;
 use dl_sdk_types::blueprint::components::PlayState;
 use dl_viewer_context::{SystemCommand, SystemCommandSender as _, TimeControlCommand, open_url};
+use itertools::Itertools as _;
 use serde::Deserialize;
 use wasm_bindgen::prelude::*;
 

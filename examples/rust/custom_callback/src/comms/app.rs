@@ -2,8 +2,8 @@ use std::error::Error;
 use std::result::Result;
 use std::sync::Arc;
 
-use parking_lot::RwLock;
 use dalaran::external::{dl_error, dl_log};
+use parking_lot::RwLock;
 use tokio::io::{AsyncReadExt, AsyncWriteExt, ReadHalf, WriteHalf};
 use tokio::net::{TcpListener, TcpSocket, TcpStream};
 use tokio::sync::Mutex;

@@ -1,4 +1,3 @@
-use egui::{Response, Ui, WidgetInfo, WidgetType};
 use dl_context_menu::{SelectionUpdateBehavior, context_menu_ui_for_item_with_context};
 use dl_data_ui::item_ui::guess_instance_path_icon;
 use dl_entity_db::InstancePath;
@@ -14,6 +13,7 @@ use dl_viewer_context::{
     VisitorControlFlow, VisualizerViewReport, contents_name_style, icon_for_container_kind,
 };
 use dl_viewport_blueprint::ViewportBlueprint;
+use egui::{Response, Ui, WidgetInfo, WidgetType};
 use smallvec::SmallVec;
 
 use crate::data::{

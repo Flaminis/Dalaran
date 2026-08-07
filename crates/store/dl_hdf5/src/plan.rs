@@ -2,9 +2,9 @@
 //! build the owned emission plan the streaming iterator consumes.
 
 use arrow::buffer::ScalarBuffer;
-use itertools::Itertools as _;
 use dl_chunk::{EntityPath, Timeline};
 use dl_log_types::{EntityPathPart, TimeType};
+use itertools::Itertools as _;
 
 use crate::config::{Hdf5Config, IndexType};
 use crate::convert;

@@ -54,7 +54,9 @@ fn migrate_pose_components(batch: RecordBatch) -> RecordBatch {
             }
             "dalaran.components.PoseRotationQuat" => "dalaran.components.RotationQuat".to_owned(),
             "dalaran.components.PoseScale3D" => "dalaran.components.Scale3D".to_owned(),
-            "dalaran.components.PoseTransformMat3x3" => "dalaran.components.TransformMat3x3".to_owned(),
+            "dalaran.components.PoseTransformMat3x3" => {
+                "dalaran.components.TransformMat3x3".to_owned()
+            }
             _ => component.to_owned(),
         }
     }

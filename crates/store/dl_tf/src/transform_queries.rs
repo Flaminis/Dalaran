@@ -2,8 +2,6 @@
 
 use std::sync::OnceLock;
 
-use glam::DAffine3;
-use itertools::Either;
 use dl_chunk_store::external::dl_chunk::ChunkError;
 use dl_chunk_store::{ChunkShared, LatestAtQuery, MissingChunkReporter};
 use dl_entity_db::EntityDb;
@@ -14,6 +12,8 @@ use dl_sdk_types::external::arrow::array::Array as _;
 use dl_sdk_types::{
     ChunkId, Component, ComponentIdentifier, RowId, TransformFrameIdHash, components,
 };
+use glam::DAffine3;
+use itertools::Either;
 
 use crate::convert;
 use crate::transform_resolution_cache::{

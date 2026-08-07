@@ -1,9 +1,9 @@
 //! Utilities for determining if an entity can be added to a view.
 
-use nohash_hasher::IntMap;
 use dl_entity_db::EntityTree;
 use dl_log_types::EntityPath;
 use dl_viewer_context::{DataQueryResult, ViewerContext};
+use nohash_hasher::IntMap;
 
 use crate::ViewBlueprint;
 

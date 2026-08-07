@@ -19,12 +19,12 @@ pub use self::resolved_pinhole_projection::{
 };
 
 use arrow::array::Array as _;
-use itertools::{Either, izip};
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_chunk_store::Chunk;
 use dl_chunk_store::external::arrow;
 use dl_log_types::{TimeInt, TimelineName};
 use dl_sdk_types::{ComponentIdentifier, RowId};
+use itertools::{Either, izip};
 
 use crate::TransformFrameIdHash;
 

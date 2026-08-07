@@ -22,12 +22,12 @@ use arrow::buffer::ScalarBuffer;
 use arrow::compute::{cast, concat_batches};
 use arrow::datatypes::DataType;
 use crossbeam::channel::Sender;
-use itertools::Itertools as _;
-use parking_lot::RwLock;
-use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
 use dl_chunk::{ArrowArray as _, ChunkId};
 use dl_video::VideoDataDescription;
 use dl_video::player::VideoSliceSource;
+use itertools::Itertools as _;
+use parking_lot::RwLock;
+use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
 use serde::{Deserialize, Serialize};
 
 use dl_arrow_util::ArrowArrayDowncastRef as _;

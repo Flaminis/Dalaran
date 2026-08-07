@@ -1,5 +1,5 @@
-use egui::NumExt as _;
 use dl_ui::ContextExt as _;
+use egui::NumExt as _;
 
 // TODO(andreas): It would be nice if these wouldn't need to be set on every single line/point builder.
 

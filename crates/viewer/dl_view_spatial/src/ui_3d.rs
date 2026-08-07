@@ -1,7 +1,3 @@
-use egui::emath::RectTransform;
-use egui::{Modifiers, NumExt as _};
-use glam::Vec3;
-use macaw::BoundingBox;
 use dl_chunk_store::MissingChunkReporter;
 use dl_renderer::view_builder::{Projection, TargetConfiguration, ViewBuilder};
 use dl_renderer::{LineDrawableBuilder, Size};
@@ -21,6 +17,10 @@ use dl_viewer_context::{
     ViewSystemExecutionError, ViewerContext, ViewerDiagnostic, ViewerReportSeverity, gpu_bridge,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::emath::RectTransform;
+use egui::{Modifiers, NumExt as _};
+use glam::Vec3;
+use macaw::BoundingBox;
 
 use super::eye::{Eye, EyeState};
 use crate::SpaceKind;

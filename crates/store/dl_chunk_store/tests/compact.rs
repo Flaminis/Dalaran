@@ -835,8 +835,8 @@ fn with_reinserted_timelines(chunk: &Chunk, order: &[dl_log_types::TimelineName]
 /// timelines" where both printed timeline sets are identical.
 #[test]
 fn rebatching_is_insensitive_to_timeline_map_iteration_order() {
-    use itertools::Itertools as _;
     use dl_log_types::TimelineName;
+    use itertools::Itertools as _;
 
     // Find names whose map iteration order depends on insertion order. Deterministic
     // (fixed-seed hashes); panics if map internals change and nothing diverges anymore.

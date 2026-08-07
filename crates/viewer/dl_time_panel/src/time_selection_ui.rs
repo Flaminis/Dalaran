@@ -1,4 +1,3 @@
-use egui::{Color32, CursorIcon, Id, Rangef, Rect};
 use dl_log_types::{
     AbsoluteTimeRange, AbsoluteTimeRangeF, Duration, TimeReal, TimeType, TimestampFormat,
 };
@@ -8,6 +7,7 @@ use dl_viewer_context::open_url::ViewerOpenUrl;
 use dl_viewer_context::{
     StoreViewContext, SystemCommandSender as _, TimeControl, TimeControlCommand, ViewerContext,
 };
+use egui::{Color32, CursorIcon, Id, Rangef, Rect};
 
 use dl_time_ruler::TimeRangesUi;
 

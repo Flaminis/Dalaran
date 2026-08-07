@@ -2,10 +2,10 @@ use std::path::PathBuf;
 
 use anyhow::Context as _;
 use crossbeam::channel;
-use itertools::Itertools as _;
 use dl_chunk::external::crossbeam;
 use dl_log_encoding::RawRrdManifest;
 use dl_quota_channel::send_crossbeam;
+use itertools::Itertools as _;
 
 // ---
 

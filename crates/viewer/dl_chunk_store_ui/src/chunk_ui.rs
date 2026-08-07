@@ -2,12 +2,12 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use arrow::array::{Array as _, RecordBatch as ArrowRecordBatch};
-use egui_extras::{Column, TableRow};
-use itertools::Itertools as _;
 use dl_byte_size::SizeBytes;
 use dl_chunk_store::{Chunk, ChunkId};
 use dl_log_types::{TimeInt, Timeline, TimestampFormat};
 use dl_ui::{UiExt as _, list_item};
+use egui_extras::{Column, TableRow};
+use itertools::Itertools as _;
 
 use crate::sort::{SortColumn, SortDirection, sortable_column_header_ui};
 use crate::toolbar_ui::{close_button_right_ui, copy_button_ui, info_toggle_button_ui};

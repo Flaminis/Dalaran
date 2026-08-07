@@ -1,5 +1,5 @@
-use itertools::Itertools as _;
 use dl_log::debug_assert;
+use itertools::Itertools as _;
 
 use crate::{THIN_SPACE, format_uint};
 

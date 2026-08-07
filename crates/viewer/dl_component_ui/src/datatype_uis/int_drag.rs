@@ -1,10 +1,10 @@
 use std::ops::RangeInclusive;
 
-use egui::NumExt as _;
-use egui::emath::Numeric;
 use dl_types_core::datatypes;
 use dl_ui::syntax_highlighting::{SyntaxHighlightedBuilder, SyntaxHighlighting};
 use dl_viewer_context::{MaybeMutRef, UiLayout};
+use egui::NumExt as _;
+use egui::emath::Numeric;
 
 /// Generic editor for a [`dl_sdk_types::datatypes::UInt32`] values within a given range.
 pub fn edit_u32_range(

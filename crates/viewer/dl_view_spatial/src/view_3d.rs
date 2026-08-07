@@ -1,8 +1,4 @@
 use ahash::HashSet;
-use egui::NumExt as _;
-use glam::Vec3;
-use itertools::Itertools as _;
-use nohash_hasher::IntSet;
 use dl_chunk_store::MissingChunkReporter;
 use dl_entity_db::EntityDb;
 use dl_log_types::EntityPath;
@@ -24,6 +20,10 @@ use dl_viewer_context::{
     ViewSystemIdentifier, ViewerContext, VisualizableReason,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::NumExt as _;
+use glam::Vec3;
+use itertools::Itertools as _;
+use nohash_hasher::IntSet;
 
 use crate::SpaceKind;
 use crate::contexts::register_spatial_contexts;

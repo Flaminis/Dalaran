@@ -1,6 +1,5 @@
 #![expect(clippy::disallowed_methods)] // It's a test, it's fine to hardcode a color!
 
-use glam::Vec3;
 use dl_log_types::TimePoint;
 use dl_renderer::Color32;
 use dl_sdk_types::blueprint::archetypes::EyeControls3D;
@@ -12,6 +11,7 @@ use dl_test_viewport::TestContextExt as _;
 use dl_view_spatial::SpatialView3D;
 use dl_viewer_context::{RecommendedView, ViewClass as _};
 use dl_viewport_blueprint::{ViewBlueprint, ViewProperty};
+use glam::Vec3;
 
 fn test_transparent_geometry<A: AsComponents>(
     name: &str,

@@ -7,7 +7,6 @@ use arrow::{
     datatypes::{DataType, Field},
 };
 use crossbeam::channel::Sender;
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_chunk::{
     ArrowArray as _, Chunk, ChunkId, EntityPath, RowId, TimeColumn, TimePoint, TimelineName,
@@ -17,6 +16,7 @@ use dl_log_types::{ApplicationId, StoreId};
 use dl_quota_channel::send_crossbeam;
 use dl_sdk_types::archetypes;
 use dl_sdk_types::archetypes::EncodedImage;
+use itertools::Itertools as _;
 
 use crate::lerobot::{EpisodeIndex, Feature};
 use crate::{ImportedData, ImporterError, import_file::prepare_store_info};

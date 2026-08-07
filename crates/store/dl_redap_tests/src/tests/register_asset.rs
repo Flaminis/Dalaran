@@ -4,12 +4,11 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use arrow::array::{BinaryArray, RecordBatch};
-use futures::TryStreamExt as _;
 use dl_log_types::EntityPath;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::{
     DataSource as DataSourceExt, DatasetDetails, QueryTasksDataframe,
 };
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     DataSource, DeleteEntryRequest, EntryKind, GetAssetsForSegmentRequest, ReadDatasetEntryRequest,
     RegisterWithDatasetRequest,
@@ -19,6 +18,7 @@ use dl_protos::common::v1alpha1::{IfDuplicateBehavior, SegmentId};
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_sdk_types::AnyValues;
 use dl_types_core::AsComponents;
+use futures::TryStreamExt as _;
 use url::Url;
 
 use crate::{
@@ -27,7 +27,7 @@ use crate::{
 };
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, entry_name,
     register_and_wait,
 };
 
@@ -144,7 +144,9 @@ pub async fn get_assets_for_segment_returns_registered_assets(service: impl Dala
 
 /// Assets can only be queried on recording datasets, so asking a blueprint or asset dataset for
 /// assets is rejected.
-pub async fn get_assets_for_segment_rejects_non_recording_dataset(service: impl DalaranCloudService) {
+pub async fn get_assets_for_segment_rejects_non_recording_dataset(
+    service: impl DalaranCloudService,
+) {
     let dataset_name = "dataset_with_asset";
     let dataset = service.create_dataset_entry_with_name(dataset_name).await;
 

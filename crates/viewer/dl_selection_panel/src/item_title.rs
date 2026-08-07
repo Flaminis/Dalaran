@@ -1,4 +1,3 @@
-use egui::WidgetText;
 use dl_chunk::EntityPath;
 use dl_data_ui::item_ui::guess_instance_path_icon;
 use dl_entity_db::InstancePath;
@@ -14,6 +13,7 @@ use dl_viewer_context::{
     ViewerContext, contents_name_style,
 };
 use dl_viewport_blueprint::ViewportBlueprint;
+use egui::WidgetText;
 
 pub fn is_component_static(ctx: &ViewerContext<'_>, component_path: &ComponentPath) -> bool {
     let ComponentPath {

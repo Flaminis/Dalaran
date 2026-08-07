@@ -1,5 +1,5 @@
-use emath::History;
 use dl_entity_db::StoreBundle;
+use emath::History;
 
 use super::chunk_event_stats::ChunkEventStats;
 

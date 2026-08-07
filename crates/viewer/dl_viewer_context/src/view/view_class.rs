@@ -1,10 +1,10 @@
 use std::collections::BTreeMap;
 
-use itertools::Itertools as _;
-use nohash_hasher::IntSet;
 use dl_chunk_store::MissingChunkReporter;
 use dl_log_types::{ComponentPath, EntityPath};
 use dl_sdk_types::ViewClassIdentifier;
+use itertools::Itertools as _;
+use nohash_hasher::IntSet;
 use vec1::Vec1;
 
 use super::{ViewContext, ViewerDiagnostic};

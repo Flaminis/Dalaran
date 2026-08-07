@@ -1,8 +1,8 @@
-use egui::NumExt as _;
 use dl_sdk_types::blueprint::components::VisualBounds2D;
 use dl_sdk_types::datatypes::Range2D;
 use dl_ui::UiExt as _;
 use dl_viewer_context::{AppContext, MaybeMutRef};
+use egui::NumExt as _;
 
 pub fn multiline_edit_visual_bounds2d(
     _ctx: &AppContext<'_>,

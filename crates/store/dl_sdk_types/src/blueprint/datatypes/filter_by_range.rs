@@ -212,7 +212,9 @@ impl ::dl_types_core::Loggable for FilterByRange {
                                     )?,
                                 end: end
                                     .ok_or_else(DeserializationError::missing_data)
-                                    .with_context("dalaran.blueprint.datatypes.FilterByRange#end")?,
+                                    .with_context(
+                                        "dalaran.blueprint.datatypes.FilterByRange#end",
+                                    )?,
                             })
                         })
                         .transpose()

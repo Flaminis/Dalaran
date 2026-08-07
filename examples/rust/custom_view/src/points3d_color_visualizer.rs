@@ -1,4 +1,3 @@
-use dalaran::external::egui;
 use dalaran::external::dl_log_types::{EntityPath, Instance};
 use dalaran::external::dl_sdk_types::blueprint::components::VisualizerInstructionId;
 use dalaran::external::dl_view::{DataResultQuery, VisualizerInstructionQueryResults};
@@ -7,6 +6,7 @@ use dalaran::external::dl_viewer_context::{
     ViewContextCollection, ViewQuery, ViewSystemExecutionError, ViewSystemIdentifier,
     VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem,
 };
+use dalaran::external::egui;
 
 /// Our view consist of single part which holds a list of egui colors for each entity path.
 #[derive(Default)]

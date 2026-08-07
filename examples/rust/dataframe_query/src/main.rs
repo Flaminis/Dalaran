@@ -1,10 +1,10 @@
 //! Demonstrates basic usage of the dataframe APIs.
 
-use itertools::Itertools;
 use dalaran::ChunkStoreConfig;
 use dalaran::dataframe::{QueryEngine, QueryExpression, SparseFillStrategy, TimelineName};
 use dalaran::external::arrow;
 use dalaran::external::dl_arrow_util::format_record_batch;
+use itertools::Itertools;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = std::env::args().collect_vec();

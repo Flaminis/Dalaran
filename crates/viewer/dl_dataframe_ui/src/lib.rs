@@ -3,12 +3,12 @@
 mod datafusion_adapter;
 mod datafusion_table_widget;
 mod display_record_batch;
+mod dl_table;
+pub mod dl_table_utils;
 mod filters;
 mod grid_view;
 mod header_tooltip;
 mod preview_renderer;
-mod dl_table;
-pub mod dl_table_utils;
 mod requested_object;
 mod streaming_cache;
 mod table_blueprint;

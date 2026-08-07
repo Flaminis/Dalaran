@@ -2,18 +2,18 @@
 //! `ScanDatasetManifest`. Runs against both the OSS server (`dl_server`) and the cloud frontend.
 
 use arrow::array::{RecordBatch, StringArray};
-use futures::TryStreamExt as _;
-use itertools::Itertools as _;
-use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
+use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_protos::cloud::v1alpha1::{
     ScanDatasetManifestRequest, ScanSegmentTableRequest, SegmentIdFilter, SegmentIdList,
     segment_id_filter,
 };
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
+use futures::TryStreamExt as _;
+use itertools::Itertools as _;
 
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, entry_name,
 };
 
 const SEGMENT_ID_COL: &str = ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME;

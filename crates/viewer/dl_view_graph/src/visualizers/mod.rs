@@ -3,9 +3,9 @@ mod nodes;
 
 use std::collections::BTreeSet;
 
+use dl_chunk::EntityPath;
 pub use edges::{EdgeData, EdgesVisualizer};
 pub use nodes::{Label, NodeData, NodeInstance, NodeVisualizer};
-use dl_chunk::EntityPath;
 
 /// Iterates over all entities and joins the node and edge data.
 pub fn merge<'a>(

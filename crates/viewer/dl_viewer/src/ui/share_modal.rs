@@ -1,10 +1,10 @@
-use egui::{AtomExt as _, IntoAtoms, NumExt as _};
 use dl_ui::list_item::PropertyContent;
 use dl_ui::modal::{ModalHandler, ModalWrapper};
 use dl_ui::{UiExt as _, icons};
 use dl_uri::Fragment;
 use dl_viewer_context::open_url::ViewerOpenUrl;
 use dl_viewer_context::{ItemCollection, Route, StoreHub, TimeControl, ViewerContext};
+use egui::{AtomExt as _, IntoAtoms, NumExt as _};
 
 pub struct ShareModal {
     modal: ModalHandler,
@@ -358,13 +358,13 @@ mod tests {
     use std::str::FromStr as _;
     use std::sync::Arc;
 
-    use parking_lot::Mutex;
     use dl_chunk::EntityPath;
     use dl_log_types::external::dl_tuid;
     use dl_log_types::{AbsoluteTimeRangeF, TimeCell};
     use dl_test_context::TestContext;
     use dl_viewer_context::open_url::ViewerOpenUrl;
     use dl_viewer_context::{Item, ItemCollection, Route, TimeControlCommand};
+    use parking_lot::Mutex;
 
     use crate::ui::ShareModal;
 

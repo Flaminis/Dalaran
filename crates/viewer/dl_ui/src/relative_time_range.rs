@@ -264,9 +264,9 @@ impl RelativeTimeRange<'_> {
 mod tests {
     use std::ops::RangeInclusive;
 
-    use egui_kittest::{Harness, SnapshotResults};
     use dl_log_types::external::dl_types_core::datatypes::{TimeInt, TimeRange, TimeRangeBoundary};
     use dl_log_types::{TimeType, TimestampFormat};
+    use egui_kittest::{Harness, SnapshotResults};
 
     use super::RelativeTimeRange;
     use crate::{TimeDragValue, UiExt as _};

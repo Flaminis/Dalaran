@@ -1,4 +1,3 @@
-use itertools::izip;
 use dl_chunk_store::AbsoluteTimeRange;
 use dl_entity_db::EntityPath;
 use dl_log_types::{TimeInt, TimePoint};
@@ -11,6 +10,7 @@ use dl_viewer_context::{
     IdentifiedViewSystem, ViewContext, ViewContextCollection, ViewQuery, ViewSystemExecutionError,
     VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem,
 };
+use itertools::izip;
 
 #[derive(Debug, Clone)]
 pub struct Entry {

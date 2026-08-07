@@ -2,8 +2,6 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
 
 use arrow::array::ArrayRef as ArrowArrayRef;
-use nohash_hasher::IntMap;
-use parking_lot::RwLock;
 use dl_byte_size::SizeBytes;
 use dl_chunk::{Chunk, ChunkId, ComponentIdentifier, RowId, UnitChunkShared};
 use dl_chunk_store::{ChunkStore, ChunkTrackingMode, LatestAtQuery, TimeInt};
@@ -12,6 +10,8 @@ use dl_log_types::EntityPath;
 use dl_types_core::components::ClearIsRecursive;
 use dl_types_core::external::arrow::array::ArrayRef;
 use dl_types_core::{Component, archetypes};
+use nohash_hasher::IntMap;
+use parking_lot::RwLock;
 
 use crate::{QueryCache, QueryCacheKey, QueryError};
 
@@ -814,7 +814,6 @@ impl LatestAtCache {
 mod tests {
     use std::sync::Arc;
 
-    use itertools::Itertools as _;
     use dl_chunk::{Chunk, ChunkId, RowId};
     use dl_chunk_store::{
         ChunkDeletionReason, ChunkStore, ChunkStoreConfig, ChunkStoreEvent, ChunkStoreHandle,
@@ -825,6 +824,7 @@ mod tests {
     use dl_log_types::external::dl_tuid::Tuid;
     use dl_log_types::{EntityPath, StoreId, TimePoint, Timeline};
     use dl_sdk_types::archetypes::Clear;
+    use itertools::Itertools as _;
 
     use super::*;
 

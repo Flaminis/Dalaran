@@ -1,4 +1,3 @@
-use nohash_hasher::IntMap;
 use dl_chunk_store::external::arrow::datatypes::DataType;
 use dl_chunk_store::{AbsoluteTimeRange, RowId};
 use dl_log_types::TimeInt;
@@ -12,6 +11,7 @@ use dl_viewer_context::{
     ViewContextCollection, ViewQuery, ViewSystemExecutionError, ViewSystemIdentifier,
     ViewerReportSeverity, VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem,
 };
+use nohash_hasher::IntMap;
 
 use crate::data::{
     StateLane, StateLaneGroup, StateLanePhase, StateLanePhaseContent, StateLanesData,

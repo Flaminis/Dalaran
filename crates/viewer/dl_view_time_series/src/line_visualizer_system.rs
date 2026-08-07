@@ -1,5 +1,3 @@
-use itertools::Itertools as _;
-use rayon::prelude::*;
 use dl_log_types::TimeInt;
 use dl_sdk_types::components::{self, AggregationPolicy, InterpolationMode, StrokeWidth};
 use dl_sdk_types::reflection::Enum as _;
@@ -11,6 +9,8 @@ use dl_viewer_context::{
     ViewStateExt as _, ViewSystemExecutionError, ViewerReportSeverity, VisualizerExecutionOutput,
     VisualizerQueryInfo, VisualizerSystem, typed_fallback_for,
 };
+use itertools::Itertools as _;
+use rayon::prelude::*;
 
 use crate::series_query::{
     allocate_plot_points, collect_colors, collect_radius_ui, collect_scalars, collect_series_name,

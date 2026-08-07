@@ -1,7 +1,7 @@
-use egui::Vec2;
 use dl_ui::list_item::ListItemContentButtonsExt as _;
 use dl_ui::modal::{ModalHandler, ModalWrapper};
 use dl_ui::{UiExt as _, list_item};
+use egui::Vec2;
 
 #[test]
 pub fn test_modal_normal_should_match_snapshot() {

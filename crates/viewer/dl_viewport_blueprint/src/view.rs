@@ -1,4 +1,3 @@
-use itertools::{FoldWhile, Itertools as _};
 use dl_chunk::{Chunk, RowId};
 use dl_chunk_store::LatestAtQuery;
 use dl_entity_db::{EntityDb, EntityPath};
@@ -13,6 +12,7 @@ use dl_viewer_context::{
     SystemCommand, SystemCommandSender as _, ViewClass, ViewClassRegistry, ViewContext, ViewId,
     ViewState, ViewStates, ViewerContext,
 };
+use itertools::{FoldWhile, Itertools as _};
 
 use crate::{ViewContents, ViewProperty};
 

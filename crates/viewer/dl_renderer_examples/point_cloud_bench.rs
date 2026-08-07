@@ -33,12 +33,12 @@
 #![expect(clippy::disallowed_methods)] // allow hardcoded colors
 
 use clap::Parser as _;
-use macaw::IsoTransform;
 use dl_renderer::mesh::GpuMesh;
 use dl_renderer::renderer::gpu_data::PositionRadius;
 use dl_renderer::renderer::{GenericSkyboxDrawData, GpuMeshInstance, MeshDrawData};
 use dl_renderer::view_builder::{self, Projection, ViewBuilder};
 use dl_renderer::{Color32, PointCloudBuilder, ShapeBuilder, Size};
+use macaw::IsoTransform;
 use std::io::Write as _;
 use std::sync::{Arc, OnceLock};
 use winit::event::ElementState;

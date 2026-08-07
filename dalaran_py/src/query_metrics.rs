@@ -19,9 +19,9 @@
 
 use std::time::Duration;
 
+use dl_datafusion::{MetricsCollector, QuerySnapshot};
 use pyo3::prelude::*;
 use pyo3::types::PyTuple;
-use dl_datafusion::{MetricsCollector, QuerySnapshot};
 
 /// Frozen, getter-only mirror of [`dl_datafusion::QuerySnapshot`].
 ///

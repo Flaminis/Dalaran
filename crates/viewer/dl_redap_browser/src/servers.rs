@@ -4,7 +4,6 @@ use std::task::Poll;
 
 use datafusion::prelude::{SessionConfig, SessionContext, col, lit};
 use datafusion::sql::TableReference;
-use egui::{Frame, Margin, RichText};
 use dl_async::AsyncRuntimeHandle;
 use dl_dataframe_ui::{ColumnBlueprint, default_display_name_for_column};
 use dl_log_types::{EntityPathPart, EntryId, TableId};
@@ -21,6 +20,7 @@ use dl_uri::DATASET_HIERARCHY_SEPARATOR;
 use dl_viewer_context::{
     AppContext, CommandSender as ViewerCommandSender, EditRedapServerModalCommand, ViewStates,
 };
+use egui::{Frame, Margin, RichText};
 
 use crate::context::Context;
 use crate::entries::{Dataset, Entries, Entry, Table};

@@ -1,13 +1,13 @@
 use std::error::Error;
 use std::str::FromStr as _;
 
-use egui::{Align2, AtomKind, Id, IntoAtoms as _, Ui};
 use dl_types_core::{ComponentIdentifier, RowId};
 use dl_ui::loading_indicator::paint_loading_indicator_inside;
 use dl_ui::{ReButton, Size, UiExt as _, Variant, icons};
 use dl_uri::RedapUri;
 use dl_viewer_context::open_url::ViewerOpenUrl;
 use dl_viewer_context::{AppContext, RecordingOrTable, SystemCommand, SystemCommandSender as _};
+use egui::{Align2, AtomKind, Id, IntoAtoms as _, Ui};
 
 /// Display an URL as an `Open` button (instead of spelling the full URL).
 ///

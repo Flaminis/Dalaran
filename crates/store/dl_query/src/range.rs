@@ -2,12 +2,12 @@ use std::collections::BTreeSet;
 use std::sync::Arc;
 
 use ahash::HashMap;
-use nohash_hasher::IntMap;
-use parking_lot::RwLock;
 use dl_byte_size::SizeBytes;
 use dl_chunk::{Chunk, ChunkId, ComponentIdentifier};
 use dl_chunk_store::{ChunkStore, ChunkTrackingMode, RangeQuery, TimeInt};
 use dl_log_types::{AbsoluteTimeRange, EntityPath};
+use nohash_hasher::IntMap;
+use parking_lot::RwLock;
 
 use crate::{QueryCache, QueryCacheKey, QueryError};
 

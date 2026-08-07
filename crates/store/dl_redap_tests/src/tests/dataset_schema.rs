@@ -3,7 +3,7 @@ use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudServic
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, entry_name,
 };
 use crate::SchemaTestExt as _;
 

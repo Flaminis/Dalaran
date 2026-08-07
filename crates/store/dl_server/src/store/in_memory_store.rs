@@ -7,7 +7,6 @@ use arrow::array::{
 use arrow::datatypes::{DataType, Field, Schema, SchemaRef, TimeUnit};
 use datafusion::catalog::MemTable;
 use datafusion::common::DataFusionError;
-use itertools::Itertools as _;
 use dl_chunk_store::{Chunk, ChunkStoreConfig};
 #[cfg(not(target_arch = "wasm32"))]
 use dl_log_types::StoreKind;
@@ -26,6 +25,7 @@ use dl_tuid::Tuid;
 #[cfg(not(target_arch = "wasm32"))]
 use dl_types_core::LayerName;
 use dl_types_core::{ComponentBatch as _, Loggable as _};
+use itertools::Itertools as _;
 
 #[cfg(not(target_arch = "wasm32"))]
 use crate::NamedPath;

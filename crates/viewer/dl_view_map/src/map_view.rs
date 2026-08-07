@@ -1,6 +1,5 @@
 use std::mem::size_of;
 
-use egui::{Modifiers, NumExt as _, Rect, Response};
 use dl_data_ui::{DataUi as _, item_ui};
 use dl_entity_db::InstancePathHash;
 use dl_log_types::EntityPath;
@@ -18,6 +17,7 @@ use dl_viewer_context::{
     ViewSystemRegistrator, ViewerContext, gpu_bridge,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::{Modifiers, NumExt as _, Rect, Response};
 use walkers::{HttpTiles, Map, MapMemory, Tiles};
 
 use crate::map_overlays;

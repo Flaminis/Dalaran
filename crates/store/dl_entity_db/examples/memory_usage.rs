@@ -51,10 +51,10 @@ fn live_bytes() -> usize {
 
 // ----------------------------------------------------------------------------
 
-use itertools::Itertools as _;
 use dl_chunk::{Chunk, RowId};
 use dl_log_types::example_components::{MyPoint, MyPoints};
 use dl_log_types::{StoreId, StoreKind, entity_path};
+use itertools::Itertools as _;
 
 fn main() {
     log_messages();

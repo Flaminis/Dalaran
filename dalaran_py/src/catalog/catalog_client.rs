@@ -2,15 +2,15 @@ use std::sync::Arc;
 
 use arrow::datatypes::Schema;
 use arrow::pyarrow::PyArrowType;
+use dl_log_types::EntryName;
+use dl_protos::cloud::v1alpha1::{EntryFilter, EntryKind};
 use pyo3::exceptions::{PyLookupError, PyRuntimeError, PyValueError};
 use pyo3::types::{PyAnyMethods as _, PyDict};
 use pyo3::{Py, PyAny, PyErr, PyResult, Python, pyclass, pymethods};
-use dl_log_types::EntryName;
-use dl_protos::cloud::v1alpha1::{EntryFilter, EntryKind};
 
 use crate::catalog::datafusion_catalog::PyDataFusionCatalogProviderList;
 use crate::catalog::{
-    ConnectionHandle, PyDatasetEntryInternal, PyEntryId, PyDalaranHtmlTable, PyTableEntryInternal,
+    ConnectionHandle, PyDalaranHtmlTable, PyDatasetEntryInternal, PyEntryId, PyTableEntryInternal,
     to_py_err,
 };
 use crate::trace_context::read_trace_context_from_python;

@@ -1,9 +1,5 @@
 use std::sync::Arc;
 
-use half::f16;
-use itertools::Itertools as _;
-use nohash_hasher::IntMap;
-use parking_lot::Mutex;
 use dl_byte_size::SizeBytes as _;
 use dl_entity_db::EntityDb;
 use dl_log_types::hash::Hash64;
@@ -22,6 +18,10 @@ use dl_viewer_context::{
     ViewQuery, ViewSystemExecutionError, VisualizerExecutionOutput, VisualizerQueryInfo,
     VisualizerSystem, typed_fallback_for,
 };
+use half::f16;
+use itertools::Itertools as _;
+use nohash_hasher::IntMap;
+use parking_lot::Mutex;
 
 use super::SpatialViewVisualizerData;
 use crate::SpaceKind;

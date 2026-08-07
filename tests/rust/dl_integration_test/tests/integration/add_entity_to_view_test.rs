@@ -1,7 +1,5 @@
 //! Tests for adding entities to new views. Checks whether the origin and entity path filter are set correctly.
 
-use egui::accesskit::Role;
-use egui_kittest::kittest::{NodeT as _, Queryable as _};
 use dl_integration_test::HarnessExt as _;
 use dl_sdk::TimePoint;
 use dl_sdk::log::RowId;
@@ -9,6 +7,8 @@ use dl_viewer::external::dl_viewer_context::{ContainerId, RecommendedView, ViewC
 use dl_viewer::external::{dl_sdk_types, dl_view_spatial};
 use dl_viewer::viewer_test_utils::{self, HarnessOptions};
 use dl_viewport_blueprint::ViewBlueprint;
+use egui::accesskit::Role;
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
 fn make_multi_view_test_harness<'a>() -> egui_kittest::Harness<'a, dl_viewer::App> {
     let mut harness = viewer_test_utils::viewer_harness(&HarnessOptions {

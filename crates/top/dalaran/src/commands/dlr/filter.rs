@@ -4,11 +4,11 @@ use std::io::IsTerminal as _;
 use anyhow::Context as _;
 use arrow::array::{RecordBatch as ArrowRecordBatch, RecordBatchOptions};
 use arrow::datatypes::{Field as ArrowField, Schema as ArrowSchema};
-use itertools::Either;
 use dl_build_info::CrateVersion;
 use dl_chunk::external::crossbeam;
 use dl_sdk::EntityPath;
 use dl_sdk::external::arrow;
+use itertools::Either;
 
 use crate::commands::read_dlr_streams_from_file_or_stdin;
 

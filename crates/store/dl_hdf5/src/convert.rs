@@ -23,8 +23,8 @@ use arrow::array::{
 };
 use arrow::buffer::{OffsetBuffer, ScalarBuffer};
 use arrow::datatypes::{Field, Fields};
-use hdf5_pure::DType;
 use dl_sdk_types::{ComponentDescriptor, ComponentIdentifier};
+use hdf5_pure::DType;
 
 use crate::config::IndexType;
 use crate::error::Hdf5Error;

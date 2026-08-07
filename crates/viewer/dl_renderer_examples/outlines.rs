@@ -1,9 +1,9 @@
 //! Demonstrates outline rendering.
 
-use itertools::Itertools as _;
 use dl_renderer::renderer::GpuMeshInstance;
 use dl_renderer::view_builder::{Projection, TargetConfiguration, ViewBuilder};
 use dl_renderer::{Color32, OutlineConfig, OutlineMaskPreference};
+use itertools::Itertools as _;
 use winit::event::ElementState;
 
 mod framework;

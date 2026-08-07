@@ -1,6 +1,6 @@
-use egui::{Align2, Color32, Rect, Rgba, Shape, Stroke, lerp, pos2, remap_clamp};
 use dl_format::time::next_grid_tick_magnitude_nanos;
 use dl_log_types::{AbsoluteTimeRangeF, TimeReal, TimeType, TimestampFormat};
+use egui::{Align2, Color32, Rect, Rgba, Shape, Stroke, lerp, pos2, remap_clamp};
 
 use crate::time_ranges_ui::TimeRangesUi;
 

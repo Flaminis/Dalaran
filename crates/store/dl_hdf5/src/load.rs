@@ -3,8 +3,8 @@
 
 use std::path::Path;
 
-use hdf5_pure::AttrValue;
 use dl_chunk::Chunk;
+use hdf5_pure::AttrValue;
 
 use crate::config::Hdf5Config;
 use crate::convert::DatasetDtype;

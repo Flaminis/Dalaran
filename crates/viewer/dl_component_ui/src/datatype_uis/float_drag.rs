@@ -1,9 +1,9 @@
 use std::ops::RangeInclusive;
 
-use egui::NumExt as _;
 use dl_sdk_types::datatypes;
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
 use dl_viewer_context::{MaybeMutRef, UiLayout};
+use egui::NumExt as _;
 
 /// Generic editor for a [`dl_sdk_types::datatypes::Float32`] value from zero to max float.
 pub fn edit_f32_zero_to_max(

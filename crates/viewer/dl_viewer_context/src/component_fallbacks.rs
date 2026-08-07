@@ -2,9 +2,9 @@ use std::borrow::Cow;
 
 use ahash::HashMap;
 use arrow::array::{ArrayRef, NullArray};
-use nohash_hasher::IntMap;
 use dl_sdk_types::{Component, ComponentType, SerializationError, ViewClassIdentifier};
 use dl_types_core::ComponentIdentifier;
+use nohash_hasher::IntMap;
 
 use crate::QueryContext;
 

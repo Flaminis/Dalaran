@@ -10,7 +10,7 @@
 
 extern crate self as dalaran;
 
-pub use dl_types_builder_prelude::{Binary, f16, dalaran_type};
+pub use dl_types_builder_prelude::{Binary, dalaran_type, f16};
 
 pub mod datatypes {
     /// A vector in 3D space.

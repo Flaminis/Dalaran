@@ -145,7 +145,9 @@ impl ::dl_types_core::Loggable for ColumnOrder {
                                 let actual = arrow_data_inner.data_type().clone();
                                 DeserializationError::datatype_mismatch(expected, actual)
                             })
-                            .with_context("dalaran.blueprint.components.ColumnOrder#entity_paths")?;
+                            .with_context(
+                                "dalaran.blueprint.components.ColumnOrder#entity_paths",
+                            )?;
                         let arrow_data_inner_buf = arrow_data_inner.values();
                         let offsets = arrow_data_inner.offsets();
                         ZipValidity::new_with_validity(offsets.windows(2), arrow_data_inner.nulls())

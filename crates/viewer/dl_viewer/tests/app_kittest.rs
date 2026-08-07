@@ -2,15 +2,15 @@
 
 use std::time::Duration;
 
-use egui::accesskit::Role;
-use egui::os::OperatingSystem;
-use egui_kittest::SnapshotResults;
-use egui_kittest::kittest::Queryable as _;
 use dl_sdk_types::ColormapSelection;
 use dl_sdk_types::components::Colormap;
 use dl_test_context::TestContext;
 use dl_viewer::viewer_test_utils::{self, HarnessOptions};
 use dl_viewer_context::MaybeMutRef;
+use egui::accesskit::Role;
+use egui::os::OperatingSystem;
+use egui_kittest::SnapshotResults;
+use egui_kittest::kittest::Queryable as _;
 
 fn os_snapshot_suffix(os: OperatingSystem) -> &'static str {
     match os {

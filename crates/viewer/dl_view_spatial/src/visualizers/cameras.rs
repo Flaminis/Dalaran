@@ -1,4 +1,3 @@
-use glam::vec3;
 use dl_log_types::Instance;
 use dl_renderer::renderer::LineStripFlags;
 use dl_sdk_types::Archetype as _;
@@ -10,6 +9,7 @@ use dl_viewer_context::{
     ViewSystemExecutionError, ViewerReportSeverity, VisualizerExecutionOutput, VisualizerQueryInfo,
     VisualizerSystem, typed_fallback_for,
 };
+use glam::vec3;
 
 use super::SpatialViewVisualizerData;
 use crate::SpaceKind;

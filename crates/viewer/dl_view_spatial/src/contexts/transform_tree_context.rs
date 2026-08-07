@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use itertools::Either;
-use nohash_hasher::{IntMap, IntSet};
 use dl_chunk_store::{LatestAtQuery, MissingChunkReporter};
 use dl_log_types::{EntityPath, EntityPathHash};
 use dl_sdk_types::components::ImagePlaneDistance;
@@ -15,6 +13,8 @@ use dl_viewer_context::{
     ViewContextSystemOncePerFrameResult, typed_fallback_for,
 };
 use dl_viewport_blueprint::ViewProperty;
+use itertools::Either;
+use nohash_hasher::{IntMap, IntSet};
 use vec1::smallvec_v1::SmallVec1;
 
 use crate::visualizers::CamerasVisualizer;

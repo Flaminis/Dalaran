@@ -2,11 +2,11 @@ use std::time::Duration;
 
 use anyhow::Context as _;
 use camino::Utf8PathBuf;
+use dl_build_info::CrateVersion;
+use dl_log_encoding::dlr::EncodingOptions;
 use indicatif::ProgressBar;
 use itertools::Itertools as _;
 use rayon::prelude::*;
-use dl_build_info::CrateVersion;
-use dl_log_encoding::dlr::EncodingOptions;
 
 #[derive(Debug, Clone, clap::Parser)]
 pub struct MigrateCommand {

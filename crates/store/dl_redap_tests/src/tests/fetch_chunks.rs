@@ -1,18 +1,18 @@
 use std::collections::HashSet;
 
-use futures::StreamExt as _;
-use itertools::Itertools as _;
 use dl_protos::cloud::v1alpha1::FetchChunksRequest;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::QueryDatasetDataframe;
 use dl_protos::cloud::v1alpha1::ext::QueryDatasetRequest;
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::common::v1alpha1::ext::ScanParameters;
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_sdk::external::dl_log_encoding::ToApplication as _;
+use futures::StreamExt as _;
+use itertools::Itertools as _;
 
 use crate::RecordBatchTestExt as _;
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, concat_record_batches,
     entry_name,
 };
 

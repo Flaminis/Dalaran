@@ -3,9 +3,6 @@ mod encoded_image;
 mod video_frame_reference;
 mod video_stream;
 
-pub use encoded_depth_image::{EncodedDepthImageVisualizer, EncodedDepthImageVisualizerOutput};
-pub use encoded_image::EncodedImageVisualizer;
-use nohash_hasher::IntMap;
 use dl_log_types::hash::Hash64;
 use dl_log_types::{EntityPath, EntityPathHash};
 use dl_renderer::renderer;
@@ -21,6 +18,9 @@ use dl_viewer_context::{
     ViewSystemIdentifier, VisualizerExecutionOutput, typed_fallback_for,
     video_stream_time_from_query,
 };
+pub use encoded_depth_image::{EncodedDepthImageVisualizer, EncodedDepthImageVisualizerOutput};
+pub use encoded_image::EncodedImageVisualizer;
+use nohash_hasher::IntMap;
 pub use video_frame_reference::VideoFrameReferenceVisualizer;
 pub use video_stream::VideoStreamVisualizer;
 

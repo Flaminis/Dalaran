@@ -1,8 +1,6 @@
 use std::collections::BTreeMap;
 
 use ahash::HashMap;
-use nohash_hasher::IntMap;
-use rayon::prelude::*;
 use dl_viewer_context::{
     MissingChunkReporter, PerVisualizerTypeInViewClass, SystemExecutionOutput,
     ViewContextCollection, ViewContextSystemOncePerFrameResult, ViewId, ViewQuery, ViewState,
@@ -10,6 +8,8 @@ use dl_viewer_context::{
     VisualizerCollection, VisualizerExecutionOutput, VisualizerInstructionsPerType,
 };
 use dl_viewport_blueprint::ViewBlueprint;
+use nohash_hasher::IntMap;
+use rayon::prelude::*;
 
 use crate::view_highlights::highlights_for_view;
 

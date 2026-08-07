@@ -1,11 +1,11 @@
 use std::sync::Arc;
 use std::time::Duration;
 
-use egui::mutex::Mutex;
 use dl_auth::callback_server::OauthCallbackServer;
 use dl_auth::oauth::Credentials;
 use dl_auth::oauth::api::{AuthenticateWithCode, Pkce, send_native};
 use dl_ui::{UiExt as _, Variant, icons};
+use egui::mutex::Mutex;
 
 use super::ActionButton;
 

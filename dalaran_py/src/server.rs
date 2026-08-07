@@ -1,12 +1,12 @@
 use std::net::SocketAddr;
 
+use dl_server::{self, Args as ServerArgs, NamedPathCollection};
 use pyo3::exceptions::PyValueError;
 use pyo3::types::{
     PyAnyMethods as _, PyDict, PyDictMethods as _, PyModule, PyModuleMethods as _, PyString,
     PyStringMethods as _,
 };
 use pyo3::{Bound, PyResult, Python, pyclass, pymethods};
-use dl_server::{self, Args as ServerArgs, NamedPathCollection};
 
 #[pyclass(name = "_ServerInternal", module = "dalaran_bindings.dalaran_bindings")]
 pub struct PyServerInternal {

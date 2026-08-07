@@ -1,6 +1,5 @@
 use std::iter;
 
-use ordered_float::NotNan;
 use dl_chunk_store::external::dl_chunk::ChunkComponentIterItem;
 use dl_sdk_types::archetypes::Capsules3D;
 use dl_sdk_types::components::{ClassId, Color, FillMode, HalfSize3D, Length, Radius, ShowLabels};
@@ -12,6 +11,7 @@ use dl_viewer_context::{
     ViewQuery, ViewSystemExecutionError, VisualizerExecutionOutput, VisualizerQueryInfo,
     VisualizerSystem, typed_fallback_for,
 };
+use ordered_float::NotNan;
 
 use super::SpatialViewVisualizerData;
 use super::utilities::{ProcMeshBatch, ProcMeshDrawableBuilder};

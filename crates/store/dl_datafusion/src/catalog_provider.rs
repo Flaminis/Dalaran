@@ -5,11 +5,11 @@ use async_trait::async_trait;
 use datafusion::catalog::{CatalogProvider, CatalogProviderList, SchemaProvider, TableProvider};
 use datafusion::common::{DataFusionError, Result as DataFusionResult, TableReference, exec_err};
 use datafusion::logical_expr::TableType;
-use parking_lot::Mutex;
 use dl_async::AsyncRuntimeHandle;
 use dl_log_types::EntryName;
 use dl_protos::cloud::v1alpha1::EntryKind;
 use dl_redap_client::{ConnectionAnalyticsExporter, ConnectionClient};
+use parking_lot::Mutex;
 use tokio::runtime::Handle as RuntimeHandle;
 
 use crate::IntoDfError as _;

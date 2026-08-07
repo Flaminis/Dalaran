@@ -5,7 +5,6 @@ mod hierarchical_drag_and_drop;
 mod right_panel;
 
 use crossbeam::channel::Receiver;
-use egui::{ComboBox, Modifiers, Rect, ScrollArea, Widget as _};
 use dl_ui::filter_widget::{FilterState, format_matching_text};
 use dl_ui::list_item::ListItemContentButtonsExt as _;
 use dl_ui::menu::menu_style;
@@ -15,6 +14,7 @@ use dl_ui::{
     ComboItem, ComboItemHeader, ContextExt as _, DesignTokens, Help, IconText, OnResponseExt as _,
     UICommand, UICommandSender, UiExt as _, WindowFrameConfig, icons, list_item,
 };
+use egui::{ComboBox, Modifiers, Rect, ScrollArea, Widget as _};
 
 /// Sender that queues up the execution of a command.
 pub struct CommandSender(crossbeam::channel::Sender<UICommand>);

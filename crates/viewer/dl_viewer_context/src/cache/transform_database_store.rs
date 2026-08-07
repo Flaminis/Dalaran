@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use ahash::HashSet;
-use parking_lot::{ArcRwLockReadGuard, RawRwLock};
 use dl_byte_size::SizeBytes as _;
 use dl_chunk::{LatestAtQuery, TimelineName};
 use dl_chunk_store::{ChunkStoreEvent, MissingChunkReporter};
@@ -9,6 +8,7 @@ use dl_entity_db::EntityDb;
 use dl_tf::{
     CachedTransformsForTimeline, FrameIdRegistry, TransformForest, TransformResolutionCache,
 };
+use parking_lot::{ArcRwLockReadGuard, RawRwLock};
 
 use super::Cache;
 

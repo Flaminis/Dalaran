@@ -8,9 +8,9 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-use indicatif::ProgressBar;
 use dl_mutex::Mutex;
 use dl_video::player::VideoSliceSource;
+use indicatif::ProgressBar;
 
 fn main() {
     dl_log::setup_logging();

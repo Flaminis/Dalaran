@@ -1,5 +1,5 @@
-use parking_lot::RwLock;
 use dl_sdk::ComponentDescriptor;
+use parking_lot::RwLock;
 
 use crate::{CComponentTypeHandle, CError, CErrorCode};
 

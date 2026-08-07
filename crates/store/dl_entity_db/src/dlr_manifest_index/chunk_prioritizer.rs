@@ -4,7 +4,6 @@ use std::time::Duration;
 
 use ahash::{HashMap, HashSet};
 use arrow::array::RecordBatch;
-use itertools::chain;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk::{Chunk, ChunkId, ComponentIdentifier, TimeInt, Timeline, TimelineName};
 use dl_chunk_store::{ChunkStore, QueriedChunkIdTracker};
@@ -13,6 +12,7 @@ use dl_log::debug_assert;
 use dl_log_encoding::RrdManifest;
 use dl_log_types::{AbsoluteTimeRange, EntityPathHash, TimelinePoint};
 use dl_mutex::Mutex;
+use itertools::chain;
 
 use crate::{
     chunk_requests::{ChunkRequests, RequestInfo},

@@ -1,9 +1,9 @@
 use std::convert::{TryFrom, TryInto as _};
 
-use egui_tiles::TileId;
 use dl_log_types::EntityPath;
 use dl_ui::SyntaxHighlighting;
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
+use egui_tiles::TileId;
 
 use crate::{BlueprintId, BlueprintIdRegistry, ContainerId, Item, ViewId};
 

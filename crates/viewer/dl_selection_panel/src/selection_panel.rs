@@ -1,5 +1,3 @@
-use egui::{NumExt as _, TextBuffer, WidgetInfo, WidgetType};
-use egui_tiles::ContainerKind;
 use dl_context_menu::{SelectionUpdateBehavior, context_menu_ui_for_item};
 use dl_data_ui::DataUi;
 use dl_data_ui::item_ui::{self, cursor_interact_with_selectable};
@@ -22,6 +20,8 @@ use dl_viewer_context::{
 };
 use dl_viewport_blueprint::ViewportBlueprint;
 use dl_viewport_blueprint::ui::show_add_view_or_container_modal;
+use egui::{NumExt as _, TextBuffer, WidgetInfo, WidgetType};
+use egui_tiles::ContainerKind;
 
 use crate::defaults_ui::view_components_defaults_section_ui;
 use crate::item_heading_no_breadcrumbs::item_title_list_item;

@@ -5,7 +5,6 @@ use std::sync::Arc;
 
 use arrow::array::{Array as _, BinaryArray, RecordBatch};
 use arrow::datatypes::Field;
-use itertools::{Itertools as _, chain};
 use dl_arrow_util::RecordBatchTestExt as _;
 use dl_chunk::{Chunk, ChunkId, RowId, TimePoint};
 use dl_log_encoding::{
@@ -15,6 +14,7 @@ use dl_log_encoding::{
 use dl_log_types::external::dl_tuid::Tuid;
 use dl_log_types::{ArrowMsg, LogMsg, StoreId, StoreKind, build_log_time};
 use dl_protos::external::prost::Message as _;
+use itertools::{Itertools as _, chain};
 
 #[test]
 fn simple_manifest() {

@@ -1,4 +1,3 @@
-use egui_plot::HoverPosition;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::Chunk;
 use dl_format::{format_bytes, format_uint};
@@ -6,6 +5,7 @@ use dl_log_types::EntityPath;
 use dl_ui::UiExt as _;
 use dl_ui::list_item;
 use dl_viewer_context::StorageContext;
+use egui_plot::HoverPosition;
 use std::collections::BTreeSet;
 
 use super::plot_utils::history_to_plot;

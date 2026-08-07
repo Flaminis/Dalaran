@@ -88,12 +88,12 @@ fn populate_view_class_registry_with_builtin(
 
 #[cfg(test)]
 mod tests {
-    use egui::Vec2;
-    use egui_kittest::SnapshotResults;
     use dl_chunk::EntityPath;
     use dl_test_context::TestContext;
     use dl_ui::UiExt as _;
     use dl_viewer_context::ViewId;
+    use egui::Vec2;
+    use egui_kittest::SnapshotResults;
 
     use super::*;
 

@@ -1,11 +1,11 @@
 #![expect(clippy::unwrap_used)]
 
 use arrow::array::{ListBuilder, StringBuilder};
-use itertools::Itertools as _;
 use dl_chunk::{Chunk, ChunkId, TimeColumn, TimelineName};
 use dl_log_types::EntityPathFilter;
 use dl_sdk::lenses::{Lens, Lenses, OutputMode, Selector};
 use dl_sdk_types::ComponentDescriptor;
+use itertools::Itertools as _;
 
 /// Helper to create a simple chunk with string data for testing
 fn create_test_chunk(entity_path: &str, component_name: &'static str) -> Chunk {

@@ -151,7 +151,10 @@ impl quote::ToTokens for StrStrMapTokenizer<'_> {
 }
 
 pub fn quote_fqname_as_type_path(fqname: impl AsRef<str>) -> TokenStream {
-    let fqname = fqname.as_ref().replace('.', "::").replace("dalaran", "crate");
+    let fqname = fqname
+        .as_ref()
+        .replace('.', "::")
+        .replace("dalaran", "crate");
     let expr: syn::TypePath = syn::parse_str(&fqname).unwrap();
     quote!(#expr)
 }

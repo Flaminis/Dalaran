@@ -1,9 +1,9 @@
-use itertools::Itertools as _;
 use dl_entity_db::EntityDb;
 use dl_log_types::ApplicationId;
 use dl_sdk_types::archetypes::RecordingInfo;
 use dl_sdk_types::components::Timestamp;
 use dl_viewer_context::{AppContext, UiLayout};
+use itertools::Itertools as _;
 
 use crate::item_ui::entity_db_button_ui;
 

@@ -31,6 +31,7 @@ pub use chunks_with_component::{
 };
 pub use clears::collect_recursive_clears;
 pub use component_drop::{ComponentDropResult, handle_component_drop};
+use dl_log_types::external::arrow;
 pub use instance_hash_conversions::{
     instance_path_hash_from_picking_layer_id, picking_layer_id_from_instance_path_hash,
 };
@@ -42,7 +43,6 @@ pub use query::{
     latest_at_with_blueprint_resolved_data_polymorphic, range_with_blueprint_resolved_data,
     range_with_blueprint_resolved_data_polymorphic,
 };
-use dl_log_types::external::arrow;
 pub use view_property_ui::{
     view_property_component_ui, view_property_component_ui_custom, view_property_ui,
     view_property_ui_with_hidden_components, view_property_ui_with_redirect,

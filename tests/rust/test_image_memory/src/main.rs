@@ -3,10 +3,10 @@
 // Allow unwrap() in tests (allow-unwrap-in-tests doesn't apply)
 #![expect(clippy::unwrap_used)]
 
-use mimalloc::MiMalloc;
-use dl_memory::AccountingAllocator;
 use dalaran::archetypes::Image;
 use dalaran::external::image;
+use dl_memory::AccountingAllocator;
+use mimalloc::MiMalloc;
 
 #[global_allocator]
 static GLOBAL: AccountingAllocator<MiMalloc> = AccountingAllocator::new(MiMalloc);

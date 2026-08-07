@@ -21,11 +21,11 @@ use crate::codegen::rust::util::{is_tuple_struct_from_obj, quote_doc_line};
 use crate::codegen::{Target, autogen_warning};
 use crate::objects::ObjectClass;
 use crate::{
-    ATTR_DEFAULT, ATTR_DALARAN_COMPONENT_OPTIONAL, ATTR_DALARAN_COMPONENT_RECOMMENDED,
+    ATTR_DALARAN_COMPONENT_OPTIONAL, ATTR_DALARAN_COMPONENT_RECOMMENDED,
     ATTR_DALARAN_COMPONENT_REQUIRED, ATTR_DALARAN_VIEW_IDENTIFIER, ATTR_DALARAN_VISUALIZER,
-    ATTR_RUST_CUSTOM_CLAUSE, ATTR_RUST_DERIVE, ATTR_RUST_DERIVE_ONLY, ATTR_RUST_NEW_PUB_CRATE,
-    ATTR_RUST_REPR, CodeGenerator, ElementType, Object, ObjectField, ObjectKind, Objects, Reporter,
-    Type, TypeRegistry, format_path,
+    ATTR_DEFAULT, ATTR_RUST_CUSTOM_CLAUSE, ATTR_RUST_DERIVE, ATTR_RUST_DERIVE_ONLY,
+    ATTR_RUST_NEW_PUB_CRATE, ATTR_RUST_REPR, CodeGenerator, ElementType, Object, ObjectField,
+    ObjectKind, Objects, Reporter, Type, TypeRegistry, format_path,
 };
 
 // ---

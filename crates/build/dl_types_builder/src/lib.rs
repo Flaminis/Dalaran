@@ -127,10 +127,10 @@ use std::path::PathBuf;
 
 use anyhow::Context as _;
 use codegen::FbsCodeGenerator;
-use format::FbsCodeFormatter;
 use dl_build_tools::{
     compute_crate_hash, compute_dir_filtered_hash, compute_dir_hash, compute_strings_hash,
 };
+use format::FbsCodeFormatter;
 
 pub use self::reflection::reflection::{
     BaseType as FbsBaseType, Enum as FbsEnum, EnumVal as FbsEnumVal, Field as FbsField,

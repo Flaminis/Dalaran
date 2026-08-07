@@ -1,5 +1,3 @@
-use egui::{NumExt as _, Vec2, color_picker};
-use itertools::Itertools as _;
 use dl_log_types::EntityPath;
 use dl_sdk_types::components::{self, AnnotationContext};
 use dl_sdk_types::datatypes::{
@@ -9,6 +7,8 @@ use dl_sdk_types::{Component as _, ComponentDescriptor, RowId};
 use dl_ui::UiExt as _;
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
 use dl_viewer_context::{StoreViewContext, UiLayout, auto_color_egui};
+use egui::{NumExt as _, Vec2, color_picker};
+use itertools::Itertools as _;
 
 use super::DataUi;
 

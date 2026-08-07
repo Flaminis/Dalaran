@@ -1,10 +1,6 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use futures::StreamExt as _;
-use parking_lot::Mutex;
-use pyo3::exceptions::{PyStopIteration, PyValueError};
-use pyo3::{Py, PyErr, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
 use dl_protos::{
     cloud::v1alpha1::ext::{
         QueryTasksDataframe, QueryTasksOnCompletionResponse, RegisterWithDatasetTaskDescriptor,
@@ -12,6 +8,10 @@ use dl_protos::{
     common::v1alpha1::TaskId,
 };
 use dl_redap_client::TraceId;
+use futures::StreamExt as _;
+use parking_lot::Mutex;
+use pyo3::exceptions::{PyStopIteration, PyValueError};
+use pyo3::{Py, PyErr, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
 use tokio::sync::mpsc;
 use tracing::Instrument as _;
 

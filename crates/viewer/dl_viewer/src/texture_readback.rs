@@ -1,8 +1,8 @@
 //! Helper to poll, and then save a texture from [`dl_renderer::poll_read_texture`].
 
-use image::{ExtendedColorType, ImageEncoder as _};
 use dl_renderer::{external::wgpu::TextureFormat, texture_readback::TextureReadbackId};
 use dl_viewer_context::{CommandSender, DownloadAction};
+use image::{ExtendedColorType, ImageEncoder as _};
 
 /// Keeps track of textures we're reading back, and prompts the user to save them
 /// when they're done.

@@ -27,8 +27,6 @@ use rmcp::{
 use serde::{Deserialize, Serialize};
 use tonic::transport::Channel;
 
-use egui_inspection::protocol::{self, PROTOCOL_VERSION, Request, Response};
-use egui_mcp::{BoxFuture, Bridge, PeerInfo, Transport, UiServer};
 use dl_protos::common::v1alpha1::{
     ApplicationId, StoreId, StoreKind, TimeRange, TimeType, Timeline,
 };
@@ -37,6 +35,8 @@ use dl_protos::sdk_comms::v1alpha1::{
     SetTimeCursorRequest, SetTimeCursorResponse, TimeCursor, ViewerRecording, ViewerTimeline,
     viewer_control_service_client::ViewerControlServiceClient,
 };
+use egui_inspection::protocol::{self, PROTOCOL_VERSION, Request, Response};
+use egui_mcp::{BoxFuture, Bridge, PeerInfo, Transport, UiServer};
 
 const DEFAULT_VIEWER_ENDPOINT: &str = "http://127.0.0.1:9876";
 

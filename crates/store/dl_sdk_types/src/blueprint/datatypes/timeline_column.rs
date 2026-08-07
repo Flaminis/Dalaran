@@ -255,7 +255,9 @@ impl ::dl_types_core::Loggable for TimelineColumn {
                         Ok(Self {
                             visible: visible
                                 .ok_or_else(DeserializationError::missing_data)
-                                .with_context("dalaran.blueprint.datatypes.TimelineColumn#visible")?,
+                                .with_context(
+                                    "dalaran.blueprint.datatypes.TimelineColumn#visible",
+                                )?,
                             timeline: timeline
                                 .ok_or_else(DeserializationError::missing_data)
                                 .with_context(

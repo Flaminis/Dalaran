@@ -1,6 +1,6 @@
 use crate::legend::LegendSwatch;
-use egui::{Atom, AtomExt as _, AtomLayout, TextWrapMode};
 use dl_ui::{DesignTokens, UiExt as _};
+use egui::{Atom, AtomExt as _, AtomLayout, TextWrapMode};
 
 /// Shows a plot tooltip at the pointer for the given response.
 ///

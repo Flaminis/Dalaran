@@ -1,7 +1,7 @@
-use egui::NumExt as _;
-use nohash_hasher::IntMap;
 use dl_log_types::EntityPathHash;
 use dl_viewer_context::SystemExecutionOutput;
+use egui::NumExt as _;
+use nohash_hasher::IntMap;
 
 use crate::SpaceKind;
 use crate::visualizers::iter_spatial_data;

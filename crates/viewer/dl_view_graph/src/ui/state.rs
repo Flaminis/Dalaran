@@ -1,8 +1,8 @@
-use egui::Rect;
 use dl_format::format_f32;
 use dl_sdk_types::blueprint::components::VisualBounds2D;
 use dl_ui::UiExt as _;
 use dl_viewer_context::ViewState;
+use egui::Rect;
 
 use crate::layout::{ForceLayoutParams, ForceLayoutProvider, Layout, LayoutRequest};
 

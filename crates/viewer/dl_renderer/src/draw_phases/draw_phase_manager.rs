@@ -1,6 +1,6 @@
+use dl_log::{debug_assert, debug_panic};
 use enumset::__internal::EnumSetTypePrivate as _;
 use enumset::EnumSet;
-use dl_log::{debug_assert, debug_panic};
 
 use super::DrawPhase;
 use crate::context::Renderers;

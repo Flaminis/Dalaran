@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use arrow::array::{Float32Array, RecordBatch};
-use itertools::Itertools as _;
 use dl_arrow_util::{RecordBatchExt as _, RecordBatchTestExt as _, SchemaTestExt as _};
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
@@ -12,9 +11,10 @@ use dl_sdk::AsComponents;
 use dl_sdk::external::dl_log_encoding::{RawRrdManifest, ToApplication as _};
 use dl_sdk_types::AnyValues;
 use dl_types_core::SegmentId;
+use itertools::Itertools as _;
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, entry_name,
 };
 
 pub async fn simple_dataset_dlr_manifest(service: impl DalaranCloudService) {

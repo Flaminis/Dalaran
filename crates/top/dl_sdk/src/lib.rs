@@ -45,12 +45,12 @@ pub const DEFAULT_SERVER_PORT: u16 = dl_uri::DEFAULT_PROXY_PORT;
 pub const DEFAULT_CONNECT_URL: &str =
     const_format::concatcp!("dalaran+http://127.0.0.1:", DEFAULT_SERVER_PORT, "/proxy");
 
-pub use global::cleanup_if_forked_child;
 pub use dl_log_types::{
     ApplicationId, EntityPath, EntityPathFilter, EntityPathPart, Instance, StoreId, StoreKind,
     entity_path,
 };
 pub use dl_sdk_types::archetypes::RecordingInfo;
+pub use global::cleanup_if_forked_child;
 
 #[cfg(not(target_arch = "wasm32"))]
 impl crate::sink::LogSink for dl_log_encoding::FileSink {

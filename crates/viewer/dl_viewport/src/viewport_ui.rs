@@ -5,8 +5,6 @@
 use std::collections::BTreeMap;
 
 use ahash::HashMap;
-use egui::{Key, KeyboardShortcut, Modifiers, remap_clamp};
-use egui_tiles::{Behavior as _, EditAction};
 use dl_context_menu::{SelectionUpdateBehavior, context_menu_ui_for_item};
 use dl_log_types::{EntityPath, ResolvedEntityPathRule, RuleEffect};
 use dl_ui::{
@@ -21,6 +19,8 @@ use dl_viewer_context::{
 use dl_viewport_blueprint::{
     ViewBlueprint, ViewportBlueprint, ViewportCommand, create_entity_add_info,
 };
+use egui::{Key, KeyboardShortcut, Modifiers, remap_clamp};
+use egui_tiles::{Behavior as _, EditAction};
 
 use crate::system_execution::{execute_systems_for_all_views, execute_systems_for_view};
 

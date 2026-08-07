@@ -5,9 +5,9 @@
 //! cargo run --example demo -p dl_memory_view
 //! ```
 
+use dl_byte_size::{MemUsageNode, MemUsageTree, NamedMemUsageTree};
 use eframe::Frame;
 use egui::Ui;
-use dl_byte_size::{MemUsageNode, MemUsageTree, NamedMemUsageTree};
 
 fn main() -> eframe::Result<()> {
     let options = eframe::NativeOptions {

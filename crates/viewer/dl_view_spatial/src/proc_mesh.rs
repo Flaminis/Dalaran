@@ -4,16 +4,16 @@
 
 use std::sync::Arc;
 
-use glam::{Vec3, Vec3A, uvec3, vec3};
-use hexasphere::{BaseShape, Subdivided};
-use itertools::Itertools as _;
-use macaw::MeshGen;
-use ordered_float::NotNan;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::external::dl_chunk::external::dl_byte_size;
 use dl_renderer::RenderContext;
 use dl_renderer::mesh::{self, GpuMesh, MeshError};
 use dl_viewer_context::Cache;
+use glam::{Vec3, Vec3A, uvec3, vec3};
+use hexasphere::{BaseShape, Subdivided};
+use itertools::Itertools as _;
+use macaw::MeshGen;
+use ordered_float::NotNan;
 use smallvec::smallvec;
 
 // ----------------------------------------------------------------------------

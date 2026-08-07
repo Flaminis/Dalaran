@@ -1,7 +1,3 @@
-use egui::text::TextWrapping;
-use egui::{NumExt as _, WidgetText};
-use egui::{emath::OrderedFloat, epaint::text::ByteRangeExt as _, text::ByteRange};
-use macaw::BoundingBox;
 use dl_format::format_f32;
 use dl_sdk_types::blueprint::archetypes::EyeControls3D;
 use dl_sdk_types::blueprint::components::VisualBounds2D;
@@ -12,6 +8,10 @@ use dl_viewer_context::{
     HoverHighlight, ImageInfo, SelectionHighlight, ViewHighlights, ViewId, ViewState, ViewerContext,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::text::TextWrapping;
+use egui::{NumExt as _, WidgetText};
+use egui::{emath::OrderedFloat, epaint::text::ByteRangeExt as _, text::ByteRange};
+use macaw::BoundingBox;
 
 use super::eye::Eye;
 use super::ui_3d::View3DState;

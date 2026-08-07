@@ -1,6 +1,6 @@
+use dl_log::debug_assert;
 use fixed::FixedI128;
 use fixed::traits::LossyInto as _;
-use dl_log::debug_assert;
 
 use super::NonMinI64;
 use crate::TimeInt;

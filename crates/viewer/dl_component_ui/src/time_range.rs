@@ -1,4 +1,3 @@
-use egui::NumExt as _;
 use dl_log_types::{AbsoluteTimeRange, TimeType};
 use dl_sdk_types::blueprint::components::TimeRange;
 use dl_sdk_types::datatypes::{TimeInt, TimeRangeBoundary};
@@ -10,6 +9,7 @@ use dl_ui::{
 use dl_viewer_context::{
     AppContext, MaybeMutRef, TimeControlCommand, TimeRangeHighlight, TimeRangeHighlightKind,
 };
+use egui::NumExt as _;
 
 struct RecordingTimeContext {
     time_type: TimeType,

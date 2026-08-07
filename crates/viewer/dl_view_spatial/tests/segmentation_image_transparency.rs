@@ -1,4 +1,3 @@
-use ndarray::{Array, ShapeBuilder as _, s};
 use dl_chunk_store::RowId;
 use dl_log_types::TimePoint;
 use dl_sdk_types::datatypes::Rgba32;
@@ -6,6 +5,7 @@ use dl_test_context::TestContext;
 use dl_test_viewport::TestContextExt as _;
 use dl_viewer_context::{ViewClass as _, ViewId};
 use dl_viewport_blueprint::ViewBlueprint;
+use ndarray::{Array, ShapeBuilder as _, s};
 
 /// Regression test for transparent annotation classes in segmentation images.
 ///

@@ -1,7 +1,6 @@
 use std::fmt::Debug;
 
 use ahash::HashMap;
-use egui_tiles::TileId;
 use dl_chunk::LatestAtQuery;
 use dl_entity_db::EntityDb;
 use dl_log_types::EntityPath;
@@ -14,6 +13,7 @@ use dl_sdk_types::{Archetype as _, Loggable as _};
 use dl_viewer_context::{
     BlueprintContext as _, ContainerId, Contents, ContentsName, ViewId, ViewerContext,
 };
+use egui_tiles::TileId;
 
 /// The native version of a [`dl_sdk_types::blueprint::archetypes::ContainerBlueprint`].
 ///

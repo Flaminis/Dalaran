@@ -66,7 +66,9 @@ const URLS: &[(&str, &str)] = &[
 ];
 
 fn lookup() -> Arc<UrlNameLookup> {
-    let origin: dl_uri::Origin = "dalaran://example.dalaran.dev".parse().expect("valid origin");
+    let origin: dl_uri::Origin = "dalaran://example.dalaran.dev"
+        .parse()
+        .expect("valid origin");
 
     let mut lookup = UrlNameLookup::default();
     lookup.insert(

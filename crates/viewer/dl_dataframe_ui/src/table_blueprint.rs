@@ -14,8 +14,8 @@ use dl_viewer_context::{VariantName, blueprint_timeline};
 use crate::DisplayRecordBatch;
 use crate::datafusion_table_widget::Columns;
 use crate::display_record_batch::DisplayColumn;
-use crate::filters::ColumnFilter;
 use crate::dl_table_utils::TableConfig;
+use crate::filters::ColumnFilter;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SortDirection {

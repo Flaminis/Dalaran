@@ -190,7 +190,9 @@ impl ::dl_types_core::Loggable for SphericalHarmonics3Rgb {
                                 let actual = arrow_data_inner.data_type().clone();
                                 DeserializationError::datatype_mismatch(expected, actual)
                             })
-                            .with_context("dalaran.datatypes.SphericalHarmonics3Rgb#coefficients")?;
+                            .with_context(
+                                "dalaran.datatypes.SphericalHarmonics3Rgb#coefficients",
+                            )?;
                         if arrow_data_inner.is_empty() {
                             Vec::new()
                         } else {

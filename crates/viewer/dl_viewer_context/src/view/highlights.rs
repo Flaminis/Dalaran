@@ -1,8 +1,8 @@
-use nohash_hasher::IntMap;
 use dl_entity_db::InstancePath;
 use dl_log_types::{EntityPathHash, Instance};
 use dl_renderer::OutlineMaskPreference;
 use dl_sdk_types::blueprint::components::VisualizerInstructionId;
+use nohash_hasher::IntMap;
 
 use crate::{HoverHighlight, InteractionHighlight, SelectionHighlight};
 

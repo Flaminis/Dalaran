@@ -7,8 +7,6 @@
 
 use std::sync::Arc;
 
-use glam::{Vec2, Vec3, vec2, vec3};
-use itertools::Itertools as _;
 use dl_renderer::{
     Color32, OutlineMaskPreference, PickingLayerId, RenderContext, ShapeBuilder,
     mesh::{CpuMesh, GpuMesh, MeshError},
@@ -17,6 +15,8 @@ use dl_renderer::{
 use dl_sdk_types::components::MarkerShape;
 use dl_sdk_types::reflection::Enum as _;
 use dl_viewer_context::Cache;
+use glam::{Vec2, Vec3, vec2, vec3};
+use itertools::Itertools as _;
 
 /// Multiplier applied to the marker radius when the series is highlighted (hovered/selected).
 ///

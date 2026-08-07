@@ -1,11 +1,11 @@
 use std::collections::BTreeSet;
 use std::io::{Read, Seek};
 
-use mcap::Summary;
-use mcap::sans_io::{SummaryReadEvent, SummaryReader};
 use dl_chunk::{TimePoint, TimelineName};
 use dl_int::SaturatingCast as _;
 use dl_log_types::{TimeCell, TimeType};
+use mcap::Summary;
+use mcap::sans_io::{SummaryReadEvent, SummaryReader};
 
 use crate::Error;
 use crate::parsers::ChannelId;

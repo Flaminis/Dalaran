@@ -27,6 +27,12 @@ use std::sync::{Arc, OnceLock};
 
 use datafusion::logical_expr::Expr;
 use datafusion::physical_plan::metrics::{ExecutionPlanMetricsSet, MetricBuilder, MetricsSet};
+use dl_async::AsyncRuntimeHandle;
+use dl_dataframe::QueryExpression;
+use dl_protos::cloud::v1alpha1::SystemTableKind;
+use dl_protos::cloud::v1alpha1::ext::ProviderDetails;
+use dl_redap_client::ConnectionAnalyticsExporter;
+use dl_uri::Origin;
 use opentelemetry_proto::tonic::{
     collector::trace::v1::ExportTraceServiceRequest,
     common::v1::any_value::Value,
@@ -34,12 +40,6 @@ use opentelemetry_proto::tonic::{
     resource::v1::Resource,
     trace::v1::{ResourceSpans, ScopeSpans, Span, span::SpanKind},
 };
-use dl_async::AsyncRuntimeHandle;
-use dl_dataframe::QueryExpression;
-use dl_protos::cloud::v1alpha1::SystemTableKind;
-use dl_protos::cloud::v1alpha1::ext::ProviderDetails;
-use dl_redap_client::ConnectionAnalyticsExporter;
-use dl_uri::Origin;
 use web_time::{Duration, Instant, SystemTime};
 
 use crate::metrics_capture::{QueryMetrics, QuerySnapshot, build_query_snapshot};

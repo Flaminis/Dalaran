@@ -3,12 +3,12 @@
 use std::sync::Arc;
 
 use arrow::array::{ArrayRef, Int32Array, Int32Builder, ListBuilder};
-use itertools::Itertools as _;
 use dl_chunk::{Chunk, ChunkId, TimeColumn, TimelineName};
 use dl_lenses_core::combinators::Error;
 use dl_lenses_core::function_registry::FunctionRegistry;
 use dl_lenses_core::{DynExpr, Lens, LensRuntimeError, Lenses, OutputMode, Runtime, Selector};
 use dl_sdk_types::ComponentDescriptor;
+use itertools::Itertools as _;
 
 /// An empty runtime: these tests use only path and piped selectors, no built-ins.
 fn empty_runtime() -> Runtime {

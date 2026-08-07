@@ -1,10 +1,10 @@
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use pyo3::exceptions::{PyFileNotFoundError, PyValueError};
-use pyo3::prelude::*;
 use dl_chunk::{Chunk, EntityPath};
 use dl_parquet::{ColumnGrouping, IndexColumn, IndexType, ParquetConfig, TimeUnit};
+use pyo3::exceptions::{PyFileNotFoundError, PyValueError};
+use pyo3::prelude::*;
 
 use super::error::ChunkPipelineError;
 use super::py_stream::PyLazyChunkStreamInternal;

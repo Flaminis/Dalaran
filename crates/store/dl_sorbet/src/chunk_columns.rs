@@ -1,6 +1,6 @@
 use arrow::datatypes::{Field as ArrowField, Fields as ArrowFields};
-use itertools::chain;
 use dl_log_types::EntityPath;
+use itertools::chain;
 
 use crate::{
     BatchType, ColumnDescriptor, ComponentColumnDescriptor, IndexColumnDescriptor,

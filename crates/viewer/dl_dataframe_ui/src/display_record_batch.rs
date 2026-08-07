@@ -9,7 +9,6 @@ use arrow::array::{
 };
 use arrow::buffer::{NullBuffer as ArrowNullBuffer, ScalarBuffer as ArrowScalarBuffer};
 use arrow::datatypes::DataType as ArrowDataType;
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_component_ui::REDAP_THUMBNAIL_VARIANT;
 use dl_dataframe::external::dl_chunk::{TimeColumn, TimeColumnError};
@@ -21,6 +20,7 @@ use dl_sorbet::ColumnDescriptorRef;
 use dl_types_core::{Component as _, DeserializationError, Loggable as _, RowId};
 use dl_ui::UiExt as _;
 use dl_viewer_context::{AppContext, UiLayout, VariantName};
+use itertools::Itertools as _;
 
 use crate::table_blueprint::ColumnBlueprint;
 

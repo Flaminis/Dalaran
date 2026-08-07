@@ -632,9 +632,9 @@ mod tests {
 
     use arrow::array::{Array as _, Float32Array};
     use byteorder::LittleEndian;
+    use dl_log_types::TimeType;
     use mcap::{Channel, Message};
     use re_cdr::to_vec;
-    use dl_log_types::TimeType;
 
     use super::*;
     use crate::parsers::decode::ParserContext;

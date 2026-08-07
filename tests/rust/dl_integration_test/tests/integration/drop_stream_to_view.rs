@@ -4,13 +4,13 @@
 
 use std::f64::consts::TAU;
 
-use egui::Modifiers;
 use dl_integration_test::HarnessExt as _;
 use dl_sdk::log::RowId;
 use dl_viewer::external::dl_sdk_types;
 use dl_viewer::external::dl_viewer_context::{Item, RecommendedView, ViewClass as _, ViewId};
 use dl_viewer::viewer_test_utils::{self, HarnessOptions};
 use dl_viewport_blueprint::ViewBlueprint;
+use egui::Modifiers;
 
 fn make_harness<'a>() -> egui_kittest::Harness<'a, dl_viewer::App> {
     let mut harness = viewer_test_utils::viewer_harness(&HarnessOptions::default());

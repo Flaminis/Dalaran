@@ -1161,7 +1161,10 @@ mod tests {
             object.fields.iter().map(|f| f.order).collect::<Vec<_>>(),
             vec![0, 1, 2]
         );
-        assert_eq!(object.fields[0].fqname, "dalaran.datatypes.AnnotationInfo#id");
+        assert_eq!(
+            object.fields[0].fqname,
+            "dalaran.datatypes.AnnotationInfo#id"
+        );
     }
 
     #[test]
@@ -1432,7 +1435,10 @@ mod tests {
 
     #[test]
     fn state_defaults_by_kind_and_scope() {
-        let datatype = parse_ok("dalaran.datatypes", "#[dalaran_type] pub struct A(pub f32);");
+        let datatype = parse_ok(
+            "dalaran.datatypes",
+            "#[dalaran_type] pub struct A(pub f32);",
+        );
         assert_eq!(datatype[0].state, State::Stable);
 
         let blueprint = parse_ok(
@@ -1578,7 +1584,11 @@ mod tests {
     fn package_name_comes_from_the_path() {
         let root = Utf8Path::new("/x/definitions");
         assert_eq!(
-            package_name_of(root, Utf8Path::new("/x/definitions/dalaran/components/a.rs")).as_deref(),
+            package_name_of(
+                root,
+                Utf8Path::new("/x/definitions/dalaran/components/a.rs")
+            )
+            .as_deref(),
             Some("dalaran.components")
         );
         assert_eq!(
@@ -1633,11 +1643,11 @@ mod tests {
         );
 
         let bad = [
-            String::new(),                                      // empty
+            String::new(),                                        // empty
             "#[dalaran_type]\npub struct Position3D;".to_owned(), // no banner at all
-            BANNER[..BANNER.len() - 1].join("\n"),              // truncated
-            banner.replace("normal Rust", "normal rust"),       // reworded
-            format!("\n{banner}"),                              // not at the very top
+            BANNER[..BANNER.len() - 1].join("\n"),                // truncated
+            banner.replace("normal Rust", "normal rust"),         // reworded
+            format!("\n{banner}"),                                // not at the very top
         ];
 
         for contents in bad {

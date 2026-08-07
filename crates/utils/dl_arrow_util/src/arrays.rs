@@ -8,8 +8,8 @@ use arrow::array::{
 use arrow::buffer::{Buffer, NullBuffer, OffsetBuffer};
 use arrow::datatypes::{DataType, Field, UInt8Type};
 use arrow::error::ArrowError;
-use itertools::Itertools as _;
 use dl_log::debug_assert;
+use itertools::Itertools as _;
 
 // ---------------------------------------------------------------------------------
 

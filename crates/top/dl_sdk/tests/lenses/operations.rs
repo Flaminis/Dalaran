@@ -4,11 +4,11 @@ use std::sync::Arc;
 
 use arrow::array::{AsArray as _, Int32Builder, ListArray, ListBuilder};
 use arrow::datatypes::{DataType, Field};
-use itertools::Itertools as _;
 use dl_chunk::{ArrowArray as _, Chunk, ChunkId, TimeColumn, TimelineName};
 use dl_sdk::lenses::{CastTo, Lens, Lenses, OutputMode, Selector};
 use dl_sdk_types::ComponentDescriptor;
 use dl_sdk_types::archetypes::Scalars;
+use itertools::Itertools as _;
 
 /// Helper to convert serializable data to a `ListArray` using Arrow's JSON decoder
 fn to_list_array<T: serde::Serialize>(data: &[T], inner_field: Arc<Field>) -> ListArray {

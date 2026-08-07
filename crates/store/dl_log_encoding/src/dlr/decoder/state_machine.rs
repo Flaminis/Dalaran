@@ -1,8 +1,8 @@
 use std::collections::VecDeque;
 use std::io::{Cursor, Read as _};
 
-use itertools::Itertools as _;
 use dl_build_info::CrateVersion;
+use itertools::Itertools as _;
 
 use crate::dlr::MessageHeader;
 use crate::{

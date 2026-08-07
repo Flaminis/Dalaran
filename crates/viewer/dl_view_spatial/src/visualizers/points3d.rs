@@ -1,8 +1,5 @@
 use std::sync::Arc;
 
-use itertools::Itertools as _;
-use nohash_hasher::IntMap;
-use parking_lot::Mutex;
 use dl_byte_size::SizeBytes as _;
 use dl_entity_db::EntityDb;
 use dl_log_types::hash::Hash64;
@@ -22,6 +19,9 @@ use dl_viewer_context::{
     ViewContext, ViewContextCollection, ViewQuery, ViewSystemExecutionError,
     VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem, typed_fallback_for,
 };
+use itertools::Itertools as _;
+use nohash_hasher::IntMap;
+use parking_lot::Mutex;
 
 use super::utilities::LabeledBatch;
 use super::{Keypoints, SpatialViewVisualizerData, process_labels_3d};

@@ -128,9 +128,9 @@ pub mod log_integration;
 #[cfg(feature = "run")]
 pub use commands::{CallSource, run};
 #[cfg(feature = "log")]
-pub use log_integration::Logger;
-#[cfg(feature = "log")]
 pub use dl_log::default_log_filter;
+#[cfg(feature = "log")]
+pub use log_integration::Logger;
 #[cfg(feature = "sdk")]
 pub use sdk::*;
 

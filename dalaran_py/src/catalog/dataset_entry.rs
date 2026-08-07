@@ -2,9 +2,6 @@ use std::sync::Arc;
 
 use arrow::datatypes::Schema as ArrowSchema;
 use arrow::pyarrow::PyArrowType;
-use pyo3::exceptions::{PyOverflowError, PyRuntimeError, PyValueError};
-use pyo3::types::PyAnyMethods as _;
-use pyo3::{Bound, Py, PyAny, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
 use dl_chunk_store::LazyStore;
 use dl_datafusion::{DatasetManifestProvider, SegmentTableProvider};
 use dl_log_types::EntryId;
@@ -13,6 +10,9 @@ use dl_protos::common::v1alpha1::ext::{DatasetHandle, IfDuplicateBehavior, Segme
 use dl_redap_client::SegmentChunkProvider;
 use dl_sorbet::SorbetColumnDescriptors;
 use dl_types_core::LayerName;
+use pyo3::exceptions::{PyOverflowError, PyRuntimeError, PyValueError};
+use pyo3::types::PyAnyMethods as _;
+use pyo3::{Bound, Py, PyAny, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
 
 use super::registration_handle::PyRegistrationHandleInternal;
 use super::{PyCatalogClientInternal, PyEntryDetails, PyTableProviderAdapterInternal, to_py_err};

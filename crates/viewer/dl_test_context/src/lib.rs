@@ -6,8 +6,6 @@ use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 
 use ahash::HashMap;
-use egui::os::OperatingSystem;
-use parking_lot::{Mutex, RwLock};
 use dl_chunk::{Chunk, ChunkBuilder, TimelineName};
 use dl_chunk_store::LatestAtQuery;
 use dl_entity_db::{EntityDb, InstancePath};
@@ -26,6 +24,8 @@ use dl_viewer_context::{
     TimeControl, TimeControlCommand, ViewClass, ViewClassRegistry, ViewId, ViewStates,
     ViewerContext, blueprint_timeline, command_channel,
 };
+use egui::os::OperatingSystem;
+use parking_lot::{Mutex, RwLock};
 
 pub mod external {
     pub use egui_kittest;

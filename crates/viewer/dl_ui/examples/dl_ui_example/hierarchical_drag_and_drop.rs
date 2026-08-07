@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
-use egui::NumExt as _;
 use dl_ui::{DesignTokens, UiExt as _, list_item};
+use egui::NumExt as _;
 
 #[derive(Hash, Clone, Copy, PartialEq, Eq)]
 struct ItemId(u32);

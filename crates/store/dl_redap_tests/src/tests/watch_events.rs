@@ -1,10 +1,10 @@
 use std::time::Duration;
 
 use anyhow::Context as _;
-use futures::StreamExt as _;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::watch_events_response::Kind;
 use dl_protos::cloud::v1alpha1::{DeleteEntryRequest, WatchEventsRequest};
+use futures::StreamExt as _;
 
 use super::common::DalaranCloudServiceExt as _;
 

@@ -5,13 +5,13 @@ use ahash::{HashMap, HashSet};
 use arrow::array::{ArrayRef, BooleanArray, ListArray as ArrowListArray};
 use arrow::buffer::{OffsetBuffer, ScalarBuffer};
 use arrow::datatypes::Field;
-use itertools::izip;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk::{Chunk, ChunkId, ChunkShared, EntityPath, TimeColumn, Timeline, TimelineName};
 use dl_format::format_bytes;
 use dl_log_types::TimeInt;
 use dl_sdk_types::archetypes::VideoStream;
 use dl_sdk_types::components::{IsKeyframe, VideoCodec, VideoSample};
+use itertools::izip;
 
 use crate::{ChunkStore, ChunkStoreConfig, ChunkTrackingMode};
 

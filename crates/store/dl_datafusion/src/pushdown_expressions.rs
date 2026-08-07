@@ -1,13 +1,13 @@
 use arrow::datatypes::SchemaRef;
 use datafusion::common::{DataFusionError, ScalarValue, exec_err};
 use datafusion::logical_expr::{BinaryExpr, Expr, Operator, TableProviderFilterPushDown};
-use itertools::Itertools as _;
 use dl_int::SaturatingCast as _;
 use dl_log_types::{AbsoluteTimeRange, TimeInt, TimelineName};
 use dl_protos::cloud::v1alpha1::ext::{Query, QueryDatasetRequest, QueryLatestAt, QueryRange};
 use dl_protos::cloud::v1alpha1::{SegmentIdFilter, SegmentIdList, segment_id_filter};
 use dl_sorbet::metadata::DALARAN_KIND;
 use dl_types_core::SegmentId;
+use itertools::Itertools as _;
 use std::collections::HashSet;
 use std::ops::Not as _;
 
@@ -777,7 +777,11 @@ mod tests {
             vec![
                 Field::new(index_name, arrow::datatypes::DataType::Int64, false)
                     .with_metadata(metadata),
-                Field::new("dalaran_segment_id", arrow::datatypes::DataType::Utf8, false),
+                Field::new(
+                    "dalaran_segment_id",
+                    arrow::datatypes::DataType::Utf8,
+                    false,
+                ),
             ],
             HashMap::default(),
         ))

@@ -2,7 +2,6 @@ use std::collections::BTreeMap;
 use std::sync::{Arc, OnceLock};
 
 use ahash::HashMap;
-use nohash_hasher::IntSet;
 use dl_chunk::RowId;
 use dl_chunk_store::{
     ChunkStore, ChunkStoreEvent, ChunkStoreSubscriberHandle, LatestAtQuery, PerStoreChunkSubscriber,
@@ -12,6 +11,7 @@ use dl_log_types::StoreId;
 use dl_sdk_types::archetypes;
 use dl_sdk_types::components::AnnotationContext;
 use dl_sdk_types::datatypes::{AnnotationInfo, ClassDescription, ClassId, KeypointId, Utf8};
+use nohash_hasher::IntSet;
 
 use super::auto_color_egui;
 

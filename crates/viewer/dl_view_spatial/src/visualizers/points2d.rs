@@ -1,4 +1,3 @@
-use itertools::Itertools as _;
 use dl_renderer::{LineDrawableBuilder, PickingLayerInstanceId, PointCloudBuilder};
 use dl_sdk_types::archetypes::Points2D;
 use dl_sdk_types::components::{ClassId, Color, KeypointId, Position2D, Radius, ShowLabels};
@@ -9,6 +8,7 @@ use dl_viewer_context::{
     ViewQuery, ViewSystemExecutionError, VisualizerExecutionOutput, VisualizerQueryInfo,
     VisualizerSystem, typed_fallback_for,
 };
+use itertools::Itertools as _;
 
 use super::SpatialViewVisualizerData;
 use super::utilities::{LabeledBatch, process_labels_2d};

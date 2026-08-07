@@ -6,10 +6,10 @@ use arrow::array::{
     RecordBatchOptions as ArrowRecordBatchOptions,
 };
 use arrow::datatypes::{Field as ArrowField, FieldRef as ArrowFieldRef, Schema as ArrowSchema};
-use itertools::Itertools as _;
 use dl_log::ResultExt as _;
 use dl_tuid::Tuid;
 use dl_types_core::arrow_helpers::as_array_ref;
+use itertools::Itertools as _;
 
 use crate::MetadataExt as _;
 

@@ -1,7 +1,5 @@
 use std::ops::Range;
 
-use itertools::Itertools as _;
-use nohash_hasher::IntMap;
 use dl_data_ui::item_ui;
 use dl_entity_db::{EntityPath, EntityTree, InstancePath};
 use dl_log_types::{ResolvedEntityPathFilter, ResolvedEntityPathRule};
@@ -11,6 +9,8 @@ use dl_viewer_context::{DataQueryResult, ViewId, ViewerContext};
 use dl_viewport_blueprint::{
     CanAddToView, EntityAddInfo, ViewBlueprint, ViewportBlueprint, create_entity_add_info,
 };
+use itertools::Itertools as _;
+use nohash_hasher::IntMap;
 use smallvec::SmallVec;
 
 /// Window for adding/removing entities from a view.

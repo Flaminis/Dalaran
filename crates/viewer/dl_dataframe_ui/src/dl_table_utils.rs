@@ -1,8 +1,8 @@
 use ahash::HashSet;
+use dl_ui::{UiExt as _, design_tokens_of, icons};
 use egui::containers::menu::{MenuButton, MenuConfig};
 use egui::emath::GuiRounding as _;
 use egui::{Color32, Frame, Id, PopupCloseBehavior, RichText, Stroke, Style};
-use dl_ui::{UiExt as _, design_tokens_of, icons};
 
 pub const CELL_SEPARATOR_STROKE_OFFSET: f32 = 0.5;
 

@@ -2,13 +2,13 @@ use std::{collections::BTreeMap, sync::Arc};
 
 use ahash::HashMap;
 use arrow::array::RecordBatch;
-use itertools::izip;
-use nohash_hasher::IntSet;
 use dl_byte_size::{MemUsageTree, MemUsageTreeCapture};
 use dl_chunk::{ChunkId, EntityPath, Timeline, TimelineName};
 use dl_chunk_store::{ChunkStore, ChunkStoreDiff, ChunkStoreEvent};
 use dl_log_encoding::{CodecResult, RrdManifest};
 use dl_log_types::{AbsoluteTimeRange, StoreKind};
+use itertools::izip;
+use nohash_hasher::IntSet;
 
 pub use crate::chunk_requests::{ChunkPromise, ChunkRequests, RequestInfo};
 

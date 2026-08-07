@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use ahash::{HashMap, HashSet};
-use itertools::Either;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::{ChunkStoreEvent, RowId};
 use dl_entity_db::{EntityDb, VersionedInstancePathHash};
@@ -10,6 +9,7 @@ use dl_renderer::RenderContext;
 use dl_sdk_types::archetypes::{Asset3D, Mesh3D};
 use dl_sdk_types::components::MediaType;
 use dl_viewer_context::Cache;
+use itertools::Either;
 
 use crate::mesh_loader::{LoadedMesh, NativeAsset3D, NativeMesh3D};
 

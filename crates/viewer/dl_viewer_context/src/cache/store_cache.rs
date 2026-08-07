@@ -1,8 +1,8 @@
-use nohash_hasher::IntMap;
 use dl_byte_size::{MemUsageNode, MemUsageTree, MemUsageTreeCapture, SizeBytes as _};
 use dl_chunk_store::ChunkStoreEvent;
 use dl_entity_db::EntityDb;
 use dl_log_types::StoreId;
+use nohash_hasher::IntMap;
 
 use crate::view::visualizer_entity_subscriber::VisualizerEntitySubscriber;
 use crate::{

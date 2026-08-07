@@ -1,11 +1,11 @@
 #![expect(clippy::unwrap_used)]
 
-use itertools::Itertools as _;
 use dl_arrow_util::format_record_batch;
 use dl_dataframe::{
     AbsoluteTimeRange, ChunkStoreConfig, EntityPathFilter, QueryEngine, QueryExpression,
     SparseFillStrategy, TimeInt, TimelineName,
 };
+use itertools::Itertools as _;
 
 fn main() -> anyhow::Result<()> {
     let args = std::env::args().collect_vec();

@@ -6,9 +6,9 @@
 //! cargo run -p incremental -- --help
 //! ```
 
+use dalaran::external::dl_log;
 use rand::Rng as _;
 use rand::distr::Uniform;
-use dalaran::external::dl_log;
 
 #[derive(Debug, clap::Parser)]
 #[clap(author, version, about)]

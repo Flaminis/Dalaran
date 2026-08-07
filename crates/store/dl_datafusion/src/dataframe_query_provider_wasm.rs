@@ -27,7 +27,6 @@ use datafusion::physical_plan::metrics::MetricsSet;
 
 use crate::analytics::build_metrics_set_for_explain;
 use datafusion::physical_plan::{DisplayAs, DisplayFormatType, ExecutionPlan, PlanProperties};
-use futures_util::{Stream, StreamExt as _};
 use dl_dataframe::external::dl_chunk_store::ChunkStore;
 use dl_dataframe::utils::align_record_batch_to_schema;
 use dl_dataframe::{
@@ -37,6 +36,7 @@ use dl_log_types::{StoreId, StoreKind};
 use dl_protos::cloud::v1alpha1::FetchChunksRequest;
 use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_types_core::SegmentId;
+use futures_util::{Stream, StreamExt as _};
 use tokio::runtime::Handle;
 use tonic::IntoRequest as _;
 

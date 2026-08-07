@@ -4,9 +4,6 @@ use std::time::Duration;
 
 use arrow::array::{Int64Array, RecordBatch, StringArray};
 use arrow::datatypes::{DataType, Field, Schema};
-use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
-use egui_kittest::{Harness, SnapshotResults};
 use dl_integration_test::{HarnessExt as _, TestServer};
 use dl_protos::cloud::v1alpha1::ext;
 use dl_protos::cloud::v1alpha1::ext::TableInsertMode;
@@ -14,6 +11,9 @@ use dl_sdk::external::dl_log_types::EntryId;
 use dl_viewer::App;
 use dl_viewer::external::dl_viewer_context::{RedapEntryKind, Route};
 use dl_viewer::viewer_test_utils::{self, AppTestingExt as _, HarnessOptions};
+use egui::accesskit::Role;
+use egui_kittest::kittest::Queryable as _;
+use egui_kittest::{Harness, SnapshotResults};
 
 fn assert_route_and_selection(harness: &mut Harness<'static, App>, expected_route: &Route) {
     let actual_route = harness.state_mut().testonly_get_route().clone();

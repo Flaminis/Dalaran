@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 
-use egui::{Frame, Margin};
 use dl_log_types::EntryId;
 use dl_protos::cloud::v1alpha1::EntryKind;
 use dl_ui::UiExt as _;
@@ -8,6 +7,7 @@ use dl_ui::egui_ext::card_layout::CardLayout;
 use dl_ui::icons;
 use dl_uri::{DATASET_HIERARCHY_SEPARATOR, split_dataset_hierarchy_path};
 use dl_viewer_context::{RedapEntryKind, Route, SystemCommand, SystemCommandSender as _};
+use egui::{Frame, Margin};
 
 use crate::entries::Entry;
 

@@ -1,8 +1,8 @@
+use dl_ui::{Help, IconText, MouseButtonText, UiExt as _, icons};
 use egui::os::OperatingSystem;
 use egui::{Modifiers, vec2};
 use egui_kittest::kittest::Queryable as _;
 use egui_kittest::{Harness, SnapshotResults};
-use dl_ui::{Help, IconText, MouseButtonText, UiExt as _, icons};
 
 #[test]
 fn test_help() {

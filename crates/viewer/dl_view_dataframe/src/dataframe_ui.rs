@@ -3,8 +3,6 @@ use std::ops::Range;
 
 use anyhow::Context as _;
 use arrow::array::ArrayRef;
-use egui::{NumExt as _, RichText};
-use itertools::Itertools as _;
 use dl_chunk_store::ColumnDescriptor;
 use dl_dataframe::QueryHandle;
 use dl_dataframe::external::dl_query::StorageEngineArcReadGuard;
@@ -15,6 +13,8 @@ use dl_sdk_types::ComponentDescriptor;
 use dl_sdk_types::reflection::ComponentDescriptorExt as _;
 use dl_ui::{UiExt as _, UiLayout};
 use dl_viewer_context::{StoreViewContext, TimeControlCommand, ViewId};
+use egui::{NumExt as _, RichText};
+use itertools::Itertools as _;
 
 use crate::expanded_rows::{ExpandedRows, ExpandedRowsCache};
 

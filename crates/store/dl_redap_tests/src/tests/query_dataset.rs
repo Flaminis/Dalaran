@@ -1,15 +1,15 @@
 use arrow::array::{RecordBatch, RecordBatchOptions, UInt32Array};
-use futures::StreamExt as _;
 use dl_log_types::{AbsoluteTimeRange, TimeInt, TimeType};
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::{
     DataSource, Query, QueryDatasetDataframe, QueryDatasetRequest, QueryLatestAt, QueryRange,
 };
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_types_core::ChunkId;
+use futures::StreamExt as _;
 
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, concat_record_batches,
     entry_name,
 };
 use crate::{FieldsTestExt as _, RecordBatchTestExt as _, TempPath};

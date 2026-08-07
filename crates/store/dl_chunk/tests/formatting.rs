@@ -1,8 +1,8 @@
-use insta::Settings;
 use dl_chunk::{Chunk, ChunkId, RowId};
 use dl_log_types::example_components::{MyColor, MyIndex, MyPoints};
 use dl_log_types::{EntityPath, Timestamp, build_frame_nr, build_log_time};
 use dl_types_core::ComponentBatch as _;
+use insta::Settings;
 
 fn create_chunk() -> anyhow::Result<Chunk> {
     let entity_path = EntityPath::from("this/that");

@@ -6,7 +6,6 @@
 #![expect(clippy::unwrap_used)]
 #![expect(clippy::disallowed_methods)] // allow hardcoded colors
 
-use itertools::Itertools as _;
 use dl_renderer::renderer::{
     ColormappedTexture, LineStripFlags, RectangleDrawData, RectangleOptions, TextureFilterMag,
     TextureFilterMin, TexturedRect,
@@ -14,6 +13,7 @@ use dl_renderer::renderer::{
 use dl_renderer::resource_managers::{GpuTexture2D, ImageDataDesc};
 use dl_renderer::view_builder::{self, Projection, TargetConfiguration, ViewBuilder};
 use dl_renderer::{Color32, Hsva, LineDrawableBuilder, PointCloudBuilder, Size};
+use itertools::Itertools as _;
 
 mod framework;
 

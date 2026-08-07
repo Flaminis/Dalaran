@@ -1,4 +1,3 @@
-use egui::{NumExt as _, Rangef, Vec2};
 use dl_capabilities::MainThreadToken;
 use dl_chunk_store::UnitChunkShared;
 use dl_renderer::renderer::ColormappedTexture;
@@ -13,6 +12,7 @@ use dl_viewer_context::{
     AppContext, ColormapWithRange, DownloadAction, ImageHistogramCache, ImageInfo, Rgb8Histogram,
     StoreViewContext, UiLayout,
 };
+use egui::{NumExt as _, Rangef, Vec2};
 use std::sync::Arc;
 
 use crate::find_and_deserialize_archetype_mono_component;

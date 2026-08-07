@@ -1,8 +1,6 @@
 use std::borrow::Cow;
 use std::sync::Arc;
 
-use itertools::Itertools as _;
-use nohash_hasher::IntMap;
 use dl_chunk_store::external::dl_chunk::external::arrow::array::ArrayRef;
 use dl_chunk_store::{LatestAtQuery, RangeQuery, UnitChunkShared};
 use dl_log_types::hash::Hash64;
@@ -10,6 +8,8 @@ use dl_query::{LatestAtResults, RangeResults};
 use dl_sdk_types::ComponentIdentifier;
 use dl_sdk_types::blueprint::datatypes::ComponentSourceKind;
 use dl_viewer_context::{QueryContext, typed_fallback_for};
+use itertools::Itertools as _;
+use nohash_hasher::IntMap;
 
 use crate::{
     ComponentMappingError,

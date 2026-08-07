@@ -1,6 +1,6 @@
 use arrow::datatypes::{Field as ArrowField, Fields as ArrowFields};
-use nohash_hasher::IntSet;
 use dl_log_types::{EntityPath, TimelineName};
+use nohash_hasher::IntSet;
 
 use crate::{
     ColumnDescriptor, ColumnDescriptorRef, ColumnKind, ComponentColumnDescriptor,

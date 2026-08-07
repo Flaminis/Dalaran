@@ -128,8 +128,11 @@ fn log_video_frame(rec: &dalaran::RecordingStream, ar_frame: &ArFrame) -> anyhow
     let image_path = ar_frame.dir.join(format!("video/{}.jpg", ar_frame.index));
 
     rec.set_timepoint(ar_frame.timepoint.clone());
-    rec.log("world/camera", &dalaran::EncodedImage::from_file(image_path)?)
-        .map_err(Into::into)
+    rec.log(
+        "world/camera",
+        &dalaran::EncodedImage::from_file(image_path)?,
+    )
+    .map_err(Into::into)
 }
 
 fn log_ar_camera(
@@ -257,7 +260,8 @@ fn log_frame_annotations(
         } else {
             rec.log(
                 ent_path,
-                &dalaran::Points2D::new(points).with_colors([dalaran::Color::from_rgb(130, 160, 250)]),
+                &dalaran::Points2D::new(points)
+                    .with_colors([dalaran::Color::from_rgb(130, 160, 250)]),
             )?;
         }
     }

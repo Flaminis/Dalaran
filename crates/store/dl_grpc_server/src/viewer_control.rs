@@ -1,4 +1,3 @@
-use futures::StreamExt as _;
 use dl_log_channel::{DataSourceUiCommand, InspectError, SaveScreenshotError};
 use dl_protos::sdk_comms::v1alpha1::{
     GetViewerStateRequest, GetViewerStateResponse, InspectRequest, InspectResponse, OpenUrlRequest,
@@ -6,6 +5,7 @@ use dl_protos::sdk_comms::v1alpha1::{
     SetTimeCursorResponse, viewer_control_service_server,
 };
 use dl_quota_channel::async_mpsc_channel;
+use futures::StreamExt as _;
 
 use crate::{Event, LogOrTableMsgProto};
 

@@ -5,8 +5,8 @@ use arrow::array::{
 };
 use arrow::datatypes::{Fields as ArrowFields, Schema as ArrowSchema};
 use arrow::error::ArrowError;
-use itertools::Itertools as _;
 use dl_log::ResultExt as _;
+use itertools::Itertools as _;
 
 use crate::{
     ArrowBatchMetadata, ColumnDescriptor, ColumnDescriptorRef, ComponentColumnDescriptor,

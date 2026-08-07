@@ -1,7 +1,5 @@
 use std::{str::FromStr as _, time::Duration};
 
-use egui_kittest::SnapshotResults;
-use egui_kittest::kittest::Queryable as _;
 use dl_integration_test::{HarnessExt as _, TestServer};
 use dl_sdk::{
     TimeCell, Timeline,
@@ -17,6 +15,8 @@ use dl_viewer::{
     },
     viewer_test_utils::{self, HarnessOptions},
 };
+use egui_kittest::SnapshotResults;
+use egui_kittest::kittest::Queryable as _;
 
 #[tokio::test(flavor = "multi_thread")]
 pub async fn dataset_ui_test() {

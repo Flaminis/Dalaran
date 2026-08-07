@@ -34,11 +34,12 @@ fn rewire_tagged_components(batch: &RecordBatch) -> RecordBatch {
         .metadata()
         .keys()
         .any(|key| key.starts_with("dalaran."))
-        || batch
-            .schema()
-            .fields()
-            .iter()
-            .any(|field| field.metadata().keys().any(|key| key.starts_with("dalaran.")));
+        || batch.schema().fields().iter().any(|field| {
+            field
+                .metadata()
+                .keys()
+                .any(|key| key.starts_with("dalaran."))
+        });
 
     if !needs_rewiring {
         return batch.clone();

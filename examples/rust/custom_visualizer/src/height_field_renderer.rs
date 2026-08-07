@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
-use dalaran::external::glam;
 use dalaran::external::dl_renderer::external::smallvec::smallvec;
 use dalaran::external::dl_renderer::external::wgpu;
 use dalaran::external::dl_renderer::{self};
+use dalaran::external::glam;
 
 mod gpu_data {
     use dalaran::external::dl_renderer::{self, wgpu_buffer_types};

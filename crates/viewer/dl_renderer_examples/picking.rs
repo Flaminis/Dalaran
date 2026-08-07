@@ -1,13 +1,13 @@
 //! Demonstrates the dedicated picking layer support.
 
-use itertools::Itertools as _;
-use rand::Rng as _;
 use dl_renderer::renderer::GpuMeshInstance;
 use dl_renderer::view_builder::{Projection, TargetConfiguration, ViewBuilder};
 use dl_renderer::{
     Color32, GpuReadbackIdentifier, PickingLayerId, PickingLayerInstanceId, PickingLayerProcessor,
     PointCloudBuilder, RectInt, Size, ViewPickingConfiguration,
 };
+use itertools::Itertools as _;
+use rand::Rng as _;
 
 mod framework;
 

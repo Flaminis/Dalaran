@@ -3,7 +3,6 @@
 
 use std::sync::Arc;
 
-use itertools::Itertools as _;
 use dl_chunk::{RowId, TimelineName};
 use dl_chunk_store::external::dl_chunk::Chunk;
 use dl_chunk_store::{
@@ -13,6 +12,7 @@ use dl_log_types::example_components::{MyColor, MyPoint, MyPoints};
 use dl_log_types::{EntityPath, TimePoint, build_frame_nr};
 use dl_query::QueryCache;
 use dl_types_core::{Archetype as _, ComponentBatch as _};
+use itertools::Itertools as _;
 
 // ---
 

@@ -1,6 +1,9 @@
 use std::iter;
 use std::sync::Arc;
 
+use dl_format::format_uint;
+use dl_ui::egui_ext::response_ext::ResponseExt as _;
+use dl_ui::{TableStyle, UiExt as _};
 use egui::emath::GuiRounding as _;
 use egui::text_selection::LabelSelectionState;
 use egui::{
@@ -9,9 +12,6 @@ use egui::{
 };
 use egui_table::{CellInfo, HeaderCellInfo, PrefetchInfo};
 use itertools::chain;
-use dl_format::format_uint;
-use dl_ui::egui_ext::response_ext::ResponseExt as _;
-use dl_ui::{TableStyle, UiExt as _};
 
 use crate::dl_table_utils::{TableConfig, apply_table_style_fixes, cell_ui, header_ui};
 use crate::table_selection::TableSelectionState;

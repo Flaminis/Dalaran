@@ -18,6 +18,7 @@
 //!   Python objects and the Rust pipeline types.
 
 pub mod chunk_store;
+pub mod dlr_reader;
 mod engine;
 pub mod error;
 mod hdf5_reader;
@@ -26,7 +27,6 @@ mod mcap_reader;
 mod mp4_reader;
 mod parquet_reader;
 mod py_stream;
-pub mod dlr_reader;
 pub mod stream;
 mod summary;
 pub mod urdf_tree_stream;

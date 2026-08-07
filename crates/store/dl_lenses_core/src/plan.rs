@@ -6,9 +6,9 @@
 use std::collections::btree_map::Entry;
 use std::collections::{BTreeMap, BTreeSet};
 
-use nohash_hasher::IntMap;
 use dl_chunk::{Chunk, ComponentIdentifier, EntityPath, TimeColumn, TimelineName};
 use dl_sdk_types::SerializedComponentColumn;
+use nohash_hasher::IntMap;
 
 use crate::Selector;
 use dl_log_types::ResolvedEntityPathFilter;

@@ -516,8 +516,7 @@ mod tests {
         let objects = test_objects();
         let (_report, reporter) = crate::report::init();
 
-        let input =
-            "A vector `[1, 2, 3]` and a doclink [views.Spatial2DView] and a [url](www.dalaran.dev).";
+        let input = "A vector `[1, 2, 3]` and a doclink [views.Spatial2DView] and a [url](www.dalaran.dev).";
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::Cpp),

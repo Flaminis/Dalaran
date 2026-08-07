@@ -1,5 +1,5 @@
-use nohash_hasher::IntSet;
 use dl_byte_size::SizeBytes;
+use nohash_hasher::IntSet;
 
 #[expect(unused_imports, clippy::unused_trait_names)] // used in docstrings
 use crate::{Archetype, ComponentBatch};
@@ -148,7 +148,8 @@ impl ComponentType {
 
     /// Web URL to the Dalaran documentation for this component.
     pub fn doc_url(&self) -> Option<String> {
-        if let Some(component_type_pascal_case) = self.full_name().strip_prefix("dalaran.components.")
+        if let Some(component_type_pascal_case) =
+            self.full_name().strip_prefix("dalaran.components.")
         {
             // This code should be correct as long as this url passes our link checker:
             // https://dalaran.dev/docs/reference/types/components/line_strip2d

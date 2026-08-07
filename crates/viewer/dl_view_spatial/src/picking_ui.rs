@@ -1,4 +1,3 @@
-use egui::NumExt as _;
 use dl_chunk_store::MissingChunkReporter;
 use dl_data_ui::{DataUi as _, item_ui};
 use dl_log_types::Instance;
@@ -10,6 +9,7 @@ use dl_viewer_context::{
     DataResultInteractionAddress, IdentifiedViewSystem as _, Item, ItemCollection, ItemContext,
     UiLayout, ViewQuery, ViewSystemExecutionError, ViewerContext,
 };
+use egui::NumExt as _;
 
 use crate::TransformTreeContext;
 use crate::visualizers::DepthImageProcessResult;

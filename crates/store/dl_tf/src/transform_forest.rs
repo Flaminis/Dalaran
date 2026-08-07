@@ -1,8 +1,8 @@
-use nohash_hasher::{IntMap, IntSet};
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::{LatestAtQuery, MissingChunkReporter};
 use dl_entity_db::EntityDb;
 use dl_log::debug_assert;
+use nohash_hasher::{IntMap, IntSet};
 
 use crate::frame_id_registry::FrameIdRegistry;
 use crate::transform_resolution_cache::ParentFromChildTransform;
@@ -801,12 +801,12 @@ fn transforms_at(
 mod tests {
     use std::sync::Arc;
 
-    use itertools::Itertools as _;
     use dl_chunk_store::Chunk;
     use dl_entity_db::EntityDb;
     use dl_log_types::{EntityPath, StoreInfo, TimeCell, TimePoint, Timeline, TimelineName};
     use dl_sdk_types::components::TransformFrameId;
     use dl_sdk_types::{RowId, archetypes, components};
+    use itertools::Itertools as _;
 
     use crate::transform_resolution_cache::ResolvedPinholeProjectionCached;
 

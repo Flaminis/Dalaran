@@ -1,6 +1,6 @@
-use egui_tiles::ContainerKind;
 use dl_ui::icons;
 use dl_viewer_context::{ContainerId, Item};
+use egui_tiles::ContainerKind;
 
 use crate::{ContextMenuAction, ContextMenuContext};
 

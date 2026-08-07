@@ -16,9 +16,9 @@ mod viewport_command;
 mod test_view_class;
 
 pub use container::ContainerBlueprint;
-pub use entity_add_info::{CanAddToView, EntityAddInfo, create_entity_add_info};
 use dl_chunk::EntityPath;
 use dl_viewer_context::ViewerContext;
+pub use entity_add_info::{CanAddToView, EntityAddInfo, create_entity_add_info};
 pub use view::ViewBlueprint;
 pub use view_contents::ViewContents;
 pub use view_properties::{ViewProperty, ViewPropertyQueryError, entity_path_for_view_property};

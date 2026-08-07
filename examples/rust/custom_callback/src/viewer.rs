@@ -1,6 +1,6 @@
 use custom_callback::comms::viewer::ControlViewer;
 use custom_callback::panel::Control;
-use dalaran::external::{eframe, dl_crash_handler, dl_grpc_server, dl_log, dl_memory, dl_viewer};
+use dalaran::external::{dl_crash_handler, dl_grpc_server, dl_log, dl_memory, dl_viewer, eframe};
 
 // By using `dl_memory::AccountingAllocator` Dalaran can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.

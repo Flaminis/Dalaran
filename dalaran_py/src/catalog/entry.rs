@@ -1,11 +1,11 @@
 use std::str::FromStr as _;
 
-use pyo3::exceptions::PyTypeError;
-use pyo3::{Py, PyErr, PyResult, Python, pyclass, pymethods};
 use dl_log_types::EntryId;
 use dl_protos::cloud::v1alpha1::EntryKind;
 use dl_protos::cloud::v1alpha1::ext;
 use dl_protos::cloud::v1alpha1::ext::EntryDetails;
+use pyo3::exceptions::PyTypeError;
+use pyo3::{Py, PyErr, PyResult, Python, pyclass, pymethods};
 
 use crate::catalog::PyCatalogClientInternal;
 

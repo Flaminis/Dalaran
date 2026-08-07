@@ -15,12 +15,12 @@ use arrow::datatypes::{
 use arrow::record_batch::RecordBatch;
 use datafusion::catalog::MemTable;
 use datafusion::prelude::{DataFrame, SessionContext};
-use jiff::ToSpan as _;
 use dl_dataframe_ui::{
     ColumnFilter, ComparisonOperator, FloatFilter, IntFilter, NonNullableBooleanFilter,
     Nullability, NullableBooleanFilter, StringFilter, StringOperator, TimestampFilter, TypedFilter,
 };
 use dl_viewer_context::external::tokio;
+use jiff::ToSpan as _;
 use strum::VariantArray as _;
 
 const COLUMN_NAME: &str = "column";

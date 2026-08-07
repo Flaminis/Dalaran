@@ -42,8 +42,8 @@ pub mod dl_form;
 #[cfg(feature = "testing")]
 pub mod testing;
 
-use egui::NumExt as _;
 use dl_log::debug_assert;
+use egui::NumExt as _;
 
 pub use self::button::*;
 pub use self::combo_item::*;

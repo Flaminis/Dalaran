@@ -1,7 +1,7 @@
 use std::time::Duration;
 
-use rand::rngs::ThreadRng;
 use dl_auth::{Error, RedapProvider, SecretKey, VerificationOptions};
+use rand::rngs::ThreadRng;
 
 const KEY: &str = "CKxq6b4Hy3xdjDOWwaShOJab+eu6jcsFso4rbLjJuZ8=";
 

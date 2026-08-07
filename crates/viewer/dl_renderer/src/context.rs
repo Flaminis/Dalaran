@@ -2,8 +2,8 @@ use std::fmt::Write as _;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-use parking_lot::{MappedRwLockReadGuard, RwLock, RwLockReadGuard};
 use dl_mutex::Mutex;
+use parking_lot::{MappedRwLockReadGuard, RwLock, RwLockReadGuard};
 use type_map::concurrent::TypeMap;
 
 use crate::allocator::{CpuWriteGpuReadBelt, GpuReadbackBelt};

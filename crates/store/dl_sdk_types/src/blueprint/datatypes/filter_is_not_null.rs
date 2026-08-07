@@ -200,10 +200,14 @@ impl ::dl_types_core::Loggable for FilterIsNotNull {
                         Ok(Self {
                             active: active
                                 .ok_or_else(DeserializationError::missing_data)
-                                .with_context("dalaran.blueprint.datatypes.FilterIsNotNull#active")?,
+                                .with_context(
+                                    "dalaran.blueprint.datatypes.FilterIsNotNull#active",
+                                )?,
                             column: column
                                 .ok_or_else(DeserializationError::missing_data)
-                                .with_context("dalaran.blueprint.datatypes.FilterIsNotNull#column")?,
+                                .with_context(
+                                    "dalaran.blueprint.datatypes.FilterIsNotNull#column",
+                                )?,
                         })
                     })
                     .transpose()

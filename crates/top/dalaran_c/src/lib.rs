@@ -19,16 +19,16 @@ use arrow::array::{ArrayRef as ArrowArrayRef, ListArray as ArrowListArray};
 use arrow::ffi::{FFI_ArrowArray, FFI_ArrowSchema};
 use arrow_utils::arrow_array_from_c_ffi;
 use component_type_registry::COMPONENT_TYPES;
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
-use dl_sdk::external::nohash_hasher::IntMap;
 use dl_sdk::external::dl_log_types::TimelineName;
+use dl_sdk::external::nohash_hasher::IntMap;
 use dl_sdk::log::{Chunk, ChunkId, PendingRow, TimeColumn};
 use dl_sdk::time::TimeType;
 use dl_sdk::{
     ArchetypeName, ComponentDescriptor, ComponentIdentifier, ComponentType, EntityPath,
     RecordingStream, RecordingStreamBuilder, StoreKind, TimeCell, TimePoint, Timeline,
 };
+use itertools::Itertools as _;
 use recording_streams::{RECORDING_STREAMS, recording_stream};
 
 // ----------------------------------------------------------------------------

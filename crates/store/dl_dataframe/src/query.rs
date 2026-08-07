@@ -11,8 +11,6 @@ use arrow::datatypes::{
     DataType as ArrowDataType, Fields as ArrowFields, Schema as ArrowSchema,
     SchemaRef as ArrowSchemaRef,
 };
-use itertools::{Either, Itertools as _};
-use nohash_hasher::{IntMap, IntSet};
 use dl_arrow_util::{ArrowArrayDowncastRef as _, into_arrow_ref};
 use dl_chunk::external::arrow::array::ArrayRef;
 use dl_chunk::{
@@ -32,6 +30,8 @@ use dl_sorbet::{
 use dl_span::Span;
 use dl_types_core::arrow_helpers::as_array_ref;
 use dl_types_core::{Loggable as _, SerializedComponentColumn, archetypes};
+use itertools::{Either, Itertools as _};
+use nohash_hasher::{IntMap, IntSet};
 
 // ---
 
@@ -2530,7 +2530,6 @@ mod tests {
 
     use arrow::array::{StringArray, UInt32Array};
     use arrow::compute::concat_batches;
-    use insta::assert_snapshot;
     use dl_arrow_util::format_record_batch;
     use dl_chunk::{Chunk, ChunkId, ComponentIdentifier, RowId, TimePoint};
     use dl_chunk_store::{
@@ -2542,6 +2541,7 @@ mod tests {
     use dl_sdk_types::{AnyValues, AsComponents as _, ComponentDescriptor};
     use dl_sorbet::ComponentColumnSelector;
     use dl_types_core::components;
+    use insta::assert_snapshot;
 
     use super::*;
     use crate::{QueryCache, QueryEngine};

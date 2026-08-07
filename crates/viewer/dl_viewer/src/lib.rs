@@ -67,13 +67,13 @@ pub mod blueprint;
 
 pub use app::App;
 pub(crate) use app_state::AppState;
-pub use event::{SelectionChangeItem, ViewerEvent, ViewerEventKind};
-pub use external_memory::ExternalMemoryUser;
 pub use dl_async::AsyncRuntimeHandle;
 pub use dl_capabilities::MainThreadToken;
 pub use dl_viewer_context::{
     CommandReceiver, CommandSender, SystemCommand, SystemCommandSender, command_channel,
 };
+pub use event::{SelectionChangeItem, ViewerEvent, ViewerEventKind};
+pub use external_memory::ExternalMemoryUser;
 pub use startup_options::{LoginOptions, StartupOptions};
 pub use ui::about_dalaran_ui;
 pub(crate) use ui::dev_panel;
@@ -84,9 +84,9 @@ pub mod external {
     pub use dl_viewer_context::external::*;
     pub use dl_viewport::external::*;
     pub use {
-        eframe, egui, parking_lot, dl_chunk, dl_chunk_store, dl_data_ui, dl_entity_db, dl_log,
-        dl_log_channel, dl_log_types, dl_memory, dl_renderer, dl_sdk_types, dl_ui, dl_view,
-        dl_view_spatial, dl_viewer_context, dl_viewport, dl_viewport_blueprint,
+        dl_chunk, dl_chunk_store, dl_data_ui, dl_entity_db, dl_log, dl_log_channel, dl_log_types,
+        dl_memory, dl_renderer, dl_sdk_types, dl_ui, dl_view, dl_view_spatial, dl_viewer_context,
+        dl_viewport, dl_viewport_blueprint, eframe, egui, parking_lot,
     };
 }
 

@@ -3,13 +3,13 @@ use std::sync::Arc;
 use arrow::array::{Array, ArrayRef, Int64Array, RecordBatch, StringArray};
 use arrow::datatypes::{DataType, Field, FieldRef, Schema};
 use arrow::error::ArrowError;
-use itertools::Itertools as _;
-use prost::Name as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_chunk::TimelineName;
 use dl_log_types::AbsoluteTimeRange;
 use dl_log_types::{EntityPath, EntryId, TimeInt};
 use dl_types_core::LayerName;
+use itertools::Itertools as _;
+use prost::Name as _;
 
 use crate::cloud::v1alpha1::ext::{QueryDatasetDataframe, ScanSegmentTableDataframe};
 use crate::cloud::v1alpha1::{
@@ -514,7 +514,8 @@ impl FetchChunksRequest {
     //TODO(RR-2677): actually, these are also required for now.
     pub const FIELD_CHUNK_ID: &str = QueryDatasetDataframe::COLUMN_CHUNK_ID_NAME;
     pub const FIELD_CHUNK_SEGMENT_ID: &str = QueryDatasetDataframe::COLUMN_CHUNK_SEGMENT_ID_NAME;
-    pub const FIELD_CHUNK_LAYER_NAME: &str = QueryDatasetDataframe::COLUMN_DALARAN_SEGMENT_LAYER_NAME;
+    pub const FIELD_CHUNK_LAYER_NAME: &str =
+        QueryDatasetDataframe::COLUMN_DALARAN_SEGMENT_LAYER_NAME;
     pub const FIELD_CHUNK_BYTE_LENGTH: &str = QueryDatasetDataframe::COLUMN_CHUNK_BYTE_LEN_NAME;
 
     pub fn required_column_names() -> Vec<String> {

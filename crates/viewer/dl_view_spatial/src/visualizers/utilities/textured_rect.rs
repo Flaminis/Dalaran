@@ -1,10 +1,10 @@
 use crate::contexts::SpatialSceneVisualizerInstructionContext;
-use glam::Vec3;
 use dl_log_types::EntityPath;
 use dl_renderer::renderer;
 use dl_sdk_types::ArchetypeName;
 use dl_sdk_types::components::MagnificationFilter;
 use dl_viewer_context::{ColormapWithRange, ImageInfo, ImageStatsCache, ViewerContext, gpu_bridge};
+use glam::Vec3;
 
 fn mag_filter(filter: MagnificationFilter) -> renderer::TextureFilterMag {
     match filter {

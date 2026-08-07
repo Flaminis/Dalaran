@@ -6,10 +6,10 @@ use crate::{
 };
 #[cfg(feature = "testing")]
 pub use app_testing_ext::AppTestingExt;
-use egui_kittest::Harness;
 use dl_build_info::build_info;
 use dl_viewer_context::AppOptions;
 use dl_viewer_context::external::dl_log_types::DateVisibility;
+use egui_kittest::Harness;
 
 pub type AppOptionsEditor = Box<dyn Fn(&mut AppOptions)>;
 

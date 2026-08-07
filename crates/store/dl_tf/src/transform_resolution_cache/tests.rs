@@ -1,6 +1,5 @@
 use std::sync::{Arc, OnceLock};
 
-use glam::DAffine3;
 use dl_chunk_store::{
     Chunk, ChunkStore, ChunkStoreEvent, ChunkStoreSubscriberHandle, GarbageCollectionOptions,
     LatestAtQuery, MissingChunkReporter, PerStoreChunkSubscriber,
@@ -14,6 +13,7 @@ use dl_sdk_types::{
     archetypes::{self, InstancePoses3D, Pinhole, Transform3D},
     components::{self, PinholeProjection},
 };
+use glam::DAffine3;
 
 use crate::convert;
 use crate::{

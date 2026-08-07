@@ -3,11 +3,11 @@ use std::str::FromStr as _;
 
 use arrow::datatypes::Schema;
 use arrow::ffi::FFI_ArrowSchema;
+use dl_log_types::EntityPath;
+use dl_sorbet::{BatchType, ComponentColumnSelector, SorbetColumnDescriptors};
 use pyo3::exceptions::PyLookupError;
 use pyo3::types::PyCapsule;
 use pyo3::{Bound, PyResult, Python, pyclass, pymethods};
-use dl_log_types::EntityPath;
-use dl_sorbet::{BatchType, ComponentColumnSelector, SorbetColumnDescriptors};
 
 use super::component_columns::PyComponentColumnDescriptor;
 use super::index_columns::PyIndexColumnDescriptor;

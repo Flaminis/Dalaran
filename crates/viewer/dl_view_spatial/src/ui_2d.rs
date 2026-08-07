@@ -1,6 +1,3 @@
-use egui::emath::RectTransform;
-use egui::{Align2, Pos2, Rect, Shape, Vec2, pos2, vec2};
-use macaw::IsoTransform;
 use dl_chunk_store::MissingChunkReporter;
 use dl_log::ResultExt as _;
 use dl_renderer::view_builder::{TargetConfiguration, ViewBuilder};
@@ -18,6 +15,9 @@ use dl_viewer_context::{
     ViewerContext, gpu_bridge, typed_fallback_for,
 };
 use dl_viewport_blueprint::ViewProperty;
+use egui::emath::RectTransform;
+use egui::{Align2, Pos2, Rect, Shape, Vec2, pos2, vec2};
+use macaw::IsoTransform;
 
 use super::eye::Eye;
 use super::ui::{create_labels, draw_bounding_boxes, draw_origin_axes};

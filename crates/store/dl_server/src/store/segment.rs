@@ -1,8 +1,8 @@
 use std::{collections::HashMap, sync::Arc};
 
-use itertools::Itertools as _;
 use dl_protos::common::v1alpha1::ext::IfDuplicateBehavior;
 use dl_types_core::LayerName;
+use itertools::Itertools as _;
 
 use crate::store::{Error, Source, Tracked};
 

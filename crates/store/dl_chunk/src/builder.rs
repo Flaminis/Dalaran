@@ -1,9 +1,9 @@
 use arrow::array::ArrayRef;
 use arrow::datatypes::DataType as ArrowDatatype;
-use itertools::Itertools as _;
-use nohash_hasher::IntMap;
 use dl_log_types::{EntityPath, NonMinI64, TimePoint, Timeline, TimelineName};
 use dl_types_core::{AsComponents, ComponentBatch, ComponentDescriptor, SerializedComponentBatch};
+use itertools::Itertools as _;
+use nohash_hasher::IntMap;
 
 use crate::{Chunk, ChunkId, ChunkResult, RowId, TimeColumn};
 

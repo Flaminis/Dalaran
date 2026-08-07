@@ -2,9 +2,9 @@
 
 pub mod sigint;
 
+use dl_build_info::BuildInfo;
 #[cfg(not(target_os = "windows"))]
 use parking_lot::Mutex;
-use dl_build_info::BuildInfo;
 
 // The easiest way to pass this to our signal handler.
 #[cfg(not(target_os = "windows"))]

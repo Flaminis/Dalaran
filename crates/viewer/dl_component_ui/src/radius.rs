@@ -1,7 +1,7 @@
-use egui::NumExt as _;
 use dl_format::format_f32;
 use dl_sdk_types::components::Radius;
 use dl_viewer_context::{AppContext, MaybeMutRef};
+use egui::NumExt as _;
 
 use crate::response_utils::response_with_changes_of_inner;
 

@@ -9,10 +9,10 @@ mod hash;
 use egui::{Pos2, Vec2};
 pub(crate) use hash::GraphNodeHash;
 mod ids;
-pub(crate) use ids::{EdgeId, NodeId};
 use dl_chunk::EntityPath;
 use dl_sdk_types::blueprint::components::VisualizerInstructionId;
 use dl_sdk_types::components::{self, GraphType};
+pub(crate) use ids::{EdgeId, NodeId};
 
 use crate::layout::EdgeTemplate;
 use crate::ui::DrawableLabel;

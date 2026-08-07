@@ -1,7 +1,7 @@
 //! Shows how to draw a graph with various node properties.
 
-use itertools::Itertools as _;
 use dalaran::{Color, GraphEdges, GraphNodes};
+use itertools::Itertools as _;
 
 const NUM_NODES: usize = 10;
 

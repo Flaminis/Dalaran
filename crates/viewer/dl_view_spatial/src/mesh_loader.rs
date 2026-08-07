@@ -1,4 +1,3 @@
-use itertools::Itertools as _;
 use dl_renderer::RenderContext;
 use dl_renderer::mesh::GpuMesh;
 use dl_sdk_types::components::MediaType;
@@ -6,6 +5,7 @@ use dl_sdk_types::datatypes;
 use dl_view::clamped_vec_or;
 use dl_viewer_context::gpu_bridge::texture_creation_desc_from_color_image;
 use dl_viewer_context::{ImageInfo, StoredBlobCacheKey};
+use itertools::Itertools as _;
 
 use crate::caches::AnyMesh;
 

@@ -117,7 +117,8 @@ fn main() -> anyhow::Result<()> {
     }
 
     let (rec, storage) = if connect {
-        let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_benchmark").connect_grpc()?;
+        let rec =
+            dalaran::RecordingStreamBuilder::new("dalaran_example_benchmark").connect_grpc()?;
         (rec, None)
     } else {
         let (rec, storage) =
@@ -142,9 +143,9 @@ fn main() -> anyhow::Result<()> {
     // Being able to log fast isn't particularly useful if the data happens to be corrupt at the
     // other end, so make sure we can encode/decode everything that was logged.
     if check && let Some(storage) = storage {
-        use itertools::Itertools as _;
         use dalaran::external::dl_log_encoding;
         use dalaran::external::dl_log_encoding::ToTransport as _;
+        use itertools::Itertools as _;
         let msgs: Vec<_> = storage
             .take()
             .into_iter()

@@ -11,8 +11,8 @@ use crate::datafusion_table_widget::{
     Columns, bool_value_at, find_row_batch, resolve_recording_for_row,
 };
 use crate::display_record_batch::DisplayColumn;
-use crate::preview_renderer::RecordingPreviewRenderer;
 use crate::dl_table_utils::TableConfig;
+use crate::preview_renderer::RecordingPreviewRenderer;
 use crate::table_blueprint::TableBlueprint;
 
 /// Height of the segment preview area inside each card.

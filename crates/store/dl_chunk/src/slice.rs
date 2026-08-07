@@ -2,10 +2,10 @@ use arrow::array::{
     Array as _, ArrayRef as ArrowArrayRef, BooleanArray as ArrowBooleanArray,
     ListArray as ArrowListArray,
 };
-use itertools::Itertools as _;
-use nohash_hasher::IntSet;
 use dl_log_types::TimelineName;
 use dl_types_core::{ComponentIdentifier, SerializedComponentColumn};
+use itertools::Itertools as _;
+use nohash_hasher::IntSet;
 
 use crate::{Chunk, ChunkId, RowId, TimeColumn, UnitChunkShared};
 
@@ -975,11 +975,11 @@ impl TimeColumn {
 mod tests {
     #![expect(clippy::cast_possible_wrap)]
 
-    use itertools::Itertools as _;
     use dl_log_types::{
         TimePoint,
         example_components::{MyColor, MyLabel, MyPoint, MyPoints},
     };
+    use itertools::Itertools as _;
 
     use super::*;
     use crate::{Chunk, RowId, Timeline};

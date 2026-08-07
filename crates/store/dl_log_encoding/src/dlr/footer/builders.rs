@@ -3,12 +3,12 @@ use std::sync::Arc;
 
 use arrow::array::{Array as _, ArrayRef, BooleanArray, RecordBatch, StringArray, UInt64Array};
 use arrow::datatypes::{Field, Schema, SchemaRef};
-use itertools::chain;
 use dl_chunk::{Chunk, ChunkId};
 use dl_log_types::{
     AbsoluteTimeRange, EntityPath, StoreId, TimeInt, TimeType, Timeline, TimelineName,
 };
 use dl_types_core::{ComponentBatch as _, ComponentDescriptor};
+use itertools::chain;
 
 use crate::{CodecError, CodecResult, RawRrdManifest};
 

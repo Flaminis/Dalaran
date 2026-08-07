@@ -1,5 +1,5 @@
-use egui::Vec2;
 use dl_ui::filter_widget::FilterState;
+use egui::Vec2;
 
 #[test]
 pub fn test_filter_widget() {

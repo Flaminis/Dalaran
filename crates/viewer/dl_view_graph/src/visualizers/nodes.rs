@@ -1,4 +1,3 @@
-use egui::Color32;
 use dl_chunk::LatestAtQuery;
 use dl_log_types::{EntityPath, Instance};
 use dl_query::{clamped_zip_2x4, range_zip_1x4};
@@ -14,6 +13,7 @@ use dl_viewer_context::{
     ViewSystemExecutionError, ViewSystemIdentifier, VisualizerExecutionOutput, VisualizerQueryInfo,
     VisualizerSystem,
 };
+use egui::Color32;
 
 use crate::graph::NodeId;
 

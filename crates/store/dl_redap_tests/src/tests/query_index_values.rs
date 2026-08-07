@@ -5,20 +5,21 @@ use arrow::array::RecordBatch;
 use datafusion::datasource::TableProvider as _;
 use datafusion::physical_plan::ExecutionPlanProperties as _;
 use datafusion::prelude::SessionContext;
-use futures::{StreamExt as _, TryStreamExt as _};
-use itertools::Itertools as _;
 use dl_chunk_store::IndexValue;
 use dl_datafusion::DataframeQueryTableProvider;
 use dl_log_types::{EntityPath, TimeInt, TimeType};
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext;
 use dl_protos::cloud::v1alpha1::ext::DatasetEntry;
 use dl_protos::cloud::v1alpha1::ext::QueryDatasetDataframe;
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_types_core::SegmentId;
+use futures::{StreamExt as _, TryStreamExt as _};
+use itertools::Itertools as _;
 
 use crate::RecordBatchTestExt as _;
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches, prop,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, concat_record_batches,
+    prop,
 };
 use crate::utils::client::TestClient;
 
@@ -712,7 +713,9 @@ async fn query_dataset_per_segment_values_multi_value_wire_level_by_time_type<
 /// `InvalidArgument`, on every `DalaranCloudService` implementation that goes
 /// through the conversion layer. One violation is sufficient — the unit tests
 /// already cover the full rule matrix.
-pub async fn query_dataset_per_segment_values_validation_rejected(service: impl DalaranCloudService) {
+pub async fn query_dataset_per_segment_values_validation_rejected(
+    service: impl DalaranCloudService,
+) {
     use dl_protos::cloud::v1alpha1::QueryDatasetRequest as WireQueryDatasetRequest;
     use dl_protos::headers::DalaranHeadersInjectorExt as _;
 

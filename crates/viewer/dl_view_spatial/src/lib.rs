@@ -25,11 +25,11 @@ mod view_2d;
 mod view_3d;
 mod visualizers;
 
-pub(crate) use pickable_textured_rect::{PickableRectSourceData, PickableTexturedRect};
-pub(crate) use pinhole::Pinhole;
 use dl_sdk_types::blueprint::archetypes::Background;
 use dl_sdk_types::blueprint::components::BackgroundKind;
 use dl_sdk_types::components::Color;
+pub(crate) use pickable_textured_rect::{PickableRectSourceData, PickableTexturedRect};
+pub(crate) use pinhole::Pinhole;
 // ---
 use dl_viewer_context::ViewContext;
 use dl_viewport_blueprint::{ViewProperty, ViewPropertyQueryError};

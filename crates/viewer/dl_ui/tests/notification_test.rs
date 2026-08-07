@@ -1,5 +1,5 @@
-use egui::Vec2;
 use dl_ui::notifications::NotificationUi;
+use egui::Vec2;
 
 /// End-to-end test: a single `dl_log::warn!` call carrying a string field, an integer field
 /// and a message should turn into a toast with each `key: value` on its own line.

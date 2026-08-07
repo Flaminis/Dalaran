@@ -1,6 +1,6 @@
+mod dalaran_menu;
 mod mobile_warning_ui;
 mod open_url_modal;
-mod dalaran_menu;
 mod share_modal;
 mod top_panel;
 mod welcome_screen;

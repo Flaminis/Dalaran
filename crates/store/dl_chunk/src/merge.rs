@@ -1,9 +1,9 @@
 use arrow::array::{Array as _, FixedSizeBinaryArray, ListArray as ArrowListArray};
 use arrow::buffer::ScalarBuffer as ArrowScalarBuffer;
-use itertools::Itertools as _;
-use nohash_hasher::IntMap;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_types_core::SerializedComponentColumn;
+use itertools::Itertools as _;
+use nohash_hasher::IntMap;
 
 use crate::chunk::ChunkComponents;
 use crate::{Chunk, ChunkError, ChunkId, ChunkResult, TimeColumn};

@@ -3,11 +3,11 @@ mod native;
 #[cfg(target_arch = "wasm32")]
 mod web;
 
-#[cfg(not(target_arch = "wasm32"))]
-use native::State;
 use dl_ui::ReButton;
 use dl_ui::notifications::{Notification, NotificationLevel};
 use dl_viewer_context::{CommandSender, SystemCommand, SystemCommandSender as _};
+#[cfg(not(target_arch = "wasm32"))]
+use native::State;
 #[cfg(target_arch = "wasm32")]
 use web::State;
 

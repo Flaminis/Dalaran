@@ -1,4 +1,3 @@
-use nohash_hasher::{IntMap, IntSet};
 use dl_chunk_store::MissingChunkReporter;
 use dl_entity_db::{EntityDb, EntityTree};
 use dl_log_types::EntityPath;
@@ -12,6 +11,7 @@ use dl_viewer_context::{
     RecommendedView, ViewClass, ViewClassExt as _, ViewClassRegistryError, ViewId, ViewQuery,
     ViewSpawnHeuristics, ViewState, ViewStateExt as _, ViewSystemExecutionError, ViewerContext,
 };
+use nohash_hasher::{IntMap, IntSet};
 
 use crate::SpaceKind;
 use crate::contexts::register_spatial_contexts;

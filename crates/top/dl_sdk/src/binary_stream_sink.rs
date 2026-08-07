@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
-use parking_lot::Mutex;
 use dl_log::ResultExt as _;
 use dl_log_encoding::Encoder;
 use dl_log_types::LogMsg;
+use parking_lot::Mutex;
 
 use crate::RecordingStream;
 use crate::log_sink::SinkFlushError;

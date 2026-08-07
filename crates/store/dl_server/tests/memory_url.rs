@@ -11,12 +11,12 @@ use itertools::Itertools as _;
 
 use dl_protos::cloud::v1alpha1::DeleteEntryRequest;
 use dl_protos::cloud::v1alpha1::ScanDatasetManifestRequest;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService as _;
 use dl_protos::cloud::v1alpha1::ext;
 use dl_protos::cloud::v1alpha1::ext::ScanDatasetManifestDataframe;
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService as _;
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_redap_tests::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, entry_name,
     register_and_wait,
 };
 use dl_server::{DalaranCloudHandler, DalaranCloudHandlerBuilder};

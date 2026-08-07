@@ -10,7 +10,6 @@
 
 use std::ops::{ControlFlow, Range};
 
-use itertools::Itertools as _;
 use dl_entity_db::InstancePath;
 use dl_log::debug_assert;
 use dl_log_types::EntityPath;
@@ -22,6 +21,7 @@ use dl_viewer_context::{
     DataResultInteractionAddress, DataResultNode, Item, ViewId, ViewerContext, VisitorControlFlow,
 };
 use dl_viewport_blueprint::{ContainerBlueprint, ViewBlueprint, ViewportBlueprint};
+use itertools::Itertools as _;
 use smallvec::SmallVec;
 
 use crate::data_result_node_or_path::DataResultNodeOrPath;

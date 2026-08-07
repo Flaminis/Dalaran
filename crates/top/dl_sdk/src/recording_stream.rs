@@ -6,9 +6,6 @@ use std::time::Duration;
 
 use ahash::HashMap;
 use crossbeam::channel::{Receiver, RecvTimeoutError, Sender};
-use itertools::Either;
-use nohash_hasher::IntMap;
-use parking_lot::Mutex;
 use dl_chunk::{
     BatcherFlushError, BatcherHooks, Chunk, ChunkBatcher, ChunkBatcherConfig, ChunkBatcherError,
     ChunkComponents, ChunkError, ChunkId, PendingRow, RowId, TimeColumn,
@@ -23,6 +20,9 @@ use dl_quota_channel::send_crossbeam;
 use dl_sdk_types::archetypes::RecordingInfo;
 use dl_sdk_types::components::Timestamp;
 use dl_sdk_types::{AsComponents, SerializationError, SerializedComponentColumn};
+use itertools::Either;
+use nohash_hasher::IntMap;
+use parking_lot::Mutex;
 
 use crate::binary_stream_sink::BinaryStreamStorage;
 use crate::sink::{LogSink, MemorySinkStorage, SinkFlushError};
@@ -2903,10 +2903,10 @@ impl RecordingStream {
 
 #[cfg(test)]
 mod tests {
-    use insta::assert_debug_snapshot;
-    use itertools::Itertools as _;
     use dl_log_types::example_components::{MyLabel, MyPoints};
     use dl_sdk_types::SerializedComponentBatch;
+    use insta::assert_debug_snapshot;
+    use itertools::Itertools as _;
 
     use super::*;
 
@@ -3392,11 +3392,12 @@ mod tests {
             MyLabel("c".into()),
         ];
 
-        let (rec, _mem) = RecordingStreamBuilder::new("dalaran_example_test_componentbatch_unsized")
-            .default_enabled(false)
-            .enabled(false)
-            .memory()
-            .unwrap();
+        let (rec, _mem) =
+            RecordingStreamBuilder::new("dalaran_example_test_componentbatch_unsized")
+                .default_enabled(false)
+                .enabled(false)
+                .memory()
+                .unwrap();
 
         // This call used to *not* compile due to a lack of `?Sized` bounds.
         use dl_sdk_types::ComponentBatch as _;

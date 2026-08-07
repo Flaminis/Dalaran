@@ -2,8 +2,8 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::task::Poll;
 
-use poll_promise::Promise;
 use dl_mutex::Mutex;
+use poll_promise::Promise;
 
 // FFmpeg 5.1 "Riemann" is from 2022-07-22.
 // It's simply the oldest I tested manually as of writing. We might be able to go lower.

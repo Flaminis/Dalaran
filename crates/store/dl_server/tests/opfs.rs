@@ -8,8 +8,8 @@ use dl_log_types::example_components::{MyPoint, MyPoints};
 use dl_log_types::{
     EntityPath, EntryName, LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind, StoreSource,
 };
-use dl_protos::cloud::v1alpha1::ext::RegisterWithDatasetDataframe;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService as _;
+use dl_protos::cloud::v1alpha1::ext::RegisterWithDatasetDataframe;
 use dl_protos::cloud::v1alpha1::{
     CreateDatasetEntryRequest, DataSource, DataSourceKind, GetDatasetSchemaRequest,
     RegisterWithDatasetRequest, VersionRequest,

@@ -5,8 +5,6 @@ use std::sync::atomic::{AtomicBool, Ordering};
 
 use ahash::HashMap;
 use arrow::datatypes::DataType;
-use egui::NumExt as _;
-use parking_lot::RwLock;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk::{ChunkId, EntityPath, Span, TimelineName};
 use dl_chunk_store::{
@@ -19,6 +17,8 @@ use dl_sdk_types::archetypes::VideoStream;
 use dl_sdk_types::components;
 use dl_video::player::GetVideoSource;
 use dl_video::{DecodeSettings, SampleMetadataState, StableIndexDeque, VideoSource};
+use egui::NumExt as _;
+use parking_lot::RwLock;
 
 use crate::Cache;
 

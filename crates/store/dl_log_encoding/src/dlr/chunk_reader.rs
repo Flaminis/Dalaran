@@ -1,9 +1,9 @@
 use std::sync::Arc;
 
-use itertools::Itertools as _;
 use dl_async::AsyncReadAt;
 use dl_chunk::{Chunk, ChunkId};
 use dl_span::Span;
+use itertools::Itertools as _;
 
 use crate::RrdManifest;
 use crate::ToApplication as _;

@@ -1,10 +1,10 @@
 use std::borrow::Cow;
 
-use itertools::Either;
 use dl_chunk_store::external::dl_chunk::{ChunkComponentIter, ChunkComponentSlicer};
 use dl_chunk_store::{Chunk, Span};
 use dl_log_types::{TimeInt, TimePoint, TimelineName};
 use dl_sdk_types::{Component, ComponentIdentifier, RowId};
+use itertools::Either;
 
 use crate::ComponentMappingError;
 

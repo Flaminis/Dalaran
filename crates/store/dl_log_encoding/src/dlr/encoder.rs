@@ -3,11 +3,11 @@
 use std::borrow::Borrow;
 use std::collections::HashMap;
 
-use itertools::Itertools as _;
 use dl_build_info::CrateVersion;
 use dl_chunk::{ChunkError, ChunkResult};
 use dl_log_types::{LogMsg, StoreId};
 use dl_sorbet::SorbetError;
+use itertools::Itertools as _;
 
 use crate::{
     CodecError, Compression, Encodable as _, EncodingOptions, MessageHeader, MessageKind,

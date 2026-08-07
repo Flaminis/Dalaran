@@ -6,13 +6,13 @@ mod welcome_section;
 
 use std::sync::Arc;
 
-use example_section::{ExampleSection, MIN_COLUMN_WIDTH};
 use dl_log_channel::LogSource;
+use example_section::{ExampleSection, MIN_COLUMN_WIDTH};
 
 use crate::app_state::WelcomeScreenState;
 
-pub use intro_section::{CloudState, LoginState};
 use dl_viewer_context::AppContext;
+pub use intro_section::{CloudState, LoginState};
 
 #[derive(Default)]
 pub struct WelcomeScreen {

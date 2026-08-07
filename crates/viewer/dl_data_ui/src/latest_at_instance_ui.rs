@@ -1,4 +1,3 @@
-use egui::NumExt as _;
 use dl_chunk_store::UnitChunkShared;
 use dl_entity_db::InstancePath;
 use dl_format::format_plural_s;
@@ -6,6 +5,7 @@ use dl_log_types::{EntityPath, Instance, TimePoint};
 use dl_sdk_types::ComponentIdentifier;
 use dl_ui::{SyntaxHighlighting as _, UiExt as _};
 use dl_viewer_context::{StoreViewContext, UiLayout};
+use egui::NumExt as _;
 
 use crate::item_ui;
 

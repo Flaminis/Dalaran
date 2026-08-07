@@ -3,9 +3,9 @@ pub use self::generated::*;
 
 #[cfg(test)]
 mod tests {
-    use itertools::Itertools as _;
     use dl_chunk::RowId;
     use dl_log_types::TimeInt;
+    use itertools::Itertools as _;
 
     use super::*;
 

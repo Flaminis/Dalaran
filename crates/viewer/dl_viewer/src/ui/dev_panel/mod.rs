@@ -6,8 +6,6 @@ mod streaming_history;
 mod transform_cache_ui;
 
 use ahash::HashMap;
-use egui_plot::HoverPosition;
-use plot_utils::history_to_plot;
 use dl_chunk_store::{ChunkStoreChunkStats, ChunkStoreConfig, ChunkStoreStats};
 use dl_entity_db::StoreBundle;
 use dl_format::{format_bytes, format_uint};
@@ -19,6 +17,8 @@ use dl_renderer::WgpuResourcePoolStatistics;
 use dl_ui::UiExt as _;
 use dl_viewer_context::store_hub::StoreHubStats;
 use dl_viewer_context::{ActiveStoreContext, StorageContext, TimeControl};
+use egui_plot::HoverPosition;
+use plot_utils::history_to_plot;
 
 use crate::env_vars::DALARAN_TRACK_ALLOCATIONS;
 use memory_history::MemoryHistory;

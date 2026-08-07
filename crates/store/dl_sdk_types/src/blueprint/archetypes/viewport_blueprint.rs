@@ -121,7 +121,9 @@ impl ViewportBlueprint {
             std::sync::LazyLock::new(|| ComponentDescriptor {
                 archetype: Some("dalaran.blueprint.archetypes.ViewportBlueprint".into()),
                 component: "ViewportBlueprint:past_viewer_recommendations".into(),
-                component_type: Some("dalaran.blueprint.components.ViewerRecommendationHash".into()),
+                component_type: Some(
+                    "dalaran.blueprint.components.ViewerRecommendationHash".into(),
+                ),
             });
         (*DESCRIPTOR).clone()
     }

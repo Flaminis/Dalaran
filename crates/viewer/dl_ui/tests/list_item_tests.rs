@@ -1,8 +1,8 @@
 #![cfg(feature = "testing")]
 
-use egui_kittest::kittest::Queryable as _;
 use dl_ui::list_item::ListItemContentButtonsExt as _;
 use dl_ui::{UiExt as _, icons, list_item};
+use egui_kittest::kittest::Queryable as _;
 
 #[test]
 pub fn test_list_items_should_match_snapshot() {

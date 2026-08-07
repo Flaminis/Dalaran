@@ -1,10 +1,6 @@
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use egui::accesskit::{Role, Toggled};
-use egui::{Modifiers, PointerButton};
-use egui_kittest::kittest::{NodeT as _, Queryable as _};
-use parking_lot::Mutex;
 use dl_sdk::external::dl_log_types::{SetStoreInfo, StoreInfo};
 use dl_sdk::external::dl_tuid::Tuid;
 use dl_sdk::log::Chunk;
@@ -20,6 +16,10 @@ use dl_viewer::viewer_test_utils::AppTestingExt as _;
 use dl_viewer::{SystemCommand, SystemCommandSender as _};
 use dl_viewer_context::{ContainerId, Route};
 use dl_viewport_blueprint::ViewportBlueprint;
+use egui::accesskit::{Role, Toggled};
+use egui::{Modifiers, PointerButton};
+use egui_kittest::kittest::{NodeT as _, Queryable as _};
+use parking_lot::Mutex;
 
 // use crate::GetSection;
 // use crate::GetSection as _;

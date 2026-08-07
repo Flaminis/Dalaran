@@ -2,9 +2,9 @@
 //!
 //! Similar to `plot_dashboard_stress`.
 
-use rand::prelude::*;
 use dalaran::EntityPath;
 use dalaran::external::dl_log;
+use rand::prelude::*;
 
 #[derive(Debug, Clone, clap::Parser)]
 pub struct ScalarsCommand {

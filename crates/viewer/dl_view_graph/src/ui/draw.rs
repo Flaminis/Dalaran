@@ -1,10 +1,5 @@
 use std::sync::Arc;
 
-use egui::epaint::CubicBezierShape;
-use egui::{
-    Align2, Color32, FontId, FontSelection, Frame, Galley, Painter, Pos2, Rect, Response, RichText,
-    Sense, Shape, Stroke, TextWrapMode, Ui, UiBuilder, Vec2, WidgetText,
-};
 use dl_chunk::EntityPath;
 use dl_data_ui::{DataUi as _, item_ui};
 use dl_entity_db::InstancePath;
@@ -13,6 +8,11 @@ use dl_ui::list_item;
 use dl_viewer_context::{
     DataResultInteractionAddress, HoverHighlight, InteractionHighlight, Item, SelectionHighlight,
     StoreViewContext, SystemCommand, SystemCommandSender as _, UiLayout, ViewHighlights, ViewQuery,
+};
+use egui::epaint::CubicBezierShape;
+use egui::{
+    Align2, Color32, FontId, FontSelection, Frame, Galley, Painter, Pos2, Rect, Response, RichText,
+    Sense, Shape, Stroke, TextWrapMode, Ui, UiBuilder, Vec2, WidgetText,
 };
 
 use crate::graph::{Graph, Node};

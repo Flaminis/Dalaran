@@ -1,10 +1,10 @@
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use itertools::{Either, Itertools as _};
-use nohash_hasher::IntSet;
 use dl_int::SaturatingCast as _;
 use dl_log::debug_assert;
+use itertools::{Either, Itertools as _};
+use nohash_hasher::IntSet;
 
 use dl_chunk::{
     Chunk, ChunkId, ComponentIdentifier, LatestAtQuery, RangeQuery, TimeColumn, TimelineName,

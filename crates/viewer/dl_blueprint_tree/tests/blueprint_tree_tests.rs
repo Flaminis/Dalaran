@@ -1,6 +1,5 @@
 #![cfg(feature = "testing")]
 
-use egui_kittest::SnapshotResults;
 use dl_blueprint_tree::BlueprintTree;
 use dl_chunk_store::RowId;
 use dl_chunk_store::external::dl_chunk::ChunkBuilder;
@@ -10,6 +9,7 @@ use dl_test_context::TestContext;
 use dl_test_viewport::TestContextExt as _;
 use dl_viewer_context::{CollapseScope, RecommendedView, ViewClass as _, ViewId};
 use dl_viewport_blueprint::{ViewBlueprint, ViewportBlueprint};
+use egui_kittest::SnapshotResults;
 
 #[test]
 fn basic_blueprint_panel_should_match_snapshot() {

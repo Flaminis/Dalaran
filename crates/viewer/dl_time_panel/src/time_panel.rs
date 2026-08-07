@@ -1,9 +1,3 @@
-use egui::emath::Rangef;
-use egui::scroll_area::ScrollSource;
-use egui::{
-    Align, CursorIcon, Modifiers, NumExt as _, Painter, PointerButton, Rect, Response, RichText,
-    TextEdit, Ui, Vec2, WidgetInfo, WidgetType,
-};
 use dl_context_menu::{SelectionUpdateBehavior, context_menu_ui_for_item_with_context};
 use dl_data_ui::DataUi as _;
 use dl_entity_db::InstancePath;
@@ -27,6 +21,12 @@ use dl_viewer_context::{
     TimeView, UiLayout, ViewerContext, VisitorControlFlow,
 };
 use dl_viewport_blueprint::ViewportBlueprint;
+use egui::emath::Rangef;
+use egui::scroll_area::ScrollSource;
+use egui::{
+    Align, CursorIcon, Modifiers, NumExt as _, Painter, PointerButton, Rect, Response, RichText,
+    TextEdit, Ui, Vec2, WidgetInfo, WidgetType,
+};
 
 use crate::recursive_chunks_per_timeline_subscriber::PathRecursiveChunksPerTimelineStoreSubscriber;
 use crate::streams_tree_data::{EntityData, StreamsTreeData, components_for_entity};

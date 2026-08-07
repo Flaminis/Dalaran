@@ -2,8 +2,8 @@ use std::any::TypeId;
 use std::collections::BTreeMap;
 use std::collections::HashMap;
 
-use parking_lot::Mutex;
 use dl_chunk_store::MissingChunkReporter;
+use parking_lot::Mutex;
 use vec1::Vec1;
 
 use dl_chunk::ArchetypeName;

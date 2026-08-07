@@ -3,7 +3,6 @@ use std::sync::Arc;
 
 use arrow::array::{AsArray as _, RecordBatch};
 use arrow::error::ArrowError;
-use itertools::Itertools as _;
 use dl_auth::client::AuthDecorator;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk::{Chunk, ChunkId};
@@ -12,10 +11,11 @@ use dl_log_types::{
     BlueprintActivationCommand, EntryId, LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind,
     StoreSource,
 };
-use dl_protos::cloud::v1alpha1::ext;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_client::DalaranCloudServiceClient;
+use dl_protos::cloud::v1alpha1::ext;
 use dl_types_core::SegmentId;
 use dl_uri::Origin;
+use itertools::Itertools as _;
 use tokio_stream::StreamExt as _;
 
 use crate::{
@@ -373,7 +373,8 @@ pub type RedapClientStack = dl_auth::client::AuthService<
 pub(crate) type RawRedapClient = DalaranCloudServiceClient<RedapClientStack>;
 
 fn redap_grpc_client(client_stack: RedapClientStack) -> RawRedapClient {
-    DalaranCloudServiceClient::new(client_stack).max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
+    DalaranCloudServiceClient::new(client_stack)
+        .max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
 }
 
 pub(crate) fn boxed_redap_grpc_client(
@@ -391,7 +392,8 @@ pub(crate) fn boxed_redap_grpc_client(
             .map_err(tonic::Status::from_error),
     );
 
-    DalaranCloudServiceClient::new(client_stack).max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
+    DalaranCloudServiceClient::new(client_stack)
+        .max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
 }
 
 /// Apply the standard SDK-side layer stack on top of an already-built channel

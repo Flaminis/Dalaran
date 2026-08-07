@@ -1,5 +1,3 @@
-use egui::NumExt as _;
-use nohash_hasher::IntMap;
 use dl_entity_db::InstancePath;
 use dl_log_types::EntityPathHash;
 use dl_renderer::OutlineMaskPreference;
@@ -8,6 +6,8 @@ use dl_viewer_context::{
     DataResultInteractionAddress, HoverHighlight, Item, SelectionHighlight, ViewEntityHighlight,
     ViewHighlights, ViewId, ViewOutlineMasks,
 };
+use egui::NumExt as _;
+use nohash_hasher::IntMap;
 
 /// Computes which things in a view should received highlighting.
 ///

@@ -39,9 +39,9 @@ pub use nalu::{
 // Re-export:
 #[doc(no_inline)]
 pub use {
-    re_mp4::{TrackId, TrackKind},
     dl_quota_channel::{Receiver, Sender, TryRecvError},
     dl_span::Span,
+    re_mp4::{TrackId, TrackKind},
     stable_index_deque::StableIndexDeque,
     time::{Time, Timescale},
 };

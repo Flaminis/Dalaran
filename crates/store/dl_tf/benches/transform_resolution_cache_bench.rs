@@ -3,12 +3,12 @@
 use std::sync::Arc;
 
 use criterion::{Criterion, criterion_group, criterion_main};
-use itertools::Itertools as _;
 use dl_chunk_store::{Chunk, ChunkStoreEvent, MissingChunkReporter};
 use dl_entity_db::EntityDb;
 use dl_log_types::{EntityPath, StoreId, TimePoint, Timeline, TimelineName};
 use dl_sdk_types::{RowId, archetypes};
 use dl_tf::{TransformFrameIdHash, TransformResolutionCache};
+use itertools::Itertools as _;
 
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;

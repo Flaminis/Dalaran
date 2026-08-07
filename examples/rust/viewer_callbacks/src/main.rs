@@ -3,9 +3,9 @@
 use std::rc::Rc;
 use std::sync::Arc;
 
-use dalaran::external::parking_lot::Mutex;
 use dalaran::external::dl_viewer::{self, ViewerEvent, ViewerEventKind};
-use dalaran::external::{eframe, egui, dl_crash_handler, dl_grpc_server, dl_log, dl_memory, tokio};
+use dalaran::external::parking_lot::Mutex;
+use dalaran::external::{dl_crash_handler, dl_grpc_server, dl_log, dl_memory, eframe, egui, tokio};
 
 // By using `dl_memory::AccountingAllocator` Dalaran can keep track of exactly how much memory it is using,
 // and prune the data store when it goes above a certain limit.

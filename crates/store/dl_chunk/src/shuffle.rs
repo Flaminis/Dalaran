@@ -1,7 +1,7 @@
 use arrow::array::{Array as ArrowArray, ListArray as ArrowListArray};
 use arrow::buffer::{OffsetBuffer as ArrowOffsets, ScalarBuffer as ArrowScalarBuffer};
-use itertools::Itertools as _;
 use dl_log_types::TimelineName;
+use itertools::Itertools as _;
 
 use crate::{Chunk, ChunkId, TimeColumn};
 

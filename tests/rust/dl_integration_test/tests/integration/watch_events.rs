@@ -3,13 +3,13 @@ use std::time::Duration;
 
 use arrow::array::{Int64Array, RecordBatch, StringArray};
 use arrow::datatypes::{DataType, Field, Schema};
-use egui_kittest::SnapshotResults;
-use egui_kittest::kittest::Queryable as _;
 use dl_integration_test::{HarnessExt as _, TestServer};
 use dl_protos::cloud::v1alpha1::EntryFilter;
 use dl_protos::cloud::v1alpha1::ext::{self, TableInsertMode};
 use dl_sdk::external::dl_log_types;
 use dl_viewer::viewer_test_utils::{self, HarnessOptions};
+use egui_kittest::SnapshotResults;
+use egui_kittest::kittest::Queryable as _;
 
 /// The viewer should auto-refresh its catalog when entries are added/removed server-side,
 /// driven by the `WatchEvents` stream (no manual refresh).

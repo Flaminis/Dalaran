@@ -1,4 +1,3 @@
-use egui::NumExt as _;
 use dl_sdk_types::blueprint::archetypes;
 use dl_sdk_types::blueprint::components::TensorDimensionIndexSlider;
 use dl_sdk_types::components::{
@@ -6,6 +5,7 @@ use dl_sdk_types::components::{
 };
 use dl_sdk_types::datatypes::TensorDimensionSelection;
 use dl_viewport_blueprint::ViewProperty;
+use egui::NumExt as _;
 
 use crate::TensorDimension;
 

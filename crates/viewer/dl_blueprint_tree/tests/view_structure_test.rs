@@ -3,8 +3,6 @@
 
 #![cfg(feature = "testing")]
 
-use egui_kittest::SnapshotError;
-use itertools::Itertools as _;
 use dl_blueprint_tree::BlueprintTree;
 use dl_blueprint_tree::data::BlueprintTreeData;
 use dl_chunk_store::RowId;
@@ -16,6 +14,8 @@ use dl_test_viewport::TestContextExt as _;
 use dl_ui::filter_widget::FilterState;
 use dl_viewer_context::{RecommendedView, ViewClass as _, ViewId};
 use dl_viewport_blueprint::{ViewBlueprint, ViewportBlueprint};
+use egui_kittest::SnapshotError;
+use itertools::Itertools as _;
 
 const VIEW_ID: &str = "this-is-a-view-id";
 

@@ -1,6 +1,6 @@
-use emath::History;
 use dl_renderer::WgpuResourcePoolStatistics;
 use dl_viewer_context::store_hub::{StoreHubStats, StoreStats};
+use emath::History;
 
 // ----------------------------------------------------------------------------
 

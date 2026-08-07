@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use arrow::array::AsArray as _;
-use nohash_hasher::{IntMap, IntSet};
 use dl_entity_db::external::dl_chunk_store::LatestAtQuery;
 use dl_entity_db::{EntityDb, EntityTree};
 use dl_log::ResultExt as _;
@@ -21,6 +20,7 @@ use dl_viewer_context::{
     IndicatedEntities, PerVisualizerType, QueryRange, ViewId, ViewSystemIdentifier, ViewerContext,
     VisualizableEntities, VisualizableReason, VisualizerComponentMappings, VisualizerInstruction,
 };
+use nohash_hasher::{IntMap, IntSet};
 use slotmap::SlotMap;
 use smallvec::SmallVec;
 

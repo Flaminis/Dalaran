@@ -1,8 +1,8 @@
 use std::sync::Arc;
 
 use ahash::HashMap;
-use parking_lot::RwLock;
 use dl_protos::common::v1alpha1::TaskId;
+use parking_lot::RwLock;
 
 /// A constant task ID used for all successful tasks.
 pub const TASK_ID_SUCCESS: &str = "task_00000000DEADBEEF";

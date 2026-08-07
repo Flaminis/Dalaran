@@ -6,9 +6,9 @@ use std::sync::Arc;
 use arrow::array::{BinaryArray, BooleanArray, StringArray};
 use arrow::record_batch::RecordBatch;
 use datafusion::prelude::SessionContext;
+use dl_protos::common::v1alpha1::TaskId;
 use futures::StreamExt as _;
 use nohash_hasher::{IntMap, IntSet};
-use dl_protos::common::v1alpha1::TaskId;
 use tonic::{Code, Request, Response, Status};
 
 use dl_arrow_util::RecordBatchExt as _;
@@ -17,13 +17,13 @@ use dl_chunk_store::{
 };
 use dl_log_encoding::ToTransport as _;
 use dl_log_types::{AbsoluteTimeRange, EntityPath, EntryId, StoreId, StoreKind, TimelineName};
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 #[cfg(not(target_arch = "wasm32"))]
 use dl_protos::cloud::v1alpha1::ext::{CreateTableEntryResponse, ProviderDetails};
 use dl_protos::cloud::v1alpha1::ext::{
     QueryDatasetDataframe, QueryTasksDataframe, RegisterWithDatasetDataframe,
     ScanDatasetManifestDataframe, ScanSegmentTableDataframe,
 };
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     CancelTasksRequest, CancelTasksResponse, DeleteEntryResponse, DoBandwidthTestResponse,
     EntryCreatedEvent, EntryDeletedEvent, EntryDetails, EntryKind, EventKind, FetchChunksRequest,
@@ -2335,9 +2335,9 @@ fn bandwidth_test_stream(
 mod tests {
     use super::*;
 
-    use futures::TryStreamExt as _;
     use dl_protos::cloud::v1alpha1::GetAssetsForSegmentRequest;
     use dl_protos::headers::DalaranHeadersInjectorExt as _;
+    use futures::TryStreamExt as _;
 
     /// Datasets created before asset datasets were introduced don't have one. Querying assets on
     /// such a dataset returns no assets, and updating its entry creates the missing asset dataset.

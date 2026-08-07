@@ -1,6 +1,5 @@
 #![expect(clippy::disallowed_methods)] // It's just an example
 
-use dalaran::external::egui;
 use dalaran::external::dl_data_ui::{DataUi, item_ui};
 use dalaran::external::dl_entity_db::InstancePath;
 use dalaran::external::dl_log_types::EntityPath;
@@ -16,6 +15,7 @@ use dalaran::external::dl_viewer_context::{
     VisualizableReason,
 };
 use dalaran::external::dl_viewport_blueprint::ViewProperty;
+use dalaran::external::egui;
 
 use crate::color_coordinate_config::{ColorCoordinatesConfiguration, ColorCoordinatesMode};
 use crate::points3d_color_visualizer::{ColorWithInstance, Points3DColorVisualizer};

@@ -11,14 +11,14 @@ use std::time::Duration;
 
 use arrow::array::{AsArray as _, BooleanArray, Int64Array, RecordBatch, StringArray};
 use arrow::datatypes::{DataType, Field, Schema};
-use egui::accesskit::Role;
-use egui_kittest::kittest::Queryable as _;
-use futures::StreamExt as _;
 use dl_integration_test::{HarnessExt as _, TestServer};
 use dl_protos::cloud::v1alpha1::ScanTableRequest;
 use dl_protos::cloud::v1alpha1::ext::TableInsertMode;
 use dl_sdk::external::dl_log_types;
 use dl_viewer::viewer_test_utils::{self, HarnessOptions};
+use egui::accesskit::Role;
+use egui_kittest::kittest::Queryable as _;
+use futures::StreamExt as _;
 
 #[tokio::test(flavor = "multi_thread")]
 pub async fn grid_view_flagging() {

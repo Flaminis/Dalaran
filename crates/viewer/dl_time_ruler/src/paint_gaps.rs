@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
-use egui::{Color32, NumExt as _, Rangef, Rect, Shape, pos2};
 use dl_ui::UiExt as _;
+use egui::{Color32, NumExt as _, Rangef, Rect, Shape, pos2};
 
 use crate::TimeRangesUi;
 

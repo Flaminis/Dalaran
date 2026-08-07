@@ -1,13 +1,13 @@
 use arrow::array::{RecordBatch, record_batch};
 use arrow::datatypes as arrow_schema;
-use futures::TryStreamExt as _;
-use itertools::Itertools as _;
-use dl_protos::cloud::v1alpha1::ext::EntryDetails;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
+use dl_protos::cloud::v1alpha1::ext::EntryDetails;
 use dl_protos::cloud::v1alpha1::{
     FindEntriesRequest, ScanTableRequest, TableInsertMode, WriteTableRequest,
 };
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
+use futures::TryStreamExt as _;
+use itertools::Itertools as _;
 
 use crate::RecordBatchTestExt as _;
 use crate::tests::common::{DalaranCloudServiceExt as _, concat_record_batches, entry_name};

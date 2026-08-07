@@ -7,13 +7,13 @@ use arrow::{
     array::{BinaryArray, BooleanArray, FixedSizeBinaryArray, StringArray, UInt64Array},
     error::ArrowError,
 };
-use itertools::Itertools as _;
-use dl_chunk::external::nohash_hasher::IntMap;
 use dl_chunk::external::dl_byte_size;
+use dl_chunk::external::nohash_hasher::IntMap;
 use dl_chunk::{ArchetypeName, ChunkError, ChunkId, ComponentIdentifier, ComponentType, Timeline};
 use dl_log_types::external::dl_tuid::Tuid;
 use dl_log_types::{AbsoluteTimeRange, EntityPath, StoreId, TimeType, TimelineName};
 use dl_types_core::ComponentDescriptor;
+use itertools::Itertools as _;
 
 use crate::{CodecError, CodecResult, Decodable as _, StreamFooterEntry, ToApplication as _};
 
@@ -742,7 +742,10 @@ impl RawRrdManifest {
 
     /// The index kind (`"sequence"`, `"timestamp"`, `"duration"`) for a field, if any.
     pub fn get_index_kind(field: &Field) -> Option<&str> {
-        field.metadata().get("dalaran:index_kind").map(|s| s.as_str())
+        field
+            .metadata()
+            .get("dalaran:index_kind")
+            .map(|s| s.as_str())
     }
 
     /// `true` if the field is a Dalaran index column with the given name.

@@ -2,7 +2,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use egui_kittest::Harness;
 use dl_integration_test::HarnessExt as _;
 use dl_sdk::Timeline;
 use dl_sdk::external::dl_log_types::TimeReal;
@@ -13,6 +12,7 @@ use dl_viewer::external::dl_sdk_types::archetypes::TextLog;
 use dl_viewer::external::dl_sdk_types::blueprint::components::PlayState;
 use dl_viewer::external::dl_viewer_context::{AppContext, TimeControl, TimeControlCommand};
 use dl_viewer::viewer_test_utils::{self, HarnessOptions};
+use egui_kittest::Harness;
 
 /// A simple event collector that records viewer events for later inspection.
 struct EventCollector {

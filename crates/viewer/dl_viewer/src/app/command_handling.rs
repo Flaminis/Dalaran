@@ -1,5 +1,4 @@
 use anyhow::Context as _;
-use itertools::Itertools as _;
 use dl_build_info::CrateVersion;
 use dl_chunk::TimelineName;
 use dl_entity_db::{EntityDb, LogSource};
@@ -15,6 +14,7 @@ use dl_viewer_context::{
 use dl_viewer_context::{
     RecordingOrTable, SystemCommandSender as _, TimeControlCommand, sanitize_file_name,
 };
+use itertools::Itertools as _;
 use std::sync::Arc;
 
 use super::App;
@@ -940,7 +940,8 @@ impl App {
             }
             UICommand::OpenWebHelp => {
                 egui_ctx.open_url(egui::output::OpenUrl {
-                    url: "https://dalaran.dev/docs/getting-started/navigating-the-viewer".to_owned(),
+                    url: "https://dalaran.dev/docs/getting-started/navigating-the-viewer"
+                        .to_owned(),
                     new_tab: true,
                 });
             }
@@ -1353,9 +1354,9 @@ impl App {
     fn save_many_recordings(&mut self, stores: &[&EntityDb], folder: &std::path::Path) {
         use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
-        use itertools::Itertools as _;
         use dl_log::ResultExt as _;
         use dl_viewer_context::sanitize_file_name;
+        use itertools::Itertools as _;
         use tap::Pipe as _;
 
         dl_tracing::profile_function!();

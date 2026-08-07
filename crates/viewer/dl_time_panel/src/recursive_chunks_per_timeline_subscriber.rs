@@ -1,12 +1,12 @@
 use std::sync::{Arc, OnceLock, Weak};
 
 use ahash::HashMap;
-use nohash_hasher::IntMap;
 use dl_chunk_store::{
     Chunk, ChunkDirectLineageReport, ChunkId, ChunkStore, ChunkStoreDiff, ChunkStoreEvent,
     ChunkStoreSubscriberHandle, PerStoreChunkSubscriber,
 };
 use dl_log_types::{AbsoluteTimeRange, EntityPath, EntityPathHash, StoreId, TimelineName};
+use nohash_hasher::IntMap;
 
 /// Cached information about a chunk in the context of a given timeline.
 #[derive(Debug, Clone, dl_byte_size::SizeBytes)]

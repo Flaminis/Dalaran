@@ -17,8 +17,9 @@ use camino::{Utf8Path, Utf8PathBuf};
 
 use crate::data_type::LazyDatatype;
 use crate::{
-    ATTR_DALARAN_COMPONENT_OPTIONAL, ATTR_DALARAN_COMPONENT_RECOMMENDED, ATTR_DALARAN_COMPONENT_REQUIRED,
-    ATTR_DALARAN_DEPRECATED_NOTICE, ATTR_DALARAN_DEPRECATED_SINCE, ATTR_DALARAN_STATE, Docs, Reporter,
+    ATTR_DALARAN_COMPONENT_OPTIONAL, ATTR_DALARAN_COMPONENT_RECOMMENDED,
+    ATTR_DALARAN_COMPONENT_REQUIRED, ATTR_DALARAN_DEPRECATED_NOTICE, ATTR_DALARAN_DEPRECATED_SINCE,
+    ATTR_DALARAN_STATE, Docs, Reporter,
 };
 
 // ---
@@ -306,7 +307,9 @@ impl State {
                         ))
                     }
                 }
-                unknown => Err(format!("Unknown value for {ATTR_DALARAN_STATE:?}: {unknown}")),
+                unknown => Err(format!(
+                    "Unknown value for {ATTR_DALARAN_STATE:?}: {unknown}"
+                )),
             }
         } else {
             Err(format!("Missing attribute {ATTR_DALARAN_STATE:?}"))

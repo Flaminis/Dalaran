@@ -1,5 +1,3 @@
-use egui::vec2;
-use egui_kittest::kittest::Queryable as _;
 use dl_integration_test::HarnessExt as _;
 use dl_sdk::TimePoint;
 use dl_sdk::log::RowId;
@@ -7,6 +5,8 @@ use dl_viewer::external::dl_viewer_context::{ContainerId, RecommendedView, ViewC
 use dl_viewer::external::{dl_sdk_types, dl_view_spatial};
 use dl_viewer::viewer_test_utils::{self, HarnessOptions};
 use dl_viewport_blueprint::ViewBlueprint;
+use egui::vec2;
+use egui_kittest::kittest::Queryable as _;
 
 fn make_multi_view_test_harness<'a>() -> egui_kittest::Harness<'a, dl_viewer::App> {
     let mut harness = viewer_test_utils::viewer_harness(&HarnessOptions {

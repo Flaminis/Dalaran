@@ -7,13 +7,13 @@ use arrow::array::{Array as _, Float64Array, ListArray, StringArray, StructArray
 use arrow::buffer::OffsetBuffer;
 use arrow::compute::cast;
 use arrow::datatypes::{DataType, Field, Fields};
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_chunk::EntityPath;
 use dl_log_types::EntityPathPart;
 use dl_sdk_types::Loggable as _;
 use dl_sdk_types::archetypes::Transform3D;
 use dl_sdk_types::datatypes::{Quaternion, Vec3D};
+use itertools::Itertools as _;
 use urdf_rs::{Geometry, Joint, Link, Material, Robot};
 
 use super::joint_transform;

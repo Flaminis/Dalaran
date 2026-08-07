@@ -1,8 +1,6 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use egui_extras::{Column, TableRow};
-use itertools::{Either, Itertools as _};
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::{
     Chunk, ChunkId, ChunkStore, ChunkStoreGeneration, ChunkTrackingMode, LatestAtQuery, RangeQuery,
@@ -14,6 +12,8 @@ use dl_ui::{ContextExt as _, text_edit::autocomplete_text_edit};
 use dl_ui::{UiExt as _, list_item};
 use dl_viewer_context::external::dl_entity_db::EntityDb;
 use dl_viewer_context::{Route, StorageContext, SystemCommand, SystemCommandSender as _};
+use egui_extras::{Column, TableRow};
+use itertools::{Either, Itertools as _};
 
 use crate::chunk_list_mode::{ChunkListMode, ChunkListQueryMode};
 use crate::chunk_ui::ChunkUi;

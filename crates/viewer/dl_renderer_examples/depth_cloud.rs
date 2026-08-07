@@ -17,9 +17,6 @@
 
 use std::f32::consts::TAU;
 
-use glam::Vec3;
-use itertools::Itertools as _;
-use macaw::IsoTransform;
 use dl_renderer::renderer::{
     ColormappedTexture, DepthCloud, DepthCloudDrawData, DepthClouds, DrawData,
     GenericSkyboxDrawData, RectangleDrawData, RectangleOptions, TexturedRect,
@@ -27,6 +24,9 @@ use dl_renderer::renderer::{
 use dl_renderer::resource_managers::{GpuTexture2D, ImageDataDesc};
 use dl_renderer::view_builder::{self, Projection, ViewBuilder};
 use dl_renderer::{Color32, LineDrawableBuilder, PointCloudBuilder, Rgba, Size};
+use glam::Vec3;
+use itertools::Itertools as _;
+use macaw::IsoTransform;
 use winit::event::ElementState;
 use winit::keyboard;
 

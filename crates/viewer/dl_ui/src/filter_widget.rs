@@ -1,8 +1,8 @@
 use std::ops::Range;
 
+use dl_log::debug_assert;
 use egui::{Color32, NumExt as _, Widget as _};
 use itertools::Itertools as _;
-use dl_log::debug_assert;
 use smallvec::SmallVec;
 
 use crate::{UiExt as _, icons, list_item};

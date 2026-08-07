@@ -8,8 +8,8 @@
 
 use std::collections::BTreeMap;
 
-use egui::{Pos2, Vec2};
 use dl_chunk::EntityPath;
+use egui::{Pos2, Vec2};
 
 use crate::graph::{EdgeId, Graph, NodeId};
 

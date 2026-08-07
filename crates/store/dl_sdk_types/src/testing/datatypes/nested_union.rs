@@ -259,7 +259,9 @@ impl ::dl_types_core::Loggable for NestedUnion {
                                 crate::testing::datatypes::ScalarUnion::from_arrow_opt(
                                     arrow_data_inner,
                                 )
-                                .with_context("dalaran.testing.datatypes.NestedUnion#many_required")?
+                                .with_context(
+                                    "dalaran.testing.datatypes.NestedUnion#many_required",
+                                )?
                                 .into_iter()
                                 .collect::<Vec<_>>()
                             };

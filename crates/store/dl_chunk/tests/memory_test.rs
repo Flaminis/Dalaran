@@ -30,9 +30,9 @@ use arrow::array::{
 };
 use arrow::buffer::OffsetBuffer as ArrowOffsetBuffer;
 use arrow::datatypes::Field as ArrowField;
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_types_core::arrow_helpers::as_array_ref;
+use itertools::Itertools as _;
 
 // --- concat ---
 

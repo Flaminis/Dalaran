@@ -1,9 +1,9 @@
 //! Snapshot test for how the command palette renders rows:
 //! enabled vs. disabled (grayed-out) commands, and long paths that wrap to several lines.
 
-use egui::Vec2;
 use dl_log_types::EntityPath;
 use dl_ui::{CmdRow, FuzzyQuery, RowState, SyntaxHighlighting as _, paint_command_row};
+use egui::Vec2;
 
 /// Builds a plain command row, highlighting the characters matched by `query`.
 #[expect(clippy::fn_params_excessive_bools)] // test helper 🤷

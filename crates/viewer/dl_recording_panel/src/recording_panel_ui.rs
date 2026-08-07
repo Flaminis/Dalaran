@@ -1,7 +1,5 @@
 use std::sync::Arc;
 
-use egui::collapsing_header::CollapsingState;
-use egui::{RichText, WidgetInfo, WidgetType};
 use dl_data_ui::AppUi as _;
 use dl_data_ui::item_ui::{entity_db_button_ui, table_id_button_ui};
 use dl_log_channel::LogSource;
@@ -15,6 +13,8 @@ use dl_viewer_context::{
     AppContext, Item, RecordingOrTable, RedapEntryKind, Route, SystemCommand,
     SystemCommandSender as _,
 };
+use egui::collapsing_header::CollapsingState;
+use egui::{RichText, WidgetInfo, WidgetType};
 
 use crate::RecordingPanelCommand;
 use crate::data::{

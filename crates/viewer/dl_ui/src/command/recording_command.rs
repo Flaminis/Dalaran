@@ -1,6 +1,6 @@
+use dl_log_types::StoreId;
 use egui::os::OperatingSystem;
 use egui::{Id, Key, KeyboardShortcut, Modifiers};
-use dl_log_types::StoreId;
 use smallvec::{SmallVec, smallvec};
 
 use super::CommandEnvironment;

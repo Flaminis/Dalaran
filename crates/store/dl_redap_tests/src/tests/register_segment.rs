@@ -4,15 +4,13 @@ use std::sync::Arc;
 
 use arrow::array::{Float32Array, Float64Array, ListArray, RecordBatch, StringArray};
 use arrow::datatypes::Schema;
-use futures::TryStreamExt as _;
-use itertools::{Itertools as _, izip};
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_log_types::{EntityPath, TimeType};
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::{
     self, DatasetDetails, RegisterWithDatasetRequest, TableDetails, UpdateTableEntryRequest,
 };
 use dl_protos::cloud::v1alpha1::ext::{ScanDatasetManifestDataframe, ScanSegmentTableDataframe};
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     CreateDatasetEntryRequest, GetDatasetManifestSchemaRequest, GetSegmentTableSchemaRequest,
     ReadDatasetEntryRequest, ReadTableEntryRequest, ScanDatasetManifestRequest,
@@ -24,10 +22,12 @@ use dl_protos::{cloud::v1alpha1::ext as cloud_ext, common::v1alpha1::TaskId};
 use dl_sdk_types::{AnyValues, LayerName};
 use dl_types_core::AsComponents;
 use dl_types_core::SegmentId;
+use futures::TryStreamExt as _;
+use itertools::{Itertools as _, izip};
 use url::Url;
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition,
     create_table_entry_with_name, entry_name, prop,
 };
 use crate::{
@@ -336,7 +336,9 @@ pub async fn register_and_scan_simple_dataset_with_layers(service: impl DalaranC
     scan_dataset_manifest_and_snapshot(&service, dataset_name, "simple_with_layers").await;
 }
 
-pub async fn register_and_scan_simple_dataset_multiple_timelines(service: impl DalaranCloudService) {
+pub async fn register_and_scan_simple_dataset_multiple_timelines(
+    service: impl DalaranCloudService,
+) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -1324,9 +1326,9 @@ async fn register_and_wait_for_task_result(
     dataset_name: &str,
     data_sources_def: DataSourcesDefinition,
 ) -> Vec<TaskResult> {
-    use futures::StreamExt as _;
     use dl_protos::cloud::v1alpha1::QueryTasksOnCompletionRequest;
     use dl_protos::common::v1alpha1::TaskId;
+    use futures::StreamExt as _;
     use std::collections::HashMap;
 
     service.create_dataset_entry_with_name(dataset_name).await;

@@ -1,10 +1,10 @@
-use egui::text::{ByteIndex, LayoutJob};
-use egui::{Color32, Style, TextFormat, TextStyle};
 use dl_entity_db::InstancePath;
 use dl_log_types::external::dl_types_core::{
     ArchetypeName, ComponentDescriptor, ComponentIdentifier, ComponentType,
 };
 use dl_log_types::{ComponentPath, EntityPath, EntityPathPart, Instance};
+use egui::text::{ByteIndex, LayoutJob};
+use egui::{Color32, Style, TextFormat, TextStyle};
 
 use crate::HasDesignTokens as _;
 

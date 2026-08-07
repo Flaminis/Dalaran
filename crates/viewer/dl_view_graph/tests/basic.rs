@@ -1,6 +1,5 @@
 //! Basic tests for the graph view, mostly focused on edge cases (pun intended).
 
-use egui::Vec2;
 use dl_chunk_store::RowId;
 use dl_log_types::TimePoint;
 use dl_sdk_types::archetypes;
@@ -9,6 +8,7 @@ use dl_test_viewport::TestContextExt as _;
 use dl_view_graph::GraphView;
 use dl_viewer_context::ViewClass as _;
 use dl_viewport_blueprint::ViewBlueprint;
+use egui::Vec2;
 
 #[test]
 pub fn coincident_nodes() {

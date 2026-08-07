@@ -3,9 +3,9 @@
 use std::collections::BTreeSet;
 use std::sync::Arc;
 
-use emath::NumExt as _;
 use dl_chunk::{Chunk, ChunkId};
 use dl_mutex::Mutex;
+use emath::NumExt as _;
 
 /// A batch of chunks being loaded from a remote server.
 pub type ChunkPromise = poll_promise::Promise<Result<Vec<Chunk>, ()>>;

@@ -1,26 +1,26 @@
 #![expect(clippy::unwrap_used)]
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, entry_name,
 };
 use crate::tests::common::concat_record_batches;
 use crate::{FieldsTestExt as _, RecordBatchTestExt as _, SchemaTestExt as _};
 use arrow::array::RecordBatch;
 use arrow::datatypes::Schema;
-use futures::TryStreamExt as _;
-use itertools::Itertools as _;
 use dl_arrow_util::RecordBatchExt as _;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::ScanDatasetManifestDataframe;
 use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_protos::cloud::v1alpha1::ext::{
     LayerRegistrationStatus, QueryDatasetDataframe, QueryDatasetRequest,
 };
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     GetDatasetManifestSchemaRequest, GetSegmentTableSchemaRequest, ReadDatasetEntryRequest,
     ScanDatasetManifestRequest, ScanSegmentTableRequest,
 };
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
+use futures::TryStreamExt as _;
+use itertools::Itertools as _;
 
 pub async fn unregister_simple(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
@@ -633,7 +633,10 @@ fn filter_out_index_ranges(batch: RecordBatch) -> RecordBatch {
         .unwrap()
 }
 
-async fn get_dataset_updated_at_nanos(service: &impl DalaranCloudService, dataset_name: &str) -> i64 {
+async fn get_dataset_updated_at_nanos(
+    service: &impl DalaranCloudService,
+    dataset_name: &str,
+) -> i64 {
     service
         .read_dataset_entry(
             tonic::Request::new(ReadDatasetEntryRequest {})

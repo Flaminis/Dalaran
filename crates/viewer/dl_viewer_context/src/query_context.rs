@@ -1,9 +1,9 @@
 use std::sync::LazyLock;
 
 use ahash::HashMap;
-use nohash_hasher::IntMap;
 use dl_log_types::{EntityPath, EntityPathHash};
 use dl_sdk_types::blueprint::components::VisualizerInstructionId;
+use nohash_hasher::IntMap;
 use slotmap::SlotMap;
 use smallvec::SmallVec;
 

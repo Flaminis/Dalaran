@@ -7,10 +7,10 @@
 
 #![expect(clippy::redundant_clone)]
 
-use half::f16;
 use dl_sdk_types::testing::archetypes::{AffixFuzzer1, AffixFuzzer2, AffixFuzzer3, AffixFuzzer4};
 use dl_sdk_types::testing::{components, datatypes};
 use dl_sdk_types::{Archetype as _, AsComponents as _};
+use half::f16;
 
 #[test]
 fn roundtrip() {

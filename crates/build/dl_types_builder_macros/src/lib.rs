@@ -34,7 +34,9 @@ use quote::quote;
 /// The annotations `#[dalaran_type]` strips.
 ///
 /// Anything not in this list is passed through to rustc untouched — see the module docs.
-const DALARAN_ATTRIBUTES: &[&str] = &["arrow", "cpp", "default", "docs", "python", "dalaran", "rust"];
+const DALARAN_ATTRIBUTES: &[&str] = &[
+    "arrow", "cpp", "default", "docs", "python", "dalaran", "rust",
+];
 
 /// Strips Dalaran's IDL annotations off a type definition so that rustc will accept it.
 ///

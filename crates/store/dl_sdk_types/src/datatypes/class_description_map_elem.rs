@@ -197,7 +197,9 @@ impl ::dl_types_core::Loggable for ClassDescriptionMapElem {
                     }
                     let arrow_data = &**arrays_by_name["class_description"];
                     crate::datatypes::ClassDescription::from_arrow_opt(arrow_data)
-                        .with_context("dalaran.datatypes.ClassDescriptionMapElem#class_description")?
+                        .with_context(
+                            "dalaran.datatypes.ClassDescriptionMapElem#class_description",
+                        )?
                         .into_iter()
                 };
                 ZipValidity::new_with_validity(
@@ -209,7 +211,9 @@ impl ::dl_types_core::Loggable for ClassDescriptionMapElem {
                         Ok(Self {
                             class_id: class_id
                                 .ok_or_else(DeserializationError::missing_data)
-                                .with_context("dalaran.datatypes.ClassDescriptionMapElem#class_id")?,
+                                .with_context(
+                                    "dalaran.datatypes.ClassDescriptionMapElem#class_id",
+                                )?,
                             class_description: class_description
                                 .ok_or_else(DeserializationError::missing_data)
                                 .with_context(

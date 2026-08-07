@@ -1330,12 +1330,12 @@ mod tests {
     use std::sync::Arc;
     use std::time::Duration;
 
-    use itertools::{Itertools as _, chain};
     use dl_chunk::RowId;
     use dl_log_encoding::dlr::Compression;
     use dl_log_types::{LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind, StoreSource};
     use dl_protos::sdk_comms::v1alpha1::message_proxy_service_client::MessageProxyServiceClient;
     use dl_protos::sdk_comms::v1alpha1::message_proxy_service_server::MessageProxyServiceServer;
+    use itertools::{Itertools as _, chain};
     use similar_asserts::assert_eq;
     use tokio::net::TcpListener;
     use tokio_util::sync::CancellationToken;

@@ -1,5 +1,5 @@
-use half::f16;
 use dl_sdk_types::datatypes::ChannelDatatype;
+use half::f16;
 
 use crate::ImageInfo;
 

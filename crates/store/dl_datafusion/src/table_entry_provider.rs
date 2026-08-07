@@ -13,8 +13,6 @@ use datafusion::logical_expr::dml::InsertOp;
 use datafusion::physical_expr::{EquivalenceProperties, Partitioning};
 use datafusion::physical_plan::execution_plan::{Boundedness, EmissionType};
 use datafusion::physical_plan::{DisplayAs, DisplayFormatType, ExecutionPlan, PlanProperties};
-use futures::Stream;
-use parking_lot::Mutex;
 use dl_async::AsyncRuntimeHandle;
 use dl_log_types::{EntryId, EntryIdOrName};
 use dl_protos::cloud::v1alpha1::ext::{EntryDetails, TableInsertMode};
@@ -24,6 +22,8 @@ use dl_protos::cloud::v1alpha1::{
 };
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_redap_client::{ApiError, ApiResult, ConnectionAnalyticsExporter, ConnectionClient};
+use futures::Stream;
+use parking_lot::Mutex;
 use tokio::runtime::Handle;
 use tracing::instrument;
 

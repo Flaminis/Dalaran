@@ -1,10 +1,10 @@
-use itertools::Itertools as _;
 use dl_log_types::EntityPath;
 use dl_log_types::hash::Hash64;
 use dl_sdk_types::datatypes::TensorData;
 use dl_sdk_types::{ComponentDescriptor, RowId};
 use dl_ui::UiExt as _;
 use dl_viewer_context::{StoreViewContext, TensorStats, TensorStatsCache, UiLayout};
+use itertools::Itertools as _;
 
 use super::EntityDataUi;
 

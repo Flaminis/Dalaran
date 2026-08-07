@@ -1,10 +1,10 @@
 use arrow::datatypes::{DataType, Field, Schema};
 use dl_log_types::EntryId;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::{
     CreateDatasetEntryRequest, CreateTableEntryRequest, DatasetDetails, DatasetEntry, EntryDetails,
     LanceTable, ProviderDetails,
 };
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     EntryFilter, EntryKind, FindEntriesRequest, ReadDatasetEntryRequest,
 };

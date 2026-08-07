@@ -16,11 +16,11 @@
 //! - Error type (either built-in such as [`pyo3::exceptions::PyValueError`] or custom) can always
 //!   be used directly using, e.g. `PyValueError::new_err("message")`.
 
+use dl_redap_client::{ApiErrorKind, TonicStatusError};
 use pyo3::PyErr;
 use pyo3::exceptions::{
     PyConnectionError, PyException, PyPermissionError, PyRuntimeError, PyTimeoutError, PyValueError,
 };
-use dl_redap_client::{ApiErrorKind, TonicStatusError};
 
 pyo3::create_exception!(
     dalaran_bindings.dalaran_bindings,
@@ -248,7 +248,8 @@ mod tests {
     fn recovers_embedded_api_error_with_trace_id() {
         let trace_id =
             TraceId::from_hex("0123456789abcdef0123456789abcdef").expect("valid trace-id");
-        let arrow_err = arrow::error::ArrowError::SchemaError("dalaran schema mismatch: boom".into());
+        let arrow_err =
+            arrow::error::ArrowError::SchemaError("dalaran schema mismatch: boom".into());
         let api = ApiError::with_kind_and_source(
             ApiErrorKind::Internal,
             Some(trace_id),

@@ -8,14 +8,14 @@ use std::sync::{LazyLock, OnceLock};
 use std::time::Duration;
 
 use arrow::array::RecordBatch as ArrowRecordBatch;
+use dl_auth::oauth::Credentials;
+use dl_auth::oauth::login_flow::{DeviceCodeFlow, DeviceCodeFlowState};
 use itertools::Itertools as _;
 use pyo3::exceptions::{
     PyKeyboardInterrupt, PyRuntimeError, PyStopIteration, PyTypeError, PyValueError,
 };
 use pyo3::prelude::*;
 use pyo3::types::{PyBytes, PyDict};
-use dl_auth::oauth::Credentials;
-use dl_auth::oauth::login_flow::{DeviceCodeFlow, DeviceCodeFlowState};
 //use crate::reflection::ComponentDescriptorExt as _;
 use dl_chunk::{ChunkBatcherConfig, TimelineName};
 use dl_log::ResultExt as _;

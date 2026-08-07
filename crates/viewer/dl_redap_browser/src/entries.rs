@@ -6,8 +6,6 @@ use ahash::HashMap;
 use datafusion::catalog::TableProvider;
 use datafusion::common::TableReference;
 use datafusion::prelude::SessionContext;
-use futures::stream::FuturesUnordered;
-use futures::{FutureExt as _, StreamExt as _, TryFutureExt as _};
 use dl_async::AsyncRuntimeHandle;
 use dl_dataframe_ui::{RequestedObject, StreamingCacheTableProvider};
 use dl_datafusion::{SegmentTableProvider, TableEntryTableProvider, TableKind, TableQueryCaller};
@@ -21,6 +19,8 @@ use dl_redap_client::{
 };
 use dl_ui::{Icon, icons};
 use dl_viewer_context::{CommandSender, SystemCommand, SystemCommandSender as _};
+use futures::stream::FuturesUnordered;
+use futures::{FutureExt as _, StreamExt as _, TryFutureExt as _};
 
 pub type EntryResult<T = ()> = Result<T, ApiError>;
 

@@ -1285,7 +1285,10 @@ mod tests {
             &[
                 (DALARAN_KIND, "data"),
                 ("dalaran:component", "translation"),
-                ("dalaran:component_type", "dalaran.components.PoseTranslation3D"),
+                (
+                    "dalaran:component_type",
+                    "dalaran.components.PoseTranslation3D",
+                ),
             ],
             /* with_version = */ false,
             "/foo",

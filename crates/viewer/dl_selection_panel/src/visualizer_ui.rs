@@ -1,8 +1,6 @@
 use std::sync::Arc;
 
 use arrow::datatypes::DataType;
-use egui::Ui;
-use itertools::{Either, Itertools as _};
 use dl_chunk::ComponentIdentifier;
 use dl_data_ui::{DataUi as _, sorted_component_list_by_archetype_for_ui};
 use dl_log_types::EntityPath;
@@ -27,6 +25,8 @@ use dl_viewer_context::{
     VisualizerInstruction, VisualizerQueryInfo, VisualizerSystem, VisualizerViewReport,
 };
 use dl_viewport_blueprint::ViewBlueprint;
+use egui::Ui;
+use itertools::{Either, Itertools as _};
 
 /// Extracts the list of visualizers (with their reasons) for a specific entity
 /// from the viewer context, without cloning.

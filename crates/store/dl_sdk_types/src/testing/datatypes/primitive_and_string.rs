@@ -251,9 +251,13 @@ impl ::dl_types_core::Loggable for PrimitiveAndString {
                         opt.map(|(p, s)| {
                             Ok(Self {
                                 p: p.ok_or_else(DeserializationError::missing_data)
-                                    .with_context("dalaran.testing.datatypes.PrimitiveAndString#p")?,
+                                    .with_context(
+                                        "dalaran.testing.datatypes.PrimitiveAndString#p",
+                                    )?,
                                 s: s.ok_or_else(DeserializationError::missing_data)
-                                    .with_context("dalaran.testing.datatypes.PrimitiveAndString#s")?,
+                                    .with_context(
+                                        "dalaran.testing.datatypes.PrimitiveAndString#s",
+                                    )?,
                             })
                         })
                         .transpose()

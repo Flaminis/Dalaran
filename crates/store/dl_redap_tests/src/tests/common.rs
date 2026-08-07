@@ -2,12 +2,10 @@ use std::collections::BTreeMap;
 
 use arrow::array::RecordBatch;
 use arrow::datatypes::{DataType, Field, Schema};
-use futures::StreamExt as _;
-use itertools::Itertools as _;
 use dl_log_types::{EntityPath, TimeType};
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext as cloud_ext;
 use dl_protos::cloud::v1alpha1::ext::DatasetEntry;
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     CreateDatasetEntryRequest, DataSource, QueryTasksOnCompletionRequest,
     RegisterWithDatasetRequest,
@@ -17,6 +15,8 @@ use dl_protos::common::v1alpha1::ext::IfDuplicateBehavior;
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_protos::{EntryName, common::v1alpha1::ext::SegmentId};
 use dl_types_core::{AsComponents, LayerName};
+use futures::StreamExt as _;
+use itertools::Itertools as _;
 use tonic::async_trait;
 use url::Url;
 

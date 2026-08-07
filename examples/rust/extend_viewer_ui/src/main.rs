@@ -1,8 +1,8 @@
 //! This example shows how to wrap the Dalaran Viewer in your own GUI.
 
 use dalaran::external::{
-    arrow, eframe, egui, dl_chunk_store, dl_crash_handler, dl_entity_db, dl_grpc_server, dl_log,
-    dl_log_types, dl_memory, dl_sdk_types, dl_viewer, tokio,
+    arrow, dl_chunk_store, dl_crash_handler, dl_entity_db, dl_grpc_server, dl_log, dl_log_types,
+    dl_memory, dl_sdk_types, dl_viewer, eframe, egui, tokio,
 };
 
 // By using `dl_memory::AccountingAllocator` Dalaran can keep track of exactly how much memory it is using,

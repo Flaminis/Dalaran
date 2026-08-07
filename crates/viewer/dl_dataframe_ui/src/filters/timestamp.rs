@@ -22,12 +22,12 @@ use arrow::array::{ArrayRef, BooleanArray};
 use arrow::datatypes::{DataType, Field, TimeUnit};
 use datafusion::common::{Result as DataFusionResult, exec_err};
 use datafusion::logical_expr::{Expr, TypeSignature, col, not};
-use jiff::{RoundMode, Timestamp, TimestampRound, ToSpan as _};
 use dl_log_types::TimestampFormat;
 use dl_types_core::Loggable as _;
 use dl_types_core::datatypes::TimeInt;
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
 use dl_ui::{DesignTokens, SyntaxHighlighting, UiExt as _};
+use jiff::{RoundMode, Timestamp, TimestampRound, ToSpan as _};
 use strum::VariantArray as _;
 
 use super::{Filter, FilterError, FilterUdf, FilterUiAction, TimestampFormatted, parse_timestamp};

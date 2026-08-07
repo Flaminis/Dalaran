@@ -6,11 +6,11 @@ mod viewer_section;
 
 use std::net::TcpListener;
 
-pub use kittest_harness_ext::HarnessExt;
 use dl_redap_client::{ApiResult, ConnectionClient, ConnectionRegistry};
 use dl_sdk_types::SegmentId;
 use dl_server::ServerHandle;
 use dl_uri::external::url::Host;
+pub use kittest_harness_ext::HarnessExt;
 pub use test_data::register_table_blueprint;
 // pub use viewer_section::GetSection;
 pub use viewer_section::ViewerSection;

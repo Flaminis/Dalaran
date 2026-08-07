@@ -1,7 +1,5 @@
 #![expect(clippy::unwrap_used)] // It's a test!
 
-use image::GenericImageView as _;
-use itertools::Itertools as _;
 use dl_chunk_store::RowId;
 use dl_log_types::TimePoint;
 use dl_sdk_types::Archetype as _;
@@ -13,6 +11,8 @@ use dl_test_context::external::egui_kittest::SnapshotResults;
 use dl_test_viewport::TestContextExt as _;
 use dl_viewer_context::{BlueprintContext as _, ViewClass as _};
 use dl_viewport_blueprint::ViewBlueprint;
+use image::GenericImageView as _;
+use itertools::Itertools as _;
 
 fn convert_pixels_to<T: From<u8> + Copy>(u8s: &[u8]) -> Vec<T> {
     u8s.iter().map(|u| T::from(*u)).collect()

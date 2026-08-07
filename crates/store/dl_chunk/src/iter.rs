@@ -13,11 +13,11 @@ use arrow::buffer::{
     ScalarBuffer as ArrowScalarBuffer,
 };
 use arrow::datatypes::ArrowNativeType;
-use itertools::{Either, Itertools as _, izip};
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_log_types::{TimeInt, TimePoint, TimelineName};
 use dl_span::Span;
 use dl_types_core::{ArrowString, Component, ComponentIdentifier};
+use itertools::{Either, Itertools as _, izip};
 
 use crate::{Chunk, RowId, TimeColumn};
 
@@ -1287,11 +1287,11 @@ mod tests {
     use std::sync::Arc;
 
     use arrow::array::{BooleanArray, Float64Array, LargeStringArray, StringArray};
-    use itertools::{Itertools as _, izip};
     use dl_log_types::example_components::{MyPoint, MyPoints};
     use dl_log_types::{EntityPath, TimeInt, TimePoint};
     use dl_span::Span;
     use dl_types_core::{ArrowString, ComponentIdentifier};
+    use itertools::{Itertools as _, izip};
 
     use super::ChunkComponentSlicer;
     use crate::{Chunk, RowId, Timeline};

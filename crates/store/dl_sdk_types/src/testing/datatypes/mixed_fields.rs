@@ -533,7 +533,9 @@ impl ::dl_types_core::Loggable for MixedFields {
                             let actual = arrow_data.data_type().clone();
                             DeserializationError::datatype_mismatch(expected, actual)
                         })
-                        .with_context("dalaran.testing.datatypes.MixedFields#single_float_optional")?
+                        .with_context(
+                            "dalaran.testing.datatypes.MixedFields#single_float_optional",
+                        )?
                         .into_iter()
                 };
                 let single_string_required = {

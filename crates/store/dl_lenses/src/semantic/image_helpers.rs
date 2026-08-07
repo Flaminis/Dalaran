@@ -7,10 +7,10 @@ use arrow::array::{
 };
 use arrow::buffer::OffsetBuffer;
 use arrow::datatypes::{DataType, Field};
-use itertools::Itertools as _;
 use dl_lenses_core::combinators::Error;
 use dl_sdk_types::Loggable as _;
 use dl_sdk_types::datatypes::ImageFormat;
+use itertools::Itertools as _;
 
 use crate::semantic::helpers::get_field_as;
 

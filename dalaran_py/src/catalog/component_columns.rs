@@ -1,5 +1,5 @@
-use pyo3::{pyclass, pymethods};
 use dl_sorbet::{ComponentColumnDescriptor, ComponentColumnSelector};
+use pyo3::{pyclass, pymethods};
 
 /// The descriptor of a component column.
 ///

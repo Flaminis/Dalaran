@@ -1,4 +1,3 @@
-use glam::Vec3;
 use dl_renderer::renderer;
 use dl_sdk_types::Archetype as _;
 use dl_sdk_types::archetypes::GridMap;
@@ -15,6 +14,7 @@ use dl_viewer_context::{
     VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem, gpu_bridge,
     typed_fallback_for,
 };
+use glam::Vec3;
 
 use super::SpatialViewVisualizerData;
 use super::entity_iterator::process_archetype;

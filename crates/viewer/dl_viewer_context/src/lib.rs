@@ -155,8 +155,8 @@ pub mod external {
     #[cfg(not(target_arch = "wasm32"))]
     pub use tokio;
     pub use {
-        nohash_hasher, dl_chunk_store, dl_entity_db, dl_log_types, dl_query, dl_string_interner,
-        dl_tf, dl_ui,
+        dl_chunk_store, dl_entity_db, dl_log_types, dl_query, dl_string_interner, dl_tf, dl_ui,
+        nohash_hasher,
     };
 }
 

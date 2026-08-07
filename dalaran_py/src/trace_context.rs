@@ -126,9 +126,9 @@ fn trace_context_var(py: Python<'_>) -> PyResult<pyo3::Bound<'_, PyAny>> {
 pub(crate) fn extract_trace_context_from_contextvar(
     py: Python<'_>,
 ) -> dl_perf_telemetry::TraceHeaders {
+    use dl_perf_telemetry::TraceHeaders;
     use pyo3::prelude::*;
     use pyo3::types::PyDict;
-    use dl_perf_telemetry::TraceHeaders;
 
     fn try_extract(py: Python<'_>) -> PyResult<TraceHeaders> {
         let context_var = trace_context_var(py)?;

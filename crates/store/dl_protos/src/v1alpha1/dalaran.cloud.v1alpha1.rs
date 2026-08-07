@@ -3751,7 +3751,8 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::create_table_entry(&inner, request).await
+                                <T as DalaranCloudService>::create_table_entry(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -3793,7 +3794,8 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::read_dataset_entry(&inner, request).await
+                                <T as DalaranCloudService>::read_dataset_entry(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -3920,7 +3922,8 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::update_table_entry(&inner, request).await
+                                <T as DalaranCloudService>::update_table_entry(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -4092,8 +4095,10 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::get_segment_table_schema(&inner, request)
-                                    .await
+                                <T as DalaranCloudService>::get_segment_table_schema(
+                                    &inner, request,
+                                )
+                                .await
                             };
                             Box::pin(fut)
                         }
@@ -4137,7 +4142,8 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::scan_segment_table(&inner, request).await
+                                <T as DalaranCloudService>::scan_segment_table(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -4269,7 +4275,8 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::get_dataset_schema(&inner, request).await
+                                <T as DalaranCloudService>::get_dataset_schema(&inner, request)
+                                    .await
                             };
                             Box::pin(fut)
                         }
@@ -4646,8 +4653,8 @@ pub mod dalaran_cloud_service_server {
                 "/dalaran.cloud.v1alpha1.DalaranCloudService/QueryTasks" => {
                     #[allow(non_camel_case_types)]
                     struct QueryTasksSvc<T: DalaranCloudService>(pub Arc<T>);
-                    impl<T: DalaranCloudService> tonic::server::UnaryService<super::QueryTasksRequest>
-                        for QueryTasksSvc<T>
+                    impl<T: DalaranCloudService>
+                        tonic::server::UnaryService<super::QueryTasksRequest> for QueryTasksSvc<T>
                     {
                         type Response = super::QueryTasksResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
@@ -4701,8 +4708,10 @@ pub mod dalaran_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as DalaranCloudService>::query_tasks_on_completion(&inner, request)
-                                    .await
+                                <T as DalaranCloudService>::query_tasks_on_completion(
+                                    &inner, request,
+                                )
+                                .await
                             };
                             Box::pin(fut)
                         }

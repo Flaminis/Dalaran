@@ -200,7 +200,9 @@ impl ::dl_types_core::Loggable for TextLogColumn {
                         Ok(Self {
                             visible: visible
                                 .ok_or_else(DeserializationError::missing_data)
-                                .with_context("dalaran.blueprint.datatypes.TextLogColumn#visible")?,
+                                .with_context(
+                                    "dalaran.blueprint.datatypes.TextLogColumn#visible",
+                                )?,
                             kind: kind
                                 .ok_or_else(DeserializationError::missing_data)
                                 .with_context("dalaran.blueprint.datatypes.TextLogColumn#kind")?,

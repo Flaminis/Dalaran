@@ -1,12 +1,12 @@
-use egui::{
-    Align, Atom, Button, Color32, Id, Image, Layout, Popup, RichText, Sense, include_image,
-};
-use emath::{Rect, RectAlign, Vec2};
 use dl_format::format_uint;
 use dl_renderer::WgpuResourcePoolStatistics;
 use dl_sorbet::TimestampLocation;
 use dl_ui::{ContextExt as _, UICommand, UiExt as _, icons};
 use dl_viewer_context::{ActiveStoreContext, StoreHub, SystemCommand, SystemCommandSender as _};
+use egui::{
+    Align, Atom, Button, Color32, Id, Image, Layout, Popup, RichText, Sense, include_image,
+};
+use emath::{Rect, RectAlign, Vec2};
 
 use crate::App;
 use crate::app_blueprint::AppBlueprint;
@@ -251,7 +251,9 @@ fn software_rasterizer_warning_ui(ui: &mut egui::Ui, info: &wgpu::AdapterInfo) {
     )
     .on_hover_ui(|ui| {
         ui.label("Software rasterizer detected - expect poor performance.");
-        ui.label("Dalaran requires hardware accelerated graphics (i.e. a GPU) for good performance.");
+        ui.label(
+            "Dalaran requires hardware accelerated graphics (i.e. a GPU) for good performance.",
+        );
         ui.label("Click for troubleshooting.");
         ui.add_space(8.0);
         ui.label(format!(

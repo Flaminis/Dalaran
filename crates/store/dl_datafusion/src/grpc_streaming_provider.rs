@@ -19,8 +19,8 @@ use datafusion::logical_expr::dml::InsertOp;
 use datafusion::physical_plan::ExecutionPlan;
 use datafusion::physical_plan::streaming::{PartitionStream, StreamingTableExec};
 use datafusion::prelude::Expr;
-use futures_util::StreamExt as _;
 use dl_redap_client::{ApiResponseStream, ApiResult};
+use futures_util::StreamExt as _;
 use tokio_stream::Stream;
 
 /// The projection, filters, and row limit offered to a scan.
@@ -423,10 +423,10 @@ mod table_query_pipeline_tests {
     use arrow::array::{RecordBatchOptions, StringArray, UInt32Array};
     use arrow::datatypes::{DataType, Field, Schema, SchemaRef};
     use async_trait::async_trait;
-    use futures_util::StreamExt as _;
-    use parking_lot::Mutex;
     use dl_redap_client::{ApiError, ApiResponseStream, ApiResult};
     use dl_uri::Origin;
+    use futures_util::StreamExt as _;
+    use parking_lot::Mutex;
 
     use crate::analytics::{TableQueryInfo, build_table_query_span};
     use crate::{ConnectionAnalytics, PendingTableQueryAnalytics, TableKind, TableQueryCaller};

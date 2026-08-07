@@ -2,8 +2,8 @@ use arrow::datatypes::Schema;
 use arrow::pyarrow::FromPyArrow as _;
 use arrow::record_batch::RecordBatch;
 use comfy_table::Table;
-use pyo3::{Bound, PyAny, PyResult, pyclass, pymethods};
 use dl_arrow_util::{RecordBatchFormatOpts, format_record_batch_opts};
+use pyo3::{Bound, PyAny, PyResult, pyclass, pymethods};
 
 #[pyclass(
     eq,

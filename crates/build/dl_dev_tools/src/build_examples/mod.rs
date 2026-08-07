@@ -10,11 +10,11 @@
 //! An example may also specify args to be run with via the frontmatter
 //! `build_args` string array.
 
+mod dlr;
 mod example;
 mod install;
 mod manifest;
 mod notebook;
-mod dlr;
 mod snippets;
 mod wait_for_output;
 

@@ -79,8 +79,8 @@ use std::num::NonZeroU64;
 use std::ops::Range;
 
 use bitflags::bitflags;
-use enumset::{EnumSet, enum_set};
 use dl_tracing::profile_function;
+use enumset::{EnumSet, enum_set};
 use smallvec::smallvec;
 
 use super::{DrawData, DrawError, RenderContext, Renderer};

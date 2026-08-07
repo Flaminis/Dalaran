@@ -221,9 +221,15 @@ mod tests {
     #[test]
     fn test_host_pattern_domain_no_match() {
         // The domain itself should not match (need at least one subdomain)
-        assert!(!host_matches_pattern(".cloud.dalaran.dev", "cloud.dalaran.dev"));
+        assert!(!host_matches_pattern(
+            ".cloud.dalaran.dev",
+            "cloud.dalaran.dev"
+        ));
         // Partial label overlap must not match
-        assert!(!host_matches_pattern(".cloud.dalaran.dev", "mycloud.dalaran.dev"));
+        assert!(!host_matches_pattern(
+            ".cloud.dalaran.dev",
+            "mycloud.dalaran.dev"
+        ));
         // Completely different host
         assert!(!host_matches_pattern(".cloud.dalaran.dev", "evil.com"));
         assert!(!host_matches_pattern(".cloud.dalaran.dev", "localhost"));

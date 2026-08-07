@@ -3,11 +3,11 @@ use std::sync::Arc;
 use std::sync::atomic::AtomicU64;
 
 use ahash::{HashMap, HashSet};
+use dl_log::debug_assert;
 use futures::{AsyncRead, StreamExt as _};
 use itertools::Itertools as _;
 use nohash_hasher::IntMap;
 use parking_lot::RwLock;
-use dl_log::debug_assert;
 
 use dl_chunk::{Chunk, ChunkId, ComponentIdentifier, RowId, TimelineName};
 use dl_log_types::{EntityPath, StoreId, TimeInt};

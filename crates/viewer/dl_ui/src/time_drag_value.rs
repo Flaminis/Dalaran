@@ -1,7 +1,7 @@
 use core::range::RangeInclusive;
 
-use egui::{NumExt as _, Response};
 use dl_log_types::{TimeInt, TimeType, TimestampFormat};
+use egui::{NumExt as _, Response};
 
 /// Drag value widget for editing time values for both sequence and temporal timelines.
 ///

@@ -1,9 +1,9 @@
 use arrow::datatypes::DataType as ArrowDatatype;
-use nohash_hasher::IntMap;
 use dl_chunk::{Chunk, RangeQuery, RowId, TimePoint, Timeline, TimelineName};
 use dl_log_types::AbsoluteTimeRange;
 use dl_log_types::example_components::{MyColor, MyLabel, MyPoint, MyPoints};
 use dl_types_core::{ComponentDescriptor, Loggable as _};
+use nohash_hasher::IntMap;
 
 // ---
 

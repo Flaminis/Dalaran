@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
-use nohash_hasher::IntMap;
 use dl_chunk::{
     Chunk, ChunkId, ComponentIdentifier, EntityPath, LatestAtQuery, RangeQuery, RowId,
     UnitChunkShared,
 };
 use dl_chunk_store::{ChunkTrackingMode, TimeInt};
 use dl_log_types::AbsoluteTimeRange;
+use nohash_hasher::IntMap;
 
 use crate::{LatestAtResults, QueryCache};
 

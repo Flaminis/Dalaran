@@ -8,13 +8,13 @@ use datafusion::datasource::memory::MemorySourceConfig;
 use datafusion::error::DataFusionError;
 use datafusion::execution::SessionStateBuilder;
 use datafusion::logical_expr::dml::InsertOp;
-use futures::StreamExt as _;
 use dl_log_types::EntryId;
 use dl_protos::EntryName;
 use dl_protos::cloud::v1alpha1::EntryKind;
 use dl_protos::cloud::v1alpha1::ext::{
     EntryDetails, ProviderDetails, TableDetails, TableEntry, TableInsertMode,
 };
+use futures::StreamExt as _;
 
 #[derive(Clone)]
 pub enum TableType {

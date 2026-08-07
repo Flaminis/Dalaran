@@ -2,20 +2,20 @@
 
 //! A Dalaran server implementation backed by an in-memory store.
 
+mod dalaran_cloud;
 #[cfg(not(target_arch = "wasm32"))]
 mod entrypoint;
 #[cfg(not(target_arch = "wasm32"))]
 mod layers;
 mod named_path;
-mod dalaran_cloud;
 #[cfg(not(target_arch = "wasm32"))]
 mod server;
 mod store;
 
-pub use self::named_path::{NamedPath, NamedPathCollection};
 pub use self::dalaran_cloud::{
     DalaranCloudHandler, DalaranCloudHandlerBuilder, DalaranCloudHandlerSettings,
 };
+pub use self::named_path::{NamedPath, NamedPathCollection};
 #[cfg(not(target_arch = "wasm32"))]
 pub use self::{
     entrypoint::Args,

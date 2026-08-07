@@ -1,7 +1,6 @@
 use std::sync::Arc;
 
 use ahash::HashMap;
-use parking_lot::{ArcRwLockReadGuard, RawRwLock, RwLock};
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::ChunkStore;
 use dl_entity_db::EntityDb;
@@ -9,6 +8,7 @@ use dl_log::{debug_assert, debug_assert_eq};
 use dl_log_encoding::RrdManifest;
 use dl_log_types::{TimeInt, TimelineName};
 use dl_sdk_types::archetypes;
+use parking_lot::{ArcRwLockReadGuard, RawRwLock, RwLock};
 
 use crate::frame_id_registry::FrameIdRegistry;
 use crate::transform_aspect::TransformAspect;

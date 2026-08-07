@@ -2,15 +2,15 @@
 
 use std::fmt::Write as _;
 
-use egui::ScrollArea;
-#[cfg(debug_assertions)]
-use egui::containers::menu;
-use egui::containers::menu::{MenuButton, MenuConfig};
 use dl_ui::menu::menu_style;
 use dl_ui::{
     RecordingCommand, RecordingCommandKind, UICommand, UICommandSender as _, UiExt as _, icons,
 };
 use dl_viewer_context::ActiveStoreContext;
+use egui::ScrollArea;
+#[cfg(debug_assertions)]
+use egui::containers::menu;
+use egui::containers::menu::{MenuButton, MenuConfig};
 
 use crate::App;
 

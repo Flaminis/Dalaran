@@ -1,6 +1,5 @@
 use std::ops::{ControlFlow, Range};
 
-use itertools::Itertools as _;
 use dl_chunk_store::ChunkStore;
 use dl_data_ui::{ArchetypeComponentMap, sorted_component_list_by_archetype_for_ui};
 use dl_entity_db::{EntityTree, InstancePath};
@@ -8,6 +7,7 @@ use dl_log_types::{ComponentPath, EntityPath};
 use dl_sdk_types::ComponentDescriptor;
 use dl_ui::filter_widget::{FilterMatcher, PathRanges};
 use dl_viewer_context::{AppContext, CollapseScope, Item, ViewerContext, VisitorControlFlow};
+use itertools::Itertools as _;
 use smallvec::SmallVec;
 
 use crate::time_panel::TimePanelSource;

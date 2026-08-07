@@ -7,8 +7,6 @@ use std::sync::Arc;
 
 use arrow::array::{ArrayRef, RecordBatch, RecordBatchOptions, create_array};
 use arrow::datatypes::{Field, Fields, Schema};
-use itertools::{Either, Itertools as _};
-use parking_lot::Mutex;
 use dl_arrow_util::RecordBatchExt as _;
 use dl_log_encoding::RawRrdManifest;
 use dl_log_types::{EntryId, StoreId, StoreKind, TimeType};
@@ -21,6 +19,8 @@ use dl_protos::common::v1alpha1::ext::{
     DatasetHandle, DatasetKind, IfDuplicateBehavior, SegmentId,
 };
 use dl_types_core::LayerName;
+use itertools::{Either, Itertools as _};
+use parking_lot::Mutex;
 
 #[cfg(not(target_arch = "wasm32"))]
 use crate::store::store_pool::StorePool;

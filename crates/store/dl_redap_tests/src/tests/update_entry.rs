@@ -1,10 +1,10 @@
 use dl_log_types::EntryId;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::{
     CreateDatasetEntryRequest, DatasetDetails, DatasetEntry, EntryDetailsUpdate, TableDetails,
     TableEntry, UpdateDatasetEntryRequest, UpdateEntryRequest, UpdateEntryResponse,
     UpdateTableEntryRequest,
 };
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{DeleteEntryRequest, ReadTableEntryRequest};
 use dl_protos::common::v1alpha1::ext::SegmentId;
 
@@ -220,7 +220,9 @@ pub async fn update_table_entry_blueprint_details(service: impl DalaranCloudServ
     );
 }
 
-pub async fn update_table_entry_rejects_invalid_blueprint_details(service: impl DalaranCloudService) {
+pub async fn update_table_entry_rejects_invalid_blueprint_details(
+    service: impl DalaranCloudService,
+) {
     let table_dir = tempfile::tempdir().expect("create temp dir");
     let table_entry =
         create_table_entry_with_name(&service, "table_with_invalid_blueprint", &table_dir).await;
@@ -440,7 +442,9 @@ pub async fn update_dataset_entry_keeps_asset_dataset(service: impl DalaranCloud
 /// A dataset whose asset dataset was deleted is left with a dangling reference. Updating the
 /// entry replaces the dangling reference with a new asset dataset, whether the client omits the
 /// reference or sends the stale one back unchanged.
-pub async fn update_dataset_entry_replaces_deleted_asset_dataset(service: impl DalaranCloudService) {
+pub async fn update_dataset_entry_replaces_deleted_asset_dataset(
+    service: impl DalaranCloudService,
+) {
     let dataset_entry = create_dataset_entry(&service, "dataset_replaces_deleted_asset")
         .await
         .unwrap();

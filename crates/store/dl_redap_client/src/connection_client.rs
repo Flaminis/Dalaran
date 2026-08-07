@@ -5,6 +5,10 @@ use itertools::Itertools as _;
 use dl_log_encoding::{Decodable as _, RawRrdManifest, ToApplication as _};
 use dl_log_types::EntryId;
 use dl_protos::EntryName;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_client::DalaranCloudServiceClient;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::{
+    DalaranCloudService, DalaranCloudServiceServer,
+};
 use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_protos::cloud::v1alpha1::ext::{
     self as cloud_ext, ETag, RrdManifestKey as RrdManifestKeyExt, SOURCE_CHANGED_MESSAGE,
@@ -19,10 +23,6 @@ use dl_protos::cloud::v1alpha1::ext::{
     TableDetails, TableEntry, TableInsertMode, UnregisterFromDatasetRequest,
     UpdateDatasetEntryRequest, UpdateDatasetEntryResponse, UpdateEntryRequest, UpdateEntryResponse,
     UpdateTableEntryRequest, UpdateTableEntryResponse, VersionResponse,
-};
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_client::DalaranCloudServiceClient;
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::{
-    DalaranCloudService, DalaranCloudServiceServer,
 };
 use dl_protos::cloud::v1alpha1::{
     CancelTasksRequest, CreateDatasetEntryRequest, DeleteEntryRequest, EntryFilter, EntryKind,
@@ -368,11 +368,12 @@ impl Connection {
     where
         T: DalaranCloudService,
     {
-        let service = <DalaranCloudServiceServer<T> as tower::ServiceExt<RedapHttpRequest>>::map_err(
-            DalaranCloudServiceServer::from_arc(handler)
-                .max_decoding_message_size(crate::MAX_DECODING_MESSAGE_SIZE),
-            |err: std::convert::Infallible| match err {},
-        );
+        let service =
+            <DalaranCloudServiceServer<T> as tower::ServiceExt<RedapHttpRequest>>::map_err(
+                DalaranCloudServiceServer::from_arc(handler)
+                    .max_decoding_message_size(crate::MAX_DECODING_MESSAGE_SIZE),
+                |err: std::convert::Infallible| match err {},
+            );
         let client = DalaranCloudServiceClient::new(tower::util::BoxCloneSyncService::new(service))
             .max_decoding_message_size(crate::MAX_DECODING_MESSAGE_SIZE);
 
@@ -1301,14 +1302,16 @@ where
             ApiError::deserialization_quiver_from(trace_id, err, "/RegisterWithDataset response")
         })?;
 
-        let segment_types = DataSourceKind::many_from_arrow(dalaran_segment_type.as_arrow().as_ref())
-            .map_err(|err| {
-                ApiError::deserialization_with_source(
-                    trace_id,
-                    err,
-                    "failed parsing /RegisterWithDataset response",
-                )
-            })?;
+        let segment_types = DataSourceKind::many_from_arrow(
+            dalaran_segment_type.as_arrow().as_ref(),
+        )
+        .map_err(|err| {
+            ApiError::deserialization_with_source(
+                trace_id,
+                err,
+                "failed parsing /RegisterWithDataset response",
+            )
+        })?;
 
         let descriptors = itertools::izip!(
             dalaran_segment_layer.into_iter_owned(),

@@ -98,9 +98,10 @@ fn main() -> anyhow::Result<()> {
     // data at a specific timepoint without having to modify the global stateful clock.
     rec.set_timepoint(timepoint_from_args(&args)?);
 
-    let entity_path_prefix = args
-        .entity_path_prefix
-        .map_or_else(|| dalaran::EntityPath::new(vec![]), dalaran::EntityPath::from);
+    let entity_path_prefix = args.entity_path_prefix.map_or_else(
+        || dalaran::EntityPath::new(vec![]),
+        dalaran::EntityPath::from,
+    );
 
     rec.log_with_static(
         entity_path_prefix.join(&dalaran::EntityPath::from_file_path(&args.filepath)),

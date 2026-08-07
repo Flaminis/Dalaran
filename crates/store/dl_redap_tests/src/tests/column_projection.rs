@@ -1,13 +1,13 @@
 use arrow::array::RecordBatch;
-use futures::TryStreamExt as _;
-use itertools::Itertools as _;
-use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
+use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_protos::cloud::v1alpha1::{ScanDatasetManifestRequest, ScanSegmentTableRequest};
 use dl_protos::headers::DalaranHeadersInjectorExt as _;
+use futures::TryStreamExt as _;
+use itertools::Itertools as _;
 
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name, prop,
+    DalaranCloudServiceExt as _, DataSourcesDefinition, LayerDefinition, entry_name, prop,
 };
 
 pub async fn test_segment_table_column_projections(service: impl DalaranCloudService) {

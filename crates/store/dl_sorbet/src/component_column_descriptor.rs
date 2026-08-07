@@ -246,7 +246,10 @@ impl ComponentColumnDescriptor {
             metadata.insert("dalaran:is_tombstone".to_owned(), "true".to_owned());
         }
         if *is_semantically_empty {
-            metadata.insert("dalaran:is_semantically_empty".to_owned(), "true".to_owned());
+            metadata.insert(
+                "dalaran:is_semantically_empty".to_owned(),
+                "true".to_owned(),
+            );
         }
 
         metadata

@@ -1,9 +1,9 @@
 use std::ops::RangeInclusive;
 
-use egui::NumExt as _;
 use dl_sdk_types::datatypes;
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
 use dl_viewer_context::{MaybeMutRef, UiLayout};
+use egui::NumExt as _;
 
 pub fn edit_or_view_vec2d(
     _ctx: &dl_viewer_context::AppContext<'_>,

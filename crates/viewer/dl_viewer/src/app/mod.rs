@@ -1,6 +1,5 @@
 use std::sync::Arc;
 
-use egui::{FocusDirection, Key};
 use dl_async::AsyncRuntimeHandle;
 use dl_auth::credentials::CredentialsProvider as _;
 use dl_build_info::CrateVersion;
@@ -23,6 +22,7 @@ use dl_viewer_context::{
     SystemCommand, SystemCommandSender as _, TimeControlCommand, ViewClass, ViewClassRegistry,
     ViewClassRegistryError, command_channel,
 };
+use egui::{FocusDirection, Key};
 
 use crate::app_blueprint::{AppBlueprint, PanelStateOverrides};
 use crate::background_tasks::BackgroundTasks;

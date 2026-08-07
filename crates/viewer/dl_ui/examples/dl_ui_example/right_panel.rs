@@ -1,9 +1,9 @@
 use crate::{drag_and_drop, hierarchical_drag_and_drop};
+use dl_ui::dl_form::{ConstructFormStrip as _, FormFields, SelectableStrip};
+use dl_ui::list_item::{ListItemContentButtonsExt as _, PropertyContent};
+use dl_ui::{UiExt as _, icons, list_item};
 use eframe::emath::Align;
 use egui::{Atom, AtomExt as _, AtomKind, Button, DragValue, RichText, TextEdit, Ui, Vec2};
-use dl_ui::list_item::{ListItemContentButtonsExt as _, PropertyContent};
-use dl_ui::dl_form::{ConstructFormStrip as _, FormFields, SelectableStrip};
-use dl_ui::{UiExt as _, icons, list_item};
 
 pub struct RightPanel {
     show_hierarchical_demo: bool,

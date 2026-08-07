@@ -166,7 +166,10 @@ impl RedapProvider {
     /// Allow users from the given organization to authenticate via
     /// their Dalaran Hub credentials.
     #[cfg(feature = "oauth")]
-    pub async fn with_dalaran_cloud_provider(self, org_id: impl Into<String>) -> Result<Self, Error> {
+    pub async fn with_dalaran_cloud_provider(
+        self,
+        org_id: impl Into<String>,
+    ) -> Result<Self, Error> {
         use crate::oauth::api;
 
         // TODO(jan): fetch these less often? cache somehow?

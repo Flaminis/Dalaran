@@ -1,13 +1,13 @@
 use ahash::HashMap;
 use arrow::array::RecordBatch;
 
-use itertools::chain;
 use dl_chunk::Chunk;
 use dl_entity_db::{
     ChunkFetcher, ChunkPrefetchOptions, FetchStage, RemainingByteBudget, StoreBundle,
 };
 use dl_log_types::StoreId;
 use dl_redap_client::{ApiResult, ConnectionClient};
+use itertools::chain;
 
 pub enum RecordingOpenKind {
     Active,

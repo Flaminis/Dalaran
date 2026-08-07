@@ -1,12 +1,12 @@
 use std::iter;
 
-use egui::Color32;
-use itertools::{Either, izip};
 use dl_entity_db::InstancePathHash;
 use dl_log_types::{EntityPath, Instance};
 use dl_sdk_types::blueprint::components::VisualizerInstructionId;
 use dl_view::clamped_or;
 use dl_viewer_context::ResolvedAnnotationInfos;
+use egui::Color32;
+use itertools::{Either, izip};
 
 #[derive(Clone)]
 pub enum UiLabelTarget {

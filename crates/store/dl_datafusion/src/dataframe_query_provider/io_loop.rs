@@ -9,10 +9,10 @@ use std::sync::atomic::Ordering;
 use std::time::Duration;
 
 use arrow::array::{RecordBatch, StringArray};
-use futures::StreamExt as _;
 use dl_dataframe::TimelineName;
 use dl_log_types::TimeInt;
 use dl_protos::cloud::v1alpha1::ext::QueryDatasetDataframe;
+use futures::StreamExt as _;
 
 use dl_redap_client::{ApiError, ApiResult};
 use dl_types_core::SegmentId;

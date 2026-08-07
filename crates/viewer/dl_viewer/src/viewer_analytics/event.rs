@@ -76,7 +76,8 @@ pub fn open_recording(
         let application_id = store_id.application_id();
         let recording_id = store_id.recording_id();
 
-        let app_id_starts_with_dalaran_example = application_id.as_str().starts_with("dalaran_example");
+        let app_id_starts_with_dalaran_example =
+            application_id.as_str().starts_with("dalaran_example");
 
         let (application_id_preprocessed, recording_id_preprocessed) =
             if app_id_starts_with_dalaran_example {

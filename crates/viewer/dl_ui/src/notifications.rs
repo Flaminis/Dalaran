@@ -9,9 +9,9 @@
 
 use std::time::Duration;
 
+pub use dl_log::Level;
 use egui::{NumExt as _, Widget as _};
 use jiff::Timestamp;
-pub use dl_log::Level;
 
 use crate::{UiExt as _, icons};
 

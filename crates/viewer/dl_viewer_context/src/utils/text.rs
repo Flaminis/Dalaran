@@ -1,6 +1,6 @@
-use egui::RichText;
 use dl_sdk_types::components::TextLogLevel;
 use dl_ui::UiExt as _;
+use egui::RichText;
 
 pub fn level_to_rich_text(ui: &egui::Ui, lvl: &str) -> RichText {
     let design_tokens = ui.tokens();

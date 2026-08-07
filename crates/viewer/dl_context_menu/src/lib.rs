@@ -2,7 +2,6 @@
 
 use std::sync::OnceLock;
 
-use egui::Popup;
 use dl_entity_db::InstancePath;
 use dl_log_types::TableId;
 use dl_ui::UiExt as _;
@@ -11,6 +10,7 @@ use dl_viewer_context::{
     SystemCommandSender as _, ViewId, ViewerContext,
 };
 use dl_viewport_blueprint::{ContainerBlueprint, ViewportBlueprint};
+use egui::Popup;
 
 mod actions;
 pub mod collapse_expand;

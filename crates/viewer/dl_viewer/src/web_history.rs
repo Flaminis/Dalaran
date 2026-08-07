@@ -13,11 +13,11 @@
 
 use std::sync::{Arc, OnceLock};
 
-use js_sys::wasm_bindgen;
 use dl_log::ResultExt as _;
 use dl_log_channel::RecordingOpenBehavior;
 use dl_mutex::Mutex;
 use dl_viewer_context::{CommandSender, open_url};
+use js_sys::wasm_bindgen;
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast as _, JsError, JsValue};

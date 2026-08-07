@@ -1,10 +1,10 @@
 use anyhow::Context as _;
 use arrow::array::RecordBatch;
-use itertools::Itertools as _;
 use dl_arrow_util::RecordBatchExt as _;
 use dl_byte_size::SizeBytes as _;
 use dl_log_types::{LogMsg, SetStoreInfo};
 use dl_sdk::EntityPath;
+use itertools::Itertools as _;
 
 use crate::commands::read_dlr_streams_from_file_or_stdin;
 

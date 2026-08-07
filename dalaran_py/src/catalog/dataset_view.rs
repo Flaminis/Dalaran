@@ -6,15 +6,15 @@ use crate::trace_context::extract_trace_context_from_contextvar;
 use arrow::datatypes::Schema as ArrowSchema;
 use arrow::pyarrow::PyArrowType;
 use datafusion::catalog::TableProvider;
-use itertools::Itertools as _;
-use pyo3::exceptions::PyValueError;
-use pyo3::prelude::PyAnyMethods as _;
-use pyo3::{Bound, Py, PyAny, PyRef, PyResult, Python, pyclass, pymethods};
 use dl_chunk_store::{QueryExpression, SparseFillStrategy, TimeInt, ViewContentsSelector};
 use dl_datafusion::DataframeQueryTableProvider;
 use dl_log_types::{EntityPathFilter, ResolvedEntityPathFilter};
 use dl_sorbet::{ColumnDescriptor, SorbetColumnDescriptors};
 use dl_types_core::SegmentId;
+use itertools::Itertools as _;
+use pyo3::exceptions::PyValueError;
+use pyo3::prelude::PyAnyMethods as _;
+use pyo3::{Bound, Py, PyAny, PyRef, PyResult, Python, pyclass, pymethods};
 
 use crate::catalog::{
     IndexValuesLike, PyDatasetEntryInternal, PySchemaInternal, PyTableProviderAdapterInternal,
@@ -25,7 +25,10 @@ use crate::utils::wait_for_future;
 
 /// A view over a dataset with optional segment and content filters applied lazily.
 //TODO(RR-3157): add the ability to filter on components, not just entity paths
-#[pyclass(name = "DatasetViewInternal", module = "dalaran_bindings.dalaran_bindings")]
+#[pyclass(
+    name = "DatasetViewInternal",
+    module = "dalaran_bindings.dalaran_bindings"
+)]
 pub struct PyDatasetViewInternal {
     dataset: Py<PyDatasetEntryInternal>,
 

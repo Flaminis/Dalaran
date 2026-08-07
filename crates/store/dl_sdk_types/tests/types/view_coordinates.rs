@@ -66,8 +66,8 @@ fn legacy_arrow_layout_is_compatible() {
 #[cfg(feature = "glam")]
 #[test]
 fn view_coordinates() {
-    use glam::{Mat3, vec3};
     use dl_sdk_types::view_coordinates::{Handedness, SignedAxis3};
+    use glam::{Mat3, vec3};
 
     let rub_component =
         components::ViewCoordinates::new(ViewDir::Right, ViewDir::Up, ViewDir::Back);

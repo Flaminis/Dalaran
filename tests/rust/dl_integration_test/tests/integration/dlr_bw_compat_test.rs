@@ -3,16 +3,16 @@
 //! This catches backward-compatibility regressions for both recording data and blueprints.
 //! The previous release version is derived from the workspace `CARGO_PKG_VERSION`.
 
-use egui::accesskit::Role;
-use egui_kittest::SnapshotResults;
-use egui_kittest::kittest::Queryable as _;
-use futures::StreamExt as _;
 use dl_integration_test::HarnessExt as _;
 use dl_viewer::external::dl_log_types::TimelineName;
 use dl_viewer::external::dl_ui::notifications::NotificationLevel;
 use dl_viewer::viewer_test_utils::{self, AppTestingExt as _, HarnessOptions, step_until};
 use dl_viewer::{SystemCommand, SystemCommandSender as _};
 use dl_viewer_context::TimeControlCommand;
+use egui::accesskit::Role;
+use egui_kittest::SnapshotResults;
+use egui_kittest::kittest::Queryable as _;
+use futures::StreamExt as _;
 use std::io::Write as _;
 use std::path::Path;
 use std::time::Duration;

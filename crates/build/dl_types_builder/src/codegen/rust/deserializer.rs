@@ -1,6 +1,6 @@
+use dl_log::debug_assert;
 use proc_macro2::{Literal, TokenStream};
 use quote::{format_ident, quote};
-use dl_log::debug_assert;
 
 use crate::codegen::rust::arrow::{
     ArrowDataTypeTokenizer, is_backed_by_scalar_buffer, quote_fqname_as_type_path,

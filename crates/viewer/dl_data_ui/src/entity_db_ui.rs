@@ -1,8 +1,5 @@
 use std::fmt::Write as _;
 
-use egui::NumExt as _;
-use jiff::SignedDuration;
-use jiff::fmt::friendly::{FractionalUnit, SpanPrinter};
 use dl_chunk_store::ChunkStoreConfig;
 use dl_entity_db::{EntityDb, entity_db::RedapConnectionState};
 use dl_format::{format_bytes, format_uint};
@@ -10,6 +7,9 @@ use dl_log_channel::LogSource;
 use dl_log_types::StoreKind;
 use dl_ui::UiExt as _;
 use dl_viewer_context::{AppContext, UiLayout};
+use egui::NumExt as _;
+use jiff::SignedDuration;
+use jiff::fmt::friendly::{FractionalUnit, SpanPrinter};
 
 use crate::item_ui::{app_id_button_ui, data_source_button_ui};
 

@@ -5,9 +5,9 @@
 // Low-hanging fruit would be tree-based layouts. But we could also think about more complex
 // layouts, such as `dot` from `graphviz`.
 
+use dl_log::{debug_assert, debug_panic, error_once};
 use egui::{Pos2, Rect, Vec2};
 use fjadra::{self as fj, Simulation};
-use dl_log::{debug_assert, debug_panic, error_once};
 
 use super::params::ForceLayoutParams;
 use super::request::NodeTemplate;

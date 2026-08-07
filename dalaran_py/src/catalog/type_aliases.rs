@@ -5,12 +5,12 @@ use arrow::array::{ArrayData, ArrayRef, Int64Array, make_array};
 use arrow::compute::cast;
 use arrow::datatypes::DataType;
 use arrow::pyarrow::PyArrowType;
+use dl_arrow_util::ArrowArrayDowncastRef as _;
+use dl_sorbet::ComponentColumnSelector;
 use numpy::PyArrayMethods as _;
 use pyo3::exceptions::{PyTypeError, PyValueError};
 use pyo3::prelude::PyAnyMethods as _;
 use pyo3::{Borrowed, Bound, FromPyObject, PyAny, PyErr, PyResult, pyclass, pymethods};
-use dl_arrow_util::ArrowArrayDowncastRef as _;
-use dl_sorbet::ComponentColumnSelector;
 
 use crate::catalog::{PyComponentColumnDescriptor, PyComponentColumnSelector};
 

@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
-use itertools::{Itertools as _, izip};
 use dl_chunk::{Chunk, RowId};
 use dl_chunk_store::{ChunkStore, ChunkStoreHandle, RangeQuery};
 use dl_log_types::example_components::{MyColor, MyLabel, MyPoint, MyPoints};
 use dl_log_types::{AbsoluteTimeRange, TimeType, Timeline, build_frame_nr};
 use dl_query::{RangeResults, clamped_zip_1x2, range_zip_1x2};
 use dl_types_core::Archetype as _;
+use itertools::{Itertools as _, izip};
 
 // ---
 

@@ -4,10 +4,10 @@ use arrow::datatypes::{DataType, Field, Schema};
 use tonic::Code;
 
 use dl_protos::cloud::v1alpha1::GetTableSchemaRequest;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::ext::{
     CreateTableEntryRequest, EntryDetails, LanceTable, ProviderDetails,
 };
-use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 
 use super::common::entry_name;
 use crate::SchemaTestExt as _;

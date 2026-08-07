@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
 
 use arrow::array::ArrayRef;
-use itertools::Itertools as _;
 use dl_chunk::{ArchetypeName, Chunk, ComponentIdentifier, ComponentType, RowId};
 use dl_chunk_store::LatestAtQuery;
 use dl_data_ui::{DataUi as _, archetype_label_list_item_ui};
@@ -15,6 +14,7 @@ use dl_viewer_context::{
     UiLayout, ViewContext, VisualizerCollection, blueprint_timeline,
 };
 use dl_viewport_blueprint::ViewBlueprint;
+use itertools::Itertools as _;
 
 /// Entry that we can show in the defaults ui.
 #[derive(Clone, Debug)]

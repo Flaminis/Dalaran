@@ -4,7 +4,6 @@
 use std::sync::Arc;
 
 use criterion::{Criterion, criterion_group, criterion_main};
-use itertools::Itertools as _;
 use dl_chunk::{Chunk, RowId, TimelineName};
 use dl_chunk_store::{
     ChunkStore, ChunkStoreHandle, ChunkStoreSubscriber as _, ChunkTrackingMode, LatestAtQuery,
@@ -14,6 +13,7 @@ use dl_query::{LatestAtResults, QueryCache, clamped_zip_1x1};
 use dl_sdk_types::Archetype as _;
 use dl_sdk_types::archetypes::Points2D;
 use dl_sdk_types::components::{Color, Position2D, Text};
+use itertools::Itertools as _;
 
 // ---
 

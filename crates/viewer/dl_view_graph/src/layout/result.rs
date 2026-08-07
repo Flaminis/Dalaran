@@ -1,7 +1,7 @@
 //! Defines the output of a layout algorithm, i.e. everything that we need to render the graph.
 
-use egui::Rect;
 use dl_chunk::EntityPath;
+use egui::Rect;
 
 use super::EdgeGeometry;
 use crate::graph::{EdgeId, NodeId};

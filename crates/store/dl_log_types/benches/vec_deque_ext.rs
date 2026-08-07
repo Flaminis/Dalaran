@@ -6,8 +6,8 @@
 use std::collections::VecDeque;
 
 use criterion::{Criterion, criterion_group, criterion_main};
-use itertools::Itertools as _;
 use dl_log_types::{VecDequeInsertionExt as _, VecDequeRemovalExt as _};
+use itertools::Itertools as _;
 
 // ---
 

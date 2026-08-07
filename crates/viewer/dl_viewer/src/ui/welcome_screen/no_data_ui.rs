@@ -1,5 +1,5 @@
-use egui::Ui;
 use dl_ui::{DesignTokens, UiExt as _};
+use egui::Ui;
 
 /// Show a minimal welcome section.
 pub fn no_data_ui(ui: &mut egui::Ui) {

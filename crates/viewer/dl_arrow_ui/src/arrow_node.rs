@@ -1,8 +1,8 @@
-use egui::{Id, RichText, Stroke, StrokeKind, Tooltip, Ui, WidgetText};
 use dl_format::format_uint;
 use dl_ui::list_item::{LabelContent, PropertyContent, list_item_scope};
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
 use dl_ui::{UiExt as _, UiLayout};
+use egui::{Id, RichText, Stroke, StrokeKind, Tooltip, Ui, WidgetText};
 
 use crate::datatype_ui::DataTypeUi;
 use crate::show_index::ShowIndex;

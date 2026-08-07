@@ -1,7 +1,7 @@
 //! Flamegraph widget implementation.
 
-use egui::{lerp, remap_clamp};
 use dl_byte_size::{MemUsageTree, NamedMemUsageTree};
+use egui::{lerp, remap_clamp};
 
 /// Animation duration in seconds.
 const ANIMATION_DURATION: f32 = 0.5;

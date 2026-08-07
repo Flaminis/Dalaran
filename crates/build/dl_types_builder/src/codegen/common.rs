@@ -168,7 +168,9 @@ impl<'a> ImageStack<'a> {
 
     pub fn finish(self) -> Vec<String> {
         match self.url {
-            ImageUrl::Dalaran(dalaran) => dalaran.image_stack(self.snippet_id, self.width, self.center),
+            ImageUrl::Dalaran(dalaran) => {
+                dalaran.image_stack(self.snippet_id, self.width, self.center)
+            }
             ImageUrl::Other(url) => {
                 vec![format!(r#"<img src="{url}">"#)]
             }

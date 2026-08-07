@@ -6,8 +6,6 @@
 use std::path::PathBuf;
 use std::time::Duration;
 
-use egui_kittest::SnapshotResults;
-use egui_kittest::kittest::Queryable as _;
 use dl_integration_test::HarnessExt as _;
 use dl_log_types::{EntityPath, EntryName, TimelineName};
 use dl_sdk::RecordingStreamBuilder;
@@ -15,6 +13,8 @@ use dl_sdk::blueprint::{Blueprint, Spatial2DView};
 use dl_sdk_types::archetypes::Points2D;
 use dl_sdk_types::components::{Color, Radius};
 use dl_viewer::viewer_test_utils;
+use egui_kittest::SnapshotResults;
+use egui_kittest::kittest::Queryable as _;
 
 // TODO(RR-4929): We should properly show the application id,
 // and maybe even the recording id.

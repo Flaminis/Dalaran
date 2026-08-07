@@ -1,6 +1,3 @@
-use egui::{NumExt as _, Rect};
-use glam::{Mat4, Quat, Vec3, vec3};
-use macaw::IsoTransform;
 use dl_log_types::EntityPath;
 use dl_sdk_types::blueprint::archetypes::EyeControls3D;
 use dl_sdk_types::blueprint::components::{AngularSpeed, Eye3DKind};
@@ -11,6 +8,9 @@ use dl_view::controls::{
 };
 use dl_viewer_context::{ViewContext, ViewerContext};
 use dl_viewport_blueprint::{ViewProperty, ViewPropertyQueryError};
+use egui::{NumExt as _, Rect};
+use glam::{Mat4, Quat, Vec3, vec3};
+use macaw::IsoTransform;
 
 use crate::pinhole_wrapper::PinholeWrapper;
 use crate::scene_bounding_boxes::SceneBoundingBoxes;

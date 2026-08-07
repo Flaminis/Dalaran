@@ -20,7 +20,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context as _, bail, ensure};
 use dl_build_tools::{
-    Environment, get_and_track_env_var, dalaran_if_changed, write_file_if_necessary,
+    Environment, dalaran_if_changed, get_and_track_env_var, write_file_if_necessary,
 };
 use walkdir::{DirEntry, WalkDir};
 

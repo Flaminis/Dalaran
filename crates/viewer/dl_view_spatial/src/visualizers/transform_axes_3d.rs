@@ -1,4 +1,3 @@
-use itertools::chain;
 use dl_entity_db::InstancePathHash;
 use dl_log_types::{EntityPath, Instance};
 use dl_sdk_types::Archetype as _;
@@ -12,6 +11,7 @@ use dl_viewer_context::{
     ViewSystemExecutionError, ViewerReportSeverity, VisualizabilityConstraints,
     VisualizerExecutionOutput, VisualizerQueryInfo, VisualizerSystem,
 };
+use itertools::chain;
 
 use super::{SpatialViewVisualizerData, UiLabel, UiLabelStyle, UiLabelTarget};
 use crate::contexts::TransformTreeContext;

@@ -3,10 +3,10 @@
 use std::sync::Arc;
 
 pub use crossbeam::channel::{RecvError, RecvTimeoutError, SendError, TryRecvError};
-use parking_lot::RwLock;
 use dl_log_types::{StoreId, TableId};
 pub use dl_quota_channel::sync::TrySendError;
 use dl_uri::RedapUri;
+use parking_lot::RwLock;
 
 mod data_source_message;
 mod receiver;

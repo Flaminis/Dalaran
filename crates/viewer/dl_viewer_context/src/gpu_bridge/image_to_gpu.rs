@@ -3,9 +3,6 @@
 use std::borrow::Cow;
 
 use anyhow::Context as _;
-use egui::Rangef;
-use egui::util::hash;
-use half::f16;
 use dl_renderer::device_caps::DeviceCaps;
 use dl_renderer::renderer::{ColorMapper, ColormappedTexture, ShaderDecoding, TextureAlpha};
 use dl_renderer::resource_managers::{
@@ -16,6 +13,9 @@ use dl_renderer::{RenderContext, pad_rgb_to_rgba};
 use dl_sdk_types::components::ClassId;
 use dl_sdk_types::datatypes::{ChannelDatatype, ColorModel, ImageFormat, PixelFormat};
 use dl_sdk_types::image::ImageKind;
+use egui::Rangef;
+use egui::util::hash;
+use half::f16;
 use wgpu::TextureFormat;
 
 use super::get_or_create_texture;

@@ -1,11 +1,11 @@
 use std::path::PathBuf;
 use std::sync::Arc;
 
+use dl_chunk::{Chunk, EntityPath};
+use dl_hdf5::{AttrValue, Hdf5Config, Hdf5Error, IndexColumn, IndexType, TimeUnit};
 use pyo3::exceptions::{PyFileNotFoundError, PyKeyError, PyRuntimeError, PyValueError};
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use dl_chunk::{Chunk, EntityPath};
-use dl_hdf5::{AttrValue, Hdf5Config, Hdf5Error, IndexColumn, IndexType, TimeUnit};
 
 use super::error::ChunkPipelineError;
 use super::py_stream::PyLazyChunkStreamInternal;

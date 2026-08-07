@@ -3,8 +3,8 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use ahash::HashSet;
-use nohash_hasher::IntMap;
 use dl_format::format_bytes;
+use nohash_hasher::IntMap;
 use web_time::Instant;
 
 use dl_byte_size::SizeBytes;

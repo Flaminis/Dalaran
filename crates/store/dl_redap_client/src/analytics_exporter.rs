@@ -5,11 +5,11 @@
 //! reuses the same authenticated tower service as redap RPCs, so analytics
 //! exports share the HTTP/2 connection to the Hub.
 
+use dl_protos::trace_id_layer::DALARAN_HTTP_HEADER_REQUEST_TRACE_ID;
+use dl_uri::Origin;
 use opentelemetry_proto::tonic::collector::trace::v1::{
     ExportTraceServiceRequest, ExportTraceServiceResponse,
 };
-use dl_protos::trace_id_layer::DALARAN_HTTP_HEADER_REQUEST_TRACE_ID;
-use dl_uri::Origin;
 
 const EXPORT_PATH: &str = "/opentelemetry.proto.collector.trace.v1.TraceService/Export";
 

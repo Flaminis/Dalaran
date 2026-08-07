@@ -1,12 +1,12 @@
 use std::str::FromStr as _;
 
-use egui::{NumExt as _, Ui};
 use dl_entity_db::FetchStage;
 use dl_log_types::{Timestamp, TimestampFormat};
 use dl_memory::MemoryLimit;
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
 use dl_ui::{DesignTokens, UiExt as _};
 use dl_viewer_context::{AppOptions, ExperimentalAppOptions, VideoOptions};
+use egui::{NumExt as _, Ui};
 
 pub fn settings_screen_ui(ui: &mut egui::Ui, app_options: &mut AppOptions, keep_open: &mut bool) {
     egui::Frame {

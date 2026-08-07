@@ -23,12 +23,12 @@ use arrow::datatypes::{
 };
 use arrow::error::ArrowError;
 use arrow::util::display::{ArrayFormatter, FormatOptions};
-use egui::{RichText, Ui};
-use itertools::Itertools as _;
 use dl_log_types::TimestampFormat;
 use dl_ui::list_item::{CustomContent, LabelContent};
 use dl_ui::syntax_highlighting::SyntaxHighlightedBuilder;
 use dl_ui::{UiExt as _, UiLayout};
+use egui::{RichText, Ui};
+use itertools::Itertools as _;
 
 use crate::arrow_node::ArrowNode;
 use crate::list_item_ranges::list_item_ranges;

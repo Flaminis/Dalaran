@@ -3,12 +3,12 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use arrow::buffer::ScalarBuffer as ArrowScalarBuffer;
-use nohash_hasher::IntMap;
 use dl_arrow_util::arrays_to_list_array_opt;
 use dl_byte_size::SizeBytes as _;
 use dl_log_types::{AbsoluteTimeRange, EntityPath, TimeInt, TimePoint, Timeline, TimelineName};
 use dl_quota_channel::{Receiver, Sender};
 use dl_types_core::{ComponentIdentifier, SerializedComponentBatch, SerializedComponentColumn};
+use nohash_hasher::IntMap;
 
 use crate::chunk::ChunkComponents;
 use crate::{Chunk, ChunkId, ChunkResult, RowId, TimeColumn};

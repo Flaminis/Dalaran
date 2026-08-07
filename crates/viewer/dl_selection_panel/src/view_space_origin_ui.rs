@@ -1,10 +1,10 @@
 use std::ops::ControlFlow;
 
-use egui::{Key, NumExt as _, Ui};
 use dl_log_types::EntityPath;
 use dl_ui::{SyntaxHighlighting as _, UiExt as _, list_item};
 use dl_viewer_context::ViewerContext;
 use dl_viewport_blueprint::{ViewBlueprint, default_created_views};
+use egui::{Key, NumExt as _, Ui};
 
 /// State of the space origin widget.
 #[derive(Default, Clone)]

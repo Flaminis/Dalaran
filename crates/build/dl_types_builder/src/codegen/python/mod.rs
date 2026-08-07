@@ -629,7 +629,9 @@ impl PythonCodeGenerator {
                 .is_some()
             {
                 code.push_unindented(
-                    format!("from {dalaran_path}blueprint import VisualizableArchetype, Visualizer"),
+                    format!(
+                        "from {dalaran_path}blueprint import VisualizableArchetype, Visualizer"
+                    ),
                     1,
                 );
                 code.push_unindented(

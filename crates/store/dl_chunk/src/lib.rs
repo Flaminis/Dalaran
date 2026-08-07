@@ -51,5 +51,5 @@ pub use self::unit_chunk::{ChunkShared, UnitChunkShared};
 pub mod external {
     #[cfg(not(target_arch = "wasm32"))]
     pub use crossbeam;
-    pub use {arrow, nohash_hasher, dl_byte_size, dl_log_types};
+    pub use {arrow, dl_byte_size, dl_log_types, nohash_hasher};
 }

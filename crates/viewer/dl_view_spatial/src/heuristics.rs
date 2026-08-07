@@ -1,7 +1,7 @@
-use nohash_hasher::IntSet;
 use dl_log_types::EntityPath;
 use dl_sdk_types::ViewClassIdentifier;
 use dl_viewer_context::{ViewClass as _, ViewerContext};
+use nohash_hasher::IntSet;
 
 use crate::{SpatialView2D, SpatialView3D};
 

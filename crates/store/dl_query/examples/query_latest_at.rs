@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use anyhow::Context as _;
 use arrow::array::UInt32Array as ArrowUInt32Array;
-use itertools::Itertools as _;
 use dl_arrow_util::ArrowArrayDowncastRef as _;
 use dl_chunk::{Chunk, RowId, TimelineName};
 use dl_chunk_store::{ChunkStore, ChunkStoreHandle, ChunkTrackingMode, LatestAtQuery};
@@ -10,6 +9,7 @@ use dl_log_types::build_frame_nr;
 use dl_log_types::example_components::{MyColor, MyLabel, MyPoint, MyPoints};
 use dl_query::{LatestAtResults, clamped_zip_1x2};
 use dl_types_core::Archetype as _;
+use itertools::Itertools as _;
 
 // ---
 

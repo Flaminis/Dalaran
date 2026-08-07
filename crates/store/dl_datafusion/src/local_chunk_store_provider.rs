@@ -301,7 +301,6 @@ mod tests {
 
     use arrow::array::{Array as _, Int64Array, RecordBatch};
     use datafusion::prelude::SessionContext;
-    use futures::StreamExt as _;
     use dl_dataframe::external::dl_chunk::{Chunk, RowId, TimePoint};
     use dl_dataframe::external::dl_chunk_store::{
         ChunkStore, ChunkStoreConfig, StaticColumnSelection,
@@ -309,6 +308,7 @@ mod tests {
     use dl_dataframe::external::dl_log_types::example_components::{MyPoint, MyPoints};
     use dl_dataframe::external::dl_log_types::{EntityPath, StoreId, StoreKind, TimeInt, Timeline};
     use dl_log_types::TimelineName;
+    use futures::StreamExt as _;
 
     fn new_store() -> ChunkStoreHandle {
         let store_id = StoreId::random(StoreKind::Recording, "test-app");
