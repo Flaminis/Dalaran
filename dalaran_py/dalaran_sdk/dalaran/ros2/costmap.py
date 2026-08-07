@@ -61,6 +61,8 @@ __all__ = [
     "CostScale",
     "CostmapLayer",
     "PlannedLayer",
+    "RollingCostmapWindow",
+    "WindowShift",
     "costmap_layer_rgba",
     "costmap_to_rgba",
     "log_costmap_layers",
@@ -68,6 +70,7 @@ __all__ = [
     "occupancy_byte_to_raw_cost",
     "plan_costmap_layers",
     "raw_cost_to_occupancy_byte",
+    "rolling_window_origin",
 ]
 
 #: Zero cost: the planner may drive here freely.
@@ -708,3 +711,225 @@ def log_costmap_layers(
             dl.log(plan.entity_path, grid_map, static=static, recording=recording)
 
     return [plan.entity_path for plan in plans]
+
+
+# -- rolling local costmaps -------------------------------------------------
+
+
+def rolling_window_origin(
+    center: npt.ArrayLike,
+    *,
+    width: int,
+    height: int,
+    resolution: float,
+    snap_to_cells: bool = True,
+) -> npt.NDArray[np.float64]:
+    """
+    Return the lower-left origin of a rolling window centered on `center`.
+
+    A `nav2_costmap_2d` configured with `rolling_window: true` keeps the robot in
+    the middle of a fixed-size grid, so its origin moves with every update. nav2
+    snaps that origin to whole cells, because a sub-cell shift would force it to
+    resample the whole grid; reproducing the snap here keeps a hand-built window
+    aligned with the one nav2 would have published.
+
+    Parameters
+    ----------
+    center:
+        The point to center the window on, usually the robot's `(x, y)` in the
+        window's parent frame. A third component is passed through untouched.
+    width:
+        Window width in cells.
+    height:
+        Window height in cells.
+    resolution:
+        Cell size in meters.
+    snap_to_cells:
+        Snap the origin down to a multiple of `resolution`.
+
+    Returns
+    -------
+    numpy.ndarray
+        `(3,)` position of the window's lower-left corner.
+
+    Examples
+    --------
+    ```python
+    import numpy as np
+    from dalaran.ros2.costmap import rolling_window_origin
+
+    origin = rolling_window_origin((10.0, 4.0), width=60, height=60, resolution=0.05)
+    np.testing.assert_allclose(origin, [8.5, 2.5, 0.0])
+    ```
+
+    """
+    point = np.asarray(center, dtype=np.float64).reshape(-1)
+    if point.size == 2:
+        point = np.append(point, 0.0)
+    if point.size != 3:
+        msg = "center must have 2 or 3 components"
+        raise ValueError(msg)
+
+    resolution = float(resolution)
+    origin = point.copy()
+    origin[0] -= int(width) * resolution / 2.0
+    origin[1] -= int(height) * resolution / 2.0
+    if snap_to_cells and resolution > 0.0:
+        origin[:2] = np.floor(origin[:2] / resolution) * resolution
+    return origin
+
+
+@dataclass(frozen=True)
+class WindowShift:
+    """
+    How far a rolling costmap window moved between two messages.
+
+    Attributes
+    ----------
+    moved:
+        Whether the origin changed at all. `False` for the very first update.
+    meters:
+        `(dx, dy)` translation of the window's lower-left corner, in meters.
+    cells:
+        The same shift in whole cells, rounded. A window that moved by an exact
+        number of cells has reused its old contents; a fractional shift means the
+        publisher resampled, which is worth noticing when data looks smeared.
+    resized:
+        Whether the window's dimensions or resolution changed, which invalidates
+        any comparison between the two grids.
+
+    """
+
+    moved: bool
+    meters: tuple[float, float]
+    cells: tuple[int, int]
+    resized: bool
+
+
+class RollingCostmapWindow:
+    """
+    Tracks the moving origin of a rolling local costmap on one stable entity.
+
+    The gotcha this exists to prevent: `/local_costmap/costmap` is a small window
+    that *slides* with the robot, so its `info.origin` is different in almost every
+    message while the grid itself keeps the same size. The entity path must stay
+    constant - the local costmap is one thing that moves, not a new thing per
+    frame - and the pose must be re-logged on every message rather than logged once
+    as static data. Logging it statically, or deriving the entity path from the
+    origin, are the two ways this goes wrong: the first freezes the window at its
+    first origin while its contents keep updating, and the second litters the entity
+    tree with thousands of one-frame entities that never get cleared.
+
+    Parameters
+    ----------
+    entity_path:
+        The single entity path this window is logged to, for its whole lifetime.
+
+    Examples
+    --------
+    ```python
+    from dalaran.ros2.costmap import RollingCostmapWindow
+    from dalaran.ros2.occupancy_grid import occupancy_grid_placement
+
+    window = RollingCostmapWindow("map/local_costmap")
+    first = occupancy_grid_placement([0] * 4, width=2, height=2, resolution=0.5)
+    assert not window.update(first).moved
+
+    # The robot drove one cell east; same entity, new pose.
+    second = occupancy_grid_placement(
+        [0] * 4, width=2, height=2, resolution=0.5, origin_translation=(0.5, 0.0, 0.0)
+    )
+    shift = window.update(second)
+    assert shift.moved
+    assert shift.cells == (1, 0)
+    ```
+
+    """
+
+    def __init__(self, entity_path: str) -> None:
+        self.entity_path = entity_path
+        self.placement: GridPlacement | None = None
+
+    def update(self, placement: GridPlacement) -> WindowShift:
+        """
+        Record a new message's placement and report how the window moved.
+
+        Parameters
+        ----------
+        placement:
+            The placement built from the incoming message.
+
+        Returns
+        -------
+        WindowShift
+            The movement since the previous message.
+
+        """
+        previous = self.placement
+        self.placement = placement
+        if previous is None:
+            return WindowShift(moved=False, meters=(0.0, 0.0), cells=(0, 0), resized=False)
+
+        delta = (
+            np.asarray(placement.translation, dtype=np.float64)[:2]
+            - np.asarray(previous.translation, dtype=np.float64)[:2]
+        )
+        cell_size = placement.cell_size
+        cells = np.round(delta / cell_size).astype(int) if cell_size > 0.0 else np.zeros(2, dtype=int)
+        resized = (previous.width, previous.height, previous.cell_size) != (
+            placement.width,
+            placement.height,
+            placement.cell_size,
+        )
+        return WindowShift(
+            moved=bool(np.any(delta != 0.0)),
+            meters=(float(delta[0]), float(delta[1])),
+            cells=(int(cells[0]), int(cells[1])),
+            resized=resized,
+        )
+
+    def log(
+        self,
+        layers: Sequence[CostmapLayer],
+        placement: GridPlacement,
+        *,
+        ctx: Any = None,
+        recording: Any = None,
+        **kwargs: Any,
+    ) -> WindowShift:
+        """
+        Update the window and log `layers` at its stable entity path.
+
+        `static` is deliberately not accepted: a rolling window's pose changes every
+        message, so logging it statically would pin it to its first origin forever.
+
+        Parameters
+        ----------
+        layers:
+            The window's layers, bottom-most first.
+        placement:
+            The placement built from the incoming message.
+        ctx:
+            An optional [`dalaran.ros2.Context`][] to log through.
+        recording:
+            The [`dalaran.RecordingStream`][] to log to when `ctx` is not given.
+        kwargs:
+            Forwarded to [`log_costmap_layers`][dalaran.ros2.costmap.log_costmap_layers].
+
+        Returns
+        -------
+        WindowShift
+            How far the window moved since the previous message.
+
+        """
+        shift = self.update(placement)
+        log_costmap_layers(
+            self.entity_path,
+            layers,
+            placement,
+            ctx=ctx,
+            recording=recording,
+            static=False,
+            **kwargs,
+        )
+        return shift
