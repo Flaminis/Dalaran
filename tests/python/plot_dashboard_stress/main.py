@@ -25,11 +25,11 @@ from typing import Any, cast
 
 import numpy as np
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 parser = argparse.ArgumentParser(description="Plot dashboard stress test")
-rr.script_add_args(parser)
+dl.script_add_args(parser)
 
 parser.add_argument("--num-plots", type=int, default=1, help="How many different plots?")
 parser.add_argument(
@@ -95,29 +95,29 @@ args = parser.parse_args()
 
 
 def main() -> None:
-    rr.script_setup(args, "rerun_example_plot_dashboard_stress")
+    dl.script_setup(args, "dalaran_example_plot_dashboard_stress")
 
     plot_paths = [f"plot_{i}" for i in range(args.num_plots)]
     series_paths = [f"series_{i}" for i in range(args.num_series_per_plot)]
 
     if args.blueprint:
         print("logging blueprint!")
-        rr.send_blueprint(
-            rrb.Blueprint(
-                rrb.Grid(*[
-                    rrb.TimeSeriesView(
+        dl.send_blueprint(
+            dlb.Blueprint(
+                dlb.Grid(*[
+                    dlb.TimeSeriesView(
                         name=p,
                         origin=f"/{p}",
-                        time_ranges=rrb.VisibleTimeRanges(
+                        time_ranges=dlb.VisibleTimeRanges(
                             timeline="sim_time",
-                            start=rrb.TimeRangeBoundary.cursor_relative(offset=rr.TimeInt(seconds=-2.5)),
-                            end=rrb.TimeRangeBoundary.cursor_relative(offset=rr.TimeInt(seconds=2.5)),
+                            start=dlb.TimeRangeBoundary.cursor_relative(offset=dl.TimeInt(seconds=-2.5)),
+                            end=dlb.TimeRangeBoundary.cursor_relative(offset=dl.TimeInt(seconds=2.5)),
                         ),
                     )
                     for p in plot_paths
                 ]),
-                rrb.BlueprintPanel(state="collapsed"),
-                rrb.SelectionPanel(state="collapsed"),
+                dlb.BlueprintPanel(state="collapsed"),
+                dlb.SelectionPanel(state="collapsed"),
             ),
         )
 
@@ -173,22 +173,22 @@ def main() -> None:
 
     for index, sim_time in ticks:
         if args.temporal_batch_size is None:
-            rr.set_time("sim_time", duration=sim_time)
+            dl.set_time("sim_time", duration=sim_time)
         else:
-            time_column = rr.TimeColumn("sim_time", duration=sim_time)
+            time_column = dl.TimeColumn("sim_time", duration=sim_time)
 
         # Log
         for plot_idx, plot_path in enumerate(plot_paths):
             for series_idx, series_path in enumerate(series_paths):
                 if args.temporal_batch_size is None:
                     value = values[index, plot_idx, series_idx]
-                    rr.log(f"{plot_path}/{series_path}", rr.Scalars(value))
+                    dl.log(f"{plot_path}/{series_path}", dl.Scalars(value))
                 else:
                     value_index = slice(index, index + args.temporal_batch_size)
-                    rr.send_columns(
+                    dl.send_columns(
                         f"{plot_path}/{series_path}",
-                        indexes=[cast("rr.TimeColumn", time_column)],
-                        columns=rr.Scalars.columns(scalars=values[value_index, plot_idx, series_idx]),
+                        indexes=[cast("dl.TimeColumn", time_column)],
+                        columns=dl.Scalars.columns(scalars=values[value_index, plot_idx, series_idx]),
                     )
 
         # Measure how long this took and how high the load was.
@@ -240,7 +240,7 @@ load={round(max_load * 100.0, 3)}%)",
 load={round(max_load * 100.0, 3)}%)",
         )
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -5,9 +5,9 @@ title: "Asset3D"
 
 A prepacked 3D asset (`.gltf`, `.glb`, `.obj`, `.stl`, etc.).
 
-See also [`archetypes.Mesh3D`](https://rerun.io/docs/reference/types/archetypes/mesh3d).
+See also [`archetypes.Mesh3D`](https://dalaran.dev/docs/reference/types/archetypes/mesh3d).
 
-If there are multiple [`archetypes.InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) instances logged to the same entity as a mesh,
+If there are multiple [`archetypes.InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) instances logged to the same entity as a mesh,
 an instance of the mesh will be drawn for each transform.
 
 ## Fields
@@ -27,9 +27,9 @@ an instance of the mesh will be drawn for each transform.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Asset3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Asset3D.html)
- * 🐍 [Python API docs for `Asset3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Asset3D)
- * 🦀 [Rust API docs for `Asset3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Asset3D.html)
+ * 🌊 [C++ API docs for `Asset3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Asset3D.html)
+ * 🐍 [Python API docs for `Asset3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Asset3D)
+ * 🦀 [Rust API docs for `Asset3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Asset3D.html)
 
 ## Example
 

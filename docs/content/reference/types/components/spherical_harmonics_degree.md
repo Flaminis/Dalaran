@@ -8,14 +8,14 @@ The highest spherical harmonics degree to evaluate when rendering, 0-3.
 
 `0` renders the view-independent base color only, and is the fastest.
 Each higher degree brings in more view-dependent detail, at the cost of fetching and
-evaluating more coefficients ([`components.SphericalHarmonics3Rgb`](https://rerun.io/docs/reference/types/components/spherical_harmonics3rgb?speculative-link)):
+evaluating more coefficients ([`components.SphericalHarmonics3Rgb`](https://dalaran.dev/docs/reference/types/components/spherical_harmonics3rgb?speculative-link)):
 3 of them for degree 1, 8 for degree 2, and all 15 for degree 3.
 
 Lowering this in the blueprint can make the rendering a lot faster.
 
 Defaults to 3, i.e. every coefficient the data has.
 
-## Rerun datatype
+## Dalaran datatype
 [`UInt32`](../datatypes/uint32.md)
 
 
@@ -25,9 +25,9 @@ UInt32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `SphericalHarmonicsDegree`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1SphericalHarmonicsDegree.html?speculative-link)
- * 🐍 [Python API docs for `SphericalHarmonicsDegree`](https://ref.rerun.io/docs/python/stable/common/components?speculative-link#rerun.components.SphericalHarmonicsDegree)
- * 🦀 [Rust API docs for `SphericalHarmonicsDegree`](https://docs.rs/rerun/latest/rerun/components/struct.SphericalHarmonicsDegree.html?speculative-link)
+ * 🌊 [C++ API docs for `SphericalHarmonicsDegree`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1SphericalHarmonicsDegree.html?speculative-link)
+ * 🐍 [Python API docs for `SphericalHarmonicsDegree`](https://ref.dalaran.dev/docs/python/stable/common/components?speculative-link#dalaran.components.SphericalHarmonicsDegree)
+ * 🦀 [Rust API docs for `SphericalHarmonicsDegree`](https://docs.rs/dalaran/latest/dalaran/components/struct.SphericalHarmonicsDegree.html?speculative-link)
 
 
 ## Used by

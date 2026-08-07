@@ -7,18 +7,18 @@ import time
 
 import numpy as np
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_fixed_window_plot", spawn=True)
+dl.init("dalaran_example_fixed_window_plot", spawn=True)
 
-rr.send_blueprint(
-    rrb.TimeSeriesView(
+dl.send_blueprint(
+    dlb.TimeSeriesView(
         origin="random_walk",
-        time_ranges=rrb.VisibleTimeRange(
+        time_ranges=dlb.VisibleTimeRange(
             "time",
-            start=rrb.TimeRangeBoundary.cursor_relative(seconds=-5.0),
-            end=rrb.TimeRangeBoundary.cursor_relative(),
+            start=dlb.TimeRangeBoundary.cursor_relative(seconds=-5.0),
+            end=dlb.TimeRangeBoundary.cursor_relative(),
         ),
     ),
 )
@@ -34,6 +34,6 @@ while True:
 
     value += np.random.normal()
 
-    rr.set_time("time", timestamp=cur_time)
+    dl.set_time("time", timestamp=cur_time)
 
-    rr.log("random_walk", rr.Scalars(value))
+    dl.log("random_walk", dl.Scalars(value))

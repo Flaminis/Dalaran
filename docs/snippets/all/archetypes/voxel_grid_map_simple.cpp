@@ -1,24 +1,24 @@
 // Log a simple sparse voxel grid map.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <array>
 #include <vector>
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_voxel_grid_map_simple");
+        dalaran::RecordingStream("dalaran_example_voxel_grid_map_simple");
     rec.spawn().exit_on_failure();
 
-    const std::vector<rerun::components::VoxelIndex> voxel_indices = {
-        rerun::components::VoxelIndex(-1, 0, 0),
-        rerun::components::VoxelIndex(1, 0, 0),
-        rerun::components::VoxelIndex(1, 1, 0),
-        rerun::components::VoxelIndex(3, 0, 0),
-        rerun::components::VoxelIndex(3, 0, 1),
-        rerun::components::VoxelIndex(4, 0, 1),
+    const std::vector<dalaran::components::VoxelIndex> voxel_indices = {
+        dalaran::components::VoxelIndex(-1, 0, 0),
+        dalaran::components::VoxelIndex(1, 0, 0),
+        dalaran::components::VoxelIndex(1, 1, 0),
+        dalaran::components::VoxelIndex(3, 0, 0),
+        dalaran::components::VoxelIndex(3, 0, 1),
+        dalaran::components::VoxelIndex(4, 0, 1),
     };
-    const std::vector<rerun::components::VoxelValue> values = {
+    const std::vector<dalaran::components::VoxelValue> values = {
         0.0f,
         0.2f,
         0.4f,
@@ -29,15 +29,15 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "world/voxels",
-        rerun::archetypes::VoxelGridMap(
+        dalaran::archetypes::VoxelGridMap(
             voxel_indices,
             std::array<float, 3>{0.25f, 0.25f, 0.25f}
         )
             .with_values(values)
             .with_value_range(
-                rerun::components::ValueRange(std::array<double, 2>{0.0, 1.0})
+                dalaran::components::ValueRange(std::array<double, 2>{0.0, 1.0})
             )
-            .with_colormap(rerun::components::Colormap::Turbo)
+            .with_colormap(dalaran::components::Colormap::Turbo)
             .with_translation({-0.5f, -0.5f, 0.0f})
     );
 }

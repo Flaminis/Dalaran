@@ -7,7 +7,7 @@ Whether the entity can be interacted with.
 
 Non interactive components are still visible, but mouse interactions in the view are disabled.
 
-## Rerun datatype
+## Dalaran datatype
 [`Bool`](../datatypes/bool.md)
 
 
@@ -17,8 +17,8 @@ Boolean
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Interactive`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Interactive.html)
- * 🐍 [Python API docs for `Interactive`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Interactive)
- * 🦀 [Rust API docs for `Interactive`](https://docs.rs/rerun/latest/rerun/components/struct.Interactive.html)
+ * 🌊 [C++ API docs for `Interactive`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Interactive.html)
+ * 🐍 [Python API docs for `Interactive`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Interactive)
+ * 🦀 [Rust API docs for `Interactive`](https://docs.rs/dalaran/latest/dalaran/components/struct.Interactive.html)
 
 

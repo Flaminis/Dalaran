@@ -5,12 +5,12 @@ hidden: true
 ---
 <!--   ^^^ this number must be _decremented_ when you copy/paste this file -->
 
-## `cargo install rerun-cli` requires `protoc` (0.26.0 only)
+## `cargo install dalaran-cli` requires `protoc` (0.26.0 only)
 
 > [!NOTE]
 > This has been fixed in 0.26.1 and no longer applies.
 
-In order to install the Rerun CLI via cargo, you have to have a `protoc` installation on the `PATH` or `PROTOC` environment variable.
+In order to install the Dalaran CLI via cargo, you have to have a `protoc` installation on the `PATH` or `PROTOC` environment variable.
 
 To install it on macOS, run `brew install protobuf`. It is also available at https://github.com/protocolbuffers/protobuf/releases. For more information see https://docs.rs/prost-build/#sourcing-protoc.
 
@@ -26,14 +26,14 @@ This will make it easier for us to evolve our APIs in the future, when adding ne
 
 Before:
 ```py
-rr.ImageFormat(width, height, "YUV420")
+dl.ImageFormat(width, height, "YUV420")
 
 blueprint.spawn("my_app", 1234)
 ```
 
 After:
 ```py
-rr.ImageFormat(width, height, pixel_format="YUV420")
+dl.ImageFormat(width, height, pixel_format="YUV420")
 
 blueprint.spawn("my_app", port=1234)
 ```
@@ -58,24 +58,24 @@ This table contains one row per layer (i.e. possibly multiple rows per partition
 
 #### Partition table
 
-- `rerun_partition_id`: partition id (string)
-- `rerun_layer_names`: layer names (list of strings, one value per layer)
-- `rerun_storage_urls`: layer storage urls (list of strings, one value per layer)
-- `rerun_last_updated_at`: last update of the partition (nanoseconds timestamp)
-- `rerun_num_chunks`: total number of chunks in the partition (uint64)
-- `rerun_size_bytes`: total number of bytes for the partition (uint64)
+- `dalaran_partition_id`: partition id (string)
+- `dalaran_layer_names`: layer names (list of strings, one value per layer)
+- `dalaran_storage_urls`: layer storage urls (list of strings, one value per layer)
+- `dalaran_last_updated_at`: last update of the partition (nanoseconds timestamp)
+- `dalaran_num_chunks`: total number of chunks in the partition (uint64)
+- `dalaran_size_bytes`: total number of bytes for the partition (uint64)
 - `property:*`: properties columns derived from the partition data
 
 
 #### Dataset manifest columns
 
-- `rerun_layer_name`: layer name (string)
-- `rerun_partition_id`: partition id (string)
-- `rerun_storage_url`: layer storage url (string)
-- `rerun_layer_type`: layer type (string)
-- `rerun_registration_time`: registration time (nanoseconds timestamp)
-- `rerun_last_updated_at`: last update of the layer (nanoseconds timestamp)
-- `rerun_num_chunks`: number of chunks in the layer (uint64)
-- `rerun_size_bytes`: number of bytes for the layer (uint64)
-- `rerun_schema_sha256`: sha256 of the layer schema (fixed width binary, size = 32 bytes)
+- `dalaran_layer_name`: layer name (string)
+- `dalaran_partition_id`: partition id (string)
+- `dalaran_storage_url`: layer storage url (string)
+- `dalaran_layer_type`: layer type (string)
+- `dalaran_registration_time`: registration time (nanoseconds timestamp)
+- `dalaran_last_updated_at`: last update of the layer (nanoseconds timestamp)
+- `dalaran_num_chunks`: number of chunks in the layer (uint64)
+- `dalaran_size_bytes`: number of bytes for the layer (uint64)
+- `dalaran_schema_sha256`: sha256 of the layer schema (fixed width binary, size = 32 bytes)
 - `property:*`: properties columns derived from the layer data

@@ -1,6 +1,6 @@
 // Log a simple 3D asset.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <iostream>
 
@@ -13,13 +13,13 @@ int main(int argc, char* argv[]) {
 
     const auto path = argv[1];
 
-    const auto rec = rerun::RecordingStream("rerun_example_asset3d");
+    const auto rec = dalaran::RecordingStream("dalaran_example_asset3d");
     rec.spawn().exit_on_failure();
 
     // Set the 3D view's up direction:
-    rec.log_static("world", rerun::ViewCoordinates::RIGHT_HAND_Z_UP);
+    rec.log_static("world", dalaran::ViewCoordinates::RIGHT_HAND_Z_UP);
     rec.log(
         "world/asset",
-        rerun::Asset3D::from_file_path(path).value_or_throw()
+        dalaran::Asset3D::from_file_path(path).value_or_throw()
     );
 }

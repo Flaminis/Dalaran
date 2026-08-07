@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Live depth sensor"
-description = "Stream live RGB + depth from an Intel RealSense sensor into a Rerun 3D view with a pinhole camera model."
+description = "Stream live RGB + depth from an Intel RealSense sensor into a Dalaran 3D view with a pinhole camera model."
 tags = ["2D", "3D", "Live", "Depth", "RealSense"]
 thumbnail = "https://static.rerun.io/live_depth_sensor/d3c0392bebe2003d24110a779d6f6748167772d8/480w.png"
 thumbnail_dimensions = [480, 360]
@@ -18,48 +18,48 @@ Visualize the live-streaming frames from an Intel RealSense depth sensor.
 
 This example requires a connected realsense depth sensor.
 
-## Used Rerun types
-[`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole), [`Transform3D`](https://www.rerun.io/docs/reference/types/archetypes/transform3d), [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`DepthImage`](https://www.rerun.io/docs/reference/types/archetypes/depth_image)
+## Used Dalaran types
+[`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole), [`Transform3D`](https://www.dalaran.dev/docs/reference/types/archetypes/transform3d), [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`DepthImage`](https://www.dalaran.dev/docs/reference/types/archetypes/depth_image)
 
 ## Background
-The Intel RealSense depth sensor can stream live depth and color data. To visualize this data output, we utilized Rerun.
+The Intel RealSense depth sensor can stream live depth and color data. To visualize this data output, we utilized Dalaran.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-The RealSense sensor captures data in both RGB and depth formats, which are logged using the [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image) and [`DepthImage`](https://www.rerun.io/docs/reference/types/archetypes/depth_image) archetypes, respectively.
-Additionally, to provide a 3D view, the visualization includes a pinhole camera using the [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole) and [`Transform3D`](https://www.rerun.io/docs/reference/types/archetypes/transform3d) archetypes.
+The RealSense sensor captures data in both RGB and depth formats, which are logged using the [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image) and [`DepthImage`](https://www.dalaran.dev/docs/reference/types/archetypes/depth_image) archetypes, respectively.
+Additionally, to provide a 3D view, the visualization includes a pinhole camera using the [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole) and [`Transform3D`](https://www.dalaran.dev/docs/reference/types/archetypes/transform3d) archetypes.
 
-The visualization in this example were created with the following Rerun code.
+The visualization in this example were created with the following Dalaran code.
 
 ```python
-rr.log("realsense", rr.ViewCoordinates.RDF, static=True)  # Visualize the data as RDF
+dl.log("realsense", dl.ViewCoordinates.RDF, static=True)  # Visualize the data as RDF
 ```
 
 
 
 ### Image
 
-First, the pinhole camera is set using the [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole) and [`Transform3D`](https://www.rerun.io/docs/reference/types/archetypes/transform3d) archetypes. Then, the images captured by the RealSense sensor are logged as an [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image) object, and they're associated with the time they were taken.
+First, the pinhole camera is set using the [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole) and [`Transform3D`](https://www.dalaran.dev/docs/reference/types/archetypes/transform3d) archetypes. Then, the images captured by the RealSense sensor are logged as an [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image) object, and they're associated with the time they were taken.
 
 
 
 ```python
 rgb_from_depth = depth_profile.get_extrinsics_to(rgb_profile)
-rr.log(
+dl.log(
     "realsense/rgb",
-    rr.Transform3D(
+    dl.Transform3D(
         translation=rgb_from_depth.translation,
         mat3x3=np.reshape(rgb_from_depth.rotation, (3, 3)),
-        relation=rr.TransformRelation.ChildFromParent,
+        relation=dl.TransformRelation.ChildFromParent,
     ),
     static=True,
 )
 ```
 
 ```python
-rr.log(
+dl.log(
     "realsense/rgb/image",
-    rr.Pinhole(
+    dl.Pinhole(
         resolution=[rgb_intr.width, rgb_intr.height],
         focal_length=[rgb_intr.fx, rgb_intr.fy],
         principal_point=[rgb_intr.ppx, rgb_intr.ppy],
@@ -68,18 +68,18 @@ rr.log(
 )
 ```
 ```python
-rr.set_time("frame_nr", sequence=frame_nr)
-rr.log("realsense/rgb/image", rr.Image(color_image))
+dl.set_time("frame_nr", sequence=frame_nr)
+dl.log("realsense/rgb/image", dl.Image(color_image))
 ```
 
 ### Depth image
 
-Just like the RGB images, the RealSense sensor also captures depth data. The depth images are logged as [`DepthImage`](https://www.rerun.io/docs/reference/types/archetypes/depth_image) objects and are linked with the time they were captured.
+Just like the RGB images, the RealSense sensor also captures depth data. The depth images are logged as [`DepthImage`](https://www.dalaran.dev/docs/reference/types/archetypes/depth_image) objects and are linked with the time they were captured.
 
 ```python
-rr.log(
+dl.log(
     "realsense/depth/image",
-    rr.Pinhole(
+    dl.Pinhole(
         resolution=[depth_intr.width, depth_intr.height],
         focal_length=[depth_intr.fx, depth_intr.fy],
         principal_point=[depth_intr.ppx, depth_intr.ppy],
@@ -88,16 +88,16 @@ rr.log(
 )
 ```
 ```python
-rr.set_time("frame_nr", sequence=frame_nr)
-rr.log("realsense/depth/image", rr.DepthImage(depth_image, meter=1.0 / depth_units))
+dl.set_time("frame_nr", sequence=frame_nr)
+dl.log("realsense/depth/image", dl.DepthImage(depth_image, meter=1.0 / depth_units))
 ```
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

@@ -1,11 +1,11 @@
 // Create and log a image.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_image");
+    const auto rec = dalaran::RecordingStream("dalaran_example_image");
     rec.spawn().exit_on_failure();
 
     // Create a synthetic image.
@@ -23,5 +23,5 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    rec.log("image", rerun::Image::from_rgb24(data, {WIDTH, HEIGHT}));
+    rec.log("image", dalaran::Image::from_rgb24(data, {WIDTH, HEIGHT}));
 }

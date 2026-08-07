@@ -20,9 +20,9 @@ By default, edges are undirected.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `GraphEdges`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1GraphEdges.html)
- * 🐍 [Python API docs for `GraphEdges`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.GraphEdges)
- * 🦀 [Rust API docs for `GraphEdges`](https://docs.rs/rerun/latest/rerun/archetypes/struct.GraphEdges.html)
+ * 🌊 [C++ API docs for `GraphEdges`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1GraphEdges.html)
+ * 🐍 [Python API docs for `GraphEdges`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.GraphEdges)
+ * 🦀 [Rust API docs for `GraphEdges`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.GraphEdges.html)
 
 ## Examples
 

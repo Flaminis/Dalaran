@@ -1,27 +1,27 @@
 """Use a blueprint to customize a map view."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_map_view", spawn=True)
+dl.init("dalaran_example_map_view", spawn=True)
 
-rr.log(
+dl.log(
     "points",
-    rr.GeoPoints(
+    dl.GeoPoints(
         lat_lon=[[47.6344, 19.1397], [47.6334, 19.1399]],
-        radii=rr.Radius.ui_points(20.0),
+        radii=dl.Radius.ui_points(20.0),
     ),
 )
 
 # Create a map view to display the chart.
-blueprint = rrb.Blueprint(
-    rrb.MapView(
+blueprint = dlb.Blueprint(
+    dlb.MapView(
         origin="points",
         name="MapView",
         zoom=16.0,
-        background=rrb.MapProvider.OpenStreetMap,
+        background=dlb.MapProvider.OpenStreetMap,
     ),
     collapse_panels=True,
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

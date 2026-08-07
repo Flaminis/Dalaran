@@ -5,17 +5,17 @@ title: "Image"
 
 A monochrome or color image.
 
-See also [`archetypes.DepthImage`](https://rerun.io/docs/reference/types/archetypes/depth_image) and [`archetypes.SegmentationImage`](https://rerun.io/docs/reference/types/archetypes/segmentation_image).
+See also [`archetypes.DepthImage`](https://dalaran.dev/docs/reference/types/archetypes/depth_image) and [`archetypes.SegmentationImage`](https://dalaran.dev/docs/reference/types/archetypes/segmentation_image).
 
-Rerun also supports compressed images (JPEG, PNG, …), using [`archetypes.EncodedImage`](https://rerun.io/docs/reference/types/archetypes/encoded_image).
-For images that refer to video frames see [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference/types/archetypes/video_frame_reference).
+Dalaran also supports compressed images (JPEG, PNG, …), using [`archetypes.EncodedImage`](https://dalaran.dev/docs/reference/types/archetypes/encoded_image).
+For images that refer to video frames see [`archetypes.VideoFrameReference`](https://dalaran.dev/docs/reference/types/archetypes/video_frame_reference).
 Compressing images or using video data instead can save a lot of bandwidth and memory.
 
-The raw image data is stored as a single buffer of bytes in a [`components.Blob`](https://rerun.io/docs/reference/types/components/blob).
-The meaning of these bytes is determined by the [`components.ImageFormat`](https://rerun.io/docs/reference/types/components/image_format) which specifies the resolution
+The raw image data is stored as a single buffer of bytes in a [`components.Blob`](https://dalaran.dev/docs/reference/types/components/blob).
+The meaning of these bytes is determined by the [`components.ImageFormat`](https://dalaran.dev/docs/reference/types/components/image_format) which specifies the resolution
 and the pixel format (e.g. RGB, RGBA, …).
 
-The order of dimensions in the underlying [`components.Blob`](https://rerun.io/docs/reference/types/components/blob) follows the typical
+The order of dimensions in the underlying [`components.Blob`](https://dalaran.dev/docs/reference/types/components/blob) follows the typical
 row-major, interleaved-pixel image format.
 
 ## Fields
@@ -35,9 +35,9 @@ row-major, interleaved-pixel image format.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Image`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Image.html)
- * 🐍 [Python API docs for `Image`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Image)
- * 🦀 [Rust API docs for `Image`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Image.html)
+ * 🌊 [C++ API docs for `Image`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Image.html)
+ * 🐍 [Python API docs for `Image`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Image)
+ * 🦀 [Rust API docs for `Image`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Image.html)
 
 ## Examples
 

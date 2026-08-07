@@ -2,7 +2,7 @@
 //!
 //! This is semantically equivalent to the `any_values_row_updates` example, albeit much faster.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <arrow/array/builder_primitive.h>
 #include <cmath>
@@ -11,7 +11,7 @@
 
 arrow::Status run_main() {
     const auto rec =
-        rerun::RecordingStream("rerun_example_any_values_column_updates");
+        dalaran::RecordingStream("dalaran_example_any_values_column_updates");
     rec.spawn().exit_on_failure();
 
     constexpr int64_t STEPS = 64;
@@ -29,7 +29,7 @@ arrow::Status run_main() {
     }
     ARROW_RETURN_NOT_OK(sin_builder.Finish(&arrow_array));
     auto sin =
-        rerun::ComponentBatch::from_arrow_array(std::move(arrow_array), "sin")
+        dalaran::ComponentBatch::from_arrow_array(std::move(arrow_array), "sin")
             .value_or_throw();
 
     arrow::DoubleBuilder cos_builder;
@@ -40,12 +40,12 @@ arrow::Status run_main() {
     }
     ARROW_RETURN_NOT_OK(cos_builder.Finish(&arrow_array));
     auto cos =
-        rerun::ComponentBatch::from_arrow_array(std::move(arrow_array), "cos")
+        dalaran::ComponentBatch::from_arrow_array(std::move(arrow_array), "cos")
             .value_or_throw();
 
     rec.send_columns(
         "/",
-        rerun::TimeColumn::from_sequence("step", std::move(times)),
+        dalaran::TimeColumn::from_sequence("step", std::move(times)),
         sin.partitioned().value_or_throw(),
         cos.partitioned().value_or_throw()
     );

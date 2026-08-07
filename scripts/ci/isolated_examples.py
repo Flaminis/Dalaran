@@ -2,7 +2,7 @@
 
 An "isolated" example is one that has its own uv project (separate pyproject.toml and uv.lock)
 because its dependency closure conflicts with the workspace .venv (e.g. LeRobot requiring Python >=3.12).
-Each such example opts in by setting `[tool.rerun-example] isolated = true` in its pyproject.toml.
+Each such example opts in by setting `[tool.dalaran-example] isolated = true` in its pyproject.toml.
 
 Fails on the first non-zero exit.
 """
@@ -24,7 +24,7 @@ def discover_isolated(examples_dir: Path) -> list[Path]:
     for pyproject in sorted(examples_dir.glob("*/pyproject.toml")):
         with pyproject.open("rb") as f:
             data = tomli.load(f)
-        if data.get("tool", {}).get("rerun-example", {}).get("isolated"):
+        if data.get("tool", {}).get("dalaran-example", {}).get("isolated"):
             found.append(pyproject.parent)
     return found
 
@@ -69,10 +69,10 @@ def cmd_lint(examples_dir: Path, repo_root: Path) -> int:
     for project in projects:
         print(f"\n=== {project.relative_to(repo_root)} ===", flush=True)
         subprocess.run(["uv", "sync", "--frozen"], cwd=project, check=True)
-        # rerun-dev-fixup is not in pyproject.toml (uv 0.7.x resolves all groups
+        # dalaran-dev-fixup is not in pyproject.toml (uv 0.7.x resolves all groups
         # unconditionally — a path-only package would block standalone --no-sources).
         # Install it explicitly here when running inside the monorepo.
-        shim_dir = (project / "../../../rerun_py/rerun_dev_fixup").resolve()
+        shim_dir = (project / "../../../dalaran_py/dalaran_dev_fixup").resolve()
         if shim_dir.exists():
             subprocess.run(["uv", "pip", "install", str(shim_dir)], cwd=project, check=True)
         merged = build_merged_config(shared_base, project / "pyproject.toml")

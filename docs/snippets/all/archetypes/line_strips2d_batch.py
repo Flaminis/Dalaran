@@ -1,13 +1,13 @@
 """Log a batch of 2D line strips."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_line_strip2d_batch", spawn=True)
+dl.init("dalaran_example_line_strip2d_batch", spawn=True)
 
-rr.log(
+dl.log(
     "strips",
-    rr.LineStrips2D(
+    dl.LineStrips2D(
         [
             [[0, 0], [2, 1], [4, -1], [6, 0]],
             [[0, 3], [1, 4], [2, 2], [3, 4], [4, 2], [5, 4], [6, 3]],
@@ -19,8 +19,8 @@ rr.log(
 )
 
 # Set view bounds:
-rr.send_blueprint(
-    rrb.Spatial2DView(
-        visual_bounds=rrb.VisualBounds2D(x_range=[-1, 7], y_range=[-3, 6])
+dl.send_blueprint(
+    dlb.Spatial2DView(
+        visual_bounds=dlb.VisualBounds2D(x_range=[-1, 7], y_range=[-3, 6])
     )
 )

@@ -4,38 +4,38 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
 if TYPE_CHECKING:
     import numpy.typing as npt
 
 
-class CustomPoints3D(rr.AsComponents):  # type: ignore[misc]
+class CustomPoints3D(dl.AsComponents):  # type: ignore[misc]
     def __init__(
         self: Any, positions: npt.ArrayLike, colors: npt.ArrayLike
     ) -> None:
-        self.positions = rr.components.Position3DBatch(positions).described(
-            rr.ComponentDescriptor(
+        self.positions = dl.components.Position3DBatch(positions).described(
+            dl.ComponentDescriptor(
                 "user.CustomPoints3D:custom_positions",
                 archetype="user.CustomPoints3D",
                 component_type="user.CustomPosition3D",
             ),
         )
-        self.colors = rr.components.ColorBatch(colors).described(
-            rr.ComponentDescriptor("user.CustomPoints3D:colors").with_overrides(
+        self.colors = dl.components.ColorBatch(colors).described(
+            dl.ComponentDescriptor("user.CustomPoints3D:colors").with_overrides(
                 archetype="user.CustomPoints3D",
-                component_type=rr.components.ColorBatch._COMPONENT_TYPE,
+                component_type=dl.components.ColorBatch._COMPONENT_TYPE,
             )
         )
 
-    def as_component_batches(self) -> list[rr.DescribedComponentBatch]:
+    def as_component_batches(self) -> list[dl.DescribedComponentBatch]:
         return [self.positions, self.colors]
 
 
-rr.init("rerun_example_descriptors_custom_archetype")
-rr.spawn()
+dl.init("dalaran_example_descriptors_custom_archetype")
+dl.spawn()
 
-rr.log("data", CustomPoints3D([[1, 2, 3]], [0xFF00FFFF]), static=True)
+dl.log("data", CustomPoints3D([[1, 2, 3]], [0xFF00FFFF]), static=True)
 
 # The tags are indirectly checked by the Rust version (have a look over there
 # for more info).

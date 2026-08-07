@@ -18,7 +18,7 @@ Use the script:
 
     python3 scripts/ci/render_bench.py \
       sizes \
-      --output gs://rerun-builds/graphs
+      --output gs://dalaran-builds/graphs
 """
 
 from __future__ import annotations
@@ -182,7 +182,7 @@ def get_crates_benchmark_data(gcs: storage.Client, commits: list[CommitWithDate]
 
     return collect_benchmark_data(
         commits,
-        bucket=fetch_blobs(gcs, "rerun-builds", "benches"),
+        bucket=fetch_blobs(gcs, "dalaran-builds", "benches"),
         short_sha_to_path=lambda short_sha: f"benches/{short_sha}",
         parser=parse_bencher_text,
     )
@@ -193,7 +193,7 @@ def get_size_benchmark_data(gcs: storage.Client, commits: list[CommitWithDate]) 
 
     return collect_benchmark_data(
         commits,
-        bucket=fetch_blobs(gcs, "rerun-builds", "sizes/commit"),
+        bucket=fetch_blobs(gcs, "dalaran-builds", "sizes/commit"),
         short_sha_to_path=lambda short_sha: f"sizes/commit/{short_sha}/data.json",
         parser=parse_sizes_json,
     )

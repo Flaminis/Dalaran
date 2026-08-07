@@ -4,7 +4,7 @@ order: 300
 description: Setting up the Rust SDK
 ---
 
-Add the [Rerun crate](https://crates.io/crates/rerun) using `cargo add rerun`.
+Add the [Dalaran crate](https://crates.io/crates/dalaran) using `cargo add dalaran`.
 
 You'll additionally need to install the [Viewer](./viewer.md).
 

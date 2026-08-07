@@ -6,7 +6,7 @@ title: "Colormap"
 Colormap for mapping scalar values within a given range to a color.
 
 This provides a number of popular pre-defined colormaps.
-In the future, the Rerun Viewer will allow users to define their own colormaps,
+In the future, the Dalaran Viewer will allow users to define their own colormaps,
 but currently the Viewer is limited to the types defined here.
 
 ## Variants
@@ -96,9 +96,9 @@ UInt8
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Colormap`](https://ref.rerun.io/docs/cpp/stable/namespacererun_1_1components.html)
- * 🐍 [Python API docs for `Colormap`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Colormap)
- * 🦀 [Rust API docs for `Colormap`](https://docs.rs/rerun/latest/rerun/components/enum.Colormap.html)
+ * 🌊 [C++ API docs for `Colormap`](https://ref.dalaran.dev/docs/cpp/stable/namespacedalaran_1_1components.html)
+ * 🐍 [Python API docs for `Colormap`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Colormap)
+ * 🦀 [Rust API docs for `Colormap`](https://docs.rs/dalaran/latest/dalaran/components/enum.Colormap.html)
 
 
 ## Used by

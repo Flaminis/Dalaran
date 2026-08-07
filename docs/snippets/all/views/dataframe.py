@@ -2,28 +2,28 @@
 
 import math
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_dataframe", spawn=True)
+dl.init("dalaran_example_dataframe", spawn=True)
 
 # Log some data.
 for t in range(int(math.pi * 4 * 100.0)):
-    rr.set_time("t", duration=t)
-    rr.log("trig/sin", rr.Scalars(math.sin(float(t) / 100.0)))
-    rr.log("trig/cos", rr.Scalars(math.cos(float(t) / 100.0)))
+    dl.set_time("t", duration=t)
+    dl.log("trig/sin", dl.Scalars(math.sin(float(t) / 100.0)))
+    dl.log("trig/cos", dl.Scalars(math.cos(float(t) / 100.0)))
 
     # some sparse data
     if t % 5 == 0:
-        rr.log("trig/tan_sparse", rr.Scalars(math.tan(float(t) / 100.0)))
+        dl.log("trig/tan_sparse", dl.Scalars(math.tan(float(t) / 100.0)))
 
 # Create a Dataframe View
-blueprint = rrb.Blueprint(
-    rrb.DataframeView(
+blueprint = dlb.Blueprint(
+    dlb.DataframeView(
         origin="/trig",
-        query=rrb.archetypes.DataframeQuery(
+        query=dlb.archetypes.DataframeQuery(
             timeline="t",
-            filter_by_range=(rr.TimeInt(seconds=0), rr.TimeInt(seconds=20)),
+            filter_by_range=(dl.TimeInt(seconds=0), dl.TimeInt(seconds=20)),
             filter_is_not_null="/trig/tan_sparse:Scalar",
             select=[
                 "t",
@@ -38,4 +38,4 @@ blueprint = rrb.Blueprint(
     ),
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

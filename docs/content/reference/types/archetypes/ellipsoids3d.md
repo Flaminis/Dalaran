@@ -7,10 +7,10 @@ title: "Ellipsoids3D"
 
 This archetype is for ellipsoids or spheres whose size is a key part of the data
 (e.g. a bounding sphere).
-For points whose radii are for the sake of visualization, use [`archetypes.Points3D`](https://rerun.io/docs/reference/types/archetypes/points3d) instead.
+For points whose radii are for the sake of visualization, use [`archetypes.Points3D`](https://dalaran.dev/docs/reference/types/archetypes/points3d) instead.
 
 If there's more instance poses than half sizes, the last ellipsoid/sphere's orientation will be repeated for the remaining poses.
-Orienting and placing ellipsoids/spheres forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d).
+Orienting and placing ellipsoids/spheres forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d).
 
 ## Fields
 ### Required
@@ -36,9 +36,9 @@ Orienting and placing ellipsoids/spheres forms a separate transform that is appl
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Ellipsoids3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Ellipsoids3D.html)
- * 🐍 [Python API docs for `Ellipsoids3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Ellipsoids3D)
- * 🦀 [Rust API docs for `Ellipsoids3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Ellipsoids3D.html)
+ * 🌊 [C++ API docs for `Ellipsoids3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Ellipsoids3D.html)
+ * 🐍 [Python API docs for `Ellipsoids3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Ellipsoids3D)
+ * 🦀 [Rust API docs for `Ellipsoids3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Ellipsoids3D.html)
 
 ## Example
 

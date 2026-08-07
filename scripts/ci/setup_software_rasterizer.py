@@ -359,7 +359,7 @@ def main() -> None:
         # Note that we could also use WARP, the DX12 software rasterizer.
         # (wgpu tests with both llvmpip and WARP)
         # But practically speaking we prefer Vulkan anyways on Windows today and as such this is
-        # both less variation and closer to what Rerun uses when running on a "real" machine.
+        # both less variation and closer to what Dalaran uses when running on a "real" machine.
         env_vars = setup_lavapipe_for_windows()
         vulkan_info(env_vars)
     elif os.name == "posix" and sys.platform != "darwin" and platform.machine() == "x86_64":

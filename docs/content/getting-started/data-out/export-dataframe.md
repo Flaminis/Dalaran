@@ -3,12 +3,12 @@ title: Export the dataframe
 order: 2
 ---
 
-In the [previous section](explore-as-dataframe.md), we explored some face tracking data using the dataframe view. In this section, we will see how we can use the dataframe API of the Rerun SDK to export the same data into a [Pandas](https://pandas.pydata.org) dataframe to further inspect and process it.
+In the [previous section](explore-as-dataframe.md), we explored some face tracking data using the dataframe view. In this section, we will see how we can use the dataframe API of the Dalaran SDK to export the same data into a [Pandas](https://pandas.pydata.org) dataframe to further inspect and process it.
 
 ## Load the recording
 
 The dataframe SDK loads data from an .RRD file.
-The first step is thus to save the recording as RRD, which can be done from the Rerun menu:
+The first step is thus to save the recording as RRD, which can be done from the Dalaran menu:
 
 <picture style="zoom: 0.5">
   <img src="https://static.rerun.io/save_recording/ece0f887428b1800a305a3e30faeb57fa3d77cd8/full.png" alt="">
@@ -81,7 +81,7 @@ We can make several observations from this output:
 -   The last column is named `/blendshapes/0/jawOpen:Scalars:scalars`. This is what we call a _component column_, and it corresponds to the [Scalar](../../reference/types/components/scalar.md) component logged to the `/blendshapes/0/jawOpen` entity.
 -   Each row in the `/blendshapes/0/jawOpen:Scalar` column consists of a _list_ of (typically one) scalar.
 
-This last point may come as a surprise but is a consequence of Rerun's data model where components are always stored as arrays. This enables, for example, to log an entire point cloud using the [`Points3D`](../../reference/types/archetypes/points3d.md) archetype under a single entity and at a single timestamp.
+This last point may come as a surprise but is a consequence of Dalaran's data model where components are always stored as arrays. This enables, for example, to log an entire point cloud using the [`Points3D`](../../reference/types/archetypes/points3d.md) archetype under a single entity and at a single timestamp.
 
 Let's explore this further, recalling that, in our recording, no face was detected at around frame #170:
 
@@ -152,4 +152,4 @@ This confirms that the newly created `"jawOpen"` column now contains regular, 64
 
 ## Next steps
 
-With this, we are ready to analyze the data and log back the result to the Rerun viewer, which is covered in the [next section](analyze-and-send.md) of this guide.
+With this, we are ready to analyze the data and log back the result to the Dalaran viewer, which is covered in the [next section](analyze-and-send.md) of this guide.

@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
-rr.init("rerun_example_descriptors_builtin_component")
-rr.spawn()
+dl.init("dalaran_example_descriptors_builtin_component")
+dl.spawn()
 
-rr.log(
+dl.log(
     "data",
     [
-        rr.components.Position3DBatch([1, 2, 3]).described(
-            rr.ComponentDescriptor(
+        dl.components.Position3DBatch([1, 2, 3]).described(
+            dl.ComponentDescriptor(
                 "user.CustomPoints3D:points",
                 archetype="user.CustomPoints3D",
-                component_type="rerun.components.Position3D",
+                component_type="dalaran.components.Position3D",
             )
         )
     ],

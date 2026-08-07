@@ -48,9 +48,9 @@ members = [
     "openstreetmap-data",
     "plots",
     "raw-mesh",
-    "rerun-notebook",
-    "rerun-sdk",
-    "rerun-workspace",
+    "dalaran-notebook",
+    "dalaran-sdk",
+    "dalaran-workspace",
     "rgbd",
     "robot-data-preprocessing",
     "rrt-star",
@@ -102,7 +102,7 @@ dependencies = [
     { name = "pyproj", version = "3.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pyproj", version = "3.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "shapely" },
     { name = "tqdm" },
 ]
@@ -114,7 +114,7 @@ requires-dist = [
     { name = "polars" },
     { name = "pyproj" },
     { name = "requests" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "shapely" },
     { name = "tqdm" },
 ]
@@ -124,11 +124,11 @@ name = "animated-urdf"
 version = "0.1.0"
 source = { editable = "examples/python/animated_urdf" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "annotated-doc"
@@ -155,7 +155,7 @@ source = { editable = "examples/python/any_scalar" }
 dependencies = [
     { name = "psutil" },
     { name = "pyarrow" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "yfinance" },
 ]
 
@@ -163,7 +163,7 @@ dependencies = [
 requires-dist = [
     { name = "psutil" },
     { name = "pyarrow" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "yfinance" },
 ]
 
@@ -261,7 +261,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "opencv-python" },
     { name = "pandas" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "tqdm" },
@@ -274,7 +274,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "opencv-python" },
     { name = "pandas" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "scipy" },
     { name = "tqdm" },
     { name = "trimesh" },
@@ -523,13 +523,13 @@ source = { editable = "examples/python/blueprint" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -538,14 +538,14 @@ version = "0.1.0"
 source = { editable = "examples/python/blueprint_stocks" }
 dependencies = [
     { name = "humanize" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "yfinance" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "humanize" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "yfinance" },
 ]
 
@@ -564,13 +564,13 @@ version = "0.1.0"
 source = { editable = "examples/python/camera_video_stream" }
 dependencies = [
     { name = "av" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "av", specifier = ">=14.2.0" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -678,13 +678,13 @@ source = { editable = "examples/python/clock" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -801,7 +801,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "opencv-python" },
     { name = "pillow" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "torch" },
     { name = "transformers" },
 ]
@@ -813,7 +813,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "opencv-python" },
     { name = "pillow" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "torch" },
     { name = "transformers", specifier = ">=5.5.0" },
 ]
@@ -981,11 +981,11 @@ name = "dataframe-query"
 version = "0.1.0"
 source = { editable = "examples/python/dataframe_query" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "datafusion"
@@ -1086,7 +1086,7 @@ dependencies = [
     { name = "opencv-python" },
     { name = "pillow" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "timm" },
     { name = "torch" },
     { name = "transformers" },
@@ -1098,7 +1098,7 @@ requires-dist = [
     { name = "opencv-python", specifier = ">4.9" },
     { name = "pillow" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "timm", specifier = "==1.0.19" },
     { name = "torch" },
     { name = "transformers", specifier = ">=5.5.0" },
@@ -1114,7 +1114,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pydicom" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "types-requests" },
 ]
 
@@ -1124,7 +1124,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "pydicom", specifier = "==2.4.5" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "types-requests", specifier = ">=2.31,<3" },
 ]
 
@@ -1179,7 +1179,7 @@ source = { editable = "examples/python/dna" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
@@ -1187,7 +1187,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "scipy" },
 ]
 
@@ -1200,7 +1200,7 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "tqdm" },
 ]
 
@@ -1209,7 +1209,7 @@ requires-dist = [
     { name = "laspy" },
     { name = "numpy" },
     { name = "requests" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "tqdm" },
 ]
 
@@ -1525,22 +1525,22 @@ name = "graph-lattice"
 version = "0.1.0"
 source = { editable = "examples/python/graph_lattice" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "graphs"
 version = "0.1.0"
 source = { editable = "examples/python/graphs" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "griffe"
@@ -1835,7 +1835,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pandas" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "tqdm" },
 ]
 
@@ -1844,7 +1844,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "pandas" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "tqdm" },
 ]
 
@@ -1855,13 +1855,13 @@ source = { editable = "examples/python/incremental_logging" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -2551,7 +2551,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "nuscenes-devkit" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
@@ -2560,7 +2560,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "nuscenes-devkit" },
     { name = "requests" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -2569,13 +2569,13 @@ version = "0.1.0"
 source = { editable = "examples/python/live_camera_edge_detection" }
 dependencies = [
     { name = "opencv-python" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "opencv-python" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -2585,13 +2585,13 @@ source = { editable = "examples/python/live_scrolling_plot" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -2599,7 +2599,7 @@ name = "llm-embedding-ner"
 version = "0.1.0"
 source = { editable = "examples/python/llm_embedding_ner" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "torch" },
     { name = "transformers" },
     { name = "umap-learn" },
@@ -2607,7 +2607,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "torch" },
     { name = "transformers", specifier = ">=5.5.0" },
     { name = "umap-learn" },
@@ -2634,11 +2634,11 @@ name = "log-file"
 version = "0.1.0"
 source = { editable = "examples/python/log_file" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "markdown"
@@ -2804,13 +2804,13 @@ source = { editable = "examples/python/minimal" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -2820,13 +2820,13 @@ source = { editable = "examples/python/minimal_options" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -3064,11 +3064,11 @@ name = "multiprocess-logging"
 version = "0.1.0"
 source = { editable = "examples/python/multiprocess_logging" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "multitasking"
@@ -3083,13 +3083,13 @@ source = { editable = "examples/python/multithreading" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -3369,7 +3369,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "nuscenes-devkit" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
@@ -3378,7 +3378,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "nuscenes-devkit" },
     { name = "requests" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -3416,14 +3416,14 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "opencv-python" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
     { name = "opencv-python" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -3588,7 +3588,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "opencv-python" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "scipy", version = "1.16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
@@ -3599,7 +3599,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "opencv-python", specifier = ">4.6" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "scipy" },
 ]
 
@@ -3613,7 +3613,7 @@ dependencies = [
     { name = "pillow" },
     { name = "pyopf" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "tqdm" },
 ]
 
@@ -3623,7 +3623,7 @@ requires-dist = [
     { name = "pillow" },
     { name = "pyopf" },
     { name = "requests" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "tqdm" },
 ]
 
@@ -3651,13 +3651,13 @@ version = "0.1.0"
 source = { editable = "examples/python/openstreetmap_data" }
 dependencies = [
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "requests" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -3904,13 +3904,13 @@ source = { editable = "examples/python/plots" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -4685,7 +4685,7 @@ dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "trimesh" },
 ]
 
@@ -4693,7 +4693,7 @@ dependencies = [
 requires-dist = [
     { name = "numpy" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "trimesh" },
 ]
 
@@ -4764,9 +4764,9 @@ wheels = [
 ]
 
 [[package]]
-name = "rerun-dev-fixup"
+name = "dalaran-dev-fixup"
 version = "0.1.0"
-source = { directory = "rerun_py/rerun_dev_fixup" }
+source = { directory = "dalaran_py/dalaran_dev_fixup" }
 dependencies = [
     { name = "sitecustomize-entrypoints" },
 ]
@@ -4775,9 +4775,9 @@ dependencies = [
 requires-dist = [{ name = "sitecustomize-entrypoints" }]
 
 [[package]]
-name = "rerun-notebook"
+name = "dalaran-notebook"
 version = "0.36.0a1+dev"
-source = { editable = "rerun_notebook" }
+source = { editable = "dalaran_notebook" }
 dependencies = [
     { name = "anywidget" },
     { name = "ipykernel" },
@@ -4807,8 +4807,8 @@ requires-dist = [
 provides-extras = ["dev", "test"]
 
 [[package]]
-name = "rerun-sdk"
-source = { editable = "rerun_py" }
+name = "dalaran-sdk"
+source = { editable = "dalaran_py" }
 dependencies = [
     { name = "attrs" },
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -4823,7 +4823,7 @@ dependencies = [
 all = [
     { name = "datafusion" },
     { name = "pandas" },
-    { name = "rerun-notebook" },
+    { name = "dalaran-notebook" },
 ]
 catalog = [
     { name = "datafusion" },
@@ -4844,7 +4844,7 @@ dataplatform = [
     { name = "pandas" },
 ]
 notebook = [
-    { name = "rerun-notebook" },
+    { name = "dalaran-notebook" },
 ]
 tests = [
     { name = "av" },
@@ -4893,8 +4893,8 @@ requires-dist = [
     { name = "psutil", specifier = ">=7.0" },
     { name = "pyarrow", specifier = ">=18.0.0" },
     { name = "pytest", marker = "extra == 'tests'", specifier = "==9.0.3" },
-    { name = "rerun-notebook", marker = "extra == 'all'", editable = "rerun_notebook" },
-    { name = "rerun-notebook", marker = "extra == 'notebook'", editable = "rerun_notebook" },
+    { name = "dalaran-notebook", marker = "extra == 'all'", editable = "dalaran_notebook" },
+    { name = "dalaran-notebook", marker = "extra == 'notebook'", editable = "dalaran_notebook" },
     { name = "semver", marker = "extra == 'tests'", specifier = ">=3.0,<3.1" },
     { name = "syrupy", marker = "extra == 'tests'", specifier = "==5.0.0" },
     { name = "tomli", marker = "extra == 'tests'", specifier = "==2.0.1" },
@@ -4907,7 +4907,7 @@ requires-dist = [
 provides-extras = ["all", "catalog", "datafusion", "dataloader", "dataplatform", "notebook", "tests", "tracing"]
 
 [[package]]
-name = "rerun-workspace"
+name = "dalaran-workspace"
 version = "0.28.0a1+dev"
 source = { virtual = "." }
 
@@ -4941,7 +4941,7 @@ dev = [
     { name = "pytest-benchmark" },
     { name = "pyyaml" },
     { name = "requests" },
-    { name = "rerun-dev-fixup" },
+    { name = "dalaran-dev-fixup" },
     { name = "rich" },
     { name = "ruff" },
     { name = "semver" },
@@ -5027,7 +5027,7 @@ examples = [
 snippets = [
     { name = "av" },
     { name = "pandas" },
-    { name = "rerun-sdk", extra = ["dataloader"] },
+    { name = "dalaran-sdk", extra = ["dataloader"] },
 ]
 
 [package.metadata]
@@ -5062,7 +5062,7 @@ dev = [
     { name = "pytest-benchmark" },
     { name = "pyyaml", specifier = ">=6.0" },
     { name = "requests", specifier = ">=2.28" },
-    { name = "rerun-dev-fixup", directory = "rerun_py/rerun_dev_fixup" },
+    { name = "dalaran-dev-fixup", directory = "dalaran_py/dalaran_dev_fixup" },
     { name = "rich", specifier = ">=13.0" },
     { name = "ruff", specifier = "==0.15.7" },
     { name = "semver", specifier = ">=3.0,<3.1" },
@@ -5148,7 +5148,7 @@ examples = [
 snippets = [
     { name = "av" },
     { name = "pandas" },
-    { name = "rerun-sdk", extras = ["dataloader"], editable = "rerun_py" },
+    { name = "dalaran-sdk", extras = ["dataloader"], editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -5193,7 +5193,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "opencv-python" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "tqdm" },
 ]
 
@@ -5202,7 +5202,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "opencv-python", specifier = ">4.6" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "tqdm" },
 ]
 
@@ -5225,13 +5225,13 @@ version = "0.1.0"
 source = { editable = "examples/python/robot_data_preprocessing" }
 dependencies = [
     { name = "pyarrow" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pyarrow" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -5290,13 +5290,13 @@ source = { editable = "examples/python/rrt_star" }
 dependencies = [
     { name = "numpy", version = "2.2.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -5505,7 +5505,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "opencv-python" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "segment-anything" },
     { name = "torch" },
     { name = "torchvision" },
@@ -5517,7 +5517,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "opencv-python" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "segment-anything", git = "https://github.com/facebookresearch/segment-anything.git" },
     { name = "torch" },
     { name = "torchvision" },
@@ -5548,13 +5548,13 @@ version = "0.1.1"
 source = { editable = "examples/python/server_tables" }
 dependencies = [
     { name = "datafusion" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "datafusion", specifier = "==54.0.0" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -5599,11 +5599,11 @@ name = "shared-recording"
 version = "0.1.0"
 source = { editable = "examples/python/shared_recording" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "shellingham"
@@ -5683,22 +5683,22 @@ name = "state-timeline"
 version = "0.1.0"
 source = { editable = "examples/python/state_timeline" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "stdio"
 version = "0.1.0"
 source = { editable = "examples/python/stdio" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "stringcase"
@@ -5715,7 +5715,7 @@ dependencies = [
     { name = "numpy", version = "2.3.5", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "opencv-python" },
     { name = "requests" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
     { name = "tqdm" },
 ]
 
@@ -5724,7 +5724,7 @@ requires-dist = [
     { name = "numpy" },
     { name = "opencv-python", specifier = ">4.6" },
     { name = "requests", specifier = ">=2.31,<3" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
     { name = "tqdm" },
 ]
 
@@ -5758,13 +5758,13 @@ version = "0.1.0"
 source = { editable = "examples/python/table_blueprints" }
 dependencies = [
     { name = "pyarrow" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pyarrow" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -5773,13 +5773,13 @@ version = "0.1.0"
 source = { editable = "examples/python/table_grid_with_flags" }
 dependencies = [
     { name = "pyarrow" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "pyarrow" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -5790,7 +5790,7 @@ dependencies = [
     { name = "lancedb" },
     { name = "platformdirs" },
     { name = "pyarrow" },
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
@@ -5798,7 +5798,7 @@ requires-dist = [
     { name = "lancedb" },
     { name = "platformdirs" },
     { name = "pyarrow" },
-    { name = "rerun-sdk", editable = "rerun_py" },
+    { name = "dalaran-sdk", editable = "dalaran_py" },
 ]
 
 [[package]]
@@ -5815,11 +5815,11 @@ name = "template"
 version = "0.1.0"
 source = { editable = "examples/python/template" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "termcolor"
@@ -6293,11 +6293,11 @@ name = "using-index-values"
 version = "0.1.0"
 source = { editable = "examples/python/using_index_values" }
 dependencies = [
-    { name = "rerun-sdk" },
+    { name = "dalaran-sdk" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "rerun-sdk", editable = "rerun_py" }]
+requires-dist = [{ name = "dalaran-sdk", editable = "dalaran_py" }]
 
 [[package]]
 name = "uv"

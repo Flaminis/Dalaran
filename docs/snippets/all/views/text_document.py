@@ -1,13 +1,13 @@
 """Use a blueprint to show a text document."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_text_document", spawn=True)
+dl.init("dalaran_example_text_document", spawn=True)
 
-rr.log(
+dl.log(
     "markdown",
-    rr.TextDocument(
+    dl.TextDocument(
         '''
 # Hello Markdown!
 [Click here to see the raw text](recording://markdown:Text).
@@ -38,16 +38,16 @@ You can link to [an entity](recording://markdown),
 a [specific instance of an entity](recording://markdown[#0]),
 or a [specific component](recording://markdown:Text).
 
-Of course you can also have [normal https links](https://github.com/rerun-io/rerun), e.g. <https://rerun.io>.
+Of course you can also have [normal https links](https://github.com/rerun-io/rerun), e.g. <https://dalaran.dev>.
 
 ## Image
 ![A random image](https://picsum.photos/640/480)
 '''.strip(),
-        media_type=rr.MediaType.MARKDOWN,
+        media_type=dl.MediaType.MARKDOWN,
     ),
 )
 
 # Create a text view that displays the markdown.
-blueprint = rrb.Blueprint(rrb.TextDocumentView(origin="markdown", name="Markdown example"), collapse_panels=True)
+blueprint = dlb.Blueprint(dlb.TextDocumentView(origin="markdown", name="Markdown example"), collapse_panels=True)
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

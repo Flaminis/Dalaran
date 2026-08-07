@@ -12,7 +12,7 @@
 # Pixi manages build tools (Rust, C++, maturin, etc.) while uv manages Python runtime
 # dependencies in a separate .venv directory. To work with Python:
 #
-#   pixi run py-build                              # Build the rerun-sdk
+#   pixi run py-build                              # Build the dalaran-sdk
 #   pixi run uv run examples/python/minimal/…   # Run Python scripts via uv
 #   pixi run uvpy script.py                        # Shorthand for running Python scripts
 #
@@ -21,11 +21,11 @@
 # Check your environment is correct by running: pixi run check-env
 
 [workspace]
-name = "rerun"
-authors = ["rerun.io <opensource@rerun.io>"]
+name = "dalaran"
+authors = ["dalaran.dev <opensource@dalaran.dev>"]
 channels = ["conda-forge"]
 description = "Log images, point clouds, etc, and visualize them effortlessly"
-homepage = "https://rerun.io"
+homepage = "https://dalaran.dev"
 license = "MIT OR Apache-2.0"
 platforms = [
   { name = "linux-64-glibc-2-28", platform = "linux-64", glibc = "2.28" },
@@ -53,11 +53,11 @@ requires-pixi = ">=0.71.3" # Make sure to keep this in sync with the version on 
 # Global
 
 [activation]
-# Run ensure-rerun-env to set up pyo3-build.cfg and uv shim.
+# Run ensure-dalaran-env to set up pyo3-build.cfg and uv shim.
 scripts = ["scripts/pixi/activate.sh"]
 
 [activation.env]
-RERUN_DEV_ENVIRONMENT = "true"
+DALARAN_DEV_ENVIRONMENT = "true"
 
 # The executable extension for binaries on the current platform.
 EXECUTABLE_EXTENSION = ""
@@ -78,7 +78,7 @@ PKG_CONFIG = "pkgconf"
 PKG_CONFIG_PATH = "${CONDA_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
 
 [target.win-64.activation]
-# Run ensure-rerun-env to set up pyo3-build.cfg and uv shim.
+# Run ensure-dalaran-env to set up pyo3-build.cfg and uv shim.
 # This is a polyglot .bat that works in both cmd.exe and bash (Git Bash).
 scripts = ["scripts/pixi/activate.bat"]
 
@@ -101,7 +101,7 @@ PATH = "%PIXI_PROJECT_ROOT%\\scripts\\pixi;%PATH%"
 # CI tasks. If you are only working in rust, this is the only environment you need.
 #
 # Python run-time dependencies are installed and managed in a parallel uv environment.
-# `pixi run py-build` will install the rerun-sdk package into that uv environment.
+# `pixi run py-build` will install the dalaran-sdk package into that uv environment.
 #
 # NOTE: when you run `pixi run uv`, it will find a `uv` helper script, which unsets
 # CONDA_PREFIX before invoking uv, ensuring that the uv environment is used rather
@@ -109,10 +109,10 @@ PATH = "%PIXI_PROJECT_ROOT%\\scripts\\pixi;%PATH%"
 #
 # To run code that uses cpp bindings, you will generally need to use the `cpp` env.
 # - The cpp feature cannot be included in the default environment because
-#   it breaks compilation of the rerun client on linux. See: https://github.com/rerun-io/rerun/issues/6852
+#   it breaks compilation of the dalaran client on linux. See: https://github.com/rerun-io/rerun/issues/6852
 default = ["base"]
 
-# The cpp environment is for building any code that depends on the C++ `rerun-sdk`.
+# The cpp environment is for building any code that depends on the C++ `dalaran-sdk`.
 #
 # ⚠️ This environment sets the C/C++ compiler to the system compiler (see c-compiler/cxx-compiler dependencies).
 # As of writing this breaks building the web viewer on MacOS, so do not enable it in any environment
@@ -143,87 +143,87 @@ codegen-protos = { cmd = "cargo run --package dl_protos_builder && cargo fmt -p 
 ] }
 codegen-protos-check = "before=$(./scripts/ci/compare_path_digest.py crates/store/dl_protos) ;  pixi run codegen-protos && ./scripts/ci/compare_path_digest.py crates/store/dl_protos $before"
 
-# Generate the Rerun CLI manual.
+# Generate the Dalaran CLI manual.
 
 # NOTE: must be --all-features, otherwise we might miss some optional commands.
-man = "RERUN_DISABLE_WEB_VIEWER_SERVER=1 cargo run --package rerun-cli --all-features -- man > docs/content/reference/cli.md"
+man = "DALARAN_DISABLE_WEB_VIEWER_SERVER=1 cargo run --package dalaran-cli --all-features -- man > docs/content/reference/cli.md"
 
-# Compile and run the rerun viewer.
+# Compile and run the dalaran viewer.
 #
 # You can also give an argument for what to view (e.g. an .rrd file).
-rerun = "cargo run --package rerun-cli --no-default-features --features release_no_web_viewer --"
+dalaran = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer --"
 
-# Compile and run the rerun cli tool, without any viewer.
+# Compile and run the dalaran cli tool, without any viewer.
 #
 # This avoid recompiling the viewer when you just want to run a quick command.
 #
 # You can also give an argument for what to view (e.g. an .rrd file).
-rerun-cli = "cargo run --package rerun-cli --no-default-features --"
+dalaran-cli = "cargo run --package dalaran-cli --no-default-features --"
 
-# Compile and run the rerun viewer, with performance telemetry including Tracy profiler.
+# Compile and run the dalaran viewer, with performance telemetry including Tracy profiler.
 #
 # You can also give an argument for what to view (e.g. an .rrd file).
-rerun-perf-debug = "cargo run --package rerun-cli --no-default-features --features release_no_web_viewer,rerun/perf_telemetry_tracy --"
+dalaran-perf-debug = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer,dalaran/perf_telemetry_tracy --"
 
-# Compile `rerun-cli` without the web-viewer.
-rerun-build = "cargo build --package rerun-cli --no-default-features --features release_no_web_viewer"
+# Compile `dalaran-cli` without the web-viewer.
+dalaran-build = "cargo build --package dalaran-cli --no-default-features --features release_no_web_viewer"
 
 
-# Compile `rerun-cli` without the web-viewer.
-rerun-build-release = "cargo build --package rerun-cli --release --no-default-features --features release_no_web_viewer"
+# Compile `dalaran-cli` without the web-viewer.
+dalaran-build-release = "cargo build --package dalaran-cli --release --no-default-features --features release_no_web_viewer"
 
-# Compile and run the rerun viewer with --release.
+# Compile and run the dalaran viewer with --release.
 #
 # You can also give an argument for what to view (e.g. an .rrd file).
-rerun-release = "cargo run --package rerun-cli --no-default-features --features release_no_web_viewer --release --"
+dalaran-release = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer --release --"
 
-# Compile and run the rerun viewer in release mode, with performance telemetry including Tracy profiler.
+# Compile and run the dalaran viewer in release mode, with performance telemetry including Tracy profiler.
 #
 # You can also give an argument for what to view (e.g. an .rrd file).
-rerun-perf = "cargo run --package rerun-cli --no-default-features --features release_no_web_viewer,rerun/perf_telemetry_tracy --release --"
+dalaran-perf = "cargo run --package dalaran-cli --no-default-features --features release_no_web_viewer,dalaran/perf_telemetry_tracy --release --"
 
-# Compile `rerun-cli` with the same feature set as we build for releases.
-rerun-build-native-and-web = { cmd = "cargo build --package rerun-cli --no-default-features --features release_full --", depends-on = [
-  "rerun-build-web",
+# Compile `dalaran-cli` with the same feature set as we build for releases.
+dalaran-build-native-and-web = { cmd = "cargo build --package dalaran-cli --no-default-features --features release_full --", depends-on = [
+  "dalaran-build-web",
 ] }
 
-# Compile `rerun-cli` with the same feature set as we build for releases.
-rerun-build-native-and-web-release = { cmd = "cargo build --package rerun-cli --no-default-features --features release_full --release --", depends-on = [
-  "rerun-build-web-release",
+# Compile `dalaran-cli` with the same feature set as we build for releases.
+dalaran-build-native-and-web-release = { cmd = "cargo build --package dalaran-cli --no-default-features --features release_full --release --", depends-on = [
+  "dalaran-build-web-release",
 ] }
 
-rerun-build-native-and-pending-web-release = { cmd = "cargo build --package rerun-cli --no-default-features --features release_full --release --", env = { RERUN_TRAILING_WEB_VIEWER = "1" } }
-rerun-build-native-and-pending-web-release-zig = { cmd = "cargo zigbuild --locked --package rerun-cli --no-default-features --features release_full --release --target x86_64-unknown-linux-gnu.2.28", env = { RERUN_TRAILING_WEB_VIEWER = "1" } }
+dalaran-build-native-and-pending-web-release = { cmd = "cargo build --package dalaran-cli --no-default-features --features release_full --release --", env = { DALARAN_TRAILING_WEB_VIEWER = "1" } }
+dalaran-build-native-and-pending-web-release-zig = { cmd = "cargo zigbuild --locked --package dalaran-cli --no-default-features --features release_full --release --target x86_64-unknown-linux-gnu.2.28", env = { DALARAN_TRAILING_WEB_VIEWER = "1" } }
 
-# Compile and run the web-viewer via rerun-cli.
+# Compile and run the web-viewer via dalaran-cli.
 #
 # You can also give an argument for what to view (e.g. an .rrd file).
-rerun-web = { cmd = "cargo run --package rerun-cli --no-default-features --features web_viewer -- --web-viewer", depends-on = [
-  "rerun-build-web",
+dalaran-web = { cmd = "cargo run --package dalaran-cli --no-default-features --features web_viewer -- --web-viewer", depends-on = [
+  "dalaran-build-web",
 ] }
 
 # Compile the web-viewer wasm, does not include the cli.
-rerun-build-web = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug"
+dalaran-build-web = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug"
 
 # Compile the web-viewer wasm and the cli.
-rerun-build-web-cli = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug && cargo build --package rerun-cli --no-default-features --features web_viewer"
+dalaran-build-web-cli = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --debug && cargo build --package dalaran-cli --no-default-features --features web_viewer"
 
-# Compile and run the web-viewer in release mode via rerun-cli.
+# Compile and run the web-viewer in release mode via dalaran-cli.
 #
 # You can also give an argument for what to view (e.g. an .rrd file).
-rerun-web-release = { cmd = "cargo run --package rerun-cli --no-default-features --features map_view,web_viewer --release -- --web-viewer", depends-on = [
-  "rerun-build-web-release",
+dalaran-web-release = { cmd = "cargo run --package dalaran-cli --no-default-features --features map_view,web_viewer --release -- --web-viewer", depends-on = [
+  "dalaran-build-web-release",
 ] }
 
 # Compile the web-viewer wasm in release mode.
-rerun-build-web-release = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --release"
+dalaran-build-web-release = "cargo run -p dl_dev_tools -- build-web-viewer --no-default-features --features analytics,map_view --release"
 
 rs-check = "python scripts/ci/rust_checks.py"
 
 # Check that old .rrd files can still be read and understood.
 # See tests/assets/rrd/README.md for more.
 # Note that we run with `--check-footers=false`: it is expected that these RRDs do not have proper footers (they predate them).
-check-backwards-compatibility = { cmd = "find tests/assets/rrd -name '*.rrd' -type f -print0 | xargs -0 cargo run --package rerun-cli --no-default-features rrd verify --check-footers=false" }
+check-backwards-compatibility = { cmd = "find tests/assets/rrd -name '*.rrd' -type f -print0 | xargs -0 cargo run --package dalaran-cli --no-default-features rrd verify --check-footers=false" }
 web-test = "cargo run --package dl_web_tests --"
 
 # `cargo fmt --all` only sees files reachable from each crate's lib.rs/main.rs.
@@ -247,11 +247,11 @@ link-check = 'lychee --cache --max-cache-age 1d . --root-dir "$PIXI_PROJECT_ROOT
 # Assorted linting tasks
 fast-lint = "python scripts/fast_lint.py"
 lint-codegen = "cargo run --package dl_types_builder -- --check"
-lint-clang-tidy-config = "clang-tidy --config-file rerun_cpp/.clang-tidy --verify-config"
-lint-cpp-files = { cmd = "run-clang-tidy -p build/debug -config-file rerun_cpp/.clang-tidy -quiet -use-color -warnings-as-errors '*' 'rerun_cpp/.*'", depends-on = [
+lint-clang-tidy-config = "clang-tidy --config-file dalaran_cpp/.clang-tidy --verify-config"
+lint-cpp-files = { cmd = "run-clang-tidy -p build/debug -config-file dalaran_cpp/.clang-tidy -quiet -use-color -warnings-as-errors '*' 'dalaran_cpp/.*'", depends-on = [
   "lint-clang-tidy-config",
 ] }
-lint-rerun = "python scripts/lint.py"
+lint-dalaran = "python scripts/lint.py"
 lint-rs-files = "rustfmt --edition 2024 --check"
 lint-rs-all = "cargo fmt --check"
 
@@ -268,7 +268,7 @@ toml-fmt = "taplo fmt"
 # we might run it in an environment that doesn't otherwise have or expect
 # rust to be setup.
 uv-lock-check-workspace = "env -u RUSTC_WRAPPER uv lock --dry-run && uv lock --check"
-# Same check for every isolated example project (discovered via `[tool.rerun-example] isolated = true`).
+# Same check for every isolated example project (discovered via `[tool.dalaran-example] isolated = true`).
 uv-lock-check-isolated-examples = "python scripts/ci/isolated_examples.py check-lock"
 uv-lock-check = { depends-on = ["uv-lock-check-workspace", "uv-lock-check-isolated-examples"] }
 
@@ -321,29 +321,29 @@ py-fmt = { cmd = "uv run ruff check --fix {{ files }} && uv run ruff format {{ f
   { arg = "files", default = "." },
 ] }
 py-fmt-check = "uv run ruff check . && uv run ruff format --check ."
-# Get non-internal things that are ok to not check rerun on
+# Get non-internal things that are ok to not check dalaran on
 py-lint-non-sdk = { depends-on = [
   "py-sync-examples", # these ensure that the .venv is in the right state for type checking examples and snippets
   "py-sync-snippets",
-], cmd = "uv run mypy --config-file rerun_py/.non_sdk_mypy.ini --no-warn-unused-ignore --cache-dir .mypy_cache_rerun_other" }
+], cmd = "uv run mypy --config-file dalaran_py/.non_sdk_mypy.ini --no-warn-unused-ignore --cache-dir .mypy_cache_dalaran_other" }
 # I couldn't get the config to work correctly, so placing relevant directories in command line
 # Until we resolve nbqa config issue keep aligned with nb-strip dirs below
-# MYPYPATH is set to allow mypy to find rerun and rerun_bindings without needing maturin develop.
-py-lint-nb-rerun = { cmd = "uv run nbqa mypy --no-warn-unused-ignore examples/notebook --cache-dir .mypy_cache_rerun_nb ", env = { MYPYPATH = "rerun_py:rerun_py/rerun_sdk:rerun_notebook/src" } }
-# Need to run this in env with rerun installed
-py-lint-rerun = "uv run mypy --no-warn-unused-ignore --cache-dir .mypy_cache_rerun_sdk"
-py-lint-rerun-ty = "uv run ty check --error deprecated"
+# MYPYPATH is set to allow mypy to find dalaran and dalaran_bindings without needing maturin develop.
+py-lint-nb-dalaran = { cmd = "uv run nbqa mypy --no-warn-unused-ignore examples/notebook --cache-dir .mypy_cache_dalaran_nb ", env = { MYPYPATH = "dalaran_py:dalaran_py/dalaran_sdk:dalaran_notebook/src" } }
+# Need to run this in env with dalaran installed
+py-lint-dalaran = "uv run mypy --no-warn-unused-ignore --cache-dir .mypy_cache_dalaran_sdk"
+py-lint-dalaran-ty = "uv run ty check --error deprecated"
 # Isolated examples (their own uv project + .venv, excluded from the shared mypy run above).
 # The script auto-discovers any example whose pyproject.toml sets
-# `[tool.rerun-example] isolated = true` and lints it with the shared mypy config.
-# RERUN_ALLOW_MISSING_BIN matches `py-build` — lets maturin build the rerun-sdk extension
-# into each example's .venv without needing the `rerun` CLI binary on disk first.
-py-lint-isolated-examples = { cmd = "python scripts/ci/isolated_examples.py lint", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
+# `[tool.dalaran-example] isolated = true` and lints it with the shared mypy config.
+# DALARAN_ALLOW_MISSING_BIN matches `py-build` — lets maturin build the dalaran-sdk extension
+# into each example's .venv without needing the `dalaran` CLI binary on disk first.
+py-lint-isolated-examples = { cmd = "python scripts/ci/isolated_examples.py lint", env = { DALARAN_ALLOW_MISSING_BIN = "1" } }
 py-lint = { depends-on = [
-  "py-lint-rerun-ty", # Fast first
+  "py-lint-dalaran-ty", # Fast first
   "py-lint-non-sdk",
-  "py-lint-rerun",
-  "py-lint-nb-rerun",
+  "py-lint-dalaran",
+  "py-lint-nb-dalaran",
   "py-lint-isolated-examples",
 ] }
 
@@ -361,7 +361,7 @@ meilisearch = "meilisearch --db-path=./meilisearch/data.ms --dump-dir=./meilisea
 rs-update-snapshot-tests = "INSTA_UPDATE=always UPDATE_SNAPSHOTS=1 cargo nextest run --all-targets --all-features --cargo-quiet --no-fail-fast"
 
 # Update the Python-based snapshot tests (inline-snapshot for inline snapshots, --snapshot-update for syrupy .ambr files)
-py-update-snapshot-tests = { cmd = "uv run pytest -vv rerun_py/tests --inline-snapshot=fix --snapshot-update", depends-on = [
+py-update-snapshot-tests = { cmd = "uv run pytest -vv dalaran_py/tests --inline-snapshot=fix --snapshot-update", depends-on = [
   "py-build",
 ] }
 
@@ -393,29 +393,29 @@ mdlint = "python scripts/ci/mdlint.py"
 js-setup = "npm i -g yarn"
 
 # Install JS package dependencies
-js-install = { cmd = "yarn install --cwd rerun_js", depends-on = ["js-setup"] }
+js-install = { cmd = "yarn install --cwd dalaran_js", depends-on = ["js-setup"] }
 
 # Build JS packages
-js-build-base = { cmd = "yarn --cwd rerun_js/web-viewer run build", depends-on = ["js-install"] }
-js-build-all = { cmd = "yarn --cwd rerun_js workspaces run build", depends-on = ["js-install"] }
+js-build-base = { cmd = "yarn --cwd dalaran_js/web-viewer run build", depends-on = ["js-install"] }
+js-build-all = { cmd = "yarn --cwd dalaran_js workspaces run build", depends-on = ["js-install"] }
 
 # Build web-viewer and web-viewer-react without rebuilding dl_viewer Wasm
-js-build-no-wasm = { cmd = "yarn --cwd rerun_js workspaces run build:js", depends-on = [
+js-build-no-wasm = { cmd = "yarn --cwd dalaran_js workspaces run build:js", depends-on = [
   "js-install",
 ] }
 
 # Build individual package JS docs in their own directories
-js-build-package-docs = { cmd = "yarn --cwd rerun_js workspaces run docs", depends-on = [
+js-build-package-docs = { cmd = "yarn --cwd dalaran_js workspaces run docs", depends-on = [
   "js-install",
 ] }
 
 # Combine the output of individual package docs into a single directory
-js-docs = { cmd = "yarn --cwd rerun_js run docs", depends-on = ["js-build-package-docs"] }
+js-docs = { cmd = "yarn --cwd dalaran_js run docs", depends-on = ["js-build-package-docs"] }
 
-js-docs-serve = { cmd = "yarn --cwd rerun_js run docs:serve", depends-on = ["js-docs"] }
+js-docs-serve = { cmd = "yarn --cwd dalaran_js run docs:serve", depends-on = ["js-docs"] }
 
 
-# Build and install a development version of the rerun-sdk Python package.
+# Build and install a development version of the dalaran-sdk Python package.
 #
 # These packages are installed into the parallel uv environment.
 #
@@ -423,45 +423,45 @@ js-docs-serve = { cmd = "yarn --cwd rerun_js run docs:serve", depends-on = ["js-
 # the python package. The python code will be imported directly from the source folder and will
 # reflect changes immediately upon re-import.
 # -
-# - RERUN_ALLOW_MISSING_BIN is needed to allow maturin to run without the `rerun` binary being part of the rerun-sdk
+# - DALARAN_ALLOW_MISSING_BIN is needed to allow maturin to run without the `dalaran` binary being part of the dalaran-sdk
 #   package.
 
-py-build = { cmd = "uv run maturin develop --uv --manifest-path rerun_py/Cargo.toml --extras=tests,datafusion,dataloader,tracing", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
-# Build the `rerun-notebook` package.
-py-build-notebook = { cmd = "uv sync --package rerun-notebook --inexact --no-install-package rerun-sdk", depends-on = [
+py-build = { cmd = "uv run maturin develop --uv --manifest-path dalaran_py/Cargo.toml --extras=tests,datafusion,dataloader,tracing", env = { DALARAN_ALLOW_MISSING_BIN = "1" } }
+# Build the `dalaran-notebook` package.
+py-build-notebook = { cmd = "uv sync --package dalaran-notebook --inexact --no-install-package dalaran-sdk", depends-on = [
   "js-build-base",
 ] }
-py-build-notebook-fast = { cmd = "uv sync --package rerun-notebook --inexact --no-install-package rerun-sdk" }
-# Create a wheel for the `rerun-sdk` package.
-py-build-wheel = { cmd = "cp target/release/rerun$EXECUTABLE_EXTENSION rerun_py/rerun_sdk/rerun_cli/ && uv run maturin build --release --manifest-path rerun_py/Cargo.toml", depends-on = [
-  "rerun-build-native-and-web-release",
+py-build-notebook-fast = { cmd = "uv sync --package dalaran-notebook --inexact --no-install-package dalaran-sdk" }
+# Create a wheel for the `dalaran-sdk` package.
+py-build-wheel = { cmd = "cp target/release/dalaran$EXECUTABLE_EXTENSION dalaran_py/dalaran_sdk/dalaran_cli/ && uv run maturin build --release --manifest-path dalaran_py/Cargo.toml", depends-on = [
+  "dalaran-build-native-and-web-release",
 ] }
-# Install example dependencies without rebuilding rerun-sdk.
+# Install example dependencies without rebuilding dalaran-sdk.
 # Use this after `py-build` to add example-specific packages like opencv, torch, etc.
-py-sync-examples = { cmd = "pixi run uv sync --group examples --inexact --no-install-package rerun-sdk" }
-# Install example snippet dependencies without rebuilding rerun-sdk.
+py-sync-examples = { cmd = "pixi run uv sync --group examples --inexact --no-install-package dalaran-sdk" }
+# Install example snippet dependencies without rebuilding dalaran-sdk.
 # Use this after `py-build` to add snippet-specific dependencies.
-py-sync-snippets = { cmd = "pixi run uv sync --group snippets --inexact --no-install-package rerun-sdk" }
+py-sync-snippets = { cmd = "pixi run uv sync --group snippets --inexact --no-install-package dalaran-sdk" }
 
 
-# Build the `rerun-sdk` package in release mode.
-py-build-release = { cmd = "uv run maturin develop --uv --release --manifest-path rerun_py/Cargo.toml --extras=tests,datafusion,dataloader", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
-# Build and install the `rerun-sdk` package with the `web_viewer` & `server` feature.
-py-build-web-viewer = { cmd = "uv run maturin develop --uv --manifest-path rerun_py/Cargo.toml --features web_viewer --extras=tests,datafusion,dataloader", depends-on = [
-  "rerun-build-native-and-web",
-], env = { RERUN_ALLOW_MISSING_BIN = "1" } }
-# Build and install the `rerun-sdk` package with the `web_viewer` & `server` feature in release mode.
-py-build-web-viewer-release = { cmd = "uv run maturin develop --uv --release --manifest-path rerun_py/Cargo.toml --features web_viewer --extras=tests,datafusion,dataloader", depends-on = [
-  "rerun-build-native-and-web-release",
-], env = { RERUN_ALLOW_MISSING_BIN = "1" } }
+# Build the `dalaran-sdk` package in release mode.
+py-build-release = { cmd = "uv run maturin develop --uv --release --manifest-path dalaran_py/Cargo.toml --extras=tests,datafusion,dataloader", env = { DALARAN_ALLOW_MISSING_BIN = "1" } }
+# Build and install the `dalaran-sdk` package with the `web_viewer` & `server` feature.
+py-build-web-viewer = { cmd = "uv run maturin develop --uv --manifest-path dalaran_py/Cargo.toml --features web_viewer --extras=tests,datafusion,dataloader", depends-on = [
+  "dalaran-build-native-and-web",
+], env = { DALARAN_ALLOW_MISSING_BIN = "1" } }
+# Build and install the `dalaran-sdk` package with the `web_viewer` & `server` feature in release mode.
+py-build-web-viewer-release = { cmd = "uv run maturin develop --uv --release --manifest-path dalaran_py/Cargo.toml --features web_viewer --extras=tests,datafusion,dataloader", depends-on = [
+  "dalaran-build-native-and-web-release",
+], env = { DALARAN_ALLOW_MISSING_BIN = "1" } }
 # Dedicated alias for building the python bindings for the `py` environment with performance telemetry including Tracy profiler.
-py-build-perf-debug = { cmd = "uv run maturin develop --uv --manifest-path rerun_py/Cargo.toml --features dl_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
+py-build-perf-debug = { cmd = "uv run maturin develop --uv --manifest-path dalaran_py/Cargo.toml --features dl_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { DALARAN_ALLOW_MISSING_BIN = "1" } }
 # Dedicated alias for building the python bindings in release mode for the `py` environment with performance telemetry including Tracy profiler.
-py-build-perf-release = { cmd = "uv run maturin develop --uv --release --manifest-path rerun_py/Cargo.toml --features dl_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { RERUN_ALLOW_MISSING_BIN = "1" } }
+py-build-perf-release = { cmd = "uv run maturin develop --uv --release --manifest-path dalaran_py/Cargo.toml --features dl_perf_telemetry/tracy --extras=tests,datafusion,dataloader,tracing", env = { DALARAN_ALLOW_MISSING_BIN = "1" } }
 
-py-test = { cmd = "uvpy -m pytest -vv rerun_py/tests", depends-on = ["py-build"] }
-py-test-no-build = { cmd = "uvpy -m pytest -vv rerun_py/tests" }
-py-test-notebook = { cmd = "uvpy -m pytest -vv rerun_notebook/tests", depends-on = [
+py-test = { cmd = "uvpy -m pytest -vv dalaran_py/tests", depends-on = ["py-build"] }
+py-test-no-build = { cmd = "uvpy -m pytest -vv dalaran_py/tests" }
+py-test-notebook = { cmd = "uvpy -m pytest -vv dalaran_notebook/tests", depends-on = [
   "py-build-notebook-fast",
 ] }
 py-bench = { cmd = "uvpy -m pytest --benchmark-only --benchmark-group-by=func --benchmark-sort=fullname", depends-on = [
@@ -474,14 +474,14 @@ py-check-signatures = { cmd = "uvpy scripts/ci/python_check_signatures.py", depe
   "py-build",
 ] }
 
-# Build the JS parts of `rerun-notebook` without rebuilding dl_viewer Wasm in the process
-py-build-notebook-js = { cmd = "npm --prefix rerun_notebook run build", depends-on = [
+# Build the JS parts of `dalaran-notebook` without rebuilding dl_viewer Wasm in the process
+py-build-notebook-js = { cmd = "npm --prefix dalaran_notebook run build", depends-on = [
   "js-build-no-wasm",
 ] }
 
 # Build an installable SDK-only wheel. IMPORTANT: unlike the officially published wheels, the wheel produced by this command does NOT include the viewer.
-py-build-wheels-sdk-only = { cmd = "RERUN_ALLOW_MISSING_BIN=1 python scripts/ci/build_and_upload_wheels.py --mode pr --dir ''" }
-py-build-wheels-sdk-only-zig = { cmd = "RERUN_ALLOW_MISSING_BIN=1 python scripts/ci/build_and_upload_wheels.py --mode pr --dir '' --compat manylinux_2_28 --zig" }
+py-build-wheels-sdk-only = { cmd = "DALARAN_ALLOW_MISSING_BIN=1 python scripts/ci/build_and_upload_wheels.py --mode pr --dir ''" }
+py-build-wheels-sdk-only-zig = { cmd = "DALARAN_ALLOW_MISSING_BIN=1 python scripts/ci/build_and_upload_wheels.py --mode pr --dir '' --compat manylinux_2_28 --zig" }
 
 # Helper alias to run the python interpreter in the context of the python environment
 rrpy = "uvpy"
@@ -496,24 +496,24 @@ py-plot-dashboard = { cmd = "uvpy tests/python/plot_dashboard_stress/main.py", d
 search-index = "uv run --group docs cargo run --locked -p dl_dev_tools -- search-index"
 
 # Serve python docs locally (uses mkdocs from uv docs dependency group)
-py-docs-serve = "uv run --group docs mkdocs serve -f rerun_py/mkdocs.yml -w rerun_py"
+py-docs-serve = "uv run --group docs mkdocs serve -f dalaran_py/mkdocs.yml -w dalaran_py"
 
 # Build python docs locally (uses mkdocs from uv docs dependency group)
-py-docs-build = "uv run --group docs mkdocs build -f rerun_py/mkdocs.yml"
+py-docs-build = "uv run --group docs mkdocs build -f dalaran_py/mkdocs.yml"
 
-# Compile the rerun viewer using the Cranelift backend for fast compilation.
+# Compile the dalaran viewer using the Cranelift backend for fast compilation.
 # Codegen backend config is in .cargo/cranelift.toml (loaded via config-include on nightly).
 # Requires: rustup component add rustc-codegen-cranelift-preview --toolchain nightly
-[tasks.rerun-build-fast]
+[tasks.dalaran-build-fast]
 cmd = """cargo +nightly build --package dl_viewer --bin viewer --profile dev-fast \
   --config 'include=[".cargo/cranelift.toml"]'"""
-[tasks.rerun-build-fast.env]
+[tasks.dalaran-build-fast.env]
 RUSTFLAGS = "-Z threads=0"
 
-# Compile and run the rerun viewer using the Cranelift backend for fast compilation.
-[tasks.rerun-fast]
+# Compile and run the dalaran viewer using the Cranelift backend for fast compilation.
+[tasks.dalaran-fast]
 cmd = "target/dev-fast/viewer"
-depends-on = ["rerun-build-fast"]
+depends-on = ["dalaran-build-fast"]
 
 # ------------------------------------------------------------------------------------------
 # Test coverage (cargo-llvm-cov + nextest) — see scripts/rs_coverage.sh for details.
@@ -533,7 +533,7 @@ args = [{ arg = "crate", default = "--workspace" }]
 cmd = "bash scripts/rs_coverage.sh {{ crate }}"
 
 [feature.cpp.tasks]
-# All the cpp-* tasks can be configured with environment variables, e.g.: RERUN_WERROR=ON CXX=clang++
+# All the cpp-* tasks can be configured with environment variables, e.g.: DALARAN_WERROR=ON CXX=clang++
 # We export a compilation database (compile_commands.json) in the CMake configure step (-DCMAKE_EXPORT_COMPILE_COMMANDS=ON),
 # which is handy for various dev tools like clang-tidy, clangd, vscode etc (https://clang.llvm.org/docs/JSONCompilationDatabase.html).
 cpp-prepare-release = "cmake -G 'Ninja' -B build/release -S . -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Release"
@@ -546,7 +546,7 @@ cpp-build-all-shared-libs = { cmd = "cmake --build build/debug --config Debug --
   "cpp-prepare-shared-libs",
 ] }
 cpp-clean = "rm -rf build CMakeCache.txt CMakeFiles"
-cpp-build-tests = { cmd = "cmake --build build/debug --config Debug --target rerun_sdk_tests", depends-on = [
+cpp-build-tests = { cmd = "cmake --build build/debug --config Debug --target dalaran_sdk_tests", depends-on = [
   "cpp-prepare",
 ] }
 cpp-build-examples = { cmd = "cmake --build build/debug --config Debug --target examples", depends-on = [
@@ -561,17 +561,17 @@ cpp-build-log-benchmark = { cmd = "cmake --build build/release --config Release 
 cpp-build-plot-dashboard-stress = { cmd = "cmake --build build/release --config Release --target plot_dashboard_stress", depends-on = [
   "cpp-prepare-release",
 ] }
-cpp-test = { cmd = "export RERUN_STRICT=1 PYTHONWARNINGS=error && ./build/debug/rerun_cpp/tests/rerun_sdk_tests", depends-on = [
+cpp-test = { cmd = "export DALARAN_STRICT=1 PYTHONWARNINGS=error && ./build/debug/dalaran_cpp/tests/dalaran_sdk_tests", depends-on = [
   "cpp-build-tests",
 ] }
-cpp-log-benchmark = { cmd = "export RERUN_STRICT=1 PYTHONWARNINGS=error && ./build/release/tests/cpp/log_benchmark/log_benchmark", depends-on = [
+cpp-log-benchmark = { cmd = "export DALARAN_STRICT=1 PYTHONWARNINGS=error && ./build/release/tests/cpp/log_benchmark/log_benchmark", depends-on = [
   "cpp-build-log-benchmark",
 ] }
-cpp-plot-dashboard = { cmd = "export RERUN_STRICT=1 PYTHONWARNINGS=error && ./build/release/tests/cpp/plot_dashboard_stress/plot_dashboard_stress", depends-on = [
+cpp-plot-dashboard = { cmd = "export DALARAN_STRICT=1 PYTHONWARNINGS=error && ./build/release/tests/cpp/plot_dashboard_stress/plot_dashboard_stress", depends-on = [
   "cpp-build-plot-dashboard-stress",
 ] }
 cpp-build-and-test-all = { depends-on = ["cpp-build-all", "cpp-test"] }
-cpp-docs = { cmd = "doxygen docs/Doxyfile && echo '***************\nSuccess!\nOpen ./rerun_cpp/docs/html/index.html in your browser.'", cwd = "rerun_cpp" }
+cpp-docs = { cmd = "doxygen docs/Doxyfile && echo '***************\nSuccess!\nOpen ./dalaran_cpp/docs/html/index.html in your browser.'", cwd = "dalaran_cpp" }
 cpp-fmt = "fd --extension h --extension hpp --extension c  --extension cpp --exec clang-format -i"
 cpp-fmt-check = "fd --extension h --extension hpp --extension c  --extension cpp --exec clang-format --dry-run --Werror"
 
@@ -634,7 +634,7 @@ wasm-pack = "0.15.*"
 urllib3 = "<2.6.0" # TODO(googleapis/google-resumable-media-python#491)
 gh = ">=2.79.0,<3"
 binaryen = "117.*" # for `wasm-opt`
-nodejs = ">=22.0" # rerun_notebook needs nodejs to build the wheel
+nodejs = ">=22.0" # dalaran_notebook needs nodejs to build the wheel
 packaging = ">=24.0,<25" # For `publish_wheels.py`
 pip = ">=23"
 wheel = ">=0.38,<0.39"
@@ -642,12 +642,12 @@ wheel = ">=0.38,<0.39"
 [feature.base.pypi-dependencies]
 cryptography = ">=49" # Transitive need of `google-auth` (via `google-cloud-storage`) for `upload_image.py`.
 google-cloud-storage = "==2.9.0" # For `upload_image.py`
-hatch = "*" # For `rerun_notebook`
+hatch = "*" # For `dalaran_notebook`
 pillow = ">=12.2.0,<13" # For `upload_image.py`
 py-spy = ">=0.4" # For profiling Python benchmarks
 pygithub = "==2.6.1" # Among others for `sync_release_assets.py`.
 requests = ">=2.31,<3" # For `thumbnails.py` & `upload_image.py`
-rerun-pixi-env = { path = "rerun_pixi_env", editable = true }
+dalaran-pixi-env = { path = "dalaran_pixi_env", editable = true }
 uv = "==0.11.32"
 
 # Test coverage tooling, isolated in the `coverage` environment (see [environments]).

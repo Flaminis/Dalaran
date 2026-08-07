@@ -2,15 +2,15 @@
 //
 // See also the `arrows3d_column_updates` example, which achieves the same thing in a single operation.
 
-#include <rerun.hpp>
-#include <rerun/demo_utils.hpp>
+#include <dalaran.hpp>
+#include <dalaran/demo_utils.hpp>
 
 #include <algorithm>
 #include <vector>
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_arrows3d_row_updates");
+        dalaran::RecordingStream("dalaran_example_arrows3d_row_updates");
     rec.spawn().exit_on_failure();
 
     // Prepare a fixed sequence of arrows over 5 timesteps.
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
         rec.set_time_duration_secs("time", 10.0 + static_cast<double>(i));
         rec.log(
             "arrows",
-            rerun::Arrows3D::from_vectors(vectors[i])
+            dalaran::Arrows3D::from_vectors(vectors[i])
                 .with_origins(origins[i])
                 .with_colors(colors[i])
         );

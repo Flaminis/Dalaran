@@ -142,8 +142,8 @@ pub struct QueryExpression {
     /// Example (pseudo-code):
     /// ```text
     /// view_contents = {
-    ///   "world/points": [rr.Position3D, rr.Radius],
-    ///   "metrics": [rr.Scalars]
+    ///   "world/points": [dl.Position3D, dl.Radius],
+    ///   "metrics": [dl.Scalars]
     /// }
     /// ```
     pub view_contents: Option<ViewContentsSelector>,

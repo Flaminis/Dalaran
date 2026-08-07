@@ -1,0 +1,158 @@
+use std::net::SocketAddr;
+
+use pyo3::exceptions::PyValueError;
+use pyo3::types::{
+    PyAnyMethods as _, PyDict, PyDictMethods as _, PyModule, PyModuleMethods as _, PyString,
+    PyStringMethods as _,
+};
+use pyo3::{Bound, PyResult, Python, pyclass, pymethods};
+use dl_server::{self, Args as ServerArgs, NamedPathCollection};
+
+#[pyclass(name = "_ServerInternal", module = "dalaran_bindings.dalaran_bindings")]
+pub struct PyServerInternal {
+    handle: Option<dl_server::ServerHandle>,
+    host: std::net::IpAddr,
+    url: String,
+}
+
+#[pymethods]
+impl PyServerInternal {
+    #[new]
+    #[pyo3(signature = (*, host, port, datasets, dataset_prefixes, tables))]
+    #[pyo3(text_signature = "(self, *, host, port, datasets, dataset_prefixes, tables)")]
+    pub fn new(
+        py: Python<'_>,
+        host: &str,
+        port: u16,
+        datasets: &Bound<'_, PyDict>,
+        dataset_prefixes: &Bound<'_, PyDict>,
+        tables: &Bound<'_, PyDict>,
+    ) -> PyResult<Self> {
+        let datasets = extract_named_collections(datasets);
+        let dataset_prefixes = extract_named_paths(dataset_prefixes);
+        let tables = extract_named_paths(tables);
+
+        // we can re-use the CLI argument to construct the server
+        let args = ServerArgs {
+            host: host.to_owned(),
+            port,
+            datasets,
+            dataset_prefixes,
+            tables,
+            latency_ms: 0, // no artificial latency
+            bandwidth_limit: None,
+            cors_allow_origin: vec![],
+        };
+
+        let host: std::net::IpAddr = host
+            .parse()
+            .map_err(|err| PyValueError::new_err(format!("Invalid IP: {host:?}: {err}")))?;
+
+        let connect_ip = if host.is_unspecified() {
+            // We usually cannot connect to 0.0.0.0 or ::, so tell clients to connect to 127.0.0.1 instead:
+            std::net::Ipv4Addr::LOCALHOST.into()
+        } else {
+            host
+        };
+        let connect_address = SocketAddr::new(connect_ip, args.port);
+
+        let url = format!("dalaran+http://{connect_address}");
+
+        crate::utils::wait_for_future(py, async {
+            let handle = args.create_server_handle().await.map_err(|err| {
+                PyValueError::new_err(format!("Failed to start Dalaran server: {err:#}"))
+            })?;
+
+            Ok(Self {
+                handle: Some(handle),
+                host,
+                url,
+            })
+        })
+    }
+
+    /// The address of the server to which clients can connect.
+    pub fn url(&self) -> String {
+        self.url.clone()
+    }
+
+    /// Get the IP that we've bound the server to.
+    pub fn host(&self) -> String {
+        self.host.to_string()
+    }
+
+    pub fn shutdown(&mut self, py: Python<'_>) -> PyResult<()> {
+        if let Some(handle) = self.handle.take() {
+            crate::utils::wait_for_future(py, async {
+                handle.shutdown_and_wait().await;
+                Ok(())
+            })
+        } else {
+            Err(PyValueError::new_err(
+                "Server is not running or has already been shut down",
+            ))
+        }
+    }
+
+    pub fn is_running(&self) -> bool {
+        self.handle.is_some()
+    }
+
+    /// Test hook: make the given gRPC method fail with a `NotFound` error.
+    ///
+    /// The `method` is the gRPC method name, e.g. `"FetchChunks"`.
+    pub fn inject_error(&self, method: &str) -> PyResult<()> {
+        let handle = self.handle.as_ref().ok_or_else(|| {
+            PyValueError::new_err("Server is not running or has already been shut down")
+        })?;
+        handle.injected_errors().inject(method);
+        Ok(())
+    }
+
+    /// Stop failing a previously injected endpoint.
+    pub fn clear_injected_error(&self, method: &str) -> PyResult<()> {
+        let handle = self.handle.as_ref().ok_or_else(|| {
+            PyValueError::new_err("Server is not running or has already been shut down")
+        })?;
+        handle.injected_errors().clear(method);
+        Ok(())
+    }
+}
+
+fn extract_named_paths(dict: &Bound<'_, PyDict>) -> Vec<dl_server::NamedPath> {
+    dict.iter()
+        .filter_map(|(k, v)| {
+            let name = k.cast::<PyString>().ok()?;
+            let path = v.extract::<&str>().ok()?;
+
+            Some(dl_server::NamedPath {
+                name: Some(name.to_string_lossy().to_string()),
+                path: std::path::PathBuf::from(path),
+            })
+        })
+        .collect()
+}
+
+fn extract_named_collections(dict: &Bound<'_, PyDict>) -> Vec<NamedPathCollection> {
+    dict.iter()
+        .filter_map(|(k, v)| {
+            let name = k.cast::<PyString>().ok()?;
+            let paths: Vec<String> = v.extract().ok()?;
+
+            let entry_name =
+                dl_log_types::EntryName::new(name.to_string_lossy().to_string()).ok()?;
+
+            Some(NamedPathCollection {
+                name: entry_name,
+                paths: paths.into_iter().map(std::path::PathBuf::from).collect(),
+            })
+        })
+        .collect()
+}
+
+/// Register the `dalaran.server` module.
+pub fn register(_py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_class::<PyServerInternal>()?;
+
+    Ok(())
+}

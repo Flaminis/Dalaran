@@ -5,7 +5,7 @@ Usage:
   pixi run py-build
   pixi run -e py python tests/python/table_zoo/table_zoo.py [--host HOST] [--port PORT] [--register-to-server]
 
-By default, behaves as before: sends the table to the Rerun Viewer via ViewerClient at rerun+http://127.0.0.1:9876/proxy.
+By default, behaves as before: sends the table to the Dalaran Viewer via ViewerClient at dalaran+http://127.0.0.1:9876/proxy.
 """
 
 from __future__ import annotations
@@ -20,8 +20,8 @@ import lancedb
 import pyarrow as pa
 from platformdirs import user_cache_dir
 
-import rerun as rr
-from rerun.catalog import CatalogClient
+import dalaran as dl
+from dalaran.catalog import CatalogClient
 
 
 def _build_record_batch() -> tuple[str, pa.RecordBatch]:
@@ -40,7 +40,7 @@ def _build_record_batch() -> tuple[str, pa.RecordBatch]:
         "Arrow",
         "DATA",
         "Test",
-        "ReRun",
+        "Dalaran",
         "viewer",
         "TABLE",
         "Query",
@@ -218,12 +218,12 @@ def _build_record_batch() -> tuple[str, pa.RecordBatch]:
         pa.field("ts_ns_non_null", pa.timestamp("ns"), nullable=False),
         pa.field("ts_ns_nullable", pa.timestamp("ns"), nullable=True),
         pa.field("ts_ns_list_nullable", pa.list_(pa.timestamp("ns")), nullable=True),
-        # rr.components.Timestamp column
+        # dl.components.Timestamp column
         pa.field(
             "timestamp_component",
             pa.list_(pa.int64()),
             nullable=True,
-            metadata={"rerun:component_type": "rerun.components.Timestamp"},
+            metadata={"dalaran:component_type": "dalaran.components.Timestamp"},
         ),
     ])
 
@@ -261,7 +261,7 @@ def _build_record_batch() -> tuple[str, pa.RecordBatch]:
         pa.array(ts_ns, type=pa.timestamp("ns")),
         pa.array(ts_ns_nullable, type=pa.timestamp("ns")),
         pa.array(ts_ns_list, type=pa.list_(pa.timestamp("ns"))),
-        # rr.components.Timestamp column
+        # dl.components.Timestamp column
         pa.array([[ts] for ts in ts_ns], type=pa.list_(pa.int64())),
     ]
 
@@ -271,7 +271,7 @@ def _build_record_batch() -> tuple[str, pa.RecordBatch]:
 
 def _get_cache_dir() -> Path:
     """Return an OS-appropriate cache directory for storing Lance tables."""
-    p = Path(user_cache_dir(appname="rerun", appauthor=False))
+    p = Path(user_cache_dir(appname="dalaran", appauthor=False))
     p.mkdir(parents=True, exist_ok=True)
     return p
 
@@ -304,8 +304,8 @@ def _write_recordbatch_to_lance(reader: pa.RecordBatchReader, path: Path | str) 
 
 def _run_viewer_mode(host: str, port: int) -> None:
     name, batch = _build_record_batch()
-    url = f"rerun+http://{host}:{port}/proxy"
-    client = rr.experimental.ViewerClient.connect(url=url)
+    url = f"dalaran+http://{host}:{port}/proxy"
+    client = dl.experimental.ViewerClient.connect(url=url)
     client.send_table(name, batch)
 
 
@@ -321,7 +321,7 @@ def _run_register_mode(host: str, port: int, cache_dir: Path) -> None:
     # Place table under cache_root; last component is table name
     uri = _write_recordbatch_to_lance(reader, cache_root / name)
 
-    c = CatalogClient(f"rerun+http://{host}:{port}")
+    c = CatalogClient(f"dalaran+http://{host}:{port}")
 
     try:
         entry = c.get_table(name)

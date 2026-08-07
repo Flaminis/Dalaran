@@ -20,8 +20,8 @@ from typing import TYPE_CHECKING, Annotated, Literal
 import numpy as np
 import numpy.typing as npt
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -148,7 +148,7 @@ class Map:
             self.obstacles.append((np.array(start), np.array(end)))
 
     def log_obstacles(self, path: str) -> None:
-        rr.log(path, rr.LineStrips2D(self.obstacles))
+        dl.log(path, dl.LineStrips2D(self.obstacles))
 
     def __init__(self) -> None:
         self.obstacles = []  # List of lines as tuples of  (start, end)
@@ -191,34 +191,34 @@ def rrt(
         intersects_obs = mp.intersects_obstacle(closest_node.pos, new_point)
 
         step += 1
-        rr.set_time("step", sequence=step)
-        rr.log("map/new/close_nodes", rr.Clear(recursive=False))
-        rr.log(
+        dl.set_time("step", sequence=step)
+        dl.log("map/new/close_nodes", dl.Clear(recursive=False))
+        dl.log(
             "map/tree/edges",
-            rr.LineStrips2D(tree.segments(), radii=0.0005, colors=[0, 0, 255, 128]),
+            dl.LineStrips2D(tree.segments(), radii=0.0005, colors=[0, 0, 255, 128]),
         )
-        rr.log(
+        dl.log(
             "map/tree/vertices",
-            rr.Points2D([node.pos for node in tree], radii=0.002),
+            dl.Points2D([node.pos for node in tree], radii=0.002),
             # So that we can see the cost at a node by hovering over it.
-            rr.AnyValues(cost=[float(node.cost) for node in tree]),
+            dl.AnyValues(cost=[float(node.cost) for node in tree]),
         )
-        rr.log("map/new/random_point", rr.Points2D([random_point], radii=0.008))
-        rr.log("map/new/closest_node", rr.Points2D([closest_node.pos], radii=0.008))
-        rr.log("map/new/new_point", rr.Points2D([new_point], radii=0.008))
+        dl.log("map/new/random_point", dl.Points2D([random_point], radii=0.008))
+        dl.log("map/new/closest_node", dl.Points2D([closest_node.pos], radii=0.008))
+        dl.log("map/new/new_point", dl.Points2D([new_point], radii=0.008))
 
         color = np.array([0, 255, 0, 255]).astype(np.uint8)
         if intersects_obs:
             color = np.array([255, 0, 0, 255]).astype(np.uint8)
-        rr.log(
+        dl.log(
             "map/new/new_edge",
-            rr.LineStrips2D([(closest_node.pos, new_point)], colors=[color], radii=0.001),
+            dl.LineStrips2D([(closest_node.pos, new_point)], colors=[color], radii=0.001),
         )
 
         if not intersects_obs:
             # Searches for the point in a neighborhood that would result in the minimal cost (distance from start).
             close_nodes = tree.in_neighborhood(new_point, neighborhood_size)
-            rr.log("map/new/close_nodes", rr.Points2D([node.pos for node in close_nodes]))
+            dl.log("map/new/close_nodes", dl.Points2D([node.pos for node in close_nodes]))
 
             min_node = min(
                 filter(
@@ -257,9 +257,9 @@ def rrt(
                 # Reconstruct shortest path in tree
                 path = path_to_root(end_node)
                 segments = [(path[i], path[i + 1]) for i in range(len(path) - 1)]
-                rr.log(
+                dl.log(
                     "map/path",
-                    rr.LineStrips2D(segments, radii=0.002, colors=[0, 255, 255, 255]),
+                    dl.LineStrips2D(segments, radii=0.002, colors=[0, 255, 255, 255]),
                 )
 
     return path
@@ -267,17 +267,17 @@ def rrt(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Visualization of the path finding algorithm RRT*.")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     parser.add_argument("--max-step-size", type=float, default=0.1)
     parser.add_argument("--iterations", type=int, help="How many iterations it should do")
     args = parser.parse_args()
 
-    blueprint = rrb.Horizontal(
-        rrb.Spatial2DView(name="Map", origin="/map", background=[32, 0, 16]),
-        rrb.TextDocumentView(name="Description", origin="/description"),
+    blueprint = dlb.Horizontal(
+        dlb.Spatial2DView(name="Map", origin="/map", background=[32, 0, 16]),
+        dlb.TextDocumentView(name="Description", origin="/description"),
         column_shares=[3, 1],
     )
-    rr.script_setup(args, "rerun_example_rrt_star", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_rrt_star", default_blueprint=blueprint)
 
     max_step_size = args.max_step_size
     neighborhood_size = max_step_size * 1.5
@@ -285,15 +285,15 @@ def main() -> None:
     start_point = np.array([0.2, 0.5])
     end_point = np.array([1.8, 0.5])
 
-    rr.set_time("step", sequence=0)
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
-    rr.log(
+    dl.set_time("step", sequence=0)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
+    dl.log(
         "map/start",
-        rr.Points2D([start_point], radii=0.02, colors=[[255, 255, 255, 255]]),
+        dl.Points2D([start_point], radii=0.02, colors=[[255, 255, 255, 255]]),
     )
-    rr.log(
+    dl.log(
         "map/destination",
-        rr.Points2D([end_point], radii=0.02, colors=[[255, 255, 0, 255]]),
+        dl.Points2D([end_point], radii=0.02, colors=[[255, 255, 0, 255]]),
     )
 
     mp = Map()
@@ -301,7 +301,7 @@ def main() -> None:
 
     __path = rrt(mp, start_point, end_point, max_step_size, neighborhood_size, args.iterations)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ from PIL import Image
 from pyopf.io import load
 from pyopf.resolve import resolve
 
-import rerun as rr
+import dalaran as dl
 
 DESCRIPTION = """
 # Open Photogrammetry Format
@@ -119,7 +119,7 @@ class OPFProject:
     def log_point_cloud(self) -> None:
         """Log the project's point cloud."""
         points = self.project.point_cloud_objs[0].nodes[0]
-        rr.log("world/points", rr.Points3D(points.position, colors=points.color), static=True)
+        dl.log("world/points", dl.Points3D(points.position, colors=points.color), static=True)
 
     def log_calibrated_cameras(self, jpeg_quality: int | None) -> None:
         """
@@ -141,7 +141,7 @@ class OPFProject:
                 continue
 
             if self.log_as_frames:
-                rr.set_time("image", sequence=i)
+                dl.set_time("image", sequence=i)
                 entity = "world/cameras"
             else:
                 entity = f"world/cameras/{i}"
@@ -170,30 +170,30 @@ class OPFProject:
                 ])
             )
 
-            rr.log(entity, rr.Transform3D(translation=calib_camera.position, mat3x3=rot))
+            dl.log(entity, dl.Transform3D(translation=calib_camera.position, mat3x3=rot))
 
             assert calib_sensor.internals.type == "perspective"
 
             # RUB coordinate system specified in https://pix4d.github.io/opf-spec/specification/projected_input_cameras.html#coordinate-system-specification
-            rr.log(
+            dl.log(
                 entity + "/image",
-                rr.Pinhole(
+                dl.Pinhole(
                     resolution=sensor.image_size_px,
                     focal_length=calib_sensor.internals.focal_length_px,
                     principal_point=calib_sensor.internals.principal_point_px,
-                    camera_xyz=rr.ViewCoordinates.RUB,
+                    camera_xyz=dl.ViewCoordinates.RUB,
                 ),
             )
 
             if jpeg_quality is not None:
                 with Image.open(self.path.parent / camera.uri) as img:
-                    rr.log(entity + "/image/rgb", rr.Image(img).compress(jpeg_quality=jpeg_quality))
+                    dl.log(entity + "/image/rgb", dl.Image(img).compress(jpeg_quality=jpeg_quality))
             else:
-                rr.log(entity + "/image/rgb", rr.EncodedImage(path=self.path.parent / camera.uri))
+                dl.log(entity + "/image/rgb", dl.EncodedImage(path=self.path.parent / camera.uri))
 
 
 def main() -> None:
-    logging.getLogger().addHandler(rr.LoggingHandler())
+    logging.getLogger().addHandler(dl.LoggingHandler())
     logging.getLogger().setLevel("INFO")
 
     parser = argparse.ArgumentParser(
@@ -217,7 +217,7 @@ def main() -> None:
         help="If specified, compress the camera images with the given JPEG quality.",
     )
 
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
 
     args, unknown = parser.parse_known_args()
     for arg in unknown:
@@ -226,13 +226,13 @@ def main() -> None:
     # load the data set
     project = OPFProject.from_dataset(args.dataset, log_as_frames=not args.no_frames)
 
-    # display everything in Rerun
-    rr.script_setup(args, "rerun_example_open_photogrammetry_format")
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
-    rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
+    # display everything in Dalaran
+    dl.script_setup(args, "dalaran_example_open_photogrammetry_format")
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
+    dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
     project.log_point_cloud()
     project.log_calibrated_cameras(jpeg_quality=args.jpeg_quality)
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 name = "openstreetmap_data"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["requests", "rerun-sdk"]
+dependencies = ["requests", "dalaran-sdk"]
 
 [project.scripts]
 openstreetmap_data = "openstreetmap_data:main"

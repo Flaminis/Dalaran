@@ -2,14 +2,14 @@
 //!
 //! This is semantically equivalent to the `arrows3d_row_updates` example, albeit much faster.
 
-use rerun::demo_util::linspace;
+use dalaran::demo_util::linspace;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_arrows3d_column_updates",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_arrows3d_column_updates",
     )
     .spawn()?;
-    let times = rerun::TimeColumn::new_duration_secs("time", 10..15);
+    let times = dalaran::TimeColumn::new_duration_secs("time", 10..15);
 
     // Prepare a fixed sequence of arrows over 5 timesteps.
     // Origins stay constant, vectors change magnitude and direction, and each timestep has a unique color.
@@ -27,11 +27,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // At each timestep, all arrows share the same but changing color.
     let colors = [0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 0x00FFFFFF];
 
-    let arrows = rerun::Arrows3D::update_fields()
+    let arrows = dalaran::Arrows3D::update_fields()
         .with_origins(origins.into_iter().flatten())
         .with_vectors(vectors.into_iter().flatten())
         .columns([5, 5, 5, 5, 5])?;
-    let color = rerun::Arrows3D::update_fields()
+    let color = dalaran::Arrows3D::update_fields()
         .with_colors(colors)
         .columns_of_unit_batches()?;
 

@@ -1,6 +1,6 @@
 //! Log an encoded depth image stored as a 16-bit PNG or RVL file
 
-use rerun::external::anyhow;
+use dalaran::external::anyhow;
 
 fn main() -> anyhow::Result<()> {
     let args = _args;
@@ -9,15 +9,15 @@ fn main() -> anyhow::Result<()> {
     };
 
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_encoded_depth_image")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_encoded_depth_image")
             .spawn()?;
 
     let depth_blob = std::fs::read(path)?;
-    let encoded_depth = rerun::EncodedDepthImage::new(depth_blob)
+    let encoded_depth = dalaran::EncodedDepthImage::new(depth_blob)
         .with_media_type(if path.ends_with(".png") {
-            rerun::components::MediaType::PNG
+            dalaran::components::MediaType::PNG
         } else {
-            rerun::components::MediaType::RVL
+            dalaran::components::MediaType::RVL
         })
         .with_meter(0.001_f32);
 

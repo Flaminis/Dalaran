@@ -6,13 +6,13 @@ description: Setting up the Python SDK
 
 The Python SDK includes both the SDK and the Viewer, so you're ready to go with a single install:
 
--   `pip install rerun-sdk` via pip
--   `conda install -c conda-forge rerun-sdk` via Conda
+-   `pip install dalaran-sdk` via pip
+-   `conda install -c conda-forge dalaran-sdk` via Conda
 
 Conda always comes with support for all features but if using pip you may need to specify optional features:
--   `pip install rerun-sdk[notebook]` for the embedded notebook tools
--   `pip install rerun-sdk[catalog]` for the query api tools
--   `pip install rerun-sdk[dataloader]` for model training tools
+-   `pip install dalaran-sdk[notebook]` for the embedded notebook tools
+-   `pip install dalaran-sdk[catalog]` for the query api tools
+-   `pip install dalaran-sdk[dataloader]` for model training tools
 
 ## Next steps
 

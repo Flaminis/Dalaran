@@ -1,22 +1,22 @@
 ---
-title: Query data out of Rerun
+title: Query data out of Dalaran
 order: 100
-description: Load Rerun data into Pandas, Polars, or DuckDB
+description: Load Dalaran data into Pandas, Polars, or DuckDB
 ---
 
-Rerun comes with the ability to get data out of Rerun from code. This page provides an overview of the API, as well as recipes to load the data in popular packages such as [Pandas](https://pandas.pydata.org), [Polars](https://pola.rs), and [DuckDB](https://duckdb.org).
+Dalaran comes with the ability to get data out of Dalaran from code. This page provides an overview of the API, as well as recipes to load the data in popular packages such as [Pandas](https://pandas.pydata.org), [Polars](https://pola.rs), and [DuckDB](https://duckdb.org).
 
 ## Starting a server with recordings
 
 The first step to query data is to start a catalog server and load it with a dataset containing your recording.
 
-See the [catalog object model](../../concepts/query-and-transform/catalog-object-model.md) docs for more details on how datasets are organized in Rerun.
+See the [catalog object model](../../concepts/query-and-transform/catalog-object-model.md) docs for more details on how datasets are organized in Dalaran.
 
 ```python
-import rerun as rr
+import dalaran as dl
 
 # Start a server with one or more .rrd files
-with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
     client = server.client()
     dataset = client.get_dataset("my_dataset")
 ```
@@ -24,7 +24,7 @@ with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
 The server can host multiple datasets. Each dataset maps to either a list of `.rrd` files or a directory (which will be scanned for `.rrd` files):
 
 ```python
-with rr.server.Server(
+with dl.server.Server(
     datasets={
         # Explicit list of RRD files
         "dataset1": ["recording1.rrd", "recording2.rrd"],
@@ -44,14 +44,14 @@ You can also start a longer running server in a separate process and connect to 
 In one file or terminal launch the server and print its address,
 
 ```python
-server = rr.server.Server()
+server = dl.server.Server()
 print(server.url())
 ```
 
 in a separate file or terminal connect to that url
 
 ```python
-client = rr.catalog.CatalogClient(server.url())
+client = dl.catalog.CatalogClient(server.url())
 ```
 
 ## Adding new datasets
@@ -70,7 +70,7 @@ dataset.register(Path("/path/to/recording/recording.rrd").resolve().as_uri()).wa
 Either specify the network location with the CLI at launch:
 
 ```console
-rerun connect localhost:51234
+dalaran connect localhost:51234
 ```
 
 or open the command palette in the viewer (`cmd/ctrl + P` or via the menu) and enter/select `Add Redap server`.
@@ -96,11 +96,11 @@ df = dataset.reader(index="frame_nr")
 print(df)
 ```
 
-The returned object is a [`datafusion.DataFrame`](https://datafusion.apache.org/python/autoapi/datafusion/dataframe/index.html#datafusion.dataframe.DataFrame). Rerun's query APIs heavily rely on [DataFusion](https://datafusion.apache.org), which offers a rich set of data filtering, manipulation, and conversion tools.
+The returned object is a [`datafusion.DataFrame`](https://datafusion.apache.org/python/autoapi/datafusion/dataframe/index.html#datafusion.dataframe.DataFrame). Dalaran's query APIs heavily rely on [DataFusion](https://datafusion.apache.org), which offers a rich set of data filtering, manipulation, and conversion tools.
 
 When calling `reader()`, an index column must be specified. It can be any of the recording's timelines. Each row of the view will correspond to a unique value of the index column. It is also possible to query the dataset using `index=None`. In this case, only the `static=True` data will be returned.
 
-By default, when performing a query on a dataset, data for all its segments is returned. An additional `"rerun_segment_id"` column is added to the dataframe to indicate which segment each row belongs to.
+By default, when performing a query on a dataset, data for all its segments is returned. An additional `"dalaran_segment_id"` column is added to the dataframe to indicate which segment each row belongs to.
 
 An often used parameter of the `reader()` method is `fill_latest_at=True`. When used, all `null` data will be filled with a latest-at value, similarly to how the viewer works.
 
@@ -155,9 +155,9 @@ Likewise, DataFusion offers a rich set of tools to convert a dataframe to variou
 ### Load data to a PyArrow `Table`
 
 ```python
-import rerun as rr
+import dalaran as dl
 
-with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     table = dataset.reader(index="frame_nr").to_arrow_table()
 ```
@@ -165,9 +165,9 @@ with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
 ### Load data to a Pandas dataframe
 
 ```python
-import rerun as rr
+import dalaran as dl
 
-with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     df = dataset.reader(index="frame_nr").to_pandas()
 ```
@@ -175,10 +175,10 @@ with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
 ### Load data to a Polars dataframe
 
 ```python
-import rerun as rr
+import dalaran as dl
 import polars as pl
 
-with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     df = pl.from_arrow(dataset.reader(index="frame_nr").to_arrow_table())
 ```
@@ -186,10 +186,10 @@ with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
 ### Load data to a DuckDB relation
 
 ```python
-import rerun as rr
+import dalaran as dl
 import duckdb
 
-with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
     dataset = server.client().get_dataset("my_dataset")
     table = dataset.reader(index="frame_nr").to_arrow_table()
     rel = duckdb.arrow(table)

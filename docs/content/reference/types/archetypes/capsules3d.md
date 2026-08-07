@@ -11,7 +11,7 @@ Capsules in other orientations may be produced by applying a rotation to the ent
 instances.
 
 If there's more instance poses than lengths & radii, the last capsule's orientation will be repeated for the remaining poses.
-Orienting and placing capsules forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d).
+Orienting and placing capsules forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d).
 
 ## Fields
 ### Required
@@ -38,9 +38,9 @@ Orienting and placing capsules forms a separate transform that is applied prior 
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Capsules3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Capsules3D.html)
- * 🐍 [Python API docs for `Capsules3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Capsules3D)
- * 🦀 [Rust API docs for `Capsules3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Capsules3D.html)
+ * 🌊 [C++ API docs for `Capsules3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Capsules3D.html)
+ * 🐍 [Python API docs for `Capsules3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Capsules3D)
+ * 🦀 [Rust API docs for `Capsules3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Capsules3D.html)
 
 ## Example
 

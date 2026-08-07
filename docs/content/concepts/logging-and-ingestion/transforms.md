@@ -6,14 +6,14 @@ description: Coordinate frames and how transforms relate them
 
 <!-- Figma file for diagrams in this article: https://www.figma.com/board/PTwJKgi9kQOqG7ZgzdhrDL/Transforms-doc-page-graphs?t=fWkOGxxn6mZkkCON-1 -->
 
-Rerun comes with built-in support for modeling spatial relationships between entities.
-This page details how the [different archetypes](https://rerun.io/docs/reference/types/archetypes#transforms) involved interact with each other and explains how transforms are set up in Rerun.
+Dalaran comes with built-in support for modeling spatial relationships between entities.
+This page details how the [different archetypes](https://dalaran.dev/docs/reference/types/archetypes#transforms) involved interact with each other and explains how transforms are set up in Dalaran.
 
 ## Transforms
 
 ### Entity path transforms
 
-The [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d) archetype allows you to specify how one coordinate system relates to another through translation, rotation, and scaling.
+The [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d) archetype allows you to specify how one coordinate system relates to another through translation, rotation, and scaling.
 
 The simplest way to use transforms is through [entity path hierarchies](entity-path.md), where each transform describes the relationship between an entity and its parent path.
 Note that by default, all entities are connected via identity transforms.
@@ -37,9 +37,9 @@ your data much closer to how it would be defined when using ROS' [tf2](https://w
 By explicitly specifying transform frames, you can decouple spatial relationships from the entity hierarchy.
 
 Instead of relying on entity path relationships, each entity is first associated with a named transform frame using
-the [`CoordinateFrame`](https://rerun.io/docs/reference/types/archetypes/coordinate_frame) archetype.
+the [`CoordinateFrame`](https://dalaran.dev/docs/reference/types/archetypes/coordinate_frame) archetype.
 
-The geometric relationship between two transform frames is then determined by logging [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d)
+The geometric relationship between two transform frames is then determined by logging [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d)
 with `child_frame` and `parent_frame` parameters set to their respective names.
 
 snippet: concepts/transform3d_hierarchy_named_frames
@@ -60,7 +60,7 @@ Named transform frames have several advantages over entity path based hierarchie
 
 ### Entity hierarchy based transforms under the hood
 
-Under the hood, Rerun's entity path hierarchies actually use the same transform frame system as named frames.
+Under the hood, Dalaran's entity path hierarchies actually use the same transform frame system as named frames.
 For each entity path, an associated transform frame with the prefix `tf#` is automatically created:
 for example, an entity `/world/robot` gets frame `tf#/world/robot`.
 
@@ -77,25 +77,25 @@ have implicit identity relationships.
 
 Given these entities:
 ```python
-rr.log("robot", rr.Transform3D(translation=[1, 0, 0]))
-rr.log("robot/arm", rr.Transform3D(translation=[0, 1, 0]))
-rr.log("robot/arm/gripper", rr.Points3D([0, 0, 0]))
+dl.log("robot", dl.Transform3D(translation=[1, 0, 0]))
+dl.log("robot/arm", dl.Transform3D(translation=[0, 1, 0]))
+dl.log("robot/arm/gripper", dl.Points3D([0, 0, 0]))
 ```
 
-Rerun will interpret this _as-if_ it was logged with the named transform frames like so:
+Dalaran will interpret this _as-if_ it was logged with the named transform frames like so:
 
 ```python
-rr.log(
+dl.log(
     "robot",
-    rr.CoordinateFrame("tf#/robot"),
-    rr.Transform3D(translation=[1, 0, 0], child_frame="tf#/robot", parent_frame="tf#/"),
+    dl.CoordinateFrame("tf#/robot"),
+    dl.Transform3D(translation=[1, 0, 0], child_frame="tf#/robot", parent_frame="tf#/"),
 )
-rr.log(
+dl.log(
     "robot/arm",
-    rr.CoordinateFrame("tf#/robot/arm"),
-    rr.Transform3D(translation=[0, 1, 0], child_frame="tf#/robot/arm", parent_frame="tf#/robot"),
+    dl.CoordinateFrame("tf#/robot/arm"),
+    dl.Transform3D(translation=[0, 1, 0], child_frame="tf#/robot/arm", parent_frame="tf#/robot"),
 )
-rr.log("robot/arm/gripper", rr.CoordinateFrame("tf#/robot/arm/gripper"), rr.Points3D([0, 0, 0]))
+dl.log("robot/arm/gripper", dl.CoordinateFrame("tf#/robot/arm/gripper"), dl.Points3D([0, 0, 0]))
 ```
 
 <picture>
@@ -109,13 +109,13 @@ but doing so works seamlessly and can be useful if necessary.
 
 Example:
 ```python
-rr.log("robot", rr.Transform3D(translation=[1, 0, 0]))
-rr.log(
+dl.log("robot", dl.Transform3D(translation=[1, 0, 0]))
+dl.log(
     "arm",
-    rr.Transform3D(translation=[0, 1, 0], parent_frame="tf#/robot", child_frame="arm_frame"),
-    rr.CoordinateFrame("arm_frame"),
+    dl.Transform3D(translation=[0, 1, 0], parent_frame="tf#/robot", child_frame="arm_frame"),
+    dl.CoordinateFrame("arm_frame"),
 )
-rr.log("gripper", rr.Points3D([0, 0, 0]), rr.CoordinateFrame("arm_frame"))
+dl.log("gripper", dl.Points3D([0, 0, 0]), dl.CoordinateFrame("arm_frame"))
 ```
 
 <picture>
@@ -126,18 +126,18 @@ rr.log("gripper", rr.Points3D([0, 0, 0]), rr.CoordinateFrame("arm_frame"))
 
 ### Pinhole projections
 
-In Rerun, pinhole cameras are not merely another archetype that can be visualized,
+In Dalaran, pinhole cameras are not merely another archetype that can be visualized,
 they are also treated as spatial relationships that define projections from 3D spaces to 2D subspaces.
 This unified approach allows the Viewer to handle both traditional 3D-to-3D transforms and 3D-to-2D projections.
 
-The [`Pinhole`](https://rerun.io/docs/reference/types/archetypes/pinhole) archetype defines this projection relationship through its intrinsic matrix (`image_from_camera`) and resolution.
-Both implicit & named coordinate frames are supported, exactly as on [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d).
+The [`Pinhole`](https://dalaran.dev/docs/reference/types/archetypes/pinhole) archetype defines this projection relationship through its intrinsic matrix (`image_from_camera`) and resolution.
+Both implicit & named coordinate frames are supported, exactly as on [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d).
 
 With the right setup, pinholes allow a bunch of powerful visualizations:
 * the pinhole glyph itself in 3D views
 * 2D in 3D: all 2D content that is part of the pinhole's transform subtree
 * 3D in 2D: if the pinhole is at the origin of the view, 3D objects can be projected through pinhole camera into the view.
-    * Both the [nuscenes](https://rerun.io/examples/robotics/nuscenes_dataset) and [arkit](https://rerun.io/examples/spatial-computing/arkit_scenes) examples make use of this
+    * Both the [nuscenes](https://dalaran.dev/examples/robotics/nuscenes_dataset) and [arkit](https://dalaran.dev/examples/spatial-computing/arkit_scenes) examples make use of this
 
 If a transform frame relationship has both a pinhole projection & regular transforms (in this context often regarded as the camera extrinsics),
 the regular transform is applied first.
@@ -147,7 +147,7 @@ the regular transform is applied first.
 Here's how to set up a 3D scene with pinhole cameras that create 2D projections:
 
 In this example, the 3D objects (box and points) are automatically projected into the 2D camera view,
-demonstrating how Rerun's transform system handles the spatial relationship between 3D world coordinates
+demonstrating how Dalaran's transform system handles the spatial relationship between 3D world coordinates
 and 2D image coordinates through pinhole projections.
 
 snippet: archetypes/pinhole_projections
@@ -163,40 +163,40 @@ snippet: archetypes/pinhole_projections
 
 ### View coordinates
 
-[`ViewCoordinates`](https://rerun.io/docs/reference/types/archetypes/view_coordinates) describes an orientation convention by specifying the directions in which the positive X, Y, and Z axes point.
+[`ViewCoordinates`](https://dalaran.dev/docs/reference/types/archetypes/view_coordinates) describes an orientation convention by specifying the directions in which the positive X, Y, and Z axes point.
 It controls camera and view orientation.
 
-For a 3D view, [`SpatialInformation.axes`](https://rerun.io/docs/reference/types/views/spatial3d_view) controls the eye orientation, navigation, and default grid plane.
+For a 3D view, [`SpatialInformation.axes`](https://dalaran.dev/docs/reference/types/views/spatial3d_view) controls the eye orientation, navigation, and default grid plane.
 A logged `ViewCoordinates` archetype provides the default value for 3D views whose origin is at or below that entity.
-The view uses the value at its origin or the closest ancestor, so logging `rr.log("/", rr.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)` applies to all 3D views unless a view overrides it in its blueprint.
+The view uses the value at its origin or the closest ancestor, so logging `dl.log("/", dl.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)` applies to all 3D views unless a view overrides it in its blueprint.
 If no archetype value is found, the view uses `camera_xyz` from the closest ancestor pinhole, followed by `RFU` as the final fallback.
 This orientation does not change logged transforms.
 
-For a [`Pinhole`](https://rerun.io/docs/reference/types/archetypes/pinhole), `camera_xyz` controls the camera orientation and projection direction.
+For a [`Pinhole`](https://dalaran.dev/docs/reference/types/archetypes/pinhole), `camera_xyz` controls the camera orientation and projection direction.
 The default is `RDF`: +X is right, +Y is down, and +Z is forward.
 Changing `camera_xyz` reorients the camera frustum, projected depth data, and the projection of 3D content into the camera view.
-See the [`open_photogrammetry_format`](https://rerun.io/examples/3d-reconstruction/open_photogrammetry_format) example for a non-default camera orientation.
+See the [`open_photogrammetry_format`](https://dalaran.dev/examples/3d-reconstruction/open_photogrammetry_format) example for a non-default camera orientation.
 
 For 2D spaces and other entities, view coordinates currently have currently no effect ([#1387](https://github.com/rerun-io/rerun/issues/1387)).
 
 ### Pose transforms
 
-[`InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) defines geometric poses relative to an entity's transform frame.
-Unlike with [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d), poses do not propagate through the transform hierarchy
+[`InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) defines geometric poses relative to an entity's transform frame.
+Unlike with [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d), poses do not propagate through the transform hierarchy
 and can store an arbitrary amount of transforms on the same entity.
 
-For an entity that has both [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d)
+For an entity that has both [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d)
 (without `child_frame`/`parent_frame`) and `InstancePoses3D`,
-the [`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d) is applied first
-(affecting the entity and all its children), then [`InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d)
+the [`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d) is applied first
+(affecting the entity and all its children), then [`InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d)
 is applied only to that specific entity.
 (This is consistent with how entity hierarchy based transforms translate to transform frames.)
 
 #### Instancing
 
-Rerun's [`InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) archetype is not only used
+Dalaran's [`InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) archetype is not only used
 to model poses relative to an Entity's frame, but also for repeating (known as "instancing") visualizations on the same entity:
-most visualizations will show once for each transform on [`InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d)
+most visualizations will show once for each transform on [`InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d)
 in the respective place.
 
 snippet: archetypes/mesh3d_instancing
@@ -213,13 +213,13 @@ The box at `"shape/box"` is not affected by its parent's instance poses and appe
 
 ## Debugging transform trees
 
-The Rerun viewer features a debugging UI for visual introspection of the 3D transform cache.
+The Dalaran viewer features a debugging UI for visual introspection of the 3D transform cache.
 This allows to view the tree structure of the transforms, including potentially disconnected trees, and inspect the latest stored values of each frame node or transform edge.
 The UI supports horizontal and vertical tree layout and you can filter by transform type (e.g. static or temporal).
 
 > [!NOTE]
 > This UI is currently a tab in the dev panel (accessible via "Toggle dev panel" in the menu or ctrl/cmd+shift+m).
-> We are open to making this a dedicated view in the future - let us know if you have any [feedback](https://rerun.io/docs/development)!
+> We are open to making this a dedicated view in the future - let us know if you have any [feedback](https://dalaran.dev/docs/development)!
 
 <video width="100%" autoplay loop muted controls>
     <source src="https://static.rerun.io/cc6c41138eeeabb31fb2ec988eefdcd8da446c86_transform_dev_panel_teaser.mp4" type="video/mp4" />

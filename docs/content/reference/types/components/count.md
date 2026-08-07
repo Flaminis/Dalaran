@@ -8,7 +8,7 @@ A generic count value.
 
 Used for counting various entities like messages, schemas, channels, etc.
 
-## Rerun datatype
+## Dalaran datatype
 [`UInt64`](../datatypes/uint64.md)
 
 
@@ -18,9 +18,9 @@ UInt64
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Count`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Count.html)
- * 🐍 [Python API docs for `Count`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Count)
- * 🦀 [Rust API docs for `Count`](https://docs.rs/rerun/latest/rerun/components/struct.Count.html)
+ * 🌊 [C++ API docs for `Count`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Count.html)
+ * 🐍 [Python API docs for `Count`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Count)
+ * 🦀 [Rust API docs for `Count`](https://docs.rs/dalaran/latest/dalaran/components/struct.Count.html)
 
 
 ## Used by

@@ -1,0 +1,55 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+import pytest
+import dalaran as dl
+from dalaran.error_utils import DalaranWarning
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+dl.init("dalaran_example_exceptions", spawn=False)
+# Make sure strict mode isn't leaking in from another context
+mem = dl.memory_recording()
+
+
+def expect_warning(call: Callable[..., None], expected_warning: str) -> None:
+    with pytest.warns(DalaranWarning) as warnings:
+        call()
+        print("Logged warnings:")
+        for warning in warnings:
+            print(warning)
+        assert len(warnings) == 1
+        assert expected_warning in str(warnings[0])
+
+
+def test_expected_warnings() -> None:
+    # Always set strict mode to false in case it leaked from another test
+    dl.set_strict_mode(False)
+
+    expect_warning(
+        lambda: dl.log("points", dl.Points3D([1, 2, 3, 4, 5])),
+        "Expected either a flat array with a length multiple of 3 elements, or an array with shape (`num_elements`, 3). Shape of passed array was (5,).",
+    )
+    expect_warning(
+        lambda: dl.log("points", dl.Points2D([1, 2, 3, 4, 5])),
+        "Expected either a flat array with a length multiple of 2 elements, or an array with shape (`num_elements`, 2). Shape of passed array was (5,).",
+    )
+    expect_warning(
+        lambda: dl.log("test_transform", dl.Transform3D(rotation=[1, 2, 3, 4, 5])),  # type: ignore[arg-type]
+        "Rotation must be compatible with either RotationQuat or RotationAxisAngle",
+    )
+    expect_warning(
+        # TODO(jleibs): This should ideally capture the field name as mat3x3 as above
+        lambda: dl.log("test_transform", dl.Transform3D(mat3x3=[1, 2, 3, 4, 5])),
+        "cannot reshape array of size 5 into shape (3,3))",
+    )
+    expect_warning(
+        lambda: dl.log("test_transform", dl.datatypes.Vec3D([1, 0, 0])),  # type: ignore[arg-type]
+        "Expected an object implementing dalaran.AsComponents or an iterable of dalaran.DescribedComponentBatch, but got",
+    )
+    expect_warning(
+        lambda: dl.log("world/image", dl.Pinhole(focal_length=3)),
+        "Must provide one of principal_point, resolution, or width/height)",
+    )

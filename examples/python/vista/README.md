@@ -16,7 +16,7 @@ Vista is a generative driving world model. Built on Stable Video Diffusion it ca
 ## Run the code
 This is an external example, check the [repository](https://github.com/rerun-io/hf-example-vista) for more information.
 
-You can try the example on Rerun's HuggingFace space [here](https://huggingface.co/spaces/rerun/Vista).
+You can try the example on Dalaran's HuggingFace space [here](https://huggingface.co/spaces/dalaran/Vista).
 
 If you have a GPU with ~20GB of memory you can run the example locally. To do so, clone the repo and run:
 ```

@@ -5,7 +5,7 @@ title: "LatLon"
 
 A geospatial position expressed in [EPSG:4326](https://epsg.io/4326) latitude and longitude (North/East-positive degrees).
 
-## Rerun datatype
+## Dalaran datatype
 [`DVec2D`](../datatypes/dvec2d.md)
 
 
@@ -15,9 +15,9 @@ FixedSizeList(2 x non-null Float64)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `LatLon`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1LatLon.html)
- * 🐍 [Python API docs for `LatLon`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.LatLon)
- * 🦀 [Rust API docs for `LatLon`](https://docs.rs/rerun/latest/rerun/components/struct.LatLon.html)
+ * 🌊 [C++ API docs for `LatLon`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1LatLon.html)
+ * 🐍 [Python API docs for `LatLon`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.LatLon)
+ * 🦀 [Rust API docs for `LatLon`](https://docs.rs/dalaran/latest/dalaran/components/struct.LatLon.html)
 
 
 ## Used by

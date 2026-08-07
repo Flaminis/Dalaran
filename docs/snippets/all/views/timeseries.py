@@ -2,76 +2,76 @@
 
 import math
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_timeseries", spawn=True)
+dl.init("dalaran_example_timeseries", spawn=True)
 
 # Log some trigonometric functions
-rr.log(
+dl.log(
     "trig/sin",
-    rr.SeriesLines(colors=[255, 0, 0], names="sin(0.01t)"),
+    dl.SeriesLines(colors=[255, 0, 0], names="sin(0.01t)"),
     static=True,
 )
-rr.log(
+dl.log(
     "trig/cos",
-    rr.SeriesLines(colors=[0, 255, 0], names="cos(0.01t)"),
+    dl.SeriesLines(colors=[0, 255, 0], names="cos(0.01t)"),
     static=True,
 )
-rr.log(
+dl.log(
     "trig/cos_scaled",
-    rr.SeriesLines(colors=[0, 0, 255], names="cos(0.01t) scaled"),
+    dl.SeriesLines(colors=[0, 0, 255], names="cos(0.01t) scaled"),
     static=True,
 )
 for t in range(int(math.pi * 4 * 100.0)):
-    rr.set_time("timeline0", sequence=t)
-    rr.set_time("timeline1", duration=t)
-    rr.log("trig/sin", rr.Scalars(math.sin(float(t) / 100.0)))
-    rr.log("trig/cos", rr.Scalars(math.cos(float(t) / 100.0)))
-    rr.log("trig/cos_scaled", rr.Scalars(math.cos(float(t) / 100.0) * 2.0))
+    dl.set_time("timeline0", sequence=t)
+    dl.set_time("timeline1", duration=t)
+    dl.log("trig/sin", dl.Scalars(math.sin(float(t) / 100.0)))
+    dl.log("trig/cos", dl.Scalars(math.cos(float(t) / 100.0)))
+    dl.log("trig/cos_scaled", dl.Scalars(math.cos(float(t) / 100.0) * 2.0))
 
 # Create a TimeSeries View
-blueprint = rrb.Blueprint(
-    rrb.Vertical(
+blueprint = dlb.Blueprint(
+    dlb.Vertical(
         contents=[
-            rrb.TimeSeriesView(
+            dlb.TimeSeriesView(
                 origin="/trig",
                 # Set a custom Y axis.
-                axis_y=rrb.ScalarAxis(range=(-1.0, 1.0), zoom_lock=True),
+                axis_y=dlb.ScalarAxis(range=(-1.0, 1.0), zoom_lock=True),
                 # Configure the legend.
-                plot_legend=rrb.PlotLegend(visible=False),
+                plot_legend=dlb.PlotLegend(visible=False),
                 # Set time different time ranges for different timelines.
                 time_ranges=[
                     # Sliding window depending on the time cursor for the
                     # first timeline.
-                    rrb.VisibleTimeRange(
+                    dlb.VisibleTimeRange(
                         "timeline0",
-                        start=rrb.TimeRangeBoundary.cursor_relative(seq=-100),
-                        end=rrb.TimeRangeBoundary.cursor_relative(),
+                        start=dlb.TimeRangeBoundary.cursor_relative(seq=-100),
+                        end=dlb.TimeRangeBoundary.cursor_relative(),
                     ),
                     # Time range from some point to the end of the timeline
                     # for the second timeline.
-                    rrb.VisibleTimeRange(
+                    dlb.VisibleTimeRange(
                         "timeline1",
-                        start=rrb.TimeRangeBoundary.absolute(seconds=300.0),
-                        end=rrb.TimeRangeBoundary.infinite(),
+                        start=dlb.TimeRangeBoundary.absolute(seconds=300.0),
+                        end=dlb.TimeRangeBoundary.infinite(),
                     ),
                 ],
             ),
-            rrb.TimeSeriesView(
+            dlb.TimeSeriesView(
                 origin="/trig",
-                axis_x=rrb.TimeAxis(
-                    view_range=rr.TimeRange(
-                        start=rrb.TimeRangeBoundary.cursor_relative(
+                axis_x=dlb.TimeAxis(
+                    view_range=dl.TimeRange(
+                        start=dlb.TimeRangeBoundary.cursor_relative(
                             seconds=-100
                         ),
-                        end=rrb.TimeRangeBoundary.cursor_relative(seconds=100),
+                        end=dlb.TimeRangeBoundary.cursor_relative(seconds=100),
                     ),
                     zoom_lock=True,
                 ),
                 # Configure the legend.
-                plot_legend=rrb.PlotLegend(visible=True),
-                background=rrb.archetypes.PlotBackground(
+                plot_legend=dlb.PlotLegend(visible=True),
+                background=dlb.archetypes.PlotBackground(
                     color=[128, 128, 128], show_grid=False
                 ),
             ),
@@ -80,4 +80,4 @@ blueprint = rrb.Blueprint(
     collapse_panels=True,
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

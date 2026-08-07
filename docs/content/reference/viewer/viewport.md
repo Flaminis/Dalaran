@@ -24,7 +24,7 @@ Only one view can be maximized at a time.
 
 ## View classes
 
-Rerun includes multiple view classes, each dedicated to a specific type of visualization; for example, a 3D scene or a timeseries plot.
+Dalaran includes multiple view classes, each dedicated to a specific type of visualization; for example, a 3D scene or a timeseries plot.
 See the [views reference page](../types/views.md) for a list of available view classes.
 
 The view class, which is specified upon creation, determines which entities it can display, how it displays them, and the way they can be interacted with.

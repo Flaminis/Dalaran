@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "LeRobot loader"
-description = "Rerun's built-in importer for LeRobot datasets: point the viewer at a directory and it loads like any other recording."
+description = "Dalaran's built-in importer for LeRobot datasets: point the viewer at a directory and it loads like any other recording."
 tags = ["2D", "Video", "Loader", "Hugging Face", "LeRobot"]
 thumbnail = "https://static.rerun.io/LeRobot/ec638243c38d01c0d9e27ef4e52e62c43c6e4ba4/480w.png"
 thumbnail_dimensions = [480, 275]
@@ -16,7 +16,7 @@ thumbnail_dimensions = [480, 275]
 
 ## Overview
 
-Rerun has a built in importer to visualize [LeRobot](https://github.com/huggingface/lerobot) datasets.
+Dalaran has a built in importer to visualize [LeRobot](https://github.com/huggingface/lerobot) datasets.
 
 ## Try it out
 
@@ -30,9 +30,9 @@ git clone https://huggingface.co/datasets/satvikahuja/mixer_on_off_new_1
 Then you can open the Viewer and select the directory to load the dataset, or you can open it directly from the terminal:
 
 ```bash
-rerun mixer_on_off_new_1
+dalaran mixer_on_off_new_1
 ```
 
 ### SDK support
 
-Since this importer is included other SDK functionalities should work similar to loading a rerun file but pointing at the directory instead.
+Since this importer is included other SDK functionalities should work similar to loading a dalaran file but pointing at the directory instead.

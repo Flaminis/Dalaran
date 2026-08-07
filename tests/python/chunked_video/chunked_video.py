@@ -3,7 +3,7 @@
 # Order is either alphabetical or - if present - by last filename digits parsed as integer.
 #
 # Any folder of .mp4 files can be used.
-# For Rerun internal users, there are examples assets available at
+# For Dalaran internal users, there are examples assets available at
 # https://github.com/rerun-io/internal-test-assets/tree/main/video
 #
 # Things to look out for:
@@ -17,7 +17,7 @@ import re
 import sys
 from pathlib import Path
 
-import rerun as rr
+import dalaran as dl
 
 
 # Try sorting by last filename digits parsed as integer.
@@ -31,7 +31,7 @@ def main() -> None:
         print(f"Usage: {sys.argv[0]} <path_to_folder>")
         sys.exit(1)
 
-    rr.init("rerun_example_chunked_video", spawn=True)
+    dl.init("dalaran_example_chunked_video", spawn=True)
 
     video_folder = Path(sys.argv[1])
     video_files = [file for file in video_folder.iterdir() if file.suffix == ".mp4"]
@@ -42,17 +42,17 @@ def main() -> None:
     for file in video_files:
         print(f"Logging video {file}, start time {last_time_ns}ns")
 
-        rr.set_time("video_time", duration=1e-9 * last_time_ns)
+        dl.set_time("video_time", duration=1e-9 * last_time_ns)
 
-        video_asset = rr.AssetVideo(path=file)
-        rr.log("video", video_asset)
+        video_asset = dl.AssetVideo(path=file)
+        dl.log("video", video_asset)
 
         frame_timestamps_ns = video_asset.read_frame_timestamps_nanos()
-        rr.send_columns(
+        dl.send_columns(
             "video",
             # Note timeline values don't have to be the same as the video timestamps.
-            indexes=[rr.TimeColumn("video_time", duration=1e-9 * (frame_timestamps_ns + last_time_ns))],
-            columns=rr.VideoFrameReference.columns_nanos(frame_timestamps_ns),
+            indexes=[dl.TimeColumn("video_time", duration=1e-9 * (frame_timestamps_ns + last_time_ns))],
+            columns=dl.VideoFrameReference.columns_nanos(frame_timestamps_ns),
         )
         last_time_ns += frame_timestamps_ns[-1]
 

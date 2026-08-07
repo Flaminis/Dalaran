@@ -23,7 +23,7 @@
 # These archetypes will ignore the associated snippets in the snippet index.
 [snippets_ref.archetypes.opt_out]
 "DataframeQuery" = ["howto/visualization/save_blueprint"]
-"Tensor" = ["howto/dataloader"] # snippet uses `torch.Tensor`, not Rerun's `Tensor` archetype
+"Tensor" = ["howto/dataloader"] # snippet uses `torch.Tensor`, not Dalaran's `Tensor` archetype
 
 # These components will ignore the associated snippets in the snippet index.
 [snippets_ref.components.opt_out]
@@ -168,7 +168,7 @@ backwards_check = [
 
 # These entries won't run at all.
 #
-# NOTE: Non-runnable python snippets will have to also be added the `rerun_py/pyproject.toml`
+# NOTE: Non-runnable python snippets will have to also be added the `dalaran_py/pyproject.toml`
 # file as mypy excluded.
 #
 # You should only ever use this if the test isn't implemented and cannot yet be implemented
@@ -198,19 +198,19 @@ backwards_check = [
   "cpp",
   "rust",
 ]
-"concepts/chunk_processing" = [ # `rerun.experimental` is Python-only
+"concepts/chunk_processing" = [ # `dalaran.experimental` is Python-only
   "cpp",
   "rust",
 ]
-"concepts/chunk_processing_intro" = [ # `rerun.experimental` is Python-only
+"concepts/chunk_processing_intro" = [ # `dalaran.experimental` is Python-only
   "cpp",
   "rust",
 ]
-"concepts/chunk_processing_query" = [ # `rerun.experimental` is Python-only
+"concepts/chunk_processing_query" = [ # `dalaran.experimental` is Python-only
   "cpp",
   "rust",
 ]
-"concepts/rrd_format" = [ # `rerun.experimental` is Python-only
+"concepts/rrd_format" = [ # `dalaran.experimental` is Python-only
   "cpp",
   "rust",
 ]
@@ -264,7 +264,7 @@ backwards_check = [
   "cpp", # Blueprint API doesn't exist for C++/Rust
   "rust", # Blueprint API doesn't exist for C++/Rust
 ]
-"concepts/how-does-rerun-work" = [ # Uses a non-standard logging workflow
+"concepts/how-does-dalaran-work" = [ # Uses a non-standard logging workflow
   "py",
   "cpp",
   "rust",
@@ -282,11 +282,11 @@ backwards_check = [
 "concepts/lenses" = [
   "cpp", # Not implemented
 ]
-"concepts/query-and-transform/dataframe_query_example" = [ # Skips backwards compatibility check, to opt out of _RERUN_TEST_FORCE_SAVE
+"concepts/query-and-transform/dataframe_query_example" = [ # Skips backwards compatibility check, to opt out of _DALARAN_TEST_FORCE_SAVE
   "cpp",
   "rust",
 ]
-"concepts/query-and-transform/segment_properties" = [ # Skips backwards compatibility check, to opt out of _RERUN_TEST_FORCE_SAVE
+"concepts/query-and-transform/segment_properties" = [ # Skips backwards compatibility check, to opt out of _DALARAN_TEST_FORCE_SAVE
   "cpp",
   "rust",
 ]
@@ -339,8 +339,8 @@ backwards_check = [
   "cpp", # TODO(#10661): Doesn't exist
 ]
 "howto/optimize_chunks" = [
-  "cpp", # `rerun.experimental` is Python-only
-  "rust", # `rerun.experimental` is Python-only
+  "cpp", # `dalaran.experimental` is Python-only
+  "rust", # `dalaran.experimental` is Python-only
 ]
 "howto/query_images" = [
   "cpp", # Not implemented

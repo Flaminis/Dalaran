@@ -5,7 +5,7 @@ title: "MarkerSize"
 
 Radius of a marker of a point in e.g. a 2D plot, measured in UI points.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -15,9 +15,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `MarkerSize`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1MarkerSize.html)
- * 🐍 [Python API docs for `MarkerSize`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.MarkerSize)
- * 🦀 [Rust API docs for `MarkerSize`](https://docs.rs/rerun/latest/rerun/components/struct.MarkerSize.html)
+ * 🌊 [C++ API docs for `MarkerSize`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1MarkerSize.html)
+ * 🐍 [Python API docs for `MarkerSize`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.MarkerSize)
+ * 🦀 [Rust API docs for `MarkerSize`](https://docs.rs/dalaran/latest/dalaran/components/struct.MarkerSize.html)
 
 
 ## Used by

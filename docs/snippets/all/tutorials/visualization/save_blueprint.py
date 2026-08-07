@@ -2,22 +2,22 @@
 
 import sys
 
-import rerun.blueprint as rrb
+import dalaran.blueprint as dlb
 
 path_to_rbl = sys.argv[1]
 
-rrb.Blueprint(
-    rrb.Horizontal(
-        rrb.Grid(
-            rrb.BarChartView(name="Bar Chart", origin="/bar_chart"),
-            rrb.TimeSeriesView(
+dlb.Blueprint(
+    dlb.Horizontal(
+        dlb.Grid(
+            dlb.BarChartView(name="Bar Chart", origin="/bar_chart"),
+            dlb.TimeSeriesView(
                 name="Curves",
                 origin="/curves",
             ),
         ),
-        rrb.TextDocumentView(name="Description", origin="/description"),
+        dlb.TextDocumentView(name="Description", origin="/description"),
         column_shares=[3, 1],
     ),
-    rrb.SelectionPanel(state="collapsed"),
-    rrb.TimePanel(state="collapsed"),
+    dlb.SelectionPanel(state="collapsed"),
+    dlb.TimePanel(state="collapsed"),
 ).save("your_blueprint_name", path_to_rbl)

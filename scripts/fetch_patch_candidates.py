@@ -29,8 +29,8 @@ Requirements:
 
 MAX_COLUMN_WIDTH = 50
 
-OWNER = "rerun-io"
-RERUN_LABEL = "consider-patch"
+OWNER = "dalaran-io"
+DALARAN_LABEL = "consider-patch"
 REALITY_LABEL = "consider-oss-patch"
 
 
@@ -55,7 +55,7 @@ class PullRequest:
 class PatchCandidate:
     prs: list[PullRequest]
     merged: bool
-    rerun_sha: str | None
+    dalaran_sha: str | None
     reality_sha: str | None
     warning: str | None = None
 
@@ -85,7 +85,7 @@ def is_message_on_branch(message: str) -> bool:
 
 def cherry_pick_candidates(candidates: list[PatchCandidate], repo: str, dry_run: bool) -> None:
     """Cherry-pick all pending patch candidates for the given repo onto the current branch."""
-    sha_field = "rerun_sha" if repo == "rerun" else "reality_sha"
+    sha_field = "dalaran_sha" if repo == "dalaran" else "reality_sha"
 
     # Filter to merged candidates that have a SHA for the chosen repo.
     pickable = []
@@ -213,7 +213,7 @@ def fetch_prs(repo: str, label: str, state: str) -> list[PullRequest]:
         sys.exit(1)
 
 
-def fetch_rerun_releases() -> list[Release]:
+def fetch_dalaran_releases() -> list[Release]:
     """Fetch recent releases from rerun-io/rerun, sorted by date ascending."""
     try:
         result = subprocess.run(
@@ -222,7 +222,7 @@ def fetch_rerun_releases() -> list[Release]:
                 "release",
                 "list",
                 "--repo",
-                f"{OWNER}/rerun",
+                f"{OWNER}/dalaran",
                 "--json",
                 "tagName,publishedAt",
                 "--limit",
@@ -242,7 +242,7 @@ def fetch_rerun_releases() -> list[Release]:
 
 
 def find_release_after(merged_at: str, releases: list[Release]) -> Release | None:
-    """Find the earliest rerun release published after the given merge date."""
+    """Find the earliest dalaran release published after the given merge date."""
     for release in releases:
         if "prerelease" in release.tag:
             continue
@@ -297,7 +297,7 @@ def remove_outdated_labels(candidates: list[PatchCandidate], dry_run: bool) -> N
         eprint(f"\n{Fore.YELLOW}Dry run — no labels were removed.{Style.RESET_ALL}")
         return
 
-    label_map = {"rerun": RERUN_LABEL, "reality": REALITY_LABEL}
+    label_map = {"dalaran": DALARAN_LABEL, "reality": REALITY_LABEL}
     removed = 0
     for candidate in outdated:
         for pr in candidate.prs:
@@ -374,7 +374,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--cherry-pick",
-        choices=["rerun", "reality"],
+        choices=["dalaran", "reality"],
         help="Cherry-pick all pending candidates for the specified repo onto the current branch.",
     )
     parser.add_argument(
@@ -390,20 +390,20 @@ def main() -> None:
     args = parser.parse_args()
 
     with tqdm(total=5, desc="Fetching data", file=sys.stderr, leave=False) as pbar:
-        pbar.set_description("Fetching rerun releases")
-        releases = fetch_rerun_releases()
+        pbar.set_description("Fetching dalaran releases")
+        releases = fetch_dalaran_releases()
         pbar.update(1)
 
-        pbar.set_description(f"Fetching merged '{RERUN_LABEL}' PRs from rerun")
-        rerun_prs = fetch_prs("rerun", RERUN_LABEL, "merged")
+        pbar.set_description(f"Fetching merged '{DALARAN_LABEL}' PRs from dalaran")
+        dalaran_prs = fetch_prs("dalaran", DALARAN_LABEL, "merged")
         pbar.update(1)
 
         pbar.set_description(f"Fetching merged '{REALITY_LABEL}' PRs from reality")
         reality_prs = fetch_prs("reality", REALITY_LABEL, "merged")
         pbar.update(1)
 
-        pbar.set_description(f"Fetching open '{RERUN_LABEL}' PRs from rerun")
-        rerun_open = fetch_prs("rerun", RERUN_LABEL, "open")
+        pbar.set_description(f"Fetching open '{DALARAN_LABEL}' PRs from dalaran")
+        dalaran_open = fetch_prs("dalaran", DALARAN_LABEL, "open")
         pbar.update(1)
 
         pbar.set_description(f"Fetching open '{REALITY_LABEL}' PRs from reality")
@@ -413,28 +413,28 @@ def main() -> None:
     all_results: list[PatchCandidate] = []
 
     # Open (unmerged) PRs — no commit resolution needed.
-    for pr in rerun_open + reality_open:
-        all_results.append(PatchCandidate(prs=[pr], merged=False, rerun_sha=None, reality_sha=None))
+    for pr in dalaran_open + reality_open:
+        all_results.append(PatchCandidate(prs=[pr], merged=False, dalaran_sha=None, reality_sha=None))
 
     # Merged PRs — resolve commits across repos.
-    merged_prs = rerun_prs + reality_prs
+    merged_prs = dalaran_prs + reality_prs
     progress = tqdm(merged_prs, desc="Resolving commits", file=sys.stderr, leave=False)
     for pr in progress:
         progress.set_description(pr.url)
         search_msg = strip_pr_number(pr.title)
 
-        if pr.repo == "rerun":
-            rerun_sha = pr.merge_commit_sha
+        if pr.repo == "dalaran":
+            dalaran_sha = pr.merge_commit_sha
             reality_sha = find_commit_via_github("reality", search_msg)
         else:
-            rerun_sha = find_commit_via_github("rerun", search_msg)
+            dalaran_sha = find_commit_via_github("dalaran", search_msg)
             reality_sha = pr.merge_commit_sha
 
         all_results.append(
             PatchCandidate(
                 prs=[pr],
                 merged=True,
-                rerun_sha=rerun_sha,
+                dalaran_sha=dalaran_sha,
                 reality_sha=reality_sha,
                 warning=maybe_warn(pr.merged_at, releases),
             )
@@ -446,7 +446,7 @@ def main() -> None:
         key = strip_pr_number(c.prs[0].title)
         if key in deduped:
             existing = deduped[key]
-            existing.rerun_sha = existing.rerun_sha or c.rerun_sha
+            existing.dalaran_sha = existing.dalaran_sha or c.dalaran_sha
             existing.reality_sha = existing.reality_sha or c.reality_sha
             existing.warning = existing.warning or c.warning
             existing.prs.extend(c.prs)
@@ -478,7 +478,7 @@ def main() -> None:
 
     columns: dict[str, list[str]] = {
         "Merge date": [merge_date(c) for c in merged_results],
-        "rerun": [short_sha(c.rerun_sha) for c in merged_results],
+        "dalaran": [short_sha(c.dalaran_sha) for c in merged_results],
         "reality": [short_sha(c.reality_sha) for c in merged_results],
         "Origin PR": ["\n".join(p.url for p in c.prs) for c in merged_results],
         "Commit message": [c.prs[0].title for c in merged_results],

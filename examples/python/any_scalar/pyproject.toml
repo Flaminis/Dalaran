@@ -2,7 +2,7 @@
 name = "any_scalar"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["psutil", "pyarrow", "rerun-sdk", "yfinance"]
+dependencies = ["psutil", "pyarrow", "dalaran-sdk", "yfinance"]
 
 [project.scripts]
 any_scalar = "any_scalar.__main__:main"

@@ -12,7 +12,7 @@ Either way we end up with a columnar `(segment_id, camera, timestamp_ms, vector)
 Arrow table, which we write to a local vector store (LanceDB or Qdrant, see
 `--backend`) and index for ANN search.
 
-Run inside the rerun SDK venv, e.g.:
+Run inside the dalaran SDK venv, e.g.:
 
     pixi run uv run ../droid_semantic_search/ingest.py --num-segments 5 --cameras ext1
 """
@@ -29,7 +29,7 @@ import pyarrow as pa
 import pyarrow.compute as pc
 from vector_store import BACKENDS, DEFAULT_PATHS, open_store
 
-from rerun.catalog import CatalogClient
+from dalaran.catalog import CatalogClient
 
 # DROID camera roles, and the timeline everything is logged on.
 ALL_CAMERAS = ("wrist", "ext1", "ext2")
@@ -45,7 +45,7 @@ DROID_FPS_ESTIMATE = 15.0
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--catalog-url", default="rerun+http://127.0.0.1:51234", help="Rerun catalog URL")
+    parser.add_argument("--catalog-url", default="dalaran+http://127.0.0.1:51234", help="Dalaran catalog URL")
     parser.add_argument("--dataset", default="droid:sample", help="Dataset name in the catalog")
     parser.add_argument("--token", default=None, help="Auth token (if the catalog requires one)")
     parser.add_argument(
@@ -133,7 +133,7 @@ def _embedding_table(role: str, segment_ids: pa.Array, timestamps_ms: pa.Array, 
 def _find_embedding_column(schema: pa.Schema, role: str) -> str:
     """Locate the list-typed embedding column for *role* in a query result schema.
 
-    The DROID loader logs embeddings via `rr.AnyValues(embeddings=...)`, so the
+    The DROID loader logs embeddings via `dl.AnyValues(embeddings=...)`, so the
     exact column name (e.g. `/camera/ext1/embedding:embeddings`) is derived by
     the platform — discover it rather than hardcoding.
     """
@@ -159,11 +159,11 @@ def read_embedding_table(dataset: object, segments: list[str], role: str) -> pa.
     table = view.reader(index=TIMELINE).to_arrow_table()
 
     emb_col = _find_embedding_column(table.schema, role)
-    if "rerun_segment_id" not in table.schema.names or TIMELINE not in table.schema.names:
-        raise RuntimeError(f"Expected 'rerun_segment_id' and '{TIMELINE}' columns, got {table.schema.names}")
+    if "dalaran_segment_id" not in table.schema.names or TIMELINE not in table.schema.names:
+        raise RuntimeError(f"Expected 'dalaran_segment_id' and '{TIMELINE}' columns, got {table.schema.names}")
 
     # Columnar equivalent of the per-row `if vec is None or seg is None: continue`.
-    keep = pc.and_(pc.is_valid(table.column(emb_col)), pc.is_valid(table.column("rerun_segment_id")))
+    keep = pc.and_(pc.is_valid(table.column(emb_col)), pc.is_valid(table.column("dalaran_segment_id")))
     table = table.filter(keep)
     if table.num_rows == 0:
         print(f"  [{role}] no pre-computed embeddings")
@@ -171,7 +171,7 @@ def read_embedding_table(dataset: object, segments: list[str], role: str) -> pa.
 
     vectors = table.column(emb_col).combine_chunks()
     vectors = vectors.cast(pa.list_(pa.float32(), _vector_dim(vectors)))
-    segment_ids = table.column("rerun_segment_id").cast(pa.string())
+    segment_ids = table.column("dalaran_segment_id").cast(pa.string())
     # DROID's index timeline is nanosecond timestamps; LanceDB just wants an int.
     timestamps_ms = table.column(TIMELINE).cast(pa.timestamp("ms")).cast(pa.int64())
 
@@ -201,11 +201,11 @@ def compute_embedding_table(
     from torch.utils.data import DataLoader
     from tqdm import tqdm
 
-    from rerun.experimental.dataloader import (
+    from dalaran.experimental.dataloader import (
         DataSource,
         Field,
         FixedRateSampling,
-        RerunMapDataset,
+        DalaranMapDataset,
         VideoFrameDecoder,
     )
 
@@ -221,7 +221,7 @@ def compute_embedding_table(
             ),
         ),
     }
-    ds = RerunMapDataset(
+    ds = DalaranMapDataset(
         source=source,
         index=TIMELINE,
         fields=fields,

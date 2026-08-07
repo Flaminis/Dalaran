@@ -6,7 +6,7 @@ title: "AnnotationContext"
 ⚠️ **This type is _unstable_ and may change significantly in a way that the data won't be backwards compatible.**
 The annotation context provides additional information on how to display entities.
 
-Entities can use [`datatypes.ClassId`](https://rerun.io/docs/reference/types/datatypes/class_id)s and [`datatypes.KeypointId`](https://rerun.io/docs/reference/types/datatypes/keypoint_id)s to provide annotations, and
+Entities can use [`datatypes.ClassId`](https://dalaran.dev/docs/reference/types/datatypes/class_id)s and [`datatypes.KeypointId`](https://dalaran.dev/docs/reference/types/datatypes/keypoint_id)s to provide annotations, and
 the labels and colors will be looked up in the appropriate
 annotation context. We use the *first* annotation context we find in the
 path-hierarchy when searching up through the ancestors of a given entity
@@ -37,9 +37,9 @@ List(non-null Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `AnnotationContext`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1AnnotationContext.html)
- * 🐍 [Python API docs for `AnnotationContext`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.AnnotationContext)
- * 🦀 [Rust API docs for `AnnotationContext`](https://docs.rs/rerun/latest/rerun/components/struct.AnnotationContext.html)
+ * 🌊 [C++ API docs for `AnnotationContext`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1AnnotationContext.html)
+ * 🐍 [Python API docs for `AnnotationContext`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.AnnotationContext)
+ * 🦀 [Rust API docs for `AnnotationContext`](https://docs.rs/dalaran/latest/dalaran/components/struct.AnnotationContext.html)
 
 
 ## Used by

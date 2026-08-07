@@ -9,15 +9,15 @@ from __future__ import annotations
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_scalar_column_updates", spawn=True)
+dl.init("dalaran_example_scalar_column_updates", spawn=True)
 
 times = np.arange(0, 64)
 scalars = np.sin(times / 10.0)
 
-rr.send_columns(
+dl.send_columns(
     "scalars",
-    indexes=[rr.TimeColumn("step", sequence=times)],
-    columns=rr.Scalars.columns(scalars=scalars),
+    indexes=[dl.TimeColumn("step", sequence=times)],
+    columns=dl.Scalars.columns(scalars=scalars),
 )

@@ -1,19 +1,19 @@
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_entity_path", spawn=True)
+dl.init("dalaran_example_entity_path", spawn=True)
 
-rr.log(
+dl.log(
     r"world/42/escaped\ string\!",
-    rr.TextDocument("This entity path was escaped manually"),
+    dl.TextDocument("This entity path was escaped manually"),
 )
-rr.log(
+dl.log(
     ["world", 42, "unescaped string!"],
-    rr.TextDocument(
+    dl.TextDocument(
         "This entity path was provided as a list of unescaped strings"
     ),
 )
 
-assert rr.escape_entity_path_part("my string!") == r"my\ string\!"
+assert dl.escape_entity_path_part("my string!") == r"my\ string\!"
 assert (
-    rr.new_entity_path(["world", 42, "my string!"]) == r"/world/42/my\ string\!"
+    dl.new_entity_path(["world", 42, "my string!"]) == r"/world/42/my\ string\!"
 )

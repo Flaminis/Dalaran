@@ -3,13 +3,13 @@
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_line_segments3d", spawn=True)
+dl.init("dalaran_example_line_segments3d", spawn=True)
 
-rr.log(
+dl.log(
     "segments",
-    rr.LineStrips3D(
+    dl.LineStrips3D(
         np.array(
             [
                 [[0, 0, 0], [0, 0, 1]],

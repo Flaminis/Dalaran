@@ -22,10 +22,10 @@ from diffusers import (
     StableDiffusionXLControlNetPipeline,
 )
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-RERUN_LOGO_URL = "https://storage.googleapis.com/rerun-example-datasets/controlnet/rerun-icon-1000.png"
+DALARAN_LOGO_URL = "https://storage.googleapis.com/rerun-example-datasets/controlnet/rerun-icon-1000.png"
 
 
 def controlnet_callback(
@@ -34,14 +34,14 @@ def controlnet_callback(
     timestep: float,
     callback_kwargs: dict[str, Any],
 ) -> dict[str, Any]:
-    rr.set_time("iteration", sequence=step_index)
-    rr.set_time("timestep", duration=timestep)
+    dl.set_time("iteration", sequence=step_index)
+    dl.set_time("timestep", duration=timestep)
     latents = callback_kwargs["latents"]
 
     image = pipe.vae.decode(latents / pipe.vae.config.scaling_factor, return_dict=False)[0]  # type: ignore[attr-defined]
     image = pipe.image_processor.postprocess(image, output_type="np").squeeze()  # type: ignore[attr-defined]
-    rr.log("output", rr.Image(image))
-    rr.log("latent", rr.Tensor(latents.squeeze(), dim_names=["channel", "height", "width"]))
+    dl.log("output", dl.Image(image))
+    dl.log("latent", dl.Tensor(latents.squeeze(), dim_names=["channel", "height", "width"]))
 
     return callback_kwargs
 
@@ -74,8 +74,8 @@ def run_canny_controlnet(image_path: str, prompt: str, negative_prompt: str) -> 
     canny_data = np.concatenate([canny_data, canny_data, canny_data], axis=2)
     canny_image = PIL.Image.fromarray(canny_data)
 
-    rr.log("input/raw", rr.Image(image), static=True)
-    rr.log("input/canny", rr.Image(canny_image), static=True)
+    dl.log("input/raw", dl.Image(image), static=True)
+    dl.log("input/canny", dl.Image(canny_image), static=True)
 
     controlnet = ControlNetModel.from_pretrained(
         "diffusers/controlnet-canny-sdxl-1.0",
@@ -97,8 +97,8 @@ def run_canny_controlnet(image_path: str, prompt: str, negative_prompt: str) -> 
 
     pipeline.enable_model_cpu_offload()
 
-    rr.log("positive_prompt", rr.TextDocument(prompt), static=True)
-    rr.log("negative_prompt", rr.TextDocument(negative_prompt), static=True)
+    dl.log("positive_prompt", dl.TextDocument(prompt), static=True)
+    dl.log("negative_prompt", dl.TextDocument(negative_prompt), static=True)
 
     images = pipeline(
         prompt,
@@ -108,7 +108,7 @@ def run_canny_controlnet(image_path: str, prompt: str, negative_prompt: str) -> 
         callback_on_step_end=controlnet_callback,
     ).images[0]
 
-    rr.log("output", rr.Image(images))
+    dl.log("output", dl.Image(images))
 
 
 def main() -> None:
@@ -117,7 +117,7 @@ def main() -> None:
         "--img-path",
         type=str,
         help="Path to image used as input for Canny edge detector.",
-        default=RERUN_LOGO_URL,
+        default=DALARAN_LOGO_URL,
     )
     parser.add_argument(
         "--prompt",
@@ -131,27 +131,27 @@ def main() -> None:
         help="Negative prompt used as input for ControlNet.",
         default="low quality, bad quality, sketches",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(
+    dl.script_setup(
         args,
-        "rerun_example_controlnet",
-        default_blueprint=rrb.Horizontal(
-            rrb.Grid(
-                rrb.Spatial2DView(origin="input/raw"),
-                rrb.Spatial2DView(origin="input/canny"),
-                rrb.Vertical(
-                    rrb.TextDocumentView(origin="positive_prompt"),
-                    rrb.TextDocumentView(origin="negative_prompt"),
+        "dalaran_example_controlnet",
+        default_blueprint=dlb.Horizontal(
+            dlb.Grid(
+                dlb.Spatial2DView(origin="input/raw"),
+                dlb.Spatial2DView(origin="input/canny"),
+                dlb.Vertical(
+                    dlb.TextDocumentView(origin="positive_prompt"),
+                    dlb.TextDocumentView(origin="negative_prompt"),
                 ),
-                rrb.TensorView(origin="latent"),
+                dlb.TensorView(origin="latent"),
             ),
-            rrb.Spatial2DView(origin="output"),
+            dlb.Spatial2DView(origin="output"),
         ),
     )
     run_canny_controlnet(args.img_path, args.prompt, args.negative_prompt)
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

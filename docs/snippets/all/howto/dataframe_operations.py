@@ -11,15 +11,15 @@ import pyarrow as pa
 from datafusion import col, lit
 from datafusion import functions as F
 
-import rerun as rr
+import dalaran as dl
 
 sample_5_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
 )
 
-server = rr.server.Server(datasets={"sample_dataset": sample_5_path})
+server = dl.server.Server(datasets={"sample_dataset": sample_5_path})
 CATALOG_URL = server.url()
-client = rr.catalog.CatalogClient(CATALOG_URL)
+client = dl.catalog.CatalogClient(CATALOG_URL)
 dataset = client.get_dataset(name="sample_dataset")
 observations = dataset.filter_contents(["/observation/**"]).reader(
     index="real_time"
@@ -28,7 +28,7 @@ observations = dataset.filter_contents(["/observation/**"]).reader(
 
 # region: group_by
 first_last = observations.aggregate(
-    col("rerun_segment_id"),
+    col("dalaran_segment_id"),
     [
         F.first_value(col("real_time")).alias("start"),
         F.last_value(col("real_time")).alias("end"),
@@ -49,9 +49,9 @@ joint_min_t = (
     joints
     .reader(index="real_time")
     .with_column("joint_epoch_ns", col("real_time").cast(pa.int64()))
-    .select("rerun_segment_id", "joint_epoch_ns")
+    .select("dalaran_segment_id", "joint_epoch_ns")
     .aggregate(
-        col("rerun_segment_id"),
+        col("dalaran_segment_id"),
         F.min(col("joint_epoch_ns")).alias("joint_min_t"),
     )
 )
@@ -65,24 +65,24 @@ camera_min_t = (
     .reader(index="real_time")
     .with_column("camera_epoch_ns", col("real_time").cast(pa.int64()))
     .select(
-        "rerun_segment_id",
+        "dalaran_segment_id",
         col("real_time").cast(pa.int64()).alias("camera_epoch_ns"),
     )
     .aggregate(
-        col("rerun_segment_id"),
+        col("dalaran_segment_id"),
         F.min(col("camera_epoch_ns")).alias("camera_min_t"),
     )
 )
 
 # Join the two dataframes
 min_t = camera_min_t.join(
-    joint_min_t.with_column_renamed("rerun_segment_id", "segment_id"),
-    left_on="rerun_segment_id",
+    joint_min_t.with_column_renamed("dalaran_segment_id", "segment_id"),
+    left_on="dalaran_segment_id",
     right_on="segment_id",
     how="left",
 )
 delta_t = min_t.select(
-    col("rerun_segment_id"),
+    col("dalaran_segment_id"),
     (col("camera_min_t") - col("joint_min_t")).alias("start_delta_t"),
 )
 THRESHOLD_S = 1
@@ -122,7 +122,7 @@ all_data = (
 
 # Drop heavy columns for performance
 light_slice = all_data.select(
-    "rerun_segment_id",
+    "dalaran_segment_id",
     "real_time",
     "/observation/gripper_position:Scalars:scalars",
 )
@@ -140,7 +140,7 @@ light_slice = light_slice.with_column(
     F.lag(
         col("gripper_open"),
         default_value=False,
-        partition_by=[col("rerun_segment_id")],
+        partition_by=[col("dalaran_segment_id")],
         order_by=[col("real_time")],
     ),
 )
@@ -173,14 +173,14 @@ min_ts = pa.scalar(
 # This generates the column for the last observed start time
 slice_dense_times = (
     slice_times
-    .select("rerun_segment_id", "real_time", "start", "end")
+    .select("dalaran_segment_id", "real_time", "start", "end")
     .with_column(
         "dense_start",
         F.last_value(col("start")).over(
             dfn.expr.Window(
                 window_frame=dfn.expr.WindowFrame("rows", None, 0),
                 order_by=col("real_time"),
-                partition_by=col("rerun_segment_id"),
+                partition_by=col("dalaran_segment_id"),
                 null_treatment=dfn.common.NullTreatment.IGNORE_NULLS,
             )
         ),
@@ -196,14 +196,14 @@ slice_dense_times = slice_dense_times.with_column(
         dfn.expr.Window(
             window_frame=dfn.expr.WindowFrame("rows", None, 0),
             order_by=col("real_time").sort(ascending=False),
-            partition_by=col("rerun_segment_id"),
+            partition_by=col("dalaran_segment_id"),
             null_treatment=dfn.common.NullTreatment.IGNORE_NULLS,
         )
     ),
 ).fill_null(value=min_ts, subset=["dense_end"])
 
 slice_dense_times = slice_dense_times.select(
-    "rerun_segment_id", "real_time", "dense_start", "dense_end"
+    "dalaran_segment_id", "real_time", "dense_start", "dense_end"
 )
 
 sub_episodes = slice_dense_times.filter(

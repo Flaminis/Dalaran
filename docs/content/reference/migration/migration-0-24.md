@@ -20,7 +20,7 @@ Have been removed in favor of `Scalars`, `SeriesLines`, `SeriesPoints` respectiv
 
 ## Micro-batcher default flushing duration increased from 8ms to 200ms for memory & file recording streams
 
-`RERUN_FLUSH_TICK_SECS` previously always defaulted to 8ms when left unspecified.
+`DALARAN_FLUSH_TICK_SECS` previously always defaulted to 8ms when left unspecified.
 This now only applies to recording streams that use a GRPC connection, all others default to 200ms.
 
 You can learn more about micro-batching in our [dedicated documentation page](../sdk/micro-batching.md).
@@ -60,8 +60,8 @@ The underlying reason for this was that the our internal datastructures used the
 This release changes how components are identified within the viewer and within our APIs:
 Instead of specifying the component's type name, components are now referenced by a new syntax that consists of the (short) archetype name + the archetype field name separated by a colon (`:`).
 
-As an example, `Points3D:positions` refers to the `positions` component in the `rerun.archetypes.Points3D` archetype.
-(Previously, it would only be identified by its component type, i.e. `rerun.components.Position3D`.)
+As an example, `Points3D:positions` refers to the `positions` component in the `dalaran.archetypes.Points3D` archetype.
+(Previously, it would only be identified by its component type, i.e. `dalaran.components.Position3D`.)
 For custom data, such as `AnyValues`, it is possible to omit the archetype part of this syntax and only specify the field name.
 
 To `View.select` columns in dataframe queries, we additionally need to specify the entity that a component belongs to.
@@ -79,9 +79,9 @@ Conceptually, it looks like the following:
 
 ```rs
 struct ComponentDescriptor {
-  archetype:      Option<String>, // e.g. `rerun.archetypes.Points3D
+  archetype:      Option<String>, // e.g. `dalaran.archetypes.Points3D
   component:      String,         // e.g. `Points3D:positions`
-  component_type: Option<String>, // e.g. `rerun.components.Position3D
+  component_type: Option<String>, // e.g. `dalaran.components.Position3D
 }
 ```
 
@@ -90,11 +90,11 @@ For this we also provide a new `AnyValues.with_field` method.
 
 ### Changes
 
-When logging data to Rerun using the builtin archetypes no changes to user code should be required.
+When logging data to Dalaran using the builtin archetypes no changes to user code should be required.
 There is also migration code in place so that you can open `.rrd` files that were created with `v0.23`.
 Recordings from `v0.22` can also be loaded, but need to be migrated using the migration tool from `v0.23` first.
 
-These changes are reflected in various parts of the Rerun viewer:
+These changes are reflected in various parts of the Dalaran viewer:
 
 * It is now possible to log arbitrary overlapping archetypes on a single entity path. It is also now possible to re-use the same component type for different fields of the same archetype.
 * The selection panel UI comes with a revamped display of archetypes that uses the new syntax to show the `ComponentDescriptor` for each component.
@@ -116,7 +116,7 @@ In practice this means that component defaults are now limited to a single arche
 ### Limitations & breaking changes
 
 * In some cases, it is not possible to migrate previous blueprints, _but only if they were saved from the viewer via the UI_.
-* Currently, only Rerun-builtin components are picked up by the visualizers and therefore shown in the views (except for the dataframe view which shows all components).
+* Currently, only Dalaran-builtin components are picked up by the visualizers and therefore shown in the views (except for the dataframe view which shows all components).
 * In `v0.23`, the LeRobot dataloader logged incomplete `ComponentDescriptors` for robot observations and actions. To fix this, load the dataset in `v0.24` and resave your episodes to `.rrd` (`v0.24` now supports saving all selected recordings).
 * Overriding visualizers to reinterpret data (e.g. show a point-cloud for mesh vertices) is no longer possible, since visualizers now match for <archetype>:<field> instead of component type name. This will be addressed in the future with blueprint-driven overrides that will allow to remap data to arbitrary archetypes.
 * `VisualizerOverrides` are now limited to time series views, and _stop to be supported for general views_, such as the spatial views.

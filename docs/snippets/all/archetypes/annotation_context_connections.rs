@@ -1,8 +1,8 @@
 //! Log annotation context with connections between keypoints.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_annotation_context_connections",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_annotation_context_connections",
     )
     .spawn()?;
 
@@ -11,15 +11,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // connections between keypoints.
     rec.log_static(
         "/",
-        &rerun::AnnotationContext::new([rerun::ClassDescription {
+        &dalaran::AnnotationContext::new([dalaran::ClassDescription {
             info: 0.into(),
             keypoint_annotations: vec![
-                (0, "zero", rerun::Rgba32::from_rgb(255, 0, 0)).into(),
-                (1, "one", rerun::Rgba32::from_rgb(0, 255, 0)).into(),
-                (2, "two", rerun::Rgba32::from_rgb(0, 0, 255)).into(),
-                (3, "three", rerun::Rgba32::from_rgb(255, 255, 0)).into(),
+                (0, "zero", dalaran::Rgba32::from_rgb(255, 0, 0)).into(),
+                (1, "one", dalaran::Rgba32::from_rgb(0, 255, 0)).into(),
+                (2, "two", dalaran::Rgba32::from_rgb(0, 0, 255)).into(),
+                (3, "three", dalaran::Rgba32::from_rgb(255, 255, 0)).into(),
             ],
-            keypoint_connections: rerun::KeypointPair::vec_from([
+            keypoint_connections: dalaran::KeypointPair::vec_from([
                 (0, 2),
                 (1, 2),
                 (2, 3),
@@ -30,7 +30,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Log some points with different keypoint IDs
     rec.log(
         "points",
-        &rerun::Points3D::new([
+        &dalaran::Points3D::new([
             [0., 0., 0.],
             [50., 0., 20.],
             [100., 100., 30.],

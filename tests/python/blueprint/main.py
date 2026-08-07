@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from numpy.random import default_rng
 
-import rerun as rr
-from rerun.blueprint import (
+import dalaran as dl
+from dalaran.blueprint import (
     Blueprint,
     Grid,
     Horizontal,
@@ -38,8 +38,8 @@ if __name__ == "__main__":
         TimePanel(state="collapsed"),
     )
 
-    rr.init(
-        "rerun_example_blueprint_test",
+    dl.init(
+        "dalaran_example_blueprint_test",
         spawn=True,
         default_blueprint=blueprint,
     )
@@ -49,5 +49,5 @@ if __name__ == "__main__":
     colors = rng.uniform(0, 255, size=[10, 3])
     radii = rng.uniform(0, 1, size=[10])
 
-    rr.log("test1", rr.Points3D(positions, colors=colors, radii=radii))
-    rr.log("test2", rr.Points2D(positions[:, :2], colors=colors, radii=radii))
+    dl.log("test1", dl.Points3D(positions, colors=colors, radii=radii))
+    dl.log("test2", dl.Points2D(positions[:, :2], colors=colors, radii=radii))

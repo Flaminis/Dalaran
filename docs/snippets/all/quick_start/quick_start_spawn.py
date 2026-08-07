@@ -2,10 +2,10 @@
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
 # Initialize the SDK, give our recording a unique name, and spawn a viewer
-rr.init("rerun_example_quick_start_spawn", spawn=True)
+dl.init("dalaran_example_quick_start_spawn", spawn=True)
 
 # Create some data
 SIZE = 10
@@ -17,9 +17,9 @@ col_grid = np.meshgrid(*[np.linspace(0, 255, SIZE)] * 3)
 colors = np.vstack([c.reshape(-1) for c in col_grid]).astype(np.uint8).T
 
 # Log the data
-rr.log(
+dl.log(
     # name under which this entity is logged (known as "entity path")
     "my_points",
     # log data as a 3D point cloud archetype
-    rr.Points3D(positions, colors=colors, radii=0.5),
+    dl.Points3D(positions, colors=colors, radii=0.5),
 )

@@ -34,7 +34,7 @@ The timeout behavior is also improved: it will only block as long as there is _h
 Removed:
  * Python: `flush_timeout_sec` argument of `connect_grpc`
  * Rust: `flush_timeout` argument of `connect_grpc_opts`
- * C++: `rerun::GrpcSink::flush_timeout_sec`
+ * C++: `dalaran::GrpcSink::flush_timeout_sec`
 
 
 ## ❗ Deprecations
@@ -44,7 +44,7 @@ Removed:
 Support for Python 3.9 is being deprecated. Python 3.9 is past end-of-life. See: https://devguide.python.org/versions/
 In the next release, we will fully drop support and switch to Python 3.10 as the minimum supported version.
 
-See an overview for supported python versions [here](https://ref.rerun.io/docs/python/main/common#supported-python-versions).
+See an overview for supported python versions [here](https://ref.dalaran.dev/docs/python/main/common#supported-python-versions).
 
 ### `archetype` specification in `AnyValues`
 
@@ -55,13 +55,13 @@ arbitrary_int = 10
 example = AnyValues()
 example.with_field(ComponentDescriptor("component_name", "archetype_name"), arbitrary_int)
 example.with_field(ComponentDescriptor("component_name", "different_archetype"), arbitrary_int + 1)
-rr.log("/path", example)
+dl.log("/path", example)
 ```
 
 In the viewer we would see two `component_name` entries under different archetypes but they would not be uniquely queryable.
 
 ```python
-from rerun.dataframe import load_recording
+from dalaran.dataframe import load_recording
 
 rec = load_recording("<path_to_logs_above>.rrd")
 rec.view(index="log_time", contents="/path").select().schema
@@ -82,12 +82,12 @@ example = DynamicArchetype("archetype_name")
 example.with_component_from_data("component_name", arbitrary_int)
 another_example = DynamicArchetype("another_archetype")
 another_example.with_field("component_name", arbitrary_int + 1)
-rr.log("/path", example)
-rr.log("/path", another_example)
+dl.log("/path", example)
+dl.log("/path", another_example)
 ```
 
 ```python
-from rerun.dataframe import load_recording
+from dalaran.dataframe import load_recording
 
 rec = load_recording("<path_to_logs_above>.rrd")
 rec.view(index="log_time", contents="/path").select().schema

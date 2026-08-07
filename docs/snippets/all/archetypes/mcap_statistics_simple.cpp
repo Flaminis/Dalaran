@@ -1,14 +1,14 @@
 // Log simple MCAP recording statistics.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_mcap_statistics");
+    const auto rec = dalaran::RecordingStream("dalaran_example_mcap_statistics");
     rec.spawn().exit_on_failure();
 
     rec.log(
         "mcap/statistics/recording_overview",
-        rerun::archetypes::McapStatistics::update_fields()
+        dalaran::archetypes::McapStatistics::update_fields()
             .with_message_count(12500)
             .with_schema_count(3)
             .with_channel_count(5)

@@ -15,9 +15,9 @@ import argparse
 import numpy as np
 import pyarrow as pa
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.blueprint.datatypes import ComponentSourceKind, VisualizerComponentMapping
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran.blueprint.datatypes import ComponentSourceKind, VisualizerComponentMapping
 
 DESCRIPTION = """
 # State timeline
@@ -36,9 +36,9 @@ TOTAL_DURATION_SEC = CYCLE_DURATION_SEC * NUM_CYCLES
 def log_task() -> None:
     # A fully styled lane: `StateConfiguration` maps each raw state value to a display label
     # and a color. The configuration is time-independent, so it's logged as static.
-    rr.log(
+    dl.log(
         "robot/task",
-        rr.StateConfiguration(
+        dl.StateConfiguration(
             values=["idle", "pick", "place", "error"],
             labels=["Idle", "Picking", "Placing", "Error"],
             # Wrapped as `np.uint32` so that the list isn't mistaken for a single RGB color.
@@ -52,46 +52,46 @@ def log_task() -> None:
     for cycle in range(NUM_CYCLES):
         t = cycle * CYCLE_DURATION_SEC
 
-        rr.set_time("time", duration=t)
-        rr.log("robot/task", rr.StateChange(state="idle"))
+        dl.set_time("time", duration=t)
+        dl.log("robot/task", dl.StateChange(state="idle"))
 
-        rr.set_time("time", duration=t + 2.0)
-        rr.log("robot/task", rr.StateChange(state="pick"))
+        dl.set_time("time", duration=t + 2.0)
+        dl.log("robot/task", dl.StateChange(state="pick"))
 
         if cycle == 3:
             # Something went wrong during this pick.
-            rr.set_time("time", duration=t + 3.5)
-            rr.log("robot/task", rr.StateChange(state="error"))
+            dl.set_time("time", duration=t + 3.5)
+            dl.log("robot/task", dl.StateChange(state="error"))
         else:
-            rr.set_time("time", duration=t + 5.0)
-            rr.log("robot/task", rr.StateChange(state="place"))
+            dl.set_time("time", duration=t + 5.0)
+            dl.log("robot/task", dl.StateChange(state="place"))
 
-    rr.set_time("time", duration=TOTAL_DURATION_SEC)
-    rr.log("robot/task", rr.StateChange(state="idle"))
+    dl.set_time("time", duration=TOTAL_DURATION_SEC)
+    dl.log("robot/task", dl.StateChange(state="idle"))
 
 
 def log_gripper() -> None:
     # This lane has no `StateConfiguration` at all: raw state values are used as labels, and
     # colors are assigned automatically from a built-in palette.
-    rr.set_time("time", duration=0.0)
-    rr.log("robot/gripper", rr.StateChange(state="open"))
+    dl.set_time("time", duration=0.0)
+    dl.log("robot/gripper", dl.StateChange(state="open"))
 
     for cycle in range(NUM_CYCLES):
         t = cycle * CYCLE_DURATION_SEC
 
-        rr.set_time("time", duration=t + 3.0)
-        rr.log("robot/gripper", rr.StateChange(state="closed"))
+        dl.set_time("time", duration=t + 3.0)
+        dl.log("robot/gripper", dl.StateChange(state="closed"))
 
-        rr.set_time("time", duration=t + 6.0)
-        rr.log("robot/gripper", rr.StateChange(state="open"))
+        dl.set_time("time", duration=t + 6.0)
+        dl.log("robot/gripper", dl.StateChange(state="open"))
 
 
 def log_connection() -> None:
     # `labels` is shorter than `values` here: states without a label fall back to showing
     # their raw value ("degraded").
-    rr.log(
+    dl.log(
         "robot/connection",
-        rr.StateConfiguration(
+        dl.StateConfiguration(
             values=["online", "degraded"],
             labels=["Online"],
             colors=np.array([0x66BB6AFF, 0xFFB300FF], dtype=np.uint32),
@@ -99,30 +99,30 @@ def log_connection() -> None:
         static=True,
     )
 
-    rr.set_time("time", duration=0.0)
-    rr.log("robot/connection", rr.StateChange(state="online"))
+    dl.set_time("time", duration=0.0)
+    dl.log("robot/connection", dl.StateChange(state="online"))
 
     # An empty string resets the state: the state timeline view shows a gap until the next
     # state change.
-    rr.set_time("time", duration=18.0)
-    rr.log("robot/connection", rr.StateChange(state=""))
+    dl.set_time("time", duration=18.0)
+    dl.log("robot/connection", dl.StateChange(state=""))
 
-    rr.set_time("time", duration=22.0)
-    rr.log("robot/connection", rr.StateChange(state="online"))
+    dl.set_time("time", duration=22.0)
+    dl.log("robot/connection", dl.StateChange(state="online"))
 
-    rr.set_time("time", duration=34.0)
-    rr.log("robot/connection", rr.StateChange(state="degraded"))
+    dl.set_time("time", duration=34.0)
+    dl.log("robot/connection", dl.StateChange(state="degraded"))
 
-    rr.set_time("time", duration=42.0)
-    rr.log("robot/connection", rr.StateChange(state="online"))
+    dl.set_time("time", duration=42.0)
+    dl.log("robot/connection", dl.StateChange(state="online"))
 
 
 def log_diagnostics() -> None:
     # Per-state visibility: "chatter" is a noisy diagnostic state that would clutter the
     # timeline; setting its `visible` entry to `False` hides those segments.
-    rr.log(
+    dl.log(
         "robot/diagnostics",
-        rr.StateConfiguration(
+        dl.StateConfiguration(
             values=["ok", "chatter", "fault"],
             colors=np.array([0x66BB6AFF, 0x9E9E9EFF, 0xEF5350FF], dtype=np.uint32),
             visible=[True, False, True],
@@ -142,8 +142,8 @@ def log_diagnostics() -> None:
         (41.0, "ok"),
     ]
     for t, state in transitions:
-        rr.set_time("time", duration=t)
-        rr.log("robot/diagnostics", rr.StateChange(state=state))
+        dl.set_time("time", duration=t)
+        dl.log("robot/diagnostics", dl.StateChange(state=state))
 
 
 def log_conveyor() -> None:
@@ -154,10 +154,10 @@ def log_conveyor() -> None:
     times = np.arange(0.0, TOTAL_DURATION_SEC, 6.0)
     states = pa.array(["running", "stopped", None, "jammed", "running", None, "stopped", "running"], type=pa.utf8())
 
-    rr.send_columns(
+    dl.send_columns(
         "conveyor",
-        indexes=[rr.TimeColumn("time", duration=times)],
-        columns=rr.StateChange.columns(state=states),
+        indexes=[dl.TimeColumn("time", duration=times)],
+        columns=dl.StateChange.columns(state=states),
     )
 
 
@@ -167,10 +167,10 @@ def log_plc() -> None:
     # with `DynamicArchetype`. The blueprint maps them onto the `StateChange:state` slot of
     # the state visualizer (see `main()`).
     times = np.arange(0.0, TOTAL_DURATION_SEC, 4.0)
-    rr.send_columns(
+    dl.send_columns(
         "plc",
-        indexes=[rr.TimeColumn("time", duration=times)],
-        columns=rr.DynamicArchetype.columns(
+        indexes=[dl.TimeColumn("time", duration=times)],
+        columns=dl.DynamicArchetype.columns(
             archetype="plc",
             components={
                 # An integer enum: 0 = auto, 1 = manual, 2 = maintenance.
@@ -183,9 +183,9 @@ def log_plc() -> None:
 
     # `StateConfiguration` works for non-string states too: values are matched against the
     # displayed form of the state, so the integer enum is keyed by "0", "1", "2".
-    rr.log(
+    dl.log(
         "plc",
-        rr.StateConfiguration(
+        dl.StateConfiguration(
             values=["0", "1", "2"],
             labels=["Auto", "Manual", "Maintenance"],
         ),
@@ -195,12 +195,12 @@ def log_plc() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Demonstrates all features of the state timeline view")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    def map_to_state(source_component: str) -> rrb.Visualizer:
+    def map_to_state(source_component: str) -> dlb.Visualizer:
         # Install a state visualizer that sources its state from a custom component.
-        return rr.StateChange().visualizer(
+        return dl.StateChange().visualizer(
             mappings=[
                 VisualizerComponentMapping(
                     target="StateChange:state",
@@ -210,10 +210,10 @@ def main() -> None:
             ],
         )
 
-    blueprint = rrb.Blueprint(
-        rrb.Horizontal(
-            rrb.Vertical(
-                rrb.StateTimelineView(
+    blueprint = dlb.Blueprint(
+        dlb.Horizontal(
+            dlb.Vertical(
+                dlb.StateTimelineView(
                     name="All states",
                     origin="/",
                     overrides={
@@ -228,21 +228,21 @@ def main() -> None:
                 ),
                 # A view can be scoped to a subtree with `origin`, and its contents can be
                 # further filtered with entity path expressions.
-                rrb.StateTimelineView(
+                dlb.StateTimelineView(
                     name="Robot (without diagnostics)",
                     origin="/robot",
                     contents=["$origin/**", "- $origin/diagnostics"],
                 ),
             ),
-            rrb.TextDocumentView(name="Description", origin="/description"),
+            dlb.TextDocumentView(name="Description", origin="/description"),
             column_shares=[3, 1],
         ),
-        rrb.SelectionPanel(state="collapsed"),
+        dlb.SelectionPanel(state="collapsed"),
     )
 
-    rr.script_setup(args, "rerun_example_state_timeline", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_state_timeline", default_blueprint=blueprint)
 
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     log_task()
     log_gripper()
@@ -251,7 +251,7 @@ def main() -> None:
     log_conveyor()
     log_plc()
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

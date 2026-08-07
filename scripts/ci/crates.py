@@ -401,7 +401,7 @@ def is_already_published(version: str, crate: Crate) -> bool:
     crate_name = crate.manifest["package"]["name"]
     resp = requests.get(
         f"https://crates.io/api/v1/crates/{crate_name}",
-        headers={"user-agent": "rerun-publishing-script (rerun.io)"},
+        headers={"user-agent": "dalaran-publishing-script (dalaran.dev)"},
         timeout=30,
     )
     body = resp.json()
@@ -546,7 +546,7 @@ def publish_unpublished_crates_in_parallel(
 
     # walk the dependency graph in parallel and publish each crate
     print(f"Publishing {len(unpublished_crates)} crates…")
-    env = {**os.environ.copy(), "RERUN_IS_PUBLISHING_CRATES": "yes"}
+    env = {**os.environ.copy(), "DALARAN_IS_PUBLISHING_CRATES": "yes"}
 
     # The max token parameter attempts to model `crates.io` rate limiting. In dry run mode, we don't want to wait so
     # we seed the rate limiter with plenty of tokens.
@@ -614,7 +614,7 @@ def publish(dry_run: bool, token: str) -> None:
 def get_latest_published_version(crate_name: str, skip_prerelease: bool = False) -> str | None:
     resp = requests.get(
         f"https://crates.io/api/v1/crates/{crate_name}",
-        headers={"user-agent": "rerun-publishing-script (rerun.io)"},
+        headers={"user-agent": "dalaran-publishing-script (dalaran.dev)"},
         timeout=30,
     )
     body = resp.json()
@@ -665,9 +665,9 @@ def get_version(target: Target | None, skip_prerelease: bool = False) -> Version
             print("this script expects the format `prepare-release-x.y.z` or `prepare-release-x.y.z-alpha.N`")
             sys.exit(1)
     elif target is Target.CratesIo:
-        latest_published_version = get_latest_published_version("rerun", skip_prerelease)
+        latest_published_version = get_latest_published_version("dalaran", skip_prerelease)
         if not latest_published_version:
-            raise Exception("Failed to get latest published version for `rerun` crate")
+            raise Exception("Failed to get latest published version for `dalaran` crate")
         current_version = VersionInfo.parse(latest_published_version)
     else:
         root: dict[str, Any] = tomlkit.parse(Path("Cargo.toml").read_text(encoding="utf-8"))

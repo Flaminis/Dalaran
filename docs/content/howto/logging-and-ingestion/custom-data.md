@@ -4,14 +4,14 @@ order: 500
 description: Log custom data via AnyValues and DynamicArchetype
 ---
 
-Rerun comes with many pre-built [Types](../../reference/types.md) that you can use out of the box. As long as your own data can be decomposed into Rerun [components](../../reference/types/components.md) or can be serialized with [Apache Arrow](https://arrow.apache.org/), you can log it directly without needing to recompile Rerun.
+Dalaran comes with many pre-built [Types](../../reference/types.md) that you can use out of the box. As long as your own data can be decomposed into Dalaran [components](../../reference/types/components.md) or can be serialized with [Apache Arrow](https://arrow.apache.org/), you can log it directly without needing to recompile Dalaran.
 
 For Python and Rust we have helpers for this, called `AnyValues`, allowing you to easily attach custom values to any entity instance.
 For C++ a similar thing can be accomplished without the helpers.
 You find the documentation for these helpers here:
 
--   [`AnyValues` in Python](https://ref.rerun.io/docs/python/main/common/custom_data/#rerun.AnyValues)
--   [`AnyValues` in Rust](https://docs.rs/rerun/latest/rerun/struct.AnyValues.html)
+-   [`AnyValues` in Python](https://ref.dalaran.dev/docs/python/main/common/custom_data/#dalaran.AnyValues)
+-   [`AnyValues` in Rust](https://docs.rs/dalaran/latest/dalaran/struct.AnyValues.html)
 
 snippet: tutorials/any_values
 
@@ -19,16 +19,16 @@ If your values should be grouped together and that grouping isn't referred to fr
 
 You find the documentation for these helpers here:
 
--   [`DynamicArchetype` in Python](https://ref.rerun.io/docs/python/main/common/custom_data/#rerun.DyanamicArchetype)
--   [`DynamicArchetype` in Rust](https://docs.rs/rerun/latest/rerun/struct.DynamicArchetype.html)
+-   [`DynamicArchetype` in Python](https://ref.dalaran.dev/docs/python/main/common/custom_data/#dalaran.DyanamicArchetype)
+-   [`DynamicArchetype` in Rust](https://docs.rs/dalaran/latest/dalaran/struct.DynamicArchetype.html)
 
 snippet: tutorials/dynamic_archetype
 
-You can also create your own component by implementing the `AsComponents` [Python protocol](https://ref.rerun.io/docs/python/0.9.0/common/interfaces/#rerun.AsComponents) or [Rust trait](https://docs.rs/rerun/latest/rerun/trait.AsComponents.html), which means implementing the function, `as_component_batches()`.
+You can also create your own component by implementing the `AsComponents` [Python protocol](https://ref.dalaran.dev/docs/python/0.9.0/common/interfaces/#dalaran.AsComponents) or [Rust trait](https://docs.rs/dalaran/latest/dalaran/trait.AsComponents.html), which means implementing the function, `as_component_batches()`.
 
-## Remapping to a Rerun archetype
+## Remapping to a Dalaran archetype
 
-Let's start with a simple example where you have your own point cloud class that is perfectly representable as a Rerun archetype.
+Let's start with a simple example where you have your own point cloud class that is perfectly representable as a Dalaran archetype.
 
 ```python
 @dataclass
@@ -37,30 +37,30 @@ class LabeledPoints:
     labels: List[str])
 ```
 
-If you implement `as_component_batches()` on `LabeledPoints`, you can pass it directly to `rr.log`. The simplest possible way is to use the matching Rerun archetype’s `as_component_batches` method.
+If you implement `as_component_batches()` on `LabeledPoints`, you can pass it directly to `dl.log`. The simplest possible way is to use the matching Dalaran archetype’s `as_component_batches` method.
 
 ```python
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
 @dataclass
 class LabeledPoints:
     points: np.ndarray
     labels: List[str]
 
-    def as_component_batches(self) -> list[rr.ComponentBatch]:
-        return rr.Points3D(positions=self.points,
+    def as_component_batches(self) -> list[dl.ComponentBatch]:
+        return dl.Points3D(positions=self.points,
                            labels=self.labels).as_component_batches()
 …
 # Somewhere deep in your code
 classified = my_points_classifier(…)  # type: LabeledPoints
-rr.log("points/classified", classified)
+dl.log("points/classified", classified)
 ```
 
 ## Custom archetypes and components
 
-You can also define and log your own custom archetypes and components completely from user code, without rebuilding Rerun.
+You can also define and log your own custom archetypes and components completely from user code, without rebuilding Dalaran.
 
-In this example we extend the Rerun Points3D archetype with a custom confidence component and user-defined archetype.
+In this example we extend the Dalaran Points3D archetype with a custom confidence component and user-defined archetype.
 
 This is what it looks like in the in the dataframe view:
 

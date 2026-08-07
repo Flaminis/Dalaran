@@ -12,9 +12,9 @@ from typing import Any
 import requests
 from tqdm import tqdm
 
-OWNER = "rerun-io"
-REPO = "rerun"
-OFFICIAL_RERUN_DEVS = [
+OWNER = "dalaran-io"
+REPO = "dalaran"
+OFFICIAL_DALARAN_DEVS = [
     "abey79",
     "emilk",
     "jleibs",
@@ -115,7 +115,7 @@ def main() -> None:
         state = issue["state"]
         labels = [label["name"] for label in issue["labels"]]
 
-        if args.list_external and state == "open" and author not in OFFICIAL_RERUN_DEVS:
+        if args.list_external and state == "open" and author not in OFFICIAL_DALARAN_DEVS:
             print(f"{html_url} by {author}")
             continue
 
@@ -123,7 +123,7 @@ def main() -> None:
             print(f"{html_url} by {author} needs triage")
         elif len(labels) == 0:
             print(f"{html_url} by {author} has no labels")
-        elif comments == 0 and state == "open" and author not in OFFICIAL_RERUN_DEVS:
+        elif comments == 0 and state == "open" and author not in OFFICIAL_DALARAN_DEVS:
             print(f"{html_url} by {author} has {comments} comments")
 
 

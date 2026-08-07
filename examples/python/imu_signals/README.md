@@ -9,7 +9,7 @@ include_in_manifest = true
 build_args = ["--seconds=10"]
 -->
 
-This example demonstrates how to log multi dimensional signals with the Rerun SDK, using the [TUM VI Benchmark](https://cvg.cit.tum.de/data/datasets/visual-inertial-dataset).
+This example demonstrates how to log multi dimensional signals with the Dalaran SDK, using the [TUM VI Benchmark](https://cvg.cit.tum.de/data/datasets/visual-inertial-dataset).
 
 <picture>
   <img src="https://static.rerun.io/imu_signals/1184ab6e2df3275b8b7a574d7f0e42b1aed8343a/full.png" alt="">
@@ -21,7 +21,7 @@ This example demonstrates how to log multi dimensional signals with the Rerun SD
 
 ## Background
 
-This example shows how to log multi-dimensional signals efficiently using the [`rr.send_columns()`](https://ref.rerun.io/docs/python/0.22.1/common/columnar_api/#rerun.send_columns) API.
+This example shows how to log multi-dimensional signals efficiently using the [`dl.send_columns()`](https://ref.dalaran.dev/docs/python/0.22.1/common/columnar_api/#dalaran.send_columns) API.
 
 The API automatically selects the right partition sizes, making it simple to log scalar signals like this:
 
@@ -35,15 +35,15 @@ imu_data = pd.read_csv(
     comment="#",
 )
 
-times = rr.TimeColumn("timestamp", timestamp=imu_data["timestamp"])
+times = dl.TimeColumn("timestamp", timestamp=imu_data["timestamp"])
 
 # Extract gyroscope data (x, y, z axes) and log it to a single entity.
 gyro = imu_data[["gyro.x", "gyro.y", "gyro.z"]]
-rr.send_columns("/gyroscope", indexes=[times], columns=rr.Scalars.columns(scalars=gyro))
+dl.send_columns("/gyroscope", indexes=[times], columns=dl.Scalars.columns(scalars=gyro))
 
 # Extract accelerometer data (x, y, z axes) and log it to a single entity.
 accel = imu_data[["accel.x", "accel.y", "accel.z"]]
-rr.send_columns("/accelerometer", indexes=[times], columns=rr.Scalars.columns(scalars=accel))
+dl.send_columns("/accelerometer", indexes=[times], columns=dl.Scalars.columns(scalars=accel))
 ```
 
 ## Running

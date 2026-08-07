@@ -1,13 +1,13 @@
 <!--[metadata]
 title = "Stock charts"
-description = "Fetch the last five days of stock data and present it through several different Rerun blueprints: same data, many shapes."
+description = "Fetch the last five days of stock data and present it through several different Dalaran blueprints: same data, many shapes."
 tags = ["Time series", "Blueprint"]
 thumbnail = "https://static.rerun.io/blueprint_stocks/8bfe6f16963acdceb2debb9de9a206dc2eb9b280/480w.png"
 thumbnail_dimensions = [480, 270]
 -->
 
 This example fetches the last 5 days of stock data for a few different stocks.
-We show how Rerun blueprints can then be used to present many different views of the same data.
+We show how Dalaran blueprints can then be used to present many different views of the same data.
 
 <picture>
   <img src="https://static.rerun.io/blueprint_stocks/8bfe6f16963acdceb2debb9de9a206dc2eb9b280/full.png" alt="">

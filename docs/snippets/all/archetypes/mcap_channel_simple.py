@@ -1,12 +1,12 @@
 """Log a simple MCAP channel definition."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_mcap_channel", spawn=True)
+dl.init("dalaran_example_mcap_channel", spawn=True)
 
-rr.log(
+dl.log(
     "mcap/channels/camera",
-    rr.McapChannel(
+    dl.McapChannel(
         id=1,
         topic="/camera/image",
         message_encoding="cdr",

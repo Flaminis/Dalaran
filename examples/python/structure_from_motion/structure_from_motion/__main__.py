@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Example of using Rerun to log and visualize the output of COLMAP's sparse reconstruction."""
+"""Example of using Dalaran to log and visualize the output of COLMAP's sparse reconstruction."""
 
 from __future__ import annotations
 
@@ -17,8 +17,8 @@ import numpy.typing as npt
 import requests
 from tqdm import tqdm
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 from .read_write_model import Camera, read_model  # type: ignore[attr-defined]
 
@@ -29,7 +29,7 @@ This example was generated from the output of a sparse reconstruction done with 
 [COLMAP](https://colmap.github.io/index.html) is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo
 (MVS) pipeline with a graphical and command-line interface.
 
-In this example a short video clip has been processed offline by the COLMAP pipeline, and we use Rerun to visualize the
+In this example a short video clip has been processed offline by the COLMAP pipeline, and we use Dalaran to visualize the
 individual camera frames, estimated camera poses, and resulting point clouds over time.
 
 The full source code for this example is available
@@ -93,15 +93,15 @@ def download_with_progress(url: str) -> io.BytesIO:
 def read_and_log_sparse_reconstruction(dataset_path: Path, filter_output: bool, resize: tuple[int, int] | None) -> None:
     print("Reading sparse COLMAP reconstruction")
     cameras, images, points3D = read_model(dataset_path / "sparse", ext=".bin")
-    print("Building visualization by logging to Rerun")
+    print("Building visualization by logging to Dalaran")
 
     if filter_output:
         # Filter out noisy points
         points3D = {id: point for id, point in points3D.items() if point.rgb.any() and len(point.image_ids) > 4}
 
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
-    rr.log("/", rr.ViewCoordinates.RIGHT_HAND_Y_DOWN, static=True)
-    rr.log("plot/avg_reproj_err", rr.SeriesLines(colors=[240, 45, 58]), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
+    dl.log("/", dl.ViewCoordinates.RIGHT_HAND_Y_DOWN, static=True)
+    dl.log("plot/avg_reproj_err", dl.SeriesLines(colors=[240, 45, 58]), static=True)
 
     # Iterate through images (video frames) logging data related to each frame.
     for image in sorted(images.values(), key=lambda im: im.name):
@@ -133,32 +133,32 @@ def read_and_log_sparse_reconstruction(dataset_path: Path, filter_output: bool, 
         if resize:
             visible_xys *= scale_factor
 
-        rr.set_time("frame", sequence=frame_idx)
+        dl.set_time("frame", sequence=frame_idx)
 
         points = [point.xyz for point in visible_xyzs]
         point_colors = [point.rgb for point in visible_xyzs]
         point_errors = [point.error for point in visible_xyzs]
 
-        rr.log("plot/avg_reproj_err", rr.Scalars(np.mean(point_errors)))
+        dl.log("plot/avg_reproj_err", dl.Scalars(np.mean(point_errors)))
 
-        rr.log("points", rr.Points3D(points, colors=point_colors), rr.AnyValues(error=point_errors))
+        dl.log("points", dl.Points3D(points, colors=point_colors), dl.AnyValues(error=point_errors))
 
         # COLMAP's camera transform is "camera from world"
-        rr.log(
+        dl.log(
             "camera",
-            rr.Transform3D(
+            dl.Transform3D(
                 translation=image.tvec,
-                rotation=rr.Quaternion(xyzw=quat_xyzw),
-                relation=rr.TransformRelation.ChildFromParent,
+                rotation=dl.Quaternion(xyzw=quat_xyzw),
+                relation=dl.TransformRelation.ChildFromParent,
             ),
         )
-        rr.log("camera", rr.ViewCoordinates.RDF, static=True)  # X=Right, Y=Down, Z=Forward
+        dl.log("camera", dl.ViewCoordinates.RDF, static=True)  # X=Right, Y=Down, Z=Forward
 
         # Log camera intrinsics
         assert camera.model == "PINHOLE"
-        rr.log(
+        dl.log(
             "camera/image",
-            rr.Pinhole(
+            dl.Pinhole(
                 resolution=[camera.width, camera.height],
                 focal_length=camera.params[:2],
                 principal_point=camera.params[2:],
@@ -168,11 +168,11 @@ def read_and_log_sparse_reconstruction(dataset_path: Path, filter_output: bool, 
         if resize:
             bgr = cv2.imread(str(image_file))
             bgr = cv2.resize(bgr, resize)
-            rr.log("camera/image", rr.Image(bgr, color_model="BGR").compress(jpeg_quality=75))
+            dl.log("camera/image", dl.Image(bgr, color_model="BGR").compress(jpeg_quality=75))
         else:
-            rr.log("camera/image", rr.EncodedImage(path=dataset_path / "images" / image.name))
+            dl.log("camera/image", dl.EncodedImage(path=dataset_path / "images" / image.name))
 
-        rr.log("camera/image/keypoints", rr.Points2D(visible_xys, colors=[34, 138, 167]))
+        dl.log("camera/image/keypoints", dl.Points2D(visible_xys, colors=[34, 138, 167]))
 
 
 def main() -> None:
@@ -186,30 +186,30 @@ def main() -> None:
         help="Which dataset to download",
     )
     parser.add_argument("--resize", action="store", help="Target resolution to resize images")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     if args.resize:
         args.resize = tuple(int(x) for x in args.resize.split("x"))
 
-    blueprint = rrb.Vertical(
-        rrb.Spatial3DView(
+    blueprint = dlb.Vertical(
+        dlb.Spatial3DView(
             name="3D",
             origin="/",
             line_grid=False,  # There's no clearly defined ground plane.
         ),
-        rrb.Horizontal(
-            rrb.TextDocumentView(name="README", origin="/description"),
-            rrb.Spatial2DView(name="Camera", origin="/camera/image"),
-            rrb.TimeSeriesView(origin="/plot"),
+        dlb.Horizontal(
+            dlb.TextDocumentView(name="README", origin="/description"),
+            dlb.Spatial2DView(name="Camera", origin="/camera/image"),
+            dlb.TimeSeriesView(origin="/plot"),
         ),
         row_shares=[3, 2],
     )
 
-    rr.script_setup(args, "rerun_example_structure_from_motion", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_structure_from_motion", default_blueprint=blueprint)
     dataset_path = get_downloaded_dataset_path(args.dataset)
     read_and_log_sparse_reconstruction(dataset_path, filter_output=not args.unfiltered, resize=args.resize)
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

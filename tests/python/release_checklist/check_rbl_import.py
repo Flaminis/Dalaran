@@ -6,8 +6,8 @@ from uuid import uuid4
 
 import numpy as np
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 README = """\
 # Blueprint imports
@@ -19,28 +19,28 @@ You should be seeing a **dataframe view of a plot** on your left, instead of an 
 
 
 def log_readme() -> None:
-    rr.log("readme", rr.TextDocument(README, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("readme", dl.TextDocument(README, media_type=dl.MediaType.MARKDOWN), static=True)
 
 
 def log_external_blueprint() -> None:
     import tempfile
 
     with tempfile.NamedTemporaryFile(suffix=".rbl") as tmp:
-        rrb.Blueprint(
-            rrb.Horizontal(
-                rrb.DataframeView(
+        dlb.Blueprint(
+            dlb.Horizontal(
+                dlb.DataframeView(
                     origin="/",
-                    query=rrb.archetypes.DataframeQuery(
+                    query=dlb.archetypes.DataframeQuery(
                         timeline="frame_nr",
                         apply_latest_at=True,
                     ),
                 ),
-                rrb.TextDocumentView(origin="readme"),
+                dlb.TextDocumentView(origin="readme"),
                 column_shares=[3, 2],
             ),
         ).save("some_unrelated_blueprint_app_id", tmp.name)
 
-        rr.log_file_from_path(tmp.name)
+        dl.log_file_from_path(tmp.name)
 
 
 def log_plots() -> None:
@@ -50,22 +50,22 @@ def log_plots() -> None:
         return a + t * (b - a)
 
     for t in range(int(tau * 2 * 100.0)):
-        rr.set_time("frame_nr", sequence=t)
+        dl.set_time("frame_nr", sequence=t)
 
         sin_of_t = sin(float(t) / 100.0)
-        rr.log(
+        dl.log(
             "trig/sin",
-            rr.Scalars(sin_of_t),
-            rr.SeriesLines(
+            dl.Scalars(sin_of_t),
+            dl.SeriesLines(
                 widths=5, colors=lerp(np.array([1.0, 0, 0]), np.array([1.0, 1.0, 0]), (sin_of_t + 1.0) * 0.5)
             ),
         )
 
         cos_of_t = cos(float(t) / 100.0)
-        rr.log(
+        dl.log(
             "trig/cos",
-            rr.Scalars(cos_of_t),
-            rr.SeriesLines(
+            dl.Scalars(cos_of_t),
+            dl.SeriesLines(
                 widths=5,
                 colors=lerp(np.array([0.0, 1.0, 1.0]), np.array([0.0, 0.0, 1.0]), (cos_of_t + 1.0) * 0.5),
             ),
@@ -73,21 +73,21 @@ def log_plots() -> None:
 
 
 def run(args: Namespace) -> None:
-    rr.script_setup(
+    dl.script_setup(
         args,
         f"{os.path.basename(__file__)}",
         recording_id=uuid4(),
     )
-    rr.send_blueprint(
-        rrb.Blueprint(
-            rrb.Horizontal(
-                rrb.TimeSeriesView(origin="/"),
-                rrb.TextDocumentView(origin="readme"),
+    dl.send_blueprint(
+        dlb.Blueprint(
+            dlb.Horizontal(
+                dlb.TimeSeriesView(origin="/"),
+                dlb.TextDocumentView(origin="readme"),
                 column_shares=[3, 2],
             ),
-            rrb.BlueprintPanel(state="collapsed"),
-            rrb.SelectionPanel(state="collapsed"),
-            rrb.TimePanel(state="collapsed"),
+            dlb.BlueprintPanel(state="collapsed"),
+            dlb.SelectionPanel(state="collapsed"),
+            dlb.TimePanel(state="collapsed"),
         ),
         make_active=True,
         make_default=True,
@@ -103,6 +103,6 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Interactive release checklist")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
     run(args)

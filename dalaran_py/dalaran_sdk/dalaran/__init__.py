@@ -1,0 +1,542 @@
+from __future__ import annotations
+
+import functools
+import random
+import sys
+import warnings
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, TypeVar, cast
+
+import numpy as np
+
+__version__ = "0.36.0-alpha.1+dev"
+__version_info__ = (0, 36, 0, "alpha.1")
+
+if sys.version_info < (3, 10):  # noqa: UP036
+    raise RuntimeError("Dalaran SDK requires Python 3.10 or later.")
+
+
+# =====================================
+# API RE-EXPORTS
+# Important: always us the `import _ as _` format to make it explicit to type-checkers that these are public APIs.
+# Background: https://github.com/microsoft/pyright/blob/1.1.365/docs/typed-libraries.md#library-interface
+#
+import dalaran_bindings as bindings
+
+from . import (
+    blueprint as blueprint,
+    catalog as catalog,
+    experimental as experimental,
+    server as server,
+    urdf as urdf,
+)
+from ._baseclasses import (
+    ComponentBatchLike as ComponentBatchLike,
+    ComponentBatchMixin as ComponentBatchMixin,
+    ComponentColumn as ComponentColumn,
+    ComponentColumnList as ComponentColumnList,
+    ComponentDescriptor as ComponentDescriptor,
+    ComponentMixin as ComponentMixin,
+    DescribedComponentBatch as DescribedComponentBatch,
+)
+from ._legacy_notebook import (
+    legacy_notebook_show as legacy_notebook_show,
+)
+from ._log import (
+    AsComponents as AsComponents,
+    escape_entity_path_part as escape_entity_path_part,
+    log as log,
+    log_file_from_contents as log_file_from_contents,
+    log_file_from_path as log_file_from_path,
+    new_entity_path as new_entity_path,
+)
+from ._logging_handler import (
+    LoggingHandler as LoggingHandler,
+)
+from ._memory import (
+    MemoryRecording as MemoryRecording,
+    memory_recording as memory_recording,
+)
+from ._numpy_compatibility import asarray as asarray
+from ._properties import (
+    send_property as send_property,
+    send_recording_name as send_recording_name,
+    send_recording_start_time_nanos as send_recording_start_time_nanos,
+)
+from ._script_helpers import (
+    script_add_args as script_add_args,
+    script_setup as script_setup,
+    script_teardown as script_teardown,
+)
+from ._send_columns import (
+    TimeColumn as TimeColumn,
+    TimeColumnLike as TimeColumnLike,
+    send_columns as send_columns,
+)
+from ._send_dataframe import (
+    AUTO_INDEX as AUTO_INDEX,
+    RECORDING_PROPERTIES_PATH as RECORDING_PROPERTIES_PATH,
+    DALARAN_KIND as DALARAN_KIND,
+    DALARAN_KIND_CONTROL as DALARAN_KIND_CONTROL,
+    DALARAN_KIND_INDEX as DALARAN_KIND_INDEX,
+    SORBET_ARCHETYPE_NAME as SORBET_ARCHETYPE_NAME,
+    SORBET_COMPONENT as SORBET_COMPONENT,
+    SORBET_COMPONENT_TYPE as SORBET_COMPONENT_TYPE,
+    SORBET_ENTITY_PATH as SORBET_ENTITY_PATH,
+    SORBET_INDEX_NAME as SORBET_INDEX_NAME,
+    SORBET_IS_TABLE_INDEX as SORBET_IS_TABLE_INDEX,
+    send_dataframe as send_dataframe,
+    send_record_batch as send_record_batch,
+)
+from ._tracing_session import (
+    tracing_session as tracing_session,
+)
+from .any_batch_value import (
+    AnyBatchValue as AnyBatchValue,
+    ComponentValueLike as ComponentValueLike,
+)
+from .any_value import (
+    AnyValues as AnyValues,
+)
+from .archetypes import (
+    AnnotationContext as AnnotationContext,
+    Arrows2D as Arrows2D,
+    Arrows3D as Arrows3D,
+    Asset3D as Asset3D,
+    AssetVideo as AssetVideo,
+    BarChart as BarChart,
+    Boxes2D as Boxes2D,
+    Boxes3D as Boxes3D,
+    Capsules3D as Capsules3D,
+    Clear as Clear,
+    CoordinateFrame as CoordinateFrame,
+    Cylinders3D as Cylinders3D,
+    DepthImage as DepthImage,
+    Ellipses2D as Ellipses2D,
+    Ellipsoids3D as Ellipsoids3D,
+    EncodedDepthImage as EncodedDepthImage,
+    EncodedImage as EncodedImage,
+    GaussianSplats3D as GaussianSplats3D,
+    GeoLineStrings as GeoLineStrings,
+    GeoPoints as GeoPoints,
+    GraphEdges as GraphEdges,
+    GraphNodes as GraphNodes,
+    GridMap as GridMap,
+    Image as Image,
+    InstancePoses3D as InstancePoses3D,
+    LineStrips2D as LineStrips2D,
+    LineStrips3D as LineStrips3D,
+    McapChannel as McapChannel,
+    McapMessage as McapMessage,
+    McapSchema as McapSchema,
+    McapStatistics as McapStatistics,
+    Mesh3D as Mesh3D,
+    Pinhole as Pinhole,
+    Points2D as Points2D,
+    Points3D as Points3D,
+    Scalars as Scalars,
+    SegmentationImage as SegmentationImage,
+    SeriesLines as SeriesLines,
+    SeriesPoints as SeriesPoints,
+    StateChange as StateChange,
+    StateConfiguration as StateConfiguration,
+    Tensor as Tensor,
+    TextDocument as TextDocument,
+    TextLog as TextLog,
+    Transform3D as Transform3D,
+    TransformAxes3D as TransformAxes3D,
+    VideoFrameReference as VideoFrameReference,
+    VideoStream as VideoStream,
+    ViewCoordinates as ViewCoordinates,
+    VoxelGridMap as VoxelGridMap,
+)
+from .archetypes.boxes2d_ext import (
+    Box2DFormat as Box2DFormat,
+)
+from .auth import (
+    login as login,
+    logout as logout,
+)
+from .components import (
+    AlbedoFactor as AlbedoFactor,
+    GraphEdge as GraphEdge,
+    GraphType as GraphType,
+    MediaType as MediaType,
+    Radius as Radius,
+    Scale3D as Scale3D,
+    TensorDimensionIndexSelection as TensorDimensionIndexSelection,
+    TextLogLevel as TextLogLevel,
+    TransformRelation as TransformRelation,
+    VideoCodec as VideoCodec,
+)
+from .datatypes import (
+    Angle as Angle,
+    AnnotationInfo as AnnotationInfo,
+    ChannelDatatype as ChannelDatatype,
+    ClassDescription as ClassDescription,
+    ColorModel as ColorModel,
+    PixelFormat as PixelFormat,
+    Quaternion as Quaternion,
+    RotationAxisAngle as RotationAxisAngle,
+    TensorData as TensorData,
+    TensorDimensionSelection as TensorDimensionSelection,
+    TimeInt as TimeInt,
+    TimeRange as TimeRange,
+    TimeRangeBoundary as TimeRangeBoundary,
+    VisibleTimeRange as VisibleTimeRange,
+)
+from .dynamic_archetype import (
+    DynamicArchetype as DynamicArchetype,
+)
+from .error_utils import (
+    set_strict_mode as set_strict_mode,
+    strict_mode as strict_mode,
+)
+from .recording_stream import (
+    BinaryStream as BinaryStream,
+    ChunkBatcherConfig as ChunkBatcherConfig,
+    RecordingStream as RecordingStream,  # noqa: TC001
+    binary_stream as binary_stream,
+    get_application_id as get_application_id,
+    get_data_recording as get_data_recording,
+    get_global_data_recording as get_global_data_recording,
+    get_recording_id as get_recording_id,
+    get_thread_local_data_recording as get_thread_local_data_recording,
+    is_enabled as is_enabled,
+    recording_stream_generator_ctx as recording_stream_generator_ctx,
+    set_global_data_recording as set_global_data_recording,
+    set_thread_local_data_recording as set_thread_local_data_recording,
+    thread_local_stream as thread_local_stream,
+)
+from .sinks import (
+    FileSink as FileSink,
+    GrpcServerSink as GrpcServerSink,
+    GrpcSink as GrpcSink,
+    connect_grpc as connect_grpc,
+    disconnect as disconnect,
+    save as save,
+    send_blueprint as send_blueprint,
+    serve_grpc as serve_grpc,
+    set_sinks as set_sinks,
+    spawn as spawn,
+    stdout as stdout,
+)
+from .time import (
+    disable_timeline as disable_timeline,
+    reset_time as reset_time,
+    set_log_tick_enabled as set_log_tick_enabled,
+    set_log_time_enabled as set_log_time_enabled,
+    set_time as set_time,
+)
+from .web import serve_web_viewer as serve_web_viewer
+
+if TYPE_CHECKING:
+    from uuid import UUID
+
+    from .blueprint.api import (
+        BlueprintLike as BlueprintLike,
+    )
+
+# =====================================
+# UTILITIES
+
+
+# NOTE: Always keep in sync with other languages.
+EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE = 66
+"""
+When an external `Importer` is asked to import some data that it doesn't know how to handle, it
+should exit with this exit code.
+"""
+
+
+def __getattr__(name: str) -> Any:
+    """Lazy module-level attribute lookup for deprecated aliases (see PEP 562)."""
+    if name == "EXTERNAL_DATA_LOADER_INCOMPATIBLE_EXIT_CODE":
+        import warnings
+
+        warnings.warn(
+            "EXTERNAL_DATA_LOADER_INCOMPATIBLE_EXIT_CODE is deprecated since 0.32.0. "
+            "Use EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+# TODO(#3793): defaulting recording_id to authkey should be opt-in
+def init(
+    application_id: str,
+    *,
+    recording_id: str | UUID | None = None,
+    spawn: bool = False,
+    init_logging: bool = True,
+    default_enabled: bool = True,
+    strict: bool | None = None,
+    default_blueprint: BlueprintLike | None = None,
+    send_properties: bool = True,
+) -> None:
+    """
+    Initialize the Dalaran SDK with a user-chosen application id (name).
+
+    You must call this function first in order to initialize a global recording.
+    Without an active recording, all methods of the SDK will turn into no-ops.
+
+    For more advanced use cases, e.g. multiple recordings setups, see [`dalaran.RecordingStream`][].
+
+    To deal with accumulation of recording state when calling init() multiple times, this function will
+    have the side-effect of flushing all existing recordings. After flushing, any recordings which
+    are otherwise orphaned will also be destructed to free resources, close open file-descriptors, etc.
+
+    !!! Warning
+        If you don't specify a `recording_id`, it will default to a random value that is generated once
+        at the start of the process.
+        That value will be kept around for the whole lifetime of the process, and even inherited by all
+        its subprocesses, if any.
+
+        This makes it trivial to log data to the same recording in a multiprocess setup, but it also means
+        that the following code will _not_ create two distinct recordings:
+        ```
+        dl.init("my_app")
+        dl.init("my_app")
+        ```
+
+        To create distinct recordings from the same process, specify distinct recording IDs:
+        ```
+        from uuid import uuid4
+        dl.init("my_app", recording_id=uuid4())
+        dl.init("my_app", recording_id=uuid4())
+        ```
+
+    Parameters
+    ----------
+    application_id:
+        Your Dalaran recordings will be categorized by this application id, so
+        try to pick a unique one for each application that uses the Dalaran SDK.
+
+        For example, if you have one application doing object detection
+        and another doing camera calibration, you could have
+        `dalaran.init("object_detector")` and `dalaran.init("calibrator")`.
+
+        Application ids starting with `dalaran_example_` are reserved for Dalaran examples,
+        and will be treated specially by the Dalaran Viewer.
+        In particular, it will opt-in to more analytics, and will also
+        seed the global random number generator deterministically.
+    recording_id:
+        Set the recording ID that this process is logging to, as a UUIDv4.
+
+        The default recording_id is based on `multiprocessing.current_process().authkey`
+        which means that all processes spawned with `multiprocessing`
+        will have the same default recording_id.
+
+        If you are not using `multiprocessing` and still want several different Python
+        processes to log to the same Dalaran instance (and be part of the same recording),
+        you will need to manually assign them all the same recording_id.
+        Any random UUIDv4 will work, or copy the recording id for the parent process.
+    spawn:
+        Spawn a Dalaran Viewer and stream logging data to it.
+        Short for calling `spawn` separately.
+        If you don't call this, log events will be buffered indefinitely until
+        you call either `connect_grpc`, `show`, or `save`
+    default_enabled
+        Should Dalaran logging be on by default?
+        Can be overridden with the DALARAN env-var, e.g. `DALARAN=on` or `DALARAN=off`.
+    init_logging
+        Should we initialize the logging for this application?
+    strict
+        If `True`, an exception is raised on use error (wrong parameter types, etc.).
+        If `False`, errors are logged as warnings instead.
+        If unset, this can alternatively be overridden using the DALARAN_STRICT environment variable.
+        If not otherwise specified, the default behavior will be equivalent to `False`.
+    default_blueprint
+        Optionally set a default blueprint to use for this application. If the application
+        already has an active blueprint, the new blueprint won't become active until the user
+        clicks the "reset blueprint" button. If you want to activate the new blueprint
+        immediately, instead use the [`dalaran.send_blueprint`][] API.
+    send_properties
+            Immediately send the recording properties to the viewer (default: True)
+
+    """
+
+    if application_id.startswith("dalaran_example_"):
+        # Make all our example code deterministic.
+        random.seed(0)
+        np.random.seed(0)
+
+    if strict is not None:
+        set_strict_mode(strict)
+
+    # Always check whether we are a forked child when calling init. This should have happened
+    # via `_register_on_fork` but it's worth being conservative.
+    cleanup_if_forked_child()
+
+    # Dalaran is being re-initialized. We may have recordings from a previous call to init that are lingering.
+    # Clean them up now to avoid memory leaks. This could cause a problem if we call dl.init() from inside a
+    # destructor during shutdown, but that seems like a fair compromise.
+    bindings.flush_and_cleanup_orphaned_recordings()
+
+    if recording_id is not None:
+        recording_id = str(recording_id)
+
+    if init_logging:
+        # Note: don't use `RecordingStream` here, because it overrides the default recording id behavior
+        bindings.new_recording(
+            application_id=application_id,
+            recording_id=recording_id,
+            make_default=True,
+            make_thread_default=False,
+            default_enabled=default_enabled,
+            send_properties=send_properties,
+            batcher_config=None,
+        )
+
+    if spawn:
+        from dalaran.sinks import spawn as _spawn
+
+        _spawn(default_blueprint=default_blueprint)
+
+
+def version() -> str:
+    """
+    Returns a verbose version string of the Dalaran SDK.
+
+    Example: `dalaran_py 0.6.0-alpha.0 [rustc 1.69.0 (84c898d65 2023-04-16), LLVM 15.0.7] aarch64-apple-darwin main bd8a072, built 2023-05-11T08:25:17Z`
+    """
+    return bindings.version()  # type: ignore[no-any-return]
+
+
+def dalaran_shutdown() -> None:
+    bindings.shutdown()
+
+
+def _register_shutdown() -> None:
+    import atexit
+
+    atexit.register(dalaran_shutdown)
+
+
+_register_shutdown()
+
+
+def unregister_shutdown() -> None:
+    import atexit
+
+    atexit.unregister(dalaran_shutdown)
+
+
+def cleanup_if_forked_child() -> None:
+    bindings.cleanup_if_forked_child()
+
+
+def _register_on_fork() -> None:
+    # Only relevant on Linux
+    try:
+        import os
+
+        os.register_at_fork(after_in_child=cleanup_if_forked_child)
+    except AttributeError:
+        # not defined on all OSes
+        pass
+
+
+_register_on_fork()
+
+_TFunc = TypeVar("_TFunc", bound=Callable[..., Any])
+
+
+def shutdown_at_exit(func: _TFunc) -> _TFunc:
+    """
+    Decorator to shutdown Dalaran cleanly when this function exits.
+
+    Normally, Dalaran installs an atexit-handler that attempts to shutdown cleanly and
+    flush all outgoing data before terminating. However, some cases, such as forked
+    processes will always skip this at-exit handler. In these cases, you can use this
+    decorator on the entry-point to your subprocess to ensure cleanup happens as
+    expected without losing data.
+    """
+
+    @functools.wraps(func)
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
+        try:
+            return func(*args, **kwargs)
+        finally:
+            dalaran_shutdown()
+
+    return cast("_TFunc", wrapper)
+
+
+# ---
+
+
+def start_web_viewer_server(port: int = 0) -> None:
+    """
+    Start an HTTP server that hosts the dalaran web viewer.
+
+    This only provides the web-server that makes the viewer available and
+    does not otherwise provide a dalaran gRPC server or facilitate any routing of
+    data.
+
+    This is generally only necessary for application such as running a jupyter notebook
+    in a context where app.dalaran.dev is unavailable, or does not have the matching
+    resources for your build (such as when running from source.)
+
+    Parameters
+    ----------
+    port
+        Port to serve assets on. Defaults to 0 (random port).
+
+    """
+
+    from .web import _packaged_assets_archive_path
+
+    bindings.start_web_viewer_server(port, assets_archive_path=_packaged_assets_archive_path())
+
+
+def notebook_show(
+    *,
+    width: int | None = None,
+    height: int | None = None,
+    blueprint: BlueprintLike | None = None,
+    recording: RecordingStream | None = None,
+) -> None:
+    """
+    Output the Dalaran viewer in a notebook using IPython [IPython.core.display.HTML][].
+
+    Any data logged to the recording after initialization will be sent directly to the viewer.
+
+    Note that this can be called at any point during cell execution. The call will block until the embedded
+    viewer is initialized and ready to receive data. Thereafter any log calls will immediately send data
+    to the viewer.
+
+    Parameters
+    ----------
+    width:
+        The width of the viewer in pixels.
+    height:
+        The height of the viewer in pixels.
+    blueprint:
+        A blueprint object to send to the viewer.
+        It will be made active and set as the default blueprint in the recording.
+
+        Setting this is equivalent to calling [`dalaran.send_blueprint`][] before initializing the viewer.
+    recording:
+        Specifies the [`dalaran.RecordingStream`][] to use.
+        If left unspecified, defaults to the current active data recording, if there is one.
+        See also: [`dalaran.init`][], [`dalaran.set_global_data_recording`][].
+
+    """
+    try:
+        from .notebook import Viewer
+
+        Viewer(
+            width=width,
+            height=height,
+            blueprint=blueprint,
+            recording=recording,  # NOLINT
+        ).display()
+    except ImportError as e:
+        raise Exception("Could not import dalaran_notebook. Please install `dalaran-notebook`.") from e
+    except FileNotFoundError as e:
+        raise Exception(
+            "dalaran_notebook package is missing widget assets. Please run `py-build-notebook` in your pixi env."
+        ) from e

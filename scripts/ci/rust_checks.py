@@ -69,7 +69,7 @@ def run_cargo(
     additional_env_vars["RUSTDOCFLAGS"] = f"{extra_cfgs} {'--deny warnings' if deny_warnings else ''}"
 
     # We shouldn't require the web viewer .wasm to exist before running clippy, unit tests, etc:
-    additional_env_vars["RERUN_DISABLE_WEB_VIEWER_SERVER"] = "1"
+    additional_env_vars["DALARAN_DISABLE_WEB_VIEWER_SERVER"] = "1"
 
     # Disable TRACY to avoid macOS failure on CI, that looks like this:
     # > Tracy Profiler initialization failure: CPU doesn't support invariant TSC.
@@ -232,12 +232,12 @@ def base_checks(results: list[Result]) -> None:
 
 
 def sdk_variations(results: list[Result]) -> None:
-    # Check a few important permutations of the feature flags for our `rerun` library:
-    results.append(run_cargo("check", "-p rerun --no-default-features"))
-    results.append(run_cargo("check", "-p rerun --no-default-features --features sdk"))
+    # Check a few important permutations of the feature flags for our `dalaran` library:
+    results.append(run_cargo("check", "-p dalaran --no-default-features"))
+    results.append(run_cargo("check", "-p dalaran --no-default-features --features sdk"))
 
     # `dl_server` is built without the optional `lance` feature in many configurations
-    # (e.g. when pulled in by `rerun`'s `--all-features`, which does not propagate `dl_server/lance`).
+    # (e.g. when pulled in by `dalaran`'s `--all-features`, which does not propagate `dl_server/lance`).
     results.append(run_cargo("check", "-p dl_server"))
 
 
@@ -307,7 +307,7 @@ def denied_sdk_deps(results: list[Result]) -> None:
                 "tree",
                 # -f '{lib}' is used here because otherwise cargo tree would print links to repositories of patched crates
                 # which would cause false positives e.g. when checking for egui.
-                f"-p rerun --target {target} -f '{{lib}}' -F {features}",
+                f"-p dalaran --target {target} -f '{{lib}}' -F {features}",
                 output_checks=partial(check_sdk_tree_with_default_features, features=features),
             )
             result.command = f"Check dependencies in `{result.command}`"
@@ -348,22 +348,22 @@ def individual_crates(results: list[Result]) -> None:
 
 
 def docs(results: list[Result]) -> None:
-    # ⚠️ This version skips the `rerun` crate itself
-    # Presumably due to https://github.com/rust-lang/rust/issues/114891, checking the `rerun` crate
+    # ⚠️ This version skips the `dalaran` crate itself
+    # Presumably due to https://github.com/rust-lang/rust/issues/114891, checking the `dalaran` crate
     # takes about 20minutes on CI (per command).
     # Since this crate mostly combines & exposes other crates, it's not as important for iterating on the code.
     #
     # For details see https://github.com/rerun-io/rerun/issues/7387
 
     # These take a few minutes each on CI, but very useful for catching broken doclinks.
-    results.append(run_cargo("doc", "--no-deps --all-features --workspace --exclude rerun"))
-    results.append(run_cargo("doc", "--document-private-items --no-deps --all-features --workspace --exclude rerun"))
+    results.append(run_cargo("doc", "--no-deps --all-features --workspace --exclude dalaran"))
+    results.append(run_cargo("doc", "--document-private-items --no-deps --all-features --workspace --exclude dalaran"))
 
 
 def docs_slow(results: list[Result]) -> None:
     # See `docs` above, this may take 20min each due to issues in cargo doc.
-    results.append(run_cargo("doc", "--no-deps --all-features -p rerun"))
-    results.append(run_cargo("doc", "--document-private-items --no-deps --all-features -p rerun"))
+    results.append(run_cargo("doc", "--no-deps --all-features -p dalaran"))
+    results.append(run_cargo("doc", "--document-private-items --no-deps --all-features -p dalaran"))
 
 
 test_failure_message = 'See the "Upload test results" step for a link to the snapshot test artifact.'

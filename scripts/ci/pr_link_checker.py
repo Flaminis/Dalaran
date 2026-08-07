@@ -86,7 +86,7 @@ def get_added_lines_with_links(
 
     # Get the subdirectory prefix if we're not at the git root.
     # This is needed because git diff returns paths relative to the git root,
-    # but we may be running from a subdirectory (e.g., rerun/ in the reality repo).
+    # but we may be running from a subdirectory (e.g., dalaran/ in the reality repo).
     try:
         prefix_result = subprocess.run(
             ["git", "rev-parse", "--show-prefix"],

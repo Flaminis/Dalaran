@@ -1,18 +1,18 @@
-"""Shows integration of Rerun's `TextLog` with the native logging interface."""
+"""Shows integration of Dalaran's `TextLog` with the native logging interface."""
 
 import logging
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_text_log_integration", spawn=True)
+dl.init("dalaran_example_text_log_integration", spawn=True)
 
 # Log a text entry directly
-rr.log(
+dl.log(
     "logs",
-    rr.TextLog("this entry has loglevel TRACE", level=rr.TextLogLevel.TRACE),
+    dl.TextLog("this entry has loglevel TRACE", level=dl.TextLogLevel.TRACE),
 )
 
 # Or log via a logging handler
-logging.getLogger().addHandler(rr.LoggingHandler("logs/handler"))
+logging.getLogger().addHandler(dl.LoggingHandler("logs/handler"))
 logging.getLogger().setLevel(-1)
 logging.info("This INFO log got added through the standard logging interface")

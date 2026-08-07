@@ -9,27 +9,27 @@ hidden: true
 ### `segment_url_udf` and `segment_url_with_timeref_udf` have been removed
 
 The `segment_url_udf()` and `segment_url_with_timeref_udf()` functions in
-`rerun.utilities.datafusion.functions.url_generation` have been removed. Use `segment_url()` instead,
+`dalaran.utilities.datafusion.functions.url_generation` have been removed. Use `segment_url()` instead,
 which covers both use cases:
 
 Before:
 
 ```python
-from rerun.utilities.datafusion.functions.url_generation import segment_url_udf, segment_url_with_timeref_udf
+from dalaran.utilities.datafusion.functions.url_generation import segment_url_udf, segment_url_with_timeref_udf
 
 # Without timestamp
 udf = segment_url_udf(dataset)
-df.with_column("url", udf(col("rerun_segment_id")))
+df.with_column("url", udf(col("dalaran_segment_id")))
 
 # With timestamp
 udf = segment_url_with_timeref_udf(dataset, "my_timeline")
-df.with_column("url", udf(col("rerun_segment_id"), col("ts"), lit("my_timeline")))
+df.with_column("url", udf(col("dalaran_segment_id"), col("ts"), lit("my_timeline")))
 ```
 
 After:
 
 ```python
-from rerun.utilities.datafusion.functions.url_generation import segment_url
+from dalaran.utilities.datafusion.functions.url_generation import segment_url
 
 # Without timestamp
 df.with_column("url", segment_url(dataset))
@@ -65,7 +65,7 @@ Starting with 0.30, `.rrd` files are read once and loading stops at EOF.
 To restore the old tailing behavior, pass the `--follow` flag:
 
 ```sh
-rerun --follow recording.rrd
+dalaran --follow recording.rrd
 ```
 
 ### `SeriesVisible` component type has been removed

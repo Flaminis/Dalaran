@@ -1,8 +1,8 @@
 """Log a simple line strip."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_line_strip3d", spawn=True)
+dl.init("dalaran_example_line_strip3d", spawn=True)
 
 points = [
     [0, 0, 0],
@@ -15,4 +15,4 @@ points = [
     [0, 1, 1],
 ]
 
-rr.log("strip", rr.LineStrips3D([points]))
+dl.log("strip", dl.LineStrips3D([points]))

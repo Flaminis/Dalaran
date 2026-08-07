@@ -8,7 +8,7 @@ thumbnail_dimensions = [480, 294]
 -->
 
 This example visualizes the paper "Depth Pro: Sharp Monocular Metric Depth in Less Than a Second" ([arXiv](https://arxiv.org/abs/2410.02073)).
-The example runs inference for each frame in the provided video, and logs the predicted depth map to Rerun.
+The example runs inference for each frame in the provided video, and logs the predicted depth map to Dalaran.
 
 ## Background
 
@@ -24,4 +24,4 @@ This example uses the open-source code and [model weights](https://huggingface.c
 
 This is an external example. Check the [repository](https://github.com/rerun-io/hf-example-ml-depth-pro) for more information.
 
-You can try the example on a HuggingFace space [here](https://huggingface.co/spaces/oxkitsune/rerun-ml-depth-pro).
+You can try the example on a HuggingFace space [here](https://huggingface.co/spaces/oxkitsune/dalaran-ml-depth-pro).

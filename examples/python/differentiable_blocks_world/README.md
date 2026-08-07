@@ -8,11 +8,11 @@ thumbnail_dimensions = [480, 480]
 -->
 
 This example is a visual walkthrough of the paper "Differentiable Block Worlds".
-All the visualizations were created by editing the original source code to log data with the Rerun SDK.
+All the visualizations were created by editing the original source code to log data with the Dalaran SDK.
 
 ## Visual paper walkthrough
 
-Finding a textured mesh decomposition from a collection of posed images is a very challenging optimization problem. "Differentiable Block Worlds" by Tom Monnier et al. shows impressive results using differentiable rendering. Here we visualize how this optimization works using the Rerun SDK.
+Finding a textured mesh decomposition from a collection of posed images is a very challenging optimization problem. "Differentiable Block Worlds" by Tom Monnier et al. shows impressive results using differentiable rendering. Here we visualize how this optimization works using the Dalaran SDK.
 
 https://vimeo.com/865326948?autoplay=1&loop=1&autopause=0&background=1&muted=1&ratio=10000:7309
 

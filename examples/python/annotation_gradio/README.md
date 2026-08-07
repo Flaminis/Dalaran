@@ -1,5 +1,5 @@
 <!--[metadata]
-title = "Interactive 3D annotation app with Rerun and Gradio"
+title = "Interactive 3D annotation app with Dalaran and Gradio"
 description = "Interactive 3D annotation app built with Gradio and SAM 2. Track objects in monocular video, or fuse masks across multi-view RGB-D."
 tags = ["2D", "3D", "Pinhole camera", "Time series", "SAM", "Segmentation"]
 source = "https://github.com/rerun-io/annotation-example"
@@ -11,7 +11,7 @@ https://vimeo.com/1078165216?autoplay=1&loop=1&autopause=0&background=1&muted=1&
 
 ## Background
 
-This example showcases how to use Rerun with gradio to generate an annotation app. It consists of two different modes both of which leverage Segment Anything 2.
+This example showcases how to use Dalaran with gradio to generate an annotation app. It consists of two different modes both of which leverage Segment Anything 2.
 
 The first mode focuses on tracking an object in a monocular video stream. In addition to segmentation masks, it generates real-time depth maps and point clouds to provide full 3D spatial context, enabling users to visualize, inspect, and annotate the tracked object directly in three-dimensional space.
 

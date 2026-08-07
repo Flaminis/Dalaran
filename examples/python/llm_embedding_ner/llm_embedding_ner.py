@@ -11,8 +11,8 @@ import torch
 import umap
 from transformers import AutoModelForTokenClassification, AutoTokenizer, pipeline
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 DEFAULT_TEXT = """
 In the bustling city of Brightport, nestled between rolling hills and a sparkling harbor, lived three friends: Maya, a spirited chef known for her spicy curries; Leo, a laid-back jazz musician with a penchant for saxophone solos; and Ava, a tech-savvy programmer who loved solving puzzles.
@@ -38,7 +38,7 @@ def log_tokenized_text(token_words: list[str]) -> None:
             clean_token_word = " " + token_word
 
         markdown += f"[{clean_token_word}](recording://umap_embeddings[#{i}])"
-    rr.log("tokenized_text", rr.TextDocument(markdown, media_type=rr.MediaType.MARKDOWN))
+    dl.log("tokenized_text", dl.TextDocument(markdown, media_type=dl.MediaType.MARKDOWN))
 
 
 def log_ner_results(ner_results: list[dict[str, Any]]) -> None:
@@ -70,7 +70,7 @@ def log_ner_results(ner_results: list[dict[str, Any]]) -> None:
     if "MISC" in entity_sets:
         named_entities_str += f"Miscellaneous: {', '.join(entity_sets['MISC'])}\n\n"
 
-    rr.log("named_entities", rr.TextDocument(named_entities_str, media_type=rr.MediaType.MARKDOWN))
+    dl.log("named_entities", dl.TextDocument(named_entities_str, media_type=dl.MediaType.MARKDOWN))
 
 
 def entity_per_token(token_words: list[str], ner_results: list[dict[str, Any]]) -> list[str]:
@@ -111,13 +111,13 @@ def run_llm_ner(text: str) -> None:
     }
     # Define label for classes and set none class color to dark gray
     annotation_context = [
-        rr.AnnotationInfo(id=0, color=(30, 30, 30)),
-        rr.AnnotationInfo(id=1, label="Location"),
-        rr.AnnotationInfo(id=2, label="Person"),
-        rr.AnnotationInfo(id=3, label="Organization"),
-        rr.AnnotationInfo(id=4, label="Miscellaneous"),
+        dl.AnnotationInfo(id=0, color=(30, 30, 30)),
+        dl.AnnotationInfo(id=1, label="Location"),
+        dl.AnnotationInfo(id=2, label="Person"),
+        dl.AnnotationInfo(id=3, label="Organization"),
+        dl.AnnotationInfo(id=4, label="Miscellaneous"),
     ]
-    rr.log("/", rr.AnnotationContext(annotation_context))
+    dl.log("/", dl.AnnotationContext(annotation_context))
 
     # Initialize model
     tokenizer = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
@@ -135,8 +135,8 @@ def run_llm_ner(text: str) -> None:
     embeddings = ner_pipeline.model.base_model(torch.tensor([token_ids])).last_hidden_state
     ner_results: Any = ner_pipeline(text)
 
-    # Visualize in Rerun
-    rr.log("text", rr.TextDocument(text, media_type=rr.MediaType.MARKDOWN))
+    # Visualize in Dalaran
+    dl.log("text", dl.TextDocument(text, media_type=dl.MediaType.MARKDOWN))
     log_tokenized_text(token_words)
     reducer = umap.UMAP(n_components=3, n_neighbors=4)
     umap_embeddings = reducer.fit_transform(embeddings.numpy(force=True)[0])
@@ -149,10 +149,10 @@ def run_llm_ner(text: str) -> None:
     # `Any` satisfies that — a precise union fails, and so does one with `bool` added to it.
     # The literal also has to stay on one line, or `scripts/lint.py` flags the key with a space in it.
     any_values: dict[str, Any] = {"Token": token_words, "Named Entity": entity_per_token(token_words, ner_results)}
-    rr.log(
+    dl.log(
         "umap_embeddings",
-        rr.Points3D(umap_embeddings, class_ids=class_ids),
-        rr.AnyValues(**any_values),
+        dl.Points3D(umap_embeddings, class_ids=class_ids),
+        dl.AnyValues(**any_values),
     )
     log_ner_results(ner_results)
 
@@ -165,24 +165,24 @@ def main() -> None:
         help="Text that is processed.",
         default=DEFAULT_TEXT,
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(
+    dl.script_setup(
         args,
-        "rerun_example_llm_embedding_ner",
-        default_blueprint=rrb.Horizontal(
-            rrb.Vertical(
-                rrb.TextDocumentView(origin="/text", name="Original Text"),
-                rrb.TextDocumentView(origin="/tokenized_text", name="Tokenized Text"),
-                rrb.TextDocumentView(origin="/named_entities", name="Named Entities"),
+        "dalaran_example_llm_embedding_ner",
+        default_blueprint=dlb.Horizontal(
+            dlb.Vertical(
+                dlb.TextDocumentView(origin="/text", name="Original Text"),
+                dlb.TextDocumentView(origin="/tokenized_text", name="Tokenized Text"),
+                dlb.TextDocumentView(origin="/named_entities", name="Named Entities"),
                 row_shares=[3, 2, 2],
             ),
-            rrb.Spatial3DView(origin="/umap_embeddings", name="UMAP Embeddings"),
+            dlb.Spatial3DView(origin="/umap_embeddings", name="UMAP Embeddings"),
         ),
     )
     run_llm_ner(args.text)
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

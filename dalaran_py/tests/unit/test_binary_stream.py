@@ -1,0 +1,77 @@
+"""Test verifying that a binary stream works and produces valid identical RRDs."""
+
+from __future__ import annotations
+
+import queue
+import subprocess
+import tempfile
+import threading
+import time
+from typing import TYPE_CHECKING, Any
+
+import dalaran as dl
+import dalaran.blueprint as dlb
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    import pytest
+
+
+@dl.thread_local_stream("dalaran_example_binary_stream")
+def job(name: str) -> Iterator[tuple[str, bytes | None]]:
+    stream = dl.binary_stream()
+
+    blueprint = dlb.Blueprint(dlb.TextLogView(name="My Logs", origin="test"))
+
+    dl.send_blueprint(blueprint)
+
+    for i in range(30):
+        time.sleep(0.01)
+        dl.log("test", dl.TextLog(f"Message {i}"))
+
+        yield (name, stream.read())
+
+
+def queue_results(generator: Iterator[Any], out_queue: queue.Queue[tuple[str, bytes]]) -> None:
+    for item in generator:
+        out_queue.put(item)
+
+
+def test_binary_stream(monkeypatch: pytest.MonkeyPatch) -> None:
+    # Flush num rows must be 0 to avoid inconsistencies in the stream.
+    # Use `monkeypatch` so the env var is reverted even if the test fails: leaking it pollutes the
+    # rest of the session (e.g. it gets inherited by the viewer spawned in the integration tests).
+    monkeypatch.setenv("DALARAN_FLUSH_NUM_ROWS", "0")
+
+    results_queue: queue.Queue[tuple[str, bytes | None]] = queue.Queue()
+
+    threads = [
+        threading.Thread(target=queue_results, args=(job("A"), results_queue)),
+        threading.Thread(target=queue_results, args=(job("B"), results_queue)),
+    ]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        while not results_queue.empty():
+            name, data = results_queue.get()
+
+            assert data is not None
+
+            # Bump this value down when we have less overhead.
+            assert len(data) > 1000
+
+            with open(f"{tmpdir}/output_{name}.rrd", "a+b") as f:
+                f.write(data)
+
+        process = subprocess.run(
+            ["dalaran", "rrd", "compare", f"{tmpdir}/output_A.rrd", f"{tmpdir}/output_B.rrd"],
+            check=False,
+            capture_output=True,
+        )
+        if process.returncode != 0:
+            print(process.stderr.decode("utf-8"))
+            raise Exception("Dalaran failed")

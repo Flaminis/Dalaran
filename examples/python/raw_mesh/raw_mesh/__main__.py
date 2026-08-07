@@ -3,9 +3,9 @@
 Shows how to log a 3D scene as raw mesh data or as a prepacked asset.
 
 By default, the example parses the scene and logs its geometry and transform hierarchy with
-[`Mesh3D`](https://rerun.io/docs/reference/types/archetypes/mesh3d).
+[`Mesh3D`](https://dalaran.dev/docs/reference/types/archetypes/mesh3d).
 Pass `--asset3d` to log the original file directly with
-[`Asset3D`](https://rerun.io/docs/reference/types/archetypes/asset3d).
+[`Asset3D`](https://dalaran.dev/docs/reference/types/archetypes/asset3d).
 """
 
 from __future__ import annotations
@@ -17,8 +17,8 @@ from typing import cast
 import numpy as np
 import trimesh
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 from .download_dataset import AVAILABLE_MESHES, ensure_mesh_downloaded
 
@@ -50,9 +50,9 @@ def log_scene(scene: trimesh.Scene, node: str, path: str | None = None) -> None:
         if parent:
             # TODO(#3559): We should support 4x4 matrices directly
             world_from_mesh = node_data[0]
-            rr.log(
+            dl.log(
                 path,
-                rr.Transform3D(
+                dl.Transform3D(
                     translation=trimesh.transformations.translation_from_matrix(world_from_mesh),
                     mat3x3=world_from_mesh[0:3, 0:3],
                 ),
@@ -69,7 +69,7 @@ def log_scene(scene: trimesh.Scene, node: str, path: str | None = None) -> None:
             try:
                 vertex_texcoords = mesh.visual.uv  # type: ignore[union-attr]
                 # trimesh uses the OpenGL convention for UV coordinates, so we need to flip the V coordinate
-                # since Rerun uses the Vulkan/Metal/DX12/WebGPU convention.
+                # since Dalaran uses the Vulkan/Metal/DX12/WebGPU convention.
                 vertex_texcoords[:, 1] = 1.0 - vertex_texcoords[:, 1]
             except Exception:
                 pass
@@ -91,9 +91,9 @@ def log_scene(scene: trimesh.Scene, node: str, path: str | None = None) -> None:
                 except Exception:
                     pass
 
-            rr.log(
+            dl.log(
                 path,
-                rr.Mesh3D(
+                dl.Mesh3D(
                     vertex_positions=mesh.vertices,
                     vertex_colors=vertex_colors,
                     vertex_normals=mesh.vertex_normals,
@@ -130,32 +130,32 @@ def main() -> None:
         action="store_true",
         help="Log the scene as a prepacked Asset3D instead of converting it into Mesh3D archetypes.",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     scene_path = args.scene_path
     if scene_path is None:
         scene_path = ensure_mesh_downloaded(args.scene)
-    blueprint = rrb.Horizontal(
-        rrb.Spatial3DView(name="Mesh", origin="/world"),
-        rrb.TextDocumentView(name="Description", origin="/description"),
+    blueprint = dlb.Horizontal(
+        dlb.Spatial3DView(name="Mesh", origin="/world"),
+        dlb.TextDocumentView(name="Description", origin="/description"),
         column_shares=[3, 1],
     )
 
-    rr.script_setup(args, "rerun_example_raw_mesh", default_blueprint=blueprint)
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.script_setup(args, "dalaran_example_raw_mesh", default_blueprint=blueprint)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     # glTF always uses a right-handed coordinate system when +Y is up and meshes face +Z.
     if args.asset3d:
-        rr.log("world", rr.ViewCoordinates.RUB, static=True)
-        rr.log("world/asset", rr.Asset3D(path=scene_path))
+        dl.log("world", dl.ViewCoordinates.RUB, static=True)
+        dl.log("world/asset", dl.Asset3D(path=scene_path))
     else:
         scene = load_scene(scene_path)
         root = next(iter(scene.graph.nodes))
-        rr.log(root, rr.ViewCoordinates.RUB, static=True)
+        dl.log(root, dl.ViewCoordinates.RUB, static=True)
         log_scene(scene, root)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

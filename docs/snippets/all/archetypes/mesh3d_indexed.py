@@ -1,12 +1,12 @@
 """Log a simple colored triangle."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_mesh3d_indexed", spawn=True)
+dl.init("dalaran_example_mesh3d_indexed", spawn=True)
 
-rr.log(
+dl.log(
     "triangle",
-    rr.Mesh3D(
+    dl.Mesh3D(
         vertex_positions=[[0.0, 1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
         vertex_normals=[0.0, 0.0, 1.0],
         vertex_colors=[[0, 0, 255], [0, 255, 0], [255, 0, 0]],

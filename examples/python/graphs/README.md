@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Graphs"
-description = "Different graph types and layouts visualized with Rerun's built-in force-directed engine Fjädra: trees, lattices, and random graphs."
+description = "Different graph types and layouts visualized with Dalaran's built-in force-directed engine Fjädra: trees, lattices, and random graphs."
 tags = ["Graph", "Layout", "Node-link diagrams", "Bubble charts"]
 thumbnail = "https://static.rerun.io/graphs/c1070214bed5e50c9e7d452835f32759b991383e/480w.png"
 thumbnail_dimensions = [480, 480]
@@ -8,7 +8,7 @@ channel = "main"
 include_in_manifest = true
 -->
 
-This example shows different types of graphs (and layouts) that you can visualize using Rerun.
+This example shows different types of graphs (and layouts) that you can visualize using Dalaran.
 
 <picture>
   <img src="https://static.rerun.io/graphs/c1070214bed5e50c9e7d452835f32759b991383e/full.png" alt="">
@@ -18,21 +18,21 @@ This example shows different types of graphs (and layouts) that you can visualiz
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/graphs/c1070214bed5e50c9e7d452835f32759b991383e/1200w.png">
 </picture>
 
-Rerun ships with an integrated engine to produce [force-based layouts](https://en.wikipedia.org/wiki/Force-directed_graph_drawing) to visualize graphs.
+Dalaran ships with an integrated engine to produce [force-based layouts](https://en.wikipedia.org/wiki/Force-directed_graph_drawing) to visualize graphs.
 Force-directed layout approaches have to advantage that they are flexible and can therefore be used to create different kinds of visualizations.
 This example shows different types of layouts:
 
 * Regular force-directed layouts of node-link diagrams
 * Bubble charts, which are based on packing circles
 
-## Used Rerun types
+## Used Dalaran types
 
-[`GraphNodes`](https://www.rerun.io/docs/reference/types/archetypes/graph_nodes),
-[`GraphEdges`](https://www.rerun.io/docs/reference/types/archetypes/graph_edges)
+[`GraphNodes`](https://www.dalaran.dev/docs/reference/types/archetypes/graph_nodes),
+[`GraphEdges`](https://www.dalaran.dev/docs/reference/types/archetypes/graph_edges)
 
 ## Force-based layouts
 
-To compute the graph layouts, Rerun implements a physics simulation that is very similar to [`d3-force`](https://d3js.org/d3-force). In particular, we implement the following forces:
+To compute the graph layouts, Dalaran implements a physics simulation that is very similar to [`d3-force`](https://d3js.org/d3-force). In particular, we implement the following forces:
 
 * Centering force, which shifts the center of mass of the entire graph.
 * Collision radius force, which resolves collisions between nodes in the graph, taking their radius into account.

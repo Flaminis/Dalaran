@@ -1,11 +1,11 @@
-use rerun::{
+use dalaran::{
     AnnotationContext, AnnotationInfo, ClassDescription, Rgba32,
     datatypes::{ClassDescriptionMapElem, KeypointId},
 };
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_annotation_context_connections",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_annotation_context_connections",
     )
     .spawn()?;
 

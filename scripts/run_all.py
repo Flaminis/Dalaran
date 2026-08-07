@@ -25,7 +25,7 @@ EXTRA_ARGS = {
     "examples/python/live_camera_edge_detection": ["--num-frames=30"],  # Make sure it finishes
 }
 
-HAS_NO_RERUN_ARGS = {
+HAS_NO_DALARAN_ARGS = {
     "examples/python/blueprint",
     "examples/python/dna",
     "examples/python/minimal",
@@ -86,7 +86,7 @@ def run_py_example(path: str, viewer_port: int | None = None, *, wait: bool = Tr
     if save is not None:
         args += [f"--save={save}"]
     if viewer_port is not None:
-        args += ["--connect", f"--url=rerun+http://127.0.0.1:{viewer_port}/proxy"]
+        args += ["--connect", f"--url=dalaran+http://127.0.0.1:{viewer_port}/proxy"]
 
     return start_process(
         args,
@@ -174,7 +174,7 @@ class Viewer:
     def start(self) -> Viewer:
         print(f"\nStarting viewer on {'web ' if self.web else ''}port {self.sdk_port}")
         CARGO_TARGET_DIR = Path(os.environ.get("CARGO_TARGET_DIR", "./target"))
-        args = [f"{CARGO_TARGET_DIR}/debug/rerun", f"--port={self.sdk_port}"]
+        args = [f"{CARGO_TARGET_DIR}/debug/dalaran", f"--port={self.sdk_port}"]
         if self.web:
             args += [
                 "--web-viewer",
@@ -206,7 +206,7 @@ def run_sdk_build() -> None:
             "maturin",
             "develop",
             "--manifest-path",
-            "rerun_py/Cargo.toml",
+            "dalaran_py/Cargo.toml",
             '--extras="tests"',
         ],
     ).wait()
@@ -214,12 +214,12 @@ def run_sdk_build() -> None:
 
 
 def run_viewer_build(web: bool) -> None:
-    print("Building Rerun Viewer…")
+    print("Building Dalaran Viewer…")
     returncode = subprocess.Popen([
         "cargo",
         "build",
         "-p",
-        "rerun-cli",
+        "dalaran-cli",
         "--no-default-features",
         "--features=web_viewer" if web else "--features=native_viewer",
     ]).wait()
@@ -244,7 +244,7 @@ def run_web(examples: list[str], parallel: bool) -> None:
         entries: list[tuple[str, Any, Any]] = []
         # start all examples in parallel
         for path in examples:
-            if path in HAS_NO_RERUN_ARGS:
+            if path in HAS_NO_DALARAN_ARGS:
                 continue
             # each example gets its own viewer
             viewer = Viewer(web=True).start()
@@ -268,7 +268,7 @@ def run_web(examples: list[str], parallel: bool) -> None:
     else:
         with Viewer(close=True, web=True) as viewer:
             for path in examples:
-                if path in HAS_NO_RERUN_ARGS:
+                if path in HAS_NO_DALARAN_ARGS:
                     continue
                 process = run_py_example(path, viewer_port=viewer.sdk_port)
                 print(f"{output_from_process(process)}\n")
@@ -276,7 +276,7 @@ def run_web(examples: list[str], parallel: bool) -> None:
 
 def run_save(examples: list[str]) -> None:
     for path in examples:
-        if path not in HAS_NO_RERUN_ARGS:
+        if path not in HAS_NO_DALARAN_ARGS:
             process = run_py_example(path, save=os.path.join(path, "out.rrd"))
             print(f"{output_from_process(process)}\n")
 
@@ -285,7 +285,7 @@ def run_saved_example(path: str, *, wait: bool) -> Any:
     return start_process(
         [
             "cargo",
-            "rerun",
+            "dalaran",
             os.path.join(path, "out.rrd"),
         ],
         wait=wait,
@@ -293,7 +293,7 @@ def run_saved_example(path: str, *, wait: bool) -> Any:
 
 
 def run_load(examples: list[str], parallel: bool, close: bool) -> None:
-    examples = [path for path in examples if path not in HAS_NO_RERUN_ARGS]
+    examples = [path for path in examples if path not in HAS_NO_DALARAN_ARGS]
 
     if parallel:
         entries: list[tuple[str, Any]] = []
@@ -319,7 +319,7 @@ def run_native(examples: list[str], parallel: bool, close: bool) -> None:
         # start all examples in parallel:
         cleanup: list[tuple[Any, Any]] = []
         for path in examples:
-            if path in HAS_NO_RERUN_ARGS:
+            if path in HAS_NO_DALARAN_ARGS:
                 continue
             # each example gets its own viewer
             viewer = Viewer().start()
@@ -336,7 +336,7 @@ def run_native(examples: list[str], parallel: bool, close: bool) -> None:
         # run all examples sequentially in a single viewer
         with Viewer(close) as viewer:
             for path in examples:
-                if path in HAS_NO_RERUN_ARGS:
+                if path in HAS_NO_DALARAN_ARGS:
                     continue
                 process = run_py_example(path, viewer_port=viewer.sdk_port, wait=True)
                 print(f"{output_from_process(process)}\n")

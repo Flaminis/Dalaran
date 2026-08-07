@@ -1,22 +1,22 @@
 //! Demonstrates how to visualize the same point cloud with two different color schemes.
 //!
-//! Two custom archetypes (using Rerun's Color component type) are logged on the same entity,
+//! Two custom archetypes (using Dalaran's Color component type) are logged on the same entity,
 //! then a blueprint maps each color set to a separate 3D view.
 
 use std::f64::consts::TAU;
 
 use rand::prelude::*;
 
-use rerun::blueprint::VisualizableArchetype as _;
+use dalaran::blueprint::VisualizableArchetype as _;
 
-fn colormap(t: f64, stops: &[(f64, [u8; 3])]) -> rerun::components::Color {
+fn colormap(t: f64, stops: &[(f64, [u8; 3])]) -> dalaran::components::Color {
     for i in 0..stops.len() - 1 {
         if t <= stops[i + 1].0 {
             let frac =
                 ((t - stops[i].0) / (stops[i + 1].0 - stops[i].0)) as f32;
             let [r0, g0, b0] = stops[i].1.map(|c| c as f32);
             let [r1, g1, b1] = stops[i + 1].1.map(|c| c as f32);
-            return rerun::components::Color::from_rgb(
+            return dalaran::components::Color::from_rgb(
                 (r0 + frac * (r1 - r0)) as u8,
                 (g0 + frac * (g1 - g0)) as u8,
                 (b0 + frac * (b1 - b0)) as u8,
@@ -24,12 +24,12 @@ fn colormap(t: f64, stops: &[(f64, [u8; 3])]) -> rerun::components::Color {
         }
     }
     let [r, g, b] = stops.last().expect("stops must not be empty").1;
-    rerun::components::Color::from_rgb(r, g, b)
+    dalaran::components::Color::from_rgb(r, g, b)
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_custom_color_archetypes",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_custom_color_archetypes",
     )
     .spawn()?;
 
@@ -74,16 +74,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rec.log(
         "pointcloud",
         &[
-            &rerun::Points3D::new(positions)
-                .with_radii([rerun::components::Radius::from(0.06)])
-                as &dyn rerun::AsComponents,
-            &rerun::DynamicArchetype::new("HeightColors")
-                .with_component::<rerun::components::Color>(
+            &dalaran::Points3D::new(positions)
+                .with_radii([dalaran::components::Radius::from(0.06)])
+                as &dyn dalaran::AsComponents,
+            &dalaran::DynamicArchetype::new("HeightColors")
+                .with_component::<dalaran::components::Color>(
                 "colors",
                 height_colors,
             ),
-            &rerun::DynamicArchetype::new("SpinColors")
-                .with_component::<rerun::components::Color>(
+            &dalaran::DynamicArchetype::new("SpinColors")
+                .with_component::<dalaran::components::Color>(
                     "colors",
                     spin_colors,
                 ),
@@ -93,31 +93,31 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // region: blueprint
     // --- Blueprint: two side-by-side 3D views with different color mappings ---
-    let blueprint = rerun::blueprint::Blueprint::new(rerun::blueprint::Horizontal::new([
-        rerun::blueprint::Spatial3DView::new("Height Colors")
+    let blueprint = dalaran::blueprint::Blueprint::new(dalaran::blueprint::Horizontal::new([
+        dalaran::blueprint::Spatial3DView::new("Height Colors")
             .with_origin("/")
             .with_overrides(
                 "pointcloud",
-                [rerun::Points3D::update_fields()
+                [dalaran::Points3D::update_fields()
                     .visualizer()
                     .with_mappings(vec![
-                        rerun::blueprint::VisualizerComponentMapping::new_source_component(
-                            rerun::Points3D::descriptor_colors().component,
+                        dalaran::blueprint::VisualizerComponentMapping::new_source_component(
+                            dalaran::Points3D::descriptor_colors().component,
                             "HeightColors:colors",
                         )
                         .into(),
                     ])],
             )
             .into(),
-        rerun::blueprint::Spatial3DView::new("Spin Colors")
+        dalaran::blueprint::Spatial3DView::new("Spin Colors")
             .with_origin("/")
             .with_overrides(
                 "pointcloud",
-                [rerun::Points3D::update_fields()
+                [dalaran::Points3D::update_fields()
                     .visualizer()
                     .with_mappings(vec![
-                        rerun::blueprint::VisualizerComponentMapping::new_source_component(
-                            rerun::Points3D::descriptor_colors().component,
+                        dalaran::blueprint::VisualizerComponentMapping::new_source_component(
+                            dalaran::Points3D::descriptor_colors().component,
                             "SpinColors:colors",
                         )
                         .into(),
@@ -126,7 +126,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .into(),
     ]));
 
-    blueprint.send(&rec, rerun::blueprint::BlueprintActivation::default())?;
+    blueprint.send(&rec, dalaran::blueprint::BlueprintActivation::default())?;
     // endregion: blueprint
 
     Ok(())

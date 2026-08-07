@@ -6,8 +6,8 @@ Count the total number of dependencies of a file (recursively).
 This produces the format for use in <https://github.com/benchmark-action/github-action-benchmark>.
 
 Use the script:
-    python3 scripts/ci/count_dependencies.py -p rerun --all-features
-    python3 scripts/ci/count_dependencies.py -p rerun --no-default-features
+    python3 scripts/ci/count_dependencies.py -p dalaran --all-features
+    python3 scripts/ci/count_dependencies.py -p dalaran --no-default-features
 
 Unfortunately, this script under-counts compared to what `cargo build` outputs.
 There is also `cargo deps-list`, which also under-counts.

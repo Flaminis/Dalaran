@@ -2,23 +2,23 @@
 
 from math import cos, sin, tau
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_series_line_overrides", spawn=True)
+dl.init("dalaran_example_series_line_overrides", spawn=True)
 
 # Log the data on a timeline called "step".
 for t in range(int(tau * 2 * 10.0)):
-    rr.set_time("step", sequence=t)
+    dl.set_time("step", sequence=t)
 
-    rr.log("trig/sin", rr.Scalars(sin(float(t) / 10.0)))
-    rr.log("trig/cos", rr.Scalars(cos(float(t) / 10.0)))
+    dl.log("trig/sin", dl.Scalars(sin(float(t) / 10.0)))
+    dl.log("trig/cos", dl.Scalars(cos(float(t) / 10.0)))
 
 # Use the SeriesPoints visualizer for the sin series.
-rr.send_blueprint(
-    rrb.TimeSeriesView(
+dl.send_blueprint(
+    dlb.TimeSeriesView(
         overrides={
-            "trig/sin": [rr.SeriesLines(), rr.SeriesPoints()],
+            "trig/sin": [dl.SeriesLines(), dl.SeriesPoints()],
         },
     ),
 )

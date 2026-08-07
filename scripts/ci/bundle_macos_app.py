@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Assemble a macOS `.app` bundle around the rerun-cli binary.
+"""Assemble a macOS `.app` bundle around the dalaran-cli binary.
 
-Produces `<output>/Rerun.app/` with:
+Produces `<output>/Dalaran.app/` with:
     Contents/
         Info.plist            (with __VERSION__ substituted)
-        MacOS/rerun           (the binary, executable bit set)
-        Resources/Rerun.icns  (multi-resolution icns derived from the PNG)
+        MacOS/dalaran           (the binary, executable bit set)
+        Resources/Dalaran.icns  (multi-resolution icns derived from the PNG)
 
-The bundle is what gives macOS the right dock label ("Rerun" instead of "rerun"),
-proper "About Rerun" menu, and a hook for future file associations.
+The bundle is what gives macOS the right dock label ("Dalaran" instead of "dalaran"),
+proper "About Dalaran" menu, and a hook for future file associations.
 """
 
 from __future__ import annotations
@@ -57,11 +57,11 @@ def build_icns(png: Path, out: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--binary", required=True, type=Path, help="Path to the rerun-cli binary")
+    parser.add_argument("--binary", required=True, type=Path, help="Path to the dalaran-cli binary")
     parser.add_argument("--icon", required=True, type=Path, help="Path to the source square PNG icon")
     parser.add_argument("--info-plist", required=True, type=Path, help="Path to the Info.plist template")
     parser.add_argument("--version", required=True, help="Version string (e.g. 0.21.0)")
-    parser.add_argument("--output-dir", required=True, type=Path, help="Directory to write Rerun.app into")
+    parser.add_argument("--output-dir", required=True, type=Path, help="Directory to write Dalaran.app into")
     args = parser.parse_args()
 
     if sys.platform != "darwin":
@@ -73,7 +73,7 @@ def main() -> int:
             print(f"error: {path} does not exist", file=sys.stderr)
             return 1
 
-    app = args.output_dir / "Rerun.app"
+    app = args.output_dir / "Dalaran.app"
     if app.exists():
         shutil.rmtree(app)
     macos_dir = app / "Contents" / "MacOS"
@@ -82,9 +82,9 @@ def main() -> int:
     resources_dir.mkdir(parents=True)
 
     # Binary — named with a capital R inside the bundle so macOS's
-    # NSProcessInfo.processName resolves to "Rerun", which winit then uses to
-    # build the app menu items ("About Rerun", "Hide Rerun", "Quit Rerun").
-    binary_dst = macos_dir / "Rerun"
+    # NSProcessInfo.processName resolves to "Dalaran", which winit then uses to
+    # build the app menu items ("About Dalaran", "Hide Dalaran", "Quit Dalaran").
+    binary_dst = macos_dir / "Dalaran"
     shutil.copy2(args.binary, binary_dst)
     binary_dst.chmod(0o755)
 
@@ -95,7 +95,7 @@ def main() -> int:
     (app / "Contents" / "Info.plist").write_text(plist_text, encoding="utf-8")
 
     # Icon
-    build_icns(args.icon, resources_dir / "Rerun.icns")
+    build_icns(args.icon, resources_dir / "Dalaran.icns")
 
     print(f"Wrote {app}")
     return 0

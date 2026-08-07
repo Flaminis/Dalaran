@@ -1,7 +1,7 @@
 """Create and set a file sink."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_file_sink")
+dl.init("dalaran_example_file_sink")
 
-rr.set_sinks(rr.FileSink("recording.rrd"))
+dl.set_sinks(dl.FileSink("recording.rrd"))

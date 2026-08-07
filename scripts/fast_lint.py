@@ -121,7 +121,7 @@ def main() -> None:
     parser.add_argument(
         "--skip",
         type=str,
-        default=os.environ.get("RERUN_LINT_SKIP", ""),
+        default=os.environ.get("DALARAN_LINT_SKIP", ""),
         help="Comma-separated list of tasks to skip.",
     )
     parser.add_argument(
@@ -167,7 +167,7 @@ def main() -> None:
         #     extensions=[".cpp", ".c", ".h", ".hpp"],
         #     allow_no_filter=False,
         # ),
-        LintJob("lint-rerun"),
+        LintJob("lint-dalaran"),
         LintJob(
             "lint-rs-files",
             extensions=[".rs"],

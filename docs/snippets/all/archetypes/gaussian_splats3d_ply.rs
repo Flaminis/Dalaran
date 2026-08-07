@@ -1,6 +1,6 @@
 //! Log a 3D Gaussian Splatting (3DGS) PLY file.
 
-use rerun::external::anyhow;
+use dalaran::external::anyhow;
 
 fn main() -> anyhow::Result<()> {
     let args = std::env::args().collect::<Vec<_>>();
@@ -8,8 +8,8 @@ fn main() -> anyhow::Result<()> {
         anyhow::bail!("Usage: {} <path_to_splats.ply>", args[0]);
     };
 
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_gaussian_splats3d_ply",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_gaussian_splats3d_ply",
     )
     .spawn()?;
 

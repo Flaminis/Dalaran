@@ -9,7 +9,7 @@ An orientation convention for three-dimensional coordinates.
 The three directions are always ordered as [x, y, z] and specify where each positive axis points.
 For example, [Right, Down, Forward] means that +X points right, +Y points down, and +Z points forward.
 
-⚠ [Rerun does not yet support left-handed coordinate systems](https://github.com/rerun-io/rerun/issues/5032).
+⚠ [Dalaran does not yet support left-handed coordinate systems](https://github.com/rerun-io/rerun/issues/5032).
 
 
 ## Arrow datatype
@@ -18,9 +18,9 @@ FixedSizeList(3 x non-null UInt8)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ViewCoordinates`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1ViewCoordinates.html)
- * 🐍 [Python API docs for `ViewCoordinates`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.ViewCoordinates)
- * 🦀 [Rust API docs for `ViewCoordinates`](https://docs.rs/rerun/latest/rerun/datatypes/struct.ViewCoordinates.html)
+ * 🌊 [C++ API docs for `ViewCoordinates`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1ViewCoordinates.html)
+ * 🐍 [Python API docs for `ViewCoordinates`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.ViewCoordinates)
+ * 🦀 [Rust API docs for `ViewCoordinates`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.ViewCoordinates.html)
 
 
 ## Used by

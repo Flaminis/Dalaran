@@ -1,0 +1,284 @@
+use std::sync::Arc;
+
+use arrow::ffi_stream::ArrowArrayStreamReader;
+use arrow::pyarrow::FromPyArrow as _;
+use datafusion::catalog::TableProvider;
+use datafusion_ffi::table_provider::FFI_TableProvider;
+use pyo3::exceptions::PyRuntimeError;
+use pyo3::types::{PyAnyMethods as _, PyCapsule};
+use pyo3::{Bound, Py, PyAny, PyRef, PyRefMut, PyResult, Python, pyclass, pymethods};
+use dl_datafusion::TableEntryTableProvider;
+use dl_protos::cloud::v1alpha1::ext::{
+    EntryDetails, ProviderDetails, TableDetails, TableEntry, TableInsertMode,
+};
+
+use crate::catalog::entry::set_entry_name;
+use crate::catalog::table_provider_adapter::ffi_logical_codec_from_pycapsule;
+use crate::catalog::{PyCatalogClientInternal, PyDatasetEntryInternal, PyEntryDetails, to_py_err};
+use crate::trace_context::read_trace_context_from_python;
+use crate::utils::{get_tokio_runtime, wait_for_future};
+
+/// A table entry in the catalog.
+///
+/// Note: this object acts as a table provider for DataFusion.
+//TODO(ab): expose metadata about the table (e.g. stuff found in `provider_details`).
+#[pyclass(name = "TableEntryInternal", module = "dalaran_bindings.dalaran_bindings")]
+pub struct PyTableEntryInternal {
+    client: Py<PyCatalogClientInternal>,
+    entry_details: EntryDetails,
+    table_details: TableDetails,
+    lazy_provider: Option<Arc<dyn TableProvider + Send>>,
+    url: Option<String>,
+}
+
+#[pymethods]
+impl PyTableEntryInternal {
+    //
+    // Entry methods
+    //
+
+    fn catalog(&self, py: Python<'_>) -> Py<PyCatalogClientInternal> {
+        self.client.clone_ref(py)
+    }
+
+    fn entry_details(&self, py: Python<'_>) -> PyResult<Py<PyEntryDetails>> {
+        Py::new(py, PyEntryDetails(self.entry_details.clone()))
+    }
+
+    /// Delete this entry from the catalog.
+    fn delete(&mut self, py: Python<'_>) -> PyResult<()> {
+        let _span = read_trace_context_from_python(py, "TableEntry.delete").entered();
+        let connection = self.client.borrow_mut(py).connection().clone();
+        connection.delete_entry(py, self.entry_details.id)
+    }
+
+    fn set_name(&mut self, py: Python<'_>, name: String) -> PyResult<()> {
+        let _span = read_trace_context_from_python(py, "TableEntry.set_name").entered();
+        set_entry_name(py, name, &mut self.entry_details, &self.client)
+    }
+
+    //
+    // Table entry methods
+    //
+
+    /// The associated blueprint dataset.
+    fn blueprint_dataset(
+        mut self_: PyRefMut<'_, Self>,
+        py: Python<'_>,
+    ) -> PyResult<Py<PyDatasetEntryInternal>> {
+        let _span = read_trace_context_from_python(py, "TableEntry.blueprint_dataset").entered();
+
+        let client = self_.client.clone_ref(py);
+        let connection = self_.client.borrow(py).connection().clone();
+
+        if self_.table_details.blueprint_dataset.is_none() {
+            let table_entry =
+                connection.update_table(py, self_.entry_details.id, self_.table_details.clone())?;
+            self_.table_details = table_entry.table_details;
+        }
+
+        let blueprint_dataset_entry_id = self_
+            .table_details
+            .blueprint_dataset
+            .ok_or_else(|| PyRuntimeError::new_err("missing table blueprint dataset"))?;
+        let dataset_entry = connection.read_dataset(py, blueprint_dataset_entry_id)?;
+
+        Py::new(py, PyDatasetEntryInternal::new(client, dataset_entry))
+    }
+
+    /// The default blueprint segment ID for this table, if any.
+    ///
+    /// ⚠️ This API is experimental and may change or be removed in future versions! ⚠️
+    /// TODO(#12746): Stabilize table blueprint APIs.
+    fn default_blueprint_segment_id(self_: PyRef<'_, Self>) -> Option<String> {
+        self_
+            .table_details
+            .default_blueprint_segment
+            .as_ref()
+            .map(ToString::to_string)
+    }
+
+    /// Set the default blueprint segment ID for this table.
+    ///
+    /// Pass `None` to clear the blueprint. This fails if the change cannot be made to the remote server.
+    ///
+    /// ⚠️ This API is experimental and may change or be removed in future versions! ⚠️
+    /// TODO(#12746): Stabilize table blueprint APIs.
+    #[pyo3(signature = (segment_id))]
+    fn set_default_blueprint_segment_id(
+        mut self_: PyRefMut<'_, Self>,
+        py: Python<'_>,
+        segment_id: Option<String>,
+    ) -> PyResult<()> {
+        let _span =
+            read_trace_context_from_python(py, "TableEntry.set_default_blueprint_segment_id")
+                .entered();
+        let connection = self_.client.borrow(py).connection().clone();
+
+        let mut table_details = self_.table_details.clone();
+        table_details.default_blueprint_segment = segment_id.map(Into::into);
+
+        let result = connection.update_table(py, self_.entry_details.id, table_details)?;
+
+        self_.table_details = result.table_details;
+
+        Ok(())
+    }
+
+    /// Returns a DataFusion table provider capsule.
+    fn __datafusion_table_provider__<'py>(
+        self_: PyRefMut<'py, Self>,
+        session: &Bound<'py, PyAny>,
+    ) -> PyResult<Bound<'py, PyCapsule>> {
+        let _span =
+            read_trace_context_from_python(self_.py(), "TableEntry.__datafusion_table_provider__")
+                .entered();
+        let provider = Self::table_provider(self_)?;
+
+        let capsule_name = cr"datafusion_table_provider".into();
+
+        let runtime = get_tokio_runtime().handle().clone();
+        let codec = ffi_logical_codec_from_pycapsule(session)?;
+        let provider = FFI_TableProvider::new_with_ffi_codec(provider, false, Some(runtime), codec);
+
+        PyCapsule::new(session.py(), provider, Some(capsule_name))
+    }
+
+    /// Registers the table with the DataFusion context and return a DataFrame.
+    pub fn reader(self_: PyRef<'_, Self>) -> PyResult<Bound<'_, PyAny>> {
+        let py = self_.py();
+
+        let client = self_.client.borrow(py);
+        let table_name = self_.entry_details.name.clone();
+        let ctx = client.ctx(py)?;
+        let ctx = ctx.bind(py);
+
+        // Any tables for which we have a TableEntry are already
+        // registered with the CatalogProvider.
+
+        let df = ctx.call_method1("table", (table_name.as_str(),))?;
+
+        Ok(df)
+    }
+
+    /// Convert this table to a [`pyarrow.RecordBatchReader`][].
+    fn to_arrow_reader<'py>(
+        self_: PyRef<'py, Self>,
+        py: Python<'py>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let _span = read_trace_context_from_python(py, "TableEntry.to_arrow_reader").entered();
+        let df = Self::reader(self_)?;
+
+        py.import("pyarrow")?
+            .getattr("RecordBatchReader")?
+            .call_method1("from_stream", (df,))
+    }
+
+    /// The table's storage URL.
+    #[getter]
+    pub fn storage_url(&self) -> String {
+        self.url.clone().unwrap_or_default()
+    }
+
+    pub fn __str__(&self) -> String {
+        format!("TableEntry(url='{}')", self.url.clone().unwrap_or_default())
+    }
+
+    /// Write record batches to the table.
+    fn write_batches(
+        self_: Py<Self>,
+        py: Python<'_>,
+        batches: &Bound<'_, PyAny>,
+        insert_mode: PyTableInsertModeInternal,
+    ) -> PyResult<()> {
+        let _span = read_trace_context_from_python(py, "TableEntry.write_batches").entered();
+        let entry_id = self_.borrow(py).entry_details.id;
+        let connection = self_
+            .borrow_mut(py)
+            .client
+            .borrow_mut(py)
+            .connection()
+            .clone();
+        let stream = ArrowArrayStreamReader::from_pyarrow_bound(batches)?;
+        connection.write_table(py, entry_id, stream, insert_mode)?;
+        Ok(())
+    }
+}
+
+impl PyTableEntryInternal {
+    pub fn new(client: Py<PyCatalogClientInternal>, table_entry: TableEntry) -> Self {
+        let url = match &table_entry.provider_details {
+            ProviderDetails::LanceTable(p) => Some(p.table_url.to_string()),
+            ProviderDetails::SystemTable(_) => None,
+        };
+
+        Self {
+            client,
+            entry_details: table_entry.details,
+            table_details: table_entry.table_details,
+            lazy_provider: None,
+            url,
+        }
+    }
+
+    fn table_provider(mut self_: PyRefMut<'_, Self>) -> PyResult<Arc<dyn TableProvider + Send>> {
+        let py = self_.py();
+        if self_.lazy_provider.is_none() {
+            let table_id = self_.entry_details.id;
+            let connection = self_.client.borrow_mut(py).connection().clone();
+
+            self_.lazy_provider = Some(
+                wait_for_future(py, async {
+                    TableEntryTableProvider::new(
+                        connection.client().await?,
+                        table_id,
+                        Some(get_tokio_runtime().handle().clone()),
+                    )
+                    .into_provider()
+                    .await
+                    .map_err(to_py_err)
+                })
+                .map_err(|err| {
+                    PyRuntimeError::new_err(format!("Error creating TableProvider: {err}"))
+                })?,
+            );
+        }
+
+        let provider = self_
+            .lazy_provider
+            .as_ref()
+            .ok_or_else(|| PyRuntimeError::new_err("Missing TableProvider".to_owned()))?
+            .clone();
+
+        Ok(provider)
+    }
+}
+
+#[pyclass(
+    name = "TableInsertModeInternal",
+    from_py_object,
+    eq,
+    eq_int,
+    module = "dalaran_bindings.dalaran_bindings"
+)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, strum_macros::EnumIter)]
+pub enum PyTableInsertModeInternal {
+    #[pyo3(name = "APPEND")]
+    Append = 1,
+
+    #[pyo3(name = "OVERWRITE")]
+    Overwrite = 2,
+
+    #[pyo3(name = "REPLACE")]
+    Replace = 3,
+}
+
+impl From<PyTableInsertModeInternal> for TableInsertMode {
+    fn from(value: PyTableInsertModeInternal) -> Self {
+        match value {
+            PyTableInsertModeInternal::Append => Self::Append,
+            PyTableInsertModeInternal::Overwrite => Self::Overwrite,
+            PyTableInsertModeInternal::Replace => Self::Replace,
+        }
+    }
+}

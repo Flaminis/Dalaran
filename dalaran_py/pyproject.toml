@@ -1,0 +1,300 @@
+[build-system]
+build-backend = "maturin"
+requires = ["maturin>=1.8.1"]
+
+[project]
+classifiers = [
+  "Programming Language :: Rust",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+  "Development Status :: 3 - Alpha",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Scientific/Engineering :: Visualization",
+]
+# Keep in mind that tested dependencies are usually goverend by `pixi.toml`
+# which means that any changes to the dependencies here should be reflected there as well.
+dependencies = [
+  # Must match list in `.github/workflows/reusable_test_wheels.yml`
+  "attrs>=23.1.0",
+  "numpy>=2",
+  "pillow>=8.0.0", # Used for JPEG encoding. 8.0.0 added the `format` arguments to `Image.open`
+  "psutil>=7.0", # Used by `tracing_session()` to capture per-session CPU and network metrics.
+  "pyarrow>=18.0.0",
+  "typing_extensions>=4.5",
+]
+description = "The Dalaran Logging SDK"
+readme = "README.md"
+keywords = ["computer-vision", "logging", "dalaran"]
+name = "dalaran-sdk"
+requires-python = ">=3.10"
+dynamic = ["version"]
+
+[[project.authors]]
+email = "opensource@dalaran.dev"
+name = "Dalaran.io"
+
+[project.license]
+text = "Apache-2.0"
+
+[project.optional-dependencies]
+tests = [
+  "av>=14.2.0", # PyAV, for demuxing mp4 in VideoStream tests
+  "inline-snapshot==0.31.1",
+  "opencv-python>4.6",
+  "pandas>=2",
+  "polars==1.36.1",
+  "pytest==9.0.3",
+  "semver>=3.0,<3.1",
+  "syrupy==5.0.0",
+  "tomli==2.0.1",
+  "torch>=2.5", # Needs numpy 2 support
+  "torchvision", # Imported at top of `dalaran.experimental.dataloader._decoders`, so needed to import the dataloader module at all
+  "datafusion==54.0.0",
+]
+notebook = ["dalaran-notebook==0.36.0-alpha.1+dev"]
+# TODO(RR-3786): when pyarrow is fixed, we should remove the pandas dependency
+datafusion = ["datafusion==54.0.0", "pandas>=2"] # deprecated, replaced by `catalog`
+dataplatform = [ # deprecated, replaced by `catalog` (NOLINT)
+  "datafusion==54.0.0",
+  "pandas>=2",
+]
+catalog = [
+  "datafusion==54.0.0",
+  "pandas>=2",
+] # pandas is needed so pyarrow properly converts nanoseconds (RR-3532)
+
+# PyTorch `Dataset` for a catalog server.
+dataloader = ["torch>=2.5", "torchvision", "av", "pillow>=8.0.0"]
+
+# Client-side OpenTelemetry export, enabled by setting `TELEMETRY_ENABLED=true`
+# along with an OTLP endpoint env var (e.g. `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=...`).
+# Only needed for developers profiling the SDK — see `dalaran._tracing`.
+tracing = ["opentelemetry-api", "opentelemetry-sdk", "opentelemetry-exporter-otlp-proto-grpc"]
+
+# Note: We avoid self-referential extras like "dalaran-sdk[notebook]" because they cause
+# uv to fetch dalaran-sdk from PyPI when the local package isn't built yet.
+# TODO(RR-3786): when pyarrow is fixed, we should remove the pandas dependency
+all = ["datafusion==54.0.0", "pandas>=2", "dalaran-notebook==0.36.0-alpha.1+dev"]
+
+[project.urls]
+documentation = "https://www.dalaran.dev/docs"
+homepage = "https://www.dalaran.dev"
+repository = "https://github.com/rerun-io/rerun"
+
+[project.scripts]
+dalaran = "dalaran_cli.__main__:main"
+
+
+######################
+# Ruff configuration #
+######################
+
+[tool.ruff]
+src = ["dalaran_bindings", "dalaran_sdk/*", "../dalaran_notebook"]
+
+# https://beta.ruff.rs/docs/configuration/
+
+# Enable unsafe fixes to allow ruff to apply fixes that may change the behavior of the code.
+# This is needed because otherwise ruff will not be able to trim whitespaces in (codegened) docstrings.
+unsafe-fixes = true
+
+# Allow preview lints to be enabled (like `PLW1514` to force `encoding` on open).
+preview = true
+# But we only want to opt-in to certain preview rules!
+
+lint.ignore = [
+  # flake8-bandit (`S`). Rules that cannot produce a security finding in the SDK tree.
+  # Anything scoped to a subdirectory is under `per-file-ignores` instead.
+  "S101", # `assert` — 1,906 of the 1,937 raw findings, nearly all in tests
+  "S110", # `try`-`except`-`pass`
+  "S603", # Every `subprocess` call whose arguments are not a literal list
+  "S607", # Running tools from `PATH`, which is deliberate
+
+  # It's pretty hard to always avoid variable/argument shadowing of built-in
+  "A001",
+  "A002",
+  "A005",
+
+  # Too many violations to fix
+  # TODO(ab): fix 'em nonetheless!
+  "ANN001",
+  "ANN202",
+  "ANN401",
+
+  # Conflicts with the formatter, as per ruff itself
+  "COM812",
+
+  # Missing docstring in public function - TODO(emilk): enable for SDK but not for examples
+  "D1",
+
+  # No blank lines allowed after function docstring.
+  "D202",
+
+  # npydocstyle: https://docs.astral.sh/ruff/rules/#pydocstyle-d
+  # numpy convention with a few additional lints
+  "D107",
+  "D203",
+  "D212",
+  "D401",
+  "D402",
+  "D415",
+  "D416",
+
+  # Ruff can't fix this error on its own (yet)
+  # Having ruff check this causes errors that prevent the code-formatting process from completing.
+  "E501",
+
+  # allow relative imports
+  "TID252",
+]
+
+lint.explicit-preview-rules = true
+extend-exclude = [
+  # Automatically generated test artifacts
+  "target_ra/",
+  "target_wasm/",
+  "target/",
+  "venv/",
+
+  "scripts/ci/compare_path_digest.py",
+
+  # Intentionally uses ''' instead of """ so we can embed it in a docstring in the Python API docs.
+  "docs/snippets/all/archetypes/text_document.py",
+  "docs/snippets/all/views/text_document.py",
+
+  # TODO(#4047): incomplete example snippet
+  "docs/snippets/all/tutorials/timelines_example.py",
+
+  # Intentionally incomplete snippets
+  "docs/snippets/all/concepts/how_helix_was_logged.py",
+  "docs/snippets/all/concepts/static",
+  "docs/snippets/all/tutorials/custom-application-id.py",
+  "docs/snippets/all/tutorials/custom-recording-id.py",
+
+  # generated
+  "examples/python/objectron/objectron/proto/objectron/proto.py",
+
+  # Copied from https://github.com/colmap/colmap/blob/bf3e19140f491c3042bfd85b7192ef7d249808ec/scripts/python/read_write_model.py
+  "examples/python/structure_from_motion/structure_from_motion/read_write_model.py",
+]
+
+line-length = 120
+lint.select = [
+  "S", # flake8-bandit: security lints
+
+  "A", # Avoid shadowing built-ins
+  "ANN", # Ensure all code is properly annotated.
+  "ARG", # Detect unused arguments
+  "B", # flake8-bugbear lints
+  "C4", # Comprehension-related rules
+  "COM", # Trailing-comma-related rules
+  "D", # pydocstyle codes https://docs.astral.sh/ruff/rules/#pydocstyle-d
+  "E", # pycodestyle error codes: https://pycodestyle.pycqa.org/en/latest/intro.html#error-codes
+  "F", # Flake8 error codes https://flake8.pycqa.org/en/latest/user/error-codes.html
+  "FA", # Force from __future__ import annotations
+  "FURB", # refurb (Python code modernization)
+  "I", # Isort
+  "ISC", # Ensure implicit string concat syntax
+  "PIE", # flake8-pic: various idomatic python lints
+  "PLR0917", # too-many-positional-parameters
+  "PLW1514", # Force setting `encoding` for open calls. This is in order to prevent issues when opening utf8 files on windows where the default encoding may depend on the active locale. https://docs.astral.sh/ruff/rules/unspecified-encoding/
+  "RUF", # Ruff-specific rules
+  "RUF027", # Ensure that strings which look like format-strings have the `f` prefix
+  "TC", # Ensure that all type comments are valid
+  "TID", # flake8-tidy-imports
+  "UP", # pyupgrade (ensures idomatic code for supported python version)
+  "W", # pycodestyle warning codes: https://pycodestyle.pycqa.org/en/latest/intro.html#error-codes
+  "YTT", # Various checks on the use of `sys.version_info` and related.
+
+  # TODO(emilk): Consider enable more of these lints:
+  # "ERA",     # eradicate dead code (WONT DO: we have lots of dead-looking code in comments)
+  # "LOG",     # flake8-logging (logging best practices) # NOT SURE
+  # "PERF",    # Perflint (performance anti-patterns) # MAYBE
+  # "PL",      # Pylint (comprehensive linting)
+  # "SIM",     # flake8-simplify (simplify code) # I'm not sure about this one… it makes some code more confusing imho
+]
+
+lint.unfixable = [
+  "PLW1514", # Automatic fix for `encoding` doesn't do what we want - it queries the locale for the preferred encoding which is exactly what we want to avoid.
+]
+
+[tool.ruff.lint.pylint]
+max-positional-args = 3
+
+[tool.ruff.lint.per-file-ignores]
+"*" = ["RUF012"] # TODO(emilk): consider enabling this
+
+"__init__.py" = ["F401", "F403"]
+
+"tests/*" = [
+  # We don't care about nice APIs in our tests:
+  "PLR0917",
+  # Test fixtures, not a security surface:
+  "S301", # `pickle` round-trip fixtures
+  "S608", # SQL built from literals in the e2e catalog tests
+  "S104", # A test server binding all interfaces inside its own container
+  "S108", # A fixed `/tmp` path in a filter test
+]
+
+"dalaran_sdk/*" = [
+  # Allow using dalaran_bindings
+  "TID251",
+]
+"dalaran_bindings/*" = [
+  # Allow using dalaran_bindings
+  "TID251",
+]
+
+
+[tool.ruff.lint.isort]
+required-imports = ["from __future__ import annotations"]
+combine-as-imports = true # needed so keep dalaran_sdk/__init__.py clean
+
+# Sometime Ruff is unable to guess that this is first-party package. Since it's disallowed outside of context where
+# it should be considered first-party (e.g. tests, scripts), it's OK to enforce it here.
+known-first-party = ["dalaran_bindings"]
+
+# We should never use these as they are internal APIs. The exception is `dalaran`'s implementation, which is covered by
+# `per-file-ignores` exceptions.
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"dalaran_bindings".msg = "Internal API"
+"dalaran_cli".msg = "Only for running CLI"
+
+
+[tool.maturin]
+# We use a python package from inside the dalaran_sdk folder to avoid conflicting
+# with the other `dalaran` pypi package. The dalaran_sdk.pth adds this to the pythonpath
+# which then allows `import dalaran` to work as expected.
+# See https://github.com/rerun-io/rerun/pull/1085 for more details
+# Each platform fetches only one of these — `dalaran` (Linux), `dalaran.exe` (Windows),
+# or the `Dalaran.app` bundle (macOS — see scripts/ci/bundle_macos_app.py).
+# Files missing from this list is not a packaging failure.
+include = [
+  "dalaran_sdk.pth",
+  "dalaran_sdk/dalaran_cli/dalaran",
+  "dalaran_sdk/dalaran_cli/dalaran.exe",
+  "dalaran_sdk/dalaran_cli/Dalaran.app/**/*",
+]
+locked = true
+name = "dalaran_bindings"
+python-packages = ["dalaran_sdk/dalaran", "dalaran_sdk/dalaran_cli"]
+
+# Use debug profile for editable installs (uv sync, pip install -e) to match
+# `pixi run py-build` and share the cargo cache.
+editable-profile = "dev"
+
+# Setting this to 1 causes lets the build.rs script know we are building a wheel,
+# which will cause it to check for the existence of the `dalaran` binary.
+config = ["env.DALARAN_BUILDING_WHEEL=\"1\""]
+
+
+[tool.pytest.ini_options]
+# These conform to Python's Warning Filter syntax:
+# https://docs.python.org/3/library/warnings.html#warning-filter
+filterwarnings = """
+error
+"""
+norecursedirs = ".* venv* target* build"
+
+[tool.inline-snapshot]
+format-command = "ruff check --config dalaran_py/pyproject.toml --fix-only --stdin-filename {filename} | ruff format --config dalaran_py/pyproject.toml --stdin-filename {filename}"

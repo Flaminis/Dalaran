@@ -9,7 +9,7 @@ thumbnail_dimensions = [480, 267]
 
 https://vimeo.com/1136303951?autoplay=1&loop=1&autopause=0&background=1&muted=1&ratio=2696:1463
 
-[VistaDream](https://vistadream-project-page.github.io/) is a novel framework for reconstructing 3D scenes from single-view images using Flux-based diffusion models. This implementation combines image outpainting, depth estimation, and 3D Gaussian splatting for high-quality 3D scene generation, with integrated visualization using [Rerun](https://rerun.io/).
+[VistaDream](https://vistadream-project-page.github.io/) is a novel framework for reconstructing 3D scenes from single-view images using Flux-based diffusion models. This implementation combines image outpainting, depth estimation, and 3D Gaussian splatting for high-quality 3D scene generation, with integrated visualization using [Dalaran](https://dalaran.dev/).
 
 ## Background
 
@@ -22,7 +22,7 @@ The framework utilizes:
 
 - **Flux diffusion models** for high-quality image outpainting and inpainting.
 - **3D Gaussian Splatting** for efficient 3D scene representation.
-- **Rerun** for real-time 3D visualization and debugging.
+- **Dalaran** for real-time 3D visualization and debugging.
 
 ## Run the code
 

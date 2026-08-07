@@ -54,7 +54,7 @@ def find_mesh_path_if_downloaded(name: str) -> Path | None:
 
 
 def download_mesh(name: str) -> Path:
-    """Downloads a mesh from the Rerun example datasets bucket and returns the path to the main mesh file."""
+    """Downloads a mesh from the Dalaran example datasets bucket and returns the path to the main mesh file."""
     if name not in MESH_FILES:
         raise RuntimeError(f"Unknown mesh named: {name}")
 

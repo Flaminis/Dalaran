@@ -5,8 +5,8 @@ title: "EncodedImage"
 
 An image encoded as e.g. a JPEG or PNG.
 
-Rerun also supports uncompressed images with the [`archetypes.Image`](https://rerun.io/docs/reference/types/archetypes/image).
-For images that refer to video frames see [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference/types/archetypes/video_frame_reference).
+Dalaran also supports uncompressed images with the [`archetypes.Image`](https://dalaran.dev/docs/reference/types/archetypes/image).
+For images that refer to video frames see [`archetypes.VideoFrameReference`](https://dalaran.dev/docs/reference/types/archetypes/video_frame_reference).
 
 ## Fields
 ### Required
@@ -27,9 +27,9 @@ For images that refer to video frames see [`archetypes.VideoFrameReference`](htt
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `EncodedImage`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1EncodedImage.html)
- * 🐍 [Python API docs for `EncodedImage`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.EncodedImage)
- * 🦀 [Rust API docs for `EncodedImage`](https://docs.rs/rerun/latest/rerun/archetypes/struct.EncodedImage.html)
+ * 🌊 [C++ API docs for `EncodedImage`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1EncodedImage.html)
+ * 🐍 [Python API docs for `EncodedImage`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.EncodedImage)
+ * 🦀 [Rust API docs for `EncodedImage`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.EncodedImage.html)
 
 ## Example
 

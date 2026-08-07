@@ -3,9 +3,9 @@ title: Query and Transform
 order: 450
 ---
 
-At its core, Rerun is a database. The OSS server is our small-scale in-memory parallel to our commercial cloud offering.
+At its core, Dalaran is a database. The OSS server is our small-scale in-memory parallel to our commercial cloud offering.
 
-In this three-part guide, we explore a query workflow by implementing an "open jaw detector" on top of our [face tracking example](https://rerun.io/examples/video-image/face_tracking). This process is split into three steps:
+In this three-part guide, we explore a query workflow by implementing an "open jaw detector" on top of our [face tracking example](https://dalaran.dev/examples/video-image/face_tracking). This process is split into three steps:
 
 1. [Explore a recording with the dataframe view](data-out/explore-as-dataframe.md)
 2. [Export the dataframe](data-out/export-dataframe.md)

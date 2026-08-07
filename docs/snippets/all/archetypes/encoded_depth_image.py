@@ -3,7 +3,7 @@
 import sys
 from pathlib import Path
 
-import rerun as rr
+import dalaran as dl
 
 if len(sys.argv) < 2:
     print(
@@ -13,17 +13,17 @@ if len(sys.argv) < 2:
 
 depth_path = Path(sys.argv[1])
 
-rr.init("rerun_example_encoded_depth_image", spawn=True)
+dl.init("dalaran_example_encoded_depth_image", spawn=True)
 
 depth_png = depth_path.read_bytes()
 if depth_path.suffix.lower() == ".png":
-    media_type = rr.components.MediaType.PNG
+    media_type = dl.components.MediaType.PNG
 else:
-    media_type = rr.components.MediaType.RVL
+    media_type = dl.components.MediaType.RVL
 
-rr.log(
+dl.log(
     "depth/encoded",
-    rr.EncodedDepthImage(
+    dl.EncodedDepthImage(
         blob=depth_png,
         media_type=media_type,
         meter=0.001,

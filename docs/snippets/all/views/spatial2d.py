@@ -2,10 +2,10 @@
 
 import numpy as np
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_spatial_2d", spawn=True)
+dl.init("dalaran_example_spatial_2d", spawn=True)
 
 # Create a spiral of points:
 n = 150
@@ -22,20 +22,20 @@ colors = np.dstack((
 ))[0].astype(int)
 radii = np.linspace(0.01, 0.7, n)
 
-rr.log("points", rr.Points2D(positions, colors=colors, radii=radii))
+dl.log("points", dl.Points2D(positions, colors=colors, radii=radii))
 
 # Create a Spatial2D view to display the points.
-blueprint = rrb.Blueprint(
-    rrb.Spatial2DView(
+blueprint = dlb.Blueprint(
+    dlb.Spatial2DView(
         origin="/",
         name="2D Scene",
         # Set the background color
         background=[105, 20, 105],
         # Note that this range is smaller than the range of the points,
         # so some points will not be visible.
-        visual_bounds=rrb.VisualBounds2D(x_range=[-5, 5], y_range=[-5, 5]),
+        visual_bounds=dlb.VisualBounds2D(x_range=[-5, 5], y_range=[-5, 5]),
     ),
     collapse_panels=True,
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

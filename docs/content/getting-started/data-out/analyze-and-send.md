@@ -25,7 +25,7 @@ snippet: tutorials/data_out[connect_viewer]
 <!-- TODO(nick): mention layers? -->
 
 > [!NOTE]
-> When automating data analysis, it is typically preferable to log the results to an distinct RRD file next to the source RRD (using `rr.save()`). In such a situation, it is also valid to use the same app ID and recording ID. This allows opening both the source and result RRDs in the viewer, which will display data from both files under the same recording.
+> When automating data analysis, it is typically preferable to log the results to an distinct RRD file next to the source RRD (using `dl.save()`). In such a situation, it is also valid to use the same app ID and recording ID. This allows opening both the source and result RRDs in the viewer, which will display data from both files under the same recording.
 
 We will send our jaw open state data in two forms:
 
@@ -36,13 +36,13 @@ Here is how to send the data as a scalar:
 
 snippet: tutorials/data_out[send_columns]
 
-We use the [`rr.send_column()`](../../howto/logging-and-ingestion/send-columns.md) API to efficiently send the entire column of data in a single batch.
+We use the [`dl.send_column()`](../../howto/logging-and-ingestion/send-columns.md) API to efficiently send the entire column of data in a single batch.
 
 Next, let's send the same data as `Text` component:
 
 snippet: tutorials/data_out[log_labels]
 
-Here we first log the [`ShowLabel`](../../reference/types/components/show_labels.md) component as static to enable the display of the label. Then, we use `rr.send_column()` again to send an entire batch of text labels. We use [`np.where()`](https://numpy.org/doc/stable/reference/generated/numpy.where.html) to produce a label matching the state for each timestamp.
+Here we first log the [`ShowLabel`](../../reference/types/components/show_labels.md) component as static to enable the display of the label. Then, we use `dl.send_column()` again to send an entire batch of text labels. We use [`np.where()`](https://numpy.org/doc/stable/reference/generated/numpy.where.html) to produce a label matching the state for each timestamp.
 
 ### Final result
 

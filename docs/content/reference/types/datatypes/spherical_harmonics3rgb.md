@@ -18,7 +18,7 @@ This per-coefficient order matches the `f_rest_*` properties of the PLY files us
 but those store the channels channel-major (all 15 coefficients of R, then G, then B),
 so they must be transposed on import.
 
-The degree-0 (DC) term is *not* included — it is represented as a [`datatypes.Rgba32`](https://rerun.io/docs/reference/types/datatypes/rgba32) color instead.
+The degree-0 (DC) term is *not* included — it is represented as a [`datatypes.Rgba32`](https://dalaran.dev/docs/reference/types/datatypes/rgba32) color instead.
 
 Data of a lower spherical harmonics degree should be zero-padded,
 which represents the exact same function (the spherical harmonics basis is orthonormal).
@@ -32,9 +32,9 @@ FixedSizeList(15 x non-null FixedSizeList(3 x non-null Float16))
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `SphericalHarmonics3Rgb`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1SphericalHarmonics3Rgb.html?speculative-link)
- * 🐍 [Python API docs for `SphericalHarmonics3Rgb`](https://ref.rerun.io/docs/python/stable/common/datatypes?speculative-link#rerun.datatypes.SphericalHarmonics3Rgb)
- * 🦀 [Rust API docs for `SphericalHarmonics3Rgb`](https://docs.rs/rerun/latest/rerun/datatypes/struct.SphericalHarmonics3Rgb.html?speculative-link)
+ * 🌊 [C++ API docs for `SphericalHarmonics3Rgb`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1SphericalHarmonics3Rgb.html?speculative-link)
+ * 🐍 [Python API docs for `SphericalHarmonics3Rgb`](https://ref.dalaran.dev/docs/python/stable/common/datatypes?speculative-link#dalaran.datatypes.SphericalHarmonics3Rgb)
+ * 🦀 [Rust API docs for `SphericalHarmonics3Rgb`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.SphericalHarmonics3Rgb.html?speculative-link)
 
 
 ## Used by

@@ -5,7 +5,7 @@ title: "DepthImage"
 
 A depth image, i.e. as captured by a depth camera.
 
-Each pixel corresponds to a depth value in units specified by [`components.DepthMeter`](https://rerun.io/docs/reference/types/components/depth_meter).
+Each pixel corresponds to a depth value in units specified by [`components.DepthMeter`](https://dalaran.dev/docs/reference/types/components/depth_meter).
 
 ## Fields
 ### Required
@@ -27,9 +27,9 @@ Each pixel corresponds to a depth value in units specified by [`components.Depth
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `DepthImage`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1DepthImage.html)
- * 🐍 [Python API docs for `DepthImage`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.DepthImage)
- * 🦀 [Rust API docs for `DepthImage`](https://docs.rs/rerun/latest/rerun/archetypes/struct.DepthImage.html)
+ * 🌊 [C++ API docs for `DepthImage`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1DepthImage.html)
+ * 🐍 [Python API docs for `DepthImage`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.DepthImage)
+ * 🦀 [Rust API docs for `DepthImage`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.DepthImage.html)
 
 ## Examples
 

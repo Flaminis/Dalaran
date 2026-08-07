@@ -5,7 +5,7 @@ import os
 import re
 
 """
-Script for parsing @rerun-bot PR comments.
+Script for parsing @dalaran-bot PR comments.
 
 In order to avoid executing code that an attacker might embed in a comment,
 the comment body is not passed as an argument, but instead through the `GITHUB_COMMENT_BODY` env
@@ -30,7 +30,7 @@ def gh_set_output(key: str, text: str) -> None:
 
 def main() -> None:
     comment_body = os.environ.get("GITHUB_COMMENT_BODY", "")
-    bot_invocation = re.search(r"@rerun-bot\s+([a-zA-Z\-]*)", comment_body)
+    bot_invocation = re.search(r"@dalaran-bot\s+([a-zA-Z\-]*)", comment_body)
 
     if bot_invocation:
         command = bot_invocation.group(1)
@@ -40,7 +40,7 @@ def main() -> None:
         else:
             print(f"Invalid command: {command}")
     else:
-        print("No rerun-bot invocation found")
+        print("No dalaran-bot invocation found")
 
 
 if __name__ == "__main__":

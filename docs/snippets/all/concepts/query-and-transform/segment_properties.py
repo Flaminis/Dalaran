@@ -8,7 +8,7 @@ from pathlib import Path
 
 from datafusion import col
 
-import rerun as rr
+import dalaran as dl
 
 RRD_DIR = Path(tempfile.mkdtemp())
 atexit.register(
@@ -18,30 +18,30 @@ atexit.register(
 # region: setup
 rrd_paths = [RRD_DIR / f"recording_{i}.rrd" for i in range(5)]
 for i, rrd_path in enumerate(rrd_paths):
-    with rr.RecordingStream("rerun_example_property") as rec:
+    with dl.RecordingStream("dalaran_example_property") as rec:
         rec.save(rrd_path)
-        rec.log("data", rr.Points2D(positions=[[i, i]]))
+        rec.log("data", dl.Points2D(positions=[[i, i]]))
 
-        # properties can be any rerun data
-        rec.send_property("location", rr.GeoPoints(lat_lon=[[46.5, 6.5]]))
+        # properties can be any dalaran data
+        rec.send_property("location", dl.GeoPoints(lat_lon=[[46.5, 6.5]]))
 
         # custom data can be logged with `AnyValues`
         rec.send_property(
             "info",
-            rr.AnyValues(
+            dl.AnyValues(
                 index=i,
                 is_odd=i % 2 == 1,
             ),
         )
 
         # recording name is part of the built-in properties
-        rr.send_recording_name(f"segment_{i}")
+        dl.send_recording_name(f"segment_{i}")
 # endregion: setup
 
 
 # region: segment_table
 # load the demo recording in a temporary catalog
-with rr.server.Server(datasets={"dataset": rrd_paths}) as server:
+with dl.server.Server(datasets={"dataset": rrd_paths}) as server:
     # obtain a dataset from the catalog
     dataset = server.client().get_dataset("dataset")
 
@@ -51,7 +51,7 @@ with rr.server.Server(datasets={"dataset": rrd_paths}) as server:
     segment_table = segment_table.sort(
         col("property:RecordingInfo:name")[0]
     ).select(
-        "rerun_segment_id",
+        "dalaran_segment_id",
         "property:RecordingInfo:name",
         "property:RecordingInfo:start_time",
         "property:info:index",
@@ -72,7 +72,7 @@ with rr.server.Server(datasets={"dataset": rrd_paths}) as server:
     # region: query
     df = dataset.filter_contents("__properties/**").reader(index=None)
     df = df.sort("property:RecordingInfo:name").select(
-        "rerun_segment_id", "property:RecordingInfo:name", "property:info:index"
+        "dalaran_segment_id", "property:RecordingInfo:name", "property:info:index"
     )
 
     print(df)

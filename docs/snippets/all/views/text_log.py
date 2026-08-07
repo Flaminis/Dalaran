@@ -1,40 +1,40 @@
 """Use a blueprint to show a text log."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_text_log", spawn=True)
+dl.init("dalaran_example_text_log", spawn=True)
 
-rr.set_time("time", sequence=0)
-rr.log(
-    "log/status", rr.TextLog("Application started.", level=rr.TextLogLevel.INFO)
+dl.set_time("time", sequence=0)
+dl.log(
+    "log/status", dl.TextLog("Application started.", level=dl.TextLogLevel.INFO)
 )
-rr.set_time("time", sequence=5)
-rr.log("log/other", rr.TextLog("A warning.", level=rr.TextLogLevel.WARN))
+dl.set_time("time", sequence=5)
+dl.log("log/other", dl.TextLog("A warning.", level=dl.TextLogLevel.WARN))
 for i in range(10):
-    rr.set_time("time", sequence=i)
-    rr.log(
+    dl.set_time("time", sequence=i)
+    dl.log(
         "log/status",
-        rr.TextLog(f"Processing item {i}.", level=rr.TextLogLevel.INFO),
+        dl.TextLog(f"Processing item {i}.", level=dl.TextLogLevel.INFO),
     )
 
 # Create a text view that displays all logs.
-blueprint = rrb.Blueprint(
-    rrb.TextLogView(
+blueprint = dlb.Blueprint(
+    dlb.TextLogView(
         origin="/log",
         name="Text Logs",
-        columns=rrb.TextLogColumns(
+        columns=dlb.TextLogColumns(
             timeline_columns=["time"],
             text_log_columns=["loglevel", "entitypath", "body"],
         ),
-        rows=rrb.TextLogRows(
+        rows=dlb.TextLogRows(
             filter_by_log_level=["INFO", "WARN", "ERROR"],
         ),
-        format_options=rrb.TextLogFormat(
+        format_options=dlb.TextLogFormat(
             monospace_body=False,
         ),
     ),
     collapse_panels=True,
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

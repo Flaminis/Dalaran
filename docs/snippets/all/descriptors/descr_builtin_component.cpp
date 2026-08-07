@@ -1,19 +1,19 @@
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_descriptors_builtin_component");
+        dalaran::RecordingStream("dalaran_example_descriptors_builtin_component");
     rec.spawn().exit_on_failure();
 
     rec.log_static(
         "data",
-        rerun::ComponentBatch::from_loggable(
-            rerun::Position3D(1.0f, 2.0f, 3.0f),
-            rerun::ComponentDescriptor(
+        dalaran::ComponentBatch::from_loggable(
+            dalaran::Position3D(1.0f, 2.0f, 3.0f),
+            dalaran::ComponentDescriptor(
                 "user.CustomPoints3D",        // archetype name
                 "user.CustomPoints3D:points", // component
-                rerun::Loggable<
-                    rerun::Position3D>::ComponentType // component type
+                dalaran::Loggable<
+                    dalaran::Position3D>::ComponentType // component type
             )
         )
     );

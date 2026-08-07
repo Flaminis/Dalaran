@@ -7,9 +7,9 @@ A video binary.
 
 Only MP4 containers are currently supported.
 
-See <https://rerun.io/docs/reference/video> for codec support and more general information.
+See <https://dalaran.dev/docs/reference/video> for codec support and more general information.
 
-In order to display a video, you also need to log a [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference/types/archetypes/video_frame_reference) for each frame.
+In order to display a video, you also need to log a [`archetypes.VideoFrameReference`](https://dalaran.dev/docs/reference/types/archetypes/video_frame_reference) for each frame.
 
 ## Fields
 ### Required
@@ -25,9 +25,9 @@ In order to display a video, you also need to log a [`archetypes.VideoFrameRefer
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `AssetVideo`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1AssetVideo.html)
- * 🐍 [Python API docs for `AssetVideo`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.AssetVideo)
- * 🦀 [Rust API docs for `AssetVideo`](https://docs.rs/rerun/latest/rerun/archetypes/struct.AssetVideo.html)
+ * 🌊 [C++ API docs for `AssetVideo`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1AssetVideo.html)
+ * 🐍 [Python API docs for `AssetVideo`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.AssetVideo)
+ * 🦀 [Rust API docs for `AssetVideo`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.AssetVideo.html)
 
 ## Examples
 

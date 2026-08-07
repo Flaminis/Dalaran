@@ -2,12 +2,12 @@
 
 import sys
 
-import rerun as rr
+import dalaran as dl
 
 if len(sys.argv) < 2:
     print(f"Usage: {sys.argv[0]} <path_to_splats.ply>")
     sys.exit(1)
 
-rr.init("rerun_example_gaussian_splats3d_ply", spawn=True)
+dl.init("dalaran_example_gaussian_splats3d_ply", spawn=True)
 
-rr.log_file_from_path(sys.argv[1])
+dl.log_file_from_path(sys.argv[1])

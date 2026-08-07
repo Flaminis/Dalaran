@@ -7,7 +7,7 @@ import pyarrow as pa
 from datafusion import col
 from datafusion import functions as F
 
-import rerun as rr
+import dalaran as dl
 
 TMP_FILE = tempfile.NamedTemporaryFile(suffix=".rrd")
 RRD_PATH = TMP_FILE.name
@@ -16,11 +16,11 @@ RRD_PATH = TMP_FILE.name
 sample_video_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "video_sample"
 )
-server = rr.server.Server(datasets={"video_dataset": sample_video_path})
+server = dl.server.Server(datasets={"video_dataset": sample_video_path})
 # Using OSS server for demonstration but in practice replace with
 # the URL of your cloud instance
 CATALOG_URL = server.url()
-client = rr.catalog.CatalogClient(CATALOG_URL)
+client = dl.catalog.CatalogClient(CATALOG_URL)
 dataset = client.get_dataset(name="video_dataset")
 df = dataset.filter_contents([
     "/compressed_images/**",
@@ -48,10 +48,10 @@ cache_df.count()  # basically free
 # Create a new sparse layer identifying interesting events
 segment_id = dataset.segment_ids()[0]
 second_to_last_timestamp = pa.table(df)["log_time"].to_numpy()[-2]
-with rr.RecordingStream("rerun_example_layer", recording_id=segment_id) as rec:
+with dl.RecordingStream("dalaran_example_layer", recording_id=segment_id) as rec:
     rec.save(RRD_PATH)
     rec.set_time("log_time", timestamp=second_to_last_timestamp)
-    rec.log("/events", rr.AnyValues(flag=True))
+    rec.log("/events", dl.AnyValues(flag=True))
 
 dataset.register([Path(RRD_PATH).as_uri()], layer_name="event_layer")
 

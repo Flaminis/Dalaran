@@ -9,7 +9,7 @@ It covers I/O from common robotics file formats, powerful declarative data wrang
 The API is designed to support distributed execution in the future.
 
 > [!NOTE]
-> The Chunk Processing API is currently experimental and may change in future releases. It is available in the Python SDK under `rerun.experimental`.
+> The Chunk Processing API is currently experimental and may change in future releases. It is available in the Python SDK under `dalaran.experimental`.
 
 ## Building blocks
 
@@ -24,16 +24,16 @@ The Chunk Processing API is built from three kinds of primitives — readers, st
 
 Readers produce [`Chunk`](chunks.md)s from external sources such as files, or datasets hosted on a catalog server.
 
-In some cases, readers are classes provided by the Chunk Processing API, such as [`RrdReader`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.RrdReader) and [`McapReader`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.McapReader).
-The reader functionality can also be provided by classes from other parts of the Rerun SDK.
-For example, [`DatasetEntry`](https://ref.rerun.io/docs/python/stable/catalog/#rerun.catalog.DatasetEntry) has a [`segment_store`](https://ref.rerun.io/docs/python/stable/catalog/#rerun.catalog.DatasetEntry.segment_store) method which returns a [`LazyStore`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.LazyStore) for the corresponding segment (see the [catalog object model](../query-and-transform/catalog-object-model.md) for more information on datasets).
-[`UrdfTree`](https://ref.rerun.io/docs/python/stable/urdf/#rerun.urdf.UrdfTree) is another example of a class that offers reader functionality in addition to a larger feature set.
+In some cases, readers are classes provided by the Chunk Processing API, such as [`RrdReader`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.RrdReader) and [`McapReader`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.McapReader).
+The reader functionality can also be provided by classes from other parts of the Dalaran SDK.
+For example, [`DatasetEntry`](https://ref.dalaran.dev/docs/python/stable/catalog/#dalaran.catalog.DatasetEntry) has a [`segment_store`](https://ref.dalaran.dev/docs/python/stable/catalog/#dalaran.catalog.DatasetEntry.segment_store) method which returns a [`LazyStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyStore) for the corresponding segment (see the [catalog object model](../query-and-transform/catalog-object-model.md) for more information on datasets).
+[`UrdfTree`](https://ref.dalaran.dev/docs/python/stable/urdf/#dalaran.urdf.UrdfTree) is another example of a class that offers reader functionality in addition to a larger feature set.
 
 There are two ways in which a reader may provide chunks.
 All readers can sequentially stream all their source's chunks, typically via the `stream()` method.
 Internally, such readers typically parse the source file, convert data to chunks as it is extracted, and yield those chunks as they are produced.
 
-Some readers, called [`IndexedReader`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.IndexedReader), can also provide indexed, random access to chunks via a [`LazyStore`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.LazyStore).
+Some readers, called [`IndexedReader`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.IndexedReader), can also provide indexed, random access to chunks via a [`LazyStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyStore).
 This is typically implemented on top of an existing chunk index, and is currently available for the following readers:
 - `RrdReader` (relies on the RRD footer index) <!-- TODO(ab) link doc page about that when we have it -->
 - `DatasetEntry.segment_store()` (relies on the chunk index maintained by the catalog server)
@@ -50,8 +50,8 @@ In all cases, readers typically act as the root of a processing pipeline and pro
 
 A store is a collection of chunks and comes in two complementary flavors:
 
-- **[`LazyStore`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.LazyStore)** — index-based, on-demand. Returned by indexed loaders such as `RrdReader(path).store()` and `DatasetEntry.segment_store()`.
-- **[`ChunkStore`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.ChunkStore)** — fully materialized, all chunks held in memory. Build one with `ChunkStore.from_chunks([...])`, or materialize a stream via `stream.collect()`.
+- **[`LazyStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyStore)** — index-based, on-demand. Returned by indexed loaders such as `RrdReader(path).store()` and `DatasetEntry.segment_store()`.
+- **[`ChunkStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.ChunkStore)** — fully materialized, all chunks held in memory. Build one with `ChunkStore.from_chunks([...])`, or materialize a stream via `stream.collect()`.
 
 
 The previous section already hinted at the perks of `LazyStore`. Being index-based, it is cheap to create and takes limited amounts of memory.
@@ -60,15 +60,15 @@ On the other hand, `ChunkStore` is fully materialized: its memory footprint scal
 This is a major exception in the chunk processing API, which generally leans on lazy loading and streaming execution to allow processing large datasets with bounded memory.
 
 Both kinds of stores share a common API surface, including:
-- extracting the underlying [`Schema`](https://ref.rerun.io/docs/python/stable/catalog/#rerun.catalog.Schema) of the store;
+- extracting the underlying [`Schema`](https://ref.dalaran.dev/docs/python/stable/catalog/#dalaran.catalog.Schema) of the store;
 - turning the store back into a pipeline with `.stream()`;
 - exposing various statistics and content summaries.
 
 
 One common reason to materialize a `ChunkStore` is to run chunk optimization; see [Optimize chunk count](../../howto/logging-and-ingestion/optimize-chunks.md#compacting-chunks-with-the-chunk-processing-api) for details.
 
-A materialized `ChunkStore` can also be queried directly as a dataframe with [`ChunkStore.reader`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.ChunkStore.reader), without spinning up a catalog server.
-The returned [DataFusion](https://datafusion.apache.org/) dataframe is data-equivalent to loading the same chunks into a dataset and calling its `reader()`, so the full [dataframe query API](../query-and-transform/dataframe-queries.md) applies — modulo the `rerun_segment_id` column (see the [catalog object model](../query-and-transform/catalog-object-model.md) for more information about datasets and segments).
+A materialized `ChunkStore` can also be queried directly as a dataframe with [`ChunkStore.reader`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.ChunkStore.reader), without spinning up a catalog server.
+The returned [DataFusion](https://datafusion.apache.org/) dataframe is data-equivalent to loading the same chunks into a dataset and calling its `reader()`, so the full [dataframe query API](../query-and-transform/dataframe-queries.md) applies — modulo the `dalaran_segment_id` column (see the [catalog object model](../query-and-transform/catalog-object-model.md) for more information about datasets and segments).
 
 For example, first materialize a store (here built a single chunk, for illustration):
 
@@ -140,7 +140,7 @@ Full source: [Python](https://github.com/rerun-io/rerun/blob/main/docs/snippets/
 snippet: concepts/chunk_processing[setup]
 
 - Imports the experimental entry points: readers (`McapReader`), chunk and stream types (`Chunk`, `LazyChunkStream`), lens primitives (`DeriveLens`, `Selector`).
-- Locates the input MCAP relative to the repo root and picks a CWD-relative output path. Nothing here touches Rerun yet.
+- Locates the input MCAP relative to the repo root and picks a CWD-relative output path. Nothing here touches Dalaran yet.
 
 ### Reading
 
@@ -161,7 +161,7 @@ snippet: concepts/chunk_processing[processing]
 
 snippet: concepts/chunk_processing[merging]
 
-- `Chunk.from_columns("/metadata", indexes=[], columns=rr.AnyValues.columns(…))` builds a single static chunk from scratch — `indexes=[]` makes it static. Any archetype's `.columns(…)` helper works here.
+- `Chunk.from_columns("/metadata", indexes=[], columns=dl.AnyValues.columns(…))` builds a single static chunk from scratch — `indexes=[]` makes it static. Any archetype's `.columns(…)` helper works here.
 - `LazyChunkStream.from_iter([metadata])` lifts that one chunk into a one-element stream so it can participate in the pipeline.
 - `LazyChunkStream.merge(processed, ...)` is fan-in: the two inputs become one stream. Order is preserved per-input, not globally.
 
@@ -174,7 +174,7 @@ snippet: concepts/chunk_processing[write]
 
 ## Relationship to the logging APIs
 
-Both the logging APIs (`rr.log`, `rr.send_columns`, `RecordingStream`) and the Chunk Processing API target the same underlying data model, but they differ in several ways:
+Both the logging APIs (`dl.log`, `dl.send_columns`, `RecordingStream`) and the Chunk Processing API target the same underlying data model, but they differ in several ways:
 
 |                        | Logging API                              | Chunk processing API                                                                                    |
 |------------------------|------------------------------------------|---------------------------------------------------------------------------------------------------------|
@@ -189,9 +189,9 @@ The two are interoperable:
 
   > [!NOTE]
   > This roundtrip-via-file will be smoothed out in the future for better ergonomics and performance.
-- **Chunk processing → logging:** `rerun.experimental.send_chunks(chunks, recording=...)` feeds chunks into an active `RecordingStream` (useful for streaming to a viewer, for example).
-- **Building chunks by hand:** `Chunk.from_columns` mirrors `rr.send_columns` and accepts the same `rr.<Archetype>.columns(...)` helpers, so any data that can be logged with `rr.send_columns` can also be packaged as a `Chunk` and injected into a processing pipeline.
-  Likewise, `Chunk.from_record_batch` (for a single `RecordBatch`) and `Chunk.from_dataframe` (a multi-batch `Table`, `RecordBatchReader`, or `datafusion.DataFrame`) mirrors `rr.send_record_batch` and `rr.send_dataframe`.
+- **Chunk processing → logging:** `dalaran.experimental.send_chunks(chunks, recording=...)` feeds chunks into an active `RecordingStream` (useful for streaming to a viewer, for example).
+- **Building chunks by hand:** `Chunk.from_columns` mirrors `dl.send_columns` and accepts the same `rr.<Archetype>.columns(...)` helpers, so any data that can be logged with `dl.send_columns` can also be packaged as a `Chunk` and injected into a processing pipeline.
+  Likewise, `Chunk.from_record_batch` (for a single `RecordBatch`) and `Chunk.from_dataframe` (a multi-batch `Table`, `RecordBatchReader`, or `datafusion.DataFrame`) mirrors `dl.send_record_batch` and `dl.send_dataframe`.
   See [Chunks](chunks.md) for details.
 
 

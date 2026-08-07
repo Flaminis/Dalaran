@@ -8,7 +8,7 @@ Degree of transparency ranging from 0.0 (fully transparent) to 1.0 (fully opaque
 The final opacity value may be a result of multiplication with alpha values as specified by other color sources.
 Unless otherwise specified, the default value is 1.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -18,9 +18,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Opacity`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Opacity.html)
- * 🐍 [Python API docs for `Opacity`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Opacity)
- * 🦀 [Rust API docs for `Opacity`](https://docs.rs/rerun/latest/rerun/components/struct.Opacity.html)
+ * 🌊 [C++ API docs for `Opacity`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Opacity.html)
+ * 🐍 [Python API docs for `Opacity`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Opacity)
+ * 🦀 [Rust API docs for `Opacity`](https://docs.rs/dalaran/latest/dalaran/components/struct.Opacity.html)
 
 
 ## Used by

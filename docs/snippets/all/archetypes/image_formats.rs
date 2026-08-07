@@ -1,7 +1,7 @@
-use rerun::external::ndarray;
+use dalaran::external::ndarray;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_image_formats")
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_image_formats")
         .spawn()?;
 
     // Simple gradient image
@@ -16,8 +16,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // RGB image
     rec.log(
         "image_rgb",
-        &rerun::Image::from_color_model_and_tensor(
-            rerun::ColorModel::RGB,
+        &dalaran::Image::from_color_model_and_tensor(
+            dalaran::ColorModel::RGB,
             image.clone(),
         )?,
     )?;
@@ -25,8 +25,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Green channel only (Luminance)
     rec.log(
         "image_green_only",
-        &rerun::Image::from_color_model_and_tensor(
-            rerun::ColorModel::L,
+        &dalaran::Image::from_color_model_and_tensor(
+            dalaran::ColorModel::L,
             image.slice(ndarray::s![.., .., 1]).to_owned(),
         )?,
     )?;
@@ -34,8 +34,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // BGR image
     rec.log(
         "image_bgr",
-        &rerun::Image::from_color_model_and_tensor(
-            rerun::ColorModel::BGR,
+        &dalaran::Image::from_color_model_and_tensor(
+            dalaran::ColorModel::BGR,
             image.slice(ndarray::s![.., .., ..;-1]).to_owned(),
         )?,
     )?;
@@ -47,9 +47,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     yuv_bytes.extend((0..256).flat_map(|y| std::iter::repeat_n(y as u8, 128))); // Gradient for V.
     rec.log(
         "image_yuv422",
-        &rerun::Image::from_pixel_format(
+        &dalaran::Image::from_pixel_format(
             [256, 256],
-            rerun::PixelFormat::Y_U_V16_FullRange,
+            dalaran::PixelFormat::Y_U_V16_FullRange,
             yuv_bytes,
         ),
     )?;

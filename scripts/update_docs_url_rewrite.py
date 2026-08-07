@@ -69,7 +69,7 @@ def update_url_map_rewrite_rules(project: str, version: str, language: str, dry_
     """
     client = compute_v1.UrlMapsClient()
 
-    balancer_name = "rerun-docs-balancer"
+    balancer_name = "dalaran-docs-balancer"
 
     logging.info(f"Fetching URL map for balancer {balancer_name}")
     url_map = client.get(project=project, url_map=balancer_name)
@@ -77,7 +77,7 @@ def update_url_map_rewrite_rules(project: str, version: str, language: str, dry_
     # Capture the "before" state
     before_state = format_url_map(url_map)
 
-    backend_bucket = "rerun-docs-backend"
+    backend_bucket = "dalaran-docs-backend"
     backend_url = f"https://www.googleapis.com/compute/v1/projects/{project}/global/backendBuckets/{backend_bucket}"
 
     # Initialize pathMatchers if it doesn't exist
@@ -88,7 +88,7 @@ def update_url_map_rewrite_rules(project: str, version: str, language: str, dry_
     if not url_map.host_rules:
         url_map.host_rules = []
 
-    # --- Ensure ref.rerun.io path matcher exists (serves gs://rerun-docs) ---
+    # --- Ensure ref.dalaran.dev path matcher exists (serves gs://dalaran-docs) ---
 
     ref_pm_idx = None
     for idx, pm in enumerate(url_map.path_matchers):
@@ -97,19 +97,19 @@ def update_url_map_rewrite_rules(project: str, version: str, language: str, dry_
             break
 
     if ref_pm_idx is None:
-        logging.info("Creating path matcher for ref.rerun.io")
+        logging.info("Creating path matcher for ref.dalaran.dev")
         path_matcher = compute_v1.types.PathMatcher(name="path-matcher-1", default_service=backend_url, path_rules=[])
         url_map.path_matchers.append(path_matcher)
         ref_pm_idx = len(url_map.path_matchers) - 1
 
-    if not any("ref.rerun.io" in hr.hosts for hr in url_map.host_rules):
-        logging.info("Adding host rule for ref.rerun.io")
-        url_map.host_rules.append(compute_v1.types.HostRule(hosts=["ref.rerun.io"], path_matcher="path-matcher-1"))
+    if not any("ref.dalaran.dev" in hr.hosts for hr in url_map.host_rules):
+        logging.info("Adding host rule for ref.dalaran.dev")
+        url_map.host_rules.append(compute_v1.types.HostRule(hosts=["ref.dalaran.dev"], path_matcher="path-matcher-1"))
 
-    # --- Ensure docs.rerun.io path matcher exists (serves gs://rerun-prose) ---
+    # --- Ensure docs.dalaran.dev path matcher exists (serves gs://dalaran-prose) ---
 
     prose_backend_url = (
-        f"https://www.googleapis.com/compute/v1/projects/{project}/global/backendBuckets/rerun-prose-backend"
+        f"https://www.googleapis.com/compute/v1/projects/{project}/global/backendBuckets/dalaran-prose-backend"
     )
 
     prose_pm_idx = None
@@ -119,17 +119,17 @@ def update_url_map_rewrite_rules(project: str, version: str, language: str, dry_
             break
 
     if prose_pm_idx is None:
-        logging.info("Creating path matcher for docs.rerun.io")
+        logging.info("Creating path matcher for docs.dalaran.dev")
         prose_pm = compute_v1.types.PathMatcher(
             name="prose-path-matcher", default_service=prose_backend_url, path_rules=[]
         )
         url_map.path_matchers.append(prose_pm)
 
-    if not any("docs.rerun.io" in hr.hosts for hr in url_map.host_rules):
-        logging.info("Adding host rule for docs.rerun.io")
-        url_map.host_rules.append(compute_v1.types.HostRule(hosts=["docs.rerun.io"], path_matcher="prose-path-matcher"))
+    if not any("docs.dalaran.dev" in hr.hosts for hr in url_map.host_rules):
+        logging.info("Adding host rule for docs.dalaran.dev")
+        url_map.host_rules.append(compute_v1.types.HostRule(hosts=["docs.dalaran.dev"], path_matcher="prose-path-matcher"))
 
-    # --- Update stable rewrite rules for ref.rerun.io ---
+    # --- Update stable rewrite rules for ref.dalaran.dev ---
 
     pm = url_map.path_matchers[ref_pm_idx]
 
@@ -205,7 +205,7 @@ def main() -> None:
     parser.add_argument(
         "--language", type=str, required=True, choices=["python", "js"], help="The language to update (python or js)"
     )
-    parser.add_argument("--project", type=str, default="rerun-open", help="GCP project ID (default: rerun-open)")
+    parser.add_argument("--project", type=str, default="dalaran-open", help="GCP project ID (default: dalaran-open)")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be done without making changes")
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
 

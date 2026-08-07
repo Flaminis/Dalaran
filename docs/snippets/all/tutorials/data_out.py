@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
 # endregion: imports
 
@@ -18,9 +18,9 @@ example_rrd = (
 )
 assert example_rrd.exists(), f"Example RRD not found at {example_rrd}"
 # region: launch_server
-server = rr.server.Server(datasets={"tutorial": [example_rrd]})
+server = dl.server.Server(datasets={"tutorial": [example_rrd]})
 
-client = rr.catalog.CatalogClient(server.url())
+client = dl.catalog.CatalogClient(server.url())
 # endregion: launch_server
 
 # query the recording into a pandas dataframe
@@ -60,32 +60,32 @@ pd_df["jawOpenState"] = pd_df["jawOpen"] > 0.15
 # Log the data back to the viewer
 
 application_id = (
-    rr.experimental.RrdReader(example_rrd).recordings()[0].application_id
+    dl.experimental.RrdReader(example_rrd).recordings()[0].application_id
 )
 
 # Connect to the viewer
 # region: connect_viewer
-rr.init(application_id, recording_id=dataset.segment_ids()[0])
-rr.connect_grpc()
+dl.init(application_id, recording_id=dataset.segment_ids()[0])
+dl.connect_grpc()
 # endregion: connect_viewer
 
 # log the jaw open state signal as a scalar
 # region: send_columns
-rr.send_columns(
+dl.send_columns(
     "/jaw_open_state",
-    indexes=[rr.TimeColumn("frame_nr", sequence=pd_df["frame_nr"])],
-    columns=rr.Scalars.columns(scalars=pd_df["jawOpenState"]),
+    indexes=[dl.TimeColumn("frame_nr", sequence=pd_df["frame_nr"])],
+    columns=dl.Scalars.columns(scalars=pd_df["jawOpenState"]),
 )
 # endregion: send_columns
 
 # log a `Label` component to the face bounding box entity
 # region: log_labels
 target_entity = "/video/detector/faces/0/bbox"
-rr.log(target_entity, rr.Boxes2D.from_fields(show_labels=True), static=True)
-rr.send_columns(
+dl.log(target_entity, dl.Boxes2D.from_fields(show_labels=True), static=True)
+dl.send_columns(
     target_entity,
-    indexes=[rr.TimeColumn("frame_nr", sequence=pd_df["frame_nr"])],
-    columns=rr.Boxes2D.columns(
+    indexes=[dl.TimeColumn("frame_nr", sequence=pd_df["frame_nr"])],
+    columns=dl.Boxes2D.columns(
         labels=np.where(pd_df["jawOpenState"], "OPEN", "CLOSE")
     ),
 )

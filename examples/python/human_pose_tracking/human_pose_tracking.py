@@ -18,15 +18,15 @@ import numpy as np
 import numpy.typing as npt
 import requests
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
 DESCRIPTION = """
 # Human pose tracking
-This example uses Rerun to visualize the output of [MediaPipe](https://developers.google.com/mediapipe)-based tracking
+This example uses Dalaran to visualize the output of [MediaPipe](https://developers.google.com/mediapipe)-based tracking
 of a human pose in 2D and 3D.
 
 The full source code for this example is available
@@ -49,29 +49,29 @@ def track_pose(video_path: str, model_path: str, *, max_frame_count: int | None)
         output_segmentation_masks=True,
     )
 
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
-    rr.log(
+    dl.log(
         "/",
-        rr.AnnotationContext(
-            rr.ClassDescription(
-                info=rr.AnnotationInfo(id=1, label="Person"),
-                keypoint_annotations=[rr.AnnotationInfo(id=lm.value, label=lm.name) for lm in mp_pose.PoseLandmark],
+        dl.AnnotationContext(
+            dl.ClassDescription(
+                info=dl.AnnotationInfo(id=1, label="Person"),
+                keypoint_annotations=[dl.AnnotationInfo(id=lm.value, label=lm.name) for lm in mp_pose.PoseLandmark],
                 keypoint_connections=mp_pose.POSE_CONNECTIONS,
             ),
         ),
         static=True,
     )
     # Use a separate annotation context for the segmentation mask.
-    rr.log(
+    dl.log(
         "video/mask",
-        rr.AnnotationContext([
-            rr.AnnotationInfo(id=0, label="Background"),
-            rr.AnnotationInfo(id=1, label="Person", color=(0, 0, 0)),
+        dl.AnnotationContext([
+            dl.AnnotationInfo(id=0, label="Background"),
+            dl.AnnotationInfo(id=1, label="Person", color=(0, 0, 0)),
         ]),
         static=True,
     )
-    rr.log("person", rr.ViewCoordinates.RIGHT_HAND_Y_DOWN, static=True)
+    dl.log("person", dl.ViewCoordinates.RIGHT_HAND_Y_DOWN, static=True)
 
     pose_landmarker = mp.tasks.vision.PoseLandmarker.create_from_options(options)
 
@@ -81,31 +81,31 @@ def track_pose(video_path: str, model_path: str, *, max_frame_count: int | None)
                 break
 
             mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=bgr_frame.data)
-            rr.set_time("time", duration=bgr_frame.time)
-            rr.set_time("frame_idx", sequence=bgr_frame.idx)
+            dl.set_time("time", duration=bgr_frame.time)
+            dl.set_time("frame_idx", sequence=bgr_frame.idx)
 
             results = pose_landmarker.detect_for_video(mp_image, int(bgr_frame.time * 1000))
             h, w, _ = bgr_frame.data.shape
             landmark_positions_2d = read_landmark_positions_2d(results, w, h)
 
-            rr.log("video/bgr", rr.Image(bgr_frame.data, color_model="BGR").compress(jpeg_quality=75))
+            dl.log("video/bgr", dl.Image(bgr_frame.data, color_model="BGR").compress(jpeg_quality=75))
             if landmark_positions_2d is not None:
-                rr.log(
+                dl.log(
                     "video/pose/points",
-                    rr.Points2D(landmark_positions_2d, class_ids=1, keypoint_ids=mp_pose.PoseLandmark),
+                    dl.Points2D(landmark_positions_2d, class_ids=1, keypoint_ids=mp_pose.PoseLandmark),
                 )
 
             landmark_positions_3d = read_landmark_positions_3d(results)
             if landmark_positions_3d is not None:
-                rr.log(
+                dl.log(
                     "person/pose/points",
-                    rr.Points3D(landmark_positions_3d, class_ids=1, keypoint_ids=mp_pose.PoseLandmark),
+                    dl.Points3D(landmark_positions_3d, class_ids=1, keypoint_ids=mp_pose.PoseLandmark),
                 )
 
             if results.segmentation_masks is not None:
                 segmentation_mask = results.segmentation_masks[0].numpy_view()
                 binary_segmentation_mask = segmentation_mask > 0.5
-                rr.log("video/mask", rr.SegmentationImage(binary_segmentation_mask.astype(np.uint8)))
+                dl.log("video/mask", dl.SegmentationImage(binary_segmentation_mask.astype(np.uint8)))
 
 
 def read_landmark_positions_2d(
@@ -226,20 +226,20 @@ def main() -> None:
         type=int,
         help="Stop after processing this many frames. If not specified, will run until interrupted.",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
 
     args = parser.parse_args()
-    rr.script_setup(
+    dl.script_setup(
         args,
-        "rerun_example_human_pose_tracking",
-        default_blueprint=rrb.Horizontal(
-            rrb.Vertical(
-                rrb.Spatial2DView(origin="video", name="Result"),
-                rrb.Spatial3DView(origin="person", name="3D pose"),
+        "dalaran_example_human_pose_tracking",
+        default_blueprint=dlb.Horizontal(
+            dlb.Vertical(
+                dlb.Spatial2DView(origin="video", name="Result"),
+                dlb.Spatial3DView(origin="person", name="3D pose"),
             ),
-            rrb.Vertical(
-                rrb.Spatial2DView(origin="video/bgr", name="Raw video"),
-                rrb.TextDocumentView(origin="description", name="Description"),
+            dlb.Vertical(
+                dlb.Spatial2DView(origin="video/bgr", name="Raw video"),
+                dlb.TextDocumentView(origin="description", name="Description"),
                 row_shares=[2, 3],
             ),
             column_shares=[3, 2],
@@ -256,7 +256,7 @@ def main() -> None:
 
     track_pose(video_path, model_path, max_frame_count=args.max_frame)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

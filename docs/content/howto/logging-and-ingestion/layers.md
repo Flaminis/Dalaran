@@ -18,7 +18,7 @@ This how-to page provides examples for two ways data can be added to existing da
 
 When registering recordings to a dataset, the recordings are assigned the `"base"` layer name by default.
 
-Let's register a few recordings from the [DROID](https://droid-dataset.github.io/) dataset (included in the Rerun repository for testing) to illustrate this:
+Let's register a few recordings from the [DROID](https://droid-dataset.github.io/) dataset (included in the Dalaran repository for testing) to illustrate this:
 
 snippet: howto/layers[setup]
 
@@ -26,7 +26,7 @@ Output:
 
 ```
 ┌───────────────────────────────────────┬───────────────────┐
-│ rerun_segment_id                      ┆ rerun_layer_names │
+│ dalaran_segment_id                      ┆ dalaran_layer_names │
 │ ---                                   ┆ ---               │
 │ type: Utf8                            ┆ type: List[Utf8]  │
 ╞═══════════════════════════════════════╪═══════════════════╡
@@ -56,7 +56,7 @@ The key steps are:
 4. Log the derived data using `send_columns()` for efficient columnar logging
 5. Register all derived `.rrd` files to the dataset with a `"tracking_error"` layer name
 
-The `"rerun_layer_names"` column of the segment table confirms the new layer was added:
+The `"dalaran_layer_names"` column of the segment table confirms the new layer was added:
 
 snippet: howto/layers[check_layer_names]
 
@@ -64,7 +64,7 @@ Output:
 
 ```
 ┌───────────────────────────────────────┬────────────────────────┐
-│ rerun_segment_id                      ┆ rerun_layer_names      │
+│ dalaran_segment_id                      ┆ dalaran_layer_names      │
 │ ---                                   ┆ ---                    │
 │ type: Utf8                            ┆ type: List[Utf8]       │
 ╞═══════════════════════════════════════╪════════════════════════╡
@@ -86,7 +86,7 @@ In the next section, we will demonstrate that the data has indeed been added by 
 
 ## Adding properties to segments using layers
 
-In addition to regular Rerun data, layers can be used to add [properties](../../concepts/query-and-transform/properties-and-segments.md) to segments.
+In addition to regular Dalaran data, layers can be used to add [properties](../../concepts/query-and-transform/properties-and-segments.md) to segments.
 This is useful for tagging segments with derived metadata based on their content.
 
 In this example, we query the tracking error computed in the previous section, calculate the mean error per segment, and create a `tracking_good` boolean property based on a threshold:
@@ -109,7 +109,7 @@ Output:
 
 ```
 ┌───────────────────────────────────────┬─────────────────────────────────┬────────────────────────────────────┐
-│ rerun_segment_id                      ┆ rerun_layer_names               ┆ property:quality:tracking_good     │
+│ dalaran_segment_id                      ┆ dalaran_layer_names               ┆ property:quality:tracking_good     │
 │ ---                                   ┆ ---                             ┆ ---                                │
 │ type: Utf8                            ┆ type: List[Utf8]                ┆ type: nullable List[nullable bool] │
 │                                       ┆                                 ┆ component: tracking_good           │
@@ -168,7 +168,7 @@ When you register a recording without specifying a `layer_name`, it is assigned 
 ### Is it possible to obtain a dataframe with a list of all layers in a dataset?
 
 Yes.
-The [`DatasetEntry.segment_table()`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetEntry.segment_table) method returns a DataFusion DataFrame with one row per segment and a `rerun_layer_names` column listing the layers of each segment:
+The [`DatasetEntry.segment_table()`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetEntry.segment_table) method returns a DataFusion DataFrame with one row per segment and a `dalaran_layer_names` column listing the layers of each segment:
 
 snippet: howto/layers[list_layers]
 
@@ -176,7 +176,7 @@ Output:
 
 ```
 ┌───────────────────────────────────────┬─────────────────────────────────┐
-│ rerun_segment_id                      ┆ rerun_layer_names               │
+│ dalaran_segment_id                      ┆ dalaran_layer_names               │
 │ ---                                   ┆ ---                             │
 │ type: Utf8                            ┆ type: List[Utf8]                │
 ╞═══════════════════════════════════════╪═════════════════════════════════╡

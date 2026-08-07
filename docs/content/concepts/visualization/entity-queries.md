@@ -7,7 +7,7 @@ description: Control which entities appear in a given view
 Many views are made up of visualizations that include more than one
 entity.
 
-Rather that requiring you to specify each entity individually, Rerun supports
+Rather that requiring you to specify each entity individually, Dalaran supports
 this through "entity queries" that allow you to use "query expressions" to
 include or exclude entire subtrees.
 
@@ -67,7 +67,7 @@ be written as:
 
 ```python
 (
-    rrb.Spatial3DView(
+    dlb.Spatial3DView(
         contents=[
             "+ helix/**",
             "- helix/structure/scaffolding",
@@ -85,7 +85,7 @@ For example, the above query could be rewritten as:
 
 ```python
 (
-    rrb.Spatial3DView(
+    dlb.Spatial3DView(
         origin="helix",
         contents=[
             "+ $origin/**",

@@ -1,4 +1,4 @@
-"""Per-call overhead micro-benchmarks for the rr.log() pipeline.
+"""Per-call overhead micro-benchmarks for the dl.log() pipeline.
 
 See README.md for usage.
 """
@@ -10,31 +10,31 @@ from typing import Any
 import numpy as np
 import pytest
 
-import rerun as rr
-import rerun_bindings as bindings
-from rerun._log import _log_components
+import dalaran as dl
+import dalaran_bindings as bindings
+from dalaran._log import _log_components
 
 ARCHETYPE_CASES = [
-    pytest.param(lambda: rr.Scalars(42.0), id="Scalars"),
+    pytest.param(lambda: dl.Scalars(42.0), id="Scalars"),
     pytest.param(
-        lambda: rr.Points3D([[1, 2, 3]], colors=[0xFF0000FF], radii=[0.1]),
+        lambda: dl.Points3D([[1, 2, 3]], colors=[0xFF0000FF], radii=[0.1]),
         id="Points3D",
     ),
     pytest.param(
-        lambda: rr.Transform3D(translation=[1, 2, 3], mat3x3=np.eye(3, dtype=np.float32)),
+        lambda: dl.Transform3D(translation=[1, 2, 3], mat3x3=np.eye(3, dtype=np.float32)),
         id="Transform3D",
     ),
     pytest.param(
-        lambda: rr.Boxes3D(half_sizes=[[1, 2, 3]], colors=[0xFF0000FF]),
+        lambda: dl.Boxes3D(half_sizes=[[1, 2, 3]], colors=[0xFF0000FF]),
         id="Boxes3D",
     ),
 ]
 
 
 def _init() -> None:
-    """Common setup: init rerun + memory recording."""
-    rr.init("rerun_example_micro_benchmark", spawn=False)
-    rr.memory_recording()
+    """Common setup: init dalaran + memory recording."""
+    dl.init("dalaran_example_micro_benchmark", spawn=False)
+    dl.memory_recording()
 
 
 @pytest.mark.parametrize("make_archetype", ARCHETYPE_CASES)
@@ -69,9 +69,9 @@ def test_bench_micro_log_arrow_msg(benchmark: Any, make_archetype: Any) -> None:
 def test_bench_micro_log(benchmark: Any, make_archetype: Any) -> None:
     _init()
     archetype = make_archetype()
-    benchmark(rr.log, "test_entity", archetype)
+    benchmark(dl.log, "test_entity", archetype)
 
 
 def test_bench_micro_set_time(benchmark: Any) -> None:
     _init()
-    benchmark(rr.set_time, "frame", sequence=42)
+    benchmark(dl.set_time, "frame", sequence=42)

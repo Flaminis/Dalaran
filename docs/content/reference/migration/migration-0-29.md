@@ -15,11 +15,11 @@ A sideffect of that is that `VisualizerOverrides` no longer exists, instead you 
 
 Before:
 ```py
-rr.send_blueprint(
-    rrb.TimeSeriesView(
+dl.send_blueprint(
+    dlb.TimeSeriesView(
         overrides={
             "trig/sin": [
-                rrb.VisualizerOverrides([rrb.visualizers.SeriesLines, rrb.visualizers.SeriesPoints]),
+                dlb.VisualizerOverrides([dlb.visualizers.SeriesLines, dlb.visualizers.SeriesPoints]),
             ],
         },
     )
@@ -27,7 +27,7 @@ rr.send_blueprint(
 ```
 After:
 ```py
-rr.send_blueprint(rrb.TimeSeriesView(overrides={"trig/sin": [rr.SeriesLines(), rr.SeriesPoints()]}))
+dl.send_blueprint(dlb.TimeSeriesView(overrides={"trig/sin": [dl.SeriesLines(), dl.SeriesPoints()]}))
 ```
 
 In general, you can now pass any archetype that has a corresponding visualizer.
@@ -54,34 +54,34 @@ The other arguments (including `token`) are now kw-args.
 ### `Server`: Renamed `addr` constructor parameter
 The first argument to `Server` is now called `host`.
 
-### Deprecated `rerun.dataframe` API has been removed
+### Deprecated `dalaran.dataframe` API has been removed
 
-The `rerun.dataframe` module and its associated APIs, which were deprecated in 0.28, have now been fully removed. This includes `RecordingView`, `Recording.view()`, and the ability to run dataframe queries locally via this module.
+The `dalaran.dataframe` module and its associated APIs, which were deprecated in 0.28, have now been fully removed. This includes `RecordingView`, `Recording.view()`, and the ability to run dataframe queries locally via this module.
 
-Please refer to the [0.28 migration guide section on `RecordingView` and local dataframe API](migration-0-28.md#recordingview-and-local-dataframe-api-deprecated) for details on updating your code to use `rerun.server.Server` and the `rerun.catalog` API instead.
+Please refer to the [0.28 migration guide section on `RecordingView` and local dataframe API](migration-0-28.md#recordingview-and-local-dataframe-api-deprecated) for details on updating your code to use `dalaran.server.Server` and the `dalaran.catalog` API instead.
 
-### Deprecated `rerun.catalog` APIs have been removed
+### Deprecated `dalaran.catalog` APIs have been removed
 
-The deprecated `rerun.catalog` APIs that were marked for removal in 0.28 have now been fully removed. If you were using any of these deprecated methods, you must update your code to use the new APIs.
+The deprecated `dalaran.catalog` APIs that were marked for removal in 0.28 have now been fully removed. If you were using any of these deprecated methods, you must update your code to use the new APIs.
 
 Please refer to the [0.28 migration guide section on catalog API overhaul](migration-0-28.md#python-sdk-catalog-api-overhaul) for more details on the new API patterns.
 
 ### Multiple internal submodules were move to properly mark internal
 Most of their functionality is already exposed indirectly through re-exports.
 If you still need to use any functionality directly you can still find them in their new location.
-* `rr.color_conversion` -> `rr._color_conversion`
-* `rr.event` -> `rr._event`
-* `rr.legacy_notebook` -> `rr._legacy_notebook`
-* `rr.logging_handler` -> `rr._logging_handler`
-* `rr.memory` -> `rr._memory`
-* `rr.script_helpers` -> `rr._script_helpers`
+* `dl.color_conversion` -> `dl._color_conversion`
+* `dl.event` -> `dl._event`
+* `dl.legacy_notebook` -> `dl._legacy_notebook`
+* `dl.logging_handler` -> `dl._logging_handler`
+* `dl.memory` -> `dl._memory`
+* `dl.script_helpers` -> `dl._script_helpers`
 
 ## CLI
-`rerun server --addr …` has been renamed `rerun server --host …`
+`dalaran server --addr …` has been renamed `dalaran server --host …`
 
 ## Overrides in blueprint files can't be imported
 
-Rerun 0.29 cannot currently load component overrides from `.rbl` files created in previous versions. Support for legacy overrides is coming soon.
+Dalaran 0.29 cannot currently load component overrides from `.rbl` files created in previous versions. Support for legacy overrides is coming soon.
 
 ## Dataset re-registration required to fix missing `name` and `start_time` in segment table
 

@@ -1,22 +1,22 @@
-"""Demonstrates pinhole camera projections with Rerun blueprints."""
+"""Demonstrates pinhole camera projections with Dalaran blueprints."""
 
 import numpy as np
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_pinhole_projections", spawn=True)
+dl.init("dalaran_example_pinhole_projections", spawn=True)
 
 img_height, img_width = 12, 16
 
 # Create a 3D scene with a camera and an image.
-rr.log(
+dl.log(
     "world/box",
-    rr.Boxes3D(centers=[0, 0, 0], half_sizes=[1, 1, 1], colors=[255, 0, 0]),
+    dl.Boxes3D(centers=[0, 0, 0], half_sizes=[1, 1, 1], colors=[255, 0, 0]),
 )
-rr.log(
+dl.log(
     "world/points",
-    rr.Points3D(
+    dl.Points3D(
         positions=[(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1)],
         colors=[
             (255, 0, 0),
@@ -28,14 +28,14 @@ rr.log(
         radii=0.1,
     ),
 )
-rr.log(
+dl.log(
     "camera",
-    rr.Transform3D(translation=[0, 3, 0]),
-    rr.Pinhole(
+    dl.Transform3D(translation=[0, 3, 0]),
+    dl.Pinhole(
         width=img_width,
         height=img_height,
         focal_length=10,
-        camera_xyz=rr.ViewCoordinates.LEFT_HAND_Z_UP,
+        camera_xyz=dl.ViewCoordinates.LEFT_HAND_Z_UP,
     ),
 )
 # Create a simple test image.
@@ -43,24 +43,24 @@ checkerboard = np.zeros((img_height, img_width, 1), dtype=np.uint8)
 checkerboard[
     (np.arange(img_height)[:, None] + np.arange(img_width)) % 2 == 0
 ] = 255
-rr.log("camera/image", rr.Image(checkerboard))
+dl.log("camera/image", dl.Image(checkerboard))
 
 # Use a blueprint to show both 3D and 2D views side by side.
-blueprint = rrb.Blueprint(
-    rrb.Horizontal(
+blueprint = dlb.Blueprint(
+    dlb.Horizontal(
         # 3D view showing the scene and camera
-        rrb.Spatial3DView(
+        dlb.Spatial3DView(
             origin="world",
             name="3D Scene",
             contents=["/**"],
             overrides={
                 # Adjust visual size of camera frustum in 3D view for
                 # better visibility.
-                "camera": rr.Pinhole.from_fields(image_plane_distance=1.0)
+                "camera": dl.Pinhole.from_fields(image_plane_distance=1.0)
             },
         ),
         # 2D projection from angled camera
-        rrb.Spatial2DView(
+        dlb.Spatial2DView(
             # Make sure that the origin is at the camera's path.
             origin="camera",
             name="Camera",
@@ -69,4 +69,4 @@ blueprint = rrb.Blueprint(
     )
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

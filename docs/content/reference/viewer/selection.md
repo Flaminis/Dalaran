@@ -3,7 +3,7 @@ title: Selection
 order: 2
 ---
 
-Making selections is one of the primary ways of exploring data in Rerun.
+Making selections is one of the primary ways of exploring data in Dalaran.
 The current selection can be changed with a mouse click on most elements of the -
 including the [Blueprint](blueprints.md), [Viewport](viewport.md),
 [Timeline](timeline.md)
@@ -19,7 +19,7 @@ Parts of the Selection view
 
 
 ### Selection history
-Rerun keeps a log of all your selections, allowing you to undo/redo previous selections
+Dalaran keeps a log of all your selections, allowing you to undo/redo previous selections
 with the ←/→ buttons at the top of the view or `ctrl + shift + left/right`.
 
 Right clicking on the buttons expands the full history

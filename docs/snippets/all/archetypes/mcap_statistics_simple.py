@@ -1,12 +1,12 @@
 """Log simple MCAP recording statistics."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_mcap_statistics", spawn=True)
+dl.init("dalaran_example_mcap_statistics", spawn=True)
 
-rr.log(
+dl.log(
     "mcap/statistics/recording_overview",
-    rr.McapStatistics(
+    dl.McapStatistics(
         message_count=12500,
         schema_count=3,
         channel_count=5,

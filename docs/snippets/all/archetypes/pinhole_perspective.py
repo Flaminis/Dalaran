@@ -1,24 +1,24 @@
 """Logs a point cloud and a perspective camera looking at it."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_pinhole_perspective", spawn=True)
+dl.init("dalaran_example_pinhole_perspective", spawn=True)
 
-rr.log(
+dl.log(
     "world/cam",
-    rr.Pinhole(
+    dl.Pinhole(
         fov_y=0.7853982,
         aspect_ratio=1.7777778,
-        camera_xyz=rr.ViewCoordinates.RUB,
+        camera_xyz=dl.ViewCoordinates.RUB,
         image_plane_distance=0.1,
         color=[255, 128, 0],
         line_width=0.003,
     ),
 )
 
-rr.log(
+dl.log(
     "world/points",
-    rr.Points3D(
+    dl.Points3D(
         [(0.0, 0.0, -0.5), (0.1, 0.1, -0.5), (-0.1, -0.1, -0.5)], radii=0.025
     ),
 )

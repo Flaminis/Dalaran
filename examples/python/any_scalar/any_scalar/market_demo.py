@@ -10,9 +10,9 @@ from __future__ import annotations
 
 import yfinance as yf
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.blueprint.datatypes import ComponentSourceKind, VisualizerComponentMapping
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran.blueprint.datatypes import ComponentSourceKind, VisualizerComponentMapping
 
 
 def log_market_data(tickers: list[str]) -> None:
@@ -66,10 +66,10 @@ def log_market_data(tickers: list[str]) -> None:
                 for _, row in ticker_data.iterrows()
             ]
 
-            rr.send_columns(
+            dl.send_columns(
                 f"market/{ticker}",
-                indexes=[rr.TimeColumn("market_time", timestamp=timestamps)],
-                columns=[*rr.DynamicArchetype.columns(archetype="MarketTelemetry", components={"data": market_ticks})],
+                indexes=[dl.TimeColumn("market_time", timestamp=timestamps)],
+                columns=[*dl.DynamicArchetype.columns(archetype="MarketTelemetry", components={"data": market_ticks})],
             )
         except Exception as e:
             print(f"Error processing {ticker}: {e}")
@@ -81,7 +81,7 @@ def run_market_demo() -> None:
     log_market_data(tickers)
 
 
-def generate_blueprint() -> rrb.Blueprint:
+def generate_blueprint() -> dlb.Blueprint:
     """Generate the blueprint for the market demo."""
     tickers = ["NVDA", "AAPL", "MSFT", "GOOGL", "AMD", "INTC"]
     colors = {
@@ -92,15 +92,15 @@ def generate_blueprint() -> rrb.Blueprint:
         "AMD": [237, 28, 36],  # AMD Red
         "INTC": [0, 104, 181],  # Intel Blue
     }
-    return rrb.Blueprint(
-        rrb.Vertical(
-            rrb.Horizontal(
-                rrb.TimeSeriesView(
+    return dlb.Blueprint(
+        dlb.Vertical(
+            dlb.Horizontal(
+                dlb.TimeSeriesView(
                     name="Market Relative Performance (%)",
                     origin="/market",
                     overrides={
                         f"market/{ticker}": [
-                            rr.SeriesLines(names=f"{ticker} (Rel)", colors=colors.get(ticker)).visualizer(
+                            dl.SeriesLines(names=f"{ticker} (Rel)", colors=colors.get(ticker)).visualizer(
                                 mappings=[
                                     VisualizerComponentMapping(
                                         target="Scalars:scalars",
@@ -113,18 +113,18 @@ def generate_blueprint() -> rrb.Blueprint:
                         ]
                         for ticker in tickers
                     },
-                    axis_x=rrb.TimeAxis(
-                        view_range=rrb.TimeRange(
-                            start=rrb.TimeRangeBoundary.infinite(), end=rrb.TimeRangeBoundary.infinite()
+                    axis_x=dlb.TimeAxis(
+                        view_range=dlb.TimeRange(
+                            start=dlb.TimeRangeBoundary.infinite(), end=dlb.TimeRangeBoundary.infinite()
                         )
                     ),
                 ),
-                rrb.TimeSeriesView(
+                dlb.TimeSeriesView(
                     name="Market Close",
                     origin="/market",
                     overrides={
                         f"market/{ticker}": [
-                            rr.SeriesLines(names=f"{ticker} (Close)", colors=colors.get(ticker)).visualizer(
+                            dl.SeriesLines(names=f"{ticker} (Close)", colors=colors.get(ticker)).visualizer(
                                 mappings=[
                                     VisualizerComponentMapping(
                                         target="Scalars:scalars",
@@ -137,24 +137,24 @@ def generate_blueprint() -> rrb.Blueprint:
                         ]
                         for ticker in tickers
                     },
-                    axis_x=rrb.TimeAxis(
-                        view_range=rrb.TimeRange(
-                            start=rrb.TimeRangeBoundary.infinite(), end=rrb.TimeRangeBoundary.infinite()
+                    axis_x=dlb.TimeAxis(
+                        view_range=dlb.TimeRange(
+                            start=dlb.TimeRangeBoundary.infinite(), end=dlb.TimeRangeBoundary.infinite()
                         )
                     ),
                 ),
             ),
-            rrb.DataframeView(name="Market Inspector", origin="/market"),
+            dlb.DataframeView(name="Market Inspector", origin="/market"),
         )
     )
 
 
 def main() -> None:
-    rr.init("rerun_example_any_scalar_market", spawn=True)
+    dl.init("dalaran_example_any_scalar_market", spawn=True)
 
     run_market_demo()
 
-    rr.send_blueprint(generate_blueprint())
+    dl.send_blueprint(generate_blueprint())
 
 
 if __name__ == "__main__":

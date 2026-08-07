@@ -4,19 +4,19 @@ order: 90
 description: Align multi-rate sensor data and export to LeRobot
 ---
 
-Convert Rerun data into the training dataset version of your choice.
-This guide demonstrates how to use the OSS Rerun server to query recordings, align multi-rate sensor data to a common timeline, and export the result as a [LeRobot](https://github.com/huggingface/lerobot) dataset.
+Convert Dalaran data into the training dataset version of your choice.
+This guide demonstrates how to use the OSS Dalaran server to query recordings, align multi-rate sensor data to a common timeline, and export the result as a [LeRobot](https://github.com/huggingface/lerobot) dataset.
 
 ## Prerequisites
 
-The conversion code lives in the [`rerun-lerobot`](https://github.com/rerun-io/rerun-lerobot) package.
+The conversion code lives in the [`dalaran-lerobot`](https://github.com/rerun-io/rerun-lerobot) package.
 Install it from PyPI:
 
 ```bash
-pip install rerun-lerobot
+pip install dalaran-lerobot
 ```
 
-See the [`rerun-lerobot` repository](https://github.com/rerun-io/rerun-lerobot) for source and development instructions.
+See the [`dalaran-lerobot` repository](https://github.com/rerun-io/rerun-lerobot) for source and development instructions.
 
 ## Time alignment and resampling
 
@@ -81,7 +81,7 @@ Convert the filtered data into a LeRobot episode. This is the core transformatio
 snippet: howto/lerobot_export[export_episode]
 
 The `convert_dataframe_to_episode` function performs time alignment and resamples the dataframe to the target frame rate. It generates a sequence of evenly spaced timestamps at the target frame rate and treats these as the canonical timesteps for the episode.
-For each timestep, it queries the most recent available value of every selected component using Rerun's [`latest-at`](../../concepts/logging-and-ingestion/latest-at.md) semantics. If a stream has no sample exactly at that time, its last observed value is forward-filled.
+For each timestep, it queries the most recent available value of every selected component using Dalaran's [`latest-at`](../../concepts/logging-and-ingestion/latest-at.md) semantics. If a stream has no sample exactly at that time, its last observed value is forward-filled.
 
 The `finalize()` call completes the dataset by writing metadata and closing all files.
 
@@ -105,10 +105,10 @@ dataset.push_to_hub(repo_id="your-username/your-dataset-name")
 
 ## Command-line interface
 
-The `rerun-lerobot` package includes a CLI that implements this workflow for batch processing:
+The `dalaran-lerobot` package includes a CLI that implements this workflow for batch processing:
 
 ```bash
-rerun-lerobot \
+dalaran-lerobot \
   --rrd-dir ./tests/assets/rrd/sample_5 \
   --output ./lerobot_dataset \
   --dataset-name rerun-example-droid \
@@ -121,4 +121,4 @@ rerun-lerobot \
   --video wrist:/camera/wrist:VideoStream:sample
 ```
 
-See the [`rerun-lerobot` repository](https://github.com/rerun-io/rerun-lerobot) for the complete implementation.
+See the [`dalaran-lerobot` repository](https://github.com/rerun-io/rerun-lerobot) for the complete implementation.

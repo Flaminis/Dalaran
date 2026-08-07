@@ -1,0 +1,190 @@
+from __future__ import annotations
+
+import math
+from typing import TYPE_CHECKING, Any, cast
+
+from ..datatypes import Float32Like, Mat3x3Like, Rgba32Like, Utf8Like, Vec2D, Vec2DLike, ViewCoordinatesLike
+from ..error_utils import _send_warning_or_raise, catch_and_log_exceptions
+
+if TYPE_CHECKING:
+    import numpy.typing as npt
+
+
+class PinholeExt:
+    """Extension for [Pinhole][dalaran.archetypes.Pinhole]."""
+
+    def __init__(
+        self: Any,
+        *,
+        image_from_camera: Mat3x3Like | None = None,
+        resolution: Vec2DLike | None = None,
+        camera_xyz: ViewCoordinatesLike | None = None,
+        width: int | float | None = None,
+        height: int | float | None = None,
+        focal_length: float | npt.ArrayLike | None = None,
+        principal_point: npt.ArrayLike | None = None,
+        fov_y: float | None = None,
+        aspect_ratio: float | None = None,
+        child_frame: Utf8Like | None = None,
+        parent_frame: Utf8Like | None = None,
+        image_plane_distance: float | None = None,
+        color: Rgba32Like | None = None,
+        line_width: Float32Like | None = None,
+    ) -> None:
+        """
+        Create a new instance of the Pinhole archetype.
+
+        Parameters
+        ----------
+        image_from_camera:
+            Row-major intrinsics matrix for projecting from camera space to image space.
+            The first two axes are X=Right and Y=Down, respectively.
+            Projection is done along the positive third (Z=Forward) axis.
+            This can be specified _instead_ of `focal_length` and `principal_point`.
+        resolution:
+            Pixel resolution (usually integers) of child image space. Width and height.
+            `image_from_camera` projects onto the space spanned by `(0,0)` and `resolution - 1`.
+        camera_xyz:
+            Sets the camera orientation convention.
+
+            All common values are available as constants on the `components.ViewCoordinates` class.
+
+            The default is `ViewCoordinates.RDF`: +X is right, +Y is down, and +Z is forward.
+            This makes the camera frustum point along +Z in the parent space, with its up direction along -Y.
+
+            The camera frustum points along the axis set to `F`, or opposite the axis set to `B`.
+            When logging a depth image under this entity, this is the direction in which the point cloud is projected.
+
+            The frustum's up direction is the axis set to `U`, or opposite the axis set to `D`.
+            This matches the -Y direction of pixel space, where all images use RDF coordinates.
+
+            The frustum's right direction is the axis set to `R`, or opposite the axis set to `L`.
+            This matches the +X direction of pixel space.
+
+            Other common formats are `RUB` (X=Right, Y=Up, Z=Back) and `FLU` (X=Forward, Y=Left, Z=Up).
+
+            `image_from_camera` is always defined to project along +Z in camera coordinates.
+            `camera_xyz` reorients that projection to the forward axis of the pinhole entity.
+        focal_length:
+            The focal length of the camera in pixels.
+            This is the diagonal of the projection matrix.
+            Set one value for symmetric cameras, or two values (X=Right, Y=Down) for anamorphic cameras.
+        principal_point:
+            The center of the camera in pixels.
+            The default is half the width and height.
+            This is the last column of the projection matrix.
+            Expects two values along the dimensions Right and Down
+        width:
+            Width of the image in pixels.
+        height:
+            Height of the image in pixels.
+        fov_y:
+            Vertical field of view in radians.
+        aspect_ratio
+            Aspect ratio (width/height).
+        child_frame:
+            The child frame this transform transforms from.
+
+            The entity at which the transform relationship of any given child frame is specified mustn't change over time, but is allowed to be different for static time.
+            E.g. if you specified the child frame `"robot_arm"` on an entity named `"my_transforms"`, you may not log transforms
+            with the child frame `"robot_arm"` on any other entity than `"my_transforms"` unless one of them was logged with static time.
+
+            If not specified, this is set to the implicit transform frame of the current entity path.
+            This means that if a [`archetypes.Transform3D`][dalaran.archetypes.Transform3D] is set on an entity called `/my/entity/path` then this will default to `tf#/my/entity/path`.
+
+            To set the frame an entity is part of see [`archetypes.CoordinateFrame`][dalaran.archetypes.CoordinateFrame].
+
+            Any update to this field will reset all other transform properties that aren't changed in the same log call or `send_columns` row.
+        parent_frame:
+            The parent frame this transform transforms into.
+
+            If not specified, this is set to the implicit transform frame of the current entity path's parent.
+            This means that if a [`archetypes.Transform3D`][dalaran.archetypes.Transform3D] is set on an entity called `/my/entity/path` then this will default to `tf#/my/entity`.
+
+            To set the frame an entity is part of see [`archetypes.CoordinateFrame`][dalaran.archetypes.CoordinateFrame].
+
+            Any update to this field will reset all other transform properties that aren't changed in the same log call or `send_columns` row.
+        image_plane_distance:
+            The distance from the camera origin to the image plane when the projection is shown in a 3D viewer.
+
+            This is only used for visualization purposes, and does not affect the projection itself.
+        color:
+            Color of the camera frustum lines in the 3D viewer.
+        line_width:
+            Width of the camera frustum lines in the 3D viewer.
+
+        """
+
+        with catch_and_log_exceptions(context=self.__class__.__name__):
+            if resolution is None and width is not None and height is not None:
+                resolution = [width, height]
+            elif resolution is not None and (width is not None or height is not None):
+                _send_warning_or_raise("Can't set both resolution and width/height", 1)
+
+            # TODO(andreas): Use a union type for the Pinhole component instead ~Zof converting to a matrix here
+            if image_from_camera is None:
+                if fov_y is not None and aspect_ratio is not None:
+                    EPSILON = 1.19209e-07
+                    focal_length = focal_length = 0.5 / math.tan(max(fov_y * 0.5, EPSILON))
+                    resolution = [aspect_ratio, 1.0]
+
+                if resolution is not None:
+                    res_vec = Vec2D(resolution)
+                    width = cast("float", res_vec.xy[0])
+                    height = cast("float", res_vec.xy[1])
+                else:
+                    width = None
+                    height = None
+
+                if focal_length is None:
+                    if height is None or width is None:
+                        raise ValueError("Either image_from_camera or focal_length must be set")
+                    else:
+                        _send_warning_or_raise("Either image_from_camera or focal_length must be set", 1)
+                        focal_length = (width * height) ** 0.5  # a reasonable best-effort default
+
+                if principal_point is None:
+                    if height is not None and width is not None:
+                        principal_point = [width / 2, height / 2]
+                    else:
+                        raise ValueError("Must provide one of principal_point, resolution, or width/height")
+
+                if type(focal_length) in (int, float):
+                    fl_x = focal_length
+                    fl_y = focal_length
+                else:
+                    try:
+                        # TODO(emilk): check that it is 2 elements long
+                        fl_x = focal_length[0]  # type: ignore[index]  # ty: ignore[not-subscriptable]
+                        fl_y = focal_length[1]  # type: ignore[index]  # ty: ignore[not-subscriptable]
+                    except Exception:
+                        raise ValueError("Expected focal_length to be one or two floats") from None
+
+                try:
+                    u_cen = principal_point[0]  # type: ignore[index]  # ty: ignore[not-subscriptable]
+                    v_cen = principal_point[1]  # type: ignore[index]  # ty: ignore[not-subscriptable]
+                except Exception:
+                    raise ValueError("Expected principal_point to be one or two floats") from None
+
+                image_from_camera = [[fl_x, 0, u_cen], [0, fl_y, v_cen], [0, 0, 1]]  # type: ignore[assignment]
+            else:
+                if focal_length is not None:
+                    _send_warning_or_raise("Both image_from_camera and focal_length set", 1)
+                if principal_point is not None:
+                    _send_warning_or_raise("Both image_from_camera and principal_point set", 1)
+                if fov_y is not None or aspect_ratio is not None:
+                    _send_warning_or_raise("Both image_from_camera and fov_y or aspect_ratio set", 1)
+
+            self.__attrs_init__(
+                image_from_camera=image_from_camera,
+                resolution=resolution,
+                camera_xyz=camera_xyz,
+                child_frame=child_frame,
+                parent_frame=parent_frame,
+                image_plane_distance=image_plane_distance,
+                color=color,
+                line_width=line_width,
+            )
+            return
+
+        self.__attrs_clear__()

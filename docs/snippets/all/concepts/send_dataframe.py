@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import pyarrow as pa
 
-import rerun as rr
-import rerun.experimental as rrx
+import dalaran as dl
+import dalaran.experimental as rrx
 
-rr.init("rerun_example_send_dataframe")
+dl.init("dalaran_example_send_dataframe")
 
 # region: build_table
 # An index column…
@@ -21,23 +21,23 @@ positions = pa.array(
     type=pa.list_(pa.list_(pa.field("item", pa.float32(), nullable=False), 3)),
 )
 
-# Tag each column with the `rerun:*` metadata keys that `Chunk.from_dataframe`
+# Tag each column with the `dalaran:*` metadata keys that `Chunk.from_dataframe`
 # recognizes.
 schema = pa.schema([
     pa.field(
         "frame",
         index.type,
-        metadata={b"rerun:index_name": b"frame", b"rerun:kind": b"index"},
+        metadata={b"dalaran:index_name": b"frame", b"dalaran:kind": b"index"},
     ),
     pa.field(
         "/points:Points3D:positions",
         positions.type,
         metadata={
-            b"rerun:entity_path": b"/points",
-            b"rerun:archetype": b"rerun.archetypes.Points3D",
-            b"rerun:component": b"Points3D:positions",
-            b"rerun:component_type": b"rerun.components.Position3D",
-            b"rerun:kind": b"data",
+            b"dalaran:entity_path": b"/points",
+            b"dalaran:archetype": b"dalaran.archetypes.Points3D",
+            b"dalaran:component": b"Points3D:positions",
+            b"dalaran:component_type": b"dalaran.components.Position3D",
+            b"dalaran:kind": b"data",
         },
     ),
 ])
@@ -52,5 +52,5 @@ for chunk in chunks:
 # endregion: from_dataframe
 
 # region: send_dataframe
-rr.send_dataframe(table)
+dl.send_dataframe(table)
 # endregion: send_dataframe

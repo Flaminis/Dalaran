@@ -8,7 +8,7 @@ You can run multiple Native Viewer windows simultaneously, each displaying diffe
 
 ## How it works
 
-Every Native Viewer binds to a gRPC port on startup. By default, this is port `9876`. When you run `rerun`, it checks if a viewer is already listening on that port:
+Every Native Viewer binds to a gRPC port on startup. By default, this is port `9876`. When you run `dalaran`, it checks if a viewer is already listening on that port:
 
 - **If yes**: it connects to the existing viewer (or sends data to it)
 - **If no**: it starts a new viewer on that port
@@ -19,19 +19,19 @@ To open multiple viewer windows, use different ports with the `--port` flag.
 
 ```sh
 # Start a viewer on the default port (9876)
-$ rerun &
+$ dalaran &
 
 # This does nothing — a viewer is already running on :9876
-$ rerun &
+$ dalaran &
 
 # Start a second viewer on port 6789
-$ rerun --port 6789 &
+$ dalaran --port 6789 &
 
 # Log an image to the first viewer (port 9876)
-$ rerun image.jpg
+$ dalaran image.jpg
 
 # Log an image to the second viewer (port 6789)
-$ rerun --port 6789 image.jpg
+$ dalaran --port 6789 image.jpg
 ```
 
 ## From the SDK
@@ -39,14 +39,14 @@ $ rerun --port 6789 image.jpg
 When using `connect_grpc()` from the SDK, specify the port to target a specific viewer:
 
 ```python
-import rerun as rr
+import dalaran as dl
 
 # Connect to viewer on default port
-rr.init("rerun_example_demo")
-rr.connect_grpc()
+dl.init("dalaran_example_demo")
+dl.connect_grpc()
 
 # Or connect to a specific port
-rr.connect_grpc("rerun+http://127.0.0.1:6789")
+dl.connect_grpc("dalaran+http://127.0.0.1:6789")
 ```
 
 ## Tips

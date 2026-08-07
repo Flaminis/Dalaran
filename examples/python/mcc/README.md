@@ -7,7 +7,7 @@ thumbnail = "https://static.rerun.io/single-image-3D-reconstruction/c54498053d53
 thumbnail_dimensions = [480, 480]
 -->
 
-This example project combines several popular computer vision methods and uses Rerun to visualize the results and how the pieces fit together.
+This example project combines several popular computer vision methods and uses Dalaran to visualize the results and how the pieces fit together.
 
 ## Visual project walkthrough
 

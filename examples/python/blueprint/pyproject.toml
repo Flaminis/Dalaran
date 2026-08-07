@@ -2,7 +2,7 @@
 name = "blueprint"
 version = "0.1.0"
 # requires-python = "<3.12"
-dependencies = ["numpy", "rerun-sdk"]
+dependencies = ["numpy", "dalaran-sdk"]
 
 [project.scripts]
 blueprint = "blueprint:main"

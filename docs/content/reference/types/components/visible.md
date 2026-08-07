@@ -5,7 +5,7 @@ title: "Visible"
 
 Whether the container, view, entity or instance is currently visible.
 
-## Rerun datatype
+## Dalaran datatype
 [`Bool`](../datatypes/bool.md)
 
 
@@ -15,9 +15,9 @@ Boolean
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Visible`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Visible.html)
- * 🐍 [Python API docs for `Visible`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Visible)
- * 🦀 [Rust API docs for `Visible`](https://docs.rs/rerun/latest/rerun/components/struct.Visible.html)
+ * 🌊 [C++ API docs for `Visible`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Visible.html)
+ * 🐍 [Python API docs for `Visible`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Visible)
+ * 🦀 [Rust API docs for `Visible`](https://docs.rs/dalaran/latest/dalaran/components/struct.Visible.html)
 
 
 ## Used by

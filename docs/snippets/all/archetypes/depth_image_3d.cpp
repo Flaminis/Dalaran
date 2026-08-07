@@ -1,12 +1,12 @@
 // Create and log a depth image and pinhole camera.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm> // fill_n
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_depth_image_3d");
+    const auto rec = dalaran::RecordingStream("dalaran_example_depth_image_3d");
     rec.spawn().exit_on_failure();
 
     // Create a synthetic depth image.
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
     // If we log a pinhole camera model, the depth gets automatically back-projected to 3D
     rec.log(
         "world/camera",
-        rerun::Pinhole::from_focal_length_and_resolution(
+        dalaran::Pinhole::from_focal_length_and_resolution(
             200.0f,
             {static_cast<float>(WIDTH), static_cast<float>(HEIGHT)}
         )
@@ -39,8 +39,8 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "world/camera/depth",
-        rerun::DepthImage(data.data(), {WIDTH, HEIGHT})
+        dalaran::DepthImage(data.data(), {WIDTH, HEIGHT})
             .with_meter(10000.0)
-            .with_colormap(rerun::Colormap::Viridis)
+            .with_colormap(dalaran::Colormap::Viridis)
     );
 }

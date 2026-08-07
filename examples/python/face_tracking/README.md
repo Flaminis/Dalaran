@@ -14,11 +14,11 @@ Use the [MediaPipe](https://github.com/google-ai-edge/mediapipe) Face Detector a
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/mp_face/f5ee03278408bf8277789b637857d5a4fda7eba3/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/mp_face/f5ee03278408bf8277789b637857d5a4fda7eba3/1024w.png">
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/mp_face/f5ee03278408bf8277789b637857d5a4fda7eba3/1200w.png">
-  <img src="https://static.rerun.io/mp_face/f5ee03278408bf8277789b637857d5a4fda7eba3/full.png" alt="screenshot of the Rerun visualization of the MediaPipe Face Detector and Landmarker">
+  <img src="https://static.rerun.io/mp_face/f5ee03278408bf8277789b637857d5a4fda7eba3/full.png" alt="screenshot of the Dalaran visualization of the MediaPipe Face Detector and Landmarker">
 </picture>
 
-## Used Rerun types
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`Points2D`](https://www.rerun.io/docs/reference/types/archetypes/points2d), [`Points3D`](https://www.rerun.io/docs/reference/types/archetypes/points3d), [`Boxes2D`](https://www.rerun.io/docs/reference/types/archetypes/boxes2d), [`AnnotationContext`](https://www.rerun.io/docs/reference/types/archetypes/annotation_context), [`Scalars`](https://www.rerun.io/docs/reference/types/archetypes/scalars)
+## Used Dalaran types
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`Points2D`](https://www.dalaran.dev/docs/reference/types/archetypes/points2d), [`Points3D`](https://www.dalaran.dev/docs/reference/types/archetypes/points3d), [`Boxes2D`](https://www.dalaran.dev/docs/reference/types/archetypes/boxes2d), [`AnnotationContext`](https://www.dalaran.dev/docs/reference/types/archetypes/annotation_context), [`Scalars`](https://www.dalaran.dev/docs/reference/types/archetypes/scalars)
 
 ## Background
 The face and face landmark detection technology aims to give the ability of the devices to interpret face movements and facial expressions as commands or inputs.
@@ -26,40 +26,40 @@ At the core of this technology, a pre-trained machine-learning model analyses th
 Human-Computer Interaction, Robotics, Gaming, and Augmented Reality are among the fields where this technology shows significant promise for applications.
 
 In this example, the [MediaPipe](https://developers.google.com/mediapipe/) Face and Face Landmark Detection solutions were utilized to detect human face, detect face landmarks and identify facial expressions.
-Rerun was employed to visualize the output of the Mediapipe solution over time to make it easy to analyze the behavior.
+Dalaran was employed to visualize the output of the Mediapipe solution over time to make it easy to analyze the behavior.
 
-## Logging and visualizing with Rerun
-The visualizations in this example were created with the following Rerun code.
+## Logging and visualizing with Dalaran
+The visualizations in this example were created with the following Dalaran code.
 
 ### Timelines
 
-For each processed video frame, all data sent to Rerun is associated with the two [`timelines`](https://www.rerun.io/docs/concepts/logging-and-ingestion/timelines) `time` and `frame_idx`.
+For each processed video frame, all data sent to Dalaran is associated with the two [`timelines`](https://www.dalaran.dev/docs/concepts/logging-and-ingestion/timelines) `time` and `frame_idx`.
 
 ```python
-rr.set_time("time", duration=bgr_frame.time)
-rr.set_time("frame_idx", sequence=bgr_frame.idx)
+dl.set_time("time", duration=bgr_frame.time)
+dl.set_time("frame_idx", sequence=bgr_frame.idx)
 ```
 
 ### Video
-The input video is logged as a sequence of [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image) objects to the 'Video' entity.
+The input video is logged as a sequence of [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image) objects to the 'Video' entity.
 ```python
-rr.log("video/image", rr.Image(frame).compress(jpeg_quality=75))
+dl.log("video/image", dl.Image(frame).compress(jpeg_quality=75))
 ```
 
 ### Face landmark points
-Logging the face landmarks involves specifying connections between the points, extracting face landmark points and logging them to the Rerun SDK.
+Logging the face landmarks involves specifying connections between the points, extracting face landmark points and logging them to the Dalaran SDK.
 The 2D points are visualized over the video/image for a better understanding and visualization of the face.
 The 3D points allows the creation of a 3D model of the face reconstruction for a more comprehensive representation of the face.
 
 The 2D and 3D points are logged through a combination of two archetypes. First, a static
-[`ClassDescription`](https://www.rerun.io/docs/reference/types/datatypes/class_description) is logged, that contains the information which maps keypoint ids to labels and how to connect
+[`ClassDescription`](https://www.dalaran.dev/docs/reference/types/datatypes/class_description) is logged, that contains the information which maps keypoint ids to labels and how to connect
 the keypoints. Defining these connections automatically renders lines between them.
-Second, the actual keypoint positions are logged in 2D and 3D as [`Points2D`](https://www.rerun.io/docs/reference/types/archetypes/points2d) and [`Points3D`](https://www.rerun.io/docs/reference/types/archetypes/points3d) archetypes, respectively.
+Second, the actual keypoint positions are logged in 2D and 3D as [`Points2D`](https://www.dalaran.dev/docs/reference/types/archetypes/points2d) and [`Points3D`](https://www.dalaran.dev/docs/reference/types/archetypes/points3d) archetypes, respectively.
 
 #### Label mapping and keypoint connections
 
 An annotation context is logged with one class ID assigned per facial feature. The class description includes the connections between corresponding keypoints extracted from the MediaPipe face mesh solution.
-A class ID array is generated to match the class IDs in the annotation context with keypoint indices (to be utilized as the class_ids argument to rr.log).
+A class ID array is generated to match the class IDs in the annotation context with keypoint indices (to be utilized as the class_ids argument to dl.log).
 ```python
 # Initialize a list of facial feature classes from MediaPipe face mesh solution
 classes = [
@@ -92,25 +92,25 @@ for i, klass in enumerate(classes):
 
     # Append class description with class ID and keypoint connections
     class_descriptions.append(
-        rr.ClassDescription(
-            info=rr.AnnotationInfo(id=i),
+        dl.ClassDescription(
+            info=dl.AnnotationInfo(id=i),
             keypoint_connections=klass,
         )
     )
 
 # Log annotation context for video/landmarker and reconstruction entities
-rr.log("video/landmarker", rr.AnnotationContext(class_descriptions), static=True)
-rr.log("reconstruction", rr.AnnotationContext(class_descriptions), static=True)
+dl.log("video/landmarker", dl.AnnotationContext(class_descriptions), static=True)
+dl.log("reconstruction", dl.AnnotationContext(class_descriptions), static=True)
 
-rr.log("reconstruction", rr.ViewCoordinates.RDF, static=True)  # properly align the 3D face in the viewer
+dl.log("reconstruction", dl.ViewCoordinates.RDF, static=True)  # properly align the 3D face in the viewer
 ```
 
 With the below annotation, the keypoints will be connected with lines to enhance visibility in the `video/detector` entity.
 ```python
-rr.log(
+dl.log(
     "video/detector",
-    rr.ClassDescription(
-        info=rr.AnnotationInfo(id=0), keypoint_connections=[(0, 1), (1, 2), (2, 0), (2, 3), (0, 4), (1, 5)]
+    dl.ClassDescription(
+        info=dl.AnnotationInfo(id=0), keypoint_connections=[(0, 1), (1, 2), (2, 0), (2, 3), (0, 4), (1, 5)]
     ),
     static=True,
 )
@@ -118,10 +118,10 @@ rr.log(
 #### Bounding box
 
 ```python
-rr.log(
+dl.log(
     f"video/detector/faces/{i}/bbox",
-    rr.Boxes2D(array=[bbox.origin_x, bbox.origin_y, bbox.width, bbox.height], array_format=rr.Box2DFormat.XYWH),
-    rr.AnyValues(index=index, score=score),
+    dl.Boxes2D(array=[bbox.origin_x, bbox.origin_y, bbox.width, bbox.height], array_format=dl.Box2DFormat.XYWH),
+    dl.AnyValues(index=index, score=score),
 )
 ```
 
@@ -129,22 +129,22 @@ rr.log(
 #### 2D points
 
 ```python
-rr.log(f"video/detector/faces/{i}/keypoints", rr.Points2D(pts, radii=3, keypoint_ids=list(range(6))))
+dl.log(f"video/detector/faces/{i}/keypoints", dl.Points2D(pts, radii=3, keypoint_ids=list(range(6))))
 ```
 
 ```python
-rr.log(
+dl.log(
     f"video/landmarker/faces/{i}/landmarks",
-    rr.Points2D(pts, radii=3, keypoint_ids=keypoint_ids, class_ids=self._class_ids),
+    dl.Points2D(pts, radii=3, keypoint_ids=keypoint_ids, class_ids=self._class_ids),
 )
 ```
 
 #### 3D points
 
 ```python
-rr.log(
+dl.log(
     f"reconstruction/faces/{i}",
-    rr.Points3D(
+    dl.Points3D(
         [(lm.x, lm.y, lm.z) for lm in landmark],
         keypoint_ids=keypoint_ids,
         class_ids=self._class_ids,
@@ -159,15 +159,15 @@ The blendshapes are logged along with their corresponding scores.
 ```python
 for blendshape in blendshapes:
     if blendshape.category_name in BLENDSHAPES_CATEGORIES:
-        rr.log(f"blendshapes/{i}/{blendshape.category_name}", rr.Scalars(blendshape.score))
+        dl.log(f"blendshapes/{i}/{blendshape.category_name}", dl.Scalars(blendshape.score))
 ```
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

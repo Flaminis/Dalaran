@@ -14,13 +14,13 @@ atexit.register(lambda: shutil.rmtree(TMP_DIR) if TMP_DIR.exists() else None)
 # region: setup
 from pathlib import Path
 
-import rerun as rr
+import dalaran as dl
 
 sample_5_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
 )
 
-server = rr.server.Server(datasets={"sample_dataset": sample_5_path})
+server = dl.server.Server(datasets={"sample_dataset": sample_5_path})
 client = server.client()
 dataset = client.get_dataset(name="sample_dataset")
 
@@ -28,10 +28,10 @@ print(
     dataset
     .segment_table()
     .select(
-        "rerun_segment_id",
-        "rerun_layer_names",
+        "dalaran_segment_id",
+        "dalaran_layer_names",
     )
-    .sort("rerun_segment_id")
+    .sort("dalaran_segment_id")
 )
 # endregion: setup
 
@@ -46,8 +46,8 @@ joints = dataset.filter_contents([
 ]).reader(index="real_time")
 
 # Compute tracking error: L2 norm of (commanded - actual) joint positions
-segment_ids = pa.table(joints.select("rerun_segment_id").distinct())[
-    "rerun_segment_id"
+segment_ids = pa.table(joints.select("dalaran_segment_id").distinct())[
+    "dalaran_segment_id"
 ].to_numpy()
 rrd_paths = []
 
@@ -55,7 +55,7 @@ for seg_id in segment_ids:
     # Filter to this segment and collect as a PyArrow table for efficient
     # extraction to NumPy
     segment_data = pa.table(
-        joints.filter(col("rerun_segment_id") == seg_id).select(
+        joints.filter(col("dalaran_segment_id") == seg_id).select(
             "real_time",
             "/action/joint_positions:Scalars:scalars",
             "/observation/joint_positions:Scalars:scalars",
@@ -78,14 +78,14 @@ for seg_id in segment_ids:
     rrd_path = TMP_DIR / f"{seg_id}_tracking_error.rrd"
     rrd_paths.append(rrd_path)
 
-    with rr.RecordingStream(
-        application_id="rerun_example_tracking_error", recording_id=seg_id
+    with dl.RecordingStream(
+        application_id="dalaran_example_tracking_error", recording_id=seg_id
     ) as rec:
         rec.save(rrd_path)
-        rr.send_columns(
+        dl.send_columns(
             "/derived/tracking_error",
-            indexes=[rr.TimeColumn("real_time", timestamp=timestamps)],
-            columns=rr.Scalars.columns(scalars=tracking_error),
+            indexes=[dl.TimeColumn("real_time", timestamp=timestamps)],
+            columns=dl.Scalars.columns(scalars=tracking_error),
         )
 
 
@@ -100,10 +100,10 @@ segment_table = (
     dataset
     .segment_table()
     .select(
-        "rerun_segment_id",
-        "rerun_layer_names",
+        "dalaran_segment_id",
+        "dalaran_layer_names",
     )
-    .sort("rerun_segment_id")
+    .sort("dalaran_segment_id")
 )
 print(segment_table)
 # endregion: check_layer_names
@@ -118,7 +118,7 @@ tracking = dataset.filter_contents(["/derived/tracking_error"]).reader(
 quality_stats = pa.table(
     tracking
     .aggregate(
-        col("rerun_segment_id"),
+        col("dalaran_segment_id"),
         [
             F.avg(col("/derived/tracking_error:Scalars:scalars")[0]).alias(
                 "mean_error"
@@ -126,22 +126,22 @@ quality_stats = pa.table(
         ],
     )
     .with_column("tracking_good", col("mean_error") < 0.13)
-    .select("rerun_segment_id", "tracking_good")
+    .select("dalaran_segment_id", "tracking_good")
 )
 
 # Create RRDs with just the property
 rrd_paths = []
 for seg_id, tracking_good in zip(
-    quality_stats["rerun_segment_id"], quality_stats["tracking_good"]
+    quality_stats["dalaran_segment_id"], quality_stats["tracking_good"]
 ):
     rrd_path = TMP_DIR / f"{seg_id}_quality.rrd"
     rrd_paths.append(rrd_path)
 
-    with rr.RecordingStream(
-        application_id="rerun_example_quality", recording_id=seg_id
+    with dl.RecordingStream(
+        application_id="dalaran_example_quality", recording_id=seg_id
     ) as rec:
         rec.save(rrd_path)
-        rec.send_property("quality", rr.AnyValues(tracking_good=tracking_good))
+        rec.send_property("quality", dl.AnyValues(tracking_good=tracking_good))
 
 # Register as a separate layer
 dataset.register([p.as_uri() for p in rrd_paths], layer_name="quality").wait()
@@ -153,11 +153,11 @@ segment_table = (
     dataset
     .segment_table()
     .select(
-        "rerun_segment_id",
-        "rerun_layer_names",
+        "dalaran_segment_id",
+        "dalaran_layer_names",
         "property:quality:tracking_good",
     )
-    .sort("rerun_segment_id")
+    .sort("dalaran_segment_id")
 )
 print(segment_table)
 # endregion: verify
@@ -167,10 +167,10 @@ layers = (
     dataset
     .segment_table()
     .select(
-        "rerun_segment_id",
-        "rerun_layer_names",
+        "dalaran_segment_id",
+        "dalaran_layer_names",
     )
-    .sort("rerun_segment_id")
+    .sort("dalaran_segment_id")
 )
 print(layers)
 # endregion: list_layers

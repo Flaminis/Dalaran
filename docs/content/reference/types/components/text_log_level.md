@@ -13,7 +13,7 @@ Recommended to be one of:
 * `"DEBUG"`
 * `"TRACE"`
 
-## Rerun datatype
+## Dalaran datatype
 [`Utf8`](../datatypes/utf8.md)
 
 
@@ -23,9 +23,9 @@ Utf8
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `TextLogLevel`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1TextLogLevel.html)
- * 🐍 [Python API docs for `TextLogLevel`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.TextLogLevel)
- * 🦀 [Rust API docs for `TextLogLevel`](https://docs.rs/rerun/latest/rerun/components/struct.TextLogLevel.html)
+ * 🌊 [C++ API docs for `TextLogLevel`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1TextLogLevel.html)
+ * 🐍 [Python API docs for `TextLogLevel`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.TextLogLevel)
+ * 🦀 [Rust API docs for `TextLogLevel`](https://docs.rs/dalaran/latest/dalaran/components/struct.TextLogLevel.html)
 
 
 ## Used by

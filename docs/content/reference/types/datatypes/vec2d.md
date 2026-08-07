@@ -12,9 +12,9 @@ FixedSizeList(2 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Vec2D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1Vec2D.html)
- * 🐍 [Python API docs for `Vec2D`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.Vec2D)
- * 🦀 [Rust API docs for `Vec2D`](https://docs.rs/rerun/latest/rerun/datatypes/struct.Vec2D.html)
+ * 🌊 [C++ API docs for `Vec2D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1Vec2D.html)
+ * 🐍 [Python API docs for `Vec2D`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.Vec2D)
+ * 🦀 [Rust API docs for `Vec2D`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.Vec2D.html)
 
 
 ## Used by

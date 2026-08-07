@@ -7,9 +7,9 @@ thing in a single operation.
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_arrows3d_row_updates", spawn=True)
+dl.init("dalaran_example_arrows3d_row_updates", spawn=True)
 
 # Prepare a fixed sequence of arrows over 5 timesteps.
 # Origins stay constant, vectors change magnitude and direction, and each
@@ -25,8 +25,8 @@ vectors = [np.linspace((-1, -1, 0), (1, 1, i), 5) for i in range(5)]
 colors = [0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 0x00FFFFFF]
 
 for i in range(5):
-    rr.set_time("time", duration=10 + i)
-    rr.log(
+    dl.set_time("time", duration=10 + i)
+    dl.log(
         "arrows",
-        rr.Arrows3D(vectors=vectors[i], origins=origins, colors=colors[i]),
+        dl.Arrows3D(vectors=vectors[i], origins=origins, colors=colors[i]),
     )

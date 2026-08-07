@@ -7,7 +7,7 @@ The distance from the camera origin to the image plane when the projection is sh
 
 This is only used for visualization purposes, and does not affect the projection itself.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -17,9 +17,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ImagePlaneDistance`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1ImagePlaneDistance.html)
- * 🐍 [Python API docs for `ImagePlaneDistance`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.ImagePlaneDistance)
- * 🦀 [Rust API docs for `ImagePlaneDistance`](https://docs.rs/rerun/latest/rerun/components/struct.ImagePlaneDistance.html)
+ * 🌊 [C++ API docs for `ImagePlaneDistance`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1ImagePlaneDistance.html)
+ * 🐍 [Python API docs for `ImagePlaneDistance`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.ImagePlaneDistance)
+ * 🦀 [Rust API docs for `ImagePlaneDistance`](https://docs.rs/dalaran/latest/dalaran/components/struct.ImagePlaneDistance.html)
 
 
 ## Used by

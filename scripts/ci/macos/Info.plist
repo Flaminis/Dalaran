@@ -5,17 +5,17 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>Rerun</string>
+    <string>Dalaran</string>
     <key>CFBundleExecutable</key>
-    <string>Rerun</string>
+    <string>Dalaran</string>
     <key>CFBundleIconFile</key>
-    <string>Rerun.icns</string>
+    <string>Dalaran.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>io.rerun.Rerun</string>
+    <string>io.dalaran.Dalaran</string>
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>Rerun</string>
+    <string>Dalaran</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

@@ -3,7 +3,7 @@ use ndarray::{Array, ShapeBuilder as _, s};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_depth_image_3d")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_depth_image_3d")
             .spawn()?;
 
     let width = 300;
@@ -12,14 +12,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     image.slice_mut(s![50..150, 50..150]).fill(20000);
     image.slice_mut(s![130..180, 100..280]).fill(45000);
 
-    let depth_image = rerun::DepthImage::try_from(image)?
+    let depth_image = dalaran::DepthImage::try_from(image)?
         .with_meter(10000.0)
-        .with_colormap(rerun::components::Colormap::Viridis);
+        .with_colormap(dalaran::components::Colormap::Viridis);
 
     // If we log a pinhole camera model, the depth gets automatically back-projected to 3D
     rec.log(
         "world/camera",
-        &rerun::Pinhole::from_focal_length_and_resolution(
+        &dalaran::Pinhole::from_focal_length_and_resolution(
             [200.0, 200.0],
             [width as f32, height as f32],
         ),

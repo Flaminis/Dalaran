@@ -3,7 +3,7 @@ title: Visualize
 order: 425
 ---
 
-This guide will familiarize you with the basics of using the Rerun Viewer with an example dataset. By the end you should be comfortable with the following topics:
+This guide will familiarize you with the basics of using the Dalaran Viewer with an example dataset. By the end you should be comfortable with the following topics:
 
 - [Prerequisites](#prerequisites)
 - [Launching an example](#launching-an-example)
@@ -34,15 +34,15 @@ to take the images.
 
 ## Prerequisites
 
-Although the Rerun SDK is available in both Python and Rust, this walkthrough makes use the Python installation. Even if
-you plan to use Rerun with Rust, we still recommend having a Rerun Python environment available for quick
+Although the Dalaran SDK is available in both Python and Rust, this walkthrough makes use the Python installation. Even if
+you plan to use Dalaran with Rust, we still recommend having a Dalaran Python environment available for quick
 experimentation and working with examples. You can either follow the [Log and Ingest tutorial](data-in.md) or simply run:
 
 ```bash
-pip install rerun-sdk
+pip install dalaran-sdk
 ```
 
-You can also find `rerun-sdk` on [`conda`](https://github.com/conda-forge/rerun-sdk-feedstock).
+You can also find `dalaran-sdk` on [`conda`](https://github.com/conda-forge/dalaran-sdk-feedstock).
 
 ## Launching an example
 
@@ -51,14 +51,14 @@ If you have already followed the Python Quickstart you may have already check th
 Start by running the viewer:
 
 ```bash
-$ rerun
+$ dalaran
 ```
 
-_Note: If this is your first time launching Rerun you will see a notification about the Rerun anonymous data usage
-policy. Rerun collects anonymous usage data to help improve the SDK, though you may choose to opt out if you would
+_Note: If this is your first time launching Dalaran you will see a notification about the Dalaran anonymous data usage
+policy. Dalaran collects anonymous usage data to help improve the SDK, though you may choose to opt out if you would
 like._
 
-This will bring you the Rerun viewer's Welcome screen:
+This will bring you the Dalaran viewer's Welcome screen:
 
 <picture>
   <img src="https://static.rerun.io/viewer_walkthrough_welcome/65675332322e7aa14c6877974da4aabd53a4d168/full.png" alt="">
@@ -105,7 +105,7 @@ via the [Blueprint API](configure-the-viewer/navigating-the-viewer.md#programmat
 
 ## Exploring data
 
-In Rerun, data is modeled using [entities](../concepts/logging-and-ingestion/entity-component.md) (essentially objects) that contain batches of [components](../reference/types/components.md)
+In Dalaran, data is modeled using [entities](../concepts/logging-and-ingestion/entity-component.md) (essentially objects) that contain batches of [components](../reference/types/components.md)
 that change over time. Each entity is identified by an entity path, which uses a hierarchical syntax to represent relationships between entities.
 Let's explore an example of this hierarchy in our scene:
 
@@ -172,7 +172,7 @@ There are several ways to navigate through the timeline:
 -   Move the time indicator by dragging it to a different point on the timeline.
     You can also click on the frame number and manually type the desired frame.
 -   Adjust the playback speed, and for index-based timelines, you can also modify the number of frames per second to specify how indices relate to time.
--   Use the play, pause, step, and loop controls to playback Rerun data, similar to how you would with a video file.
+-   Use the play, pause, step, and loop controls to playback Dalaran data, similar to how you would with a video file.
 
 Try out the following:
 
@@ -203,15 +203,15 @@ to the "frame" timeline and double-click the timeline panel to reset it to the d
 
 One thing to notice is there is a gap in the timeline in the "frame" view. This dataset is actually missing a few
 frames, and the timeline view of frames makes this easy to spot. This highlights the importance of applying meaningful
-timestamps to your data as you log it. You also aren't limited to frame and log_time. Rerun lets you define your own
+timestamps to your data as you log it. You also aren't limited to frame and log_time. Dalaran lets you define your own
 timelines however you would like. You can read more about timelines [here](../concepts/logging-and-ingestion/timelines.md).
 
 ## Conclusion
 
 That brings us to the end of this walkthrough. To recap, you have learned how to:
 
--   Install the `rerun-sdk` pypi package.
--   Run the Rerun Viewer using the `rerun` command.
+-   Install the `dalaran-sdk` pypi package.
+-   Run the Dalaran Viewer using the `dalaran` command.
 -   Open the examples integrated in the viewer.
 -   Work with the [Blueprint](../reference/viewer/blueprints.md), [Selection](../reference/viewer/selection.md) and [Timeline](../reference/viewer/timeline.md) panels.
 -   Rearrange view layouts.
@@ -223,6 +223,6 @@ Again, if you ran into any issues following this guide, please don't hesitate to
 
 ### Up next
 
--   [Get started](data-in) by writing a program to log data with the Rerun SDK.
--   Explore other [examples of using Rerun](https://rerun.io/examples).
+-   [Get started](data-in) by writing a program to log data with the Dalaran SDK.
+-   Explore other [examples of using Dalaran](https://dalaran.dev/examples).
 -   Consult the [concept overview](../concepts.md) for more context on the ideas covered here.

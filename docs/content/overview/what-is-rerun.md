@@ -3,10 +3,10 @@ title: The Data Layer for Physical AI
 order: 0
 ---
 
-Rerun covers the whole journey from raw recordings to training, on a single unified data layer for multi-rate, multimodal robotics data.
+Dalaran covers the whole journey from raw recordings to training, on a single unified data layer for multi-rate, multimodal robotics data.
 
-It's comprised of **Rerun SDK**: an open source library and tools for logging, storing, querying, visualizing, and training on multi-rate, multimodal data; and
-**Rerun Hub**: a data catalog and backend for large scale storage, access, and streaming of robotics data from object storage.
+It's comprised of **Dalaran SDK**: an open source library and tools for logging, storing, querying, visualizing, and training on multi-rate, multimodal data; and
+**Dalaran Hub**: a data catalog and backend for large scale storage, access, and streaming of robotics data from object storage.
 
 ## The problem
 
@@ -17,18 +17,18 @@ Building intelligent physical systems requires rapid iteration on both data and 
 - Extracting, cleaning, and preparing data for training involves too many manual steps
 - Switching between different tools for each step slows everything down
 
-The best robotics teams minimize their time from new data to training. Rerun gives you the unified infrastructure to make that happen.
+The best robotics teams minimize their time from new data to training. Dalaran gives you the unified infrastructure to make that happen.
 
-## Who is Rerun for?
+## Who is Dalaran for?
 
-Rerun is built for teams developing intelligent physical systems:
+Dalaran is built for teams developing intelligent physical systems:
 
 - **Robotics engineers** debugging perception, controls, and planning
 - **Perception teams** analyzing sensor data and model outputs
 - **ML engineers** preparing datasets and understanding model behavior
 - **Autonomy teams** developing and testing decision-making systems
 
-If you're working with robots, drones, autonomous vehicles, spatial AI, or any system with data that evolves over time, Rerun helps you move faster.
+If you're working with robots, drones, autonomous vehicles, spatial AI, or any system with data that evolves over time, Dalaran helps you move faster.
 
 ## How do you use it?
 
@@ -40,8 +40,8 @@ Use the [logging API](../getting-started/data-in.md) to log multimodal data from
 </div>
 
 ### Visualize
-Rerun provides an open source pre-built [viewer](../reference/viewer/overview.md) that is [adjustable](../getting-started/configure-the-viewer.md) and [extensible](../howto/extend.md).
-You can log directly to the viewer, [open](../getting-started/data-in/open-any-file.md) a range of file formats to get data into the viewer, or even connect the viewer to a Rerun [catalog](../concepts/query-and-transform/catalog-object-model.md).
+Dalaran provides an open source pre-built [viewer](../reference/viewer/overview.md) that is [adjustable](../getting-started/configure-the-viewer.md) and [extensible](../howto/extend.md).
+You can log directly to the viewer, [open](../getting-started/data-in/open-any-file.md) a range of file formats to get data into the viewer, or even connect the viewer to a Dalaran [catalog](../concepts/query-and-transform/catalog-object-model.md).
 
 <div class="d2-diagram">
   <img class="d2-dark" src="https://static.rerun.io/2ded478d0e3d66b8532f1b9991ed786a2919d6d7_d2.svg" alt="">
@@ -49,16 +49,16 @@ You can log directly to the viewer, [open](../getting-started/data-in/open-any-f
 </div>
 
 ### Query and transform
-The Rerun file format supports both high performance visualization and querying over the same data source.
+The Dalaran file format supports both high performance visualization and querying over the same data source.
 
 You can use the open source [catalog](../concepts/query-and-transform/catalog-object-model.md) server for running local [laptop scale examples](../getting-started/data-out).
-We also offer **Rerun Hub**, a scalable catalog for robotic data, for teams that need collaborative dataset management, version control, and cloud storage ([reach out](https://5li7zhj98k8.typeform.com/to/a5XDpBkZ?typeform-source=docs) to learn more).
-These are API compatible so the only difference from our examples to **Rerun Hub** is that you connect to an existing server instead of launching your own.
+We also offer **Dalaran Hub**, a scalable catalog for robotic data, for teams that need collaborative dataset management, version control, and cloud storage ([reach out](https://5li7zhj98k8.typeform.com/to/a5XDpBkZ?typeform-source=docs) to learn more).
+These are API compatible so the only difference from our examples to **Dalaran Hub** is that you connect to an existing server instead of launching your own.
 
 #### Prepare catalog
 Before querying or viewing recordings on the catalog we have to register them.
 We group recordings as [datasets](../concepts/query-and-transform/catalog-object-model.md#datasets).
-Since Rerun indexes existing data in place, registration needs paths to RRDs to index: in object store for **Rerun Hub** or on disk for local catalog server.
+Since Dalaran indexes existing data in place, registration needs paths to RRDs to index: in object store for **Dalaran Hub** or on disk for local catalog server.
 
 <div class="d2-diagram">
   <img class="d2-dark" src="https://static.rerun.io/40ada7a9f3834208554b8de80a0bab3fb8e5f108_d2.svg" alt="">
@@ -88,10 +88,10 @@ Use the catalog as a data source for [training](../getting-started/train.md): a 
 Ready to speed up your iteration cycle?
 
 - [Quick start guide](../getting-started.md) - Get up and running in minutes
-- [Examples](https://rerun.io/examples) - See Rerun in action with real data
-- [Concepts](../concepts.md) - Learn how Rerun works under the hood
+- [Examples](https://dalaran.dev/examples) - See Dalaran in action with real data
+- [Concepts](../concepts.md) - Learn how Dalaran works under the hood
 
 ## Can't find what you're looking for?
 
-- Join us in the [Rerun Community Discord](https://discord.gg/xwcxHUjD35)
-- [Submit an issue](https://github.com/rerun-io/rerun/issues) in the Rerun GitHub project
+- Join us in the [Dalaran Community Discord](https://discord.gg/xwcxHUjD35)
+- [Submit an issue](https://github.com/rerun-io/rerun/issues) in the Dalaran GitHub project

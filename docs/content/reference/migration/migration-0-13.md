@@ -26,7 +26,7 @@ more predictable but comes with a few changes on how paths are expected to be st
   * Example:
     * Before: image at `image/rgb`, rects at `image/annotation`
     * After: image at `image`, rects at `image/annotation`
-  * Previously Rerun treated children of the root-space as special. This behavior has been removed for 2D views to
+  * Previously Dalaran treated children of the root-space as special. This behavior has been removed for 2D views to
     give more predictable results regardless of prefix.
     * The primary 2D partitioning is now driven by putting images of the same size in the same view, with each space
       being created as the common ancestor of all the images of the size.

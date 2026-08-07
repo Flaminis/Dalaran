@@ -5,6 +5,6 @@ numpy<2.0
 opencv-python
 pycollada
 pyyaml
-rerun-sdk
+dalaran-sdk
 scipy
 yourdfpy

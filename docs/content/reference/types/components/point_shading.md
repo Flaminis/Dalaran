@@ -19,9 +19,9 @@ UInt8
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `PointShading`](https://ref.rerun.io/docs/cpp/stable/namespacererun_1_1components.html)
- * 🐍 [Python API docs for `PointShading`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.PointShading)
- * 🦀 [Rust API docs for `PointShading`](https://docs.rs/rerun/latest/rerun/components/enum.PointShading.html)
+ * 🌊 [C++ API docs for `PointShading`](https://ref.dalaran.dev/docs/cpp/stable/namespacedalaran_1_1components.html)
+ * 🐍 [Python API docs for `PointShading`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.PointShading)
+ * 🦀 [Rust API docs for `PointShading`](https://docs.rs/dalaran/latest/dalaran/components/enum.PointShading.html)
 
 
 ## Used by

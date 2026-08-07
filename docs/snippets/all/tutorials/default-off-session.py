@@ -1,3 +1,3 @@
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_app", default_enabled=False)
+dl.init("dalaran_example_app", default_enabled=False)

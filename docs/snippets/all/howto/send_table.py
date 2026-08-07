@@ -2,17 +2,17 @@
 
 import pyarrow as pa
 
-from rerun.experimental import ViewerClient
+from dalaran.experimental import ViewerClient
 
-client = ViewerClient.connect(url="rerun+http://127.0.0.1:9876/proxy")
+client = ViewerClient.connect(url="dalaran+http://127.0.0.1:9876/proxy")
 client.send_table(
     "Hello from Python",
     pa.RecordBatch.from_pydict({
         "id": [1, 2, 3],
         "url": [
-            "https://www.rerun.io",
+            "https://www.dalaran.dev",
             "https://github.com/rerun-io/rerun",
-            "https://crates.io/crates/rerun",
+            "https://crates.io/crates/dalaran",
         ],
     }),
 )

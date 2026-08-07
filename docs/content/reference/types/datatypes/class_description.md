@@ -5,29 +5,29 @@ title: "ClassDescription"
 
 The description of a semantic Class.
 
-If an entity is annotated with a corresponding [`components.ClassId`](https://rerun.io/docs/reference/types/components/class_id), Rerun will use
-the attached [`datatypes.AnnotationInfo`](https://rerun.io/docs/reference/types/datatypes/annotation_info) to derive labels and colors.
+If an entity is annotated with a corresponding [`components.ClassId`](https://dalaran.dev/docs/reference/types/components/class_id), Dalaran will use
+the attached [`datatypes.AnnotationInfo`](https://dalaran.dev/docs/reference/types/datatypes/annotation_info) to derive labels and colors.
 
 Keypoints within an annotation class can similarly be annotated with a
-[`components.KeypointId`](https://rerun.io/docs/reference/types/components/keypoint_id) in which case we should defer to the label and color for the
-[`datatypes.AnnotationInfo`](https://rerun.io/docs/reference/types/datatypes/annotation_info) specifically associated with the Keypoint.
+[`components.KeypointId`](https://dalaran.dev/docs/reference/types/components/keypoint_id) in which case we should defer to the label and color for the
+[`datatypes.AnnotationInfo`](https://dalaran.dev/docs/reference/types/datatypes/annotation_info) specifically associated with the Keypoint.
 
 Keypoints within the class can also be decorated with skeletal edges.
-Keypoint-connections are pairs of [`components.KeypointId`](https://rerun.io/docs/reference/types/components/keypoint_id)s. If an edge is
+Keypoint-connections are pairs of [`components.KeypointId`](https://dalaran.dev/docs/reference/types/components/keypoint_id)s. If an edge is
 defined, and both keypoints exist within the instance of the class, then the
 keypoints should be connected with an edge. The edge should be labeled and
-colored as described by the class's [`datatypes.AnnotationInfo`](https://rerun.io/docs/reference/types/datatypes/annotation_info).
+colored as described by the class's [`datatypes.AnnotationInfo`](https://dalaran.dev/docs/reference/types/datatypes/annotation_info).
 
 ## Fields
 #### `info`
 Type: non-null [`AnnotationInfo`](../datatypes/annotation_info.md)
 
-The [`datatypes.AnnotationInfo`](https://rerun.io/docs/reference/types/datatypes/annotation_info) for the class.
+The [`datatypes.AnnotationInfo`](https://dalaran.dev/docs/reference/types/datatypes/annotation_info) for the class.
 
 #### `keypoint_annotations`
 Type: non-null List of [`AnnotationInfo`](../datatypes/annotation_info.md)
 
-The [`datatypes.AnnotationInfo`](https://rerun.io/docs/reference/types/datatypes/annotation_info) for all of the keypoints.
+The [`datatypes.AnnotationInfo`](https://dalaran.dev/docs/reference/types/datatypes/annotation_info) for all of the keypoints.
 
 #### `keypoint_connections`
 Type: non-null List of [`KeypointPair`](../datatypes/keypoint_pair.md)
@@ -56,9 +56,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ClassDescription`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1ClassDescription.html)
- * 🐍 [Python API docs for `ClassDescription`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.ClassDescription)
- * 🦀 [Rust API docs for `ClassDescription`](https://docs.rs/rerun/latest/rerun/datatypes/struct.ClassDescription.html)
+ * 🌊 [C++ API docs for `ClassDescription`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1ClassDescription.html)
+ * 🐍 [Python API docs for `ClassDescription`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.ClassDescription)
+ * 🦀 [Rust API docs for `ClassDescription`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.ClassDescription.html)
 
 
 ## Used by

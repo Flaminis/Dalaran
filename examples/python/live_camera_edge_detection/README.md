@@ -16,24 +16,24 @@ Visualize the [OpenCV Canny Edge Detection](https://docs.opencv.org/4.x/da/d22/t
   <img src="https://static.rerun.io/live_camera_edge_detection/bf877bffd225f6c62cae3b87eecbc8e247abb202/full.png" alt="Live Camera Edge Detection example screenshot">
 </picture>
 
-## Used Rerun types
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image)
+## Used Dalaran types
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image)
 
 ## Background
 In this example, the results of the [OpenCV Canny Edge Detection](https://docs.opencv.org/4.x/da/d22/tutorial_py_canny.html) algorithm are visualized.
 Canny Edge Detection is a popular edge detection algorithm, and can efficiently extract important structural information from visual objects while notably reducing the computational load.
 The process in this example involves converting the input image to RGB, then to grayscale, and finally applying the Canny Edge Detector for precise edge detection.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-The visualization in this example were created with the following Rerun code:
+The visualization in this example were created with the following Dalaran code:
 ### RGB image
 
 The original image is read and logged in RGB format under the entity "image/rgb".
 ```python
 # Log the original image
 rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-rr.log("image/rgb", rr.Image(rgb))
+dl.log("image/rgb", dl.Image(rgb))
 ```
 
 ### Grayscale image
@@ -42,7 +42,7 @@ The input image is converted from BGR color space to grayscale, and the resultin
 ```python
 # Convert to grayscale
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-rr.log("image/gray", rr.Image(gray))
+dl.log("image/gray", dl.Image(gray))
 ```
 
 ### Canny edge detection image
@@ -51,16 +51,16 @@ The Canny edge detector is applied to the grayscale image, and the resulting edg
 ```python
 # Run the canny edge detector
 canny = cv2.Canny(gray, 50, 200)
-rr.log("image/canny", rr.Image(canny))
+dl.log("image/canny", dl.Image(canny))
 ```
 
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

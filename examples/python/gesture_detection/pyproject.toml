@@ -9,7 +9,7 @@ dependencies = [
   "numpy",
   "opencv-python>4.9",
   "requests>=2.31,<3",
-  "rerun-sdk",
+  "dalaran-sdk",
   "tqdm",
 ]
 

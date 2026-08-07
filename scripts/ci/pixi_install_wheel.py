@@ -6,7 +6,7 @@ Install a wheel from a folder in the specified pixi environment.
 Example:
 -------
 ```
-python3 scripts/ci/pixi_install_wheel.py --feature python-pypi --dir wheel --package rerun-sdk
+python3 scripts/ci/pixi_install_wheel.py --feature python-pypi --dir wheel --package dalaran-sdk
 ```
 
 """

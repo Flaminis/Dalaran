@@ -11,8 +11,8 @@ MCAP message metadata such as timestamps, channel IDs, sequence numbers, or publ
 The binary payload represents sensor data, commands, or other information encoded according
 to the format specified by the associated channel.
 
-See [`archetypes.McapChannel`](https://rerun.io/docs/reference/types/archetypes/mcap_channel) for channel definitions that specify message encoding,
-[`archetypes.McapSchema`](https://rerun.io/docs/reference/types/archetypes/mcap_schema) for data structure definitions, and the
+See [`archetypes.McapChannel`](https://dalaran.dev/docs/reference/types/archetypes/mcap_channel) for channel definitions that specify message encoding,
+[`archetypes.McapSchema`](https://dalaran.dev/docs/reference/types/archetypes/mcap_schema) for data structure definitions, and the
 [MCAP specification](https://mcap.dev/) for complete format details.
 
 ## Fields
@@ -24,9 +24,9 @@ See [`archetypes.McapChannel`](https://rerun.io/docs/reference/types/archetypes/
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `McapMessage`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1McapMessage.html)
- * 🐍 [Python API docs for `McapMessage`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.McapMessage)
- * 🦀 [Rust API docs for `McapMessage`](https://docs.rs/rerun/latest/rerun/archetypes/struct.McapMessage.html)
+ * 🌊 [C++ API docs for `McapMessage`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1McapMessage.html)
+ * 🐍 [Python API docs for `McapMessage`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.McapMessage)
+ * 🦀 [Rust API docs for `McapMessage`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.McapMessage.html)
 
 ## Example
 

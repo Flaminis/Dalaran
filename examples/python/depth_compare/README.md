@@ -16,7 +16,7 @@ Depth Compare allows for easy comparison between different depth models, both me
 ## Run the code
 This is an external example. Check the [repository](https://github.com/pablovela5620/monoprior) for more information.
 
-You can try the example on Rerun's HuggingFace space [here](https://huggingface.co/spaces/pablovela5620/depth-compare).
+You can try the example on Dalaran's HuggingFace space [here](https://huggingface.co/spaces/pablovela5620/depth-compare).
 
 You can also run things locally by cloning the above repo and running:
 ```

@@ -1,7 +1,7 @@
 ---
 title: Events and Timelines
 order: 500
-description: Events, timelines, and how Rerun tracks time
+description: Events, timelines, and how Dalaran tracks time
 ---
 
 ## Timelines
@@ -9,18 +9,18 @@ description: Events, timelines, and how Rerun tracks time
 Each piece of logged data is associated with one or more timelines.
 
 The logging SDK can automatically create two timelines for you:
-* `log_time` - a temporal timeline with the time of the log call. Enabled by default; opt-out via the `RERUN_LOG_TIME` environment variable or `set_log_time_enabled`.
-* `log_tick` - a sequence timeline with the sequence number of the log call. Disabled by default; opt-in via the `RERUN_LOG_TICK` environment variable or `set_log_tick_enabled`.
+* `log_time` - a temporal timeline with the time of the log call. Enabled by default; opt-out via the `DALARAN_LOG_TIME` environment variable or `set_log_time_enabled`.
+* `log_tick` - a sequence timeline with the sequence number of the log call. Disabled by default; opt-in via the `DALARAN_LOG_TICK` environment variable or `set_log_tick_enabled`.
 
-You can use the `set_time` function (Python reference: [set_time](https://ref.rerun.io/docs/python/stable/common/logging_functions/#rerun.set_time)) to associate logs with other timestamps on other timelines. For example:
+You can use the `set_time` function (Python reference: [set_time](https://ref.dalaran.dev/docs/python/stable/common/logging_functions/#dalaran.set_time)) to associate logs with other timestamps on other timelines. For example:
 
 snippet: tutorials/timelines_example
 
 This will add the logged points to the timelines `frame_idx` and `sensor_time`, as well as the automatic `log_time` timeline (and `log_tick`, if you opted in).
-You can then choose which timeline you want to organize your data along in the expanded timeline view in the bottom of the Rerun Viewer.
+You can then choose which timeline you want to organize your data along in the expanded timeline view in the bottom of the Dalaran Viewer.
 
 ### How to log precise times
-Rerun supports three types of indices, all encoded as `i64`:
+Dalaran supports three types of indices, all encoded as `i64`:
 * Sequential
 * Timestamp (nanoseconds since Unix epoch)
 * Timedelta/duration (nanoseconds)
@@ -58,7 +58,7 @@ An _event_ refer to an instance of logging one or more component batches to one 
 
 ## Static data
 
-The [`rr.log()`](https://ref.rerun.io/docs/python/stable/common/logging_functions/#rerun.log) function has a `static=False` default argument.
+The [`dl.log()`](https://ref.dalaran.dev/docs/python/stable/common/logging_functions/#dalaran.log) function has a `static=False` default argument.
 If `static=True` is used instead, the data logged becomes *static*. Static data belongs to all timelines (existing ones, and ones not yet created) and shadows any temporal data of the same type on the same entity.
 
 This is useful for data that isn't part of normal data capture, but sets the scene for how it should be shown.

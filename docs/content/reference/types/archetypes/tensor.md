@@ -19,9 +19,9 @@ An N-dimensional array of numbers.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Tensor`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Tensor.html)
- * 🐍 [Python API docs for `Tensor`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Tensor)
- * 🦀 [Rust API docs for `Tensor`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Tensor.html)
+ * 🌊 [C++ API docs for `Tensor`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Tensor.html)
+ * 🐍 [Python API docs for `Tensor`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Tensor)
+ * 🦀 [Rust API docs for `Tensor`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Tensor.html)
 
 ## Example
 

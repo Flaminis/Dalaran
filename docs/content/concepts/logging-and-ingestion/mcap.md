@@ -1,10 +1,10 @@
 ---
 title: MCAP files
 order: 850
-description: How Rerun reads and interprets MCAP files
+description: How Dalaran reads and interprets MCAP files
 ---
 
-Working with MCAP files in Rerun:
+Working with MCAP files in Dalaran:
 
 <!-- TODO(ab): it would be nice to auto-generate a TOC here -->
 

@@ -4,7 +4,7 @@ order: 1000
 hidden: true
 ---
 
-For Rerun 0.34 and later, breaking changes and their migration guides are part of the [changelog](../changelog.md).
+For Dalaran 0.34 and later, breaking changes and their migration guides are part of the [changelog](../changelog.md).
 
 ## Older migration guides
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Example of using the blueprint APIs to configure Rerun."""
+"""Example of using the blueprint APIs to configure Dalaran."""
 
 from __future__ import annotations
 
@@ -7,8 +7,8 @@ import argparse
 
 import numpy as np
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 
 def main() -> None:
@@ -27,48 +27,48 @@ def main() -> None:
         #
         # If auto_views is True, the blueprint will automatically add one of the heuristic
         # views, which will include the image and both rectangles.
-        blueprint = rrb.Blueprint(
-            rrb.Grid(
-                rrb.Spatial2DView(name="Rect 0", origin="/", contents=["image", "rect/0"]),
-                rrb.Spatial2DView(
+        blueprint = dlb.Blueprint(
+            dlb.Grid(
+                dlb.Spatial2DView(name="Rect 0", origin="/", contents=["image", "rect/0"]),
+                dlb.Spatial2DView(
                     name="Rect 1",
                     origin="/",
                     contents=["/**"],
-                    defaults=[rr.Boxes2D.from_fields(radii=2)],  # Default all rectangles to have a radius of 2
-                    overrides={"rect/0": rr.Boxes2D.from_fields(radii=1)},  # Override the radius of rect/0 to be 1
+                    defaults=[dl.Boxes2D.from_fields(radii=2)],  # Default all rectangles to have a radius of 2
+                    overrides={"rect/0": dl.Boxes2D.from_fields(radii=1)},  # Override the radius of rect/0 to be 1
                 ),
             ),
-            rrb.BlueprintPanel(state="collapsed"),
-            rrb.SelectionPanel(state="collapsed"),
-            rrb.TimePanel(
+            dlb.BlueprintPanel(state="collapsed"),
+            dlb.SelectionPanel(state="collapsed"),
+            dlb.TimePanel(
                 state="collapsed",
                 timeline="custom",
-                time_selection=rrb.components.AbsoluteTimeRange(10, 25),
+                time_selection=dlb.components.AbsoluteTimeRange(10, 25),
                 loop_mode="selection",
                 play_state="playing",
             ),
             auto_views=args.auto_views,
         )
 
-    rr.init("rerun_example_blueprint", spawn=True, default_blueprint=blueprint)
+    dl.init("dalaran_example_blueprint", spawn=True, default_blueprint=blueprint)
 
-    rr.set_time("custom", sequence=0)
+    dl.set_time("custom", sequence=0)
 
     img = np.zeros([128, 128, 3], dtype="uint8")
     for i in range(8):
         img[(i * 16) + 4 : (i * 16) + 12, :] = (0, 0, 200)
-    rr.log("image", rr.Image(img))
+    dl.log("image", dl.Image(img))
 
-    rr.set_time("custom", sequence=10)
-    rr.log(
+    dl.set_time("custom", sequence=10)
+    dl.log(
         "rect/0",
-        rr.Boxes2D(mins=[16, 16], sizes=[64, 64], labels="Rect0", colors=(255, 0, 0)),
+        dl.Boxes2D(mins=[16, 16], sizes=[64, 64], labels="Rect0", colors=(255, 0, 0)),
     )
 
-    rr.set_time("custom", sequence=20)
-    rr.log(
+    dl.set_time("custom", sequence=20)
+    dl.log(
         "rect/1",
-        rr.Boxes2D(mins=[48, 48], sizes=[64, 64], labels="Rect1", colors=(0, 255, 0)),
+        dl.Boxes2D(mins=[48, 48], sizes=[64, 64], labels="Rect1", colors=(0, 255, 0)),
     )
 
 

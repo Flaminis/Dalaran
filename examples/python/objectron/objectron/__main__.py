@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Example of using the Rerun SDK to log the Objectron dataset."""
+"""Example of using the Dalaran SDK to log the Objectron dataset."""
 
 from __future__ import annotations
 
@@ -16,8 +16,8 @@ from typing import TYPE_CHECKING
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 from .download_dataset import (
     ANNOTATIONS_FILENAME,
@@ -108,25 +108,25 @@ def read_annotations(dirpath: Path) -> Sequence:
 
 
 def log_ar_frames(samples: Iterable[SampleARFrame], seq: Sequence) -> None:
-    """Logs a stream of `ARFrame` samples and their annotations with the Rerun SDK."""
+    """Logs a stream of `ARFrame` samples and their annotations with the Dalaran SDK."""
 
-    rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Y_UP, static=True)
+    dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Y_UP, static=True)
 
     log_annotated_bboxes(seq.objects)
 
     frame_times = []
     for sample in samples:
-        rr.set_time("frame", sequence=sample.index)
-        rr.set_time("time", duration=sample.timestamp)
+        dl.set_time("frame", sequence=sample.index)
+        dl.set_time("time", duration=sample.timestamp)
         frame_times.append(sample.timestamp)
 
-        rr.log("world/camera", rr.EncodedImage(path=sample.image_path))
+        dl.log("world/camera", dl.EncodedImage(path=sample.image_path))
         log_camera(sample.frame.camera)
         log_point_cloud(sample.frame.raw_feature_points)
 
 
 def log_camera(cam: ARCamera) -> None:
-    """Logs a camera from an `ARFrame` using the Rerun SDK."""
+    """Logs a camera from an `ARFrame` using the Dalaran SDK."""
 
     X = np.asarray([1.0, 0.0, 0.0])
     Z = np.asarray([0.0, 0.0, 1.0])
@@ -145,29 +145,29 @@ def log_camera(cam: ARCamera) -> None:
 
     rot = rot * R.from_rotvec((math.tau / 2.0) * X)  # TODO(emilk): figure out why this is needed
 
-    rr.log(
+    dl.log(
         "world/camera",
-        rr.Transform3D(translation=translation, rotation=rr.Quaternion(xyzw=rot.as_quat())),
+        dl.Transform3D(translation=translation, rotation=dl.Quaternion(xyzw=rot.as_quat())),
     )
-    rr.log(
+    dl.log(
         "world/camera",
-        rr.Pinhole(
+        dl.Pinhole(
             resolution=[w, h],
             image_from_camera=intrinsics,
-            camera_xyz=rr.ViewCoordinates.RDF,
+            camera_xyz=dl.ViewCoordinates.RDF,
         ),
     )
 
 
 def log_point_cloud(point_cloud: ARPointCloud) -> None:
-    """Logs a point cloud from an `ARFrame` using the Rerun SDK."""
+    """Logs a point cloud from an `ARFrame` using the Dalaran SDK."""
 
     positions = np.array([[p.x, p.y, p.z] for p in point_cloud.point]).astype(np.float32)
-    rr.log("world/points", rr.Points3D(positions, colors=[255, 255, 255, 255]))
+    dl.log("world/points", dl.Points3D(positions, colors=[255, 255, 255, 255]))
 
 
 def log_annotated_bboxes(bboxes: Iterable[Object]) -> None:
-    """Logs all the bounding boxes annotated in an `ARFrame` sequence using the Rerun SDK."""
+    """Logs all the bounding boxes annotated in an `ARFrame` sequence using the Dalaran SDK."""
 
     for bbox in bboxes:
         if bbox.type != ObjectType.BOUNDING_BOX:
@@ -175,12 +175,12 @@ def log_annotated_bboxes(bboxes: Iterable[Object]) -> None:
             continue
 
         rot = R.from_matrix(np.asarray(bbox.rotation).reshape((3, 3)))
-        rr.log(
+        dl.log(
             f"world/annotations/box-{bbox.id}",
-            rr.Boxes3D(
+            dl.Boxes3D(
                 half_sizes=0.5 * np.array(bbox.scale),
                 centers=bbox.translation,
-                rotations=rr.Quaternion(xyzw=rot.as_quat()),
+                rotations=dl.Quaternion(xyzw=rot.as_quat()),
                 colors=[160, 230, 130, 255],
                 labels=bbox.category,
             ),
@@ -193,7 +193,7 @@ def main() -> None:
     logging.getLogger().addHandler(logging.StreamHandler())
     logging.getLogger().setLevel("INFO")
 
-    parser = argparse.ArgumentParser(description="Logs Objectron data using the Rerun SDK.")
+    parser = argparse.ArgumentParser(description="Logs Objectron data using the Dalaran SDK.")
     parser.add_argument(
         "--frames",
         type=int,
@@ -212,7 +212,7 @@ def main() -> None:
         type=str,
         choices=AVAILABLE_RECORDINGS,
         default=AVAILABLE_RECORDINGS[1],
-        help="The objectron recording to log to Rerun.",
+        help="The objectron recording to log to Dalaran.",
     )
     parser.add_argument(
         "--force-reprocess-video",
@@ -226,16 +226,16 @@ def main() -> None:
         help="Directory to save example videos to.",
     )
 
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    blueprint = rrb.Horizontal(
-        rrb.Spatial3DView(origin="/world", name="World"),
-        rrb.Spatial2DView(origin="/world/camera", name="Camera", contents=["/world/**"]),
+    blueprint = dlb.Horizontal(
+        dlb.Spatial3DView(origin="/world", name="World"),
+        dlb.Spatial2DView(origin="/world/camera", name="Camera", contents=["/world/**"]),
     )
-    rr.script_setup(
+    dl.script_setup(
         args,
-        "rerun_example_objectron",
+        "dalaran_example_objectron",
         default_blueprint=blueprint,
     )
 
@@ -245,7 +245,7 @@ def main() -> None:
     seq = read_annotations(dir)
     log_ar_frames(samples, seq)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

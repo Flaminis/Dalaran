@@ -20,7 +20,7 @@ Configures the background of the plot.
 * `show_grid`: Should the grid be drawn?
 
 ## API reference links
- * 🐍 [Python API docs for `BarChartView`](https://ref.rerun.io/docs/python/stable/common/blueprint_views#rerun.blueprint.views.BarChartView)
+ * 🐍 [Python API docs for `BarChartView`](https://ref.dalaran.dev/docs/python/stable/common/blueprint_views#dalaran.blueprint.views.BarChartView)
 
 ## Example
 

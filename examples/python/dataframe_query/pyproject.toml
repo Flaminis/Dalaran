@@ -3,7 +3,7 @@ name = "dataframe_query"
 version = "0.1.0"
 # requires-python = "<3.12"
 readme = "README.md"
-dependencies = ["rerun-sdk"]
+dependencies = ["dalaran-sdk"]
 
 [project.scripts]
 dataframe_query = "dataframe_query:main"

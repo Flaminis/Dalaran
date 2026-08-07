@@ -8,7 +8,7 @@ A standardized media type (RFC2046, formerly known as MIME types), encoded as a 
 The complete reference of officially registered media types is maintained by the IANA and can be
 consulted at <https://www.iana.org/assignments/media-types/media-types.xhtml>.
 
-## Rerun datatype
+## Dalaran datatype
 [`Utf8`](../datatypes/utf8.md)
 
 
@@ -18,9 +18,9 @@ Utf8
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `MediaType`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1MediaType.html)
- * 🐍 [Python API docs for `MediaType`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.MediaType)
- * 🦀 [Rust API docs for `MediaType`](https://docs.rs/rerun/latest/rerun/components/struct.MediaType.html)
+ * 🌊 [C++ API docs for `MediaType`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1MediaType.html)
+ * 🐍 [Python API docs for `MediaType`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.MediaType)
+ * 🦀 [Rust API docs for `MediaType`](https://docs.rs/dalaran/latest/dalaran/components/struct.MediaType.html)
 
 
 ## Used by

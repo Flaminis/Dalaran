@@ -4,7 +4,7 @@ use ndarray::{Array, ShapeBuilder as _, s};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_segmentation_image")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_segmentation_image")
             .spawn()?;
 
     // create a segmentation image
@@ -13,15 +13,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     image.slice_mut(s![4..8, 6..12]).fill(2);
 
     // create an annotation context to describe the classes
-    let annotation = rerun::AnnotationContext::new([
-        (1, "red", rerun::Rgba32::from_rgb(255, 0, 0)),
-        (2, "green", rerun::Rgba32::from_rgb(0, 255, 0)),
+    let annotation = dalaran::AnnotationContext::new([
+        (1, "red", dalaran::Rgba32::from_rgb(255, 0, 0)),
+        (2, "green", dalaran::Rgba32::from_rgb(0, 255, 0)),
     ]);
 
     // log the annotation and the image
     rec.log_static("/", &annotation)?;
 
-    rec.log("image", &rerun::SegmentationImage::try_from(image)?)?;
+    rec.log("image", &dalaran::SegmentationImage::try_from(image)?)?;
 
     Ok(())
 }

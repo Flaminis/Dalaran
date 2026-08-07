@@ -4,9 +4,9 @@ order: 110
 description: Tips for keeping queries fast as datasets grow
 ---
 
-This is a loose collection of considerations when querying Rerun datasets.
+This is a loose collection of considerations when querying Dalaran datasets.
 Over time baseline performance will improve, rendering some of these approaches unnecessary.
-Since Rerun depends on [DataFusion](https://datafusion.apache.org/), some of these approaches are observations from our own usage.
+Since Dalaran depends on [DataFusion](https://datafusion.apache.org/), some of these approaches are observations from our own usage.
 
 First, generate a DataFrame for comparison:
 

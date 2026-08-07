@@ -1,8 +1,8 @@
 //! Log a scalar over time.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_scalar_multiple_plots",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_scalar_multiple_plots",
     )
     .spawn()?;
     let mut lcg_state = 0_i64;
@@ -12,13 +12,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Log two lines series under a shared root so that they show in the same plot by default.
     rec.log_static(
         "trig/sin",
-        &rerun::SeriesLines::new()
+        &dalaran::SeriesLines::new()
             .with_colors([[255, 0, 0]])
             .with_names(["sin(0.01t)"]),
     )?;
     rec.log_static(
         "trig/cos",
-        &rerun::SeriesLines::new()
+        &dalaran::SeriesLines::new()
             .with_colors([[0, 255, 0]])
             .with_names(["cos(0.01t)"]),
     )?;
@@ -31,8 +31,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Log scattered points under a different root so that they show in a different plot by default.
     rec.log_static(
         "scatter/lcg",
-        &rerun::SeriesPoints::new()
-            .with_markers([rerun::components::MarkerShape::Circle]),
+        &dalaran::SeriesPoints::new()
+            .with_markers([dalaran::components::MarkerShape::Circle]),
     )?;
 
     for t in 0..((std::f32::consts::TAU * 2.0 * 100.0) as i64) {
@@ -41,11 +41,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Log two time series under a shared root so that they show in the same plot by default.
         rec.log(
             "trig/sin",
-            &rerun::Scalars::single((t as f64 / 100.0).sin()),
+            &dalaran::Scalars::single((t as f64 / 100.0).sin()),
         )?;
         rec.log(
             "trig/cos",
-            &rerun::Scalars::single((t as f64 / 100.0).cos()),
+            &dalaran::Scalars::single((t as f64 / 100.0).cos()),
         )?;
 
         // Log scattered points under a different root so that it shows in a different plot by default.
@@ -53,7 +53,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .wrapping_mul(lcg_state)
             .wrapping_add(128201163))
             % 16777216; // simple linear congruency generator
-        rec.log("scatter/lcg", &rerun::Scalars::single(lcg_state as f64))?;
+        rec.log("scatter/lcg", &dalaran::Scalars::single(lcg_state as f64))?;
     }
 
     Ok(())

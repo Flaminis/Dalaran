@@ -9,14 +9,14 @@ from pathlib import Path
 import pyarrow as pa
 from datafusion import lit
 
-import rerun as rr
-from rerun.utilities.datafusion.functions.url_generation import segment_url
+import dalaran as dl
+from dalaran.utilities.datafusion.functions.url_generation import segment_url
 
 sample_5_path = (
     Path(__file__).parents[5] / "tests" / "assets" / "rrd" / "sample_5"
 )
 
-server = rr.server.Server(datasets={"sample_dataset": sample_5_path})
+server = dl.server.Server(datasets={"sample_dataset": sample_5_path})
 client = server.client()
 dataset = client.get_dataset(name="sample_dataset")
 
@@ -24,13 +24,13 @@ dataset = client.get_dataset(name="sample_dataset")
 segment_ids = sorted(dataset.segment_ids())[:3]
 view = dataset.filter_segments(segment_ids)
 
-# Build a synthetic metadata table keyed by rerun_segment_id
+# Build a synthetic metadata table keyed by dalaran_segment_id
 base_time = datetime(2023, 11, 14, 22, 13, 20)
 event_times = [base_time + timedelta(seconds=i) for i in range(3)]
 
 meta = pa.record_batch(
     {
-        "rerun_segment_id": segment_ids,
+        "dalaran_segment_id": segment_ids,
         "event_time": pa.array(event_times, type=pa.timestamp("ns")),
         "range_start": pa.array(event_times, type=pa.timestamp("ns")),
         "range_end": pa.array(
@@ -50,7 +50,7 @@ meta_df = ctx.from_arrow(meta)
 # endregion: setup
 
 # region: basic
-basic = view.segment_table().select("rerun_segment_id").sort("rerun_segment_id")
+basic = view.segment_table().select("dalaran_segment_id").sort("dalaran_segment_id")
 basic = basic.with_column("url", segment_url(dataset))
 for url in basic.select("url").to_pydict()["url"]:
     print(url)
@@ -58,9 +58,9 @@ for url in basic.select("url").to_pydict()["url"]:
 
 # region: timestamp
 ts = view.segment_table(join_meta=meta_df).select(
-    "rerun_segment_id", "event_time"
+    "dalaran_segment_id", "event_time"
 )
-ts = ts.sort("rerun_segment_id")
+ts = ts.sort("dalaran_segment_id")
 ts = ts.with_column(
     "url",
     segment_url(dataset, timestamp="event_time", timeline_name="real_time"),
@@ -71,9 +71,9 @@ for url in ts.select("url").to_pydict()["url"]:
 
 # region: time_range
 tr = view.segment_table(join_meta=meta_df).select(
-    "rerun_segment_id", "range_start", "range_end"
+    "dalaran_segment_id", "range_start", "range_end"
 )
-tr = tr.sort("rerun_segment_id")
+tr = tr.sort("dalaran_segment_id")
 tr = tr.with_column(
     "url",
     segment_url(
@@ -89,9 +89,9 @@ for url in tr.select("url").to_pydict()["url"]:
 
 # region: selection
 sel = view.segment_table(join_meta=meta_df).select(
-    "rerun_segment_id", "entity_path"
+    "dalaran_segment_id", "entity_path"
 )
-sel = sel.sort("rerun_segment_id")
+sel = sel.sort("dalaran_segment_id")
 sel = sel.with_column("url", segment_url(dataset, selection="entity_path"))
 for url in sel.select("url").to_pydict()["url"]:
     print(url)
@@ -99,9 +99,9 @@ for url in sel.select("url").to_pydict()["url"]:
 
 # region: combined
 combined = view.segment_table(join_meta=meta_df).select(
-    "rerun_segment_id", "event_time", "range_start", "range_end", "entity_path"
+    "dalaran_segment_id", "event_time", "range_start", "range_end", "entity_path"
 )
-combined = combined.sort("rerun_segment_id")
+combined = combined.sort("dalaran_segment_id")
 combined = combined.with_column(
     "url",
     segment_url(
@@ -119,9 +119,9 @@ for url in combined.select("url").to_pydict()["url"]:
 
 # region: expressions
 expr = view.segment_table(join_meta=meta_df).select(
-    "rerun_segment_id", "event_time"
+    "dalaran_segment_id", "event_time"
 )
-expr = expr.sort("rerun_segment_id")
+expr = expr.sort("dalaran_segment_id")
 expr = expr.with_column(
     "url",
     segment_url(

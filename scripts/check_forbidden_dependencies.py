@@ -24,7 +24,7 @@ import sys
 FORBIDDEN_DEPENDENCIES: list[tuple[str, set[str]]] = [
     ("dl_sdk", {"datafusion", "egui", "lance"}),
     ("dl_sdk --all-features", {"datafusion", "egui", "lance"}),
-    ("rerun-cli --no-default-features", {"datafusion", "egui", "lance"}),
+    ("dalaran-cli --no-default-features", {"datafusion", "egui", "lance"}),
 ]
 
 

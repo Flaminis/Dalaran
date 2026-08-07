@@ -13,7 +13,7 @@ that class across entities.
 <!-- Example link should point to `latest` but at the time of writing the samples just got renamed -->
 This is particularly useful for visualizing the output of classifications algorithms
 (as demonstrated by the [Detect and Track Objects](https://github.com/rerun-io/rerun/tree/main/examples/python/detect_and_track_objects) example),
-but can be used more generally for any kind of reoccurring categorization within a Rerun recording.
+but can be used more generally for any kind of reoccurring categorization within a Dalaran recording.
 
 <picture>
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/classids/7f881338f1970161f52a00f1ddd01d4dcccf8a46/480w.png">
@@ -26,7 +26,7 @@ but can be used more generally for any kind of reoccurring categorization within
 
 ### Keypoints & keypoint connections
 
-Rerun allows you to define keypoints *within* a class.
+Dalaran allows you to define keypoints *within* a class.
 Each keypoint can define its own properties (colors, labels, etc.) that overwrite its parent class.
 
 A typical example usage of keypoints is annotating the joints of a skeleton within a pose detection.
@@ -54,8 +54,8 @@ The Annotation Context is defined as a list of Class Descriptions that define ho
 
 Annotation contexts are logged with:
 
-* Python: 🐍[`rr.AnnotationContext`](https://ref.rerun.io/docs/python/stable/common/archetypes/#rerun.archetypes.AnnotationContext)
-* Rust: 🦀[`rerun::AnnotationContext`](https://docs.rs/rerun/latest/rerun/archetypes/struct.AnnotationContext.html#)
+* Python: 🐍[`dl.AnnotationContext`](https://ref.dalaran.dev/docs/python/stable/common/archetypes/#dalaran.archetypes.AnnotationContext)
+* Rust: 🦀[`dalaran::AnnotationContext`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.AnnotationContext.html#)
 
 snippet: tutorials/annotation_context
 
@@ -69,11 +69,11 @@ the nearest ancestor that in the [entity path hierarchy](../logging-and-ingestio
 ## Segmentation images
 
 Segmentation images are single channel integer images/tensors where each pixel represents a class id.
-By default, Rerun will automatically assign colors to each class id, but by defining an Annotation Context,
+By default, Dalaran will automatically assign colors to each class id, but by defining an Annotation Context,
 you can explicitly determine the color of each class.
 
-* Python: [`rr.SegmentationImage`](https://ref.rerun.io/docs/python/stable/common/archetypes/#rerun.archetypes.SegmentationImage)
-* Rust: Log a [`rerun::SegmentationImage`](https://docs.rs/rerun/latest/rerun/archetypes/struct.SegmentationImage.html)
+* Python: [`dl.SegmentationImage`](https://ref.dalaran.dev/docs/python/stable/common/archetypes/#dalaran.archetypes.SegmentationImage)
+* Rust: Log a [`dalaran::SegmentationImage`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.SegmentationImage.html)
 
 <picture>
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/segmentation_image/f48e7db9a1253f35b55205acd55d4b84ab1d8434/480w.png">

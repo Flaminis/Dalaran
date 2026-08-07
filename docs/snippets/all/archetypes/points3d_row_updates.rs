@@ -3,8 +3,8 @@
 //! See also the `points3d_column_updates` example, which achieves the same thing in a single operation.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_points3d_row_updates",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_points3d_row_updates",
     )
     .spawn()?;
 
@@ -27,7 +27,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     {
         rec.set_duration_secs("time", time);
 
-        let point_cloud = rerun::Points3D::new(positions)
+        let point_cloud = dalaran::Points3D::new(positions)
             .with_colors([color])
             .with_radii([radius]);
 

@@ -6,7 +6,7 @@ use ndarray::{Array, ShapeBuilder as _, s};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_image_row_updates")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_image_row_updates")
             .spawn()?;
 
     for t in 0..20 {
@@ -20,8 +20,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
         rec.log(
             "image",
-            &rerun::Image::from_color_model_and_tensor(
-                rerun::ColorModel::RGB,
+            &dalaran::Image::from_color_model_and_tensor(
+                dalaran::ColorModel::RGB,
                 image,
             )?,
         )?;

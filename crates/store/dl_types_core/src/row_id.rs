@@ -30,12 +30,12 @@ use crate::Loggable as _;
 ///
 /// In pseudo-code:
 /// ```text
-/// rr.set_time("frame", sequence=10)
+/// dl.set_time("frame", sequence=10)
 ///
-/// rr.log("my_entity", point1, row_id=#1)
-/// rr.log("my_entity", point2, row_id=#0)
+/// dl.log("my_entity", point1, row_id=#1)
+/// dl.log("my_entity", point2, row_id=#0)
 ///
-/// rr.query("my_entity", at=("frame", 10))  # returns `point1`
+/// dl.query("my_entity", at=("frame", 10))  # returns `point1`
 /// ```
 ///
 /// Think carefully about your `RowId`s when logging a lot of data at the same timestamp.

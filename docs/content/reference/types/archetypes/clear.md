@@ -27,9 +27,9 @@ data (i.e. discontinuous lines).
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Clear`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Clear.html)
- * 🐍 [Python API docs for `Clear`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Clear)
- * 🦀 [Rust API docs for `Clear`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Clear.html)
+ * 🌊 [C++ API docs for `Clear`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Clear.html)
+ * 🐍 [Python API docs for `Clear`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Clear)
+ * 🦀 [Rust API docs for `Clear`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Clear.html)
 
 ## Examples
 

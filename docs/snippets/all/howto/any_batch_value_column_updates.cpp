@@ -1,6 +1,6 @@
-// Use `send_column` to send an entire column of custom data to Rerun.
+// Use `send_column` to send an entire column of custom data to Dalaran.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <arrow/array/builder_primitive.h>
 #include <cmath>
@@ -9,7 +9,7 @@
 
 arrow::Status run_main() {
     const auto rec =
-        rerun::RecordingStream("rerun_example_any_batch_value_column_updates");
+        dalaran::RecordingStream("dalaran_example_any_batch_value_column_updates");
     rec.spawn().exit_on_failure();
 
     constexpr int64_t STEPS = 64;
@@ -26,7 +26,7 @@ arrow::Status run_main() {
         );
     }
     ARROW_RETURN_NOT_OK(one_per_timestamp_builder.Finish(&arrow_array));
-    auto one_per_timestamp_result = rerun::ComponentBatch::from_arrow_array(
+    auto one_per_timestamp_result = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
         "custom_component_single"
     );
@@ -39,7 +39,7 @@ arrow::Status run_main() {
         ));
     }
     ARROW_RETURN_NOT_OK(ten_per_timestamp_builder.Finish(&arrow_array));
-    auto ten_per_timestamp_result = rerun::ComponentBatch::from_arrow_array(
+    auto ten_per_timestamp_result = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
         "custom_component_multi"
     );
@@ -47,7 +47,7 @@ arrow::Status run_main() {
 
     rec.send_columns(
         "/",
-        rerun::TimeColumn::from_sequence("step", std::move(times)),
+        dalaran::TimeColumn::from_sequence("step", std::move(times)),
         one_per_timestamp.partitioned().value_or_throw(),
         ten_per_timestamp.partitioned(std::vector<uint32_t>(STEPS, 10))
             .value_or_throw()

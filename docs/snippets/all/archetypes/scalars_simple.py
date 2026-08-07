@@ -2,11 +2,11 @@
 
 import math
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_scalar", spawn=True)
+dl.init("dalaran_example_scalar", spawn=True)
 
 # Log the data on a timeline called "step".
 for step in range(64):
-    rr.set_time("step", sequence=step)
-    rr.log("scalar", rr.Scalars(math.sin(step / 10.0)))
+    dl.set_time("step", sequence=step)
+    dl.log("scalar", dl.Scalars(math.sin(step / 10.0)))

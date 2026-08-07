@@ -9,7 +9,7 @@ In order to more narrowly specify relevant content for further dataframe operati
 This view can filter on episode, time, column name etc.
 This example shows specific instances highlighting these capabilities.
 
-The dependencies in this example are contained in `rerun-sdk[all]`.
+The dependencies in this example are contained in `dalaran-sdk[all]`.
 
 ## Setup
 

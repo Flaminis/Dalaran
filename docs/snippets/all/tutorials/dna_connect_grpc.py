@@ -1,8 +1,8 @@
 """DNA-abacus example, connecting to a separately-running viewer over gRPC."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_dna_abacus")
-rr.connect_grpc()  # connect to the viewer running at the default URL
+dl.init("dalaran_example_dna_abacus")
+dl.connect_grpc()  # connect to the viewer running at the default URL
 
 # … log data as in the spawn-based example …

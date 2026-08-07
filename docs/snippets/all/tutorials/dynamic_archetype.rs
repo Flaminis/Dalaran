@@ -2,19 +2,19 @@
 
 use std::sync::Arc;
 
-use rerun::external::arrow;
+use dalaran::external::arrow;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_dynamic_archetype")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_dynamic_archetype")
             .spawn()?;
 
-    let new_archetype = rerun::DynamicArchetype::new("MyArchetype")
+    let new_archetype = dalaran::DynamicArchetype::new("MyArchetype")
         // Using arbitrary Arrow data.
         .with_component_from_data(
             "homepage",
             Arc::new(arrow::array::StringArray::from(vec![
-                "https://www.rerun.io",
+                "https://www.dalaran.dev",
             ])),
         )
         .with_component_from_data(
@@ -23,12 +23,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "https://github.com/rerun-io/rerun",
             ])),
         )
-        // Using Rerun's builtin components.
-        .with_component::<rerun::components::Scalar>(
+        // Using Dalaran's builtin components.
+        .with_component::<dalaran::components::Scalar>(
             "confidence",
             [1.2, 3.4, 5.6],
         )
-        .with_component::<rerun::components::Text>(
+        .with_component::<dalaran::components::Text>(
             "description",
             vec!["Bla bla bla…"],
         );

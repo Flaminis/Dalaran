@@ -3,17 +3,17 @@
 use ndarray::{Array, ShapeBuilder as _, s};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_annotation_context_segmentation",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_annotation_context_segmentation",
     )
     .spawn()?;
 
     // create an annotation context to describe the classes
     rec.log_static(
         "segmentation",
-        &rerun::AnnotationContext::new([
-            (1, "red", rerun::Rgba32::from_rgb(255, 0, 0)),
-            (2, "green", rerun::Rgba32::from_rgb(0, 255, 0)),
+        &dalaran::AnnotationContext::new([
+            (1, "red", dalaran::Rgba32::from_rgb(255, 0, 0)),
+            (2, "green", dalaran::Rgba32::from_rgb(0, 255, 0)),
         ]),
     )?;
 
@@ -24,7 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     rec.log(
         "segmentation/image",
-        &rerun::SegmentationImage::try_from(data)?,
+        &dalaran::SegmentationImage::try_from(data)?,
     )?;
 
     Ok(())

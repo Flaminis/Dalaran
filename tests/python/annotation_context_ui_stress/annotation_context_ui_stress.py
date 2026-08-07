@@ -4,16 +4,16 @@ from __future__ import annotations
 
 import argparse
 
-import rerun as rr
-from rerun.datatypes import ClassDescription
+import dalaran as dl
+from dalaran.datatypes import ClassDescription
 
 parser = argparse.ArgumentParser()
-rr.script_add_args(parser)
+dl.script_add_args(parser)
 args = parser.parse_args()
-rr.script_setup(args, "rerun_example_annotation_context_ui_stress")
+dl.script_setup(args, "dalaran_example_annotation_context_ui_stress")
 
 
-annotation_context = rr.AnnotationContext([
+annotation_context = dl.AnnotationContext([
     ClassDescription(
         info=(0, "class_info", (255, 0, 0)),
         keypoint_annotations=[(i, f"keypoint {i}", (255, 255 - i, 0)) for i in range(100)],
@@ -27,5 +27,5 @@ annotation_context = rr.AnnotationContext([
 ])
 
 # log two of those to test multi-selection
-rr.log("annotation1", annotation_context)
-rr.log("annotation2", annotation_context)
+dl.log("annotation1", annotation_context)
+dl.log("annotation2", annotation_context)

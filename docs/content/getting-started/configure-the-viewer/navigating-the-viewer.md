@@ -3,9 +3,9 @@ title: Navigating the Viewer
 order: 400
 ---
 
-This page will walk you through the basics of navigating the Rerun Viewer.
+This page will walk you through the basics of navigating the Dalaran Viewer.
 
-By default, the Rerun Viewer uses heuristics to automatically determine an appropriate layout for your data. However, you'll often want precise control over how your data is displayed. Blueprints give you complete control over the Viewer's layout and configuration. For a conceptual understanding of blueprints, see [Blueprints](../../concepts/visualization/blueprints.md).
+By default, the Dalaran Viewer uses heuristics to automatically determine an appropriate layout for your data. However, you'll often want precise control over how your data is displayed. Blueprints give you complete control over the Viewer's layout and configuration. For a conceptual understanding of blueprints, see [Blueprints](../../concepts/visualization/blueprints.md).
 
 This guide covers three complementary ways to work with the viewer:
 - **[Interactive configuration](#interactive-configuration)**: Modify layouts directly in the Viewer UI
@@ -14,7 +14,7 @@ This guide covers three complementary ways to work with the viewer:
 
 ## Interactive configuration
 
-The Rerun Viewer is fully configurable through its UI, making it easy to experiment with different layouts.
+The Dalaran Viewer is fully configurable through its UI, making it easy to experiment with different layouts.
 
 ### Viewer overview
 
@@ -221,4 +221,4 @@ For a complete guide, see [Build a blueprint programmatically](../../howto/visua
 
 - **Explore view types**: Check the [View Type Reference](../../reference/types/views/) to see all available views and their configuration options
 - **Learn about overrides**: See [Visualizers and Overrides](../../concepts/visualization/customize-views.md) for per-entity customization
-- **API Reference**: Browse the complete [Blueprint API](https://ref.rerun.io/docs/python/stable/common/blueprint_apis/) for programmatic control
+- **API Reference**: Browse the complete [Blueprint API](https://ref.dalaran.dev/docs/python/stable/common/blueprint_apis/) for programmatic control

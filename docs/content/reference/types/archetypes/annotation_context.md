@@ -6,13 +6,13 @@ title: "AnnotationContext"
 ⚠️ **This type is _unstable_ and may change significantly in a way that the data won't be backwards compatible.**
 The annotation context provides additional information on how to display entities.
 
-Entities can use [`components.ClassId`](https://rerun.io/docs/reference/types/components/class_id)s and [`components.KeypointId`](https://rerun.io/docs/reference/types/components/keypoint_id)s to provide annotations, and
+Entities can use [`components.ClassId`](https://dalaran.dev/docs/reference/types/components/class_id)s and [`components.KeypointId`](https://dalaran.dev/docs/reference/types/components/keypoint_id)s to provide annotations, and
 the labels and colors will be looked up in the appropriate
 annotation context. We use the *first* annotation context we find in the
 path-hierarchy when searching up through the ancestors of a given entity
 path.
 
-See also [`datatypes.ClassDescription`](https://rerun.io/docs/reference/types/datatypes/class_description).
+See also [`datatypes.ClassDescription`](https://dalaran.dev/docs/reference/types/datatypes/class_description).
 
 ## Fields
 ### Required
@@ -25,9 +25,9 @@ See also [`datatypes.ClassDescription`](https://rerun.io/docs/reference/types/da
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `AnnotationContext`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1AnnotationContext.html)
- * 🐍 [Python API docs for `AnnotationContext`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.AnnotationContext)
- * 🦀 [Rust API docs for `AnnotationContext`](https://docs.rs/rerun/latest/rerun/archetypes/struct.AnnotationContext.html)
+ * 🌊 [C++ API docs for `AnnotationContext`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1AnnotationContext.html)
+ * 🐍 [Python API docs for `AnnotationContext`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.AnnotationContext)
+ * 🦀 [Rust API docs for `AnnotationContext`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.AnnotationContext.html)
 
 ## Examples
 

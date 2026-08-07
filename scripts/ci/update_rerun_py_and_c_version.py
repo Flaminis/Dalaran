@@ -5,13 +5,13 @@ Updates the version information for Python & C SDK.
 
 This includes:
 - Python
-    - `rerun.__version__`
-    - `rerun.__version_info__`
+    - `dalaran.__version__`
+    - `dalaran.__version_info__`
 - C/C++
-    - `#define RERUN_SDK_HEADER_VERSION`
-    - `#define RERUN_SDK_HEADER_VERSION_MAJOR`
-    - `#define RERUN_SDK_HEADER_VERSION_MINOR`
-    - `#define RERUN_SDK_HEADER_VERSION_PATCH`
+    - `#define DALARAN_SDK_HEADER_VERSION`
+    - `#define DALARAN_SDK_HEADER_VERSION_MAJOR`
+    - `#define DALARAN_SDK_HEADER_VERSION_MINOR`
+    - `#define DALARAN_SDK_HEADER_VERSION_PATCH`
 """
 
 from __future__ import annotations
@@ -31,7 +31,7 @@ def update_python_line(line: str, version_line: str, version_info_line: str) -> 
     return line
 
 
-def set_rerun_py_version(init_path: Path, version: semver.VersionInfo) -> None:
+def set_dalaran_py_version(init_path: Path, version: semver.VersionInfo) -> None:
     version_line = f'__version__ = "{version}"\n'
     version_info_items = [str(item) for item in (version.major, version.minor, version.patch)]
     if version.prerelease is not None:
@@ -60,23 +60,23 @@ def update_c_line(
     version_line_minor: str,
     version_line_patch: str,
 ) -> str:
-    if line.startswith("#define RERUN_SDK_HEADER_VERSION_MAJOR"):
+    if line.startswith("#define DALARAN_SDK_HEADER_VERSION_MAJOR"):
         return version_line_major
-    elif line.startswith("#define RERUN_SDK_HEADER_VERSION_MINOR"):
+    elif line.startswith("#define DALARAN_SDK_HEADER_VERSION_MINOR"):
         return version_line_minor
-    elif line.startswith("#define RERUN_SDK_HEADER_VERSION_PATCH"):
+    elif line.startswith("#define DALARAN_SDK_HEADER_VERSION_PATCH"):
         return version_line_patch
-    elif line.startswith("#define RERUN_SDK_HEADER_VERSION"):
+    elif line.startswith("#define DALARAN_SDK_HEADER_VERSION"):
         return version_line
 
     return line
 
 
-def set_rerun_c_version(init_path: Path, version: semver.VersionInfo) -> None:
-    version_line = f'#define RERUN_SDK_HEADER_VERSION "{version}"\n'
-    version_line_major = f"#define RERUN_SDK_HEADER_VERSION_MAJOR {version.major}\n"
-    version_line_minor = f"#define RERUN_SDK_HEADER_VERSION_MINOR {version.minor}\n"
-    version_line_patch = f"#define RERUN_SDK_HEADER_VERSION_PATCH {version.patch}\n"
+def set_dalaran_c_version(init_path: Path, version: semver.VersionInfo) -> None:
+    version_line = f'#define DALARAN_SDK_HEADER_VERSION "{version}"\n'
+    version_line_major = f"#define DALARAN_SDK_HEADER_VERSION_MAJOR {version.major}\n"
+    version_line_minor = f"#define DALARAN_SDK_HEADER_VERSION_MINOR {version.minor}\n"
+    version_line_patch = f"#define DALARAN_SDK_HEADER_VERSION_PATCH {version.patch}\n"
 
     with init_path.open(encoding="utf-8") as f:
         lines = f.readlines()
@@ -92,7 +92,7 @@ def set_rerun_c_version(init_path: Path, version: semver.VersionInfo) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Update rerun_py __version__ variable & rerun_c version defines.")
+    parser = argparse.ArgumentParser(description="Update dalaran_py __version__ variable & dalaran_c version defines.")
     parser.add_argument("VERSION", help="Version to use")
     args = parser.parse_args()
 
@@ -106,8 +106,8 @@ def main() -> None:
     project_path = Path(__file__).parent.parent.parent.absolute()
 
     sem_version = semver.VersionInfo.parse(args.VERSION)
-    set_rerun_py_version(project_path / "rerun_py" / "rerun_sdk" / "rerun" / "__init__.py", sem_version)
-    set_rerun_c_version(project_path / "rerun_cpp" / "src" / "rerun" / "c" / "sdk_info.h", sem_version)
+    set_dalaran_py_version(project_path / "dalaran_py" / "dalaran_sdk" / "dalaran" / "__init__.py", sem_version)
+    set_dalaran_c_version(project_path / "dalaran_cpp" / "src" / "dalaran" / "c" / "sdk_info.h", sem_version)
 
 
 if __name__ == "__main__":

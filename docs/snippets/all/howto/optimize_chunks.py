@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from rerun.experimental import McapReader, OptimizationProfile
+from dalaran.experimental import McapReader, OptimizationProfile
 
 mcap_path = (
     Path(__file__).resolve().parents[4]
@@ -22,7 +22,7 @@ output_path = Path("trossen_compacted.rrd")
     .collect(optimize=OptimizationProfile.OBJECT_STORE)
     .write_rrd(
         output_path,
-        application_id="rerun_example_optimize",
+        application_id="dalaran_example_optimize",
         recording_id=mcap_path.stem,
     )
 )

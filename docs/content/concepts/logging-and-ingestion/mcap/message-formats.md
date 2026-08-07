@@ -3,18 +3,18 @@ title: Supported Message Formats
 order: 200
 ---
 
-Rerun provides automatic visualization for common message types in MCAP files:
+Dalaran provides automatic visualization for common message types in MCAP files:
 
 * ROS 2 messages
 * Foxglove schemas (Protobuf)
 
 ## Overview
 
-This table shows an overview of the ROS 2 and Foxglove message schemas that are automatically converted to Rerun archetypes.
+This table shows an overview of the ROS 2 and Foxglove message schemas that are automatically converted to Dalaran archetypes.
 
 We are continually adding support for more standard message types.
 
-| Modality | ROS 2 | Foxglove Protobuf | Rerun Archetypes |
+| Modality | ROS 2 | Foxglove Protobuf | Dalaran Archetypes |
 | --- | --- | --- | --- |
 | Raw image | `sensor_msgs/Image` | `RawImage` | [Image](../../../reference/types/archetypes/image.md), [DepthImage](../../../reference/types/archetypes/depth_image.md) |
 | Encoded image | `sensor_msgs/CompressedImage` | `CompressedImage` | [EncodedImage](../../../reference/types/archetypes/encoded_image.md), [EncodedDepthImage](../../../reference/types/archetypes/encoded_depth_image.md) |
@@ -53,10 +53,10 @@ Data from schemas containing a `.timestamp` field is put onto a `timestamp` time
 Transform messages are converted to [`Transform3D`](../../../reference/types/archetypes/transform3d.md), with `parent_frame` and `child_frame` set according to the `frame_id` and `child_frame_id` of each `geometry_msgs/TransformStamped` contained in the message's `transforms` list.
 The timestamps of the individual transforms are put onto the respective timelines, allowing the viewer to resolve the spatial relationships between frames over time similar to a TF buffer in ROS.
 
-> You can read more about how Rerun handles transforms and "TF-style" frame names [here](https://rerun.io/docs/concepts/transforms#named-transform-frames).
+> You can read more about how Dalaran handles transforms and "TF-style" frame names [here](https://dalaran.dev/docs/concepts/transforms#named-transform-frames).
 
 To see the transforms in the viewer, you can select the entity corresponding to the topic and add a visualizer for `TransformAxes3D` as shown in the video here.
-If you have transforms that correspond to joints in a robot model, you can also read more about how to load `URDF` models into a recording [here](https://rerun.io/docs/howto/logging-and-ingestion/urdf#load-urdf-into-an-existing-recording).
+If you have transforms that correspond to joints in a robot model, you can also read more about how to load `URDF` models into a recording [here](https://dalaran.dev/docs/howto/logging-and-ingestion/urdf#load-urdf-into-an-existing-recording).
 
 <video width="100%" autoplay loop muted controls>
     <source src="https://static.rerun.io/83f26961023d5f554175ebc48d1292e218db1212_add_axes_visualizer.mp4" type="video/mp4" />
@@ -73,12 +73,12 @@ For data that can be visualized in 3D views (e.g. point clouds), this means that
 
 ## Schema reflection
 
-MCAP files allow for arbitrary custom message payloads, so you might have other message types in your files than the set of ROS 2 or Foxglove messages that Rerun automatically converts to archetypes.
+MCAP files allow for arbitrary custom message payloads, so you might have other message types in your files than the set of ROS 2 or Foxglove messages that Dalaran automatically converts to archetypes.
 
-Rerun's MCAP importer automatically decodes unknown Protobuf or ROS 2 messages using schema reflection.
-This means that you won't get Rerun archetypes out of the box, but the message fields become queryable components (e.g. for training data curation via the Rerun SDK, see [here](decoders-explained.md#accessing-decoder-data)).
+Dalaran's MCAP importer automatically decodes unknown Protobuf or ROS 2 messages using schema reflection.
+This means that you won't get Dalaran archetypes out of the box, but the message fields become queryable components (e.g. for training data curation via the Dalaran SDK, see [here](decoders-explained.md#accessing-decoder-data)).
 Depending on the contents of your data, you can still manually add visualizers for certain fields to your blueprint, e.g. a time-series view for scalars or a dataframe view.
-You can also use [Lenses](../../query-and-transform/lenses.md) to attach Rerun semantics to the reflected data.
+You can also use [Lenses](../../query-and-transform/lenses.md) to attach Dalaran semantics to the reflected data.
 
 ### Example: time-series plot for custom message scalars
 
@@ -117,15 +117,15 @@ You can see this also in the selection panel:
 ## ROS1 message types
 
 ROS 1 data is not supported for semantic interpretation through any decoder.
-The `raw` and `schema` decoders are able to preserve the original bytes and structure of ROS 1 messages in MCAP files, but Rerun will not convert them to visualization archetypes.
+The `raw` and `schema` decoders are able to preserve the original bytes and structure of ROS 1 messages in MCAP files, but Dalaran will not convert them to visualization archetypes.
 
-We don't plan to add support for ROS 1 in Rerun, as it has reached [end-of-life](https://www.ros.org/blog/noetic-eol/) in May 2025.
+We don't plan to add support for ROS 1 in Dalaran, as it has reached [end-of-life](https://www.ros.org/blog/noetic-eol/) in May 2025.
 But if you have legacy ROS 1 data and want to migrate it to modern formats, we recommend to try external tools like [`rosbags`](https://ternaris.gitlab.io/rosbags/).
-For example, this command converts a ROS 1 `.bag` to a ROS 2 CDR-encoded `.mcap` that Rerun can import like any other supported ROS 2 recording:
+For example, this command converts a ROS 1 `.bag` to a ROS 2 CDR-encoded `.mcap` that Dalaran can import like any other supported ROS 2 recording:
 ```bash
 rosbags-convert --src my_data_ros1.bag --dst my_data_ros2 --dst-storage mcap
 
-rerun my_data_ros2/my_data_ros2.mcap
+dalaran my_data_ros2/my_data_ros2.mcap
 ```
 Please refer to the `rosbags` documentation for further information.
 
@@ -134,4 +134,4 @@ Please refer to the `rosbags` documentation for further information.
 To request support for additional message types:
 
 - [File a GitHub issue](https://github.com/rerun-io/rerun/issues) requesting the specific message type
-- Join the Rerun community on [Discord](https://discord.gg/PXtCgFBSmH) to discuss and provide feedback on message support priorities. Or if you're open for a conversation, [sign up here](https://rerun.io/feedback)
+- Join the Dalaran community on [Discord](https://discord.gg/PXtCgFBSmH) to discuss and provide feedback on message support priorities. Or if you're open for a conversation, [sign up here](https://dalaran.dev/feedback)

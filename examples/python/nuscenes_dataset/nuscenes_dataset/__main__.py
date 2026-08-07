@@ -10,8 +10,8 @@ import matplotlib
 import numpy as np
 from nuscenes import nuscenes
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 from .download_dataset import MINISPLIT_SCENES, download_minisplit
 from .export_gps import derive_latlon
@@ -96,7 +96,7 @@ def log_nuscenes(nusc: nuscenes.NuScenes, scene_name: str, max_time_sec: float) 
 
     location = nusc.get("log", scene["log_token"])["location"]
 
-    rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
+    dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
 
     first_sample_token = scene["first_sample_token"]
     first_sample = nusc.get("sample", scene["first_sample_token"])
@@ -143,29 +143,29 @@ def log_lidar_and_ego_pose(
             break
 
         # timestamps are in microseconds
-        rr.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
+        dl.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
 
         ego_pose = nusc.get("ego_pose", sample_data["ego_pose_token"])
         rotation_xyzw = np.roll(ego_pose["rotation"], shift=-1)  # go from wxyz to xyzw
         position_lat_lon = derive_latlon(location, ego_pose)
         ego_trajectory_lat_lon.append(position_lat_lon)
 
-        rr.log(
+        dl.log(
             "world/ego_vehicle",
-            rr.Transform3D(
+            dl.Transform3D(
                 translation=ego_pose["translation"],
-                rotation=rr.Quaternion(xyzw=rotation_xyzw),
-                relation=rr.TransformRelation.ParentFromChild,
+                rotation=dl.Quaternion(xyzw=rotation_xyzw),
+                relation=dl.TransformRelation.ParentFromChild,
             ),
-            rr.TransformAxes3D(10.0),  # The length of the visualized axis.
-            rr.GeoPoints(lat_lon=position_lat_lon, radii=rr.Radius.ui_points(8.0), colors=0xFF0000FF),
+            dl.TransformAxes3D(10.0),  # The length of the visualized axis.
+            dl.GeoPoints(lat_lon=position_lat_lon, radii=dl.Radius.ui_points(8.0), colors=0xFF0000FF),
         )
         # TODO(#10632): We don't want the radius for the trajectory line to be the same as the radius of the points.
-        # However, rr.GeoPoints uses the same `rr.components.Radius` for this, so these two archetypes would influence each other
+        # However, dl.GeoPoints uses the same `dl.components.Radius` for this, so these two archetypes would influence each other
         # if logged on the same entity. In the future, they will have different tags, which will allow them to live side by side.
-        rr.log(
+        dl.log(
             "world/ego_vehicle/trajectory",
-            rr.GeoLineStrings(lat_lon=ego_trajectory_lat_lon, radii=rr.Radius.ui_points(1.0), colors=0xFF0000FF),
+            dl.GeoLineStrings(lat_lon=ego_trajectory_lat_lon, radii=dl.Radius.ui_points(1.0), colors=0xFF0000FF),
         )
 
         current_lidar_token = sample_data["next"]
@@ -175,7 +175,7 @@ def log_lidar_and_ego_pose(
         points = pointcloud.points[:3].T  # shape after transposing: (num_points, 3)
         point_distances = np.linalg.norm(points, axis=1)
         point_colors = cmap(norm(point_distances))
-        rr.log(f"world/ego_vehicle/{sensor_name}", rr.Points3D(points, colors=point_colors))
+        dl.log(f"world/ego_vehicle/{sensor_name}", dl.Points3D(points, colors=point_colors))
 
 
 def log_cameras(first_camera_tokens: list[str], nusc: nuscenes.NuScenes, max_timestamp_us: float) -> None:
@@ -187,9 +187,9 @@ def log_cameras(first_camera_tokens: list[str], nusc: nuscenes.NuScenes, max_tim
             if max_timestamp_us < sample_data["timestamp"]:
                 break
             sensor_name = sample_data["channel"]
-            rr.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
+            dl.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
             data_file_path = nusc.dataroot / sample_data["filename"]
-            rr.log(f"world/ego_vehicle/{sensor_name}", rr.EncodedImage(path=data_file_path))
+            dl.log(f"world/ego_vehicle/{sensor_name}", dl.EncodedImage(path=data_file_path))
             current_camera_token = sample_data["next"]
 
 
@@ -202,15 +202,15 @@ def log_radars(first_radar_tokens: list[str], nusc: nuscenes.NuScenes, max_times
             if max_timestamp_us < sample_data["timestamp"]:
                 break
             sensor_name = sample_data["channel"]
-            rr.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
+            dl.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
             data_file_path = nusc.dataroot / sample_data["filename"]
             pointcloud = nuscenes.RadarPointCloud.from_file(str(data_file_path))
             points = pointcloud.points[:3].T  # shape after transposing: (num_points, 3)
             point_distances = np.linalg.norm(points, axis=1)
             point_colors = cmap(norm(point_distances))
-            rr.log(
+            dl.log(
                 f"world/ego_vehicle/{sensor_name}",
-                rr.Points3D(points, colors=point_colors),
+                dl.Points3D(points, colors=point_colors),
             )
             current_camera_token = sample_data["next"]
 
@@ -223,7 +223,7 @@ def log_annotations(location: str, first_sample_token: str, nusc: nuscenes.NuSce
         sample_data = nusc.get("sample", current_sample_token)
         if max_timestamp_us < sample_data["timestamp"]:
             break
-        rr.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
+        dl.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
         ann_tokens = sample_data["anns"]
         sizes = []
         centers = []
@@ -237,26 +237,26 @@ def log_annotations(location: str, first_sample_token: str, nusc: nuscenes.NuSce
             width, length, height = ann["size"]
             sizes.append((length, width, height))  # x, y, z sizes
             centers.append(ann["translation"])
-            quaternions.append(rr.Quaternion(xyzw=rotation_xyzw))
+            quaternions.append(dl.Quaternion(xyzw=rotation_xyzw))
             if ann["category_name"] not in label2id:
                 label2id[ann["category_name"]] = len(label2id)
             class_ids.append(label2id[ann["category_name"]])
             lat_lon.append(derive_latlon(location, ann))
 
-        rr.log(
+        dl.log(
             "world/anns",
-            rr.Boxes3D(
+            dl.Boxes3D(
                 sizes=sizes,
                 centers=centers,
                 quaternions=quaternions,
                 class_ids=class_ids,
             ),
-            rr.GeoPoints(lat_lon=lat_lon),
+            dl.GeoPoints(lat_lon=lat_lon),
         )
         current_sample_token = sample_data["next"]
 
     annotation_context = [(i, label) for label, i in label2id.items()]
-    rr.log("world/anns", rr.AnnotationContext(annotation_context), static=True)
+    dl.log("world/anns", dl.AnnotationContext(annotation_context), static=True)
 
 
 def log_sensor_calibration(sample_data: dict[str, Any], nusc: nuscenes.NuScenes) -> None:
@@ -265,19 +265,19 @@ def log_sensor_calibration(sample_data: dict[str, Any], nusc: nuscenes.NuScenes)
     calibrated_sensor_token = sample_data["calibrated_sensor_token"]
     calibrated_sensor = nusc.get("calibrated_sensor", calibrated_sensor_token)
     rotation_xyzw = np.roll(calibrated_sensor["rotation"], shift=-1)  # go from wxyz to xyzw
-    rr.log(
+    dl.log(
         f"world/ego_vehicle/{sensor_name}",
-        rr.Transform3D(
+        dl.Transform3D(
             translation=calibrated_sensor["translation"],
-            rotation=rr.Quaternion(xyzw=rotation_xyzw),
-            relation=rr.TransformRelation.ParentFromChild,
+            rotation=dl.Quaternion(xyzw=rotation_xyzw),
+            relation=dl.TransformRelation.ParentFromChild,
         ),
         static=True,
     )
     if len(calibrated_sensor["camera_intrinsic"]) != 0:
-        rr.log(
+        dl.log(
             f"world/ego_vehicle/{sensor_name}",
-            rr.Pinhole(
+            dl.Pinhole(
                 image_from_camera=calibrated_sensor["camera_intrinsic"],
                 width=sample_data["width"],
                 height=sample_data["height"],
@@ -287,7 +287,7 @@ def log_sensor_calibration(sample_data: dict[str, Any], nusc: nuscenes.NuScenes)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Visualizes the nuScenes dataset using the Rerun SDK.")
+    parser = argparse.ArgumentParser(description="Visualizes the nuScenes dataset using the Dalaran SDK.")
     parser.add_argument(
         "--root-dir",
         type=pathlib.Path,
@@ -307,62 +307,62 @@ def main() -> None:
         default=float("inf"),
         help="If specified, limits the number of seconds logged",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     ensure_scene_available(args.root_dir, args.dataset_version, args.scene_name)
 
     nusc = nuscenes.NuScenes(version=args.dataset_version, dataroot=args.root_dir, verbose=True)
 
-    # Set up the Rerun Blueprint (how the visualization is organized):
+    # Set up the Dalaran Blueprint (how the visualization is organized):
     sensor_views = [
-        rrb.Spatial2DView(
+        dlb.Spatial2DView(
             name=sensor_name,
             origin=f"world/ego_vehicle/{sensor_name}",
             contents=["$origin/**", "world/anns"],
-            overrides={"world/anns": rr.Boxes3D.from_fields(fill_mode="majorwireframe")},
+            overrides={"world/anns": dl.Boxes3D.from_fields(fill_mode="majorwireframe")},
         )
         for sensor_name in nuscene_sensor_names(nusc, args.scene_name)
     ]
-    blueprint = rrb.Blueprint(
-        rrb.Vertical(
-            rrb.Horizontal(
-                rrb.Spatial3DView(
+    blueprint = dlb.Blueprint(
+        dlb.Vertical(
+            dlb.Horizontal(
+                dlb.Spatial3DView(
                     name="3D",
                     origin="world",
                     # Set the image plane distance to 5m for all camera visualizations.
-                    defaults=[rr.Pinhole.from_fields(image_plane_distance=5.0)],
-                    overrides={"world/anns": rr.Boxes3D(fill_mode="solid")},
+                    defaults=[dl.Pinhole.from_fields(image_plane_distance=5.0)],
+                    overrides={"world/anns": dl.Boxes3D(fill_mode="solid")},
                 ),
-                rrb.Vertical(
-                    rrb.TextDocumentView(origin="description", name="Description"),
-                    rrb.MapView(
+                dlb.Vertical(
+                    dlb.TextDocumentView(origin="description", name="Description"),
+                    dlb.MapView(
                         origin="world",
                         name="MapView",
-                        zoom=rrb.archetypes.MapZoom(18.0),
-                        background=rrb.archetypes.MapBackground(rrb.components.MapProvider.OpenStreetMap),
+                        zoom=dlb.archetypes.MapZoom(18.0),
+                        background=dlb.archetypes.MapBackground(dlb.components.MapProvider.OpenStreetMap),
                     ),
                     row_shares=[1, 1],
                 ),
                 column_shares=[3, 1],
             ),
-            rrb.Grid(*sensor_views),
+            dlb.Grid(*sensor_views),
             row_shares=[4, 2],
         ),
-        rrb.TimePanel(state="collapsed"),
+        dlb.TimePanel(state="collapsed"),
     )
 
-    rr.script_setup(args, "rerun_example_nuscenes", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_nuscenes", default_blueprint=blueprint)
 
-    rr.log(
+    dl.log(
         "description",
-        rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN),
+        dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN),
         static=True,
     )
 
     log_nuscenes(nusc, args.scene_name, max_time_sec=args.seconds)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

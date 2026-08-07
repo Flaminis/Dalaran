@@ -8,7 +8,7 @@ A 2D texture UV coordinate.
 Texture coordinates specify a position on a 2D texture.
 A range from 0-1 covers the entire texture in the respective dimension.
 Unless configured otherwise, the texture repeats outside of this range.
-Rerun uses top-left as the origin for UV coordinates.
+Dalaran uses top-left as the origin for UV coordinates.
 
   0     U     1
 0 + --------- →
@@ -20,7 +20,7 @@ V |           .
 This is the same convention as in Vulkan/Metal/DX12/WebGPU, but (!) unlike OpenGL,
 which places the origin at the bottom-left.
 
-## Rerun datatype
+## Dalaran datatype
 [`Vec2D`](../datatypes/vec2d.md)
 
 
@@ -30,9 +30,9 @@ FixedSizeList(2 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Texcoord2D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Texcoord2D.html)
- * 🐍 [Python API docs for `Texcoord2D`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Texcoord2D)
- * 🦀 [Rust API docs for `Texcoord2D`](https://docs.rs/rerun/latest/rerun/components/struct.Texcoord2D.html)
+ * 🌊 [C++ API docs for `Texcoord2D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Texcoord2D.html)
+ * 🐍 [Python API docs for `Texcoord2D`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Texcoord2D)
+ * 🦀 [Rust API docs for `Texcoord2D`](https://docs.rs/dalaran/latest/dalaran/components/struct.Texcoord2D.html)
 
 
 ## Used by

@@ -7,7 +7,7 @@ description: Reference a subset of an existing dataset without copying
 When experimenting with new features it's often practical to work with a subset of data without modifying the original.
 A sub-dataset references the same underlying RRD files so no data is copied.
 
-The dependencies in this example are contained in `rerun-sdk[all]`.
+The dependencies in this example are contained in `dalaran-sdk[all]`.
 
 ## Setup
 

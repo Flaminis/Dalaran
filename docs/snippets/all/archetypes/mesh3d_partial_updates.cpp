@@ -1,25 +1,25 @@
 // Log a simple colored triangle, then update its vertices' positions each frame.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <cmath>
 #include <numeric>
 
-rerun::Position3D mul_pos(float factor, rerun::Position3D vec) {
+dalaran::Position3D mul_pos(float factor, dalaran::Position3D vec) {
     return {factor * vec.x(), factor * vec.y(), factor * vec.z()};
 }
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_mesh3d_partial_updates");
+        dalaran::RecordingStream("dalaran_example_mesh3d_partial_updates");
     rec.spawn().exit_on_failure();
 
-    rerun::Position3D vertex_positions[3] = {
+    dalaran::Position3D vertex_positions[3] = {
         {-1.0f, 0.0f, 0.0f},
         {1.0f, 0.0f, 0.0f},
         {0.0f, 1.0f, 0.0f},
     };
-    rerun::Color vertex_colors[3] = {
+    dalaran::Color vertex_colors[3] = {
         {255, 0, 0},
         {0, 255, 0},
         {0, 0, 255},
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
     rec.set_time_sequence("frame", 0);
     rec.log(
         "triangle",
-        rerun::Mesh3D(vertex_positions)
+        dalaran::Mesh3D(vertex_positions)
             .with_vertex_normals({{0.0f, 0.0f, 1.0f}})
             .with_vertex_colors(vertex_colors)
     );
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
         };
         rec.log(
             "triangle",
-            rerun::Mesh3D::update_fields().with_vertex_positions(
+            dalaran::Mesh3D::update_fields().with_vertex_positions(
                 modified_vertex_positions
             )
         );

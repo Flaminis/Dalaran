@@ -9,7 +9,7 @@ thumbnail_dimensions = [480, 300]
 
 https://vimeo.com/1155605317?loop=1&autopause=0&background=1&muted=1&ratio=2802:1790
 
-[SAM 3D Body](https://github.com/facebookresearch/sam-3d-body) is a promptable model for single-image full-body 3D human mesh recovery (HMR) from Meta. This example showcases an unofficial playground with promptable SAM3 masks and live [Rerun](https://rerun.io/) visualization, using Gradio for the UI and Pixi for one-command setup.
+[SAM 3D Body](https://github.com/facebookresearch/sam-3d-body) is a promptable model for single-image full-body 3D human mesh recovery (HMR) from Meta. This example showcases an unofficial playground with promptable SAM3 masks and live [Dalaran](https://dalaran.dev/) visualization, using Gradio for the UI and Pixi for one-command setup.
 
 ## Background
 
@@ -21,8 +21,8 @@ Key features of the model:
 - **Promptable inference**: Supports auxiliary prompts including 2D keypoints and masks for user-guided reconstruction
 - **Full-body estimation**: Estimates pose of body, feet, and hands
 
-This Rerun integration provides:
-- **Gradio App**: Interactive UI with embedded streaming Rerun viewer
+This Dalaran integration provides:
+- **Gradio App**: Interactive UI with embedded streaming Dalaran viewer
 - **CLI tools**: Batch processing capabilities
 - **Video segmentation**: Single and multiview video processing with SAM3
 - **Multiview optimization**: Fuses per-view body predictions into globally-consistent 3D mesh
@@ -39,6 +39,6 @@ Make sure you have the [Pixi package manager](https://pixi.sh/latest/#installati
 
 ```sh
 git clone https://github.com/rerun-io/sam3d-body-rerun.git
-cd sam3d-body-rerun
+cd sam3d-body-dalaran
 pixi run app
 ```

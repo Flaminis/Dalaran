@@ -5,7 +5,7 @@ title: "Vector2D"
 
 A vector in 2D space.
 
-## Rerun datatype
+## Dalaran datatype
 [`Vec2D`](../datatypes/vec2d.md)
 
 
@@ -15,9 +15,9 @@ FixedSizeList(2 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Vector2D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Vector2D.html)
- * 🐍 [Python API docs for `Vector2D`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Vector2D)
- * 🦀 [Rust API docs for `Vector2D`](https://docs.rs/rerun/latest/rerun/components/struct.Vector2D.html)
+ * 🌊 [C++ API docs for `Vector2D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Vector2D.html)
+ * 🐍 [Python API docs for `Vector2D`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Vector2D)
+ * 🦀 [Rust API docs for `Vector2D`](https://docs.rs/dalaran/latest/dalaran/components/struct.Vector2D.html)
 
 
 ## Used by

@@ -2,11 +2,11 @@
 
 use std::sync::Arc;
 
-use rerun::external::arrow;
+use dalaran::external::arrow;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_recording_properties",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_recording_properties",
     )
     .spawn()?;
 
@@ -16,13 +16,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Start time is set automatically, but we can overwrite it at any time.
     rec.send_recording_start_time(1742539110661000000)?;
 
-    // Adds a user-defined property to the recording, using an existing Rerun type.
+    // Adds a user-defined property to the recording, using an existing Dalaran type.
     rec.send_property(
         "camera_left",
-        &rerun::archetypes::Points3D::new([[1.0, 0.1, 1.0]]),
+        &dalaran::archetypes::Points3D::new([[1.0, 0.1, 1.0]]),
     )?;
 
-    let other = rerun::AnyValues::default()
+    let other = dalaran::AnyValues::default()
         .with_component_from_data(
             "confidences",
             Arc::new(arrow::array::Float64Array::from(vec![

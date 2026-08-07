@@ -17,33 +17,33 @@ This example visualizes layout analysis and text detection of documents using Pa
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/ocr1/54b3a9d0706fd4a3a3dcbf878046ae34a7a6feec/1200w.png">
 </picture>
 
-## Used Rerun types
+## Used Dalaran types
 
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`TextDocument`](https://rerun.io/docs/reference/types/archetypes/text_document), [`Boxes2D`](https://rerun.io/docs/reference/types/archetypes/boxes2d), [`AnnotationContext`](https://rerun.io/docs/reference/types/archetypes/annotation_context)
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`TextDocument`](https://dalaran.dev/docs/reference/types/archetypes/text_document), [`Boxes2D`](https://dalaran.dev/docs/reference/types/archetypes/boxes2d), [`AnnotationContext`](https://dalaran.dev/docs/reference/types/archetypes/annotation_context)
 
 ## Background
 
 This example demonstrates the ability to visualize and verify the document layout analysis and text detection using the [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR).
 [PP-Structure](https://github.com/PaddlePaddle/PaddleOCR/tree/main/ppstructure) used for this task, which is an intelligent document analysis system developed by the PaddleOCR team, which aims to help developers better complete tasks related to document understanding such as layout analysis and table recognition.
 In the layout analysis task, the image first goes through the layout analysis model to divide the image into different areas such as text, table, figure and more, and then analyze these areas separately.
-The classification of layouts and the text detection (including confidence levels) are visualized in the Rerun viewer.
+The classification of layouts and the text detection (including confidence levels) are visualized in the Dalaran viewer.
 Finally, the recovery text document section presents the restored document with sorted order. By clicking on the restored text, the text area will be highlighted.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-The visualizations in this example were created with the following Rerun code.
+The visualizations in this example were created with the following Dalaran code.
 
 ### Image
 
-The input document is logged as [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image) object to the `{page_path}/Image` entity.
+The input document is logged as [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image) object to the `{page_path}/Image` entity.
 
 ```python
-    rr.log(f"{page_path}/Image", rr.Image(image_rgb))
+    dl.log(f"{page_path}/Image", dl.Image(image_rgb))
 ```
 
 ### Label mapping
 
-An annotation context is logged with a class ID and a color assigned per layout type using [`AnnotationContext`](https://rerun.io/docs/reference/types/archetypes/annotation_context).
+An annotation context is logged with a class ID and a color assigned per layout type using [`AnnotationContext`](https://dalaran.dev/docs/reference/types/archetypes/annotation_context).
 
 ```python
 class LayoutType(Enum):
@@ -75,61 +75,61 @@ class LayoutType(Enum):
 
 
 def detect_and_log_layout(img_path):
-    rr.log(
+    dl.log(
         f"{page_path}/Image",
         # The annotation is defined in the Layout class based on its properties
-        rr.AnnotationContext(LayoutType.get_annotation()),
+        dl.AnnotationContext(LayoutType.get_annotation()),
         static=True,
     )
 ```
 
 ### Detections
 
-The detections include the layout types and the text detections. Both of them are logged as [`Boxes2D`](https://www.rerun.io/docs/reference/types/archetypes/boxes2d) to Rerun.
+The detections include the layout types and the text detections. Both of them are logged as [`Boxes2D`](https://www.dalaran.dev/docs/reference/types/archetypes/boxes2d) to Dalaran.
 
 ```python
-rr.log(
+dl.log(
     base_path,
-    rr.Boxes2D(
+    dl.Boxes2D(
         array=record["bounding_box"],
-        array_format=rr.Box2DFormat.XYXY,
+        array_format=dl.Box2DFormat.XYXY,
         labels=[str(layout_type.type)],
         class_ids=[str(layout_type.number)],
     ),
-    rr.AnyValues(name=record_name),
+    dl.AnyValues(name=record_name),
 )
 ```
 
 Additionally, in the detection of the text, the detection id and the confidence are specified.
 
 ```python
-rr.log(
+dl.log(
     f"{base_path}/Detections/{detection['id']}",
-    rr.Boxes2D(array=detection["box"], array_format=rr.Box2DFormat.XYXY, class_ids=[str(layout_type.number)]),
-    rr.AnyValues(DetectionID=detection["id"], Text=detection["text"], Confidence=detection["confidence"]),
+    dl.Boxes2D(array=detection["box"], array_format=dl.Box2DFormat.XYXY, class_ids=[str(layout_type.number)]),
+    dl.AnyValues(DetectionID=detection["id"], Text=detection["text"], Confidence=detection["confidence"]),
 )
 ```
 
 ### Setting up the blueprint
 
-[Blueprint](https://rerun.io/docs/concepts/visualization/blueprints) sets up the Rerun Viewer's layout. In this example, we set the layout for the layout classification, the Detections for the text detection and the Recovery for the restored detections, which includes both layout analysis and text detections.
+[Blueprint](https://dalaran.dev/docs/concepts/visualization/blueprints) sets up the Dalaran Viewer's layout. In this example, we set the layout for the layout classification, the Detections for the text detection and the Recovery for the restored detections, which includes both layout analysis and text detections.
 We dynamically set the tabs, as there will be different tabs for figures, tables and text detection.
 
 The blueprint for this example is created by the following code:
 
 ```python
 page_tabs.append(
-    rrb.Vertical(
-        rrb.Horizontal(
-            rrb.Spatial2DView(
+    dlb.Vertical(
+        dlb.Horizontal(
+            dlb.Spatial2DView(
                 name="Layout",
                 origin=f"{page_path}/Image/",
                 contents=[f"{page_path}/Image/**"] + detections_paths,
             ),
-            rrb.Spatial2DView(name="Detections", contents=[f"{page_path}/Image/**"]),
-            rrb.TextDocumentView(name="Recovery", contents=f"{page_path}/Recovery"),
+            dlb.Spatial2DView(name="Detections", contents=[f"{page_path}/Image/**"]),
+            dlb.TextDocumentView(name="Recovery", contents=f"{page_path}/Recovery"),
         ),
-        rrb.Horizontal(*section_tabs),
+        dlb.Horizontal(*section_tabs),
         name=page_path,
         row_shares=[4, 3],
     )
@@ -137,9 +137,9 @@ page_tabs.append(
 
 # …
 
-rr.send_blueprint(
-    rrb.Blueprint(
-        rrb.Tabs(*page_tabs),
+dl.send_blueprint(
+    dlb.Blueprint(
+        dlb.Tabs(*page_tabs),
         collapse_panels=True,
     )
 )
@@ -147,13 +147,13 @@ rr.send_blueprint(
 
 ## Run the code
 
-You can view this example live on [Huggingface spaces](https://huggingface.co/spaces/rerun/OCR).\
-To run this example locally, make sure you have the Rerun repository checked out and the latest SDK installed:
+You can view this example live on [Huggingface spaces](https://huggingface.co/spaces/dalaran/OCR).\
+To run this example locally, make sure you have the Dalaran repository checked out and the latest SDK installed:
 
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 ```
 
 Install the necessary libraries specified in the requirements file:

@@ -15,7 +15,7 @@ This means that if you first log a transform with only a translation, and then l
 it will be resolved to a transform with only a rotation.
 (This is unlike how we usually apply latest-at semantics on an archetype where we take the latest state of any component independently)
 
-For transforms that affect only a single entity and do not propagate along the entity tree refer to [`archetypes.InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d).
+For transforms that affect only a single entity and do not propagate along the entity tree refer to [`archetypes.InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d).
 
 ## Fields
 ### Optional
@@ -35,9 +35,9 @@ For transforms that affect only a single entity and do not propagate along the e
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Transform3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Transform3D.html)
- * 🐍 [Python API docs for `Transform3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Transform3D)
- * 🦀 [Rust API docs for `Transform3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Transform3D.html)
+ * 🌊 [C++ API docs for `Transform3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Transform3D.html)
+ * 🐍 [Python API docs for `Transform3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Transform3D)
+ * 🦀 [Rust API docs for `Transform3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Transform3D.html)
 
 ## Examples
 

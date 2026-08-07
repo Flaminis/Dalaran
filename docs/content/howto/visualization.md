@@ -5,4 +5,4 @@ description: Recipes for displaying data and customizing the Viewer
 index: true
 ---
 
-How-to guides for visualizing data in the Rerun Viewer.
+How-to guides for visualizing data in the Dalaran Viewer.

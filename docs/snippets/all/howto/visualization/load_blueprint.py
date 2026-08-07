@@ -8,12 +8,12 @@ The blueprint is being loaded from an existing blueprint recording file.
 
 import sys
 
-import rerun as rr
+import dalaran as dl
 
 path_to_rrd = sys.argv[1]
 path_to_rbl = sys.argv[2]
 
-rr.init("rerun_example_dataframe_view_query_external", spawn=True)
+dl.init("dalaran_example_dataframe_view_query_external", spawn=True)
 
-rr.log_file_from_path(path_to_rrd)
-rr.log_file_from_path(path_to_rbl)
+dl.log_file_from_path(path_to_rrd)
+dl.log_file_from_path(path_to_rbl)

@@ -4,10 +4,10 @@ order: 991
 hidden: true
 ---
 
-Blueprint files (.rbl) from previous Rerun versions will no longer load _automatically_.
+Blueprint files (.rbl) from previous Dalaran versions will no longer load _automatically_.
 
 ### 🐧 Linux
-Rerun now require glibc 2.17 or higher.
+Dalaran now require glibc 2.17 or higher.
 
 This is because we updated the Rust version. See <https://blog.rust-lang.org/2022/08/01/Increasing-glibc-kernel-requirements.html> for more details.
 

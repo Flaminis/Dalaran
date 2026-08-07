@@ -16,9 +16,9 @@ First, we create a few recordings with some properties:
 
 snippet: concepts/query-and-transform/segment_properties[setup]
 
-In this example, we use `send_property()` to attach metadata to each recording. Properties are regular Rerun data, so you can use any built-in archetype. Here we use [`GeoPoints`](../../reference/types/archetypes/geo_points.md) to store a geographic location. For arbitrary data that doesn't fit an existing archetype, use [`AnyValues`](../../howto/logging-and-ingestion/custom-data.md).
+In this example, we use `send_property()` to attach metadata to each recording. Properties are regular Dalaran data, so you can use any built-in archetype. Here we use [`GeoPoints`](../../reference/types/archetypes/geo_points.md) to store a geographic location. For arbitrary data that doesn't fit an existing archetype, use [`AnyValues`](../../howto/logging-and-ingestion/custom-data.md).
 
-In addition to user-provided properties, Rerun automatically stores built-in properties using the [`RecordingInfo`](../../reference/types/archetypes/recording_info.md) archetype.
+In addition to user-provided properties, Dalaran automatically stores built-in properties using the [`RecordingInfo`](../../reference/types/archetypes/recording_info.md) archetype.
 Its `start_time` field is automatically populated, and its `name` field can be set with `send_recording_name()`.
 
 Internally, properties are logged under a reserved `/__properties` entity path and use [static semantics](../logging-and-ingestion/static.md) since they apply to the entire recording rather than specific points in time.
@@ -26,7 +26,7 @@ Internally, properties are logged under a reserved `/__properties` entity path a
 ## Querying the segment table
 
 Once recordings are registered to a [dataset](catalog-object-model.md#datasets), their properties become visible and queryable through the segment table.
-Here we use the local open-source catalog server included with Rerun to illustrate this:
+Here we use the local open-source catalog server included with Dalaran to illustrate this:
 
 snippet: concepts/query-and-transform/segment_properties[segment_table]
 
@@ -35,7 +35,7 @@ Output:
 
 ```
 ┌──────────────────────────────────┬────────────────────────────────────┬─────────────────────────────────────┬───────────────────────────────────┬────────────────────────────────────┬──────────────────────────────────────────────────────────────┐
-│ rerun_segment_id                 ┆ property:RecordingInfo:name        ┆ property:RecordingInfo:start_time   ┆ property:info:index               ┆ property:info:is_odd               ┆ property:location:GeoPoints:positions                        │
+│ dalaran_segment_id                 ┆ property:RecordingInfo:name        ┆ property:RecordingInfo:start_time   ┆ property:info:index               ┆ property:info:is_odd               ┆ property:location:GeoPoints:positions                        │
 │ ---                              ┆ ---                                ┆ ---                                 ┆ ---                               ┆ ---                                ┆ ---                                                          │
 │ type: Utf8                       ┆ type: nullable List[nullable Utf8] ┆ type: nullable List[nullable i64]   ┆ type: nullable List[nullable i64] ┆ type: nullable List[nullable bool] ┆ type: nullable List[nullable FixedSizeList[nullable f64; 2]] │
 │                                  ┆ archetype: RecordingInfo           ┆ archetype: RecordingInfo            ┆ component: index                  ┆ component: is_odd                  ┆ archetype: GeoPoints                                         │
@@ -69,7 +69,7 @@ Output:
 
 ```
 ┌──────────────────────────────────┬────────────────────────────────────┬─────────────────────────────────────┬───────────────────────────────────┬────────────────────────────────────┬──────────────────────────────────────────────────────────────┐
-│ rerun_segment_id                 ┆ property:RecordingInfo:name        ┆ property:RecordingInfo:start_time   ┆ property:info:index               ┆ property:info:is_odd               ┆ property:location:GeoPoints:positions                        │
+│ dalaran_segment_id                 ┆ property:RecordingInfo:name        ┆ property:RecordingInfo:start_time   ┆ property:info:index               ┆ property:info:is_odd               ┆ property:location:GeoPoints:positions                        │
 │ ---                              ┆ ---                                ┆ ---                                 ┆ ---                               ┆ ---                                ┆ ---                                                          │
 │ type: Utf8                       ┆ type: nullable List[nullable Utf8] ┆ type: nullable List[nullable i64]   ┆ type: nullable List[nullable i64] ┆ type: nullable List[nullable bool] ┆ type: nullable List[nullable FixedSizeList[nullable f64; 2]] │
 │                                  ┆ archetype: RecordingInfo           ┆ archetype: RecordingInfo            ┆ component: index                  ┆ component: is_odd                  ┆ archetype: GeoPoints                                         │
@@ -92,7 +92,7 @@ Output:
 
 Properties are stored under the reserved `/__properties` entity path and are logged as [static data](../logging-and-ingestion/static.md), meaning they have no timeline association.
 Logging directly under this entity path is not recommended.
-Use the [`rr.send_property()`](https://ref.rerun.io/docs/python/stable/common/property_functions/#rerun.send_property) or [`RecordingStream.send_property()`](https://ref.rerun.io/docs/python/stable/common/initialization_functions/#rerun.RecordingStream.send_property) API instead.
+Use the [`dl.send_property()`](https://ref.dalaran.dev/docs/python/stable/common/property_functions/#dalaran.send_property) or [`RecordingStream.send_property()`](https://ref.dalaran.dev/docs/python/stable/common/initialization_functions/#dalaran.RecordingStream.send_property) API instead.
 
 ### How are property columns named?
 
@@ -108,7 +108,7 @@ For example, a `GeoPoints` archetype logged under the entity `location` appears 
 
 For built-in properties, the `$property_name` part is omitted, e.g., `property:RecordingInfo:name`.
 
-The `rr.AnyValues` helper logs data without a defined archetype.
+The `dl.AnyValues` helper logs data without a defined archetype.
 As a result, the corresponding columns do not have the `$Archetype` part, e.g., `property:info:index`.
 
 <!-- TODO(ab): should we be talking about DynamicArchetype here too? -->
@@ -126,7 +126,7 @@ Output:
 
 ```
 ┌──────────────────────────────────┬────────────────────────────────────┬───────────────────────────────────┐
-│ rerun_segment_id                 ┆ property:RecordingInfo:name        ┆ property:info:index               │
+│ dalaran_segment_id                 ┆ property:RecordingInfo:name        ┆ property:info:index               │
 │ ---                              ┆ ---                                ┆ ---                               │
 │ type: Utf8                       ┆ type: nullable List[nullable Utf8] ┆ type: nullable List[nullable i64] │
 │                                  ┆ archetype: RecordingInfo           ┆ component: index                  │
@@ -152,5 +152,5 @@ Output:
 ### Can the built-in properties be omitted from recordings?
 
 Yes.
-Both [`rr.init()`](https://ref.rerun.io/docs/python/stable/common/initialization_functions/#rerun.init) and [`RecordingStream()`](https://ref.rerun.io/docs/python/stable/common/initialization_functions/#rerun.RecordingStream) accept a `send_properties` parameter (default: `True`).
+Both [`dl.init()`](https://ref.dalaran.dev/docs/python/stable/common/initialization_functions/#dalaran.init) and [`RecordingStream()`](https://ref.dalaran.dev/docs/python/stable/common/initialization_functions/#dalaran.RecordingStream) accept a `send_properties` parameter (default: `True`).
 Set it to `False` to prevent the built-in `RecordingInfo` properties from being automatically sent when the recording is created.

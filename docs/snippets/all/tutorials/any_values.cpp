@@ -1,13 +1,13 @@
 // Log arbitrary data.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <arrow/array/builder_binary.h>
 #include <arrow/array/builder_primitive.h>
 #include <cstdio>
 
 arrow::Status run_main() {
-    const auto rec = rerun::RecordingStream("rerun_example_any_values");
+    const auto rec = dalaran::RecordingStream("dalaran_example_any_values");
     rec.spawn().exit_on_failure();
 
     std::shared_ptr<arrow::Array> arrow_array;
@@ -15,30 +15,30 @@ arrow::Status run_main() {
     arrow::DoubleBuilder confidences_builder;
     ARROW_RETURN_NOT_OK(confidences_builder.AppendValues({1.2, 3.4, 5.6}));
     ARROW_RETURN_NOT_OK(confidences_builder.Finish(&arrow_array));
-    auto confidences = rerun::ComponentBatch::from_arrow_array(
+    auto confidences = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("confidence")
-            .with_component_type(rerun::Loggable<rerun::Scalar>::ComponentType)
+        dalaran::ComponentDescriptor("confidence")
+            .with_component_type(dalaran::Loggable<dalaran::Scalar>::ComponentType)
     );
 
     arrow::StringBuilder description_builder;
     ARROW_RETURN_NOT_OK(description_builder.Append("Bla bla bla…"));
     ARROW_RETURN_NOT_OK(description_builder.Finish(&arrow_array));
-    auto description = rerun::ComponentBatch::from_arrow_array(
+    auto description = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("description")
+        dalaran::ComponentDescriptor("description")
             .with_component_type(
 
-                rerun::Loggable<rerun::Text>::ComponentType
+                dalaran::Loggable<dalaran::Text>::ComponentType
             )
     );
     // URIs will become clickable links
     arrow::StringBuilder homepage_builder;
-    ARROW_RETURN_NOT_OK(homepage_builder.Append("https://www.rerun.io"));
+    ARROW_RETURN_NOT_OK(homepage_builder.Append("https://www.dalaran.dev"));
     ARROW_RETURN_NOT_OK(homepage_builder.Finish(&arrow_array));
-    auto homepage = rerun::ComponentBatch::from_arrow_array(
+    auto homepage = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("homepage")
+        dalaran::ComponentDescriptor("homepage")
     );
 
     arrow::StringBuilder repository_builder;
@@ -46,9 +46,9 @@ arrow::Status run_main() {
         repository_builder.Append("https://github.com/rerun-io/rerun")
     );
     ARROW_RETURN_NOT_OK(repository_builder.Finish(&arrow_array));
-    auto repository = rerun::ComponentBatch::from_arrow_array(
+    auto repository = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("repository")
+        dalaran::ComponentDescriptor("repository")
     );
 
     rec.log("any_values", confidences, description, homepage, repository);

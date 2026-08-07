@@ -1,10 +1,10 @@
 // Log a simple MCAP schema definition.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 #include <string>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_mcap_schema");
+    const auto rec = dalaran::RecordingStream("dalaran_example_mcap_schema");
     rec.spawn().exit_on_failure();
 
     // Example ROS2 message definition for a simple Point message
@@ -12,11 +12,11 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "mcap/schemas/geometry_point",
-        rerun::archetypes::McapSchema(
+        dalaran::archetypes::McapSchema(
             42,
             "geometry_msgs/msg/Point",
             "ros2msg",
-            rerun::components::Blob(point_schema)
+            dalaran::components::Blob(point_schema)
         )
     );
 }

@@ -1,17 +1,17 @@
 //! Log a `TextDocument`
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_text_document")
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_text_document")
         .spawn()?;
 
     rec.log(
         "text_document",
-        &rerun::TextDocument::new("Hello, TextDocument!"),
+        &dalaran::TextDocument::new("Hello, TextDocument!"),
     )?;
 
     rec.log(
         "markdown",
-        &rerun::TextDocument::from_markdown(
+        &dalaran::TextDocument::from_markdown(
             r#"
 # Hello Markdown!
 [Click here to see the raw text](recording://markdown:Text).
@@ -42,7 +42,7 @@ You can link to [an entity](recording://markdown),
 a [specific instance of an entity](recording://markdown[#0]),
 or a [specific component](recording://markdown:Text).
 
-Of course you can also have [normal https links](https://github.com/rerun-io/rerun), e.g. <https://rerun.io>.
+Of course you can also have [normal https links](https://github.com/rerun-io/rerun), e.g. <https://dalaran.dev>.
 
 ## Image
 ![A random image](https://picsum.photos/640/480)

@@ -6,9 +6,9 @@ hidden: true
 
 
 ## ⚠️ Breaking changes
-* `HalfSizes2D` has been renamed to [`HalfSize2D`](https://rerun.io/docs/reference/types/components/half_size2d)
-* `HalfSizes3D` has been renamed to [`HalfSize3D`](https://rerun.io/docs/reference/types/components/half_size3d)
-* `.rrd` files from older versions won't load in Rerun 0.17
+* `HalfSizes2D` has been renamed to [`HalfSize2D`](https://dalaran.dev/docs/reference/types/components/half_size2d)
+* `HalfSizes3D` has been renamed to [`HalfSize3D`](https://dalaran.dev/docs/reference/types/components/half_size3d)
+* `.rrd` files from older versions won't load in Dalaran 0.17
 
 
 ## New integrated visualizer and component override UI
@@ -36,45 +36,45 @@ See [Visualizers and Overrides](../../concepts/visualization/customize-views.md)
 
 This release introduces new Python APIs to set component overrides, visualizer overrides, and component defaults from code. Depending on your use-case, these new APIs become the preferred way of styling views.
 
-For example, setting color and enabling the `SeriesPoints` visualizer was previously done using `rr.log()`:
+For example, setting color and enabling the `SeriesPoints` visualizer was previously done using `dl.log()`:
 
 ```python
-rr.log("data", rr.SeriesPoints(colors=[255, 255, 0]), static=True)
+dl.log("data", dl.SeriesPoints(colors=[255, 255, 0]), static=True)
 
 for t in range(1000):
-    rr.set_time_sequence("frame_nr", t)
-    (rr.log("data", rr.Scalar(get_data(t))),)
+    dl.set_time_sequence("frame_nr", t)
+    (dl.log("data", dl.Scalar(get_data(t))),)
 
-rr.send_blueprint(rr.blueprint.TimeSeriesView(origin="data"))
+dl.send_blueprint(dl.blueprint.TimeSeriesView(origin="data"))
 ```
 
 Now the override can be specified from the blueprint, removing the need to include styling information in the data store:
 
 ```python
 for t in range(1000):
-    rr.set_time_sequence("frame_nr", t)
-    (rr.log("data", rr.Scalar(get_data(t))),)
+    dl.set_time_sequence("frame_nr", t)
+    (dl.log("data", dl.Scalar(get_data(t))),)
 
-rr.send_blueprint(
-    rr.blueprint.TimeSeriesView(
+dl.send_blueprint(
+    dl.blueprint.TimeSeriesView(
         origin="data",
-        overrides={"data": [rr.blueprint.VisualizerOverrides("SeriesPoints"), rr.components.Color([255, 255, 0])]},
+        overrides={"data": [dl.blueprint.VisualizerOverrides("SeriesPoints"), dl.components.Color([255, 255, 0])]},
     )
 )
 ```
 
-The [Plots](https://rerun.io/examples/feature-showcase/plots) example has been updated to showcase the new APIs. See [Visualizers and Overrides](../../concepts/visualization/customize-views.md) for more information.
+The [Plots](https://dalaran.dev/examples/feature-showcase/plots) example has been updated to showcase the new APIs. See [Visualizers and Overrides](../../concepts/visualization/customize-views.md) for more information.
 
 
 ## New and changed components
 
-* New [`ImagePlaneDistance`](https://rerun.io/docs/reference/types/components/image_plane_distance) to allow configuring the size of the Pinhole frustum visualization.
-* New [`AxisLength`](https://rerun.io/docs/reference/types/components/axis_length) to allow configuring the axis length of the transform visualization.
+* New [`ImagePlaneDistance`](https://dalaran.dev/docs/reference/types/components/image_plane_distance) to allow configuring the size of the Pinhole frustum visualization.
+* New [`AxisLength`](https://dalaran.dev/docs/reference/types/components/axis_length) to allow configuring the axis length of the transform visualization.
 * New components for the `DepthImage` and `SegmentationImage` archetypes:
-    * [`Opacity`](https://rerun.io/docs/reference/types/components/opacity) is used to configure transparency.
+    * [`Opacity`](https://dalaran.dev/docs/reference/types/components/opacity) is used to configure transparency.
         * Note: layered `Image` are no longer made automatically transparent
-    * [`FillRatio`](https://rerun.io/docs/reference/types/components/fill_ratio) is used for setting the point radius on `DepthImage` in 3D views.
-    * [`Colormap`](https://rerun.io/docs/reference/types/components/colormap) is used for setting `DepthImage` colormap.
-    * [`AggregationPolicy`](https://rerun.io/docs/reference/types/components/aggregation_policy) is used for setting aggregation policy on line plots.
-* [`Radius`](https://rerun.io/docs/reference/types/components/radius) component can now optionally specify radius in UI points
-* Renamed [`HalfSize2D`](https://rerun.io/docs/reference/types/components/half_size2d) and [`HalfSize3D`](https://rerun.io/docs/reference/types/components/half_size3d). They were previously in plural form. All our components now are in singular form.
+    * [`FillRatio`](https://dalaran.dev/docs/reference/types/components/fill_ratio) is used for setting the point radius on `DepthImage` in 3D views.
+    * [`Colormap`](https://dalaran.dev/docs/reference/types/components/colormap) is used for setting `DepthImage` colormap.
+    * [`AggregationPolicy`](https://dalaran.dev/docs/reference/types/components/aggregation_policy) is used for setting aggregation policy on line plots.
+* [`Radius`](https://dalaran.dev/docs/reference/types/components/radius) component can now optionally specify radius in UI points
+* Renamed [`HalfSize2D`](https://dalaran.dev/docs/reference/types/components/half_size2d) and [`HalfSize3D`](https://dalaran.dev/docs/reference/types/components/half_size3d). They were previously in plural form. All our components now are in singular form.

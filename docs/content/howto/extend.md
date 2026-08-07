@@ -1,11 +1,11 @@
 ---
-title: Extend Rerun
+title: Extend Dalaran
 hidden: true
 ---
 
-There are currently two major ways of extending Rerun. You can use Rerun with [your own custom data](logging-and-ingestion/custom-data.md), or [extend the Rerun Viewer](visualization/extend-ui.md) (currently Rust only).
+There are currently two major ways of extending Dalaran. You can use Dalaran with [your own custom data](logging-and-ingestion/custom-data.md), or [extend the Dalaran Viewer](visualization/extend-ui.md) (currently Rust only).
 
-The goal is for Rerun to become easy to extend at every level. For example, with plugins for
+The goal is for Dalaran to become easy to extend at every level. For example, with plugins for
 - data sources
 - data stores
 - data transforms

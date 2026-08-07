@@ -2,10 +2,10 @@
 #include <cstdint>
 #include <vector>
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_image_formats");
+    const auto rec = dalaran::RecordingStream("dalaran_example_image_formats");
     rec.spawn().exit_on_failure();
 
     // Simple gradient image
@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     }
 
     // RGB image
-    rec.log("image_rgb", rerun::Image::from_rgb24(image, {256, 256}));
+    rec.log("image_rgb", dalaran::Image::from_rgb24(image, {256, 256}));
 
     // Green channel only (Luminance)
     std::vector<uint8_t> green_channel(256 * 256);
@@ -29,10 +29,10 @@ int main(int argc, char* argv[]) {
     }
     rec.log(
         "image_green_only",
-        rerun::Image(
-            rerun::borrow(green_channel),
+        dalaran::Image(
+            dalaran::borrow(green_channel),
             {256, 256},
-            rerun::ColorModel::L
+            dalaran::ColorModel::L
         )
     );
 
@@ -45,10 +45,10 @@ int main(int argc, char* argv[]) {
     }
     rec.log(
         "image_bgr",
-        rerun::Image(
-            rerun::borrow(bgr_image),
+        dalaran::Image(
+            dalaran::borrow(bgr_image),
             {256, 256},
-            rerun::ColorModel::BGR
+            dalaran::ColorModel::BGR
         )
     );
 
@@ -72,10 +72,10 @@ int main(int argc, char* argv[]) {
     }
     rec.log(
         "image_yuv422",
-        rerun::Image(
-            rerun::borrow(yuv_bytes),
+        dalaran::Image(
+            dalaran::borrow(yuv_bytes),
             {256, 256},
-            rerun::PixelFormat::Y_U_V16_FullRange
+            dalaran::PixelFormat::Y_U_V16_FullRange
         )
     );
 

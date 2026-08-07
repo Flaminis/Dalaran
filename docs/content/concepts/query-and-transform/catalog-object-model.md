@@ -4,7 +4,7 @@ order: 100
 description: How the catalog organizes datasets, segments, and entries
 ---
 
-This page covers the catalog server's object model. For logging and recording basics, see [Recordings](../logging-and-ingestion/recordings.md). For API details, see the [Catalog SDK reference](https://ref.rerun.io/docs/python/stable/common/catalog/).
+This page covers the catalog server's object model. For logging and recording basics, see [Recordings](../logging-and-ingestion/recordings.md). For API details, see the [Catalog SDK reference](https://ref.dalaran.dev/docs/python/stable/common/catalog/).
 
 
 ## Catalog
@@ -25,7 +25,7 @@ The id of a catalog entry is immutable, but the name can be changed provided it 
 In Python, call `set_name()` on an entry to rename it on the catalog server, for example:
 
 ```python
-client = rr.catalog.CatalogClient(…)
+client = dl.catalog.CatalogClient(…)
 dataset = client.get_dataset("old_name")
 dataset.set_name("new_name")
 ```
@@ -59,7 +59,7 @@ Thanks to [DataFusion](https://datafusion.apache.org/), tables also support most
 
 ## Datasets
 
-Dataset entries model a collection of Rerun data organized in episodes such as recorded runs of a given robotic task.
+Dataset entries model a collection of Dalaran data organized in episodes such as recorded runs of a given robotic task.
 These episodes within datasets are called _segments_, which are identified by a segment ID.
 
 Segments are added to datasets by the process of _registering_ a [recording](../logging-and-ingestion/recordings.md) (typically stored in some object store such as S3) to the dataset using the Catalog SDK.
@@ -83,7 +83,7 @@ Layers are immutable and can only be overwritten by registering a new `.rrd` fil
 
 ### Schema
 
-Datasets are based on the Rerun data model, which consists of a collection of [chunks](../logging-and-ingestion/chunks.md) of Arrow data.
+Datasets are based on the Dalaran data model, which consists of a collection of [chunks](../logging-and-ingestion/chunks.md) of Arrow data.
 These chunks hold data for various [entities and components](../logging-and-ingestion/entity-component.md) corresponding to various indexes (or [timelines](../logging-and-ingestion/timelines.md)).
 A given collection of chunks, say, a dataset segment, defines an Arrow schema.
 We refer to this as _schema-on-read_, because the schema proceeds from the data, and not the other way around.
@@ -99,12 +99,12 @@ In this context, the schema of a dataset is the union of schemas of its segments
 Datasets maintain a minimal level of schema self-consistency.
 Registering a `.rrd` whose schema is incompatible with the current dataset schema will result in an error.
 In this context, _incompatible_ means that the schema of the new `.rrd` contains a column for the same entity, archetype, and component, but with a different Arrow type.
-Such an occurrence is rare, and practically impossible when using standard Rerun archetypes.
+Such an occurrence is rare, and practically impossible when using standard Dalaran archetypes.
 
 
 ### Blueprints
 
 A dataset can be assigned a blueprint.
 This is done by registering a `.rbl` blueprint file typically stored in object storage to the dataset.
-A dedicated API exists for this in the Catalog SDK: [`DatasetEntry.register_blueprint()`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetEntry.register_blueprint).
-In that case, the blueprint is applied to all segments of the dataset when visualized in the Rerun Viewer.
+A dedicated API exists for this in the Catalog SDK: [`DatasetEntry.register_blueprint()`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetEntry.register_blueprint).
+In that case, the blueprint is applied to all segments of the dataset when visualized in the Dalaran Viewer.

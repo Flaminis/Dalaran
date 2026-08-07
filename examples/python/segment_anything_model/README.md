@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Segment anything model"
-description = "Run Meta AI's Segment Anything on an image and log every mask as a transparent overlay via Rerun's `Tensor` archetype."
+description = "Run Meta AI's Segment Anything on an image and log every mask as a transparent overlay via Dalaran's `Tensor` archetype."
 tags = ["2D", "SAM", "Segmentation"]
 thumbnail = "https://static.rerun.io/segment-anything-model/36438df27a287e5eff3a673e2464af071e665fdf/480w.png"
 thumbnail_dimensions = [480, 480]
@@ -8,7 +8,7 @@ channel = "release"
 include_in_manifest = true
 -->
 
-Example of using Rerun to log and visualize the output of [Meta AI's Segment Anything model](https://github.com/facebookresearch/segment-anything).
+Example of using Dalaran to log and visualize the output of [Meta AI's Segment Anything model](https://github.com/facebookresearch/segment-anything).
 
 <picture data-inline-viewer="examples/segment_anything_model">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/segment_anything_model/6aa2651907efbcf81be55b343caa76b9de5f2138/480w.png">
@@ -18,57 +18,57 @@ Example of using Rerun to log and visualize the output of [Meta AI's Segment Any
   <img src="https://static.rerun.io/segment_anything_model/6aa2651907efbcf81be55b343caa76b9de5f2138/full.png" alt="Segment Anything Model example screenshot">
 </picture>
 
-## Used Rerun types
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`Tensor`](https://www.rerun.io/docs/reference/types/archetypes/tensor), [`SegmentationImage`](https://www.rerun.io/docs/reference/types/archetypes/segmentation_image), [`Boxes2D`](https://www.rerun.io/docs/reference/types/archetypes/boxes2d)
+## Used Dalaran types
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`Tensor`](https://www.dalaran.dev/docs/reference/types/archetypes/tensor), [`SegmentationImage`](https://www.dalaran.dev/docs/reference/types/archetypes/segmentation_image), [`Boxes2D`](https://www.dalaran.dev/docs/reference/types/archetypes/boxes2d)
 
 ## Background
 This example showcases the visualization capabilities of [Meta AI's Segment Anything model](https://github.com/facebookresearch/segment-anything).
 The visualization provided in this example demonstrates the precise and accurate segmentation capabilities of the model, effectively distinguishing each object from the background and creating a transparent mask around them.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-The visualizations in this example were created with the following Rerun code:
+The visualizations in this example were created with the following Dalaran code:
 
 ### Timelines
 
-All data logged using Rerun in the following sections is connected to a specific frame.
-Rerun assigns a frame to each piece of logged data, and these timestamps are associated with a [`timeline`](https://www.rerun.io/docs/concepts/logging-and-ingestion/timelines).
+All data logged using Dalaran in the following sections is connected to a specific frame.
+Dalaran assigns a frame to each piece of logged data, and these timestamps are associated with a [`timeline`](https://www.dalaran.dev/docs/concepts/logging-and-ingestion/timelines).
 
  ```python
 for n, image_uri in enumerate(args.images):
-    rr.set_time("image", sequence=n)
+    dl.set_time("image", sequence=n)
     image = load_image(image_uri)
     run_segmentation(mask_generator, image)
  ```
 
 ### Image
-The input image is logged as [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image) to the `image` entity.
+The input image is logged as [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image) to the `image` entity.
 ```python
-rr.log("image", rr.Image(image))
+dl.log("image", dl.Image(image))
 ```
 ### Segmentation
-All masks are stacked together and logged using the [`Tensor`](https://www.rerun.io/docs/reference/types/archetypes/tensor) archetype.
+All masks are stacked together and logged using the [`Tensor`](https://www.dalaran.dev/docs/reference/types/archetypes/tensor) archetype.
 ```python
-rr.log("mask_tensor", rr.Tensor(mask_tensor))
+dl.log("mask_tensor", dl.Tensor(mask_tensor))
 ```
-Then, all the masks are layered together and the result is logged as a [`SegmentationImage`](https://www.rerun.io/docs/reference/types/archetypes/segmentation_image) to the `image/masks` entity.
+Then, all the masks are layered together and the result is logged as a [`SegmentationImage`](https://www.dalaran.dev/docs/reference/types/archetypes/segmentation_image) to the `image/masks` entity.
 ```python
-rr.log("image/masks", rr.SegmentationImage(segmentation_img.astype(np.uint8)))
+dl.log("image/masks", dl.SegmentationImage(segmentation_img.astype(np.uint8)))
 ```
-For object localization, bounding boxes of segmentations are logged as [`Boxes2D`](https://www.rerun.io/docs/reference/types/archetypes/boxes2d).
+For object localization, bounding boxes of segmentations are logged as [`Boxes2D`](https://www.dalaran.dev/docs/reference/types/archetypes/boxes2d).
 ```python
-rr.log(
+dl.log(
     "image/boxes",
-    rr.Boxes2D(array=mask_bbox, array_format=rr.Box2DFormat.XYWH, class_ids=[id for id, _ in masks_with_ids]),
+    dl.Boxes2D(array=mask_bbox, array_format=dl.Box2DFormat.XYWH, class_ids=[id for id, _ in masks_with_ids]),
 )
 ```
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

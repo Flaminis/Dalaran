@@ -15,7 +15,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--commit-sha", required=True, help="Which sha are we fetching artifacts for")
     parser.add_argument(
-        "--artifact", choices=["rerun-cli", "rerun-cli-macos-app"], help="Which artifact are we fetching"
+        "--artifact", choices=["dalaran-cli", "dalaran-cli-macos-app"], help="Which artifact are we fetching"
     )
     parser.add_argument(
         "--platform",
@@ -30,17 +30,17 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    # rerun-cli-macos-app fetches the macOS .app bundle (tarball) and extracts it into --dest.
-    if args.artifact == "rerun-cli-macos-app":
+    # dalaran-cli-macos-app fetches the macOS .app bundle (tarball) and extracts it into --dest.
+    if args.artifact == "dalaran-cli-macos-app":
         if args.platform != "macos-arm64":
-            raise SystemExit("--artifact rerun-cli-macos-app is only valid with --platform macos-arm64")
-        bucket_path = f"commit/{args.commit_sha}/rerun-cli/{args.platform}/Rerun.app.tar.gz"
+            raise SystemExit("--artifact dalaran-cli-macos-app is only valid with --platform macos-arm64")
+        bucket_path = f"commit/{args.commit_sha}/dalaran-cli/{args.platform}/Dalaran.app.tar.gz"
         print(f"Fetching artifact from {bucket_path} to {args.dest}")
         gcs = storage.Client()
-        bucket = gcs.bucket("rerun-builds")
+        bucket = gcs.bucket("dalaran-builds")
         artifact = bucket.blob(bucket_path)
         os.makedirs(args.dest, exist_ok=True)
-        tarball = Path(args.dest) / "Rerun.app.tar.gz"
+        tarball = Path(args.dest) / "Dalaran.app.tar.gz"
         with open(tarball, "wb") as f:
             artifact.download_to_file(f)
         with tarfile.open(tarball, "r:gz") as tar:
@@ -50,10 +50,10 @@ def main() -> None:
         return
 
     artifact_names: dict[tuple[str, str], str] = {}
-    artifact_names["rerun-cli", "linux-arm64"] = "rerun"
-    artifact_names["rerun-cli", "linux-x64"] = "rerun"
-    artifact_names["rerun-cli", "macos-arm64"] = "rerun"
-    artifact_names["rerun-cli", "windows-x64"] = "rerun.exe"
+    artifact_names["dalaran-cli", "linux-arm64"] = "dalaran"
+    artifact_names["dalaran-cli", "linux-x64"] = "dalaran"
+    artifact_names["dalaran-cli", "macos-arm64"] = "dalaran"
+    artifact_names["dalaran-cli", "windows-x64"] = "dalaran.exe"
 
     artifact_name = artifact_names[args.artifact, args.platform]
 
@@ -61,7 +61,7 @@ def main() -> None:
     print(f"Fetching artifact from {bucket_path} to {args.dest}")
 
     gcs = storage.Client()
-    bucket = gcs.bucket("rerun-builds")
+    bucket = gcs.bucket("dalaran-builds")
     artifact = bucket.blob(bucket_path)
 
     os.makedirs(args.dest, exist_ok=True)

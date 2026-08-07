@@ -10,52 +10,52 @@ import numpy as np
 import numpy.typing as npt
 import pytest
 
-import rerun as rr
+import dalaran as dl
 
 from . import Point3DInput, Transform3DInput
 
 
 def log_points3d_large_batch(data: Point3DInput) -> None:
     # create a new, empty memory sink for the current recording
-    rr.memory_recording()
+    dl.memory_recording()
 
-    rr.log(
+    dl.log(
         "large_batch",
-        rr.Points3D(positions=data.positions, colors=data.colors, radii=data.radii, labels=data.label),
+        dl.Points3D(positions=data.positions, colors=data.colors, radii=data.radii, labels=data.label),
     )
 
 
 @pytest.mark.parametrize("num_points", [50_000_000])
 def test_bench_points3d_large_batch(benchmark: Any, num_points: int) -> None:
-    rr.init("rerun_example_benchmark_points3d_large_batch")
+    dl.init("dalaran_example_benchmark_points3d_large_batch")
     data = Point3DInput.prepare(42, num_points)
     benchmark(log_points3d_large_batch, data)
 
 
 def log_points3d_many_individual(data: Point3DInput) -> None:
     # create a new, empty memory sink for the current recording
-    rr.memory_recording()
+    dl.memory_recording()
 
     for i in range(data.positions.shape[0]):
-        rr.log(
+        dl.log(
             "single_point",
-            rr.Points3D(positions=data.positions[i], colors=data.colors[i], radii=data.radii[i]),
+            dl.Points3D(positions=data.positions[i], colors=data.colors[i], radii=data.radii[i]),
         )
 
 
 @pytest.mark.parametrize("num_points", [100_000])
 def test_bench_points3d_many_individual(benchmark: Any, num_points: int) -> None:
-    rr.init("rerun_example_benchmark_points3d_many_individual")
+    dl.init("dalaran_example_benchmark_points3d_many_individual")
     data = Point3DInput.prepare(1337, num_points)
     benchmark(log_points3d_many_individual, data)
 
 
 def log_image(image: npt.NDArray[np.uint8], num_log_calls: int) -> None:
     # create a new, empty memory sink for the current recording
-    rr.memory_recording()
+    dl.memory_recording()
 
     for _ in range(num_log_calls):
-        rr.log("test_image", rr.Tensor(image))
+        dl.log("test_image", dl.Tensor(image))
 
 
 @pytest.mark.parametrize(
@@ -63,7 +63,7 @@ def log_image(image: npt.NDArray[np.uint8], num_log_calls: int) -> None:
     [pytest.param(1024, 4, 20_000, id="1024^2px-4channels-20000calls")],
 )
 def test_bench_image(benchmark: Any, image_dimension: int, image_channels: int, num_log_calls: int) -> None:
-    rr.init("rerun_example_benchmark_image")
+    dl.init("dalaran_example_benchmark_image")
 
     image = np.zeros((image_dimension, image_dimension, image_channels), dtype=np.uint8)
     benchmark(log_image, image, num_log_calls)
@@ -75,14 +75,14 @@ def test_bench_transforms_over_time_individual(
     rand_scales: npt.NDArray[np.float32],
 ) -> None:
     # create a new, empty memory sink for the current recording
-    rr.memory_recording()
+    dl.memory_recording()
 
     num_transforms = rand_trans.shape[0]
     for i in range(num_transforms):
-        rr.set_time("frame", sequence=i)
-        rr.log(
+        dl.set_time("frame", sequence=i)
+        dl.log(
             "test_transform",
-            rr.Transform3D(translation=rand_trans[i], rotation=rr.Quaternion(xyzw=rand_quats[i]), scale=rand_scales[i]),
+            dl.Transform3D(translation=rand_trans[i], rotation=dl.Quaternion(xyzw=rand_quats[i]), scale=rand_scales[i]),
         )
 
 
@@ -93,7 +93,7 @@ def test_bench_transforms_over_time_batched(
     num_transforms_per_batch: int,
 ) -> None:
     # create a new, empty memory sink for the current recording
-    rr.memory_recording()
+    dl.memory_recording()
 
     num_transforms = rand_trans.shape[0]
     num_log_calls = num_transforms // num_transforms_per_batch
@@ -102,10 +102,10 @@ def test_bench_transforms_over_time_batched(
         end = (i + 1) * num_transforms_per_batch
         times = np.arange(start, end)
 
-        rr.send_columns(
+        dl.send_columns(
             "test_transform",
-            indexes=[rr.TimeColumn("frame", sequence=times)],
-            columns=rr.Transform3D.columns(
+            indexes=[dl.TimeColumn("frame", sequence=times)],
+            columns=dl.Transform3D.columns(
                 translation=rand_trans[start:end],
                 quaternion=rand_quats[start:end],
                 scale=rand_scales[start:end],
@@ -122,7 +122,7 @@ def test_bench_transforms_over_time_batched(
     ],
 )
 def test_bench_transforms_over_time(benchmark: Any, num_transforms: int, num_transforms_per_batch: int) -> None:
-    rr.init("rerun_example_benchmark_transforms_individual")
+    dl.init("dalaran_example_benchmark_transforms_individual")
 
     rand_trans = np.array(np.random.rand(num_transforms, 3), dtype=np.float32)
     rand_quats = np.array(np.random.rand(num_transforms, 4), dtype=np.float32)
@@ -145,24 +145,24 @@ def test_bench_transforms_over_time(benchmark: Any, num_transforms: int, num_tra
 def log_transform3d_translation_mat3x3(data: Transform3DInput, static: bool) -> None:
     """Log Transform3D with translation and mat3x3 for each entity at each time step."""
     # create a new, empty memory sink for the current recording
-    rr.memory_recording()
+    dl.memory_recording()
 
     start = time.perf_counter()
 
     for time_index in range(data.num_time_steps):
         for entity_index in range(data.num_entities):
             entity_path = f"transform_{entity_index}"
-            transform = rr.Transform3D(
+            transform = dl.Transform3D(
                 translation=data.translations[time_index, entity_index].tolist(),
                 mat3x3=np.array(data.mat3x3s[time_index, entity_index], dtype=np.float32),
             )
 
             if static:
-                rr.log(entity_path, transform, static=True)
+                dl.log(entity_path, transform, static=True)
             else:
-                rr.set_time("frame", sequence=time_index)
-                rr.set_time("sim_time", duration=time_index * 0.01)
-                rr.log(entity_path, transform)
+                dl.set_time("frame", sequence=time_index)
+                dl.set_time("sim_time", duration=time_index * 0.01)
+                dl.log(entity_path, transform)
 
     elapsed = time.perf_counter() - start
     total_log_calls = data.num_entities * data.num_time_steps
@@ -183,7 +183,7 @@ def create_transform3d_translation_mat3x3(data: Transform3DInput, static: bool) 
     for time_index in range(data.num_time_steps):
         for entity_index in range(data.num_entities):
             transforms.append(
-                rr.Transform3D(
+                dl.Transform3D(
                     translation=data.translations[time_index, entity_index],
                     mat3x3=np.array(data.mat3x3s[time_index, entity_index], dtype=np.float32),
                 )
@@ -205,7 +205,7 @@ def create_transform3d_translation_mat3x3(data: Transform3DInput, static: bool) 
 def test_bench_transform3d_translation_mat3x3(
     benchmark: Any, num_entities: int, num_time_steps: int, static: bool
 ) -> None:
-    rr.init("rerun_example_benchmark_transform3d_translation_mat3x3")
+    dl.init("dalaran_example_benchmark_transform3d_translation_mat3x3")
     data = Transform3DInput.prepare(42, num_entities, num_time_steps)
     benchmark(log_transform3d_translation_mat3x3, data, static)
 
@@ -227,7 +227,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--connect",
         action="store_true",
-        help="Connect to a running Rerun viewer via gRPC instead of using memory recording",
+        help="Connect to a running Dalaran viewer via gRPC instead of using memory recording",
     )
     parser.add_argument(
         "--create-only", action="store_true", help="Only create Transform3D instances without logging them"
@@ -239,12 +239,12 @@ if __name__ == "__main__":
         print(
             f"Preparing {total_log_calls} transforms ({args.num_entities} entities x {args.num_time_steps} time steps)…"
         )
-        rr.init("rerun_example_benchmark_transform3d_translation_mat3x3", spawn=False)
+        dl.init("dalaran_example_benchmark_transform3d_translation_mat3x3", spawn=False)
         if args.connect:
-            print("Connecting to Rerun viewer…")
-            rr.connect_grpc()
+            print("Connecting to Dalaran viewer…")
+            dl.connect_grpc()
         else:
-            rr.memory_recording()
+            dl.memory_recording()
         data = Transform3DInput.prepare(42, args.num_entities, args.num_time_steps)
         print("Logging…")
         if args.create_only:

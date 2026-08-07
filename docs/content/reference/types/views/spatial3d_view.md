@@ -45,7 +45,7 @@ If not specified, the default is to show the latest state of each component.
 If a timeline is specified more than once, the first entry will be used.
 
 ## API reference links
- * 🐍 [Python API docs for `Spatial3DView`](https://ref.rerun.io/docs/python/stable/common/blueprint_views#rerun.blueprint.views.Spatial3DView)
+ * 🐍 [Python API docs for `Spatial3DView`](https://ref.dalaran.dev/docs/python/stable/common/blueprint_views#dalaran.blueprint.views.Spatial3DView)
 
 ## Example
 

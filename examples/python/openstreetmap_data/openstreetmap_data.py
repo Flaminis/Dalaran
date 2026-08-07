@@ -9,8 +9,8 @@ from urllib.parse import urlencode
 
 import requests
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 CACHE_DIR = Path(__file__).parent / "cache"
 if not CACHE_DIR.exists():
@@ -61,10 +61,10 @@ def log_node(node: dict[str, Any]) -> None:
     node_id = node["id"]
     entity_path = f"nodes/{node_id}"
 
-    rr.log(
+    dl.log(
         entity_path,
-        rr.GeoPoints(lat_lon=[node["lat"], node["lon"]], radii=rr.components.Radius.ui_points(7.0)),
-        rr.AnyValues(**node.get("tags", {})),
+        dl.GeoPoints(lat_lon=[node["lat"], node["lon"]], radii=dl.components.Radius.ui_points(7.0)),
+        dl.AnyValues(**node.get("tags", {})),
         static=True,
     )
 
@@ -75,10 +75,10 @@ def log_way(way: dict[str, Any]) -> None:
 
     coords = [(node["lat"], node["lon"]) for node in way["geometry"]]
 
-    rr.log(
+    dl.log(
         entity_path,
-        rr.GeoLineStrings(lat_lon=[coords], radii=rr.components.Radius.ui_points(2.0)),
-        rr.AnyValues(**way.get("tags", {})),
+        dl.GeoLineStrings(lat_lon=[coords], radii=dl.components.Radius.ui_points(2.0)),
+        dl.AnyValues(**way.get("tags", {})),
         static=True,
     )
 
@@ -86,7 +86,7 @@ def log_way(way: dict[str, Any]) -> None:
 def log_data(data: dict[str, Any]) -> None:
     try:
         copyright_text = data["osm3s"]["copyright"]
-        rr.log("copyright", rr.TextDocument(copyright_text), static=True)
+        dl.log("copyright", dl.TextDocument(copyright_text), static=True)
     except KeyError:
         pass
 
@@ -99,15 +99,15 @@ def log_data(data: dict[str, Any]) -> None:
 
 def main() -> None:
     parser = ArgumentParser(description="Visualize OpenStreetMap data")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    blueprint = rrb.Blueprint(
-        rrb.MapView(origin="/"),
+    blueprint = dlb.Blueprint(
+        dlb.MapView(origin="/"),
         collapse_panels=True,
     )
 
-    rr.script_setup(args, "rerun_example_openstreetmap_data", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_openstreetmap_data", default_blueprint=blueprint)
 
     data = execute_query(HOTELS_IN_LAUSANNE_QUERY)
     log_data(data)

@@ -14,7 +14,7 @@ mcap_path = (
 output_path = Path("chunk_processing_intro.rrd")
 
 # region: read
-from rerun.experimental import McapReader
+from dalaran.experimental import McapReader
 
 stream = McapReader(mcap_path).stream()
 # endregion: read
@@ -26,7 +26,7 @@ stream = stream.filter(content="/robot_left/**")
 # region: terminal
 stream.write_rrd(
     output_path,
-    application_id="rerun_example_chunk_processing_intro",
+    application_id="dalaran_example_chunk_processing_intro",
     recording_id="run1",
 )
 # endregion: terminal

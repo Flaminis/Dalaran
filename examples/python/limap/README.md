@@ -8,7 +8,7 @@ thumbnail_dimensions = [480, 480]
 -->
 
 This example is a visual walkthrough of the paper "3D Line Mapping Revisited".
-All the visualizations were created by editing the original source code to log data with the Rerun SDK.
+All the visualizations were created by editing the original source code to log data with the Dalaran SDK.
 
 ## Visual paper walkthrough
 

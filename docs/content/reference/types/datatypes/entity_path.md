@@ -12,9 +12,9 @@ Utf8
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `EntityPath`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1EntityPath.html)
- * 🐍 [Python API docs for `EntityPath`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.EntityPath)
- * 🦀 [Rust API docs for `EntityPath`](https://docs.rs/rerun/latest/rerun/datatypes/struct.EntityPath.html)
+ * 🌊 [C++ API docs for `EntityPath`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1EntityPath.html)
+ * 🐍 [Python API docs for `EntityPath`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.EntityPath)
+ * 🦀 [Rust API docs for `EntityPath`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.EntityPath.html)
 
 
 ## Used by

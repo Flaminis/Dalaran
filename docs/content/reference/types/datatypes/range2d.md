@@ -26,8 +26,8 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Range2D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1Range2D.html)
- * 🐍 [Python API docs for `Range2D`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.Range2D)
- * 🦀 [Rust API docs for `Range2D`](https://docs.rs/rerun/latest/rerun/datatypes/struct.Range2D.html)
+ * 🌊 [C++ API docs for `Range2D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1Range2D.html)
+ * 🐍 [Python API docs for `Range2D`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.Range2D)
+ * 🦀 [Rust API docs for `Range2D`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.Range2D.html)
 
 

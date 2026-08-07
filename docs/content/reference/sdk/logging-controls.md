@@ -5,21 +5,21 @@ order: 600
 
 ## Controlling logging globally
 
-Rerun logging is enabled by default. The logging behavior can be overridden at runtime using the `RERUN` environment variable:
+Dalaran logging is enabled by default. The logging behavior can be overridden at runtime using the `DALARAN` environment variable:
 
 ```sh
-export RERUN=off
-python my_rerun_enabled_script.py
+export DALARAN=off
+python my_dalaran_enabled_script.py
 # or
-cargo run my_rerun_package
+cargo run my_dalaran_package
 
 # No log messages will be transmitted.
 ```
 
-The `RERUN` environment variable is read once during SDK initialization. The accepted values for `RERUN` are `1/on/true`, and `0/off/false`.
+The `DALARAN` environment variable is read once during SDK initialization. The accepted values for `DALARAN` are `1/on/true`, and `0/off/false`.
 
 > [!NOTE]
-> When Rerun is disabled, logging statements are bypassed and essentially become no-ops.
+> When Dalaran is disabled, logging statements are bypassed and essentially become no-ops.
 
 ## Creating a default-off setup in code
 
@@ -48,10 +48,10 @@ To swap it out with a no-op recording call `set_global_data_recording` with `Non
 
 ```python
 # Disabling logging
-prev_rec = rr.set_global_data_recording(None)
+prev_rec = dl.set_global_data_recording(None)
 
 # …
 
 # Re-enabling logging
-rr.set_global_data_recording(prev_rec)
+dl.set_global_data_recording(prev_rec)
 ```

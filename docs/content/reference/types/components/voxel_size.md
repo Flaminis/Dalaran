@@ -8,7 +8,7 @@ The scene-unit dimensions of one voxel in a sparse 3D voxel grid.
 Each component is the size of a voxel along the corresponding local grid axis.
 All components must be finite and positive.
 
-## Rerun datatype
+## Dalaran datatype
 [`Vec3D`](../datatypes/vec3d.md)
 
 
@@ -18,9 +18,9 @@ FixedSizeList(3 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `VoxelSize`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1VoxelSize.html)
- * 🐍 [Python API docs for `VoxelSize`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.VoxelSize)
- * 🦀 [Rust API docs for `VoxelSize`](https://docs.rs/rerun/latest/rerun/components/struct.VoxelSize.html)
+ * 🌊 [C++ API docs for `VoxelSize`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1VoxelSize.html)
+ * 🐍 [Python API docs for `VoxelSize`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.VoxelSize)
+ * 🦀 [Rust API docs for `VoxelSize`](https://docs.rs/dalaran/latest/dalaran/components/struct.VoxelSize.html)
 
 
 ## Used by

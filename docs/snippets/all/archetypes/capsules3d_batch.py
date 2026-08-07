@@ -1,12 +1,12 @@
 """Log a batch of capsules."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_capsule3d_batch", spawn=True)
+dl.init("dalaran_example_capsule3d_batch", spawn=True)
 
-rr.log(
+dl.log(
     "capsules",
-    rr.Capsules3D(
+    dl.Capsules3D(
         lengths=[0.0, 2.0, 4.0, 6.0, 8.0],
         radii=[1.0, 0.5, 0.5, 0.5, 1.0],
         colors=[
@@ -24,9 +24,9 @@ rr.log(
             (8.0, 0.0, 0.0),
         ],
         rotation_axis_angles=[
-            rr.RotationAxisAngle(
+            dl.RotationAxisAngle(
                 [1.0, 0.0, 0.0],
-                rr.Angle(deg=float(i) * -22.5),
+                dl.Angle(deg=float(i) * -22.5),
             )
             for i in range(5)
         ],

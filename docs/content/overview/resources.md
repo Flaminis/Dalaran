@@ -5,13 +5,13 @@ order: 400
 
 ## How the docs are organized
 
-### Using Rerun
+### Using Dalaran
 
 | You want to… | Where to look |
 | --- | --- |
 | Learn by doing | [Getting Started](../getting-started.md) |
 | Dive into a specific task | [How-to](../howto.md) |
-| Understand how Rerun works | [Concepts](../concepts.md) |
+| Understand how Dalaran works | [Concepts](../concepts.md) |
 
 ### Even more details: [reference](../reference.md)
 
@@ -21,12 +21,12 @@ order: 400
 - [Changelog](../changelog.md)
 - [Migration guides](../reference/migration.md)
 
-### Contributing to Rerun
+### Contributing to Dalaran
 
-**[Developing Rerun](../development.md)** is for people working *on* Rerun, not just *with* it.
+**[Developing Dalaran](../development.md)** is for people working *on* Dalaran, not just *with* it.
 
 ## Beyond the docs
 
-- [Discord](https://discord.gg/PXtCgFBSmH) — ask questions and chat with other Rerun users
+- [Discord](https://discord.gg/PXtCgFBSmH) — ask questions and chat with other Dalaran users
 - [GitHub](https://github.com/rerun-io/rerun) — source code and issue tracker
-- [Examples](https://rerun.io/examples) — see Rerun in action
+- [Examples](https://dalaran.dev/examples) — see Dalaran in action

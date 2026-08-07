@@ -5,7 +5,7 @@ title: "GraphEdge"
 
 An edge in a graph connecting two nodes.
 
-## Rerun datatype
+## Dalaran datatype
 [`Utf8Pair`](../datatypes/utf8pair.md)
 
 
@@ -18,9 +18,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `GraphEdge`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1GraphEdge.html)
- * 🐍 [Python API docs for `GraphEdge`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.GraphEdge)
- * 🦀 [Rust API docs for `GraphEdge`](https://docs.rs/rerun/latest/rerun/components/struct.GraphEdge.html)
+ * 🌊 [C++ API docs for `GraphEdge`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1GraphEdge.html)
+ * 🐍 [Python API docs for `GraphEdge`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.GraphEdge)
+ * 🦀 [Rust API docs for `GraphEdge`](https://docs.rs/dalaran/latest/dalaran/components/struct.GraphEdge.html)
 
 
 ## Used by

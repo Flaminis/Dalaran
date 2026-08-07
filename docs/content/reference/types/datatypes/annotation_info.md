@@ -12,7 +12,7 @@ The id refers either to a class or key-point id
 #### `id`
 Type: non-null `UInt16`
 
-[`datatypes.ClassId`](https://rerun.io/docs/reference/types/datatypes/class_id) or [`datatypes.KeypointId`](https://rerun.io/docs/reference/types/datatypes/keypoint_id) to which this annotation info belongs.
+[`datatypes.ClassId`](https://dalaran.dev/docs/reference/types/datatypes/class_id) or [`datatypes.KeypointId`](https://dalaran.dev/docs/reference/types/datatypes/keypoint_id) to which this annotation info belongs.
 
 #### `label`
 Type: [`Utf8`](../datatypes/utf8.md)
@@ -35,9 +35,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `AnnotationInfo`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1AnnotationInfo.html)
- * 🐍 [Python API docs for `AnnotationInfo`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.AnnotationInfo)
- * 🦀 [Rust API docs for `AnnotationInfo`](https://docs.rs/rerun/latest/rerun/datatypes/struct.AnnotationInfo.html)
+ * 🌊 [C++ API docs for `AnnotationInfo`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1AnnotationInfo.html)
+ * 🐍 [Python API docs for `AnnotationInfo`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.AnnotationInfo)
+ * 🦀 [Rust API docs for `AnnotationInfo`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.AnnotationInfo.html)
 
 
 ## Used by

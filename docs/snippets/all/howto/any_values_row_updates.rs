@@ -4,16 +4,16 @@
 
 use std::sync::Arc;
 
-use rerun::external::arrow;
+use dalaran::external::arrow;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_any_values_row_updates",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_any_values_row_updates",
     )
     .spawn()?;
 
     for step in 0..64 {
-        let sin_cos = rerun::AnyValues::default()
+        let sin_cos = dalaran::AnyValues::default()
             .with_component_from_data(
                 "sin",
                 Arc::new(arrow::array::Float64Array::from_iter(

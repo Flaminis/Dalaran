@@ -1,27 +1,27 @@
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_annotation_context_connections")
+dl.init("dalaran_example_annotation_context_connections")
 
 # Annotation context with two classes, using two labeled classes, of which
 # ones defines a color.
-rr.log(
+dl.log(
     "masks",  # Applies to all entities below "masks".
-    rr.AnnotationContext(
+    dl.AnnotationContext(
         [
-            rr.AnnotationInfo(id=0, label="Background"),
-            rr.AnnotationInfo(id=1, label="Person", color=(255, 0, 0)),
+            dl.AnnotationInfo(id=0, label="Background"),
+            dl.AnnotationInfo(id=1, label="Person", color=(255, 0, 0)),
         ],
     ),
     static=True,
 )
 
 # Annotation context with simple keypoints & keypoint connections.
-rr.log(
+dl.log(
     "detections",  # Applies to all entities below "detections".
-    rr.ClassDescription(
-        info=rr.AnnotationInfo(0, label="Snake"),
+    dl.ClassDescription(
+        info=dl.AnnotationInfo(0, label="Snake"),
         keypoint_annotations=[
-            rr.AnnotationInfo(id=i, color=(0, 28 * i, 0)) for i in range(10)
+            dl.AnnotationInfo(id=i, color=(0, 28 * i, 0)) for i in range(10)
         ],
         keypoint_connections=[(i, i + 1) for i in range(9)],
     ),

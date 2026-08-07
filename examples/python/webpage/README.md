@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Webpage"
-description = "Embed the Rerun viewer in a static webpage so visitors can scrub the 3D scene and timeline themselves."
+description = "Embed the Dalaran viewer in a static webpage so visitors can scrub the 3D scene and timeline themselves."
 tags = ["Webpage", "Javascript", "Web-viewer", "Tutorial"]
 source = "https://github.com/rerun-io/webpage_example"
 thumbnail = "https://static.rerun.io/webpage_example/72208c632c0f641070b7c1647dbe2abf076f576a/480w.png"
@@ -13,11 +13,11 @@ thumbnail_dimensions = [480, 322]
 
 ## Background
 
-Static screenshots and videos belong in the past. In this guide, we will walk through deploying a live, interactive webpage integrated with Rerun. By embedding a hosted Rerun viewer, you are not just showing your results — you are handing your audience the keys to explore your data in 3D, scrub through timelines, and inspect your model's logic in real-time.
+Static screenshots and videos belong in the past. In this guide, we will walk through deploying a live, interactive webpage integrated with Dalaran. By embedding a hosted Dalaran viewer, you are not just showing your results — you are handing your audience the keys to explore your data in 3D, scrub through timelines, and inspect your model's logic in real-time.
 
-In a fast-moving industry, the ability to provide an immersive, 'hands-on' demo is the difference between a project that gets glanced at and one that gets remembered. Here we will go through the steps to create your webpage with Rerun integrated, you will see that it is simple and quick process that does not take away valuable development or writing time.
+In a fast-moving industry, the ability to provide an immersive, 'hands-on' demo is the difference between a project that gets glanced at and one that gets remembered. Here we will go through the steps to create your webpage with Dalaran integrated, you will see that it is simple and quick process that does not take away valuable development or writing time.
 
-You can see the [resulting webpage here](https://rerun-io.github.io/webpage_example/).
+You can see the [resulting webpage here](https://dalaran-io.github.io/webpage_example/).
 
 ## Follow the tutorial and run the code
 

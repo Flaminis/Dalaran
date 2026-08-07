@@ -2,11 +2,11 @@
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_mesh3d").spawn()?;
+        dalaran::RecordingStreamBuilder::new("dalaran_example_mesh3d").spawn()?;
 
     rec.log(
         "triangle",
-        &rerun::Mesh3D::new([
+        &dalaran::Mesh3D::new([
             [0.0, 0.0, 0.0],
             [1.0, 0.0, 0.0],
             [0.0, 1.0, 0.0],

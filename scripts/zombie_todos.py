@@ -287,8 +287,8 @@ def get_line_blame_info(file_path: str, line_number: int, repo_path: str = ".") 
 
 # --- Check files for zombie TODOs ---
 
-repo_owner = "rerun-io"
-repo_name = "rerun"
+repo_owner = "dalaran-io"
+repo_name = "dalaran"
 
 internal_issue_number_pattern = re.compile(r"TODO\((?:#(\d+))(?:,\s*(?:#(\d+)))*\)")
 external_issue_pattern = re.compile(r"TODO\(([a-zA-Z0-9_.-]+/[a-zA-Z0-9_.-]+)#(\d+)\)")

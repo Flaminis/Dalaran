@@ -14,8 +14,8 @@ FILES_ALLOWED_TO_BE_LARGE = {
     "crates/build/dl_types_builder/src/reflection.rs",
     "crates/store/dl_dataframe/src/query.rs",
     "crates/store/dl_protos/proto/schema_snapshot.yaml",
-    "crates/store/dl_protos/src/v1alpha1/rerun.cloud.v1alpha1.rs",
-    "crates/store/dl_protos/src/v1alpha1/rerun.cloud.v1alpha1.ext.rs",
+    "crates/store/dl_protos/src/v1alpha1/dalaran.cloud.v1alpha1.rs",
+    "crates/store/dl_protos/src/v1alpha1/dalaran.cloud.v1alpha1.ext.rs",
     "crates/store/dl_query/src/range_zip/generated.rs",
     "crates/store/dl_sdk_types/src/datatypes/tensor_buffer.rs",
     "crates/store/dl_sdk_types/src/reflection/mod.rs",
@@ -25,7 +25,7 @@ FILES_ALLOWED_TO_BE_LARGE = {
     "crates/viewer/dl_viewer/src/app.rs",  # TODO(emilk): break this up into smaller files
     "docs/snippets/INDEX.md",
     "pixi.lock",
-    "rerun_cpp/docs/Doxyfile",
+    "dalaran_cpp/docs/Doxyfile",
     "uv.lock",
     # Examples excluded from the uv workspace so they maintain standalone lockfiles.
     "examples/python/dataloader/uv.lock",

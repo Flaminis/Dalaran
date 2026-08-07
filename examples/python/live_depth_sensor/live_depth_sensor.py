@@ -8,12 +8,12 @@ import argparse
 import numpy as np
 import pyrealsense2 as rs
 
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
 
 def run_realsense(num_frames: int | None) -> None:
     # Visualize the data as RDF
-    rr.log("realsense", rr.ViewCoordinates.RDF, static=True)
+    dl.log("realsense", dl.ViewCoordinates.RDF, static=True)
 
     # Open the pipe
     pipe = rs.pipeline()
@@ -26,9 +26,9 @@ def run_realsense(num_frames: int | None) -> None:
     depth_profile = profile.get_stream(rs.stream.depth)
     depth_intr = depth_profile.as_video_stream_profile().get_intrinsics()
 
-    rr.log(
+    dl.log(
         "realsense/depth/image",
-        rr.Pinhole(
+        dl.Pinhole(
             resolution=[depth_intr.width, depth_intr.height],
             focal_length=[depth_intr.fx, depth_intr.fy],
             principal_point=[depth_intr.ppx, depth_intr.ppy],
@@ -40,12 +40,12 @@ def run_realsense(num_frames: int | None) -> None:
     rgb_profile = profile.get_stream(rs.stream.color)
 
     rgb_from_depth = depth_profile.get_extrinsics_to(rgb_profile)
-    rr.log(
+    dl.log(
         "realsense/rgb",
-        rr.Transform3D(
+        dl.Transform3D(
             translation=rgb_from_depth.translation,
             mat3x3=np.reshape(rgb_from_depth.rotation, (3, 3)),
-            relation=rr.TransformRelation.ChildFromParent,
+            relation=dl.TransformRelation.ChildFromParent,
         ),
         static=True,
     )
@@ -53,9 +53,9 @@ def run_realsense(num_frames: int | None) -> None:
     # Get and log color intrinsics
     rgb_intr = rgb_profile.as_video_stream_profile().get_intrinsics()
 
-    rr.log(
+    dl.log(
         "realsense/rgb/image",
-        rr.Pinhole(
+        dl.Pinhole(
             resolution=[rgb_intr.width, rgb_intr.height],
             focal_length=[rgb_intr.fx, rgb_intr.fy],
             principal_point=[rgb_intr.ppx, rgb_intr.ppy],
@@ -70,7 +70,7 @@ def run_realsense(num_frames: int | None) -> None:
             if num_frames and frame_nr >= num_frames:
                 break
 
-            rr.set_time("frame_nr", sequence=frame_nr)
+            dl.set_time("frame_nr", sequence=frame_nr)
             frame_nr += 1
 
             frames = pipe.wait_for_frames()
@@ -79,12 +79,12 @@ def run_realsense(num_frames: int | None) -> None:
                 depth_frame = frames.get_depth_frame()
                 depth_units = depth_frame.get_units()
                 depth_image = np.asanyarray(depth_frame.get_data())
-                rr.log("realsense/depth/image", rr.DepthImage(depth_image, meter=1.0 / depth_units))
+                dl.log("realsense/depth/image", dl.DepthImage(depth_image, meter=1.0 / depth_units))
 
                 # Log the color frame
                 color_frame = frames.get_color_frame()
                 color_image = np.asanyarray(color_frame.get_data())
-                rr.log("realsense/rgb/image", rr.Image(color_image))
+                dl.log("realsense/rgb/image", dl.Image(color_image))
     finally:
         pipe.stop()
 
@@ -93,14 +93,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Streams frames from a connected realsense depth sensor.")
     parser.add_argument("--num-frames", type=int, default=None, help="The number of frames to log")
 
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_live_depth_sensor")
+    dl.script_setup(args, "dalaran_example_live_depth_sensor")
 
     run_realsense(args.num_frames)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 name = "table_grid_with_flags"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["pyarrow", "rerun-sdk"]
+dependencies = ["pyarrow", "dalaran-sdk"]
 
 [project.scripts]
 table_grid_with_flags = "table_grid_with_flags:main"

@@ -73,7 +73,7 @@ def build_and_upload(
 ) -> None:
     # pypi / extra builds require a web build
     if mode in (BuildMode.PYPI, BuildMode.EXTRA):
-        run("pixi run rerun-build-web-release")
+        run("pixi run dalaran-build-web-release")
 
     # Grep for these feature names before changing them.
     if mode is BuildMode.PYPI:
@@ -92,7 +92,7 @@ def build_and_upload(
         "maturin build "
         f"{compatibility} "
         f"{zig} "
-        "--manifest-path rerun_py/Cargo.toml "
+        "--manifest-path dalaran_py/Cargo.toml "
         "--release "
         f"--target {target} "
         f"{maturin_feature_flags} "
@@ -117,7 +117,7 @@ def upload_only(bucket: Bucket, gcs_dir: str, wheel_path: str) -> None:
     wheel_name = os.path.basename(wheel_path)
     print(f"Uploading {wheel_name} to GCS…")
     bucket.blob(f"{gcs_dir}/{wheel_name}").upload_from_filename(wheel_path)
-    print(f"Uploaded {wheel_name} to gs://rerun-builds/{gcs_dir}/{wheel_name}")
+    print(f"Uploaded {wheel_name} to gs://dalaran-builds/{gcs_dir}/{wheel_name}")
 
 
 def main() -> None:
@@ -146,7 +146,7 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.upload_gcs:
-        bucket = Gcs("rerun-open").bucket("rerun-builds")
+        bucket = Gcs("dalaran-open").bucket("dalaran-builds")
     else:
         bucket = None
 

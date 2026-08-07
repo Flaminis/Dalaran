@@ -1,10 +1,10 @@
 ---
 title: Video
 order: 1100
-description: How Rerun handles video streams and codecs
+description: How Dalaran handles video streams and codecs
 ---
 
-A stream of images (like those produced by a camera) can be logged to Rerun in several different ways:
+A stream of images (like those produced by a camera) can be logged to Dalaran in several different ways:
 
 * Uncompressed, as many [`Image`](../../reference/types/archetypes/image.md)s
 * Compressed as many [`EncodedImage`](../../reference/types/archetypes/encoded_image.md)s, using e.g. JPEG.
@@ -18,7 +18,7 @@ This will use up a lot of space and bandwidth. You can also encode them as PNG a
 though it should be noted that PNG encoding usually does very little for the file size of photographic images.
 
 If you want to reduce bandwidth and storage cost, you can encode each frame as a JPEG and log it using `EncodedImage`. This can easily reduce the file sizes by almost two orders of magnitude with minimal perceptual loss.
-This is also very simple to do, and the Python logging SDK has built-in support for it using [`Image.compress`](https://ref.rerun.io/docs/python/0.18.2/common/archetypes/#rerun.archetypes.Image.compress).
+This is also very simple to do, and the Python logging SDK has built-in support for it using [`Image.compress`](https://ref.dalaran.dev/docs/python/0.18.2/common/archetypes/#dalaran.archetypes.Image.compress).
 
 Finally, for the best compression ratio, you can encode the images as an encoded video.
 There are two options to choose from:
@@ -33,19 +33,19 @@ There are two options to choose from:
 ## Streaming video / raw encoded video frames
 
 The following example illustrates how to encode uncompressed video frames (represented by `numpy` arrays)
-using [`pyAV`](https://github.com/PyAV-Org/PyAV) into H.264 and directly log them to Rerun using [`VideoStream`](../../reference/types/archetypes/video_stream.md).
+using [`pyAV`](https://github.com/PyAV-Org/PyAV) into H.264 and directly log them to Dalaran using [`VideoStream`](../../reference/types/archetypes/video_stream.md).
 
 snippet: archetypes/video_stream_synthetic
 
 Using [`VideoStream`](../../reference/types/archetypes/video_stream.md) requires deeper knowledge of the encoding process
 but unlike [`AssetVideo`](../../reference/types/archetypes/asset_video.md),
-allows the Rerun Viewer to show incomplete or open ended video streams.
+allows the Dalaran Viewer to show incomplete or open ended video streams.
 In contrast, [`AssetVideo`](../../reference/types/archetypes/asset_video.md) requires the entire
 video asset file to be in Viewer memory before decoding can begin.
 
-Refer to the [video camera streaming](https://github.com/rerun-io/rerun/blob/latest/examples/python/camera_video_stream) example to learn how to stream live video to Rerun.
+Refer to the [video camera streaming](https://github.com/rerun-io/rerun/blob/latest/examples/python/camera_video_stream) example to learn how to stream live video to Dalaran.
 
-For more details on how to query and decode video streams from Rerun, see our [query video streams how-to](../../howto/query-and-transform/query_videos.md).
+For more details on how to query and decode video streams from Dalaran, see our [query video streams how-to](../../howto/query-and-transform/query_videos.md).
 
 
 Current limitations of `VideoStream`:
@@ -72,9 +72,9 @@ Check the [doc page on retrieving data](../../howto/query-and-transform/get-data
 ## Video files
 
 You can use [`AssetVideo`](../../reference/types/archetypes/asset_video.md) to log readily encoded video files.
-Rerun ignores the timestamp at which the video asset itself is logged and requires you
+Dalaran ignores the timestamp at which the video asset itself is logged and requires you
 to log [`VideoFrameReference`](../../reference/types/archetypes/video_frame_reference.md) to establish a
-correlation of video time to the Rerun timeline.
+correlation of video time to the Dalaran timeline.
 To ease this, the SDK's `read_frame_timestamps_nanos` utility allows to read out timestamps from in-memory video assets:
 
 snippet: archetypes/video_auto_frames
@@ -127,14 +127,14 @@ TODO(#7755): fix above if ticket is outdated.
 H.264/avc, H.265/hevc, VP8, and VP9 are supported via a separately installed `FFmpeg` binary, requiring a minimum version of `5.1`.
 
 The viewer does intentionally not come bundled with `FFmpeg` to avoid licensing issues.
-By default rerun will look for a system installed `FFmpeg` installation in `PATH`,
+By default dalaran will look for a system installed `FFmpeg` installation in `PATH`,
 but you can specify a custom path in the viewer's settings.
 
 If you select a video that failed to play due to missing or incompatible `FFmpeg` binaries it will offer a download link to a build of `FFmpeg` for your platform.
 <!-- TODO(#8004): there should be a download button that updates the path in the settings -->
 
 ### Web viewer
-Video playback in the Rerun Web Viewer is done using the browser's own video decoder, so the exact supported codecs depend on your browser.
+Video playback in the Dalaran Web Viewer is done using the browser's own video decoder, so the exact supported codecs depend on your browser.
 
 Overall, we recommend using Chrome or another Chromium-based browser, as it seems to have the best video support as of writing.
 
@@ -157,7 +157,7 @@ We tested the following codecs in more detail:
 | VP9        | ✅             | ✅                | ✅             | ✅            | ❌            |                  |                     |
 
 [^1]: Any Chromium-based browser should work, but we don't test all of them.
-[^2]: Chrome on Windows has been observed to stutter on playback. It can be mitigated by [using software decoding](../../getting-started/install-rerun/troubleshooting.md#video-stuttering), but this may lead to high memory usage. See [#7595](https://github.com/rerun-io/rerun/issues/7595).
+[^2]: Chrome on Windows has been observed to stutter on playback. It can be mitigated by [using software decoding](../../getting-started/install-dalaran/troubleshooting.md#video-stuttering), but this may lead to high memory usage. See [#7595](https://github.com/rerun-io/rerun/issues/7595).
 [^3]: Safari/WebKit does not support AV1 decoding except on [Apple Silicon devices with hardware support](https://webkit.org/blog/14445/webkit-features-in-safari-17-0/).
 [^4]: Safari/WebKit has been observed stuttering when playing `hvc1` but working fine with `hevc1`. Despite support being advertised Safari 16.5 has been observed not support H.265 decoding.
 [^5]: Only supported if hardware encoding is available. Therefore always affected by Windows stuttering issues, see above.
@@ -168,11 +168,11 @@ Beyond this, for best compatibility we recommend:
 * keep resolutions at 8k & lower (see also [#3782](https://github.com/rerun-io/rerun/issues/3782))
 
 ## Other limitations
-There are still some limitations to encoded Video in Rerun which will be addressed in the future:
+There are still some limitations to encoded Video in Dalaran which will be addressed in the future:
 
 * [#7594](https://github.com/rerun-io/rerun/issues/7594): HDR video is not supported
 * [#5181](https://github.com/rerun-io/rerun/issues/5181): There is no audio support
-* There is no video encoder in the Rerun SDK, so you need to create the video stream or file yourself.
+* There is no video encoder in the Dalaran SDK, so you need to create the video stream or file yourself.
   Refer to the [video camera streaming](https://github.com/rerun-io/rerun/blob/latest/examples/python/camera_video_stream) example to learn how to encode video using [`pyAV`](https://github.com/PyAV-Org/PyAV).
 
 <!--

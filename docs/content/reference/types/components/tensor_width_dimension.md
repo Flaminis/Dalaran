@@ -5,7 +5,7 @@ title: "TensorWidthDimension"
 
 Specifies which dimension to use for width.
 
-## Rerun datatype
+## Dalaran datatype
 [`TensorDimensionSelection`](../datatypes/tensor_dimension_selection.md)
 
 
@@ -18,8 +18,8 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `TensorWidthDimension`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1TensorWidthDimension.html)
- * 🐍 [Python API docs for `TensorWidthDimension`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.TensorWidthDimension)
- * 🦀 [Rust API docs for `TensorWidthDimension`](https://docs.rs/rerun/latest/rerun/components/struct.TensorWidthDimension.html)
+ * 🌊 [C++ API docs for `TensorWidthDimension`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1TensorWidthDimension.html)
+ * 🐍 [Python API docs for `TensorWidthDimension`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.TensorWidthDimension)
+ * 🦀 [Rust API docs for `TensorWidthDimension`](https://docs.rs/dalaran/latest/dalaran/components/struct.TensorWidthDimension.html)
 
 

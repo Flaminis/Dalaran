@@ -1,14 +1,14 @@
 """Log a `TextDocument`."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_text_document", spawn=True)
+dl.init("dalaran_example_text_document", spawn=True)
 
-rr.log("text_document", rr.TextDocument("Hello, TextDocument!"))
+dl.log("text_document", dl.TextDocument("Hello, TextDocument!"))
 
-rr.log(
+dl.log(
     "markdown",
-    rr.TextDocument(
+    dl.TextDocument(
         '''
 # Hello Markdown!
 [Click here to see the raw text](recording://markdown:Text).
@@ -39,11 +39,11 @@ You can link to [an entity](recording://markdown),
 a [specific instance of an entity](recording://markdown[#0]),
 or a [specific component](recording://markdown:Text).
 
-Of course you can also have [normal https links](https://github.com/rerun-io/rerun), e.g. <https://rerun.io>.
+Of course you can also have [normal https links](https://github.com/rerun-io/rerun), e.g. <https://dalaran.dev>.
 
 ## Image
 ![A random image](https://picsum.photos/640/480)
 '''.strip(),
-        media_type=rr.MediaType.MARKDOWN,
+        media_type=dl.MediaType.MARKDOWN,
     ),
 )

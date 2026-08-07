@@ -18,8 +18,8 @@ This example visualizes the path finding algorithm RRT\* in a simple environment
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/rrt-star/4d4684a24eab7d5def5768b7c1685d8b1cb2c010/1200w.png">
 </picture>
 
-## Used Rerun types
-[`LineStrips2D`](https://www.rerun.io/docs/reference/types/archetypes/line_strips2d), [`Points2D`](https://www.rerun.io/docs/reference/types/archetypes/points2d), [`TextDocument`](https://www.rerun.io/docs/reference/types/archetypes/text_document)
+## Used Dalaran types
+[`LineStrips2D`](https://www.dalaran.dev/docs/reference/types/archetypes/line_strips2d), [`Points2D`](https://www.dalaran.dev/docs/reference/types/archetypes/points2d), [`TextDocument`](https://www.dalaran.dev/docs/reference/types/archetypes/text_document)
 
 ## Background
 The algorithm finds a path between two points by randomly expanding a tree from the start point.
@@ -31,27 +31,27 @@ Karaman, S. Frazzoli, S. 2011. "Sampling-based algorithms for optimal motion pla
 or in [this medium article](https://theclassytim.medium.com/robotic-path-planning-rrt-and-rrt-212319121378)
 
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-All points are logged using the [`Points2D`](https://www.rerun.io/docs/reference/types/archetypes/points2d) archetype, while the lines are logged using the LineStrips2D [`LineStrips2D`](https://www.rerun.io/docs/reference/types/archetypes/line_strips2d).
+All points are logged using the [`Points2D`](https://www.dalaran.dev/docs/reference/types/archetypes/points2d) archetype, while the lines are logged using the LineStrips2D [`LineStrips2D`](https://www.dalaran.dev/docs/reference/types/archetypes/line_strips2d).
 
-The visualizations in this example were created with the following Rerun code:
+The visualizations in this example were created with the following Dalaran code:
 
 ### Map
 
 #### Starting point
 ```python
-rr.log("map/start", rr.Points2D([start_point], radii=0.02, colors=[[255, 255, 255, 255]]))
+dl.log("map/start", dl.Points2D([start_point], radii=0.02, colors=[[255, 255, 255, 255]]))
 ```
 
 #### Destination point
 ```python
-rr.log("map/destination", rr.Points2D([end_point], radii=0.02, colors=[[255, 255, 0, 255]]))
+dl.log("map/destination", dl.Points2D([end_point], radii=0.02, colors=[[255, 255, 0, 255]]))
 ```
 
 #### Obstacles
 ```python
-rr.log("map/obstacles", rr.LineStrips2D(self.obstacles))
+dl.log("map/obstacles", dl.LineStrips2D(self.obstacles))
 ```
 
 
@@ -59,55 +59,55 @@ rr.log("map/obstacles", rr.LineStrips2D(self.obstacles))
 
 #### Edges
 ```python
-rr.log("map/tree/edges", rr.LineStrips2D(tree.segments(), radii=0.0005, colors=[0, 0, 255, 128]))
+dl.log("map/tree/edges", dl.LineStrips2D(tree.segments(), radii=0.0005, colors=[0, 0, 255, 128]))
 ```
 
 #### New edges
 ```python
-rr.log("map/new/new_edge", rr.LineStrips2D([(closest_node.pos, new_point)], colors=[color], radii=0.001))
+dl.log("map/new/new_edge", dl.LineStrips2D([(closest_node.pos, new_point)], colors=[color], radii=0.001))
 ```
 
 #### Vertices
 ```python
-rr.log(
+dl.log(
     "map/tree/vertices",
-    rr.Points2D([node.pos for node in tree], radii=0.002),
-    rr.AnyValues(cost=[float(node.cost) for node in tree]),
+    dl.Points2D([node.pos for node in tree], radii=0.002),
+    dl.AnyValues(cost=[float(node.cost) for node in tree]),
 )
 ```
 
 #### Close nodes
 ```python
-rr.log("map/new/close_nodes", rr.Points2D([node.pos for node in close_nodes]))
+dl.log("map/new/close_nodes", dl.Points2D([node.pos for node in close_nodes]))
 ```
 
 #### Closest node
 ```python
-rr.log("map/new/closest_node", rr.Points2D([closest_node.pos], radii=0.008))
+dl.log("map/new/closest_node", dl.Points2D([closest_node.pos], radii=0.008))
 ```
 
 #### Random points
 ```python
-rr.log("map/new/random_point", rr.Points2D([random_point], radii=0.008))
+dl.log("map/new/random_point", dl.Points2D([random_point], radii=0.008))
 ```
 
 #### New points
 ```python
-rr.log("map/new/new_point", rr.Points2D([new_point], radii=0.008))
+dl.log("map/new/new_point", dl.Points2D([new_point], radii=0.008))
 ```
 
 #### Path
 ```python
-rr.log("map/path", rr.LineStrips2D(segments, radii=0.002, colors=[0, 255, 255, 255]))
+dl.log("map/path", dl.LineStrips2D(segments, radii=0.002, colors=[0, 255, 255, 255]))
 ```
 
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

@@ -13,9 +13,9 @@ The three directions are always ordered as [x, y, z] and specify where each posi
 For example, [Right, Down, Forward] means that +X points right, +Y points down, and +Z points forward.
 
 A 3D view uses the value logged at its origin entity or the closest ancestor.
-[SpatialInformation](https://rerun.io/docs/reference/types/views/spatial3d_view) can override it for an individual view.
+[SpatialInformation](https://dalaran.dev/docs/reference/types/views/spatial3d_view) can override it for an individual view.
 
-⚠ [Rerun does not yet support left-handed coordinate systems](https://github.com/rerun-io/rerun/issues/5032).
+⚠ [Dalaran does not yet support left-handed coordinate systems](https://github.com/rerun-io/rerun/issues/5032).
 
 ## Fields
 ### Required
@@ -27,9 +27,9 @@ A 3D view uses the value logged at its origin entity or the closest ancestor.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `ViewCoordinates`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1ViewCoordinates.html)
- * 🐍 [Python API docs for `ViewCoordinates`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.ViewCoordinates)
- * 🦀 [Rust API docs for `ViewCoordinates`](https://docs.rs/rerun/latest/rerun/archetypes/struct.ViewCoordinates.html)
+ * 🌊 [C++ API docs for `ViewCoordinates`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1ViewCoordinates.html)
+ * 🐍 [Python API docs for `ViewCoordinates`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.ViewCoordinates)
+ * 🦀 [Rust API docs for `ViewCoordinates`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.ViewCoordinates.html)
 
 ## Example
 

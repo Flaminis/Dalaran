@@ -10,9 +10,9 @@ from __future__ import annotations
 import numpy as np
 import pyarrow as pa
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.blueprint.datatypes import (
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran.blueprint.datatypes import (
     ComponentSourceKind,
     VisualizerComponentMapping,
 )
@@ -36,24 +36,24 @@ def make_sigmoid_struct_array(steps: int) -> pa.StructArray:
 # endregion: nested_struct
 
 
-rr.init("rerun_example_component_mapping", spawn=True)
+dl.init("dalaran_example_component_mapping", spawn=True)
 
 # Send plot data using send_columns.
 times = np.arange(64)
-rr.send_columns(
+dl.send_columns(
     "plot",
-    indexes=[rr.TimeColumn("step", sequence=times)],
+    indexes=[dl.TimeColumn("step", sequence=times)],
     columns=[
         # Regular scalar batch with a sin.
-        *rr.Scalars.columns(scalars=np.sin(times / 10.0)),
+        *dl.Scalars.columns(scalars=np.sin(times / 10.0)),
         # region: custom_data
         # Custom scalar batch with a cos using a custom component name.
-        *rr.DynamicArchetype.columns(
+        *dl.DynamicArchetype.columns(
             archetype="custom",
             components={"my_custom_scalar": np.cos(times / 10.0)},
         ),
         # Nested custom scalar batch with a sigmoid inside a struct.
-        *rr.DynamicArchetype.columns(
+        *dl.DynamicArchetype.columns(
             archetype="custom",
             components={"my_nested_scalar": make_sigmoid_struct_array(64)},
         ),
@@ -62,15 +62,15 @@ rr.send_columns(
 )
 
 # Add a line series color to the store data.
-rr.log("plot", rr.SeriesLines(colors=[255, 0, 0]), static=True)
+dl.log("plot", dl.SeriesLines(colors=[255, 0, 0]), static=True)
 
 # Create a blueprint with explicit component mappings
-blueprint = rrb.Blueprint(
-    rrb.TimeSeriesView(
+blueprint = dlb.Blueprint(
+    dlb.TimeSeriesView(
         name="Component Mapping Demo",
         origin="/",
         # Set default color for series to blue.
-        defaults=[rr.SeriesLines(colors=[0, 255, 0])],
+        defaults=[dl.SeriesLines(colors=[0, 255, 0])],
         overrides={
             # Three line series visualizations for the "plot" entity:
             "plot": [
@@ -80,7 +80,7 @@ blueprint = rrb.Blueprint(
                 # * explicitly use the view's default for color
                 # * everything else uses the automatic component mappings,
                 #   so it will pick up scalars from the store.
-                rr.SeriesLines(names="sine (store)").visualizer(
+                dl.SeriesLines(names="sine (store)").visualizer(
                     mappings=[
                         VisualizerComponentMapping(
                             target="SeriesLines:colors",
@@ -96,7 +96,7 @@ blueprint = rrb.Blueprint(
                 # * set the name via an override
                 # * everything else uses the automatic component mappings,
                 #   so it will pick up colors from the view default.
-                rr.SeriesLines(names="cosine (custom)").visualizer(
+                dl.SeriesLines(names="cosine (custom)").visualizer(
                     mappings=[
                         # Map scalars to the custom component.
                         VisualizerComponentMapping(
@@ -113,7 +113,7 @@ blueprint = rrb.Blueprint(
                 # * source scalars from a nested struct using a selector to
                 #   extract the "values" field
                 # * set the name and an explicit blue color via overrides
-                rr.SeriesLines(
+                dl.SeriesLines(
                     names="sigmoid (nested)", colors=[0, 0, 255]
                 ).visualizer(
                     mappings=[
@@ -131,4 +131,4 @@ blueprint = rrb.Blueprint(
     ),
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

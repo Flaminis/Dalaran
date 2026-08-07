@@ -1,11 +1,11 @@
-use rerun::{ChunkStore, ChunkStoreConfig, ComponentDescriptor};
+use dalaran::{ChunkStore, ChunkStoreConfig, ComponentDescriptor};
 
 fn example(
-    rec: &rerun::RecordingStream,
+    rec: &dalaran::RecordingStream,
 ) -> Result<(), Box<dyn std::error::Error>> {
     rec.log_static(
         "data",
-        &rerun::Points3D::new([(1.0, 2.0, 3.0)]).with_radii([0.3, 0.2, 0.1]),
+        &dalaran::Points3D::new([(1.0, 2.0, 3.0)]).with_radii([0.3, 0.2, 0.1]),
     )?;
 
     Ok(())
@@ -16,8 +16,8 @@ fn example(
 // This is internal testing code to make sure the example yields the right data.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    const APP_ID: &str = "rerun_example_descriptors_builtin_archetype";
-    let rec = rerun::RecordingStreamBuilder::new(APP_ID).spawn()?;
+    const APP_ID: &str = "dalaran_example_descriptors_builtin_archetype";
+    let rec = dalaran::RecordingStreamBuilder::new(APP_ID).spawn()?;
 
     example(&rec)?;
 
@@ -27,13 +27,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[expect(clippy::unwrap_used)]
-fn check_tags(rec: &rerun::RecordingStream) {
+fn check_tags(rec: &dalaran::RecordingStream) {
     // When this snippet runs through the snippet comparison machinery, this environment variable
     // will point to the output RRD.
     // We can thus load this RRD to check that the proper tags were indeed forwarded.
     //
     // Python and C++ are indirectly checked by the snippet comparison tool itself.
-    if let Ok(path_to_rrd) = std::env::var("_RERUN_TEST_FORCE_SAVE") {
+    if let Ok(path_to_rrd) = std::env::var("_DALARAN_TEST_FORCE_SAVE") {
         rec.flush_blocking().unwrap();
 
         let mut rrd_file = std::fs::File::open(&path_to_rrd).unwrap();
@@ -61,14 +61,14 @@ fn check_tags(rec: &rerun::RecordingStream) {
 
             let expected = vec![
                 ComponentDescriptor {
-                    archetype: Some("rerun.archetypes.Points3D".into()),
+                    archetype: Some("dalaran.archetypes.Points3D".into()),
                     component: "Points3D:positions".into(),
-                    component_type: Some("rerun.components.Position3D".into()),
+                    component_type: Some("dalaran.components.Position3D".into()),
                 },
                 ComponentDescriptor {
-                    archetype: Some("rerun.archetypes.Points3D".into()),
+                    archetype: Some("dalaran.archetypes.Points3D".into()),
                     component: "Points3D:radii".into(),
-                    component_type: Some("rerun.components.Radius".into()),
+                    component_type: Some("dalaran.components.Radius".into()),
                 },
             ];
 

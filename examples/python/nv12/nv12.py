@@ -9,7 +9,7 @@ import time
 import cv2
 import numpy as np
 
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
 
 def bgr2nv12(bgr: cv2.typing.MatLike) -> cv2.typing.MatLike:
@@ -21,8 +21,8 @@ def bgr2nv12(bgr: cv2.typing.MatLike) -> cv2.typing.MatLike:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Example of using the Rerun visualizer to display NV12 images.")
-    rr.script_add_args(parser)
+    parser = argparse.ArgumentParser(description="Example of using the Dalaran visualizer to display NV12 images.")
+    dl.script_add_args(parser)
     parser.add_argument(
         "-t",
         "--timeout",
@@ -32,7 +32,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_nv12")
+    dl.script_setup(args, "dalaran_example_nv12")
 
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
@@ -44,17 +44,17 @@ def main() -> None:
         if not ret:
             time.sleep(0.01)
             continue
-        rr.log(
+        dl.log(
             "NV12",
-            rr.Image(
+            dl.Image(
                 bytes=bytes(bgr2nv12(frame)),
                 width=frame.shape[1],
                 height=frame.shape[0],
-                pixel_format=rr.PixelFormat.NV12,
+                pixel_format=dl.PixelFormat.NV12,
             ),
         )
         time.sleep(0.01)
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -25,7 +25,7 @@ def random_walk_generator() -> Iterator[float]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Plot dashboard stress test")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
 
     parser.add_argument("--num-plots", type=int, default=6, help="How many different plots?")
     parser.add_argument("--num-series-per-plot", type=int, default=5, help="How many series in each single plot?")
@@ -38,22 +38,22 @@ def main() -> None:
     plot_paths = [f"plot_{i}" for i in range(args.num_plots)]
     series_paths = [f"series_{i}" for i in range(args.num_series_per_plot)]
 
-    rr.script_setup(args, "rerun_example_live_scrolling_plot")
+    dl.script_setup(args, "dalaran_example_live_scrolling_plot")
 
     # Always send the blueprint since it is a function of the data.
-    rr.send_blueprint(
-        rrb.Grid(
+    dl.send_blueprint(
+        dlb.Grid(
             contents=[
-                rrb.TimeSeriesView(
+                dlb.TimeSeriesView(
                     origin=plot_path,
                     time_ranges=[
-                        rrb.VisibleTimeRange(
+                        dlb.VisibleTimeRange(
                             "time",
-                            start=rrb.TimeRangeBoundary.cursor_relative(seconds=-args.window_size),
-                            end=rrb.TimeRangeBoundary.cursor_relative(),
+                            start=dlb.TimeRangeBoundary.cursor_relative(seconds=-args.window_size),
+                            end=dlb.TimeRangeBoundary.cursor_relative(),
                         ),
                     ],
-                    plot_legend=rrb.PlotLegend(visible=False),
+                    plot_legend=dlb.PlotLegend(visible=False),
                 )
                 for plot_path in plot_paths
             ],
@@ -77,14 +77,14 @@ def main() -> None:
         if sleep_for < -0.1:
             print(f"Warning: missed logging window by {-sleep_for:.2f} seconds")
 
-        rr.set_time("time", timestamp=cur_time)
+        dl.set_time("time", timestamp=cur_time)
 
         # Output each series based on its generator
         for plot_idx, plot_path in enumerate(plot_paths):
             for series_idx, series_path in enumerate(series_paths):
-                rr.log(f"{plot_path}/{series_path}", rr.Scalars(next(values[plot_idx][series_idx])))
+                dl.log(f"{plot_path}/{series_path}", dl.Scalars(next(values[plot_idx][series_idx])))
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -9,8 +9,8 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.compute as pc
 
-import rerun as rr
-from rerun.experimental import (
+import dalaran as dl
+from dalaran.experimental import (
     Chunk,
     DeriveLens,
     LazyChunkStream,
@@ -56,7 +56,7 @@ def fan(side: str) -> list[DeriveLens]:
             "schemas.proto.JointState:message",
             output_entity=f"/joints_deg/{side}/{name}",
         ).to_component(
-            rr.Scalars.descriptor_scalars(),
+            dl.Scalars.descriptor_scalars(),
             Selector(".joint_positions").pipe(pick_joint(i)),
         )
         for i, name in enumerate(JOINTS)
@@ -86,7 +86,7 @@ processed = (
 metadata = Chunk.from_columns(
     "/metadata",
     indexes=[],
-    columns=rr.AnyValues.columns(
+    columns=dl.AnyValues.columns(
         processing_type="ingestion",
         processing_version="v1",
     ),
@@ -98,7 +98,7 @@ merged = LazyChunkStream.merge(processed, LazyChunkStream.from_iter([metadata]))
 # region: write
 merged.write_rrd(
     OUT,
-    application_id="rerun_example_chunk_processing",
+    application_id="dalaran_example_chunk_processing",
     recording_id=str(uuid.uuid4()),
 )
 # endregion: write

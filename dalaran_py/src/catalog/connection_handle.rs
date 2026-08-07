@@ -1,0 +1,636 @@
+use std::collections::BTreeSet;
+
+use arrow::array::{RecordBatch, RecordBatchIterator, RecordBatchReader};
+use arrow::datatypes::{Schema as ArrowSchema, SchemaRef};
+use arrow::ffi_stream::ArrowArrayStreamReader;
+use arrow::pyarrow::PyArrowType;
+use itertools::Itertools as _;
+use pyo3::exceptions::PyValueError;
+use pyo3::{PyResult, Python};
+use dl_chunk_store::{QueryExpression, SparseFillStrategy};
+use dl_datafusion::query_from_query_expression;
+use dl_log::external::log::warn;
+use dl_log_types::{EntryId, EntryName};
+use dl_protos::cloud::v1alpha1::ext as cloud_ext;
+use dl_protos::cloud::v1alpha1::ext::{
+    DataSource, DatasetDetails, DatasetEntry, EntryDetails, QueryDatasetDataframe,
+    QueryDatasetRequest, QueryTasksDataframe, RegisterWithDatasetTaskDescriptor, TableDetails,
+    TableEntry, VersionResponse,
+};
+use dl_protos::cloud::v1alpha1::{EntryFilter, QueryTasksResponse};
+use dl_protos::common::v1alpha1::TaskId;
+use dl_protos::common::v1alpha1::ext::{IfDuplicateBehavior, ScanParameters, SegmentId};
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
+use dl_protos::missing_field;
+use dl_redap_client::{ApiError, Connection, ConnectionClient, ConnectionRegistryHandle, TraceId};
+use dl_types_core::LayerName;
+
+use crate::catalog::table_entry::PyTableInsertModeInternal;
+use crate::catalog::to_py_err;
+use crate::utils::wait_for_future;
+
+/// Connection handle to a catalog service.
+#[derive(Clone)]
+pub struct ConnectionHandle {
+    origin: dl_uri::Origin,
+
+    connection_registry: ConnectionRegistryHandle,
+}
+
+impl ConnectionHandle {
+    pub fn new(connection_registry: ConnectionRegistryHandle, origin: dl_uri::Origin) -> Self {
+        Self {
+            origin,
+            connection_registry,
+        }
+    }
+
+    pub async fn connection(&self) -> PyResult<Connection> {
+        self.connection_registry
+            .connection(self.origin.clone())
+            .await
+            .map_err(to_py_err)
+    }
+
+    pub async fn client(&self) -> PyResult<ConnectionClient> {
+        Ok(self.connection().await?.client)
+    }
+
+    pub fn origin(&self) -> &dl_uri::Origin {
+        &self.origin
+    }
+
+    pub fn connection_registry(&self) -> &ConnectionRegistryHandle {
+        &self.connection_registry
+    }
+}
+
+impl ConnectionHandle {
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn version_info(&self, py: Python<'_>) -> PyResult<VersionResponse> {
+        wait_for_future(py, async {
+            self.client().await?.version_info().await.map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn rtt(&self, py: Python<'_>, num_pings: usize) -> PyResult<std::time::Duration> {
+        wait_for_future(py, async {
+            self.client().await?.rtt(num_pings).await.map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn bandwidth_bytes_per_sec(
+        &self,
+        py: Python<'_>,
+        num_bytes: u64,
+        rtt: std::time::Duration,
+    ) -> PyResult<Option<f64>> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .bandwidth_bytes_per_sec(num_bytes, rtt)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn find_entries(&self, py: Python<'_>, filter: EntryFilter) -> PyResult<Vec<EntryDetails>> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .find_entries(filter)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn delete_entry(&self, py: Python<'_>, entry_id: EntryId) -> PyResult<()> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .delete_entry(entry_id)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn update_entry(
+        &self,
+        py: Python<'_>,
+        entry_id: EntryId,
+        entry_details_update: cloud_ext::EntryDetailsUpdate,
+    ) -> PyResult<cloud_ext::EntryDetails> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .update_entry(entry_id, entry_details_update)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn create_dataset(&self, py: Python<'_>, name: String) -> PyResult<DatasetEntry> {
+        let name = EntryName::new(name).map_err(|err| PyValueError::new_err(err.to_string()))?;
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .create_dataset_entry(name, None)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn read_dataset(&self, py: Python<'_>, entry_id: EntryId) -> PyResult<DatasetEntry> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .read_dataset_entry(entry_id)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn update_dataset(
+        &self,
+        py: Python<'_>,
+        entry_id: EntryId,
+        dataset_details: DatasetDetails,
+    ) -> PyResult<DatasetEntry> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .update_dataset_entry(entry_id, dataset_details)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn get_dataset_segment_ids(
+        &self,
+        py: Python<'_>,
+        entry_id: EntryId,
+    ) -> PyResult<Vec<String>> {
+        wait_for_future(py, async {
+            Ok(self
+                .client()
+                .await?
+                .get_dataset_segment_ids(entry_id)
+                .await
+                .map_err(to_py_err)?
+                .iter()
+                .map(|id| id.to_string())
+                .collect::<Vec<_>>())
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn register_table(
+        &self,
+        py: Python<'_>,
+        name: EntryName,
+        url: url::Url,
+    ) -> PyResult<TableEntry> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .register_table(name, url)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn create_table_entry(
+        &self,
+        py: Python<'_>,
+        name: &EntryName,
+        schema: SchemaRef,
+        url: Option<url::Url>,
+    ) -> PyResult<TableEntry> {
+        let entry_id = wait_for_future(py, async {
+            self.client()
+                .await?
+                .create_table_entry(name.clone(), url, schema)
+                .await
+                .map_err(to_py_err)
+        })?;
+
+        self.read_table(py, entry_id.details.id)
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn read_table(&self, py: Python<'_>, entry_id: EntryId) -> PyResult<TableEntry> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .read_table_entry(entry_id)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn update_table(
+        &self,
+        py: Python<'_>,
+        entry_id: EntryId,
+        table_details: TableDetails,
+    ) -> PyResult<TableEntry> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .update_table_entry(entry_id, table_details)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn write_table(
+        &self,
+        py: Python<'_>,
+        entry_id: EntryId,
+        stream: ArrowArrayStreamReader,
+        insert_mode: PyTableInsertModeInternal,
+    ) -> PyResult<()> {
+        wait_for_future(py, async {
+            // Since the errors occur during streaming, we cannot let this method
+            // fail without doing a collect operation. Instead, we log a warning to
+            // the user.
+            let stream = futures::stream::iter(stream.filter_map(move |rb| match rb {
+                Ok(rb) => Some(rb),
+                Err(err) => {
+                    warn!("write_table input stream contains an error. {err}");
+                    None
+                }
+            }));
+
+            self.client()
+                .await?
+                .write_table(stream, entry_id, insert_mode.into())
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn get_dataset_schema(&self, py: Python<'_>, entry_id: EntryId) -> PyResult<ArrowSchema> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .get_dataset_schema(entry_id)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    /// Initiate registration of the provided recording URIs with a dataset and return the
+    /// corresponding task descriptors.
+    ///
+    /// Custom layers can be specified via `recording_layers`:
+    /// * When empty, this defaults to `["base"]`.
+    /// * If longer than `recording_uris`, `recording_layers` will be truncated.
+    /// * If shorter than `recording_uris`, `recording_layers` will be extended by repeating its last value.
+    ///   I.e. an empty `recording_layers` will result in `"base"` begin repeated `len(recording_layers)` times.
+    ///
+    /// NOTE: The server may pool multiple registrations into a single task. The result always has
+    /// the same length as the output, so task ids may be duplicated.
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn register_with_dataset(
+        &self,
+        py: Python<'_>,
+        dataset_id: EntryId,
+        recording_uris: Vec<String>,
+        recording_layers: Vec<LayerName>,
+        on_duplicate: IfDuplicateBehavior,
+    ) -> PyResult<(Option<TraceId>, Vec<RegisterWithDatasetTaskDescriptor>)> {
+        let last_layer = recording_layers
+            .last()
+            .cloned()
+            .unwrap_or_else(LayerName::base);
+
+        let data_sources = std::iter::zip(
+            &recording_uris,
+            std::iter::chain(
+                recording_layers,
+                std::iter::repeat_with(|| last_layer.clone()),
+            ),
+        )
+        .map(|(url, layer)| DataSource::new_rrd_layer(layer, url))
+        .try_collect()
+        .map_err(to_py_err)?;
+
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .register_with_dataset(dataset_id, data_sources, on_duplicate)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    /// Unregisters segments and layers from the dataset.
+    ///
+    /// This is an asynchronous operation, and returns a list of task ids.
+    ///
+    /// This method acts as a *product* filter:
+    /// * empty `segments_to_drop` + empty `layers_to_drop`: invalid argument error
+    /// * empty `segments_to_drop` + non-empty `layers_to_drop`: remove specified layers for *all* segments
+    /// * non-empty `segments_to_drop` + empty `layers_to_drop`: remove *all* layers for specified segments
+    /// * non-empty `segments_to_drop` + non-empty `layers_to_drop`: delete *all* specified layers for *all* specified segments
+    ///
+    /// If `force`, deletion will go through regardless of the segments/layers' current statuses.
+    /// This is only useful in the very specific, catatrophic scenario where the contents of the
+    /// task queue were lost and some tasks are now stuck in `status=pending` forever.
+    /// Do not use this unless you know exactly what you're doing.
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn unregister_from_dataset(
+        &self,
+        py: Python<'_>,
+        dataset_id: EntryId,
+        segments_to_drop: Vec<SegmentId>,
+        layers_to_drop: Vec<LayerName>,
+        force: bool,
+    ) -> PyResult<(Option<TraceId>, Vec<TaskId>)> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .unregister_from_dataset(dataset_id, segments_to_drop, layers_to_drop, force)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    /// Initiate registration of all the recordings within provided object store prefix (aka directory)
+    /// and return the corresponding task descriptors.
+    ///
+    /// A custom layer can be specified via `recordings_layer`:
+    /// * When empty, this defaults to `["base"]`.
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn register_with_dataset_prefix(
+        &self,
+        py: Python<'_>,
+        dataset_id: EntryId,
+        recordings_prefix: String,
+        recordings_layer: LayerName,
+        on_duplicate: IfDuplicateBehavior,
+    ) -> PyResult<(Option<TraceId>, Vec<RegisterWithDatasetTaskDescriptor>)> {
+        let data_source = DataSource::new_rrd_layer_prefix(recordings_layer, recordings_prefix)
+            .map_err(to_py_err)?;
+        let data_sources = vec![data_source];
+
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .register_with_dataset(dataset_id, data_sources, on_duplicate)
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    #[expect(clippy::fn_params_excessive_bools)]
+    pub fn do_maintenance(
+        &self,
+        py: Python<'_>,
+        dataset_id: EntryId,
+        optimize_indexes: bool,
+        retrain_indexes: bool,
+        compact_fragments: bool,
+        cleanup_before: Option<jiff::Timestamp>,
+        unsafe_allow_recent_cleanup: bool,
+    ) -> PyResult<()> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .do_maintenance(
+                    dataset_id,
+                    optimize_indexes,
+                    retrain_indexes,
+                    compact_fragments,
+                    cleanup_before,
+                    unsafe_allow_recent_cleanup,
+                )
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn do_global_maintenance(&self, py: Python<'_>) -> PyResult<()> {
+        wait_for_future(py, async {
+            self.client()
+                .await?
+                .do_global_maintenance()
+                .await
+                .map_err(to_py_err)
+        })
+    }
+
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn query_tasks(&self, py: Python<'_>, task_ids: Vec<TaskId>) -> PyResult<RecordBatch> {
+        wait_for_future(py, async {
+            let status_table = self
+                .client()
+                .await?
+                .query_tasks(task_ids)
+                .await
+                .map_err(to_py_err)?
+                .dataframe_part()
+                .map_err(to_py_err)?
+                .try_into()
+                .map_err(to_py_err)?;
+
+            Ok(status_table)
+        })
+    }
+
+    /// Wait for the provided tasks to finish.
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn wait_for_tasks(
+        &self,
+        py: Python<'_>,
+        task_ids: Vec<TaskId>,
+        timeout: std::time::Duration,
+    ) -> PyResult<()> {
+        use futures::StreamExt as _;
+
+        wait_for_future(py, async {
+            let mut response_stream = self
+                .client()
+                .await?
+                .query_tasks_on_completion(task_ids, timeout)
+                .await
+                .map_err(to_py_err)?;
+            let trace_id = response_stream.trace_id();
+
+            let mut errors: Vec<String> = Vec::new();
+
+            // loop until all the tasks are done or the timeout is reached: both cases
+            // will complete the stream
+            while let Some(response) = response_stream.next().await {
+                let item: RecordBatch = response
+                    .map_err(to_py_err)?
+                    .data
+                    .ok_or_else(|| {
+                        let err = missing_field!(QueryTasksResponse, "data");
+                        let err = ApiError::deserialization_with_source(
+                            trace_id,
+                            err,
+                            "failed waiting for tasks done: received item without data",
+                        );
+                        to_py_err(err)
+                    })?
+                    .try_into()
+                    .map_err(to_py_err)?;
+
+                let on_err = |err| {
+                    to_py_err(ApiError::deserialization_with_source(
+                        trace_id,
+                        err,
+                        "failed waiting for tasks done: received item with invalid schema",
+                    ))
+                };
+                let task_ids = QueryTasksDataframe::COLUMN_TASK_ID
+                    .extract(&item)
+                    .map_err(&on_err)?;
+                let statuses = QueryTasksDataframe::COLUMN_EXEC_STATUS
+                    .extract(&item)
+                    .map_err(&on_err)?;
+                let msgs = QueryTasksDataframe::COLUMN_MSGS
+                    .extract(&item)
+                    .map_err(&on_err)?;
+
+                for (task_id, status, msg) in itertools::izip!(&task_ids, &statuses, &msgs) {
+                    if status != "success" {
+                        errors.push(format!("task {task_id}: {}", msg.unwrap_or_default()));
+                    }
+                }
+            }
+
+            if !errors.is_empty() {
+                // Put the trace-id early, before the (potentially long) list of errors.
+                let trace_id_line = match trace_id {
+                    Some(trace_id) => format!("\nTask-completion query trace-id: {trace_id}"),
+                    None => String::new(),
+                };
+                let msg = format!(
+                    "All tasks completed, but the following errors occurred.{trace_id_line}\n\n{}",
+                    errors.join("\n")
+                );
+                Err(PyValueError::new_err(msg))
+            } else {
+                Ok(())
+            }
+        })
+    }
+
+    // TODO(ab): migrate this to the `ConnectionClient` API.
+    #[tracing::instrument(level = "info", skip_all)]
+    pub fn get_chunk_ids_for_dataframe_query(
+        &self,
+        py: Python<'_>,
+        dataset_id: EntryId,
+        query_expression: &QueryExpression,
+        segment_ids: &[impl AsRef<str> + Sync],
+    ) -> PyResult<PyArrowType<Box<dyn RecordBatchReader + Send>>> {
+        use tokio_stream::StreamExt as _;
+
+        // `/**` automatically lowers to a materialized list of entity paths on the client (and
+        // it's not just blindly grabbing all the entity paths from the schemas, there's some extra
+        // logic around /properties and such), which means the only way an empty ViewContents is
+        // used today is because is was parsed from entity paths that didn't exist in the dataset.
+        // Therefore, we are never trying to use a server-side wildcard.
+        let select_all_entity_paths = false;
+
+        let entity_paths = query_expression
+            .view_contents
+            .as_ref()
+            .map_or(vec![], |contents| contents.keys().collect::<Vec<_>>());
+
+        let fuzzy_descriptors: Vec<String> = query_expression
+            .view_contents
+            .as_ref()
+            .map_or(BTreeSet::new(), |contents| {
+                contents
+                    .values()
+                    .filter_map(|opt_set| opt_set.as_ref())
+                    .flat_map(|set| set.iter().copied())
+                    .collect::<BTreeSet<_>>()
+            })
+            .into_iter()
+            .map(|ident| ident.to_string())
+            .collect();
+
+        let query = query_from_query_expression(
+            query_expression,
+            query_expression.sparse_fill_strategy != SparseFillStrategy::None,
+        );
+
+        let request = QueryDatasetRequest {
+            segment_ids: segment_ids
+                .iter()
+                .map(|id| id.as_ref().to_owned().into())
+                .collect(),
+            chunk_ids: vec![],
+            entity_paths: entity_paths.into_iter().map(|p| (*p).clone()).collect(),
+            select_all_entity_paths,
+            fuzzy_descriptors,
+            exclude_static_data: false,
+            exclude_temporal_data: false,
+            query: Some(query),
+            scan_parameters: Some(ScanParameters {
+                columns: vec![
+                    QueryDatasetDataframe::COLUMN_CHUNK_SEGMENT_ID_NAME.to_owned(),
+                    QueryDatasetDataframe::COLUMN_CHUNK_ID_NAME.to_owned(),
+                ],
+                ..Default::default()
+            }),
+            generate_direct_urls: false,
+        };
+
+        wait_for_future(py, async {
+            let response_stream = self
+                .client()
+                .await?
+                .inner()
+                .query_dataset(tonic::Request::new(request.into()).with_entry_id(dataset_id))
+                .await
+                .map_err(to_py_err)?
+                .into_inner();
+
+            // TODO(jleibs): Make this streaming
+            let record_batches: Vec<RecordBatch> = response_stream
+                .collect::<Result<Vec<_>, _>>()
+                .await
+                .map_err(to_py_err)?
+                .into_iter()
+                .filter_map(|response| response.data)
+                .map(|dataframe_part| dataframe_part.try_into().map_err(to_py_err))
+                .try_collect()?;
+
+            // TODO(jleibs): Still need a better pattern for getting these schemas
+            let first = record_batches
+                .first()
+                .ok_or_else(|| PyValueError::new_err("No chunks returned from query"))?;
+
+            let schema = first.schema();
+
+            let reader: Box<dyn RecordBatchReader + Send> = Box::new(RecordBatchIterator::new(
+                record_batches.into_iter().map(Ok),
+                schema,
+            ));
+
+            Ok(PyArrowType(reader))
+        })
+    }
+}

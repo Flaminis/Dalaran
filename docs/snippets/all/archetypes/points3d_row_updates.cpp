@@ -2,14 +2,14 @@
 //!
 //! See also the `points3d_column_updates` example, which achieves the same thing in a single operation.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm>
 #include <vector>
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_points3d_row_updates");
+        dalaran::RecordingStream("dalaran_example_points3d_row_updates");
     rec.spawn().exit_on_failure();
 
     // Prepare a point cloud that evolves over 5 timesteps, changing the number of points in the process.
@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
         rec.set_time_duration_secs("time", 10.0 + static_cast<double>(i));
         rec.log(
             "points",
-            rerun::Points3D(positions[i])
+            dalaran::Points3D(positions[i])
                 .with_colors(colors[i])
                 .with_radii(radii[i])
         );

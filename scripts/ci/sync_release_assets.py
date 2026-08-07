@@ -2,7 +2,7 @@
 Script to update a Github release's assets.
 
 Given a Github release ID (e.g. `prerelease` or `0.9.0`), this script will fetch the associated
-binary assets from our cloud storage (`build.rerun.io`) and upload them to the release as
+binary assets from our cloud storage (`build.dalaran.dev`) and upload them to the release as
 native assets.
 
 This is expected to be run by the release & pre-release workflows.
@@ -40,28 +40,28 @@ def fetch_binary_assets(
     commit: str,
     *,
     do_wheels: bool = True,
-    do_rerun_c: bool = True,
-    do_rerun_cpp_sdk: bool = True,
-    do_rerun_cli: bool = True,
-    do_rerun_js: bool = True,
+    do_dalaran_c: bool = True,
+    do_dalaran_cpp_sdk: bool = True,
+    do_dalaran_cli: bool = True,
+    do_dalaran_js: bool = True,
 ) -> Assets:
-    """Given a release ID, fetches all associated binary assets from our cloud storage (build.rerun.io)."""
+    """Given a release ID, fetches all associated binary assets from our cloud storage (build.dalaran.dev)."""
     assets = {}
 
     gcs = storage.Client()
-    bucket = gcs.bucket("rerun-builds")
+    bucket = gcs.bucket("dalaran-builds")
 
     commit_short = commit[:7]
     print(f"Fetching the following binary assets for #{commit_short}:")
     if do_wheels:
         print("  - Python wheels")
-    if do_rerun_c:
+    if do_dalaran_c:
         print("  - C libs")
-    if do_rerun_cpp_sdk:
+    if do_dalaran_cpp_sdk:
         print("  - C++ uber SDK")
-    if do_rerun_cli:
+    if do_dalaran_cli:
         print("  - CLI (Viewer)")
-    if do_rerun_js:
+    if do_dalaran_js:
         print("  - JS package")
 
     missing_assets: MissingAssets = []
@@ -82,16 +82,16 @@ def fetch_binary_assets(
                 # other assets, but that breaks `pip install`…
                 # if "macosx" in name:
                 #     if "x86_64" in name:
-                #         name = f"rerun_sdk-{tag}-aarch64-apple-darwin.whl"
+                #         name = f"dalaran_sdk-{tag}-aarch64-apple-darwin.whl"
                 #     if "arm64" in name:
-                #         name = f"rerun_sdk-{tag}-x86_64-apple-darwin.whl"
+                #         name = f"dalaran_sdk-{tag}-x86_64-apple-darwin.whl"
                 #
                 # if "manylinux_2_28_x86_64" in name:
                 #     if "x86_64" in name:
-                #         name = f"rerun_sdk-{tag}-x86_64-unknown-linux-gnu.whl"
+                #         name = f"dalaran_sdk-{tag}-x86_64-unknown-linux-gnu.whl"
                 #
                 # if "win_amd64" in name:
-                #     name = f"rerun_sdk-{tag}-x86_64-pc-windows-msvc.whl"
+                #     name = f"dalaran_sdk-{tag}-x86_64-pc-windows-msvc.whl"
                 print(f"Found Python wheels: {name}")
                 found = True
                 assets[name] = blob
@@ -99,107 +99,107 @@ def fetch_binary_assets(
         if not found:
             report_missing_blob("Python wheels", f"commit/{commit_short}/wheels/*.whl")
 
-    # rerun_c
-    if do_rerun_c:
-        rerun_c_blobs = [
+    # dalaran_c
+    if do_dalaran_c:
+        dalaran_c_blobs = [
             (
-                f"rerun_c-{tag}-x86_64-pc-windows-msvc.lib",
-                f"commit/{commit_short}/rerun_c/windows-x64/rerun_c.lib",
+                f"dalaran_c-{tag}-x86_64-pc-windows-msvc.lib",
+                f"commit/{commit_short}/dalaran_c/windows-x64/dalaran_c.lib",
             ),
             (
-                f"librerun_c-{tag}-x86_64-unknown-linux-gnu.a",
-                f"commit/{commit_short}/rerun_c/linux-x64/librerun_c.a",
+                f"libdalaran_c-{tag}-x86_64-unknown-linux-gnu.a",
+                f"commit/{commit_short}/dalaran_c/linux-x64/libdalaran_c.a",
             ),
             (
-                f"librerun_c-{tag}-aarch64-unknown-linux-gnu.a",
-                f"commit/{commit_short}/rerun_c/linux-arm64/librerun_c.a",
+                f"libdalaran_c-{tag}-aarch64-unknown-linux-gnu.a",
+                f"commit/{commit_short}/dalaran_c/linux-arm64/libdalaran_c.a",
             ),
             (
-                f"librerun_c-{tag}-aarch64-apple-darwin.a",
-                f"commit/{commit_short}/rerun_c/macos-arm64/librerun_c.a",
+                f"libdalaran_c-{tag}-aarch64-apple-darwin.a",
+                f"commit/{commit_short}/dalaran_c/macos-arm64/libdalaran_c.a",
             ),
         ]
-        for name, blob_url in rerun_c_blobs:
+        for name, blob_url in dalaran_c_blobs:
             blob = bucket.get_blob(blob_url)
             if blob is not None:
-                print(f"Found Rerun C library: {name}")
+                print(f"Found Dalaran C library: {name}")
                 assets[name] = blob
             else:
                 report_missing_blob(name, blob_url)
 
-    # rerun_cpp_sdk
-    if do_rerun_cpp_sdk:
-        rerun_cpp_sdk_blob = bucket.get_blob(f"commit/{commit_short}/rerun_cpp_sdk.zip")
-        for blob in [rerun_cpp_sdk_blob]:
+    # dalaran_cpp_sdk
+    if do_dalaran_cpp_sdk:
+        dalaran_cpp_sdk_blob = bucket.get_blob(f"commit/{commit_short}/dalaran_cpp_sdk.zip")
+        for blob in [dalaran_cpp_sdk_blob]:
             if blob is not None and blob.name is not None:
                 name = blob.name.split("/")[-1]
-                print(f"Found Rerun cross-platform bundle: {name}")
-                assets[f"rerun_cpp_sdk-{tag}-multiplatform.zip"] = blob
+                print(f"Found Dalaran cross-platform bundle: {name}")
+                assets[f"dalaran_cpp_sdk-{tag}-multiplatform.zip"] = blob
 
-                # Upload again as rerun_cpp_sdk.zip for convenience.
+                # Upload again as dalaran_cpp_sdk.zip for convenience.
                 #
                 # ATTENTION: Renaming this file has tremendous ripple effects:
                 # Not only is this the convenient short name we use in examples,
                 # we also rely on https://github.com/rerun-io/rerun/releases/latest/download/rerun_cpp_sdk.zip
-                # to always give you the latest stable version of the Rerun SDK.
+                # to always give you the latest stable version of the Dalaran SDK.
                 # -> The name should *not* contain the version number.
-                assets["rerun_cpp_sdk.zip"] = blob
+                assets["dalaran_cpp_sdk.zip"] = blob
             else:
                 report_missing_blob(
-                    f"rerun_cpp_sdk-{tag}-multiplatform.zip",
-                    f"commit/{commit_short}/rerun_cpp_sdk.zip",
+                    f"dalaran_cpp_sdk-{tag}-multiplatform.zip",
+                    f"commit/{commit_short}/dalaran_cpp_sdk.zip",
                 )
 
-    # rerun-cli
-    if do_rerun_cli:
-        rerun_cli_blobs = [
+    # dalaran-cli
+    if do_dalaran_cli:
+        dalaran_cli_blobs = [
             (
-                f"rerun-cli-{tag}-x86_64-pc-windows-msvc.exe",
-                f"commit/{commit_short}/rerun-cli/windows-x64/rerun.exe",
+                f"dalaran-cli-{tag}-x86_64-pc-windows-msvc.exe",
+                f"commit/{commit_short}/dalaran-cli/windows-x64/dalaran.exe",
             ),
             (
-                f"rerun-cli-{tag}-x86_64-unknown-linux-gnu",
-                f"commit/{commit_short}/rerun-cli/linux-x64/rerun",
+                f"dalaran-cli-{tag}-x86_64-unknown-linux-gnu",
+                f"commit/{commit_short}/dalaran-cli/linux-x64/dalaran",
             ),
             (
-                f"rerun-cli-{tag}-aarch64-unknown-linux-gnu",
-                f"commit/{commit_short}/rerun-cli/linux-arm64/rerun",
+                f"dalaran-cli-{tag}-aarch64-unknown-linux-gnu",
+                f"commit/{commit_short}/dalaran-cli/linux-arm64/dalaran",
             ),
             (
-                f"rerun-cli-{tag}-aarch64-apple-darwin",
-                f"commit/{commit_short}/rerun-cli/macos-arm64/rerun",
+                f"dalaran-cli-{tag}-aarch64-apple-darwin",
+                f"commit/{commit_short}/dalaran-cli/macos-arm64/dalaran",
             ),
             (
-                f"Rerun-{tag}-aarch64-apple-darwin.app.tar.gz",
-                f"commit/{commit_short}/rerun-cli/macos-arm64/rerun",
+                f"Dalaran-{tag}-aarch64-apple-darwin.app.tar.gz",
+                f"commit/{commit_short}/dalaran-cli/macos-arm64/dalaran",
             ),
         ]
-        for name, blob_url in rerun_cli_blobs:
+        for name, blob_url in dalaran_cli_blobs:
             blob = bucket.get_blob(blob_url)
             if blob is not None:
-                print(f"Found Rerun CLI binary: {name}")
+                print(f"Found Dalaran CLI binary: {name}")
                 assets[name] = blob
             else:
                 report_missing_blob(name, blob_url)
 
-    # rerun-js
-    if do_rerun_js:
+    # dalaran-js
+    if do_dalaran_js:
         # note: we don't include the version tag in the asset name here,
         #       otherwise `latest` downloads contain the version number.
-        rerun_js_blobs = [
+        dalaran_js_blobs = [
             (
-                "rerun-js-web-viewer.tar.gz",
-                f"commit/{commit_short}/rerun_js/web-viewer.tar.gz",
+                "dalaran-js-web-viewer.tar.gz",
+                f"commit/{commit_short}/dalaran_js/web-viewer.tar.gz",
             ),
             (
-                "rerun-js-web-viewer-react.tar.gz",
-                f"commit/{commit_short}/rerun_js/web-viewer-react.tar.gz",
+                "dalaran-js-web-viewer-react.tar.gz",
+                f"commit/{commit_short}/dalaran_js/web-viewer-react.tar.gz",
             ),
         ]
-        for name, blob_url in rerun_js_blobs:
+        for name, blob_url in dalaran_js_blobs:
             blob = bucket.get_blob(blob_url)
             if blob is not None:
-                print(f"Found Rerun JS package: {name}")
+                print(f"Found Dalaran JS package: {name}")
                 assets[name] = blob
             else:
                 report_missing_blob(name, blob_url)
@@ -267,10 +267,10 @@ def main() -> None:
         help="Update new assets to the specified release",
     )
     parser.add_argument("--no-wheels", action="store_true", help="Don't upload Python wheels")
-    parser.add_argument("--no-rerun-c", action="store_true", help="Don't upload C libraries")
-    parser.add_argument("--no-rerun-cpp-sdk", action="store_true", help="Don't upload C++ uber SDK")
-    parser.add_argument("--no-rerun-cli", action="store_true", help="Don't upload CLI")
-    parser.add_argument("--no-rerun-js", action="store_true", help="Don't upload JS package")
+    parser.add_argument("--no-dalaran-c", action="store_true", help="Don't upload C libraries")
+    parser.add_argument("--no-dalaran-cpp-sdk", action="store_true", help="Don't upload C++ uber SDK")
+    parser.add_argument("--no-dalaran-cli", action="store_true", help="Don't upload CLI")
+    parser.add_argument("--no-dalaran-js", action="store_true", help="Don't upload JS package")
     args = parser.parse_args()
 
     # Wait for a bit before doing anything, if you must.
@@ -301,10 +301,10 @@ def main() -> None:
         release.tag_name,
         commit.sha,
         do_wheels=not args.no_wheels,
-        do_rerun_c=not args.no_rerun_c,
-        do_rerun_cpp_sdk=not args.no_rerun_cpp_sdk,
-        do_rerun_cli=not args.no_rerun_cli,
-        do_rerun_js=not args.no_rerun_js,
+        do_dalaran_c=not args.no_dalaran_c,
+        do_dalaran_cpp_sdk=not args.no_dalaran_cpp_sdk,
+        do_dalaran_cli=not args.no_dalaran_cli,
+        do_dalaran_js=not args.no_dalaran_js,
     )
 
     if args.remove:

@@ -1,11 +1,11 @@
 // Log a simple occupancy grid map.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_grid_map");
+    const auto rec = dalaran::RecordingStream("dalaran_example_grid_map");
     rec.spawn().exit_on_failure();
 
     const size_t width = 64;
@@ -28,12 +28,12 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "world/map",
-        rerun::archetypes::GridMap()
-            .with_data(rerun::ImageBuffer(grid))
-            .with_format(rerun::components::ImageFormat(
+        dalaran::archetypes::GridMap()
+            .with_data(dalaran::ImageBuffer(grid))
+            .with_format(dalaran::components::ImageFormat(
                 {width, height},
-                rerun::ColorModel::L,
-                rerun::ChannelDatatype::U8
+                dalaran::ColorModel::L,
+                dalaran::ChannelDatatype::U8
             ))
             .with_cell_size(cell_size)
             .with_translation(
@@ -41,6 +41,6 @@ int main(int argc, char* argv[]) {
                  -(static_cast<float>(height) * cell_size) / 2.0f,
                  0.0f}
             )
-            .with_colormap(rerun::Colormap::RvizMap)
+            .with_colormap(dalaran::Colormap::RvizMap)
     );
 }

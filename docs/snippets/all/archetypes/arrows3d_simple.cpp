@@ -1,6 +1,6 @@
 // Log a batch of 3D arrows.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <cmath>
 #include <vector>
@@ -8,12 +8,12 @@
 constexpr float TAU = 6.28318530717958647692528676655900577f;
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_arrow3d");
+    const auto rec = dalaran::RecordingStream("dalaran_example_arrow3d");
     rec.spawn().exit_on_failure();
 
-    std::vector<rerun::Position3D> origins;
-    std::vector<rerun::Vector3D> vectors;
-    std::vector<rerun::Color> colors;
+    std::vector<dalaran::Position3D> origins;
+    std::vector<dalaran::Vector3D> vectors;
+    std::vector<dalaran::Color> colors;
 
     for (int i = 0; i < 100; ++i) {
         origins.push_back({0, 0, 0});
@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "arrows",
-        rerun::Arrows3D::from_vectors(vectors)
+        dalaran::Arrows3D::from_vectors(vectors)
             .with_origins(origins)
             .with_colors(colors)
     );

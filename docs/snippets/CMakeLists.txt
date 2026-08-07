@@ -114,7 +114,7 @@ add_executable(snippets
     ${ALL_GENERATED_SOURCES}
 )
 
-rerun_strict_warning_settings(snippets)
+dalaran_strict_warning_settings(snippets)
 
 # Renamed mains lose the compiler's special `main` treatment that suppresses
 # unused-parameter warnings for argc/argv.
@@ -124,4 +124,4 @@ else()
     target_compile_options(snippets PRIVATE -Wno-unused-parameter)
 endif()
 
-target_link_libraries(snippets PRIVATE rerun_sdk loguru::loguru rerun_arrow_target)
+target_link_libraries(snippets PRIVATE dalaran_sdk loguru::loguru dalaran_arrow_target)

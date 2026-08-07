@@ -1,7 +1,7 @@
 """Log a simple 2D Box."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_box2d", spawn=True)
+dl.init("dalaran_example_box2d", spawn=True)
 
-rr.log("simple", rr.Boxes2D(mins=[-1, -1], sizes=[2, 2]))
+dl.log("simple", dl.Boxes2D(mins=[-1, -1], sizes=[2, 2]))

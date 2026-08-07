@@ -28,9 +28,9 @@ This archetype is intended for robotics applications like occupancy maps or navi
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `GridMap`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1GridMap.html)
- * 🐍 [Python API docs for `GridMap`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.GridMap)
- * 🦀 [Rust API docs for `GridMap`](https://docs.rs/rerun/latest/rerun/archetypes/struct.GridMap.html)
+ * 🌊 [C++ API docs for `GridMap`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1GridMap.html)
+ * 🐍 [Python API docs for `GridMap`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.GridMap)
+ * 🦀 [Rust API docs for `GridMap`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.GridMap.html)
 
 ## Examples
 

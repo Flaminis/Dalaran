@@ -1,9 +1,9 @@
 """Create and set a GRPC sink."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_grpc_sink")
+dl.init("dalaran_example_grpc_sink")
 
-# The default URL is `rerun+http://127.0.0.1:9876/proxy`
+# The default URL is `dalaran+http://127.0.0.1:9876/proxy`
 # This can be used to connect to a viewer on a different machine
-rr.set_sinks(rr.GrpcSink("rerun+http://127.0.0.1:9876/proxy"))
+dl.set_sinks(dl.GrpcSink("dalaran+http://127.0.0.1:9876/proxy"))

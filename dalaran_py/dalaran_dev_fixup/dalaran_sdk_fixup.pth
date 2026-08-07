@@ -1,0 +1,1 @@
+import sys; [sys.path.insert(0, p + "/dalaran_sdk") for p in list(sys.path) if p.endswith("dalaran_py") and p + "/dalaran_sdk" not in sys.path]

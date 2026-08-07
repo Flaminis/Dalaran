@@ -6,11 +6,11 @@
 #include <numeric>
 #include <vector>
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_scalar_column_updates");
+        dalaran::RecordingStream("dalaran_example_scalar_column_updates");
     rec.spawn().exit_on_failure();
 
     // Native scalars & times.
@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
     // Serialize to columns and send.
     rec.send_columns(
         "scalars",
-        rerun::TimeColumn::from_sequence("step", std::move(times)),
-        rerun::Scalars(std::move(scalar_data)).columns()
+        dalaran::TimeColumn::from_sequence("step", std::move(times)),
+        dalaran::Scalars(std::move(scalar_data)).columns()
     );
 }

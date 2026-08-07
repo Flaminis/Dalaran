@@ -1,10 +1,10 @@
 ---
-title: Integrate Rerun with native loggers
+title: Integrate Dalaran with native loggers
 order: 400
-description: How to use the Rerun SDK as a native logger for the host language
+description: How to use the Dalaran SDK as a native logger for the host language
 ---
 
-The Rerun SDK implements the native logging interfaces of its supported host languages, allowing you to transparently stream text logs logged with the native APIs into the Rerun Viewer.
+The Dalaran SDK implements the native logging interfaces of its supported host languages, allowing you to transparently stream text logs logged with the native APIs into the Dalaran Viewer.
 
 The details of how to achieve that vary language by language, see the snippets below.
 

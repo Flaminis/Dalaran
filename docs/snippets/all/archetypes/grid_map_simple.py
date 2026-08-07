@@ -2,7 +2,7 @@
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
 width, height = 64, 64
 cell_size = 0.1
@@ -13,13 +13,13 @@ grid = np.full((height, width), -1, dtype=np.int8)
 grid[8:56, 8:56] = 0
 grid[20:44, 20:44] = 100
 
-rr.init("rerun_example_grid_map", spawn=True)
+dl.init("dalaran_example_grid_map", spawn=True)
 
-rr.log(
+dl.log(
     "world/map",
-    rr.GridMap(
+    dl.GridMap(
         data=grid.tobytes(),
-        format=rr.components.ImageFormat(
+        format=dl.components.ImageFormat(
             width=width,
             height=height,
             color_model="L",
@@ -31,6 +31,6 @@ rr.log(
             -(height * cell_size) / 2.0,
             0.0,
         ],
-        colormap=rr.components.Colormap.RvizMap,
+        colormap=dl.components.Colormap.RvizMap,
     ),
 )

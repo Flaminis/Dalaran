@@ -26,21 +26,21 @@ as a numpy array of `np.uint8`.
 
 If you depend on code that uses a bare python list of alternating colors, such as:
 ```python
-rr.log("my_points", rr.Points3D(…, colors=[r, g, b, a, r, g, b, a, …]))
+dl.log("my_points", dl.Points3D(…, colors=[r, g, b, a, r, g, b, a, …]))
 ```
 You should wrap your input explicitly in a `np.uint8` typed numpy array:
 ```python
-rr.log("my_points", rr.Points3D(…, colors=np.array([r, g, b, a, r, g, b, a, …], dtype=np.uint8)))
+dl.log("my_points", dl.Points3D(…, colors=np.array([r, g, b, a, r, g, b, a, …], dtype=np.uint8)))
 ```
 
 Additionally, if you are making use of packed integer colors, it is also advised to add the `np.uint32` type,
 as otherwise length-3 or length-4 lists will risk being interpreted incorrectly.
 ```python
-rr.log("my_points", rr.Points3D(…, colors=[0xff0000ff, 0x00ff00ff, 0x0000ffff, …]))
+dl.log("my_points", dl.Points3D(…, colors=[0xff0000ff, 0x00ff00ff, 0x0000ffff, …]))
 ```
 becomes
 ```python
-rr.log("my_points", rr.Points3D(…, colors=np.array([0xff0000ff, 0x00ff00ff, 0x0000ffff, …], dtype=np.uint32)))
+dl.log("my_points", dl.Points3D(…, colors=np.array([0xff0000ff, 0x00ff00ff, 0x0000ffff, …], dtype=np.uint32)))
 ```
 
 ## ❗ Deprecations
@@ -60,6 +60,6 @@ The old methods will be removed in a future release.
 
 The rationale behind this change is that it was easy to confuse what these functions do exactly:
 
-We frequently had reports from users that were understandably expecting a serving process (`rr.serve()`) to be ready to accept connections from other processes (`rr.connect()`), when in reality the two things are completely unrelated: one is hosting a websocket server to be polled by the web-viewer, while the other is trying to connect to the TCP SDK comms pipeline.
+We frequently had reports from users that were understandably expecting a serving process (`dl.serve()`) to be ready to accept connections from other processes (`dl.connect()`), when in reality the two things are completely unrelated: one is hosting a websocket server to be polled by the web-viewer, while the other is trying to connect to the TCP SDK comms pipeline.
 
-You can learn more about Rerun's application model and the different servers and ports by reading our [new documentation page on the matter](../../concepts/how-does-rerun-work.md).
+You can learn more about Dalaran's application model and the different servers and ports by reading our [new documentation page on the matter](../../concepts/how-does-dalaran-work.md).

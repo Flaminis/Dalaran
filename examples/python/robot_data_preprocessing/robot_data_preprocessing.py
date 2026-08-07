@@ -1,5 +1,5 @@
 """
-Demonstrates how to use Rerun's chunk processing API to assemble a robot recording
+Demonstrates how to use Dalaran's chunk processing API to assemble a robot recording
 from multiple file sources (MCAP, custom data, URDF, …):
 
 - fix recording errors
@@ -9,7 +9,7 @@ from multiple file sources (MCAP, custom data, URDF, …):
 - …
 
 The resulting merged stream is saved to an RRD file, which can be
-opened in the Rerun viewer or registered to a dataset catalog.
+opened in the Dalaran viewer or registered to a dataset catalog.
 """
 
 from __future__ import annotations
@@ -19,9 +19,9 @@ from pathlib import Path
 
 import pyarrow as pa
 
-import rerun as rr
-from rerun.experimental import Chunk, DeriveLens, LazyChunkStream, McapReader, MutateLens, OptimizationProfile, Selector
-from rerun.urdf import UrdfTree
+import dalaran as dl
+from dalaran.experimental import Chunk, DeriveLens, LazyChunkStream, McapReader, MutateLens, OptimizationProfile, Selector
+from dalaran.urdf import UrdfTree
 
 PARENT_DIR = Path(__file__).parent
 DATA_DIR = PARENT_DIR / "input_data"
@@ -36,7 +36,7 @@ def json_transforms_stream(json_path: Path) -> LazyChunkStream:
     chunk = Chunk.from_columns(
         "/tf_static/robot_offsets",
         indexes=[],
-        columns=rr.Transform3D.columns(
+        columns=dl.Transform3D.columns(
             translation=[transform["translation"] for transform in transforms],
             quaternion=[transform["quaternion_xyzw"] for transform in transforms],
             parent_frame=[transform["parent"] for transform in transforms],
@@ -46,7 +46,7 @@ def json_transforms_stream(json_path: Path) -> LazyChunkStream:
     return LazyChunkStream.from_iter([chunk])
 
 
-def change_albedo_factor_lens(new_albedo: rr.components.AlbedoFactor) -> MutateLens:
+def change_albedo_factor_lens(new_albedo: dl.components.AlbedoFactor) -> MutateLens:
     """Replaces Asset3D albedo factors with a fixed color."""
 
     return MutateLens(
@@ -58,7 +58,7 @@ def change_albedo_factor_lens(new_albedo: rr.components.AlbedoFactor) -> MutateL
 def joints_batch_lens(robot_urdf: UrdfTree, to_entity: str = "/tmp") -> DeriveLens:
     """Computes intermediate transform batches from each joint state message using the URDF."""
     return DeriveLens("schemas.proto.JointState:message", output_entity=to_entity).to_component(
-        "rerun.urdf.JointTransformBatch",
+        "dalaran.urdf.JointTransformBatch",
         Selector(".").pipe(
             lambda joint_state_messages: robot_urdf.compute_joint_transform_batches(
                 names=Selector(".joint_names").execute(joint_state_messages),
@@ -71,21 +71,21 @@ def joints_batch_lens(robot_urdf: UrdfTree, to_entity: str = "/tmp") -> DeriveLe
 def output_transforms_lens() -> DeriveLens:
     """Scatters transform batches into final Transform3D rows per joint."""
     return (
-        DeriveLens("rerun.urdf.JointTransformBatch", output_entity="/tf", scatter=True)
+        DeriveLens("dalaran.urdf.JointTransformBatch", output_entity="/tf", scatter=True)
         .to_component(
-            rr.Transform3D.descriptor_translation(),
+            dl.Transform3D.descriptor_translation(),
             Selector(".[].translation"),
         )
         .to_component(
-            rr.Transform3D.descriptor_quaternion(),
+            dl.Transform3D.descriptor_quaternion(),
             Selector(".[].quaternion"),
         )
         .to_component(
-            rr.Transform3D.descriptor_parent_frame(),
+            dl.Transform3D.descriptor_parent_frame(),
             Selector(".[].parent_frame"),
         )
         .to_component(
-            rr.Transform3D.descriptor_child_frame(),
+            dl.Transform3D.descriptor_child_frame(),
             Selector(".[].child_frame"),
         )
     )
@@ -96,8 +96,8 @@ def main() -> None:
     OUTPUT_DIR.mkdir(exist_ok=True)
 
     # Create a chunk stream from the MCAP file.
-    # The reader uses Rerun's MCAP importer (like the viewer or `rerun mcap convert` CLI),
-    # so we get Rerun components that we can process in-stream.
+    # The reader uses Dalaran's MCAP importer (like the viewer or `dalaran mcap convert` CLI),
+    # so we get Dalaran components that we can process in-stream.
     mcap_stream = McapReader(DATA_DIR / "episode.mcap").stream()
 
     # The world-to-base transform offsets of the two robots are stored in a separate JSON file.
@@ -146,12 +146,12 @@ def main() -> None:
 
     # We also modify each robot's visual meshes to have custom colors / transparency by mutating the albedo factor.
     robot_urdf_left_stream = robot_urdf_left.stream().lenses(
-        change_albedo_factor_lens(rr.components.AlbedoFactor([80, 120, 175, 125])),
+        change_albedo_factor_lens(dl.components.AlbedoFactor([80, 120, 175, 125])),
         content="/robot_left/wxai/visual_geometries/**",
         output_mode="forward_unmatched",
     )
     robot_urdf_right_stream = robot_urdf_right.stream().lenses(
-        change_albedo_factor_lens(rr.components.AlbedoFactor([200, 120, 90, 125])),
+        change_albedo_factor_lens(dl.components.AlbedoFactor([200, 120, 90, 125])),
         content="/robot_right/wxai/visual_geometries/**",
         output_mode="forward_unmatched",
     )
@@ -177,15 +177,15 @@ def main() -> None:
     # Here we use an optimization profile suited for object-store (query & stream applications).
     data_stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_rrd(
         OUTPUT_DIR / "data.rrd",
-        application_id="rerun_example_robot_data_preprocessing",
+        application_id="dalaran_example_robot_data_preprocessing",
         recording_id="episode",
     )
     # Write also the URDF streams to an RRD.
     # Note how we use the same `recording_id` here to group the two RRD layers into the same logical recording.
-    # https://rerun.io/docs/concepts/logging-and-ingestion/recordings#logical-vs-physical-recordings
+    # https://dalaran.dev/docs/concepts/logging-and-ingestion/recordings#logical-vs-physical-recordings
     urdf_stream.collect(optimize=OptimizationProfile.OBJECT_STORE).write_rrd(
         OUTPUT_DIR / "urdf.rrd",
-        application_id="rerun_example_robot_data_preprocessing",
+        application_id="dalaran_example_robot_data_preprocessing",
         recording_id="episode",
     )
 

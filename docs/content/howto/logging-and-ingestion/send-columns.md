@@ -5,7 +5,7 @@ description: Log many rows of data in a single call
 ---
 
 The [`log` API](../../getting-started/data-in.md#logging-our-first-points) is designed to extract data from your running code as it's being generated. It is, by nature, *row-oriented*.
-If you already have data stored in something more *column-oriented*, it can be both a lot easier and more efficient to send it to Rerun in that form directly.
+If you already have data stored in something more *column-oriented*, it can be both a lot easier and more efficient to send it to Dalaran in that form directly.
 
 This is what the `send_columns` API is for: it lets you efficiently update the state of an entity over time, sending data for multiple index and component columns in a single operation.
 
@@ -14,14 +14,14 @@ This is what the `send_columns` API is for: it lets you efficiently update the s
 >
 > In contrast to the `log` API, `send_columns` does NOT add any other timelines to the data. Neither the built-in timelines `log_time` and `log_tick`, nor any [user timelines](../../concepts/logging-and-ingestion/timelines.md). Only the timelines explicitly included in the call to `send_columns` will be included.
 
-To learn more about the concepts behind the columnar APIs, and the Rerun data model in general, [refer to this page](../../concepts/logging-and-ingestion/chunks.md).
+To learn more about the concepts behind the columnar APIs, and the Dalaran data model in general, [refer to this page](../../concepts/logging-and-ingestion/chunks.md).
 
 
 ## Reference
 
-* [🌊 C++](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65)
-* [🐍 Python](https://ref.rerun.io/docs/python/stable/common/columnar_api/#rerun.send_columns)
-* [🦀 Rust](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.send_columns)
+* [🌊 C++](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65)
+* [🐍 Python](https://ref.dalaran.dev/docs/python/stable/common/columnar_api/#dalaran.send_columns)
+* [🦀 Rust](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.send_columns)
 
 
 ## Examples

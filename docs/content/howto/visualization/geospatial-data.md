@@ -4,7 +4,7 @@ order: 300
 description: Use the map view with GPS-style latitudes and longitudes
 ---
 
-Rerun 0.20 introduced a new [map view](../../reference/types/views/map_view.md).
+Dalaran 0.20 introduced a new [map view](../../reference/types/views/map_view.md).
 This guide provides a short overview on how to use it to visualize geospatial data.
 
 ## Coordinate system
@@ -14,24 +14,24 @@ This enables the use of commonly available web tiles for the background map.
 
 To be compatible with this view, geospatial data must be expressed using [ESPG:4326](https://epsg.io/4326) (aka WGS84) latitudes and longitudes.
 This corresponds to what is commonly referred to as "GPS coordinates."
-Rerun provides a set of archetypes prefixed with `Geo` designed to encapsulate such data.
+Dalaran provides a set of archetypes prefixed with `Geo` designed to encapsulate such data.
 
 For example, [`GeoPoints`](../../reference/types/archetypes/geo_points.md) represent a single geospatial location (or a batch thereof). The location of the Eiffel Tower can be logged as follows:
 
 ```python
-rr.log("eiffel_tower", rr.GeoPoints(lat_lon=[48.858222, 2.2945]))
+dl.log("eiffel_tower", dl.GeoPoints(lat_lon=[48.858222, 2.2945]))
 ```
 
 Both the latitude and longitude must be provided in degrees, with positive values corresponding to the North, resp. East directions.
 
-Note that Rerun always expects latitudes first and longitudes second.
+Note that Dalaran always expects latitudes first and longitudes second.
 As there is [no accepted ordering standard](https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services), our APIs strive to make this ordering choice as explicit as possible.
 In this case, the `lat_lon` argument is keyword-only and must thus be explicitly named as a reminder of this order.
 
 
 ## Types of geometries
 
-Rerun currently supports two types of geometries:
+Dalaran currently supports two types of geometries:
 
 - [`GeoPoints`](../../reference/types/archetypes/geo_points.md): batch of individual points, with optional [radius](../../reference/types/components/radius.md) and [color](../../reference/types/components/color.md)
 - [`GeoLineStrings`](../../reference/types/archetypes/geo_line_strings.md): batch of line strings, with optional [radius](../../reference/types/components/radius.md) and [color](../../reference/types/components/color.md)
@@ -49,7 +49,7 @@ Apart from the use of latitude and longitude, `GeoPoints` and `GeoLineStrings` a
 
 The map view supports several types of background maps, including a few from [Mapbox](https://www.mapbox.com).
 A Mapbox access token is required to use them.
-It must be provided either using the `RERUN_MAPBOX_ACCESS_TOKEN` environment variable or configured in the settings screen ("Settings…" item in the Rerun menu).
+It must be provided either using the `DALARAN_MAPBOX_ACCESS_TOKEN` environment variable or configured in the settings screen ("Settings…" item in the Dalaran menu).
 An access token may be freely obtained by creating a Mapbox account.
 
 
@@ -58,14 +58,14 @@ An access token may be freely obtained by creating a Mapbox account.
 Like other views, the map view can be configured using the [blueprint API](../../getting-started/configure-the-viewer/navigating-the-viewer.md#programmatic-blueprints):
 
 ```python
-import rerun.blueprint as rrb
+import dalaran.blueprint as dlb
 
-blueprint = rrb.Blueprint(
-    rrb.MapView(
+blueprint = dlb.Blueprint(
+    dlb.MapView(
         origin="/robot/position",
         name="map view",
         zoom=16.0,
-        background=rrb.MapProvider.OpenStreetMap,
+        background=dlb.MapProvider.OpenStreetMap,
     ),
 )
 ```

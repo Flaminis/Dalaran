@@ -2,10 +2,10 @@
 //!
 //! See also the `image_column_updates` example, which achieves the same thing in a single operation.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
-    auto rec = rerun::RecordingStream("rerun_example_image_row_updates");
+    auto rec = dalaran::RecordingStream("dalaran_example_image_row_updates");
     rec.spawn().exit_on_failure();
 
     const size_t HEIGHT = 200;
@@ -26,6 +26,6 @@ int main(int argc, char* argv[]) {
             }
         }
 
-        rec.log("image", rerun::Image::from_rgb24(data, {WIDTH, HEIGHT}));
+        rec.log("image", dalaran::Image::from_rgb24(data, {WIDTH, HEIGHT}));
     }
 }

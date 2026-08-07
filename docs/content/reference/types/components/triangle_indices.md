@@ -5,7 +5,7 @@ title: "TriangleIndices"
 
 The three indices of a triangle in a triangle mesh.
 
-## Rerun datatype
+## Dalaran datatype
 [`UVec3D`](../datatypes/uvec3d.md)
 
 
@@ -15,9 +15,9 @@ FixedSizeList(3 x non-null UInt32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `TriangleIndices`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1TriangleIndices.html)
- * 🐍 [Python API docs for `TriangleIndices`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.TriangleIndices)
- * 🦀 [Rust API docs for `TriangleIndices`](https://docs.rs/rerun/latest/rerun/components/struct.TriangleIndices.html)
+ * 🌊 [C++ API docs for `TriangleIndices`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1TriangleIndices.html)
+ * 🐍 [Python API docs for `TriangleIndices`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.TriangleIndices)
+ * 🦀 [Rust API docs for `TriangleIndices`](https://docs.rs/dalaran/latest/dalaran/components/struct.TriangleIndices.html)
 
 
 ## Used by

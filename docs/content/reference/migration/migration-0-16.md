@@ -23,22 +23,22 @@ Static data is most often used for `AnnotationContext` and `ViewCoordinates`.
 #### C++
 
 ```diff
-- rec.log_timeless("world", rerun::ViewCoordinates::RIGHT_HAND_Z_UP);
-+ rec.log_static("world", rerun::ViewCoordinates::RIGHT_HAND_Z_UP);
+- rec.log_timeless("world", dalaran::ViewCoordinates::RIGHT_HAND_Z_UP);
++ rec.log_static("world", dalaran::ViewCoordinates::RIGHT_HAND_Z_UP);
 ```
 
 #### Python
 
 ```diff
-- rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Z_UP, timeless=True)
-+ rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
+- dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Z_UP, timeless=True)
++ dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
 ```
 
 #### Rust
 
 ```diff
-- rec.log_timeless("world", &rerun::ViewCoordinates::RIGHT_HAND_Z_UP)?;
-+ rec.log_static("world", &rerun::ViewCoordinates::RIGHT_HAND_Z_UP)?;
+- rec.log_timeless("world", &dalaran::ViewCoordinates::RIGHT_HAND_Z_UP)?;
++ rec.log_static("world", &dalaran::ViewCoordinates::RIGHT_HAND_Z_UP)?;
 ```
 
 
@@ -49,15 +49,15 @@ In PR [#6169](https://github.com/rerun-io/rerun/pull/6169) we replaced `MeshProp
 #### C++
 
 ```diff
-  rerun::Mesh3D(positions)
--     .with_mesh_properties(rerun::components::MeshProperties::from_triangle_indices({{2, 1, 0}}))
+  dalaran::Mesh3D(positions)
+-     .with_mesh_properties(dalaran::components::MeshProperties::from_triangle_indices({{2, 1, 0}}))
 +     .with_triangle_indices({{2, 1, 0}})
 ```
 
 #### Python
 
 ```diff
-  rr.Mesh3D(
+  dl.Mesh3D(
       vertex_positions=…,
 -     indices=[2, 1, 0],
 +     triangle_indices=[2, 1, 0],
@@ -67,7 +67,7 @@ In PR [#6169](https://github.com/rerun-io/rerun/pull/6169) we replaced `MeshProp
 #### Rust
 
 ```diff
-  rerun::Mesh3D::new(positions)
--     .with_mesh_properties(rerun::MeshProperties::from_triangle_indices([[2, 1, 0]]))
+  dalaran::Mesh3D::new(positions)
+-     .with_mesh_properties(dalaran::MeshProperties::from_triangle_indices([[2, 1, 0]]))
 +     .with_triangle_indices([[2, 1, 0]])
 ```

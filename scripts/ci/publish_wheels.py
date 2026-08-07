@@ -47,17 +47,17 @@ def check_version(expected_version: str) -> None:
 
 
 def publish_notebook_asset() -> None:
-    bucket = Gcs("rerun-open").bucket("rerun-web-viewer")
+    bucket = Gcs("dalaran-open").bucket("dalaran-web-viewer")
     wheels = list(Path("wheels").glob("*.whl"))
     for whl in wheels:
-        if whl.name.startswith("rerun_notebook-"):
+        if whl.name.startswith("dalaran_notebook-"):
             wheel_version = whl.stem.split("-")[1]
             with zipfile.ZipFile(whl, "r") as archive:
                 # Extract the specified file to the target directory
-                archive.extract("rerun_notebook/static/widget.js", "extracted")
-                archive.extract("rerun_notebook/static/re_viewer_bg.wasm", "extracted")
+                archive.extract("dalaran_notebook/static/widget.js", "extracted")
+                archive.extract("dalaran_notebook/static/re_viewer_bg.wasm", "extracted")
                 blob_base = f"version/{wheel_version}"
-                file_base = "extracted/rerun_notebook/static"
+                file_base = "extracted/dalaran_notebook/static"
                 blobs = [
                     (bucket.blob(f"{blob_base}/notebook/widget.js"), f"{file_base}/widget.js"),
                     (bucket.blob(f"{blob_base}/notebook/re_viewer_bg.wasm"), f"{file_base}/re_viewer_bg.wasm"),
@@ -74,7 +74,7 @@ def main() -> None:
     parser.add_argument("--token", required=True, help="PyPI token")
     args = parser.parse_args()
 
-    bucket = Gcs("rerun-open").bucket("rerun-builds")
+    bucket = Gcs("dalaran-open").bucket("dalaran-builds")
     wheel_blobs: list[Blob] = [blob for blob in bucket.list_blobs(prefix=args.dir) if blob.name.endswith(".whl")]
     wheels = [blob.name.split("/")[-1] for blob in wheel_blobs]
     wheel_paths = [f"wheels/{wheel}" for wheel in wheels]

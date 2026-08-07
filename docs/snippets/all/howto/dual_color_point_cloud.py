@@ -1,7 +1,7 @@
 """
 Visualize the same point cloud with two different color schemes.
 
-Two custom archetypes (using Rerun's Color component type) are logged on the
+Two custom archetypes (using Dalaran's Color component type) are logged on the
 same entity, then a blueprint maps each color set to a separate 3D view.
 """
 
@@ -9,14 +9,14 @@ from __future__ import annotations
 
 import numpy as np
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.blueprint.datatypes import (
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran.blueprint.datatypes import (
     ComponentSourceKind,
     VisualizerComponentMapping,
 )
 
-rr.init("rerun_example_custom_color_archetypes", spawn=True)
+dl.init("dalaran_example_custom_color_archetypes", spawn=True)
 
 # --- Generate a torus point cloud ---
 N = 8_000
@@ -54,29 +54,29 @@ spin_rgba = np.column_stack([
 
 # region: log_custom_archetypes
 # --- Log positions once, then each color set as a separate custom archetype ---
-rr.log(
+dl.log(
     "pointcloud",
-    rr.Points3D(positions, radii=0.06),
-    rr.DynamicArchetype(
+    dl.Points3D(positions, radii=0.06),
+    dl.DynamicArchetype(
         "HeightColors",
-        components={"colors": rr.components.ColorBatch(height_rgba)},
+        components={"colors": dl.components.ColorBatch(height_rgba)},
     ),
-    rr.DynamicArchetype(
-        "SpinColors", components={"colors": rr.components.ColorBatch(spin_rgba)}
+    dl.DynamicArchetype(
+        "SpinColors", components={"colors": dl.components.ColorBatch(spin_rgba)}
     ),
 )
 # endregion: log_custom_archetypes
 
 # region: blueprint
 # --- Blueprint: two side-by-side 3D views with different color mappings ---
-blueprint = rrb.Blueprint(
-    rrb.Horizontal(
-        rrb.Spatial3DView(
+blueprint = dlb.Blueprint(
+    dlb.Horizontal(
+        dlb.Spatial3DView(
             name="Height Colors",
             origin="/",
             overrides={
                 "pointcloud": [
-                    rr.Points3D.from_fields().visualizer(
+                    dl.Points3D.from_fields().visualizer(
                         mappings=[
                             VisualizerComponentMapping(
                                 target="Points3D:colors",
@@ -88,12 +88,12 @@ blueprint = rrb.Blueprint(
                 ],
             },
         ),
-        rrb.Spatial3DView(
+        dlb.Spatial3DView(
             name="Spin Colors",
             origin="/",
             overrides={
                 "pointcloud": [
-                    rr.Points3D.from_fields().visualizer(
+                    dl.Points3D.from_fields().visualizer(
                         mappings=[
                             VisualizerComponentMapping(
                                 target="Points3D:colors",
@@ -109,5 +109,5 @@ blueprint = rrb.Blueprint(
     collapse_panels=True,
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)
 # endregion: blueprint

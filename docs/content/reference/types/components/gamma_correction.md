@@ -11,7 +11,7 @@ Used to adjust the gamma of a color or scalar value between 0 and 1 before rende
 Must be a positive number.
 Defaults to 1.0 unless otherwise specified.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -21,8 +21,8 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `GammaCorrection`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1GammaCorrection.html)
- * 🐍 [Python API docs for `GammaCorrection`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.GammaCorrection)
- * 🦀 [Rust API docs for `GammaCorrection`](https://docs.rs/rerun/latest/rerun/components/struct.GammaCorrection.html)
+ * 🌊 [C++ API docs for `GammaCorrection`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1GammaCorrection.html)
+ * 🐍 [Python API docs for `GammaCorrection`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.GammaCorrection)
+ * 🦀 [Rust API docs for `GammaCorrection`](https://docs.rs/dalaran/latest/dalaran/components/struct.GammaCorrection.html)
 
 

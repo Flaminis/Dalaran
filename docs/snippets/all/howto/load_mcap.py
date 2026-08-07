@@ -2,15 +2,15 @@
 
 import sys
 
-import rerun as rr
+import dalaran as dl
 
 path_to_mcap = sys.argv[1]
 
 # Initialize the SDK and give our recording a unique name
-rr.init("rerun_example_load_mcap", spawn=True)
+dl.init("dalaran_example_load_mcap", spawn=True)
 
 # Load the MCAP file
-rr.log_file_from_path(path_to_mcap)
-recording = rr.get_data_recording()
+dl.log_file_from_path(path_to_mcap)
+recording = dl.get_data_recording()
 assert recording is not None
 recording.flush()

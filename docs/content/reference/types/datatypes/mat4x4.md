@@ -5,7 +5,7 @@ title: "Mat4x4"
 
 A 4x4 Matrix.
 
-Matrices in Rerun are stored as flat list of coefficients in column-major order:
+Matrices in Dalaran are stored as flat list of coefficients in column-major order:
 ```text
            column 0         column 1         column 2         column 3
        --------------------------------------------------------------------
@@ -22,8 +22,8 @@ FixedSizeList(16 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Mat4x4`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1Mat4x4.html)
- * 🐍 [Python API docs for `Mat4x4`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.Mat4x4)
- * 🦀 [Rust API docs for `Mat4x4`](https://docs.rs/rerun/latest/rerun/datatypes/struct.Mat4x4.html)
+ * 🌊 [C++ API docs for `Mat4x4`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1Mat4x4.html)
+ * 🐍 [Python API docs for `Mat4x4`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.Mat4x4)
+ * 🦀 [Rust API docs for `Mat4x4`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.Mat4x4.html)
 
 

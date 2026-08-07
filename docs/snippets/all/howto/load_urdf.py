@@ -1,9 +1,9 @@
 from pathlib import Path
 
-import rerun as rr
-from rerun import RecordingStream
+import dalaran as dl
+from dalaran import RecordingStream
 
-with RecordingStream("rerun_example_load_urdf") as rec:
+with RecordingStream("dalaran_example_load_urdf") as rec:
     rec.spawn()
 
     # `log_file_from_path` automatically uses the built-in URDF importer.
@@ -23,8 +23,8 @@ with RecordingStream("rerun_example_load_urdf") as rec:
     # frame IDs in the URDF file.
     rec.log(
         "transforms",
-        rr.Transform3D(
-            rotation=rr.RotationAxisAngle(axis=joint_axis, angle=joint_angle),
+        dl.Transform3D(
+            rotation=dl.RotationAxisAngle(axis=joint_axis, angle=joint_angle),
             translation=origin_xyz,
             parent_frame="base_link",
             child_frame="child_link",

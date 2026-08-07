@@ -12,10 +12,10 @@ on demand and renders them through the registered blueprint's view definition.
 The demo also includes a boolean `marker_flag` column and points the registered table
 blueprint at it. The Viewer uses that column as the per-row flag state: toggling a
 card's flag updates the visible table immediately and upserts the new boolean value
-back to the server using the `rerun:is_table_index` column as the row key.
+back to the server using the `dalaran:is_table_index` column as the row key.
 
 For testing you can use this droid rrd dataset:
-https://huggingface.co/datasets/rerun/droid_sample/tree/main
+https://huggingface.co/datasets/dalaran/droid_sample/tree/main
 
 Usage:
     table_blueprints
@@ -23,15 +23,15 @@ Usage:
     table_blueprints --target dataset
     table_blueprints --target both
     table_blueprints --write-blueprints-only --blueprint-dir /tmp/table-blueprints
-    table_blueprints <dataset-name> --url rerun+https://… --blueprint-uri-base s3://bucket/table-blueprints/
+    table_blueprints <dataset-name> --url dalaran+https://… --blueprint-uri-base s3://bucket/table-blueprints/
 
 `--target` selects what the blueprints are applied to:
 - `tables` (default): create the demo tables, each with its own table blueprint.
 - `dataset`: register a blueprint on the dataset's own segment table (no tables created).
 - `both`: do both.
 
-Without `--url`, this starts a temporary local Rerun server for the given directory of
-`.rrd` files. With `--url`, this connects as a client to an existing Rerun server or
+Without `--url`, this starts a temporary local Dalaran server for the given directory of
+`.rrd` files. With `--url`, this connects as a client to an existing Dalaran server or
 catalog and expects `dataset` to be the remote dataset name.
 Remote registration requires `--blueprint-uri-base` pointing at a server-visible
 location containing the `.rbl` files written by this script.
@@ -45,16 +45,16 @@ from typing import Any, NamedTuple
 
 import pyarrow as pa
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun import bindings
-from rerun.recording_stream import RecordingStream
-from rerun.server import Server
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran import bindings
+from dalaran.recording_stream import RecordingStream
+from dalaran.server import Server
 
 
 def save_table_blueprint(
     path: Path,
-    *views: rrb.View,
+    *views: dlb.View,
     segment_preview_column: str | None = None,
     flag_column: str | None = None,
     grid_view_card_title: str | None = None,
@@ -70,7 +70,7 @@ def save_table_blueprint(
     *views:
         One or more view definitions to embed (e.g. `Spatial3DView`, `TimeSeriesView`).
     segment_preview_column:
-        If set, names the column whose values are `rerun://` recording URIs.
+        If set, names the column whose values are `dalaran://` recording URIs.
         The viewer will load those recordings and render inline previews.
     flag_column:
         If set, names the boolean column used for flag/annotation toggles.
@@ -82,7 +82,7 @@ def save_table_blueprint(
         If set, configures the time panel to display this timeline.
 
     """
-    blueprint = rrb.Blueprint(*views)
+    blueprint = dlb.Blueprint(*views)
 
     with RecordingStream._from_native(
         bindings.new_blueprint(
@@ -106,11 +106,11 @@ def save_table_blueprint(
         if table_blueprint_kwargs:
             blueprint_stream.log(
                 "/table",
-                rrb.experimental.TableBlueprint(**table_blueprint_kwargs),
+                dlb.experimental.TableBlueprint(**table_blueprint_kwargs),
             )
 
         if timeline is not None:
-            rrb.TimePanel(timeline=timeline)._log_to_stream(blueprint_stream)
+            dlb.TimePanel(timeline=timeline)._log_to_stream(blueprint_stream)
 
 
 # ---------------------------------------------------------------------------
@@ -149,9 +149,9 @@ def extract_dataset_property_columns(seg_arrow: pa.Table, num_segments: int) -> 
 class PreviewViews(NamedTuple):
     """The views shared by the table and segment-table blueprints."""
 
-    plot: rrb.TimeSeriesView
-    spatial_3d: rrb.Spatial3DView
-    spatial_2d: rrb.Spatial2DView
+    plot: dlb.TimeSeriesView
+    spatial_3d: dlb.Spatial3DView
+    spatial_2d: dlb.Spatial2DView
 
 
 def setup_preview_views() -> PreviewViews:
@@ -161,25 +161,25 @@ def setup_preview_views() -> PreviewViews:
     PLEASE EDIT THIS for your dataset: view origins, contents, target frame, and excluded paths.
     """
     return PreviewViews(
-        plot=rrb.TimeSeriesView(
+        plot=dlb.TimeSeriesView(
             origin="/observation/joint_positions",
-            plot_legend=rrb.PlotLegend(visible=False),
+            plot_legend=dlb.PlotLegend(visible=False),
         ),
-        spatial_3d=rrb.Spatial3DView(
+        spatial_3d=dlb.Spatial3DView(
             contents=[
                 "+ /**",
                 "- /camera/**",
                 "- /**/collision_0/**",
                 "- /thumbnail/**",
             ],
-            spatial_information=rrb.SpatialInformation(
+            spatial_information=dlb.SpatialInformation(
                 target_frame="panda_link0",
             ),
-            background=rrb.Background(
+            background=dlb.Background(
                 color=[0.1, 0.1, 0.1, 1.0],
             ),
         ),
-        spatial_2d=rrb.Spatial2DView(
+        spatial_2d=dlb.Spatial2DView(
             contents=["+ /camera/wrist/**"],
         ),
     )
@@ -245,7 +245,7 @@ def make_segment_table_blueprint(blueprint_dir: Path) -> Path:
 
 
 def query_segment_data(
-    dataset: rr.catalog.DatasetEntry,
+    dataset: dl.catalog.DatasetEntry,
 ) -> tuple[list[str], list[str], list[PropertyColumn]]:
     """
     Query segment table and return (segment_ids, segment_uris, property_columns).
@@ -255,7 +255,7 @@ def query_segment_data(
     seg_df = dataset.segment_table()
     seg_arrow = pa.Table.from_batches(seg_df.collect())
 
-    segment_ids = seg_arrow.column("rerun_segment_id").to_pylist()
+    segment_ids = seg_arrow.column("dalaran_segment_id").to_pylist()
     n = len(segment_ids)
     segment_uris = [dataset.segment_url(sid) for sid in segment_ids]
     props = extract_dataset_property_columns(seg_arrow, n)
@@ -264,17 +264,17 @@ def query_segment_data(
 
 
 def create_table(
-    client: rr.catalog.CatalogClient,
+    client: dl.catalog.CatalogClient,
     *,
     table_name: str,
     segment_uris: list[str],
     property_columns: list[PropertyColumn],
-) -> rr.catalog.TableEntry:
+) -> dl.catalog.TableEntry:
     """Create a table with the given segment data."""
     n = len(segment_uris)
 
     fields: list[pa.Field] = [
-        pa.field("id", pa.int64(), metadata={rr.SORBET_IS_TABLE_INDEX: "true"}),
+        pa.field("id", pa.int64(), metadata={dl.SORBET_IS_TABLE_INDEX: "true"}),
         pa.field("recording_uri", pa.utf8()),
     ]
     data: dict[str, list[Any]] = {
@@ -303,8 +303,8 @@ def blueprint_uri(name: str, local_path: Path, blueprint_uri_base: str | None) -
 
 
 def create_demo_tables(
-    client: rr.catalog.CatalogClient,
-    dataset: rr.catalog.DatasetEntry,
+    client: dl.catalog.CatalogClient,
+    dataset: dl.catalog.DatasetEntry,
     dataset_name: str,
     *,
     blueprint_dir: Path,
@@ -333,7 +333,7 @@ def create_demo_tables(
 
 
 def apply_segment_table_blueprint(
-    dataset: rr.catalog.DatasetEntry,
+    dataset: dl.catalog.DatasetEntry,
     *,
     blueprint_dir: Path,
     blueprint_uri_base: str | None,
@@ -346,7 +346,7 @@ def apply_segment_table_blueprint(
 
 
 def run_with_client(
-    client: rr.catalog.CatalogClient,
+    client: dl.catalog.CatalogClient,
     dataset_name: str,
     *,
     target: str,
@@ -426,7 +426,7 @@ def main() -> None:
             parser.error("Provide a remote dataset name when using --url")
         if args.blueprint_uri_base is None:
             parser.error("Provide --blueprint-uri-base with --url after uploading the generated .rbl files")
-        client = rr.catalog.CatalogClient(args.url)
+        client = dl.catalog.CatalogClient(args.url)
         run_with_client(
             client,
             dataset_name=args.dataset,

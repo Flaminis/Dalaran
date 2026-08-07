@@ -9,8 +9,8 @@ from pathlib import Path
 import numpy as np
 import pyarrow as pa
 
-import rerun as rr
-from rerun.server import Server
+import dalaran as dl
+from dalaran.server import Server
 
 DATASET_NAME = "dataset"
 
@@ -96,7 +96,7 @@ def query_with_dataframe_index_values(path_to_dataset: Path) -> None:
     """
     Query using a DataFrame of segment ID / index value pairs.
 
-    This is the most flexible form: a DataFrame with 'rerun_segment_id'
+    This is the most flexible form: a DataFrame with 'dalaran_segment_id'
     and index columns lets you specify exactly which (segment, timestamp)
     pairs to query.
     """
@@ -112,7 +112,7 @@ def query_with_dataframe_index_values(path_to_dataset: Path) -> None:
         # Build a DataFrame with specific (segment_id, timestamp) pairs
         ctx = client.ctx
         index_df = ctx.from_pydict({
-            "rerun_segment_id": pa.array([segment_ids[0], segment_ids[1], segment_ids[1]]),
+            "dalaran_segment_id": pa.array([segment_ids[0], segment_ids[1], segment_ids[1]]),
             "time_1": pa.array(
                 [1705314885123456789, 1705314885123456789, 1705315485123456789],
                 type=pa.timestamp("ns"),
@@ -132,7 +132,7 @@ def query_with_dataframe_index_values(path_to_dataset: Path) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Query a dataset at specific index values.")
     # TODO(#11760): Remove unneeded args when examples infra is fixed.
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
     # TODO(#11760): Fake output to satisfy examples infra.
     Path(args.save).touch()

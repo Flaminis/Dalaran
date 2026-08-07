@@ -1,0 +1,9 @@
+!Cargo.lock
+.DS_Store
+pyo3-build.cfg
+dalaran_sdk/dalaran_cli/dalaran
+dalaran_sdk/dalaran_cli/dalaran.exe
+dalaran_sdk/dalaran_cli/Dalaran.app/
+site/
+venv/
+wheels/

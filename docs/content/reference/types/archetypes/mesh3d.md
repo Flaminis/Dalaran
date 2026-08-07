@@ -5,9 +5,9 @@ title: "Mesh3D"
 
 A 3D triangle mesh as specified by its per-mesh and per-vertex properties.
 
-See also [`archetypes.Asset3D`](https://rerun.io/docs/reference/types/archetypes/asset3d).
+See also [`archetypes.Asset3D`](https://dalaran.dev/docs/reference/types/archetypes/asset3d).
 
-If there are multiple [`archetypes.InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) instances logged to the same entity as a mesh,
+If there are multiple [`archetypes.InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) instances logged to the same entity as a mesh,
 an instance of the mesh will be drawn for each transform.
 
 For transparency ordering, as well as back face culling (disabled by default),
@@ -38,9 +38,9 @@ front faces are assumed to be those with counter clockwise triangle winding orde
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Mesh3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Mesh3D.html)
- * 🐍 [Python API docs for `Mesh3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Mesh3D)
- * 🦀 [Rust API docs for `Mesh3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Mesh3D.html)
+ * 🌊 [C++ API docs for `Mesh3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Mesh3D.html)
+ * 🐍 [Python API docs for `Mesh3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Mesh3D)
+ * 🦀 [Rust API docs for `Mesh3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Mesh3D.html)
 
 ## Examples
 

@@ -1,12 +1,12 @@
 // Create and log a segmentation image.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm> // std::fill_n
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_segmentation_image");
+    const auto rec = dalaran::RecordingStream("dalaran_example_segmentation_image");
     rec.spawn().exit_on_failure();
 
     // Create a segmentation image
@@ -25,11 +25,11 @@ int main(int argc, char* argv[]) {
     // create an annotation context to describe the classes
     rec.log_static(
         "/",
-        rerun::AnnotationContext({
-            rerun::AnnotationInfo(1, "red", rerun::Rgba32(255, 0, 0)),
-            rerun::AnnotationInfo(2, "green", rerun::Rgba32(0, 255, 0)),
+        dalaran::AnnotationContext({
+            dalaran::AnnotationInfo(1, "red", dalaran::Rgba32(255, 0, 0)),
+            dalaran::AnnotationInfo(2, "green", dalaran::Rgba32(0, 255, 0)),
         })
     );
 
-    rec.log("image", rerun::SegmentationImage(data.data(), {WIDTH, HEIGHT}));
+    rec.log("image", dalaran::SegmentationImage(data.data(), {WIDTH, HEIGHT}));
 }

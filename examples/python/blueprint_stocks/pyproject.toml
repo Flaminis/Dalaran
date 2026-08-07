@@ -7,10 +7,10 @@ name = "blueprint_stocks"
 version = "0.1.0"
 requires-python = ">=3.10"
 readme = "README.md"
-dependencies = ["humanize", "rerun-sdk", "yfinance"]
+dependencies = ["humanize", "dalaran-sdk", "yfinance"]
 
 [project.scripts]
 blueprint_stocks = "blueprint_stocks:main"
 
-[tool.rerun-example]
+[tool.dalaran-example]
 #skip = true

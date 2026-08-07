@@ -9,7 +9,7 @@ Note: although the x,y,z,w components of the quaternion will be passed through t
 datastore as provided, when used in the Viewer, quaternions will always be normalized.
 If normalization fails the rotation is treated as an invalid transform.
 
-## Rerun datatype
+## Dalaran datatype
 [`Quaternion`](../datatypes/quaternion.md)
 
 
@@ -19,9 +19,9 @@ FixedSizeList(4 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `RotationQuat`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1RotationQuat.html)
- * 🐍 [Python API docs for `RotationQuat`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.RotationQuat)
- * 🦀 [Rust API docs for `RotationQuat`](https://docs.rs/rerun/latest/rerun/components/struct.RotationQuat.html)
+ * 🌊 [C++ API docs for `RotationQuat`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1RotationQuat.html)
+ * 🐍 [Python API docs for `RotationQuat`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.RotationQuat)
+ * 🦀 [Rust API docs for `RotationQuat`](https://docs.rs/dalaran/latest/dalaran/components/struct.RotationQuat.html)
 
 
 ## Used by

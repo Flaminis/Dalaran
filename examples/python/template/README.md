@@ -16,9 +16,9 @@ Use `pixi run upload-image --help` for instructions.
 Make sure to also update the `thumbnail` section in the metadata.
 -->
 
-## Used Rerun types
+## Used Dalaran types
 
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), …
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), …
 
 ## Optional details here
 

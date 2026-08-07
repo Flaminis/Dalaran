@@ -1,16 +1,16 @@
 ---
 title: Set up a Python project
 order: 100
-description: Bootstrap a Python project that depends on rerun-sdk
+description: Bootstrap a Python project that depends on dalaran-sdk
 ---
 
-You should have already [installed the Python SDK](../install-rerun/python.md).
+You should have already [installed the Python SDK](../install-dalaran/python.md).
 
-A Python project doesn't require any setup beyond having `rerun-sdk` available.
-Open your editor of choice, create a new file, and import Rerun:
+A Python project doesn't require any setup beyond having `dalaran-sdk` available.
+Open your editor of choice, create a new file, and import Dalaran:
 
 ```python
-import rerun as rr
+import dalaran as dl
 ```
 
 You're now ready to follow the [Log and Ingest](../data-in.md) tutorial.

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Manage Rerun documentation and examples in GCS for the rerun.io website.
+Manage Dalaran documentation and examples in GCS for the dalaran.dev website.
 
 The website (rerun-io/landing) reads its docs and examples from GCS at
-`gs://rerun-docs/prose/`, exposed publicly as `https://ref.rerun.io/prose/`.
+`gs://dalaran-docs/prose/`, exposed publicly as `https://ref.dalaran.dev/prose/`.
 
 Subcommands:
   upload   Build and upload a version (files + index.json), optionally
@@ -48,9 +48,9 @@ from google.cloud import storage
 
 SCHEMA_VERSION = 1
 
-BUCKET_NAME = "rerun-docs"
+BUCKET_NAME = "dalaran-docs"
 GCS_PREFIX = "prose"
-DEFAULT_SITE_URL = "https://rerun.io"
+DEFAULT_SITE_URL = "https://dalaran.dev"
 
 # Files that should be uploaded for each subtree. The website only reads
 # these paths; uploading anything else just wastes space.
@@ -78,43 +78,43 @@ class FileEntry:
     is_doc_markdown: bool  # true for docs/content/**.md (parse frontmatter)
 
 
-def collect_files(rerun_root: Path) -> list[FileEntry]:
+def collect_files(dalaran_root: Path) -> list[FileEntry]:
     files: list[FileEntry] = []
 
-    docs_content = rerun_root / "docs" / "content"
+    docs_content = dalaran_root / "docs" / "content"
     for pattern in DOC_CONTENT_GLOBS:
         for md in docs_content.glob(pattern):
             if md.is_file():
-                rel = md.relative_to(rerun_root).as_posix()
+                rel = md.relative_to(dalaran_root).as_posix()
                 files.append(FileEntry(rel, md, is_doc_markdown=True))
     for name in DOC_CONTENT_EXTRA_FILES:
         path = docs_content / name
         if path.is_file():
-            rel = path.relative_to(rerun_root).as_posix()
+            rel = path.relative_to(dalaran_root).as_posix()
             files.append(FileEntry(rel, path, is_doc_markdown=False))
 
-    snippets_dir = rerun_root / "docs" / "snippets"
+    snippets_dir = dalaran_root / "docs" / "snippets"
     for name in SNIPPET_FILES:
         path = snippets_dir / name
         if path.is_file():
-            rel = path.relative_to(rerun_root).as_posix()
+            rel = path.relative_to(dalaran_root).as_posix()
             files.append(FileEntry(rel, path, is_doc_markdown=False))
     snippets_all = snippets_dir / "all"
     if snippets_all.is_dir():
         for path in snippets_all.rglob("*"):
             if path.is_file() and path.suffix in SNIPPET_SOURCE_EXTS:
-                rel = path.relative_to(rerun_root).as_posix()
+                rel = path.relative_to(dalaran_root).as_posix()
                 files.append(FileEntry(rel, path, is_doc_markdown=False))
 
-    examples_dir = rerun_root / "examples"
+    examples_dir = dalaran_root / "examples"
     for name in EXAMPLE_FILES:
         path = examples_dir / name
         if path.is_file():
-            rel = path.relative_to(rerun_root).as_posix()
+            rel = path.relative_to(dalaran_root).as_posix()
             files.append(FileEntry(rel, path, is_doc_markdown=False))
     for readme in examples_dir.glob(EXAMPLE_README_GLOB):
         if readme.is_file():
-            rel = readme.relative_to(rerun_root).as_posix()
+            rel = readme.relative_to(dalaran_root).as_posix()
             files.append(FileEntry(rel, readme, is_doc_markdown=False))
 
     return files
@@ -160,8 +160,8 @@ def parse_doc_frontmatter(md_path: Path) -> dict[str, Any]:
     return metadata
 
 
-def load_redirects(rerun_root: Path) -> dict[str, str]:
-    path = rerun_root / "docs" / "content" / "_redirects.yaml"
+def load_redirects(dalaran_root: Path) -> dict[str, str]:
+    path = dalaran_root / "docs" / "content" / "_redirects.yaml"
     if not path.is_file():
         return {}
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -173,7 +173,7 @@ def load_redirects(rerun_root: Path) -> dict[str, str]:
 def build_index(
     *,
     version: str,
-    rerun_commit: str,
+    dalaran_commit: str,
     files: list[FileEntry],
     redirects: dict[str, str],
 ) -> dict[str, Any]:
@@ -217,7 +217,7 @@ def build_index(
         "schema_version": SCHEMA_VERSION,
         "version": version,
         "last_update": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "rerun_commit": rerun_commit,
+        "dalaran_commit": dalaran_commit,
         "entries": entries,
         "redirects": redirects,
     }
@@ -317,7 +317,7 @@ def update_versions_manifest(
     bucket: storage.Bucket,
     *,
     version: str,
-    rerun_commit: str,
+    dalaran_commit: str,
     mark_latest: bool,
     dry_run: bool,
 ) -> None:
@@ -333,7 +333,7 @@ def update_versions_manifest(
 
     manifest.setdefault("schema_version", SCHEMA_VERSION)
     manifest.setdefault("versions", {})
-    manifest["versions"][version] = {"rerun_commit": rerun_commit}
+    manifest["versions"][version] = {"dalaran_commit": dalaran_commit}
     if mark_latest or "latest" not in manifest:
         manifest["latest"] = version
 
@@ -455,17 +455,17 @@ def make_storage_client(pool_size: int) -> storage.Client:
     return client
 
 
-def detect_rerun_root(script_path: Path) -> Path:
+def detect_dalaran_root(script_path: Path) -> Path:
     # scripts/ci/upload_docs.py -> ../../
     return script_path.resolve().parent.parent.parent
 
 
-def detect_rerun_commit(rerun_root: Path) -> str:
+def detect_dalaran_commit(dalaran_root: Path) -> str:
     try:
-        sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=rerun_root, text=True).strip()
+        sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=dalaran_root, text=True).strip()
         return sha
     except Exception as e:
-        raise SystemExit(f"failed to detect rerun commit via git: {e}")
+        raise SystemExit(f"failed to detect dalaran commit via git: {e}")
 
 
 def add_common_args(p: argparse.ArgumentParser) -> None:
@@ -483,28 +483,28 @@ def cmd_upload(args: argparse.Namespace) -> int:
     if is_pr_preview and args.mark_latest:
         raise SystemExit("--mark-latest is incompatible with a pr-* version")
 
-    rerun_root = Path(args.rerun_root).resolve() if args.rerun_root else detect_rerun_root(Path(__file__))
-    if not (rerun_root / "docs" / "content").is_dir():
-        raise SystemExit(f"could not locate docs/content under {rerun_root}")
-    rerun_commit = args.rerun_commit or detect_rerun_commit(rerun_root)
+    dalaran_root = Path(args.dalaran_root).resolve() if args.dalaran_root else detect_dalaran_root(Path(__file__))
+    if not (dalaran_root / "docs" / "content").is_dir():
+        raise SystemExit(f"could not locate docs/content under {dalaran_root}")
+    dalaran_commit = args.dalaran_commit or detect_dalaran_commit(dalaran_root)
 
-    print(f"rerun root:    {rerun_root}")
+    print(f"dalaran root:    {dalaran_root}")
     print(f"version:       {args.version}{'  (PR preview)' if is_pr_preview else ''}")
-    print(f"rerun commit:  {rerun_commit}")
+    print(f"dalaran commit:  {dalaran_commit}")
     print(f"bucket:        gs://{args.bucket}/{GCS_PREFIX}/{args.version}/")
     print(f"site:          {args.site_url}")
     print(f"dry-run:       {args.dry_run}")
     print()
 
     print("scanning files…")
-    files = collect_files(rerun_root)
+    files = collect_files(dalaran_root)
     print(f"  found {len(files)} files")
 
     print("building index.json…")
-    redirects = load_redirects(rerun_root)
+    redirects = load_redirects(dalaran_root)
     index = build_index(
         version=args.version,
-        rerun_commit=rerun_commit,
+        dalaran_commit=dalaran_commit,
         files=files,
         redirects=redirects,
     )
@@ -526,7 +526,7 @@ def cmd_upload(args: argparse.Namespace) -> int:
         update_versions_manifest(
             bucket,
             version=args.version,
-            rerun_commit=rerun_commit,
+            dalaran_commit=dalaran_commit,
             mark_latest=args.mark_latest,
             dry_run=args.dry_run,
         )
@@ -583,15 +583,15 @@ def cmd_delete(args: argparse.Namespace) -> int:
 
 
 def main(argv: Iterable[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description="Manage Rerun docs/examples in GCS for the rerun.io website.")
+    p = argparse.ArgumentParser(description="Manage Dalaran docs/examples in GCS for the dalaran.dev website.")
     sub = p.add_subparsers(dest="command", required=True)
 
     pu = sub.add_parser("upload", help="build & upload a version")
     add_common_args(pu)
     pu.add_argument("--mark-latest", action="store_true", help="set this version as `latest` in versions.json")
-    pu.add_argument("--rerun-commit", help="override the rerun commit SHA (default: git HEAD)")
+    pu.add_argument("--dalaran-commit", help="override the dalaran commit SHA (default: git HEAD)")
     pu.add_argument(
-        "--rerun-root", help="path to a rerun checkout to read docs/examples from (default: this monorepo's rerun/)"
+        "--dalaran-root", help="path to a dalaran checkout to read docs/examples from (default: this monorepo's dalaran/)"
     )
 
     pd = sub.add_parser("delete", help="delete a version")

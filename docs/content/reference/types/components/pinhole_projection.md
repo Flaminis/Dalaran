@@ -15,7 +15,7 @@ Example:
    0.0     0.0    1.0
 ```
 
-## Rerun datatype
+## Dalaran datatype
 [`Mat3x3`](../datatypes/mat3x3.md)
 
 
@@ -25,9 +25,9 @@ FixedSizeList(9 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `PinholeProjection`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1PinholeProjection.html)
- * 🐍 [Python API docs for `PinholeProjection`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.PinholeProjection)
- * 🦀 [Rust API docs for `PinholeProjection`](https://docs.rs/rerun/latest/rerun/components/struct.PinholeProjection.html)
+ * 🌊 [C++ API docs for `PinholeProjection`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1PinholeProjection.html)
+ * 🐍 [Python API docs for `PinholeProjection`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.PinholeProjection)
+ * 🦀 [Rust API docs for `PinholeProjection`](https://docs.rs/dalaran/latest/dalaran/components/struct.PinholeProjection.html)
 
 
 ## Used by

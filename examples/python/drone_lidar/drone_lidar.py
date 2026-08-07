@@ -12,8 +12,8 @@ import numpy.typing as npt
 import requests
 from tqdm import tqdm
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 DATASET_DIR = Path(__file__).parent / "dataset"
 if not DATASET_DIR.exists():
@@ -83,7 +83,7 @@ def download_dataset() -> None:
         )
 
 
-# TODO(#7333): this utility should be included in the Rerun SDK
+# TODO(#7333): this utility should be included in the Dalaran SDK
 def compute_partitions(
     times: npt.NDArray[np.float64],
 ) -> tuple[typing.Sequence[float], typing.Sequence[np.uintp]]:
@@ -120,16 +120,16 @@ def log_lidar_data() -> None:
     non_repeating_times, partitions = compute_partitions(times)
 
     # log all positions at once using the computed partitions
-    rr.send_columns(
+    dl.send_columns(
         "/lidar",
-        [rr.TimeColumn("time", duration=non_repeating_times)],
-        rr.Points3D.columns(positions=positions).partition(partitions),
+        [dl.TimeColumn("time", duration=non_repeating_times)],
+        dl.Points3D.columns(positions=positions).partition(partitions),
     )
 
-    rr.log(
+    dl.log(
         "/lidar",
         # negative radii are interpreted in UI units (instead of scene units)
-        rr.Points3D.from_fields(colors=(128, 128, 255), radii=-0.1),
+        dl.Points3D.from_fields(colors=(128, 128, 255), radii=-0.1),
         static=True,
     )
 
@@ -139,38 +139,38 @@ def log_drone_trajectory() -> None:
     timestamp = data[:, 0]
     positions = data[:, 1:4]
 
-    rr.send_columns(
+    dl.send_columns(
         "/drone",
-        [rr.TimeColumn("time", duration=timestamp)],
-        rr.Points3D.columns(positions=positions),
+        [dl.TimeColumn("time", duration=timestamp)],
+        dl.Points3D.columns(positions=positions),
     )
 
-    rr.log(
+    dl.log(
         "/drone",
-        rr.Points3D.from_fields(colors=(255, 0, 0), radii=0.5),
+        dl.Points3D.from_fields(colors=(255, 0, 0), radii=0.5),
         static=True,
     )
 
 
 def main() -> None:
     parser = ArgumentParser(description="Visualize drone-based LiDAR data")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     download_dataset()
 
-    blueprint = rrb.Spatial3DView(
+    blueprint = dlb.Spatial3DView(
         origin="/",
         time_ranges=[
-            rrb.VisibleTimeRange(
+            dlb.VisibleTimeRange(
                 timeline="time",
-                start=rrb.TimeRangeBoundary.cursor_relative(seconds=-60.0),
-                end=rrb.TimeRangeBoundary.cursor_relative(),
+                start=dlb.TimeRangeBoundary.cursor_relative(seconds=-60.0),
+                end=dlb.TimeRangeBoundary.cursor_relative(),
             ),
         ],
     )
 
-    rr.script_setup(args, "rerun_example_drone_lidar", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_drone_lidar", default_blueprint=blueprint)
 
     log_lidar_data()
     log_drone_trajectory()

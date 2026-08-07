@@ -8,7 +8,7 @@ from fractions import Fraction
 import av
 from pyarrow import ChunkedArray
 
-import rerun as rr
+import dalaran as dl
 
 
 def read_h264_samples_from_rrd(
@@ -16,7 +16,7 @@ def read_h264_samples_from_rrd(
 ) -> tuple[ChunkedArray, ChunkedArray]:
     """Load recording data and query video stream."""
 
-    server = rr.server.Server(datasets={"video_stream": [rrd_path]})
+    server = dl.server.Server(datasets={"video_stream": [rrd_path]})
     client = server.client()
     dataset = client.get_dataset("video_stream")
     df = dataset.filter_contents(video_entity).reader(index=timeline)
@@ -33,8 +33,8 @@ def read_h264_samples_from_rrd(
             f"for timeline {timeline}."
         )
     codec_value = first_codec_batch.to_pyarrow().column(0)[0][0].as_py()
-    if codec_value != rr.VideoCodec.H264.value:
-        h264 = hex(rr.VideoCodec.H264.value)
+    if codec_value != dl.VideoCodec.H264.value:
+        h264 = hex(dl.VideoCodec.H264.value)
         raise ValueError(
             f"Video stream codec is not H.264 at {video_entity} for "
             f"timeline {timeline}. "

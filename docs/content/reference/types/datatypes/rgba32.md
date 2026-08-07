@@ -15,9 +15,9 @@ UInt32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Rgba32`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1Rgba32.html)
- * 🐍 [Python API docs for `Rgba32`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.Rgba32)
- * 🦀 [Rust API docs for `Rgba32`](https://docs.rs/rerun/latest/rerun/datatypes/struct.Rgba32.html)
+ * 🌊 [C++ API docs for `Rgba32`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1Rgba32.html)
+ * 🐍 [Python API docs for `Rgba32`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.Rgba32)
+ * 🦀 [Rust API docs for `Rgba32`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.Rgba32.html)
 
 
 ## Used by

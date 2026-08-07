@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
 Render a D2 diagram in both light and dark themes, upload the two SVGs to
-static.rerun.io, and print a `<div class="d2-diagram">` HTML block that can
+static.dalaran.dev, and print a `<div class="d2-diagram">` HTML block that can
 be pasted directly into the docs markdown.
 
-The rendered SVGs match the look the rerun.io docs site produces for D2
+The rendered SVGs match the look the dalaran.dev docs site produces for D2
 diagrams: monospaced uppercase labels, muted strokes, transparent node
 fills, emerald accent for `<code>` runs inside labels.
 
@@ -292,7 +292,7 @@ def post_process(svg_text: str, theme: str = "dark") -> str:
 def main() -> None:
     ap = argparse.ArgumentParser(
         description="Render a D2 diagram in light+dark, upload both SVGs to "
-        "static.rerun.io, print an HTML <div> block ready to paste "
+        "static.dalaran.dev, print an HTML <div> block ready to paste "
         "into docs markdown.",
     )
     ap.add_argument(

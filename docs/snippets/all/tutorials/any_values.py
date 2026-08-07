@@ -1,22 +1,22 @@
 """Log arbitrary data."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_any_values", spawn=True)
+dl.init("dalaran_example_any_values", spawn=True)
 
-rr.log(
+dl.log(
     "any_values",
-    rr
+    dl
     .AnyValues(
         # Using arbitrary Arrow data.
-        homepage="https://www.rerun.io",
+        homepage="https://www.dalaran.dev",
         repository="https://github.com/rerun-io/rerun",
     )
-    # Using Rerun's builtin components.
+    # Using Dalaran's builtin components.
     .with_component_override(
-        "confidence", rr.components.ScalarBatch._COMPONENT_TYPE, [1.2, 3.4, 5.6]
+        "confidence", dl.components.ScalarBatch._COMPONENT_TYPE, [1.2, 3.4, 5.6]
     )
     .with_component_override(
-        "description", rr.components.TextBatch._COMPONENT_TYPE, "Bla bla bla…"
+        "description", dl.components.TextBatch._COMPONENT_TYPE, "Bla bla bla…"
     ),
 )

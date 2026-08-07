@@ -8,7 +8,7 @@ channel = "main"
 include_in_manifest = true
 -->
 
-Visualize a [DICOM](https://en.wikipedia.org/wiki/DICOM) MRI scan. This demonstrates the flexible tensor slicing capabilities of the Rerun viewer.
+Visualize a [DICOM](https://en.wikipedia.org/wiki/DICOM) MRI scan. This demonstrates the flexible tensor slicing capabilities of the Dalaran viewer.
 
 <picture data-inline-viewer="examples/dicom_mri">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/dicom_mri/e39f34a1b1ddd101545007f43a61783e1d2e5f8e/480w.png">
@@ -18,33 +18,33 @@ Visualize a [DICOM](https://en.wikipedia.org/wiki/DICOM) MRI scan. This demonstr
   <img src="https://static.rerun.io/dicom_mri/e39f34a1b1ddd101545007f43a61783e1d2e5f8e/full.png" alt="">
 </picture>
 
-## Used Rerun types
-[`Tensor`](https://www.rerun.io/docs/reference/types/archetypes/tensor), [`TextDocument`](https://www.rerun.io/docs/reference/types/archetypes/text_document)
+## Used Dalaran types
+[`Tensor`](https://www.dalaran.dev/docs/reference/types/archetypes/tensor), [`TextDocument`](https://www.dalaran.dev/docs/reference/types/archetypes/text_document)
 
 ## Background
-Digital Imaging and Communications in Medicine (DICOM) serves as a technical standard for the digital storage and transmission of medical images. In this instance, an MRI scan is visualized using Rerun.
+Digital Imaging and Communications in Medicine (DICOM) serves as a technical standard for the digital storage and transmission of medical images. In this instance, an MRI scan is visualized using Dalaran.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
 The visualizations in this example were created with just the following line.
 ```python
-rr.log("tensor", rr.Tensor(voxels_volume_u16, dim_names=["right", "back", "up"]))
+dl.log("tensor", dl.Tensor(voxels_volume_u16, dim_names=["right", "back", "up"]))
 ```
 
 A `numpy.array` named `voxels_volume_u16` representing volumetric MRI intensities with a shape of `(512, 512, 512)`.
-To visualize this data effectively in Rerun, we can log the `numpy.array` as [`Tensor`](https://www.rerun.io/docs/reference/types/archetypes/tensor) to the `tensor` entity.
+To visualize this data effectively in Dalaran, we can log the `numpy.array` as [`Tensor`](https://www.dalaran.dev/docs/reference/types/archetypes/tensor) to the `tensor` entity.
 
-In the Rerun Viewer you can also inspect the data in detail. The `dim_names` provided in the above call to `rr.log` help to
+In the Dalaran Viewer you can also inspect the data in detail. The `dim_names` provided in the above call to `dl.log` help to
 give semantic meaning to each axis. After selecting the tensor view, you can adjust various settings in the Blueprint
 settings on the right-hand side. For example, you can adjust the color map, the brightness, which dimensions to show as
 an image and which to select from, and more.
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 

@@ -16,22 +16,22 @@ Generates a 3D colored cube and demonstrates how to log a point cloud.
   <img src="https://static.rerun.io/minimal/0e47ac513ab25d56cf2b493128097d499a07e5e8/full.png" alt="Minimal example screenshot">
 </picture>
 
-Straightforward example from the [Quick Start guide](https://www.rerun.io/docs/getting-started/data-in/python) to generate a 3D colored cube and demonstrate how to log a point cloud.
+Straightforward example from the [Quick Start guide](https://www.dalaran.dev/docs/getting-started/data-in/python) to generate a 3D colored cube and demonstrate how to log a point cloud.
 
-## Used Rerun types
+## Used Dalaran types
 
-[`Points3D`](https://www.rerun.io/docs/reference/types/archetypes/points3d)
+[`Points3D`](https://www.dalaran.dev/docs/reference/types/archetypes/points3d)
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-The visualizations in this example were created with the following Rerun code:
+The visualizations in this example were created with the following Dalaran code:
 
-It logs 3D points, each associated with a specific color, forming a grid pattern using [`Points3D`](https://www.rerun.io/docs/reference/types/archetypes/points3d) archetype.
+It logs 3D points, each associated with a specific color, forming a grid pattern using [`Points3D`](https://www.dalaran.dev/docs/reference/types/archetypes/points3d) archetype.
 ```python
-import rerun as rr
+import dalaran as dl
 import numpy as np
 
-rr.init("rerun_example_my_data", spawn=True)
+dl.init("dalaran_example_my_data", spawn=True)
 
 SIZE = 10
 
@@ -41,15 +41,15 @@ positions = np.vstack([d.reshape(-1) for d in pos_grid]).T
 col_grid = np.meshgrid(*[np.linspace(0, 255, SIZE)] * 3)
 colors = np.vstack([c.reshape(-1) for c in col_grid]).astype(np.uint8).T
 
-rr.log("my_points", rr.Points3D(positions, colors=colors, radii=0.5))
+dl.log("my_points", dl.Points3D(positions, colors=colors, radii=0.5))
  ```
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

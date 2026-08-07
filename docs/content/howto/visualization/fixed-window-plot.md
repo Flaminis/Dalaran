@@ -4,7 +4,7 @@ order: 225
 description: Configure time series views to show a sliding window
 ---
 
-As of Rerun 0.16, the [TimeSeriesView](../../reference/types/views/time_series_view.md) now supports direct
+As of Dalaran 0.16, the [TimeSeriesView](../../reference/types/views/time_series_view.md) now supports direct
 manipulation of the visible time range. This allows you to create a plot that only shows a fixed window of data.
 
 ## VisibleTimeRange
@@ -12,7 +12,7 @@ manipulation of the visible time range. This allows you to create a plot that on
 To specify the visible time range, you must pass one or more `VisibleTimeRange` objects to the `time_ranges` parameter of the `TimeSeriesView` blueprint type. If your app only uses a single timeline, you can directly pass a single `VisibleTimeRange` object instead of wrapping it in a list.
 
 The `VisibleTimeRange` object takes three parameters:
-- `timeline`: The timeline that the range will apply to. This must match the timeline used to log your data, or if you are only using the rerun-provided timestamps, you can use the strings `"log_time"`, or `"log_tick"`.
+- `timeline`: The timeline that the range will apply to. This must match the timeline used to log your data, or if you are only using the dalaran-provided timestamps, you can use the strings `"log_time"`, or `"log_tick"`.
 - `start`: The start of the visible time range.
 - `end`: The end of the visible time range.
 
@@ -24,18 +24,18 @@ The `start` and `end` parameters are set using a `TimeRangeBoundary`:
 In order to account for the different types of timeline (temporal or sequence-based), both the
 `TimeRangeBoundary.absolute()` and `TimeRangeBoundary.cursor_relative()` methods can be specified using one of
 the keyword args:
-- `seconds`/`nanos`: Use these if you called `rr.set_time()` to update the timeline.
-- `seq`: Use this if you called `rr.set_time_sequence()` to update the timeline.
+- `seconds`/`nanos`: Use these if you called `dl.set_time()` to update the timeline.
+- `seq`: Use this if you called `dl.set_time_sequence()` to update the timeline.
 
 ## Example syntax
 To create a trailing 5 second window plot, you can specify your `TimeSeriesView` like this:
 ```python
-rrb.TimeSeriesView(
+dlb.TimeSeriesView(
     origin="plot_path",
-    time_ranges=rrb.VisibleTimeRange(
+    time_ranges=dlb.VisibleTimeRange(
         timeline="time",
-        start=rrb.TimeRangeBoundary.cursor_relative(seconds=-5.0),
-        end=rrb.TimeRangeBoundary.cursor_relative(),
+        start=dlb.TimeRangeBoundary.cursor_relative(seconds=-5.0),
+        end=dlb.TimeRangeBoundary.cursor_relative(),
     ),
 )
 ```

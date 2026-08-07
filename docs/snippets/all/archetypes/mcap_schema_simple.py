@@ -1,17 +1,17 @@
 """Log a simple MCAP schema definition."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_mcap_schema", spawn=True)
+dl.init("dalaran_example_mcap_schema", spawn=True)
 
 # Example ROS2 message definition for a simple Point message
 point_schema = """float64 x
 float64 y
 float64 z"""
 
-rr.log(
+dl.log(
     "mcap/schemas/geometry_point",
-    rr.McapSchema(
+    dl.McapSchema(
         id=42,
         name="geometry_msgs/msg/Point",
         encoding="ros2msg",

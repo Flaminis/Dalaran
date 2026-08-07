@@ -122,8 +122,8 @@ def image_from_clipboard() -> Image | None:
 
 class Uploader:
     def __init__(self) -> None:
-        gcs = storage.Client("rerun-open")
-        self.bucket = gcs.bucket("rerun-static-img")
+        gcs = storage.Client("dalaran-open")
+        self.bucket = gcs.bucket("dalaran-static-img")
 
     def upload_file(self, path: Path) -> str:
         """
@@ -362,14 +362,14 @@ def run(args: argparse.Namespace) -> None:
         print(html_str)
 
 
-DESCRIPTION = """Upload an image to static.rerun.io.
+DESCRIPTION = """Upload an image to static.dalaran.dev.
 
 Example screenshots
 -------------------
 
 To make example screenshots, follow these steps:
 1. Run the example.
-2. Resize the Rerun window to an approximate 16:9 aspect ratio and a width of ~1500px.
+2. Resize the Dalaran window to an approximate 16:9 aspect ratio and a width of ~1500px.
    Note: you will get a warning and a confirmation prompt if the aspect ratio is not within ~10% of 16:9.
 3. Groom the blueprints and panel visibility to your liking.
 4. Take a screenshot using the command palette.

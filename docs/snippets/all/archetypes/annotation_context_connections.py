@@ -1,13 +1,13 @@
 """Log annotation context with connections between keypoints."""
 
-import rerun as rr
-from rerun.datatypes import ClassDescription
+import dalaran as dl
+from dalaran.datatypes import ClassDescription
 
-rr.init("rerun_example_annotation_context_connections", spawn=True)
+dl.init("dalaran_example_annotation_context_connections", spawn=True)
 
-rr.log(
+dl.log(
     "/",
-    rr.AnnotationContext([
+    dl.AnnotationContext([
         ClassDescription(
             info=0,
             keypoint_annotations=[
@@ -22,9 +22,9 @@ rr.log(
     static=True,
 )
 
-rr.log(
+dl.log(
     "points",
-    rr.Points3D(
+    dl.Points3D(
         [
             (0, 0, 0),
             (50, 0, 20),

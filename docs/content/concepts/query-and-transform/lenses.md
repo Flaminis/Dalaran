@@ -12,19 +12,19 @@ They produce new component columns, entity paths, or timelines from existing dat
 
 ## Motivation
 
-The goal of Rerun is to handle all kinds and shapes of user data.
-In addition to the datatypes defined by Rerun, it is also possible to load data with user-defined types into the viewer and into `.rrd` files.
+The goal of Dalaran is to handle all kinds and shapes of user data.
+In addition to the datatypes defined by Dalaran, it is also possible to load data with user-defined types into the viewer and into `.rrd` files.
 For example, [schema reflection](../logging-and-ingestion/mcap/message-formats.md#schema-reflection) can be used to import arbitrary Protobuf-based MCAP messages.
 Using an expressive API, Lenses allow you to:
 
 1. Reroute components to different entities
-2. Attach Rerun semantics to arbitrary data
+2. Attach Dalaran semantics to arbitrary data
 3. Wrangle the values stored in individual components
 
 Lenses are available in the Rust SDK using `LensesSink` or directly on a `Chunk` via the `ChunkExt` trait.
 In Python, Lenses can be applied to chunks directly or as a pipeline step in the `ChunkStream` API.
 
-Internally, Rerun uses lenses to implement large parts of our data importers, the MCAP importer is one example of this.
+Internally, Dalaran uses lenses to implement large parts of our data importers, the MCAP importer is one example of this.
 
 ## Example data
 
@@ -127,7 +127,7 @@ snippet: concepts/lenses[pipe_example]
 
 ### Packing fields into fixed-size lists
 
-Many Rerun components are based on Arrow fixed-size lists.
+Many Dalaran components are based on Arrow fixed-size lists.
 For example, `Position3D` is a `FixedSizeList<f32>[3]`.
 `pack(...)` assembles a fixed-size list from several paths that resolve to the same datatype, e.g. `pack(.x, .y, .z)`.
 

@@ -10,7 +10,7 @@ Starts a local server with a table containing an index column and a boolean flag
 The flag column is marked with Arrow metadata so the viewer's card/grid view can toggle flags
 and persist them back to the server.
 
-The flag column remains part of the table data. Its current boolean value controls the flag icon shown on each grid card. Clicking the icon immediately updates the visible table state and sends an upsert back to the server containing the row's table-index value plus the new flag value. The `rerun:is_table_index` column is required so the server knows which row to update.
+The flag column remains part of the table data. Its current boolean value controls the flag icon shown on each grid card. Clicking the icon immediately updates the visible table state and sends an upsert back to the server containing the row's table-index value plus the new flag value. The `dalaran:is_table_index` column is required so the server knows which row to update.
 
 <!-- TODO(#12745): this is still experimental -->
 Enable `Settings > Experimental > Table cards and blueprints` in the viewer, then open the

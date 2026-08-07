@@ -5,11 +5,11 @@ description: Fill forward to run compute at a fixed frequency
 ---
 
 Real-world data is usually not time-aligned.
-Rerun provides capabilities to simplify time alignment.
+Dalaran provides capabilities to simplify time alignment.
 One common use case is to fill forward to run compute at a fixed frequency.
-This example demonstrates how Rerun simplifies that process.
+This example demonstrates how Dalaran simplifies that process.
 
-The dependencies in this example require `rerun-sdk[all]`, and `pandas` because python datetimes only support microsecond precision.
+The dependencies in this example require `dalaran-sdk[all]`, and `pandas` because python datetimes only support microsecond precision.
 
 ## Setup
 

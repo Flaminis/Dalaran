@@ -9,7 +9,7 @@ This archetype only provides styling information.
 Changes over time are supported for most but not all its fields (see respective fields for details),
 it's generally recommended to log this type as static.
 
-The underlying data needs to be logged to the same entity-path using [`archetypes.Scalars`](https://rerun.io/docs/reference/types/archetypes/scalars).
+The underlying data needs to be logged to the same entity-path using [`archetypes.Scalars`](https://dalaran.dev/docs/reference/types/archetypes/scalars).
 Dimensionality of the scalar arrays logged at each time point is assumed to be the same over time.
 
 ## Fields
@@ -27,9 +27,9 @@ Dimensionality of the scalar arrays logged at each time point is assumed to be t
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `SeriesLines`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1SeriesLines.html)
- * 🐍 [Python API docs for `SeriesLines`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.SeriesLines)
- * 🦀 [Rust API docs for `SeriesLines`](https://docs.rs/rerun/latest/rerun/archetypes/struct.SeriesLines.html)
+ * 🌊 [C++ API docs for `SeriesLines`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1SeriesLines.html)
+ * 🐍 [Python API docs for `SeriesLines`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.SeriesLines)
+ * 🦀 [Rust API docs for `SeriesLines`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.SeriesLines.html)
 
 ## Example
 

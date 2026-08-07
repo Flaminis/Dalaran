@@ -6,7 +6,7 @@ title: "ValueRange"
 ⚠️ **This type is _unstable_ and may change significantly in a way that the data won't be backwards compatible.**
 Range of expected or valid values, specifying a lower and upper bound.
 
-## Rerun datatype
+## Dalaran datatype
 [`Range1D`](../datatypes/range1d.md)
 
 
@@ -16,9 +16,9 @@ FixedSizeList(2 x non-null Float64)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ValueRange`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1ValueRange.html)
- * 🐍 [Python API docs for `ValueRange`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.ValueRange)
- * 🦀 [Rust API docs for `ValueRange`](https://docs.rs/rerun/latest/rerun/components/struct.ValueRange.html)
+ * 🌊 [C++ API docs for `ValueRange`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1ValueRange.html)
+ * 🐍 [Python API docs for `ValueRange`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.ValueRange)
+ * 🦀 [Rust API docs for `ValueRange`](https://docs.rs/dalaran/latest/dalaran/components/struct.ValueRange.html)
 
 
 ## Used by

@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "OpenStreetMap data"
-description = "Query OpenStreetMap data via the Overpass API and render it on Rerun's geospatial map view. A starting point for ad-hoc world-map context."
+description = "Query OpenStreetMap data via the Overpass API and render it on Dalaran's geospatial map view. A starting point for ad-hoc world-map context."
 tags = ["Map", "Blueprint"]
 thumbnail_dimensions = [480, 480]
 thumbnail = "https://static.rerun.io/osm_data/0be94071469c49f98326d85456ed2a3af8d1733a/480w.png"
@@ -10,7 +10,7 @@ thumbnail = "https://static.rerun.io/osm_data/0be94071469c49f98326d85456ed2a3af8
 
 
 Download [`OpenStreetMap`](https://www.openstreetmap.org) data via the [Overpass](https://overpass-api.de) API and [query language](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL),
-and display it on a [map view](https://www.rerun.io/docs/reference/types/views/map_view).
+and display it on a [map view](https://www.dalaran.dev/docs/reference/types/views/map_view).
 
 <picture>
   <img src="https://static.rerun.io/openstreetmap_data/5da23e9244d5cfead76ad484d09ba70cf62c4e57/full.png" alt="">
@@ -22,11 +22,11 @@ and display it on a [map view](https://www.rerun.io/docs/reference/types/views/m
 
 ## Run the code
 
-To run this example, make sure you have the [required Python version](https://ref.rerun.io/docs/python/main/common#supported-python-versions), the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the [required Python version](https://ref.dalaran.dev/docs/python/main/common#supported-python-versions), the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

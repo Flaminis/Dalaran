@@ -8,7 +8,7 @@ title: "RotationAxisAngle"
 If normalization of the rotation axis fails the rotation is treated as an invalid transform, unless the
 angle is zero in which case it is treated as an identity.
 
-## Rerun datatype
+## Dalaran datatype
 [`RotationAxisAngle`](../datatypes/rotation_axis_angle.md)
 
 
@@ -21,9 +21,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `RotationAxisAngle`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1RotationAxisAngle.html)
- * 🐍 [Python API docs for `RotationAxisAngle`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.RotationAxisAngle)
- * 🦀 [Rust API docs for `RotationAxisAngle`](https://docs.rs/rerun/latest/rerun/components/struct.RotationAxisAngle.html)
+ * 🌊 [C++ API docs for `RotationAxisAngle`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1RotationAxisAngle.html)
+ * 🐍 [Python API docs for `RotationAxisAngle`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.RotationAxisAngle)
+ * 🦀 [Rust API docs for `RotationAxisAngle`](https://docs.rs/dalaran/latest/dalaran/components/struct.RotationAxisAngle.html)
 
 
 ## Used by

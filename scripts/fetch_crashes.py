@@ -43,7 +43,7 @@ parser.add_argument(
     action="append",
     dest="versions",
     metavar="VERSION",
-    help="Specify one or more Rerun version",
+    help="Specify one or more Dalaran version",
     required=True,
 )
 parser.add_argument(
@@ -64,7 +64,7 @@ project_id = os.environ.get("POSTHOG_PROJECT_ID", "1954")
 url = f"https://eu.posthog.com/api/projects/{project_id}/events"
 properties = [
     {"key": "email", "value": "is_not_set", "operator": "is_not_set", "type": "person"},
-    {"key": "rerun_version", "value": args.versions, "operator": "exact", "type": "event"},
+    {"key": "dalaran_version", "value": args.versions, "operator": "exact", "type": "event"},
 ]
 
 ## Fetch results
@@ -81,10 +81,10 @@ properties = [
 #     "callstack": "<omitted>",
 #     "session_id": "f67f53b8-da72-4564-b849-05b048a5b6be",
 #     "git_hash": "968bf7355ef146c6fad3283835f2d87e7757abc6",
-#     "rerun_workspace": false,
+#     "dalaran_workspace": false,
 #     "file_line": "wgpu-0.15.1/src/backend/direct.rs:3024",
 #     "event_id": 1,
-#     "rerun_version": "0.5.1",
+#     "dalaran_version": "0.5.1",
 #     "rust_version": "1.67.1 (d5a82bbd2 2023-02-07)",
 #     "debug": false,
 #     "build_date": "2023-05-02T21:24:20Z"
@@ -151,7 +151,7 @@ for backtrace, props in backtrace_list:
 
     targets = sorted({prop["target"] for prop in props})
     rust_versions = sorted({prop["rust_version"] for prop in props})
-    rerun_versions = sorted({prop["rerun_version"] for prop in props})
+    dalaran_versions = sorted({prop["dalaran_version"] for prop in props})
 
     print(
         f"## {n} distinct user(s) affected by {event} crash @ `{title}`\n"
@@ -159,7 +159,7 @@ for backtrace, props in backtrace_list:
         f"- First occurrence: `{first_occurrence}`\n"
         f"- Last occurrence: `{last_occurrence}`\n"
         f"- Affected Rust versions: `{rust_versions}`\n"
-        f"- Affected Rerun versions: `{rerun_versions}`\n"
+        f"- Affected Dalaran versions: `{dalaran_versions}`\n"
         f"- Affected Targets: `{targets}`\n"
         "\n"
         "Backtrace:\n"

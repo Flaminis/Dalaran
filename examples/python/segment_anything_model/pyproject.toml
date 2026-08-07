@@ -7,7 +7,7 @@ dependencies = [
   "numpy",
   "opencv-python",
   "requests>=2.31,<3",
-  "rerun-sdk",
+  "dalaran-sdk",
   "torch", # this will use the version defined in the uv workspace
   "torchvision", # this will use the version defined in the uv workspace
   "tqdm",
@@ -16,7 +16,7 @@ dependencies = [
 [tool.hatch.metadata]
 allow-direct-references = true
 
-[tool.rerun-example]
+[tool.dalaran-example]
 # skip = true
 
 [project.scripts]

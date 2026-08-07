@@ -23,31 +23,31 @@ Visualize a sparse reconstruction by [COLMAP](https://colmap.github.io/index.htm
 
 COLMAP is a general-purpose Structure-from-Motion (SfM) and Multi-View Stereo (MVS) pipeline.
 In this example, a short video clip has been processed offline using the COLMAP pipeline.
-The processed data was then visualized using Rerun, which allowed for the visualization of individual camera frames, estimation of camera poses, and creation of point clouds over time.
-By using COLMAP in combination with Rerun, a highly-detailed reconstruction of the scene depicted in the video was generated.
+The processed data was then visualized using Dalaran, which allowed for the visualization of individual camera frames, estimation of camera poses, and creation of point clouds over time.
+By using COLMAP in combination with Dalaran, a highly-detailed reconstruction of the scene depicted in the video was generated.
 
-## Used Rerun types
+## Used Dalaran types
 
-[`Points2D`](https://www.rerun.io/docs/reference/types/archetypes/points2d), [`Points3D`](https://www.rerun.io/docs/reference/types/archetypes/points3d), [`Transform3D`](https://www.rerun.io/docs/reference/types/archetypes/transform3d), [`SeriesLines`](https://www.rerun.io/docs/reference/types/archetypes/series_lines), [`Scalars`](https://www.rerun.io/docs/reference/types/archetypes/scalars), [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole), [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`TextDocument`](https://www.rerun.io/docs/reference/types/archetypes/text_document)
+[`Points2D`](https://www.dalaran.dev/docs/reference/types/archetypes/points2d), [`Points3D`](https://www.dalaran.dev/docs/reference/types/archetypes/points3d), [`Transform3D`](https://www.dalaran.dev/docs/reference/types/archetypes/transform3d), [`SeriesLines`](https://www.dalaran.dev/docs/reference/types/archetypes/series_lines), [`Scalars`](https://www.dalaran.dev/docs/reference/types/archetypes/scalars), [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole), [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`TextDocument`](https://www.dalaran.dev/docs/reference/types/archetypes/text_document)
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-The visualizations in this example were created with the following Rerun code:
+The visualizations in this example were created with the following Dalaran code:
 
 ### Timelines
 
-All data logged using Rerun in the following sections is connected to a specific frame.
-Rerun assigns a frame id to each piece of logged data, and these frame ids are associated with a [`timeline`](https://www.rerun.io/docs/concepts/logging-and-ingestion/timelines).
+All data logged using Dalaran in the following sections is connected to a specific frame.
+Dalaran assigns a frame id to each piece of logged data, and these frame ids are associated with a [`timeline`](https://www.dalaran.dev/docs/concepts/logging-and-ingestion/timelines).
 
  ```python
-rr.set_time("frame", sequence=frame_idx)
+dl.set_time("frame", sequence=frame_idx)
  ```
 
 ### Images
-The images are logged through the [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image) to the `camera/image` entity.
+The images are logged through the [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image) to the `camera/image` entity.
 
 ```python
-rr.log("camera/image", rr.Image(rgb).compress(jpeg_quality=75))
+dl.log("camera/image", dl.Image(rgb).compress(jpeg_quality=75))
 ```
 
 ### Cameras
@@ -55,23 +55,23 @@ The images stem from pinhole cameras located in the 3D world. To visualize the i
 to be logged and the camera pose (this is often referred to as the intrinsics and extrinsics of the camera,
 respectively).
 
-The [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole) is logged to the `camera/image` entity and defines the intrinsics of the camera.
+The [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole) is logged to the `camera/image` entity and defines the intrinsics of the camera.
 This defines how to go from the 3D camera frame to the 2D image plane. The extrinsics are logged as an
-[`Transform3D`](https://www.rerun.io/docs/reference/types/archetypes/transform3d) to the `camera` entity.
+[`Transform3D`](https://www.dalaran.dev/docs/reference/types/archetypes/transform3d) to the `camera` entity.
 
 ```python
-rr.log(
+dl.log(
     "camera",
-    rr.Transform3D(
-        translation=image.tvec, rotation=rr.Quaternion(xyzw=quat_xyzw), relation=rr.TransformRelation.ChildFromParent
+    dl.Transform3D(
+        translation=image.tvec, rotation=dl.Quaternion(xyzw=quat_xyzw), relation=dl.TransformRelation.ChildFromParent
     ),
 )
 ```
 
 ```python
-rr.log(
+dl.log(
     "camera/image",
-    rr.Pinhole(
+    dl.Pinhole(
         resolution=[camera.width, camera.height],
         focal_length=camera.params[:2],
         principal_point=camera.params[2:],
@@ -80,34 +80,34 @@ rr.log(
 ```
 
 ### Reprojection error
-For each image a [`Scalars`](https://www.rerun.io/docs/reference/types/archetypes/scalars) archetype containing the average reprojection error of the keypoints is logged to the
+For each image a [`Scalars`](https://www.dalaran.dev/docs/reference/types/archetypes/scalars) archetype containing the average reprojection error of the keypoints is logged to the
 `plot/avg_reproj_err` entity.
 
 ```python
-rr.log("plot/avg_reproj_err", rr.Scalars(np.mean(point_errors)))
+dl.log("plot/avg_reproj_err", dl.Scalars(np.mean(point_errors)))
 ```
 
 ### 2D points
-The 2D image points that are used to triangulate the 3D points are visualized by logging as [`Points2D`](https://www.rerun.io/docs/reference/types/archetypes/points2d)
+The 2D image points that are used to triangulate the 3D points are visualized by logging as [`Points2D`](https://www.dalaran.dev/docs/reference/types/archetypes/points2d)
 to the `camera/image/keypoints` entity. Note that these keypoints are a child of the
 `camera/image` entity, since the points should show in the image plane.
 
 ```python
-rr.log("camera/image/keypoints", rr.Points2D(visible_xys, colors=[34, 138, 167]))
+dl.log("camera/image/keypoints", dl.Points2D(visible_xys, colors=[34, 138, 167]))
 ```
 
 ### 3D points
-The colored 3D points were added to the visualization by logging the [`Points3D`](https://www.rerun.io/docs/reference/types/archetypes/points3d) archetype to the `points` entity.
+The colored 3D points were added to the visualization by logging the [`Points3D`](https://www.dalaran.dev/docs/reference/types/archetypes/points3d) archetype to the `points` entity.
 ```python
-rr.log("points", rr.Points3D(points, colors=point_colors), rr.AnyValues(error=point_errors))
+dl.log("points", dl.Points3D(points, colors=point_colors), dl.AnyValues(error=point_errors))
 ```
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

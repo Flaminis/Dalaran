@@ -1,6 +1,6 @@
-Train a [LeRobot](https://github.com/huggingface/lerobot) ACT policy using Rerun's experimental PyTorch dataloader, streaming trajectory data directly from a Rerun catalog.
+Train a [LeRobot](https://github.com/huggingface/lerobot) ACT policy using Dalaran's experimental PyTorch dataloader, streaming trajectory data directly from a Dalaran catalog.
 
-For an explanation of the dataloader API and how the example fits together, see the [Train PyTorch models with the Rerun dataloader](https://rerun.io/docs/howto/train) how-to guide.
+For an explanation of the dataloader API and how the example fits together, see the [Train PyTorch models with the Dalaran dataloader](https://dalaran.dev/docs/howto/train) how-to guide.
 
 ## Run the code
 
@@ -9,31 +9,31 @@ For an explanation of the dataloader API and how the example fits together, see 
 This example has its own `uv` project, separate from the workspace `.venv`, because LeRobot requires
 Python >=3.12 while the workspace supports older versions.
 
-**Standalone** (sparse-checkout of just this directory, no local Rerun build):
+**Standalone** (sparse-checkout of just this directory, no local Dalaran build):
 
 ```bash
 uv sync --no-sources --no-dev
 ```
 
-**Monorepo dev** (full repo checkout, editable local `rerun-sdk`):
+**Monorepo dev** (full repo checkout, editable local `dalaran-sdk`):
 
 ```bash
 cd examples/python/dataloader
-RERUN_ALLOW_MISSING_BIN=1 uv sync
-uv pip install ../../../rerun_py/rerun_dev_fixup
+DALARAN_ALLOW_MISSING_BIN=1 uv sync
+uv pip install ../../../dalaran_py/dalaran_dev_fixup
 ```
 
 Then either `source .venv/bin/activate` or prefix subsequent commands with `uv run`.
 
-### 2. Start a local Rerun server
+### 2. Start a local Dalaran server
 
 In a separate terminal:
 
 ```bash
-rerun server
+dalaran server
 ```
 
-This serves a Rerun server at `rerun+http://127.0.0.1:51234` (the default used by the scripts).
+This serves a Dalaran server at `dalaran+http://127.0.0.1:51234` (the default used by the scripts).
 
 ### 3. Prepare and register the dataset
 
@@ -57,8 +57,8 @@ It accepts a few CLI flags (run `uv run python train.py --help` for the full lis
 
 ```bash
 uv run python train.py \
-    --catalog-url rerun+http://127.0.0.1:51234 \
-    --dataset rerun_so101-pick-and-place \
+    --catalog-url dalaran+http://127.0.0.1:51234 \
+    --dataset dalaran_so101-pick-and-place \
     --num-segments 3 \
     --epochs 5 \
     --batch-size 8 \

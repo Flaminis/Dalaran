@@ -2,7 +2,7 @@
 //
 // This is semantically equivalent to the `arrows3d_row_updates` example, albeit much faster.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -11,7 +11,7 @@ using namespace std::chrono_literals;
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_arrows3d_column_updates");
+        dalaran::RecordingStream("dalaran_example_arrows3d_column_updates");
     rec.spawn().exit_on_failure();
 
     // Prepare a fixed sequence of arrows over 5 timesteps.
@@ -40,12 +40,12 @@ int main(int argc, char* argv[]) {
         {0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 0x00FFFFFF};
 
     // Log at seconds 10-14
-    auto times = rerun::Collection{10s, 11s, 12s, 13s, 14s};
+    auto times = dalaran::Collection{10s, 11s, 12s, 13s, 14s};
     auto time_column =
-        rerun::TimeColumn::from_durations("time", std::move(times));
+        dalaran::TimeColumn::from_durations("time", std::move(times));
 
     auto arrows =
-        rerun::Arrows3D().with_origins(origins).with_vectors(vectors).columns(
+        dalaran::Arrows3D().with_origins(origins).with_vectors(vectors).columns(
             {5, 5, 5, 5, 5}
         );
 
@@ -53,6 +53,6 @@ int main(int argc, char* argv[]) {
         "arrows",
         time_column,
         arrows,
-        rerun::Arrows3D::update_fields().with_colors(colors).columns()
+        dalaran::Arrows3D::update_fields().with_colors(colors).columns()
     );
 }

@@ -13,12 +13,12 @@ import pyarrow as pa
 from datafusion import DataFrame, col
 from datafusion import functions as F
 
-import rerun as rr
-from rerun.server import Server
-from rerun.utilities.datafusion.collect import collect_to_string_list
+import dalaran as dl
+from dalaran.server import Server
+from dalaran.utilities.datafusion.collect import collect_to_string_list
 
 if TYPE_CHECKING:
-    from rerun.catalog import CatalogClient, DatasetEntry
+    from dalaran.catalog import CatalogClient, DatasetEntry
 
 DATASET_NAME = "dataset"
 
@@ -43,7 +43,7 @@ def create_table(client: CatalogClient, directory: Path, table_name: str, schema
 def create_status_log_table(client: CatalogClient, directory: Path) -> DataFrame:
     """Create the status log table."""
     schema = pa.schema([
-        pa.field("rerun_segment_id", pa.utf8()).with_metadata({rr.SORBET_IS_TABLE_INDEX: "true"}),
+        pa.field("dalaran_segment_id", pa.utf8()).with_metadata({dl.SORBET_IS_TABLE_INDEX: "true"}),
         pa.field("is_complete", pa.bool_()),
         pa.field("update_time", pa.timestamp(unit="ms")),
     ])
@@ -53,7 +53,7 @@ def create_status_log_table(client: CatalogClient, directory: Path) -> DataFrame
 def create_results_table(client: CatalogClient, directory: Path) -> DataFrame:
     """Create the results table."""
     schema = pa.schema([
-        ("rerun_segment_id", pa.utf8()),
+        ("dalaran_segment_id", pa.utf8()),
         ("first_log_time", pa.timestamp(unit="ns")),
         ("last_log_time", pa.timestamp(unit="ns")),
         ("first_position_obj1", pa.list_(pa.float32(), 3)),
@@ -66,9 +66,9 @@ def create_results_table(client: CatalogClient, directory: Path) -> DataFrame:
 def find_missing_segments(segment_table: DataFrame, status_log_table: DataFrame) -> list[str]:
     """Query the status log table for segments that have not processed."""
     status_log_table = status_log_table.filter(col("is_complete"))
-    segments = segment_table.join(status_log_table, on="rerun_segment_id", how="anti")
+    segments = segment_table.join(status_log_table, on="dalaran_segment_id", how="anti")
 
-    segment_list = collect_to_string_list(segments, "rerun_segment_id")
+    segment_list = collect_to_string_list(segments, "dalaran_segment_id")
 
     # This cast is to satisfy mypy type checking. It is not strictly necessary.
     return cast("list[str]", segment_list)
@@ -88,7 +88,7 @@ def process_segments(client: CatalogClient, dataset: DatasetEntry, segment_list:
     """
     status_log_table = client.get_table(name=STATUS_LOG_TABLE_NAME)
     status_log_table.append(
-        rerun_segment_id=segment_list,
+        dalaran_segment_id=segment_list,
         is_complete=[False] * len(segment_list),
         update_time=[datetime.now()] * len(segment_list),
     )
@@ -96,7 +96,7 @@ def process_segments(client: CatalogClient, dataset: DatasetEntry, segment_list:
     df = dataset.filter_segments(segment_list).reader(index="time_1")
 
     df = df.aggregate(
-        "rerun_segment_id",
+        "dalaran_segment_id",
         [
             F.min(col("log_time")).alias("first_log_time"),
             F.max(col("log_time")).alias("last_log_time"),
@@ -124,7 +124,7 @@ def process_segments(client: CatalogClient, dataset: DatasetEntry, segment_list:
     # If instead you wish to measure how long it takes your workflow to run, you
     # can use an append statement as in the previous write.
     status_log_table.upsert(
-        rerun_segment_id=segment_list,
+        dalaran_segment_id=segment_list,
         is_complete=[True] * len(segment_list),
         update_time=[datetime.now()] * len(segment_list),
     )
@@ -134,7 +134,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Process some segments in a dataset.")
     parser.add_argument("--temp-dir", type=str, default=None, help="Temporary directory to store tables.")
     # TODO(#11760): Remove unneeded args when examples infra is fixed.
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
     # TODO(#11760): Fake output to satisfy examples infra.
     Path(args.save).touch()
@@ -156,7 +156,7 @@ def run_example(temp_path: Path) -> None:
         status_log_table = create_status_log_table(client, temp_path)
         results_table = create_results_table(client, temp_path)
 
-        segment_table = dataset.segment_table().select("rerun_segment_id").distinct()
+        segment_table = dataset.segment_table().select("dalaran_segment_id").distinct()
 
         missing_segments = None
         while missing_segments is None or len(missing_segments) != 0:

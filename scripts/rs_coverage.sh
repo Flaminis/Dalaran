@@ -16,7 +16,7 @@
 #   * a per-file coverage summary table printed to the terminal.
 #
 # `cargo-llvm-cov` needs the `llvm-tools-preview` rustup component matching the pinned
-# toolchain, which we add on the fly (idempotent, same idea as `rerun-build-web` adding
+# toolchain, which we add on the fly (idempotent, same idea as `dalaran-build-web` adding
 # the wasm target).
 #
 # `--ignore-run-fail` means a failing test still produces a coverage report (test failures

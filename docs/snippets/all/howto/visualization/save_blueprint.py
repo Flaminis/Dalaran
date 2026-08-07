@@ -2,13 +2,13 @@
 
 import sys
 
-import rerun.blueprint as rrb
+import dalaran.blueprint as dlb
 
 path_to_rbl = sys.argv[1]
 
-blueprint = rrb.Blueprint(
-    rrb.TimeSeriesView(name="AAPL", origin="/stocks/AAPL"),
+blueprint = dlb.Blueprint(
+    dlb.TimeSeriesView(name="AAPL", origin="/stocks/AAPL"),
 )
 
 # Save to a file
-blueprint.save("rerun_example_blueprint_stocks", path_to_rbl)
+blueprint.save("dalaran_example_blueprint_stocks", path_to_rbl)

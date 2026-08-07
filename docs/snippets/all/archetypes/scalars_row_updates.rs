@@ -4,14 +4,14 @@
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_scalar_row_updates")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_scalar_row_updates")
             .spawn()?;
 
     for step in 0..64 {
         rec.set_time_sequence("step", step);
         rec.log(
             "scalars",
-            &rerun::Scalars::single((step as f64 / 10.0).sin()),
+            &dalaran::Scalars::single((step as f64 / 10.0).sin()),
         )?;
     }
 

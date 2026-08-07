@@ -1,6 +1,6 @@
 // Log a video asset using automatically determined frame references.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <iostream>
 
@@ -17,35 +17,35 @@ int main(int argc, char* argv[]) {
     const auto path = argv[1];
 
     const auto rec =
-        rerun::RecordingStream("rerun_example_asset_video_auto_frames");
+        dalaran::RecordingStream("dalaran_example_asset_video_auto_frames");
     rec.spawn().exit_on_failure();
 
     // Log video asset which is referred to by frame references.
-    auto video_asset = rerun::AssetVideo::from_file(path).value_or_throw();
+    auto video_asset = dalaran::AssetVideo::from_file(path).value_or_throw();
     rec.log_static("video", video_asset);
 
     // Send automatically determined video frame timestamps.
     std::vector<std::chrono::nanoseconds> frame_timestamps_ns =
         video_asset.read_frame_timestamps_nanos().value_or_throw();
     // Note timeline values don't have to be the same as the video timestamps.
-    auto time_column = rerun::TimeColumn::from_durations(
+    auto time_column = dalaran::TimeColumn::from_durations(
         "video_time",
-        rerun::borrow(frame_timestamps_ns)
+        dalaran::borrow(frame_timestamps_ns)
     );
 
-    std::vector<rerun::components::VideoTimestamp> video_timestamps(
+    std::vector<dalaran::components::VideoTimestamp> video_timestamps(
         frame_timestamps_ns.size()
     );
     for (size_t i = 0; i < frame_timestamps_ns.size(); i++) {
         video_timestamps[i] =
-            rerun::components::VideoTimestamp(frame_timestamps_ns[i]);
+            dalaran::components::VideoTimestamp(frame_timestamps_ns[i]);
     }
 
     rec.send_columns(
         "video",
         time_column,
-        rerun::VideoFrameReference()
-            .with_many_timestamp(rerun::borrow(video_timestamps))
+        dalaran::VideoFrameReference()
+            .with_many_timestamp(dalaran::borrow(video_timestamps))
             .columns()
     );
 }

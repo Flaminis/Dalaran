@@ -9,14 +9,14 @@ dependencies = [
   "numpy",
   "opencv-python>4.6",
   "requests",
-  "rerun-sdk",
+  "dalaran-sdk",
   "tqdm",
 ]
 
 [project.scripts]
 face_tracking = "face_tracking:main"
 
-[tool.rerun-example]
+[tool.dalaran-example]
 extra-args = "--maxframe=30"
 
 [build-system]

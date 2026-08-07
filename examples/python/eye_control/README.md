@@ -1,6 +1,6 @@
 <!--[metadata]
 title = "Eye control"
-description = "Programmatically configure and animate the 3D view camera with the Rerun Blueprint API. Useful for cinematic walkthroughs."
+description = "Programmatically configure and animate the 3D view camera with the Dalaran Blueprint API. Useful for cinematic walkthroughs."
 tags = ["Eye control", "3D", "Pinhole camera"]
 source = "https://github.com/rerun-io/eye_control_example"
 thumbnail = "https://static.rerun.io/eye_control_example/01288e2cd92ec68715258e281104701fc8908c37/480w.png"
@@ -15,14 +15,14 @@ thumbnail_dimensions = [480, 306]
     <source src="https://static.rerun.io/7ef9a59523051d45c25de02e6a844e7179e205d2_eye_control_example_ntu_viral.mp4" type="video/mp4" />
 </video>
 
-## Used Rerun types
+## Used Dalaran types
 
-[`EyeControls3D`](https://ref.rerun.io/docs/python/0.27.3/common/blueprint_archetypes/#rerun.blueprint.archetypes.EyeControls3D),
-[`Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d), [`Points3D`](https://rerun.io/docs/reference/types/archetypes/points3d), [`Pinhole`](https://rerun.io/docs/reference/types/archetypes/pinhole), [`EncodedImage`](https://rerun.io/docs/reference/types/archetypes/encoded_image), [`Image`](https://rerun.io/docs/reference/types/archetypes/image), [`LineStrips3D`](https://rerun.io/docs/reference/types/archetypes/line_strips3d), [`Scalars`](https://rerun.io/docs/reference/types/archetypes/scalars), [`TextDocument`](https://rerun.io/docs/reference/types/archetypes/text_document)
+[`EyeControls3D`](https://ref.dalaran.dev/docs/python/0.27.3/common/blueprint_archetypes/#dalaran.blueprint.archetypes.EyeControls3D),
+[`Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d), [`Points3D`](https://dalaran.dev/docs/reference/types/archetypes/points3d), [`Pinhole`](https://dalaran.dev/docs/reference/types/archetypes/pinhole), [`EncodedImage`](https://dalaran.dev/docs/reference/types/archetypes/encoded_image), [`Image`](https://dalaran.dev/docs/reference/types/archetypes/image), [`LineStrips3D`](https://dalaran.dev/docs/reference/types/archetypes/line_strips3d), [`Scalars`](https://dalaran.dev/docs/reference/types/archetypes/scalars), [`TextDocument`](https://dalaran.dev/docs/reference/types/archetypes/text_document)
 
 ## Background
 
-This example demonstrates how to programmatically configure and control the 3D view camera using the Rerun Blueprint API. By defining camera states in Python, you can precisely tailor your workspace to highlight the most relevant aspects of your data.
+This example demonstrates how to programmatically configure and control the 3D view camera using the Dalaran Blueprint API. By defining camera states in Python, you can precisely tailor your workspace to highlight the most relevant aspects of your data.
 
 In this example, we define several specialized perspectives:
 
@@ -34,10 +34,10 @@ Finally, we demonstrate how to control the camera at runtime, enabling the creat
 
 ## Useful resources
 
-Below you will find a collection of useful Rerun resources for this example:
+Below you will find a collection of useful Dalaran resources for this example:
 
-* [Blueprints](https://rerun.io/docs/concepts/visualization/blueprints)
-* [Building blueprints programmatically](https://rerun.io/docs/howto/build-a-blueprint-programmatically)
+* [Blueprints](https://dalaran.dev/docs/concepts/visualization/blueprints)
+* [Building blueprints programmatically](https://dalaran.dev/docs/howto/build-a-blueprint-programmatically)
 
 ## Run the code
 

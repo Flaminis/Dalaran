@@ -1,10 +1,10 @@
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_log_to_rrd")
+dl.init("dalaran_example_log_to_rrd")
 
 # Open a local file handle to stream the data into.
-rr.save("/tmp/my_recording.rrd")
+dl.save("/tmp/my_recording.rrd")
 
 # Log data as usual, thereby writing it into the file.
 while True:
-    rr.log("/", rr.TextLog("Logging things…"))
+    dl.log("/", dl.TextLog("Logging things…"))

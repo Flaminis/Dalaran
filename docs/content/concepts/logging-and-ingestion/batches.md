@@ -4,31 +4,31 @@ order: 900
 description: Efficiently log collections by batching component values
 ---
 
-In the Rerun data model, the value of a given component at a given point in time is always itself a list — or a _batch_ — of values.
+In the Dalaran data model, the value of a given component at a given point in time is always itself a list — or a _batch_ — of values.
 
 Consider this example:
 
 ```python
-rr.log("/data", rr.Points3D(positions=[0.0, 0.0, 0.0]))
+dl.log("/data", dl.Points3D(positions=[0.0, 0.0, 0.0]))
 ```
 
-For convenience, the [`rr.Points3D`](../../reference/types/archetypes/points3d.md) archetype accepts a single position, but what actually happens is that the corresponding [`Position3D`](../../reference/types/components/position3d.md) component is logged as a batch of length 1.
+For convenience, the [`dl.Points3D`](../../reference/types/archetypes/points3d.md) archetype accepts a single position, but what actually happens is that the corresponding [`Position3D`](../../reference/types/components/position3d.md) component is logged as a batch of length 1.
 So the following log calls are equivalent:
 ```python
 single_point = [0.0, 0.0, 0.0]
-rr.log("/data", rr.Points3D(positions=single_point)
-rr.log("/data", rr.Points3D(positions=[single_point])
+dl.log("/data", dl.Points3D(positions=single_point)
+dl.log("/data", dl.Points3D(positions=[single_point])
 ```
 
 Logging larger batches is obviously possible:
 
 ```python
-rr.log("/data", rr.Points3D(positions=[[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]]))
+dl.log("/data", dl.Points3D(positions=[[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]]))
 ```
 
 The ability to log data as batches is useful in many cases, such as point clouds (as in the above example), bounding boxes for detected objects, tracked keypoints in a skeleton, or individual joint values for a robot arm.
 
-This is also why, in the logging APIs, the majority of archetypes are named with the plural form, like `rr.Points3D` above.
+This is also why, in the logging APIs, the majority of archetypes are named with the plural form, like `dl.Points3D` above.
 
 An individual value within a batch is called an _instance_.
 
@@ -46,13 +46,13 @@ Note that when data is logged multiple times for the same component and at the s
 Components are typically logged as part of archetypes, which are semantic groupings of related components (see [Entities and Components](entity-component.md)).
 Often, archetypes have instance joining semantics.
 This means that the nth instance of one of the components relates to the nth instance of other components.
-For example, this is the case of [`rr.Points3D`](../../reference/types/archetypes/points3d.md): the nth value of its `colors` field applies to the nth value of its `positions` field.
+For example, this is the case of [`dl.Points3D`](../../reference/types/archetypes/points3d.md): the nth value of its `colors` field applies to the nth value of its `positions` field.
 
 ### Instance clamping
 
 Such archetypes typically have a required component that acts as the _primary component_.
 That's the component which defines how many logical instances the logged archetype represents.
-For `rr.Points3D`, the primary component is [`Position3D`](../../reference/types/components/position3d.md).
+For `dl.Points3D`, the primary component is [`Position3D`](../../reference/types/components/position3d.md).
 Its batch size determines how many points will be visible in the viewer.
 
 For components other than the primary component:
@@ -64,7 +64,7 @@ We refer to the latter case as _clamping semantics_, which can also be seen as a
 This enables natural logging calls such as the following:
 
 ```python
-rr.log("/data", rr.Points3D(positions=[[0.0, 0.0, 0.0], [1.0, 1.0, 1.0], [2.0, 2.0, 2.0]], radii=0.5))
+dl.log("/data", dl.Points3D(positions=[[0.0, 0.0, 0.0], [1.0, 1.0, 1.0], [2.0, 2.0, 2.0]], radii=0.5))
 ```
 
 Here, an N=3 batch of positions is logged, along with a batch of N=1 radii.
@@ -83,7 +83,7 @@ The viewer will always look up for the "last" colors that were logged ("latest a
 Note that instance joining semantics are not universal.
 Some archetypes don't use it, or use it partially.
 
-For example, the [`rr.Mesh3D`](../../reference/types/archetypes/mesh3d.md) archetype has a `vertex_positions` required component, which defines the number of vertices in the mesh.
+For example, the [`dl.Mesh3D`](../../reference/types/archetypes/mesh3d.md) archetype has a `vertex_positions` required component, which defines the number of vertices in the mesh.
 Some components have instance joining semantics with `vertex_positions`, including `vertex_colors` and `vertex_texcoords`.
 However, some other components do not, including `triangle_indices` which contains triplets of indices into the `vertex_positions` batch and defines the triangles to be displayed.
 
@@ -92,9 +92,9 @@ However, some other components do not, including `triangle_indices` which contai
 
 Internally, component data is stored as [Arrow List arrays](https://arrow.apache.org/docs/format/Columnar.html#variable-size-list-layout) within [chunks](chunks.md).
 Each row of the list array corresponds to a single time point, and the values in each row correspond to the component batch.
-The Rerun data model exploits the fact that list arrays can have different lengths in each row to allow component batches to have different lengths at each time point.
+The Dalaran data model exploits the fact that list arrays can have different lengths in each row to allow component batches to have different lengths at each time point.
 
-This design choice is most visible when [querying Rerun data](../query-and-transform/dataframe-queries.md).
+This design choice is most visible when [querying Dalaran data](../query-and-transform/dataframe-queries.md).
 The returned dataframes will always have the `ListArray` datatype for component columns, even if the underlying columns contain a single value per row, or all rows (or batches) have the same length.
 
 

@@ -13,7 +13,7 @@ These new APIs make it possible to send partial updates of your data over time, 
 
 This was already possible before, but only by relying on semi-private APIs that were not without their lot of issues.\
 In particular, these APIs had no way of keeping track of the surrounding context in which these logging calls were made (e.g. which archetype?), which created a lot of data modeling related issues.\
-Internally, these new APIs make it possible to implement many long awaited Rerun features, in the long term.
+Internally, these new APIs make it possible to implement many long awaited Dalaran features, in the long term.
 
 The following snippets give a succinct before/after picture; for more information about partial updates, please [refer to the dedicated documentation](../../howto/logging-and-ingestion/send-partial-updates.md).
 
@@ -24,41 +24,41 @@ The following snippets give a succinct before/after picture; for more informatio
 ```python
 positions = [[i, 0, 0] for i in range(0, 10)]
 
-rr.set_time_sequence("frame", 0)
-rr.log("points", rr.Points3D(positions))
+dl.set_time_sequence("frame", 0)
+dl.log("points", dl.Points3D(positions))
 
 for i in range(0, 10):
     colors = [[20, 200, 20] if n < i else [200, 20, 20] for n in range(0, 10)]
     radii = [0.6 if n < i else 0.2 for n in range(0, 10)]
 
     # Update only the colors and radii, leaving everything else as-is.
-    rr.set_time_sequence("frame", i)
-    rr.log("points", [rr.components.ColorBatch(colors), rr.components.RadiusBatch(radii)])
+    dl.set_time_sequence("frame", i)
+    dl.log("points", [dl.components.ColorBatch(colors), dl.components.RadiusBatch(radii)])
 
 # Update the positions and radii, and clear everything else in the process.
-rr.set_time_sequence("frame", 20)
-rr.log("points", rr.Clear.flat())
-rr.log("points", [rr.components.Position3DBatch(positions), rr.components.RadiusBatch(0.3)])
+dl.set_time_sequence("frame", 20)
+dl.log("points", dl.Clear.flat())
+dl.log("points", [dl.components.Position3DBatch(positions), dl.components.RadiusBatch(0.3)])
 ```
 
 *After*:
 ```python
 positions = [[i, 0, 0] for i in range(0, 10)]
 
-rr.set_time_sequence("frame", 0)
-rr.log("points", rr.Points3D(positions))
+dl.set_time_sequence("frame", 0)
+dl.log("points", dl.Points3D(positions))
 
 for i in range(0, 10):
     colors = [[20, 200, 20] if n < i else [200, 20, 20] for n in range(0, 10)]
     radii = [0.6 if n < i else 0.2 for n in range(0, 10)]
 
     # Update only the colors and radii, leaving everything else as-is.
-    rr.set_time_sequence("frame", i)
-    rr.log("points", rr.Points3D.from_fields(radii=radii, colors=colors))
+    dl.set_time_sequence("frame", i)
+    dl.log("points", dl.Points3D.from_fields(radii=radii, colors=colors))
 
 # Update only the colors and radii, leaving everything else as-is.
-rr.set_time_sequence("frame", 20)
-rr.log("points", rr.Points3D.from_fields(clear_unset=True, positions=positions, radii=0.3))
+dl.set_time_sequence("frame", 20)
+dl.log("points", dl.Points3D.from_fields(clear_unset=True, positions=positions, radii=0.3))
 ```
 
 See also:
@@ -70,30 +70,30 @@ See also:
 
 *Before*:
 ```rust
-let positions = || (0..10).map(|i| (i as f32, 0.0, 0.0)).map(Into::into).collect::<Vec<rerun::components::Position3D>>();
+let positions = || (0..10).map(|i| (i as f32, 0.0, 0.0)).map(Into::into).collect::<Vec<dalaran::components::Position3D>>();
 
 rec.set_time_sequence("frame", 0);
-rec.log("points", &rerun::Points3D::new(positions()))?;
+rec.log("points", &dalaran::Points3D::new(positions()))?;
 
 for i in 0..10 {
-    let colors: Vec<rerun::components::Color> = (0..10)
-        .map(|n| { if n < i { rerun::Color::from_rgb(20, 200, 20) } else { rerun::Color::from_rgb(200, 20, 20) } })
+    let colors: Vec<dalaran::components::Color> = (0..10)
+        .map(|n| { if n < i { dalaran::Color::from_rgb(20, 200, 20) } else { dalaran::Color::from_rgb(200, 20, 20) } })
         .collect();
-    let radii: Vec<rerun::components::Radius> = (0..10)
+    let radii: Vec<dalaran::components::Radius> = (0..10)
         .map(|n| if n < i { 0.6 } else { 0.2 })
         .map(Into::into)
         .collect();
 
     // Update only the colors and radii, leaving everything else as-is.
     rec.set_time_sequence("frame", i);
-    rec.log("points", &[&radii as &dyn rerun::ComponentBatch, &colors])?;
+    rec.log("points", &[&radii as &dyn dalaran::ComponentBatch, &colors])?;
 }
 
 // Update the positions and radii, and clear everything else in the process.
-let radii: Vec<rerun::components::Radius> = vec![0.3.into()];
+let radii: Vec<dalaran::components::Radius> = vec![0.3.into()];
 rec.set_time_sequence("frame", 20);
-rec.log("points", &rerun::Clear::flat())?;
-rec.log("points", &[&positions() as &dyn rerun::ComponentBatch, &radii])?;
+rec.log("points", &dalaran::Clear::flat())?;
+rec.log("points", &[&positions() as &dyn dalaran::ComponentBatch, &radii])?;
 ```
 
 
@@ -102,20 +102,20 @@ rec.log("points", &[&positions() as &dyn rerun::ComponentBatch, &radii])?;
 let positions = || (0..10).map(|i| (i as f32, 0.0, 0.0));
 
 rec.set_time_sequence("frame", 0);
-rec.log("points", &rerun::Points3D::new(positions()))?;
+rec.log("points", &dalaran::Points3D::new(positions()))?;
 
 for i in 0..10 {
-    let colors = (0..10).map(|n| { if n < i { rerun::Color::from_rgb(20, 200, 20) } else { rerun::Color::from_rgb(200, 20, 20) } });
+    let colors = (0..10).map(|n| { if n < i { dalaran::Color::from_rgb(20, 200, 20) } else { dalaran::Color::from_rgb(200, 20, 20) } });
     let radii = (0..10).map(|n| if n < i { 0.6 } else { 0.2 });
 
     // Update only the colors and radii, leaving everything else as-is.
     rec.set_time_sequence("frame", i);
-    rec.log("points", &rerun::Points3D::update_fields().with_radii(radii).with_colors(colors))?;
+    rec.log("points", &dalaran::Points3D::update_fields().with_radii(radii).with_colors(colors))?;
 }
 
 // Update the positions and radii, and clear everything else in the process.
 rec.set_time_sequence("frame", 20);
-rec.log("points", &rerun::Points3D::clear_fields().with_positions(positions()).with_radii([0.3]))?;
+rec.log("points", &dalaran::Points3D::clear_fields().with_positions(positions()).with_radii([0.3]))?;
 ```
 
 See also:
@@ -127,23 +127,23 @@ See also:
 
 *Before*:
 ```cpp
-std::vector<rerun::Position3D> positions;
+std::vector<dalaran::Position3D> positions;
 for (int i = 0; i < 10; ++i) {
     positions.emplace_back(static_cast<float>(i), 0.0f, 0.0f);
 }
 
 rec.set_time_sequence("frame", 0);
-rec.log("points", rerun::Points3D(positions));
+rec.log("points", dalaran::Points3D(positions));
 
 for (int i = 0; i < 10; ++i) {
-    std::vector<rerun::Color> colors;
+    std::vector<dalaran::Color> colors;
     for (int n = 0; n < 10; ++n) {
-        if (n < i) { colors.emplace_back(rerun::Color(20, 200, 20)); } else { colors.emplace_back(rerun::Color(200, 20, 20)); }
+        if (n < i) { colors.emplace_back(dalaran::Color(20, 200, 20)); } else { colors.emplace_back(dalaran::Color(200, 20, 20)); }
     }
 
-    std::vector<rerun::Radius> radii;
+    std::vector<dalaran::Radius> radii;
     for (int n = 0; n < 10; ++n) {
-        if (n < i) { radii.emplace_back(rerun::Radius(0.6f)); } else { radii.emplace_back(rerun::Radius(0.2f)); }
+        if (n < i) { radii.emplace_back(dalaran::Radius(0.6f)); } else { radii.emplace_back(dalaran::Radius(0.2f)); }
     }
 
     // Update only the colors and radii, leaving everything else as-is.
@@ -151,46 +151,46 @@ for (int i = 0; i < 10; ++i) {
     rec.log("points", colors, radii);
 }
 
-std::vector<rerun::Radius> radii;
+std::vector<dalaran::Radius> radii;
 radii.emplace_back(0.3f);
 
 // Update the positions and radii, and clear everything else in the process.
 rec.set_time_sequence("frame", 20);
-rec.log("points", rerun::Clear::FLAT);
+rec.log("points", dalaran::Clear::FLAT);
 rec.log("points", positions, radii);
 ```
 
 
 *After*:
 ```cpp
-std::vector<rerun::Position3D> positions;
+std::vector<dalaran::Position3D> positions;
 for (int i = 0; i < 10; ++i) positions.emplace_back(static_cast<float>(i), 0.0f, 0.0f);
 
 rec.set_time_sequence("frame", 0);
-rec.log("points", rerun::Points3D(positions));
+rec.log("points", dalaran::Points3D(positions));
 
 for (int i = 0; i < 10; ++i) {
-    std::vector<rerun::Color> colors;
+    std::vector<dalaran::Color> colors;
     for (int n = 0; n < 10; ++n) {
-        if (n < i) { colors.emplace_back(rerun::Color(20, 200, 20)); } else { colors.emplace_back(rerun::Color(200, 20, 20)); }
+        if (n < i) { colors.emplace_back(dalaran::Color(20, 200, 20)); } else { colors.emplace_back(dalaran::Color(200, 20, 20)); }
     }
 
-    std::vector<rerun::Radius> radii;
+    std::vector<dalaran::Radius> radii;
     for (int n = 0; n < 10; ++n) {
-        if (n < i) { radii.emplace_back(rerun::Radius(0.6f)); } else { radii.emplace_back(rerun::Radius(0.2f)); }
+        if (n < i) { radii.emplace_back(dalaran::Radius(0.6f)); } else { radii.emplace_back(dalaran::Radius(0.2f)); }
     }
 
     // Update only the colors and radii, leaving everything else as-is.
     rec.set_time_sequence("frame", i);
-    rec.log("points", rerun::Points3D::update_fields().with_radii(radii).with_colors(colors));
+    rec.log("points", dalaran::Points3D::update_fields().with_radii(radii).with_colors(colors));
 }
 
-std::vector<rerun::Radius> radii;
+std::vector<dalaran::Radius> radii;
 radii.emplace_back(0.3f);
 
 // Update the positions and radii, and clear everything else in the process.
 rec.set_time_sequence("frame", 20);
-rec.log("points", rerun::Points3D::clear_fields().with_positions(positions).with_radii(radii));
+rec.log("points", dalaran::Points3D::clear_fields().with_positions(positions).with_radii(radii));
 ```
 
 See also:
@@ -204,14 +204,14 @@ These new APIs make it possible to send partial updates of your data over time, 
 
 This was already possible before, although with pretty severe limitations.\
 In particular, these APIs had no way of keeping track of the surrounding context in which these logging calls were made (e.g. which archetype?), which created a lot of data modeling related issues.\
-Internally, these new APIs make it possible to implement many long awaited Rerun features, in the long term.
+Internally, these new APIs make it possible to implement many long awaited Dalaran features, in the long term.
 
-The following snippets give a succinct before/after picture; for more information about partial updates, please [refer to the dedicated documentation](https://rerun.io/docs/howto/logging-and-ingestion/send-columns).
+The following snippets give a succinct before/after picture; for more information about partial updates, please [refer to the dedicated documentation](https://dalaran.dev/docs/howto/logging-and-ingestion/send-columns).
 
 See also the API reference:
-* [🌊 C++](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65)
-* [🐍 Python](https://ref.rerun.io/docs/python/stable/common/columnar_api/#rerun.send_columns)
-* [🦀 Rust](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.send_columns)
+* [🌊 C++](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#ad17571d51185ce2fc2fc2f5c3070ad65)
+* [🐍 Python](https://ref.dalaran.dev/docs/python/stable/common/columnar_api/#dalaran.send_columns)
+* [🦀 Rust](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.send_columns)
 
 #### Python
 
@@ -232,14 +232,14 @@ positions_arr = np.concatenate(positions)
 colors = [0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 0x00FFFFFF]
 radii = [0.05, 0.01, 0.2, 0.1, 0.3]
 
-rr.send_columns(
+dl.send_columns(
     "points",
-    indexes=[rr.TimeSecondsColumn("time", times)],
+    indexes=[dl.TimeSecondsColumn("time", times)],
     components=[
-        rr.Points3D.indicator(),
-        rr.components.Position3DBatch(positions_arr).partition([len(row) for row in positions]),
-        rr.components.ColorBatch(colors),
-        rr.components.RadiusBatch(radii),
+        dl.Points3D.indicator(),
+        dl.components.Position3DBatch(positions_arr).partition([len(row) for row in positions]),
+        dl.components.ColorBatch(colors),
+        dl.components.RadiusBatch(radii),
     ],
 )
 ```
@@ -262,12 +262,12 @@ positions = [
 colors = [0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 0x00FFFFFF]
 radii = [0.05, 0.01, 0.2, 0.1, 0.3]
 
-rr.send_columns(
+dl.send_columns(
     "points",
-    indexes=[rr.TimeSecondsColumn("time", times)],
+    indexes=[dl.TimeSecondsColumn("time", times)],
     columns=[
-        *rr.Points3D.columns(positions=positions).partition(lengths=[2, 4, 4, 3, 4]),
-        *rr.Points3D.columns(colors=colors, radii=radii),
+        *dl.Points3D.columns(positions=positions).partition(lengths=[2, 4, 4, 3, 4]),
+        *dl.Points3D.columns(colors=colors, radii=radii),
     ],
 )
 ```
@@ -284,7 +284,7 @@ See also:
 
 *After*:
 ```rust
-let times = rerun::TimeColumn::new_seconds("time", 10..15);
+let times = dalaran::TimeColumn::new_seconds("time", 10..15);
 
 // Prepare a point cloud that evolves over 5 timesteps, changing the number of points in the process.
 #[rustfmt::skip]
@@ -301,8 +301,8 @@ let colors = [0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 0x00FFFFFF];
 let radii = [0.05, 0.01, 0.2, 0.1, 0.3];
 
 // Partition our data as expected across the 5 timesteps.
-let position = rerun::Points3D::update_fields().with_positions(positions).columns([2, 4, 4, 3, 4])?;
-let color_and_radius = rerun::Points3D::update_fields().with_colors(colors).with_radii(radii).columns_of_unit_batches()?;
+let position = dalaran::Points3D::update_fields().with_positions(positions).columns([2, 4, 4, 3, 4])?;
+let color_and_radius = dalaran::Points3D::update_fields().with_colors(colors).with_radii(radii).columns_of_unit_batches()?;
 
 rec.send_columns("points", [times], position.chain(color_and_radius))?;
 ```
@@ -333,20 +333,20 @@ std::vector<uint32_t> colors = {0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 
 std::vector<float> radii = {0.05f, 0.01f, 0.2f, 0.1f, 0.3f};
 
 // Log at seconds 10-14
-auto times = rerun::Collection{10s, 11s, 12s, 13s, 14s};
-auto time_column = rerun::TimeColumn::from_times("time", std::move(times));
+auto times = dalaran::Collection{10s, 11s, 12s, 13s, 14s};
+auto time_column = dalaran::TimeColumn::from_times("time", std::move(times));
 
 // Partition our data as expected across the 5 timesteps.
-auto indicator_batch = rerun::ComponentColumn::from_indicators<rerun::Points3D>(5);
-auto position_batch = rerun::ComponentColumn::from_loggable_with_lengths(
-    rerun::Collection<rerun::components::Position3D>(std::move(positions)),
+auto indicator_batch = dalaran::ComponentColumn::from_indicators<dalaran::Points3D>(5);
+auto position_batch = dalaran::ComponentColumn::from_loggable_with_lengths(
+    dalaran::Collection<dalaran::components::Position3D>(std::move(positions)),
     {2, 4, 4, 3, 4}
 );
-auto color_batch = rerun::ComponentColumn::from_loggable(
-    rerun::Collection<rerun::components::Color>(std::move(colors))
+auto color_batch = dalaran::ComponentColumn::from_loggable(
+    dalaran::Collection<dalaran::components::Color>(std::move(colors))
 );
-auto radius_batch = rerun::ComponentColumn::from_loggable(
-    rerun::Collection<rerun::components::Radius>(std::move(radii))
+auto radius_batch = dalaran::ComponentColumn::from_loggable(
+    dalaran::Collection<dalaran::components::Radius>(std::move(radii))
 );
 
 rec.send_columns(
@@ -379,12 +379,12 @@ std::vector<uint32_t> colors = {0xFF0000FF, 0x00FF00FF, 0x0000FFFF, 0xFFFF00FF, 
 std::vector<float> radii = {0.05f, 0.01f, 0.2f, 0.1f, 0.3f};
 
 // Log at seconds 10-14
-auto times = rerun::Collection{10s, 11s, 12s, 13s, 14s};
-auto time_column = rerun::TimeColumn::from_times("time", std::move(times));
+auto times = dalaran::Collection{10s, 11s, 12s, 13s, 14s};
+auto time_column = dalaran::TimeColumn::from_times("time", std::move(times));
 
 // Partition our data as expected across the 5 timesteps.
-auto position = rerun::Points3D().with_positions(positions).columns({2, 4, 4, 3, 4});
-auto color_and_radius = rerun::Points3D().with_colors(colors).with_radii(radii).columns();
+auto position = dalaran::Points3D().with_positions(positions).columns({2, 4, 4, 3, 4});
+auto color_and_radius = dalaran::Points3D().with_colors(colors).with_radii(radii).columns();
 
 rec.send_columns("points", time_column, position, color_and_radius);
 ```
@@ -436,29 +436,29 @@ This is made easier by the fact that archetypes can now be created without speci
 For example, colors of a point cloud can be logged without position data:
 
 ```cpp
-rec.log("points", rerun::Points3D().with_colors(colors));
+rec.log("points", dalaran::Points3D().with_colors(colors));
 ```
 
 Custom implementations of `AsComponents` still work as before.
 
 #### `send_column`
 
-Only `rerun::ComponentColumn` and anything else from which
+Only `dalaran::ComponentColumn` and anything else from which
 a `Collection<ComponentColumn>` can be constructed is accepted.
-The preferred way to create `rerun::ComponentColumn`s is to use the new `columns` method on archetypes.
+The preferred way to create `dalaran::ComponentColumn`s is to use the new `columns` method on archetypes.
 
 For instance in order to send a column of scalars, you can now do this.
 ```cpp
 rec.send_columns("scalars", time_column,
-    rerun::Scalar().with_many_scalar(scalar_data).columns()
+    dalaran::Scalar().with_many_scalar(scalar_data).columns()
 );
 ```
 All [example snippets](https://github.com/rerun-io/rerun/blob/0.22.0/docs/snippets/INDEX.md) have been updated accordingly.
 
 
-## `AsComponents::serialize` is now called `AsComponents::as_batches` and returns `rerun::Collection<ComponentBatch>`
+## `AsComponents::serialize` is now called `AsComponents::as_batches` and returns `dalaran::Collection<ComponentBatch>`
 
-The `AsComponents`'s `serialize` method has been renamed to `as_batches` and now returns a `rerun::Collection<ComponentBatch>` instead of a `std::vector<ComponentBatch>`.
+The `AsComponents`'s `serialize` method has been renamed to `as_batches` and now returns a `dalaran::Collection<ComponentBatch>` instead of a `std::vector<ComponentBatch>`.
 
 ```cpp
 // Old
@@ -470,19 +470,19 @@ struct AsComponents<CustomArchetype> {
 // New
 template <>
 struct AsComponents<CustomArchetype> {
-    static Result<rerun::Collection<ComponentBatch>> operator()(const CustomArchetype& archetype);
+    static Result<dalaran::Collection<ComponentBatch>> operator()(const CustomArchetype& archetype);
 };
 ```
 
 ## Python API changes
 
-### `rr.log_components()` is now deprecated & no longer has a `num_instances` keyword argument
+### `dl.log_components()` is now deprecated & no longer has a `num_instances` keyword argument
 
-For historical reasons, the `rr.log_components()` function of the Python SDK accepts an optional, keyword-only argument `num_instances`.
+For historical reasons, the `dl.log_components()` function of the Python SDK accepts an optional, keyword-only argument `num_instances`.
 It was no longer used for several releases, so we removed it.
 
-Although `rr.log_components()` was technically a public API, it was undocumented and we now deprecated its use.
-For logging custom components, use [`rr.AnyValue`](https://ref.rerun.io/docs/python/main/common/custom_data/#rerun.AnyValues) and [`rr.AnyBatchValue`](https://ref.rerun.io/docs/python/main/common/custom_data/#rerun.AnyBatchValue).
+Although `dl.log_components()` was technically a public API, it was undocumented and we now deprecated its use.
+For logging custom components, use [`dl.AnyValue`](https://ref.dalaran.dev/docs/python/main/common/custom_data/#dalaran.AnyValues) and [`dl.AnyBatchValue`](https://ref.dalaran.dev/docs/python/main/common/custom_data/#dalaran.AnyBatchValue).
 
 
 ## Other

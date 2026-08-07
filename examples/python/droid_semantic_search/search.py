@@ -1,12 +1,12 @@
-"""Query the DROID frame index with a text prompt or example image and open the best hit in Rerun.
+"""Query the DROID frame index with a text prompt or example image and open the best hit in Dalaran.
 
 Embeds the query with the SigLIP-2 text *or* image encoder (both share one
 vector space, the same one the indexed frame embeddings live in), runs a cosine
 nearest-neighbor search over the local vector store (LanceDB or Qdrant, see
 `--backend`), prints the ranked matches, and mints a `segment_url` deep-link
-that opens the top result focused on that frame in the Rerun viewer.
+that opens the top result focused on that frame in the Dalaran viewer.
 
-Run inside the rerun SDK venv, e.g.:
+Run inside the dalaran SDK venv, e.g.:
 
     pixi run uv run ../droid_semantic_search/search.py "a robot gripper reaching for a cup"
     pixi run uv run ../droid_semantic_search/search.py --image ./query.jpg
@@ -28,8 +28,8 @@ from embeddings import (
 )
 from vector_store import BACKENDS, DEFAULT_PATHS, open_store
 
-import rerun as rr
-from rerun.catalog import CatalogClient
+import dalaran as dl
+from dalaran.catalog import CatalogClient
 
 TIMELINE = "real_time"
 
@@ -40,10 +40,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--image", help="Path to an image to search by (image-to-image); mutually exclusive with the text query"
     )
-    parser.add_argument("--catalog-url", default="rerun+http://127.0.0.1:51234", help="Rerun catalog URL")
+    parser.add_argument("--catalog-url", default="dalaran+http://127.0.0.1:51234", help="Dalaran catalog URL")
     parser.add_argument("--dataset", default="droid:sample", help="Dataset name (used to mint the viewer link)")
     parser.add_argument(
-        "--login", action="store_true", help="Authenticate with the catalog via rr.login() before connecting"
+        "--login", action="store_true", help="Authenticate with the catalog via dl.login() before connecting"
     )
     parser.add_argument(
         "--backend",
@@ -114,7 +114,7 @@ def main() -> None:
 
     # Mint a deep-link into the viewer for the best match.
     if args.login:
-        rr.login()
+        dl.login()
     client = CatalogClient(args.catalog_url)
     dataset = client.get_dataset(args.dataset)
     best = hits[0]

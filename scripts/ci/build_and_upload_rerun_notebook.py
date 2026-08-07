@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 """
-Build and upload rerun_notebook wheels to GCS.
+Build and upload dalaran_notebook wheels to GCS.
 
-IMPORTANT: rerun_js must be built beforehand, otherwise this script will fail. Use `pixi run js-build-base`.
+IMPORTANT: dalaran_js must be built beforehand, otherwise this script will fail. Use `pixi run js-build-base`.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ def build_and_upload(bucket: Bucket, gcs_dir: str) -> str:
     # Build into `dist`
     run(
         f"hatch build -t wheel ../{dist}",
-        cwd="rerun_notebook",
+        cwd="dalaran_notebook",
     )
 
     pkg = os.listdir(dist)[0]
@@ -50,18 +50,18 @@ def publish_notebook_asset(bucket: Bucket, gcs_dir: str, wheel: str) -> None:
     """Extract widget.js and re_viewer_bg.wasm from the notebook wheel and upload to the web viewer bucket."""
 
     with zipfile.ZipFile(wheel, "r") as archive:
-        archive.extract("rerun_notebook/static/widget.js", "extracted")
-        archive.extract("rerun_notebook/static/re_viewer_bg.wasm", "extracted")
+        archive.extract("dalaran_notebook/static/widget.js", "extracted")
+        archive.extract("dalaran_notebook/static/re_viewer_bg.wasm", "extracted")
 
     for filename in ["widget.js", "re_viewer_bg.wasm"]:
-        local_path = f"extracted/rerun_notebook/static/{filename}"
+        local_path = f"extracted/dalaran_notebook/static/{filename}"
         blob = bucket.blob(f"{gcs_dir}/{filename}")
         print(f"Uploading {local_path} to gs://{bucket.name}/{blob.name}")
         blob.upload_from_filename(local_path)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build and upload rerun_notebook wheels to GCS")
+    parser = argparse.ArgumentParser(description="Build and upload dalaran_notebook wheels to GCS")
     parser.add_argument("--dir", required=True, help="Upload the wheel to the given directory in GCS")
     parser.add_argument(
         "--notebook-dir",
@@ -70,16 +70,16 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    gcs = Gcs("rerun-open")
+    gcs = Gcs("dalaran-open")
 
     wheel = build_and_upload(
-        gcs.bucket("rerun-builds"),
+        gcs.bucket("dalaran-builds"),
         args.dir,
     )
 
     if args.notebook_dir:
         publish_notebook_asset(
-            gcs.bucket("rerun-web-viewer"),
+            gcs.bucket("dalaran-web-viewer"),
             args.notebook_dir,
             wheel,
         )

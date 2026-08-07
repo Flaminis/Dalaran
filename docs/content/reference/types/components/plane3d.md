@@ -13,7 +13,7 @@ Note: although the normal will be passed through to the
 datastore as provided, when used in the Viewer, planes will always be normalized.
 I.e. the plane with xyz = (2, 0, 0), d = 1 is equivalent to xyz = (1, 0, 0), d = 0.5
 
-## Rerun datatype
+## Dalaran datatype
 [`Plane3D`](../datatypes/plane3d.md)
 
 
@@ -23,8 +23,8 @@ FixedSizeList(4 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Plane3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Plane3D.html)
- * 🐍 [Python API docs for `Plane3D`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Plane3D)
- * 🦀 [Rust API docs for `Plane3D`](https://docs.rs/rerun/latest/rerun/components/struct.Plane3D.html)
+ * 🌊 [C++ API docs for `Plane3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Plane3D.html)
+ * 🐍 [Python API docs for `Plane3D`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Plane3D)
+ * 🦀 [Rust API docs for `Plane3D`](https://docs.rs/dalaran/latest/dalaran/components/struct.Plane3D.html)
 
 

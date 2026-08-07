@@ -4,4 +4,4 @@ order: 3
 index: true
 ---
 
-Guides for using Rerun in more advanced ways.
+Guides for using Dalaran in more advanced ways.

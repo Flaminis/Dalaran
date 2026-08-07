@@ -17,7 +17,7 @@ Given a single image, multi-image, or dynamic video and a chosen camera trajecto
 ## Run the code
 This is an external example. Check the [repository](https://github.com/pablovela5620/mini-nvs-solver) for more information.
 
-You can try the example on Rerun's HuggingFace space [here](https://huggingface.co/spaces/pablovela5620/mini-nvs-solver)].
+You can try the example on Dalaran's HuggingFace space [here](https://huggingface.co/spaces/pablovela5620/mini-nvs-solver)].
 
 It is highly recommended to run this example locally by cloning the above repo and running:
 ```

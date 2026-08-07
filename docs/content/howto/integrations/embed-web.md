@@ -1,28 +1,28 @@
 ---
-title: Embed Rerun in Web pages
+title: Embed Dalaran in Web pages
 order: 100
 ---
 
-Integrating the Rerun Viewer into your web application can be accomplished either by [utilizing an iframe](#embedding-apprerunio-using-an-iframe) or by using our [JavaScript package](#using-the-javascript-package).
+Integrating the Dalaran Viewer into your web application can be accomplished either by [utilizing an iframe](#embedding-appdalaranio-using-an-iframe) or by using our [JavaScript package](#using-the-javascript-package).
 
-## Embedding `app.rerun.io` using an `<iframe>`
+## Embedding `app.dalaran.dev` using an `<iframe>`
 
 This approach is straightforward and requires minimal setup. However, the drawback is that it lacks programmable control over the web viewer.
 
 ```html
-<iframe src="https://app.rerun.io/version/{RERUN_VERSION}/index.html?url={RRD_URL}"></iframe>
+<iframe src="https://app.dalaran.dev/version/{DALARAN_VERSION}/index.html?url={RRD_URL}"></iframe>
 ```
 
 To implement this, fill in the placeholders:
 - `RRD_URL` - The URL of the recording to display in the viewer.
-- `RERUN_VERSION` - The version of the Rerun SDK used to generate the recording.
+- `DALARAN_VERSION` - The version of the Dalaran SDK used to generate the recording.
 
-The `RRD_URL` can be a file served over `http` (e.g. `https://app.rerun.io/version/0.20.3/examples/arkit_scenes.rrd`), or a connection to an SDK using our [serve](https://www.rerun.io/docs/reference/sdk/operating-modes#serve) API (e.g. `rerun+http://localhost:4321/proxy`).
+The `RRD_URL` can be a file served over `http` (e.g. `https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.rrd`), or a connection to an SDK using our [serve](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API (e.g. `dalaran+http://localhost:4321/proxy`).
 
 For instance:
 
 ```html
-<iframe src="https://app.rerun.io/version/0.20.3/?url=https://app.rerun.io/version/0.20.3/examples/arkit_scenes.rrd"></iframe>
+<iframe src="https://app.dalaran.dev/version/0.20.3/?url=https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.rrd"></iframe>
 ```
 
 ### Matching the host page's theme
@@ -30,21 +30,21 @@ For instance:
 By default, the embedded viewer follows the user's OS theme (`prefers-color-scheme`). If your host page has its own theme toggle, you can pin the viewer to match by passing `theme=dark`, `theme=light`, or `theme=system`:
 
 ```html
-<iframe src="https://app.rerun.io/version/{RERUN_VERSION}/?url={RRD_URL}&theme=dark"></iframe>
+<iframe src="https://app.dalaran.dev/version/{DALARAN_VERSION}/?url={RRD_URL}&theme=dark"></iframe>
 ```
 
 This is useful for sites whose theme can differ from the OS preference — without it, a user on a light-mode OS visiting your dark-mode page would see a bright viewer panel against a dark background.
 
 ## Using the JavaScript package
 
-We offer JavaScript bindings to the Rerun Viewer via NPM. This method provides control over the Viewer but requires a JavaScript web application setup with a bundler.
+We offer JavaScript bindings to the Dalaran Viewer via NPM. This method provides control over the Viewer but requires a JavaScript web application setup with a bundler.
 
 Various packages are available:
 - [@rerun-io/web-viewer](https://www.npmjs.com/package/@rerun-io/web-viewer): Suitable for JS apps without a framework or frameworks without dedicated packages.
 - [@rerun-io/web-viewer-react](https://www.npmjs.com/package/@rerun-io/web-viewer-react): Designed specifically for React apps.
 
 > [!NOTE]
-> The stability of the `rrd` format is still evolving, so the package version corresponds to the supported Rerun SDK version. Therefore, `@rerun-io/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) originating from a Rerun SDK with version `0.10.0`!
+> The stability of the `rrd` format is still evolving, so the package version corresponds to the supported Dalaran SDK version. Therefore, `@rerun-io/web-viewer@0.10.0` can only connect to a data source (`.rrd` file, gRPC connection, etc.) originating from a Dalaran SDK with version `0.10.0`!
 
 ### Basic example
 
@@ -76,7 +76,7 @@ The first argument for `start` determines the recordings to open in the viewer. 
 - a URL string to open a single recording
 - an array of strings to open multiple recordings
 
-Each URL can be either a file served over `http` or a connection to an SDK using our [serve](https://www.rerun.io/docs/reference/sdk/operating-modes#serve) API. See [web-viewer-serve-example](https://github.com/rerun-io/web-viewer-serve-example) for a full example of how to log data from our Python SDK to an embedded Rerun Viewer.
+Each URL can be either a file served over `http` or a connection to an SDK using our [serve](https://www.dalaran.dev/docs/reference/sdk/operating-modes#serve) API. See [web-viewer-serve-example](https://github.com/rerun-io/web-viewer-serve-example) for a full example of how to log data from our Python SDK to an embedded Dalaran Viewer.
 
 ### Controlling the canvas
 
@@ -108,7 +108,7 @@ await viewer.start(null, parentElement);
 The Viewer API supports adding and removing recordings:
 
 ```js,id=embed-web-viewer-api-js-open-close
-const rrdUrl = "https://app.rerun.io/version/0.20.3/examples/arkit_scenes.rrd";
+const rrdUrl = "https://app.dalaran.dev/version/0.20.3/examples/arkit_scenes.rrd";
 
 // Open a recording:
 viewer.open(rrdUrl);

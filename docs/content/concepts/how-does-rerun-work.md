@@ -1,16 +1,16 @@
 ---
-title: How does Rerun work?
+title: How does Dalaran work?
 order: 0
 description: The high-level architecture and how the pieces fit together
 ---
 
-Rerun has several components manage multimodal data across its lifetime. This page explains what they are and how they connect.
+Dalaran has several components manage multimodal data across its lifetime. This page explains what they are and how they connect.
 
 ## The components
 
 ### Logging SDK
 
-The Logging SDK is how you get data into Rerun. Available for Python, Rust, and C++, it runs inside your application and logs data using [archetypes](logging-and-ingestion/entity-component.md) — structured types like `Points3D`, `Image`, or `Transform3D`.
+The Logging SDK is how you get data into Dalaran. Available for Python, Rust, and C++, it runs inside your application and logs data using [archetypes](logging-and-ingestion/entity-component.md) — structured types like `Points3D`, `Image`, or `Transform3D`.
 
 Data can be streamed directly to the Viewer, saved to `.rrd` files, or both.
 
@@ -37,12 +37,12 @@ The catalog server provides persistent storage and indexing for large-scale data
 Data is served via the **redap** protocol (**Re**run **Da**ta **P**rotocol).
 
 The catalog server is available as:
-- Open-source server for local development (`rerun server`)
-- **Rerun Hub**, our managed offering for production deployments
+- Open-source server for local development (`dalaran server`)
+- **Dalaran Hub**, our managed offering for production deployments
 
 ### Catalog SDK
 
-The Catalog SDK (`rerun.catalog`) is a Python library for querying and manipulating the data stored on a catalog server. Combined with Rerun Hub, it allows building complex data transformation pipelines.
+The Catalog SDK (`dalaran.catalog`) is a Python library for querying and manipulating the data stored on a catalog server. Combined with Dalaran Hub, it allows building complex data transformation pipelines.
 
 
 ## How they connect
@@ -57,20 +57,20 @@ The Catalog SDK (`rerun.catalog`) is a Python library for querying and manipulat
 
 ### Hosted web viewer
 
-The Web Viewer is available at [rerun.io/viewer](https://rerun.io/viewer).
+The Web Viewer is available at [dalaran.dev/viewer](https://dalaran.dev/viewer).
 It's a great place to start exploring the examples.
 
 ### CLI
 
-The `rerun` binary bundles multiple tools in one:
+The `dalaran` binary bundles multiple tools in one:
 - **Native Viewer** for visualization
-- **OSS catalog server** (via `rerun server`)
+- **OSS catalog server** (via `dalaran server`)
 - **RRD tools** for file manipulation
-- **Web Viewer** (via `rerun --serve-web`)
+- **Web Viewer** (via `dalaran --serve-web`)
 
 
-The Rerun CLI can be downloaded from [GitHub](https://github.com/rerun-io/rerun/releases) or as part of the Python SDK.
-It can also be built from source with `cargo install rerun-cli --locked`.
+The Dalaran CLI can be downloaded from [GitHub](https://github.com/rerun-io/rerun/releases) or as part of the Python SDK.
+It can also be built from source with `cargo install dalaran-cli --locked`.
 
 See: [CLI reference](../reference/cli.md)
 
@@ -79,21 +79,21 @@ See: [CLI reference](../reference/cli.md)
 The Python SDK includes:
 - **Logging SDK**
 - **Catalog SDK**
-- **CLI**, including the Viewer (the `rerun` CLI is made available by installing the `rerun-sdk` Python package)
+- **CLI**, including the Viewer (the `dalaran` CLI is made available by installing the `dalaran-sdk` Python package)
 
-See: Python SDK [installation instructions](../getting-started/install-rerun/python.md) and [quick start guide](../getting-started/data-in.md)
+See: Python SDK [installation instructions](../getting-started/install-dalaran/python.md) and [quick start guide](../getting-started/data-in.md)
 
 ### Rust SDK
 
 The Logging SDK as a Rust crate.
 
-See: Rust SDK [installation instructions](../getting-started/install-rerun/rust.md) and [quick start guide](../getting-started/data-in.md)
+See: Rust SDK [installation instructions](../getting-started/install-dalaran/rust.md) and [quick start guide](../getting-started/data-in.md)
 
 ### C++ SDK
 
 The Logging SDK for C++ projects.
 
-See: C++ SDK [installation instructions](../getting-started/install-rerun/cpp.md) and [quick start guide](../getting-started/data-in.md)
+See: C++ SDK [installation instructions](../getting-started/install-dalaran/cpp.md) and [quick start guide](../getting-started/data-in.md)
 
 ### The `web-viewer` and `web-viewer-react` NPM packages
 
@@ -114,7 +114,7 @@ The simplest workflow: stream data directly from your code to the Viewer for liv
 
 Minimal example:
 
-snippet: concepts/how-does-rerun-work/log-to-grpc
+snippet: concepts/how-does-dalaran-work/log-to-grpc
 
 Best for: development, debugging, real-time monitoring.
 
@@ -131,12 +131,12 @@ Log data to `.rrd` files, then open them in the Viewer whenever needed. Files ca
 
 Minimal example:
 
-snippet: concepts/how-does-rerun-work/log-to-rrd
+snippet: concepts/how-does-dalaran-work/log-to-rrd
 
 And later:
 
 ```sh
-$ rerun /tmp/my_recording.rrd
+$ dalaran /tmp/my_recording.rrd
 ```
 
 Best for: sharing recordings, offline analysis, archiving.
@@ -155,9 +155,9 @@ Register `.rrd` files with a catalog server for persistent, indexed storage. Que
 Minimal example of creating a dataset and registering files:
 
 ```python
-import rerun as rr
+import dalaran as dl
 
-client = rr.catalog.CatalogClient("rerun://example.cloud.rerun.io")
+client = dl.catalog.CatalogClient("dalaran://example.cloud.dalaran.dev")
 dataset = client.create_dataset("my_data")
 dataset.register(["s3://my-rrd-files/recording1.rrd", "s3://my-rrd-files/recording2.rrd"])
 ```
@@ -180,9 +180,9 @@ Minimal example of querying a dataset:
 
 ```python
 import datafusion as dfn
-import rerun as rr
+import dalaran as dl
 
-client = rr.catalog.CatalogClient("rerun://example.cloud.rerun.io")
+client = dl.catalog.CatalogClient("dalaran://example.cloud.dalaran.dev")
 dataset = client.get_dataset("my_data")
 df = dataset.filter_contents("/obs").reader(index="log_time")  # `df` is a DataFusion dataframe
 df.filter(dfn.col("obs:Scalars:scalars").is_not_null()).count()  # count observations in recording

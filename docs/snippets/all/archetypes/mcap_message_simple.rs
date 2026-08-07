@@ -1,7 +1,7 @@
 //! Log a simple MCAP message with binary data.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_mcap_message")
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_mcap_message")
         .spawn()?;
 
     // Example binary message data (could be from a ROS message, protobuf, etc.)
@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     rec.log(
         "mcap/messages/sensor_reading",
-        &rerun::McapMessage::new(sensor_data.as_bytes()),
+        &dalaran::McapMessage::new(sensor_data.as_bytes()),
     )?;
 
     Ok(())

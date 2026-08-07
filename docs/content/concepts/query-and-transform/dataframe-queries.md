@@ -1,7 +1,7 @@
 ---
 title: Dataframe queries
 order: 300
-description: Query Rerun data and produce aligned dataframes as output
+description: Query Dalaran data and produce aligned dataframes as output
 ---
 
 Robotic and sensor data is inherently messy:
@@ -11,27 +11,27 @@ Robotic and sensor data is inherently messy:
 
 Machine learning workloads, on the other hand, rely on aligned rows where each row represents one sample, with a consistent schema and a single index.
 
-Dataframe queries are designed to bridge this gap. They allow you to query arbitrary Rerun data and produce a dataframe as output.
+Dataframe queries are designed to bridge this gap. They allow you to query arbitrary Dalaran data and produce a dataframe as output.
 
 ## Where can dataframe queries be used?
 
 Dataframe queries can be used in two contexts:
 
 - **Interactively in the Viewer**: The [dataframe view](../../reference/types/views/dataframe_view.md) displays query results as a table, useful for inspecting raw values and debugging.
-- **Programmatically using the Catalog SDK**: The [`DatasetEntry`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetEntry) object provides API to filter and query datasets and turn them into dataframes.
+- **Programmatically using the Catalog SDK**: The [`DatasetEntry`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetEntry) object provides API to filter and query datasets and turn them into dataframes.
 
 
 ## Understanding dataframe queries
 
 Let's use an example to illustrate how dataframe queries work.
 
-Dataframe queries run against datasets stored on a [catalog server](../how-does-rerun-work.md#catalog-server).
+Dataframe queries run against datasets stored on a [catalog server](../how-does-dalaran-work.md#catalog-server).
 We can create a demo recording and load it into a temporary local catalog using the following code:
 
 snippet: concepts/query-and-transform/dataframe_query_example[setup]
 
 
-We can then perform a dataframe query (against the local open-source catalog server included in Rerun):
+We can then perform a dataframe query (against the local open-source catalog server included in Dalaran):
 
 snippet: concepts/query-and-transform/dataframe_query_example[query]
 
@@ -40,7 +40,7 @@ This should produce an output similar to:
 
 ```
 ┌──────────────────────────────────┬────────────────────┬───────────────────────────────────┐
-│ rerun_segment_id                 ┆ step               ┆ /data:Scalars:scalars             │
+│ dalaran_segment_id                 ┆ step               ┆ /data:Scalars:scalars             │
 │ ---                              ┆ ---                ┆ ---                               │
 │ type: Utf8                       ┆ type: nullable i64 ┆ type: nullable List[nullable f64] │
 │                                  ┆ index_name: step   ┆ archetype: Scalars                │
@@ -64,7 +64,7 @@ This should produce an output similar to:
 ```
 
 Let's unpack what happened here:
-- **Catalog required**: We use `rr.server.Server()` to spin up a temporary local catalog. In production, you might connect to a Rerun Hub deployment instead. We then obtain the dataset to be queried from the catalog.
+- **Catalog required**: We use `dl.server.Server()` to spin up a temporary local catalog. In production, you might connect to a Dalaran Hub deployment instead. We then obtain the dataset to be queried from the catalog.
 - **Content filtering**: The `filter_contents()` method restricts the scope of the query to specific entities. This affects which columns are returned, but may also change which rows are returned since rows are only produced where at least one filtered column has data (see [How are rows produced?](#how-are-rows-produced-by-dataframe-queries)).
 - **Reader produces a lazy dataframe**: The `reader(index=…)` method returns a [DataFusion](https://datafusion.apache.org/) dataframe. The `index` parameter specifies which timeline drives row generation: a row is produced for each unique value of this index where data exists. The returned dataframe doesn't execute until it is collected.
 - **Filtering/aggregation/joining/etc.**: The standard suite of dataframe operations is provided by DataFusion. Here we use `filter()` to filter rows based on the data. Again, these are lazy operations that only build a query plan.
@@ -108,7 +108,7 @@ dataset.filter_contents(["/camera", "/lidar"]).reader(index="timestamp").select(
 When querying a dataset with multiple [segments](catalog-object-model.md#datasets), the query is applied on a segment-by-segment basis. This means:
 
 - Latest-at semantics do not cross segment boundaries. Each segment is queried independently.
-- The output includes a `rerun_segment_id` column identifying which segment each row comes from.
+- The output includes a `dalaran_segment_id` column identifying which segment each row comes from.
 - Use `filter_segments()` on a dataset or dataset view to restrict the query to specific segment IDs.
 
 ### How is static data queried?
@@ -153,11 +153,11 @@ For a complete example, see the [Time-align data](../../howto/query-and-transfor
 
 ## Additional resources
 
-- [🐍 Python Catalog SDK reference](https://ref.rerun.io/docs/python/stable/common/catalog/)
-  - [`DatasetEntry`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetEntry)
-  - [`DatasetView`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetView)
-  - [`reader()`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetView.reader)
-  - [`filter_contents()`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetEntry.filter_contents)
-  - [`filter_segments()`](https://ref.rerun.io/docs/python/stable/common/catalog/#rerun.catalog.DatasetEntry.filter_segments)
+- [🐍 Python Catalog SDK reference](https://ref.dalaran.dev/docs/python/stable/common/catalog/)
+  - [`DatasetEntry`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetEntry)
+  - [`DatasetView`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetView)
+  - [`reader()`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetView.reader)
+  - [`filter_contents()`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetEntry.filter_contents)
+  - [`filter_segments()`](https://ref.dalaran.dev/docs/python/stable/common/catalog/#dalaran.catalog.DatasetEntry.filter_segments)
 - [Dataframe view](../../reference/types/views/dataframe_view.md) for visualizing query results in the Viewer
 - [Query semantics & partial updates](../logging-and-ingestion/latest-at.md) for understanding latest-at and range queries

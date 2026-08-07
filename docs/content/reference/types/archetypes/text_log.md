@@ -21,9 +21,9 @@ A log entry in a text log, comprised of a text body and its log level.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `TextLog`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1TextLog.html)
- * 🐍 [Python API docs for `TextLog`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.TextLog)
- * 🦀 [Rust API docs for `TextLog`](https://docs.rs/rerun/latest/rerun/archetypes/struct.TextLog.html)
+ * 🌊 [C++ API docs for `TextLog`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1TextLog.html)
+ * 🐍 [Python API docs for `TextLog`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.TextLog)
+ * 🦀 [Rust API docs for `TextLog`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.TextLog.html)
 
 ## Example
 

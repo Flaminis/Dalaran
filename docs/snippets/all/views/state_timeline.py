@@ -1,26 +1,26 @@
 # Use a blueprint to show a StateTimelineView.
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_state_timeline", spawn=True)
+dl.init("dalaran_example_state_timeline", spawn=True)
 
-rr.set_time("step", sequence=0)
-rr.log("door", rr.StateChange(state="open"))
+dl.set_time("step", sequence=0)
+dl.log("door", dl.StateChange(state="open"))
 
-rr.set_time("step", sequence=1)
-rr.log("door", rr.StateChange(state="closed"))
+dl.set_time("step", sequence=1)
+dl.log("door", dl.StateChange(state="closed"))
 
-rr.set_time("step", sequence=2)
-rr.log("door", rr.StateChange(state="open"))
+dl.set_time("step", sequence=2)
+dl.log("door", dl.StateChange(state="open"))
 
 # Create a state timeline view to display the state transitions.
-blueprint = rrb.Blueprint(
-    rrb.StateTimelineView(
+blueprint = dlb.Blueprint(
+    dlb.StateTimelineView(
         origin="/",
         name="State Transitions",
     ),
     collapse_panels=True,
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

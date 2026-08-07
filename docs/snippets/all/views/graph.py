@@ -1,13 +1,13 @@
 """Use a blueprint to customize a graph view."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_graph_view", spawn=True)
+dl.init("dalaran_example_graph_view", spawn=True)
 
-rr.log(
+dl.log(
     "simple",
-    rr.GraphNodes(
+    dl.GraphNodes(
         node_ids=["a", "b", "c"],
         positions=[(0.0, 100.0), (-100.0, 0.0), (100.0, 0.0)],
         labels=["A", "B", "C"],
@@ -15,17 +15,17 @@ rr.log(
 )
 
 # Create a Spatial2D view to display the points.
-blueprint = rrb.Blueprint(
-    rrb.GraphView(
+blueprint = dlb.Blueprint(
+    dlb.GraphView(
         origin="/",
         name="Graph",
         # Note that this translates the viewbox.
-        visual_bounds=rrb.VisualBounds2D(
+        visual_bounds=dlb.VisualBounds2D(
             x_range=[-150, 150], y_range=[-50, 150]
         ),
-        background=rrb.archetypes.GraphBackground(color=[30, 10, 10]),
+        background=dlb.archetypes.GraphBackground(color=[30, 10, 10]),
     ),
     collapse_panels=True,
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

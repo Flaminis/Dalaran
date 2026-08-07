@@ -8,7 +8,7 @@ dependencies = [
   "polars",
   "pyproj",
   "requests",
-  "rerun-sdk",
+  "dalaran-sdk",
   "shapely",
   "tqdm",
 ]

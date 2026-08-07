@@ -2,7 +2,7 @@
 
 This script:
 1. Downloads a LeRobot dataset from HuggingFace Hub.
-2. Loads it into Rerun via the built-in LeRobot importer (`log_file_from_path`).
+2. Loads it into Dalaran via the built-in LeRobot importer (`log_file_from_path`).
 3. Splits the resulting archive into one RRD per episode.
 4. Registers the per-episode RRDs to a catalog server instance.
 
@@ -16,9 +16,9 @@ from pathlib import Path
 
 from huggingface_hub import snapshot_download
 
-import rerun as rr
+import dalaran as dl
 
-DEFAULT_REPO_ID = "rerun/so101-pick-and-place"
+DEFAULT_REPO_ID = "dalaran/so101-pick-and-place"
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent / "data"
 APPLICATION_ID = "lerobot"
 
@@ -41,9 +41,9 @@ def download_dataset(repo_id: str, dest: Path) -> Path:
 
 
 def lerobot_to_combined_rrd(dataset_dir: Path, combined_rrd: Path) -> None:
-    """Use Rerun's built-in LeRobot importer to turn the dataset into a single RRD."""
+    """Use Dalaran's built-in LeRobot importer to turn the dataset into a single RRD."""
     print(f"Converting {dataset_dir} -> {combined_rrd}")
-    with rr.RecordingStream(APPLICATION_ID) as rec:
+    with dl.RecordingStream(APPLICATION_ID) as rec:
         rec.save(str(combined_rrd))
         rec.log_file_from_path(str(dataset_dir))
 
@@ -55,7 +55,7 @@ def split_into_episode_rrds(combined_rrd: Path, rrd_dir: Path) -> list[Path]:
     """
     rrd_dir.mkdir(parents=True, exist_ok=True)
 
-    reader = rr.experimental.RrdReader(str(combined_rrd))
+    reader = dl.experimental.RrdReader(str(combined_rrd))
     recordings = reader.recordings()
     print(f"Archive contains {len(recordings)} recordings")
 
@@ -69,7 +69,7 @@ def split_into_episode_rrds(combined_rrd: Path, rrd_dir: Path) -> list[Path]:
         episode_id = _zero_pad_episode_id(entry.recording_id)
         rrd_path = rrd_dir / f"{episode_id}.rrd"
 
-        with rr.RecordingStream(APPLICATION_ID, recording_id=episode_id, send_properties=False) as rec:
+        with dl.RecordingStream(APPLICATION_ID, recording_id=episode_id, send_properties=False) as rec:
             rec.save(str(rrd_path))
             rec.send_chunks(store)
         episode_paths.append(rrd_path)
@@ -89,11 +89,11 @@ def register_to_catalog(
     Uses absolute file:// URIs so the catalog can read the RRDs directly from the local filesystem.
     """
     print(f"\nRegistering {len(rrd_paths)} episodes to {catalog_url} as dataset '{dataset_name}' …")
-    client = rr.catalog.CatalogClient(catalog_url)
+    client = dl.catalog.CatalogClient(catalog_url)
     dataset = client.create_dataset(dataset_name, exist_ok=True)
 
     uris = [f"file://{p.resolve()}" for p in rrd_paths]
-    on_duplicate = rr.catalog.OnDuplicateSegmentLayer(rr.catalog.OnDuplicateSegmentLayer.REPLACE)
+    on_duplicate = dl.catalog.OnDuplicateSegmentLayer(dl.catalog.OnDuplicateSegmentLayer.REPLACE)
     dataset.register(uris, on_duplicate=on_duplicate).wait()
     print("  registration done")
 
@@ -113,8 +113,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--catalog-url",
-        default="rerun+http://127.0.0.1:51234",
-        help="Rerun catalog URL to register episodes with. Pass an empty string to skip registration.",
+        default="dalaran+http://127.0.0.1:51234",
+        help="Dalaran catalog URL to register episodes with. Pass an empty string to skip registration.",
     )
     parser.add_argument(
         "--dataset-name",

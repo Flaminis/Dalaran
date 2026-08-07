@@ -8,17 +8,17 @@ remote table.
 Settings > Experimental > Table cards and blueprints.
 
 The flag column is configured via Arrow field metadata
-(`rerun:is_flag_column = "true"`). The Viewer treats that boolean column
+(`dalaran:is_flag_column = "true"`). The Viewer treats that boolean column
 as the per-row flag state: each value drives the flag icon on the grid card,
 and clicking the icon updates the visible table state and upserts the new
 boolean value back to the server. The table must also have a
-`rerun:is_table_index` column so the upsert can target the row to update.
+`dalaran:is_table_index` column so the upsert can target the row to update.
 
 Usage:
     table_grid_with_flags
 
     # In a separate terminal, open the viewer with the URL printed by the script:
-    rerun <url>
+    dalaran <url>
 """
 
 from __future__ import annotations
@@ -27,20 +27,20 @@ import argparse
 
 import pyarrow as pa
 
-import rerun as rr
-from rerun.server import Server
+import dalaran as dl
+from dalaran.server import Server
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Create an experimental table grid with flag toggles.")
-    parser.add_argument("--port", type=int, default=None, help="Port for the local Rerun server.")
+    parser.add_argument("--port", type=int, default=None, help="Port for the local Dalaran server.")
     args = parser.parse_args()
 
     schema = pa.schema([
         pa.field(
             "id",
             pa.int64(),
-            metadata={rr.SORBET_IS_TABLE_INDEX: "true"},
+            metadata={dl.SORBET_IS_TABLE_INDEX: "true"},
         ),
         pa.field("name", pa.utf8()),
         pa.field("category", pa.utf8()),
@@ -48,7 +48,7 @@ def main() -> None:
         pa.field(
             "flagged",
             pa.bool_(),
-            metadata={"rerun:is_flag_column": "true"},
+            metadata={"dalaran:is_flag_column": "true"},
         ),
     ])
 
@@ -66,7 +66,7 @@ def main() -> None:
         table.append(**data)
 
         url = f"{srv.url()}/entry/{table.id}"
-        print(f"Open the viewer with:\n  rerun {url}")
+        print(f"Open the viewer with:\n  dalaran {url}")
 
         input("Press Enter to stop the server…")
 

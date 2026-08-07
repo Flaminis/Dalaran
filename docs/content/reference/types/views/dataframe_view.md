@@ -8,7 +8,7 @@ A view to display any data in a tabular form.
 
 Any data from the store can be shown, using a flexible, user-configurable query.
 
-See [Dataframe queries](https://rerun.io/docs/concepts/query-and-transform/dataframe-queries) to learn more about the query model.
+See [Dataframe queries](https://dalaran.dev/docs/concepts/query-and-transform/dataframe-queries) to learn more about the query model.
 
 ## Properties
 
@@ -24,7 +24,7 @@ Query of the dataframe.
 * `auto_scroll`: Whether to auto-scroll to track the time cursor.
 
 ## API reference links
- * 🐍 [Python API docs for `DataframeView`](https://ref.rerun.io/docs/python/stable/common/blueprint_views#rerun.blueprint.views.DataframeView)
+ * 🐍 [Python API docs for `DataframeView`](https://ref.dalaran.dev/docs/python/stable/common/blueprint_views#dalaran.blueprint.views.DataframeView)
 
 ## Example
 

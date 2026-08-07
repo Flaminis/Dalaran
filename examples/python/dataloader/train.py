@@ -1,17 +1,17 @@
-"""Train a LeRobot ACT policy using the Rerun dataloader.
+"""Train a LeRobot ACT policy using the Dalaran dataloader.
 
-Demonstrates how to stream robot trajectory data from Rerun's catalog
+Demonstrates how to stream robot trajectory data from Dalaran's catalog
 into an imitation learning policy (Action Chunking Transformers).
 
-The Rerun dataloader's Field.window feature fetches future action chunks in a single query per batch.
+The Dalaran dataloader's Field.window feature fetches future action chunks in a single query per batch.
 
 Usage:
 
-    train.py [common options]                       # RerunIterableDataset (default)
+    train.py [common options]                       # DalaranIterableDataset (default)
     train.py iterable [common options] [--shuffle ...]
     train.py map [common options]
 
-See https://rerun.io/docs/howto/train/dataloader for what the dataset styles
+See https://dalaran.dev/docs/howto/train/dataloader for what the dataset styles
 and shuffle options mean and how to tune them.
 """
 
@@ -29,16 +29,16 @@ from lerobot.policies.act.configuration_act import ACTConfig
 from lerobot.policies.act.modeling_act import ACTPolicy
 from torch.utils.data import DataLoader
 
-from rerun._tracing import tracing_scope, with_tracing
-from rerun.catalog import CatalogClient
-from rerun.experimental.dataloader import (
+from dalaran._tracing import tracing_scope, with_tracing
+from dalaran.catalog import CatalogClient
+from dalaran.experimental.dataloader import (
     BlockShuffle,
     DataSource,
     Field,
     NoShuffle,
     NumericDecoder,
-    RerunIterableDataset,
-    RerunMapDataset,
+    DalaranIterableDataset,
+    DalaranMapDataset,
     SampleShuffle,
     ShuffleStrategy,
     VideoFrameDecoder,
@@ -93,8 +93,8 @@ class CollateFn:
 
 def parse_args() -> argparse.Namespace:
     common = argparse.ArgumentParser(add_help=False)
-    common.add_argument("--catalog-url", default="rerun+http://127.0.0.1:51234", help="Rerun catalog URL")
-    common.add_argument("--dataset", default="rerun_so101-pick-and-place", help="Dataset name in the catalog")
+    common.add_argument("--catalog-url", default="dalaran+http://127.0.0.1:51234", help="Dalaran catalog URL")
+    common.add_argument("--dataset", default="dalaran_so101-pick-and-place", help="Dataset name in the catalog")
     common.add_argument("--num-segments", type=int, default=3, help="Number of segments to use (0 for all)")
     common.add_argument("--epochs", type=int, default=EPOCHS, help="Number of training epochs")
     common.add_argument("--batch-size", type=int, default=BATCH_SIZE, help="Training batch size")
@@ -124,7 +124,7 @@ def parse_args() -> argparse.Namespace:
     iterable = subparsers.add_parser(
         "iterable",
         parents=[common],
-        help="RerunIterableDataset: streaming iteration with internal shuffling (default)",
+        help="DalaranIterableDataset: streaming iteration with internal shuffling (default)",
     )
     iterable.add_argument("--fetch-size", type=int, default=FETCH_SIZE, help="Samples fetched per server query")
     iterable.add_argument(
@@ -154,7 +154,7 @@ def parse_args() -> argparse.Namespace:
     subparsers.add_parser(
         "map",
         parents=[common],
-        help="RerunMapDataset: random access, shuffling via DataLoader samplers",
+        help="DalaranMapDataset: random access, shuffling via DataLoader samplers",
     )
 
     # Bare `train.py` behaves like `train.py iterable` with its defaults.
@@ -204,9 +204,9 @@ def main() -> None:
         ),
     }
 
-    ds: RerunIterableDataset | RerunMapDataset
+    ds: DalaranIterableDataset | DalaranMapDataset
     if args.dataset_style == "map":
-        ds = RerunMapDataset(source=source, index="frame_index", fields=fields)
+        ds = DalaranMapDataset(source=source, index="frame_index", fields=fields)
     else:
         # Only `BlockShuffle` takes an emission buffer: its fetch order is deliberately
         # correlated, so emission is where its batches get decorrelated. `SampleShuffle`
@@ -221,7 +221,7 @@ def main() -> None:
             "sample": SampleShuffle(),
             "none": NoShuffle(),
         }
-        ds = RerunIterableDataset(
+        ds = DalaranIterableDataset(
             source=source,
             index="frame_index",
             fields=fields,
@@ -285,7 +285,7 @@ def main() -> None:
     loader = DataLoader(
         ds,
         batch_size=args.batch_size,
-        shuffle=isinstance(ds, RerunMapDataset),
+        shuffle=isinstance(ds, DalaranMapDataset),
         num_workers=args.num_workers,
         collate_fn=collate_fn,
         persistent_workers=True,
@@ -297,7 +297,7 @@ def main() -> None:
 
     for epoch in range(args.epochs):
         with tracing_scope(f"epoch {epoch}"):
-            if isinstance(ds, RerunIterableDataset):
+            if isinstance(ds, DalaranIterableDataset):
                 ds.set_epoch(epoch)
 
             total_loss = 0.0

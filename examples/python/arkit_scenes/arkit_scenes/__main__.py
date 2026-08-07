@@ -12,8 +12,8 @@ import trimesh
 from scipy.spatial.transform import Rotation as R
 from tqdm import tqdm
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 from .download_dataset import AVAILABLE_RECORDINGS, ensure_recording_available
 
@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 DESCRIPTION = """
 # ARKitScenes
-This example visualizes the [ARKitScenes dataset](https://github.com/apple/ARKitScenes/) using Rerun. The dataset
+This example visualizes the [ARKitScenes dataset](https://github.com/apple/ARKitScenes/) using Dalaran. The dataset
 contains color images, depth images, the reconstructed mesh, and labeled bounding boxes around furniture.
 
 The full source code for this example is available
@@ -55,7 +55,7 @@ def load_json(js_path: Path) -> dict[str, Any]:
 
 def log_annotated_bboxes(annotation: dict[str, Any]) -> None:
     """
-    Logs annotated oriented bounding boxes to Rerun.
+    Logs annotated oriented bounding boxes to Dalaran.
 
     annotation json file
     |  |-- label: object name of bounding box
@@ -72,13 +72,13 @@ def log_annotated_bboxes(annotation: dict[str, Any]) -> None:
         centroid = np.array(label_info["segments"]["obbAligned"]["centroid"]).reshape(-1, 3)[0]
         mat3x3 = np.array(label_info["segments"]["obbAligned"]["normalizedAxes"]).reshape(3, 3).T
 
-        rr.log(
+        dl.log(
             f"world/annotations/box-{uid}-{label}",
-            rr.Boxes3D(
+            dl.Boxes3D(
                 half_sizes=half_size,
                 labels=label,
             ),
-            rr.InstancePoses3D(translations=centroid, mat3x3=mat3x3),
+            dl.InstancePoses3D(translations=centroid, mat3x3=mat3x3),
             static=True,
         )
 
@@ -86,7 +86,7 @@ def log_annotated_bboxes(annotation: dict[str, Any]) -> None:
 def log_camera(
     intri_path: Path,
     frame_id: str,
-    poses_from_traj: dict[str, rr.Transform3D],
+    poses_from_traj: dict[str, dl.Transform3D],
     entity_id: str,
 ) -> None:
     """Logs camera transform and 3D bounding boxes in the image frame."""
@@ -95,14 +95,14 @@ def log_camera(
     camera_from_world = poses_from_traj[frame_id]
 
     # clear previous centroid labels
-    rr.log(f"{entity_id}/bbox-2D-segments", rr.Clear(recursive=True))
+    dl.log(f"{entity_id}/bbox-2D-segments", dl.Clear(recursive=True))
 
     # pathlib makes it easy to get the parent, but log methods requires a string
-    rr.log(entity_id, camera_from_world)
-    rr.log(entity_id, rr.Pinhole(image_from_camera=intrinsic, resolution=[w, h]))
+    dl.log(entity_id, camera_from_world)
+    dl.log(entity_id, dl.Pinhole(image_from_camera=intrinsic, resolution=[w, h]))
 
 
-def read_camera_from_world(traj_string: str) -> tuple[str, rr.Transform3D]:
+def read_camera_from_world(traj_string: str) -> tuple[str, dl.Transform3D]:
     """
     Reads out camera_from_world transform from trajectory string.
 
@@ -140,10 +140,10 @@ def read_camera_from_world(traj_string: str) -> tuple[str, rr.Transform3D]:
     translation = np.asarray([float(tokens[4]), float(tokens[5]), float(tokens[6])])
 
     # Create tuple in format log_transform3d expects
-    camera_from_world = rr.Transform3D(
+    camera_from_world = dl.Transform3D(
         translation=translation,
-        rotation=rr.Quaternion(xyzw=rotation.as_quat()),
-        relation=rr.TransformRelation.ChildFromParent,
+        rotation=dl.Quaternion(xyzw=rotation.as_quat()),
+        relation=dl.TransformRelation.ChildFromParent,
     )
 
     return (ts, camera_from_world)
@@ -158,7 +158,7 @@ def find_closest_frame_id(target_id: str, frame_ids: dict[str, Any]) -> str:
 
 def log_arkit(recording_path: Path, include_highres: bool) -> None:
     """
-    Logs ARKit recording data using Rerun.
+    Logs ARKit recording data using Dalaran.
 
     Args:
     ----
@@ -173,7 +173,7 @@ def log_arkit(recording_path: Path, include_highres: bool) -> None:
     None
 
     """
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     video_id = recording_path.stem
     lowres_image_dir = recording_path / "lowres_wide"
@@ -202,19 +202,19 @@ def log_arkit(recording_path: Path, include_highres: bool) -> None:
         timestamp = f"{round(float(timestamp), 3):.3f}"
         camera_from_world_dict[timestamp] = camera_from_world
 
-    rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
+    dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
     ply_path = recording_path / f"{recording_path.stem}_3dod_mesh.ply"
     print(f"Loading {ply_path}…")
     assert os.path.isfile(ply_path), f"Failed to find {ply_path}"
 
     mesh = trimesh.load(str(ply_path))
-    rr.log(
+    dl.log(
         "world/mesh",
-        rr.Mesh3D(
+        dl.Mesh3D(
             vertex_positions=mesh.vertices,  # type: ignore[attr-defined]
             vertex_colors=mesh.visual.vertex_colors,  # type: ignore[attr-defined]
             triangle_indices=mesh.faces,  # type: ignore[attr-defined]
-            face_rendering="Front",  # We want to hide the front facing faces, but the dataset uses mostly clockwise winding order which is the opposite of what Rerun assumes (CCW).
+            face_rendering="Front",  # We want to hide the front facing faces, but the dataset uses mostly clockwise winding order which is the opposite of what Dalaran assumes (CCW).
         ),
         static=True,
     )
@@ -227,7 +227,7 @@ def log_arkit(recording_path: Path, include_highres: bool) -> None:
     print("Processing frames…")
     for frame_timestamp in tqdm(lowres_frame_ids):
         # frame_id is equivalent to timestamp
-        rr.set_time("time", duration=float(frame_timestamp))
+        dl.set_time("time", duration=float(frame_timestamp))
         # load the lowres image and depth
         bgr = cv2.imread(f"{lowres_image_dir}/{video_id}_{frame_timestamp}.png")
         depth = cv2.imread(f"{lowres_depth_dir}/{video_id}_{frame_timestamp}.png", cv2.IMREAD_ANYDEPTH)
@@ -244,12 +244,12 @@ def log_arkit(recording_path: Path, include_highres: bool) -> None:
                 LOWRES_POSED_ENTITY_PATH,
             )
 
-            rr.log(f"{LOWRES_POSED_ENTITY_PATH}/bgr", rr.Image(bgr, color_model="BGR").compress(jpeg_quality=95))
-            rr.log(f"{LOWRES_POSED_ENTITY_PATH}/depth", rr.DepthImage(depth, meter=1000))
+            dl.log(f"{LOWRES_POSED_ENTITY_PATH}/bgr", dl.Image(bgr, color_model="BGR").compress(jpeg_quality=95))
+            dl.log(f"{LOWRES_POSED_ENTITY_PATH}/depth", dl.DepthImage(depth, meter=1000))
 
         # log the high res camera
         if high_res_exists:
-            rr.set_time("time high resolution", duration=float(frame_timestamp))
+            dl.set_time("time high resolution", duration=float(frame_timestamp))
             # only low res camera has a trajectory, high res does not so need to find the closest low res frame id
             closest_lowres_frame_id = find_closest_frame_id(frame_timestamp, camera_from_world_dict)
             highres_intri_path = intrinsics_dir / f"{video_id}_{frame_timestamp}.pincam"
@@ -264,12 +264,12 @@ def log_arkit(recording_path: Path, include_highres: bool) -> None:
             highres_bgr = cv2.imread(f"{image_dir}/{video_id}_{frame_timestamp}.png")
             highres_depth = cv2.imread(f"{depth_dir}/{video_id}_{frame_timestamp}.png", cv2.IMREAD_ANYDEPTH)
 
-            rr.log(f"{HIGHRES_ENTITY_PATH}/bgr", rr.Image(highres_bgr, color_model="BGR").compress(jpeg_quality=75))
-            rr.log(f"{HIGHRES_ENTITY_PATH}/depth", rr.DepthImage(highres_depth, meter=1000))
+            dl.log(f"{HIGHRES_ENTITY_PATH}/bgr", dl.Image(highres_bgr, color_model="BGR").compress(jpeg_quality=75))
+            dl.log(f"{HIGHRES_ENTITY_PATH}/depth", dl.DepthImage(highres_depth, meter=1000))
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Visualizes the ARKitScenes dataset using the Rerun SDK.")
+    parser = argparse.ArgumentParser(description="Visualizes the ARKitScenes dataset using the Dalaran SDK.")
     parser.add_argument(
         "--video-id",
         type=str,
@@ -282,40 +282,40 @@ def main() -> None:
         action="store_true",
         help="Include the high resolution camera and depth images",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     primary_camera_entity = HIGHRES_ENTITY_PATH if args.include_highres else LOWRES_POSED_ENTITY_PATH
 
-    blueprint = rrb.Horizontal(
-        rrb.Spatial3DView(name="3D"),
-        rrb.Vertical(
-            rrb.Tabs(
+    blueprint = dlb.Horizontal(
+        dlb.Spatial3DView(name="3D"),
+        dlb.Vertical(
+            dlb.Tabs(
                 # Note that we re-project the annotations into the 2D views:
                 # For this to work, the origin of the 2D views has to be a pinhole camera,
                 # this way the viewer knows how to project the 3D annotations into the 2D views.
-                rrb.Spatial2DView(
+                dlb.Spatial2DView(
                     name="BGR",
                     origin=primary_camera_entity,
                     contents=["$origin/bgr", "/world/annotations/**"],
                 ),
-                rrb.Spatial2DView(
+                dlb.Spatial2DView(
                     name="Depth",
                     origin=primary_camera_entity,
                     contents=["$origin/depth", "/world/annotations/**"],
                 ),
                 name="2D",
             ),
-            rrb.TextDocumentView(name="Readme"),
+            dlb.TextDocumentView(name="Readme"),
             row_shares=[2, 1],
         ),
     )
 
-    rr.script_setup(args, "rerun_example_arkit_scenes", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_arkit_scenes", default_blueprint=blueprint)
     recording_path = ensure_recording_available(args.video_id, args.include_highres)
     log_arkit(recording_path, args.include_highres)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

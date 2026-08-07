@@ -6,7 +6,7 @@ title: "StateChange"
 A state change, representing a transition of an entity into a new state.
 
 Useful for representing discrete state machines, mode transitions, or
-state changes over time. Each logged [`archetypes.StateChange`](https://rerun.io/docs/reference/types/archetypes/state_change) marks a new state
+state changes over time. Each logged [`archetypes.StateChange`](https://dalaran.dev/docs/reference/types/archetypes/state_change) marks a new state
 at the given time. A `null` state resets the state, showing a gap in the state timeline view.
 
 The state timeline view displays these as horizontal colored lanes over time.
@@ -21,9 +21,9 @@ The state timeline view displays these as horizontal colored lanes over time.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `StateChange`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1StateChange.html)
- * 🐍 [Python API docs for `StateChange`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.StateChange)
- * 🦀 [Rust API docs for `StateChange`](https://docs.rs/rerun/latest/rerun/archetypes/struct.StateChange.html)
+ * 🌊 [C++ API docs for `StateChange`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1StateChange.html)
+ * 🐍 [Python API docs for `StateChange`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.StateChange)
+ * 🦀 [Rust API docs for `StateChange`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.StateChange.html)
 
 ## Example
 

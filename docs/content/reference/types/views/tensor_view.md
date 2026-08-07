@@ -25,7 +25,7 @@ Configures how scalars are mapped to color.
 Configures how the selected slice should fit into the view.
 
 ## API reference links
- * 🐍 [Python API docs for `TensorView`](https://ref.rerun.io/docs/python/stable/common/blueprint_views#rerun.blueprint.views.TensorView)
+ * 🐍 [Python API docs for `TensorView`](https://ref.dalaran.dev/docs/python/stable/common/blueprint_views#dalaran.blueprint.views.TensorView)
 
 ## Example
 

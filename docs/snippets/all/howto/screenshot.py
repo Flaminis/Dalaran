@@ -1,15 +1,15 @@
 """Take screenshots of the viewer or specific views from code."""
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.experimental import ViewerClient
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran.experimental import ViewerClient
 
 # Spawn a headless viewer; the client owns its lifetime.
 with ViewerClient.spawn(headless=True) as viewer:
-    rec = rr.RecordingStream("rerun_example_screenshot")
+    rec = dl.RecordingStream("dalaran_example_screenshot")
     rec.connect_grpc(url=viewer.url)
 
-    view = rrb.Spatial3DView(name="my blue 3D", background=[100, 149, 237])
+    view = dlb.Spatial3DView(name="my blue 3D", background=[100, 149, 237])
     rec.send_blueprint(view)
 
     # Screenshot the entire viewer.

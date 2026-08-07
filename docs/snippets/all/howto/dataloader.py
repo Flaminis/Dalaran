@@ -1,4 +1,4 @@
-"""Stream a Rerun catalog into PyTorch with the experimental dataloader."""
+"""Stream a Dalaran catalog into PyTorch with the experimental dataloader."""
 
 from __future__ import annotations
 
@@ -8,26 +8,26 @@ import torch
 import torch.multiprocessing
 from torch import nn
 
-import rerun as rr
+import dalaran as dl
 
-# Rerun's tokio runtime is not fork-safe, so DataLoader workers must use
+# Dalaran's tokio runtime is not fork-safe, so DataLoader workers must use
 # `spawn`. Set this before constructing any DataLoader, even with
 # `num_workers=0`, so bumping the worker count later doesn't deadlock on the
 # first catalog call.
 torch.multiprocessing.set_start_method("spawn", force=True)
 
-# In a real workflow you'd start a long-running OSS server (`rerun server`)
+# In a real workflow you'd start a long-running OSS server (`dalaran server`)
 # and point a `CatalogClient` at it. For this self-contained snippet we use
 # a short-lived in-process server and the DROID sample dataset shipped with
 # the repo.
 sample_5_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
 )
-server = rr.server.Server()
+server = dl.server.Server()
 rrd_paths = list(sample_5_path.glob("*.rrd"))
 
 # region: register
-client = rr.catalog.CatalogClient(server.url())
+client = dl.catalog.CatalogClient(server.url())
 dataset = client.create_dataset("my_robot_data", exist_ok=True)
 
 uris = [f"file://{p.resolve()}" for p in rrd_paths]
@@ -35,12 +35,12 @@ dataset.register(uris).wait()
 # endregion: register
 
 # region: describe_sample
-from rerun.experimental.dataloader import (
+from dalaran.experimental.dataloader import (
     DataSource,
     Field,
     FixedRateSampling,
     NumericDecoder,
-    RerunIterableDataset,
+    DalaranIterableDataset,
 )
 
 source = DataSource(
@@ -60,7 +60,7 @@ fields = {
     ),
 }
 
-ds = RerunIterableDataset(
+ds = DalaranIterableDataset(
     source=source,
     index="real_time",
     fields=fields,
@@ -86,7 +86,7 @@ windowed_action = Field(
 # Decode a compressed video stream as part of each sample.
 # `keyframe_interval` must be at least the actual GOP length. For timestamp
 # timelines, `fps_estimate` should also approximate the true frame rate.
-from rerun.experimental.dataloader import VideoFrameDecoder
+from dalaran.experimental.dataloader import VideoFrameDecoder
 
 image_field = Field(
     "/camera/wrist:VideoStream:sample",
@@ -100,7 +100,7 @@ image_field = Field(
 # region: dataloader
 from torch.utils.data import DataLoader
 
-from rerun.experimental.dataloader import RerunMapDataset
+from dalaran.experimental.dataloader import DalaranMapDataset
 
 
 def my_collate(
@@ -121,7 +121,7 @@ loader = DataLoader(
     ds,
     batch_size=8,
     num_workers=0,
-    shuffle=isinstance(ds, RerunMapDataset),  # iterable shuffles internally
+    shuffle=isinstance(ds, DalaranMapDataset),  # iterable shuffles internally
     collate_fn=my_collate,
 )
 # endregion: dataloader
@@ -150,7 +150,7 @@ epochs = 1
 
 # region: train
 for epoch in range(epochs):
-    if isinstance(ds, RerunIterableDataset):
+    if isinstance(ds, DalaranIterableDataset):
         ds.set_epoch(epoch)
     for batch in loader:
         batch = {k: v.to(device) for k, v in batch.items()}

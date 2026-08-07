@@ -3,10 +3,10 @@
 //! This is semantically equivalent to the `image_row_updates` example, albeit much faster.
 
 #include <numeric>
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
-    auto rec = rerun::RecordingStream("rerun_example_image_column_updates");
+    auto rec = dalaran::RecordingStream("dalaran_example_image_column_updates");
     rec.spawn().exit_on_failure();
 
     // Timeline on which the images are distributed.
@@ -29,18 +29,18 @@ int main(int argc, char* argv[]) {
     }
 
     // Log the ImageFormat and indicator once, as static.
-    auto format = rerun::components::ImageFormat(
+    auto format = dalaran::components::ImageFormat(
         {width, height},
-        rerun::ColorModel::RGB,
-        rerun::ChannelDatatype::U8
+        dalaran::ColorModel::RGB,
+        dalaran::ChannelDatatype::U8
     );
-    rec.log_static("images", rerun::Image::update_fields().with_format(format));
+    rec.log_static("images", dalaran::Image::update_fields().with_format(format));
 
     // Split up the image data into several components referencing the underlying data.
     const size_t image_size_in_bytes = width * height * 3;
-    std::vector<rerun::ImageBuffer> image_data(times.size());
+    std::vector<dalaran::ImageBuffer> image_data(times.size());
     for (size_t i = 0; i < times.size(); ++i) {
-        image_data[i] = rerun::borrow(
+        image_data[i] = dalaran::borrow(
             images.data() + i * image_size_in_bytes,
             image_size_in_bytes
         );
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
     // Send all images at once.
     rec.send_columns(
         "images",
-        rerun::TimeColumn::from_sequence("step", std::move(times)),
-        rerun::Image().with_many_buffer(std::move(image_data)).columns()
+        dalaran::TimeColumn::from_sequence("step", std::move(times)),
+        dalaran::Image().with_many_buffer(std::move(image_data)).columns()
     );
 }

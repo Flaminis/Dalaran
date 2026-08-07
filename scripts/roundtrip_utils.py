@@ -9,19 +9,19 @@ import subprocess
 from pathlib import Path
 
 
-def get_rerun_root() -> str:
-    # Search upward for .RERUN_ROOT sentinel file
+def get_dalaran_root() -> str:
+    # Search upward for .DALARAN_ROOT sentinel file
     # TODO(RR-3355): Use a shared utility for this
     current = Path(__file__).resolve().parent
     while current != current.parent:
         # Look for sentinel file
-        if (current / ".RERUN_ROOT").exists():
+        if (current / ".DALARAN_ROOT").exists():
             return str(current)
         # Break if we reach a git root
         if (current / ".git").exists():
             break
         current = current.parent
-    raise FileNotFoundError(f"Could not find .RERUN_ROOT sentinel file in any parent directory under {current}")
+    raise FileNotFoundError(f"Could not find .DALARAN_ROOT sentinel file in any parent directory under {current}")
 
 
 def run(
@@ -31,9 +31,9 @@ def run(
     timeout: int | None = None,
     cwd: str | None = None,
 ) -> None:
-    # Run from the rerun root if not specify otherwise.
+    # Run from the dalaran root if not specify otherwise.
     if cwd is None:
-        cwd = get_rerun_root()
+        cwd = get_dalaran_root()
 
     print(f"> {subprocess.list2cmdline(args)}")
     result = subprocess.run(
@@ -62,17 +62,17 @@ def roundtrip_env(*, save_path: str | None = None) -> dict[str, str]:
 
     # NOTE: Make sure to disable batching, otherwise the Arrow concatenation logic within
     # the batcher will happily insert uninitialized padding bytes as needed!
-    env["RERUN_FLUSH_NUM_ROWS"] = "0"
+    env["DALARAN_FLUSH_NUM_ROWS"] = "0"
 
     # Turn on strict mode to catch errors early
-    env["RERUN_STRICT"] = "1"
+    env["DALARAN_STRICT"] = "1"
 
     # Treat any warning as panics
-    env["RERUN_PANIC_ON_WARN"] = "1"
+    env["DALARAN_PANIC_ON_WARN"] = "1"
 
     if save_path:
         # NOTE: Force the recording stream to write to disk!
-        env["_RERUN_TEST_FORCE_SAVE"] = save_path
+        env["_DALARAN_TEST_FORCE_SAVE"] = save_path
 
     return env
 
@@ -83,7 +83,7 @@ def run_comparison(
     full_dump: bool,
     ignore_timelines: list[str] | None = None,
 ) -> None:
-    cmd = ["rerun", "rrd", "compare", "--unordered", "--ignore-chunks-without-components"]
+    cmd = ["dalaran", "rrd", "compare", "--unordered", "--ignore-chunks-without-components"]
     if full_dump:
         cmd += ["--full-dump"]
     for timeline in ignore_timelines or []:

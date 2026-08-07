@@ -14,19 +14,19 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Check if CLI documentation is up-to-date.")
     parser.add_argument(
-        "--rerun-exe",
+        "--dalaran-exe",
         type=str,
         default=None,
-        help="Path to rerun executable to use instead of building with cargo.",
+        help="Path to dalaran executable to use instead of building with cargo.",
     )
     args = parser.parse_args()
 
     expected_file: Path = Path("docs/content/reference/cli.md")
 
-    if args.rerun_exe:
-        command = [args.rerun_exe, "man"]
+    if args.dalaran_exe:
+        command = [args.dalaran_exe, "man"]
     else:
-        command = ["cargo", "run", "--package", "rerun-cli", "--all-features", "--", "man"]
+        command = ["cargo", "run", "--package", "dalaran-cli", "--all-features", "--", "man"]
 
     # Generate current output
     try:

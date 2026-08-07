@@ -1,10 +1,10 @@
 // Log a simple MCAP message with binary data.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 #include <string>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_mcap_message");
+    const auto rec = dalaran::RecordingStream("dalaran_example_mcap_message");
     rec.spawn().exit_on_failure();
 
     // Example binary message data (could be from a ROS message, protobuf, etc.)
@@ -14,6 +14,6 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "mcap/messages/sensor_reading",
-        rerun::archetypes::McapMessage(rerun::components::Blob(sensor_data))
+        dalaran::archetypes::McapMessage(dalaran::components::Blob(sensor_data))
     );
 }

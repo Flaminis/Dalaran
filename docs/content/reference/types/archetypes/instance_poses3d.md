@@ -5,8 +5,8 @@ title: "InstancePoses3D"
 
 One or more transforms applied on the current entity's transform frame.
 
-Unlike [`archetypes.Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d), it is *not* propagated in the transform hierarchy.
-If [`archetypes.CoordinateFrame`](https://rerun.io/docs/reference/types/archetypes/coordinate_frame) is specified, it acts relative to that coordinate frame,
+Unlike [`archetypes.Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d), it is *not* propagated in the transform hierarchy.
+If [`archetypes.CoordinateFrame`](https://dalaran.dev/docs/reference/types/archetypes/coordinate_frame) is specified, it acts relative to that coordinate frame,
 otherwise it is relative to the entity's implicit coordinate frame.
 
 Whenever you log this archetype, the state of the resulting overall pose is fully reset to the new archetype.
@@ -21,7 +21,7 @@ the 3x3 matrix is applied first, followed by the translation.
 
 Currently, many visualizers support only a single instance transform per entity.
 Check archetype documentations for details - if not otherwise specified, only the first instance transform is applied.
-Some visualizers like the mesh visualizer used for [`archetypes.Mesh3D`](https://rerun.io/docs/reference/types/archetypes/mesh3d),
+Some visualizers like the mesh visualizer used for [`archetypes.Mesh3D`](https://dalaran.dev/docs/reference/types/archetypes/mesh3d),
 will draw an object for every pose, a behavior also known as "instancing".
 
 ## Fields
@@ -39,9 +39,9 @@ will draw an object for every pose, a behavior also known as "instancing".
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `InstancePoses3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1InstancePoses3D.html)
- * 🐍 [Python API docs for `InstancePoses3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.InstancePoses3D)
- * 🦀 [Rust API docs for `InstancePoses3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.InstancePoses3D.html)
+ * 🌊 [C++ API docs for `InstancePoses3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1InstancePoses3D.html)
+ * 🐍 [Python API docs for `InstancePoses3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.InstancePoses3D)
+ * 🦀 [Rust API docs for `InstancePoses3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.InstancePoses3D.html)
 
 ## Examples
 

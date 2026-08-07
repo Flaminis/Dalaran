@@ -111,14 +111,14 @@ on send and query!
 
 ## URDF loader: sending transform updates now requires `parent_frame` and `child_frame` fields to be set
 
-Previous versions of the built-in [URDF](https://en.wikipedia.org/wiki/URDF) data-loader in Rerun required you to send transform updates with _implicit_ frame IDs, i.e. having to send each joint transform on a specific entity path.
+Previous versions of the built-in [URDF](https://en.wikipedia.org/wiki/URDF) data-loader in Dalaran required you to send transform updates with _implicit_ frame IDs, i.e. having to send each joint transform on a specific entity path.
 Depending on the complexity of your robot model, this could quickly lead to long entity paths.
 E.g. when you wanted to update a joint deeper in your model hierarchy.
 
 In 0.28, this is now dropped in favor of transforms with _named_ frame IDs (`parent_frame`, `child_frame`).
 This is more in line with the TF2 system in ROS and allows you to send all transform updates on one single entity (e.g. a `transforms` entity).
 
-In particular, this results in two changes compared after you load an `URDF` model into Rerun compared to previous releases:
+In particular, this results in two changes compared after you load an `URDF` model into Dalaran compared to previous releases:
 
 1. To update a joint with a `Transform3D`, the `parent_frame` and `child_frame` fields need to be set (analogous to how the joint is specified in the `URDF` file).
 2. The transformation must have both rotation and translation (again, analogous to the `URDF`). Updating only the rotation is no longer supported.
@@ -127,7 +127,7 @@ For more details about loading & updating `URDF` models, we added a "Loading URD
 
 ## Python SDK: catalog API overhaul
 
-This release includes a major overhaul of the `rerun.catalog` module that aims to clarify and consolidate the APIs, and make them more future-proof. This includes improving naming, more consistently using DataFusion's dataframes, removing/merging redundant APIs, and exposing fewer implementation details.
+This release includes a major overhaul of the `dalaran.catalog` module that aims to clarify and consolidate the APIs, and make them more future-proof. This includes improving naming, more consistently using DataFusion's dataframes, removing/merging redundant APIs, and exposing fewer implementation details.
 
 We used deprecations to ease migration where possible, but several changes required breaking the API when deprecation would have been too complex. All deprecated APIs will be removed in a future release.
 
@@ -144,7 +144,7 @@ The term "partition" is overloaded in data science, and our use of it could be c
 | `partition_url()`                   | `segment_url()`                   |
 | `partition_url_udf()`               | `segment_url_udf()`               |
 
-The column `rerun_partition_id` is now `rerun_segment_id` (breaking change), and the `partition_id` field on viewer event classes (`PlayEvent`, `PauseEvent`, etc.) is now `segment_id` (the old name is deprecated and will be removed in a future release).
+The column `dalaran_partition_id` is now `dalaran_segment_id` (breaking change), and the `partition_id` field on viewer event classes (`PlayEvent`, `PauseEvent`, etc.) is now `segment_id` (the old name is deprecated and will be removed in a future release).
 
 ### Catalog client
 
@@ -222,7 +222,7 @@ should occur immediately after the creation of the `DataFrame` to ensure they ar
 the server.
 
 ```python
-df = view.reader(index="log_tick").filter((col("rerun_segment_id") == "recording_0") & (col("log_tick") == 123456))
+df = view.reader(index="log_tick").filter((col("dalaran_segment_id") == "recording_0") & (col("log_tick") == 123456))
 ```
 
 ### Registration and tasks
@@ -284,7 +284,7 @@ result = dataset.search_fts("query", column)
 
 ### Schema types moved
 
-The `Schema` class and column descriptor/selector types have moved from `rerun.dataframe` to `rerun.catalog`. The old import paths still work but are deprecated.
+The `Schema` class and column descriptor/selector types have moved from `dalaran.dataframe` to `dalaran.catalog`. The old import paths still work but are deprecated.
 
 ### Other deprecations
 
@@ -293,23 +293,23 @@ The `Schema` class and column descriptor/selector types have moved from `rerun.d
 
 ## `RecordingView` and local dataframe API deprecated
 
-With the OSS server and the catalog APIs gaining maturity, we want to make this the primary way to query data out of Rerun, including when working locally.
+With the OSS server and the catalog APIs gaining maturity, we want to make this the primary way to query data out of Dalaran, including when working locally.
 These APIs will receive ongoing improvements in the future, and offer a smoother migration path to cloud-based workflows.
-As a result, we are deprecating `rerun.dataframe` in this release, and in particular the ability to run dataframe queries on a `Recording` object. See the following sections for more details.
+As a result, we are deprecating `dalaran.dataframe` in this release, and in particular the ability to run dataframe queries on a `Recording` object. See the following sections for more details.
 
 
 ### `RecordingView` deprecated
 
 
-The `RecordingView` class, along with `Recording.view()` and the ability to run dataframe queries locally, is deprecated. Use `Server` and the `rerun.catalog` API instead for local dataframe queries. In addition, the `AnyColumn`, `AnyComponentColumn`, and `ViewContentsLike` helper types are deprecated.
+The `RecordingView` class, along with `Recording.view()` and the ability to run dataframe queries locally, is deprecated. Use `Server` and the `dalaran.catalog` API instead for local dataframe queries. In addition, the `AnyColumn`, `AnyComponentColumn`, and `ViewContentsLike` helper types are deprecated.
 
 **Before:**
 
 ```python
-import rerun as rr
+import dalaran as dl
 
 # Load a recording file
-recording = rr.dataframe.load_recording("recording.rrd")
+recording = dl.dataframe.load_recording("recording.rrd")
 
 # Create a view and query
 view = recording.view(index="frame_nr", contents="/world/**")
@@ -325,11 +325,11 @@ df = table.to_pandas()
 **After:**
 
 ```python
-import rerun as rr
+import dalaran as dl
 from datafusion import col
 
 # Start a local server with the recording
-with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
+with dl.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
     client = server.client()
     dataset = client.get_dataset("my_dataset")
 
@@ -344,27 +344,27 @@ with rr.server.Server(datasets={"my_dataset": ["recording.rrd"]}) as server:
     pandas_df = df.to_pandas()
 ```
 
-For more details on the new API, see the [Query data out of Rerun](../../howto/query-and-transform/get-data-out.md) guide.
+For more details on the new API, see the [Query data out of Dalaran](../../howto/query-and-transform/get-data-out.md) guide.
 
-### `Recording` moved to `rerun.recording`
+### `Recording` moved to `dalaran.recording`
 
-The `Recording` class and recording loading functions have been moved to a new `rerun.recording`. The old import paths are deprecated.
-
-| Old import                              | New import                              |
-|-----------------------------------------|-----------------------------------------|
-| `rr.dataframe.load_recording()`         | `rr.recording.load_recording()`         |
-| `rr.dataframe.load_archive()`           | `rr.recording.load_archive()`           |
-| `rr.dataframe.Recording`                | `rr.recording.Recording`                |
-| `rr.dataframe.RRDArchive`               | `rr.recording.RRDArchive`               |
-
-### `send_dataframe()` moved to top-level `rerun`
-
-The `send_dataframe()` and `send_record_batch()` functions have been moved to the top-level `rerun` module and are also exposed as methods of `RecordingStream`. The old import paths are deprecated.
+The `Recording` class and recording loading functions have been moved to a new `dalaran.recording`. The old import paths are deprecated.
 
 | Old import                              | New import                              |
 |-----------------------------------------|-----------------------------------------|
-| `rr.dataframe.send_dataframe()`         | `rr.send_dataframe()`                   |
-| `rr.dataframe.send_record_batch()`      | `rr.send_record_batch()`                |
+| `dl.dataframe.load_recording()`         | `dl.recording.load_recording()`         |
+| `dl.dataframe.load_archive()`           | `dl.recording.load_archive()`           |
+| `dl.dataframe.Recording`                | `dl.recording.Recording`                |
+| `dl.dataframe.RRDArchive`               | `dl.recording.RRDArchive`               |
+
+### `send_dataframe()` moved to top-level `dalaran`
+
+The `send_dataframe()` and `send_record_batch()` functions have been moved to the top-level `dalaran` module and are also exposed as methods of `RecordingStream`. The old import paths are deprecated.
+
+| Old import                              | New import                              |
+|-----------------------------------------|-----------------------------------------|
+| `dl.dataframe.send_dataframe()`         | `dl.send_dataframe()`                   |
+| `dl.dataframe.send_record_batch()`      | `dl.send_record_batch()`                |
 
 ## `RecordingStream` now cleans up when going out of scope in Python SDK
 
@@ -380,7 +380,7 @@ context.
 Consider an example like:
 ```python
 def create_recording(data, filename):
-    rec = rr.RecordingStream("rerun_example_cleanup")
+    rec = dl.RecordingStream("dalaran_example_cleanup")
     rec.save(filename)
 
     for event in data:

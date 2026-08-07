@@ -7,7 +7,7 @@ Integer index of a voxel in a sparse 3D voxel grid.
 
 The voxel center in local grid coordinates is `(index + 0.5) * voxel_size`.
 
-## Rerun datatype
+## Dalaran datatype
 [`IVec3D`](../datatypes/ivec3d.md)
 
 
@@ -17,9 +17,9 @@ FixedSizeList(3 x non-null Int32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `VoxelIndex`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1VoxelIndex.html)
- * 🐍 [Python API docs for `VoxelIndex`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.VoxelIndex)
- * 🦀 [Rust API docs for `VoxelIndex`](https://docs.rs/rerun/latest/rerun/components/struct.VoxelIndex.html)
+ * 🌊 [C++ API docs for `VoxelIndex`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1VoxelIndex.html)
+ * 🐍 [Python API docs for `VoxelIndex`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.VoxelIndex)
+ * 🦀 [Rust API docs for `VoxelIndex`](https://docs.rs/dalaran/latest/dalaran/components/struct.VoxelIndex.html)
 
 
 ## Used by

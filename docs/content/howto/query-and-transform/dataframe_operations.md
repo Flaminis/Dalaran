@@ -1,16 +1,16 @@
 ---
 title: Common Dataframe Operations
 order: 50
-description: Joins, filters, and aggregations on Rerun data
+description: Joins, filters, and aggregations on Dalaran data
 ---
 
 Dataframes are core to modern analytics workflows.
-Rerun provides a dataframe interface to your data via [DataFusion](https://datafusion.apache.org/python/).
+Dalaran provides a dataframe interface to your data via [DataFusion](https://datafusion.apache.org/python/).
 This example performs a series of joins, filters, etc that highlight a variety of common operations in context.
 Because datafusion has a lazy execution model it is generally more performant to use datafusion for processing,
 however datafusion does allow conversion to dataframes for popular tools (pandas, polars, pyarrow).
 
-The dependencies in this example are contained in `rerun-sdk[all]`.
+The dependencies in this example are contained in `dalaran-sdk[all]`.
 
 ## Setup
 

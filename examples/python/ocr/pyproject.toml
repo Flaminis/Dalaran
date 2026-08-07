@@ -10,7 +10,7 @@ dependencies = [
   "pandas",
   "pdf2image",
   "requests",
-  "rerun-sdk",
+  "dalaran-sdk",
   "setuptools",
   "tabulate",
   "tqdm",

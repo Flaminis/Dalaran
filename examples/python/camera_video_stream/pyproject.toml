@@ -2,7 +2,7 @@
 name = "camera_video_stream"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["rerun-sdk", "av>=14.2.0"]
+dependencies = ["dalaran-sdk", "av>=14.2.0"]
 
 [project.scripts]
 camera_video_stream = "camera_video_stream:main"

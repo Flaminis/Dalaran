@@ -2,7 +2,7 @@
 name = "live_scrolling_plot"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["numpy", "rerun-sdk"]
+dependencies = ["numpy", "dalaran-sdk"]
 
 [project.scripts]
 live_scrolling_plot = "live_scrolling_plot:main"

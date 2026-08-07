@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Example of using Rerun to log and visualize the output of [Segment Anything](https://github.com/facebookresearch/segment-anything).
+Example of using Dalaran to log and visualize the output of [Segment Anything](https://github.com/facebookresearch/segment-anything).
 
 Can be used to test mask-generation on one or more images. Images can be local file-paths
 or remote urls.
@@ -23,14 +23,14 @@ import torchvision
 from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
 from tqdm import tqdm
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 if TYPE_CHECKING:
     from segment_anything.modeling import Sam
 
 DESCRIPTION = """
-Example of using Rerun to log and visualize the output of [Segment Anything](https://github.com/facebookresearch/segment-anything).
+Example of using Dalaran to log and visualize the output of [Segment Anything](https://github.com/facebookresearch/segment-anything).
 
 The full source code for this example is available [on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/segment_anything_model).
 """.strip()
@@ -90,7 +90,7 @@ def create_sam(model: str, device: str) -> Sam:
 
 def run_segmentation(mask_generator: SamAutomaticMaskGenerator, image: cv2.typing.MatLike) -> None:
     """Run segmentation on a single image."""
-    rr.log("image", rr.Image(image))
+    dl.log("image", dl.Image(image))
 
     logging.info("Finding masks")
     masks = mask_generator.generate(image)
@@ -103,7 +103,7 @@ def run_segmentation(mask_generator: SamAutomaticMaskGenerator, image: cv2.typin
         np.dstack([np.zeros((image.shape[0], image.shape[1]))] + [m["segmentation"] for m in masks]).astype("uint8")
         * 128
     )
-    rr.log("mask_tensor", rr.Tensor(mask_tensor))
+    dl.log("mask_tensor", dl.Tensor(mask_tensor))
 
     # Note: for stacking, it is important to sort these masks by area from largest to smallest
     # this is because the masks are overlapping and we want smaller masks to
@@ -118,12 +118,12 @@ def run_segmentation(mask_generator: SamAutomaticMaskGenerator, image: cv2.typin
     for id, m in masks_with_ids:
         segmentation_img[m["segmentation"]] = id
 
-    rr.log("image/masks", rr.SegmentationImage(segmentation_img.astype(np.uint8)))
+    dl.log("image/masks", dl.SegmentationImage(segmentation_img.astype(np.uint8)))
 
     mask_bbox = np.array([m["bbox"] for _, m in masks_with_ids])
-    rr.log(
+    dl.log(
         "image/boxes",
-        rr.Boxes2D(array=mask_bbox, array_format=rr.Box2DFormat.XYWH, class_ids=[id for id, _ in masks_with_ids]),
+        dl.Boxes2D(array=mask_bbox, array_format=dl.Box2DFormat.XYWH, class_ids=[id for id, _ in masks_with_ids]),
     )
 
 
@@ -147,7 +147,7 @@ def load_image(image_uri: str) -> cv2.typing.MatLike:
     else:
         image = cv2.imread(image_uri, cv2.IMREAD_COLOR)
 
-    # Rerun can handle BGR as well, but SAM requires RGB.
+    # Dalaran can handle BGR as well, but SAM requires RGB.
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     return image
 
@@ -180,24 +180,24 @@ def main() -> None:
     )
     parser.add_argument("images", metavar="N", type=str, nargs="*", help="A list of images to process.")
 
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    blueprint = rrb.Vertical(
-        rrb.Spatial2DView(name="Image and segmentation mask", origin="/image"),
-        rrb.Horizontal(
-            rrb.TextLogView(name="Log", origin="/logs"),
-            rrb.TextDocumentView(name="Description", origin="/description"),
+    blueprint = dlb.Vertical(
+        dlb.Spatial2DView(name="Image and segmentation mask", origin="/image"),
+        dlb.Horizontal(
+            dlb.TextLogView(name="Log", origin="/logs"),
+            dlb.TextDocumentView(name="Description", origin="/description"),
             column_shares=[2, 1],
         ),
         row_shares=[3, 1],
     )
 
-    rr.script_setup(args, "rerun_example_segment_anything_model", default_blueprint=blueprint)
-    logging.getLogger().addHandler(rr.LoggingHandler("logs"))
+    dl.script_setup(args, "dalaran_example_segment_anything_model", default_blueprint=blueprint)
+    logging.getLogger().addHandler(dl.LoggingHandler("logs"))
     logging.getLogger().setLevel(logging.INFO)
 
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     sam = create_sam(args.model, args.device)
 
@@ -211,11 +211,11 @@ def main() -> None:
         ]
 
     for n, image_uri in enumerate(args.images):
-        rr.set_time("image", sequence=n)
+        dl.set_time("image", sequence=n)
         image = load_image(image_uri)
         run_segmentation(mask_generator, image)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

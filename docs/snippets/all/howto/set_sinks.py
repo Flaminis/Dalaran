@@ -2,18 +2,18 @@
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
 # Initialize the SDK and give our recording a unique name
-rr.init("rerun_example_set_sinks")
+dl.init("dalaran_example_set_sinks")
 
-rr.set_sinks(
+dl.set_sinks(
     # Connect to an existing local Viewer or gRPC server.
-    rr.GrpcSink(),
+    dl.GrpcSink(),
     # To host a gRPC server instead, replace the sink above with:
-    # rr.GrpcServerSink(),
+    # dl.GrpcServerSink(),
     # Write data to a `data.rrd` file in the current directory
-    rr.FileSink("data.rrd"),
+    dl.FileSink("data.rrd"),
 )
 
 # Create some data
@@ -26,9 +26,9 @@ col_grid = np.meshgrid(*[np.linspace(0, 255, SIZE)] * 3)
 colors = np.vstack([c.reshape(-1) for c in col_grid]).astype(np.uint8).T
 
 # Log the data
-rr.log(
+dl.log(
     # name under which this entity is logged (known as "entity path")
     "my_points",
     # log data as a 3D point cloud archetype
-    rr.Points3D(positions, colors=colors, radii=0.5),
+    dl.Points3D(positions, colors=colors, radii=0.5),
 )

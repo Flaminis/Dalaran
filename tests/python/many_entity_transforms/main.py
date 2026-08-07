@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import argparse
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Simple benchmark for many transforms over time & space.")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
 
     parser.add_argument("--branching-factor", type=int, default=2, help="How many children each node has")
     parser.add_argument("--hierarchy-depth", type=int, default=10, help="How many levels of hierarchy we want")
@@ -28,8 +28,8 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_benchmark_many_transforms")
-    rr.set_time("sim_time", duration=0)
+    dl.script_setup(args, "dalaran_example_benchmark_many_transforms")
+    dl.set_time("sim_time", duration=0)
 
     entity_paths = []
     call_id = 0
@@ -42,10 +42,10 @@ def main() -> None:
         # Add a transform at every 'transforms_every_n_levels' level except root
         if level > 0 and level % args.transforms_every_n_levels == 0:
             # Add a static transform that has to be combined in to stress the per-timestamp transform resolve.
-            rr.log(
+            dl.log(
                 entity_path,
                 # Have to be careful to not override all other transforms, therefore, use `from_fields`.
-                rr.Transform3D.from_fields(
+                dl.Transform3D.from_fields(
                     mat3x3=[
                         [1.0 + level * 0.1, 0.0, 0.0],
                         [0.0, 1.0 + level * 0.1, 0.0],
@@ -58,20 +58,20 @@ def main() -> None:
             # Add a transform that changes for each timestamp.
             for i in range(args.num_timestamps):
                 call_id_factor = call_id * 0.02
-                rr.set_time("sim_time", duration=i + call_id_factor)
-                rr.log(
+                dl.set_time("sim_time", duration=i + call_id_factor)
+                dl.log(
                     entity_path,
-                    rr.Transform3D(
+                    dl.Transform3D(
                         translation=[i * 0.1 * level + call_id_factor, call_id_factor * level, 0.0],
-                        rotation_axis_angle=rr.RotationAxisAngle(axis=(0.0, 1.0, 0.0), degrees=i * 0.1),
+                        rotation_axis_angle=dl.RotationAxisAngle(axis=(0.0, 1.0, 0.0), degrees=i * 0.1),
                     ),
                 )
 
         if level == args.hierarchy_depth:
             if not args.transforms_only:
                 # Log a single point at the leaf
-                rr.set_time("sim_time", duration=0)
-                rr.log(entity_path, rr.Points3D([[0.0, 0.0, 0.0]]))
+                dl.set_time("sim_time", duration=0)
+                dl.log(entity_path, dl.Points3D([[0.0, 0.0, 0.0]]))
             return
 
         for i in range(args.branching_factor):
@@ -81,10 +81,10 @@ def main() -> None:
     log_hierarchy("root", 0)
 
     # All views display all entities.
-    rr.send_blueprint(
-        rrb.Blueprint(
-            rrb.Grid(
-                contents=[rrb.Spatial3DView(origin=path, contents="/**") for path in entity_paths[: args.num_views]]
+    dl.send_blueprint(
+        dlb.Blueprint(
+            dlb.Grid(
+                contents=[dlb.Spatial3DView(origin=path, contents="/**") for path in entity_paths[: args.num_views]]
             ),
             collapse_panels=True,  # Collapse panels, so perf is mostly about the data & the views.
         )

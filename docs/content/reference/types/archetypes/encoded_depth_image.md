@@ -6,7 +6,7 @@ title: "EncodedDepthImage"
 ⚠️ **This type is _unstable_ and may change significantly in a way that the data won't be backwards compatible.**
 A depth image encoded with a codec (e.g. RVL or PNG).
 
-Rerun also supports uncompressed depth images with the [`archetypes.DepthImage`](https://rerun.io/docs/reference/types/archetypes/depth_image).
+Dalaran also supports uncompressed depth images with the [`archetypes.DepthImage`](https://dalaran.dev/docs/reference/types/archetypes/depth_image).
 
 ## Fields
 ### Required
@@ -30,9 +30,9 @@ Rerun also supports uncompressed depth images with the [`archetypes.DepthImage`]
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `EncodedDepthImage`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1EncodedDepthImage.html)
- * 🐍 [Python API docs for `EncodedDepthImage`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.EncodedDepthImage)
- * 🦀 [Rust API docs for `EncodedDepthImage`](https://docs.rs/rerun/latest/rerun/archetypes/struct.EncodedDepthImage.html)
+ * 🌊 [C++ API docs for `EncodedDepthImage`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1EncodedDepthImage.html)
+ * 🐍 [Python API docs for `EncodedDepthImage`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.EncodedDepthImage)
+ * 🦀 [Rust API docs for `EncodedDepthImage`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.EncodedDepthImage.html)
 
 ## Example
 

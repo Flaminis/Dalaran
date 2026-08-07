@@ -4,7 +4,7 @@ import os
 from argparse import Namespace
 from uuid import uuid4
 
-import rerun as rr
+import dalaran as dl
 
 README = """\
 # Plot overrides
@@ -37,38 +37,38 @@ If nothing weird happens, you can close this recording.
 
 
 def log_readme() -> None:
-    rr.log("readme", rr.TextDocument(README, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("readme", dl.TextDocument(README, media_type=dl.MediaType.MARKDOWN), static=True)
 
 
 def log_plots() -> None:
     from math import cos, sin, tau
 
-    rr.log("plots/sin", rr.SeriesLines(colors=[255, 0, 0], names="sin(0.01t)"), static=True)
-    rr.log("plots/cos", rr.SeriesLines(colors=[0, 255, 0], names="cos(0.01t)"), static=True)
+    dl.log("plots/sin", dl.SeriesLines(colors=[255, 0, 0], names="sin(0.01t)"), static=True)
+    dl.log("plots/cos", dl.SeriesLines(colors=[0, 255, 0], names="cos(0.01t)"), static=True)
 
     for t in range(int(tau * 2 * 10.0)):
-        rr.set_time("frame_nr", sequence=t)
+        dl.set_time("frame_nr", sequence=t)
 
         sin_of_t = sin(float(t) / 10.0)
-        rr.log("plots/sin", rr.Scalars(sin_of_t))
+        dl.log("plots/sin", dl.Scalars(sin_of_t))
 
         cos_of_t = cos(float(t) / 10.0)
-        rr.log("plots/cos", rr.Scalars(cos_of_t))
+        dl.log("plots/cos", dl.Scalars(cos_of_t))
 
 
 def run(args: Namespace) -> None:
-    rr.script_setup(args, f"{os.path.basename(__file__)}", recording_id=uuid4())
+    dl.script_setup(args, f"{os.path.basename(__file__)}", recording_id=uuid4())
 
     log_readme()
     log_plots()
 
-    rr.send_blueprint(rr.blueprint.Blueprint(auto_layout=True, auto_views=True), make_active=True, make_default=True)
+    dl.send_blueprint(dl.blueprint.Blueprint(auto_layout=True, auto_views=True), make_active=True, make_default=True)
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Interactive release checklist")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
     run(args)

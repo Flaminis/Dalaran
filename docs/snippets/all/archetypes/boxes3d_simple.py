@@ -1,7 +1,7 @@
 """Log a single 3D Box."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_box3d", spawn=True)
+dl.init("dalaran_example_box3d", spawn=True)
 
-rr.log("simple", rr.Boxes3D(half_sizes=[2.0, 2.0, 1.0]))
+dl.log("simple", dl.Boxes3D(half_sizes=[2.0, 2.0, 1.0]))

@@ -22,8 +22,8 @@ from pyproj.aoi import AreaOfInterest
 from pyproj.database import query_utm_crs_info
 from tqdm import tqdm
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 if typing.TYPE_CHECKING:
     import shapely
@@ -109,10 +109,10 @@ def log_region_boundaries_for_country(
     for _i, row in map_data[map_data.CNTR_CODE == country_code].iterrows():
         entity_path = f"region_boundaries/{country_code}/{level}/{row.NUTS_ID}"
         lines = shapely_geom_to_numpy(row.geometry)
-        rr.log(entity_path + "/2D", rr.LineStrips2D(lines, colors=color), static=True)
-        rr.log(
+        dl.log(entity_path + "/2D", dl.LineStrips2D(lines, colors=color), static=True)
+        dl.log(
             entity_path + "/3D",
-            rr.LineStrips3D(
+            dl.LineStrips3D(
                 [np.hstack([line, np.zeros((len(line), 1))]) for line in lines],
                 colors=color,
             ),
@@ -120,7 +120,7 @@ def log_region_boundaries_for_country(
         )
         metadata = row.to_dict()
         metadata.pop("geometry")
-        rr.log(entity_path, rr.AnyValues(**metadata), static=True)
+        dl.log(entity_path, dl.AnyValues(**metadata), static=True)
 
 
 @dataclasses.dataclass
@@ -196,7 +196,7 @@ def get_paths_for_directory(directory: Path) -> list[Path]:
     """
     Get a sorted list of JSON file by recursively walking the provided directory.
 
-    Note: technically, we don't need the list to be sorted as Rerun accepts out of order data. However, it comes at a
+    Note: technically, we don't need the list to be sorted as Dalaran accepts out of order data. However, it comes at a
     (small) performance cost and any (cheap) sorting on the logging end is always better.
     """
 
@@ -229,7 +229,7 @@ class Logger(typing.Protocol):
 
 
 class MeasurementLogger:
-    """Logger class that uses regular `rr.log` calls."""
+    """Logger class that uses regular `dl.log` calls."""
 
     def __init__(self, proj: pyproj.Transformer, raw: bool) -> None:
         self._proj = proj
@@ -241,7 +241,7 @@ class MeasurementLogger:
         ]
 
     def process_measurement(self, measurement: Measurement) -> None:
-        rr.set_time("unix_time", timestamp=measurement.timestamp)
+        dl.set_time("unix_time", timestamp=measurement.timestamp)
 
         if self._raw:
             metadata = dataclasses.asdict(measurement)
@@ -252,16 +252,16 @@ class MeasurementLogger:
             )
 
         entity_path = f"aircraft/{measurement.icao_id}"
-        color = rr.components.Color.from_string(entity_path)
+        color = dl.components.Color.from_string(entity_path)
 
         if (
             measurement.latitude is not None
             and measurement.longitude is not None
             and measurement.barometric_altitude is not None
         ):
-            rr.log(
+            dl.log(
                 entity_path,
-                rr.Points3D(
+                dl.Points3D(
                     [
                         self._proj.transform(
                             measurement.longitude,
@@ -271,17 +271,17 @@ class MeasurementLogger:
                     ],
                     colors=color,
                 ),
-                rr.GeoPoints(lat_lon=[measurement.latitude, measurement.longitude]),
+                dl.GeoPoints(lat_lon=[measurement.latitude, measurement.longitude]),
             )
 
         if len(metadata) > 0:
-            rr.log(entity_path, rr.AnyValues(**metadata))
+            dl.log(entity_path, dl.AnyValues(**metadata))
 
         if measurement.barometric_altitude is not None:
-            rr.log(
+            dl.log(
                 entity_path + "/barometric_altitude",
-                rr.Scalars(measurement.barometric_altitude),
-                rr.SeriesLines(colors=color),
+                dl.Scalars(measurement.barometric_altitude),
+                dl.SeriesLines(colors=color),
             )
 
     def flush(self) -> None:
@@ -293,7 +293,7 @@ class MeasurementLogger:
 
 
 class MeasurementBatchLogger:
-    """Logger class that batches measurements and uses `rr.send_columns` calls."""
+    """Logger class that batches measurements and uses `dl.send_columns` calls."""
 
     def __init__(self, proj: pyproj.Transformer, batch_size: int = 8192) -> None:
         self._proj = proj
@@ -328,40 +328,40 @@ class MeasurementBatchLogger:
             return
 
         if icao_id not in self._position_indicators:
-            color = rr.components.Color.from_string(entity_path)
-            rr.log(
+            color = dl.components.Color.from_string(entity_path)
+            dl.log(
                 entity_path,
-                rr.Points3D.from_fields(colors=color),
+                dl.Points3D.from_fields(colors=color),
                 # TODO(cmc): That would be UB right now (and doesn't matter as long as we are on the untagged index).
-                # rr.GeoPoints.from_fields(colors=color),
+                # dl.GeoPoints.from_fields(colors=color),
                 static=True,
             )
-            rr.log(entity_path + "/barometric_altitude", rr.SeriesLines.from_fields(colors=color), static=True)
+            dl.log(entity_path + "/barometric_altitude", dl.SeriesLines.from_fields(colors=color), static=True)
             self._position_indicators.add(icao_id)
 
-        timestamps = rr.TimeColumn("unix_time", timestamp=df["timestamp"].to_numpy())
+        timestamps = dl.TimeColumn("unix_time", timestamp=df["timestamp"].to_numpy())
         pos = self._proj.transform(df["longitude"], df["latitude"], df["barometric_altitude"])
 
-        raw_coordinates = rr.AnyValues.columns(
+        raw_coordinates = dl.AnyValues.columns(
             latitude=df["latitude"].to_numpy(),
             longitude=df["longitude"].to_numpy(),
             barometric_altitude=df["barometric_altitude"].to_numpy(),
         )
 
-        rr.send_columns(
+        dl.send_columns(
             entity_path,
             [timestamps],
             [
-                *rr.Points3D.columns(positions=np.vstack(pos).T),
-                *rr.GeoPoints.columns(positions=np.vstack((df["latitude"], df["longitude"])).T),
+                *dl.Points3D.columns(positions=np.vstack(pos).T),
+                *dl.GeoPoints.columns(positions=np.vstack((df["latitude"], df["longitude"])).T),
                 *raw_coordinates,
             ],
         )
 
-        rr.send_columns(
+        dl.send_columns(
             entity_path + "/barometric_altitude",
             [timestamps],
-            rr.Scalars.columns(scalars=df["barometric_altitude"].to_numpy()),
+            dl.Scalars.columns(scalars=df["barometric_altitude"].to_numpy()),
         )
 
     def log_ground_status(self, df: polars.DataFrame, icao_id: str) -> None:
@@ -371,10 +371,10 @@ class MeasurementBatchLogger:
         if df.height == 0:
             return
 
-        timestamps = rr.TimeColumn("unix_time", timestamp=df["timestamp"].to_numpy())
-        columns = rr.AnyValues.columns(ground_status=df["ground_status"].to_numpy())
+        timestamps = dl.TimeColumn("unix_time", timestamp=df["timestamp"].to_numpy())
+        columns = dl.AnyValues.columns(ground_status=df["ground_status"].to_numpy())
 
-        rr.send_columns(entity_path, [timestamps], columns)
+        dl.send_columns(entity_path, [timestamps], columns)
 
     def log_metadata(self, df: polars.DataFrame, icao_id: str) -> None:
         entity_path = f"aircraft/{icao_id}"
@@ -383,15 +383,15 @@ class MeasurementBatchLogger:
         if df.height == 0:
             return
 
-        metadata = rr.AnyValues.columns(
+        metadata = dl.AnyValues.columns(
             course=df["course"].to_numpy(),
             ground_speed=df["ground_speed"].to_numpy(),
             vertical_speed=df["vertical_speed"].to_numpy(),
         )
 
-        rr.send_columns(
+        dl.send_columns(
             entity_path,
-            [rr.TimeColumn("unix_time", timestamp=df["timestamp"].to_numpy())],
+            [dl.TimeColumn("unix_time", timestamp=df["timestamp"].to_numpy())],
             metadata,
         )
 
@@ -409,7 +409,7 @@ def log_everything(paths: list[Path], raw: bool, batch: bool, batch_size: int) -
         log_region_boundaries_for_country(country_code, level, color, utm_crs)
 
     # Exaggerate altitudes
-    rr.log("aircraft", rr.Transform3D(scale=[1, 1, 10]), static=True)
+    dl.log("aircraft", dl.Transform3D(scale=[1, 1, 10]), static=True)
 
     if batch:
         logger: Logger = MeasurementBatchLogger(proj, batch_size)
@@ -441,7 +441,7 @@ def main() -> None:
         "--batch",
         action="store_true",
         default=True,
-        help="If true, use the batch logger function (rerun 0.18 required)",
+        help="If true, use the batch logger function (dalaran 0.18 required)",
     )
     parser.add_argument(
         "--batch-size",
@@ -454,7 +454,7 @@ def main() -> None:
         type=Path,
         help="Use this directory of data instead of downloading a dataset",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     if args.dir:
@@ -470,12 +470,12 @@ def main() -> None:
                 zip_ref.extractall(dataset_directory)
 
     # TODO(ab): this blueprint would be massively improved by setting the 3D view's orbit point to FRA's coordinates.
-    blueprint = rrb.Vertical(
-        rrb.Horizontal(rrb.Spatial3DView(origin="/"), rrb.MapView(origin="/")),
-        rrb.TimeSeriesView(origin="/aircraft"),
+    blueprint = dlb.Vertical(
+        dlb.Horizontal(dlb.Spatial3DView(origin="/"), dlb.MapView(origin="/")),
+        dlb.TimeSeriesView(origin="/aircraft"),
         row_shares=[3, 1],
     )
-    rr.script_setup(args, "rerun_example_air_traffic_data", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_air_traffic_data", default_blueprint=blueprint)
 
     paths = get_paths_for_directory(dataset_directory)
     log_everything(paths, args.raw, args.batch, args.batch_size)

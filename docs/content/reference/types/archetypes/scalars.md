@@ -10,7 +10,7 @@ should not be static.
 Number of scalars per timestamp is expected to be the same over time.
 
 When used to produce a plot, this archetype is used to provide the data that
-is referenced by [`archetypes.SeriesLines`](https://rerun.io/docs/reference/types/archetypes/series_lines) or [`archetypes.SeriesPoints`](https://rerun.io/docs/reference/types/archetypes/series_points). You can do
+is referenced by [`archetypes.SeriesLines`](https://dalaran.dev/docs/reference/types/archetypes/series_lines) or [`archetypes.SeriesPoints`](https://dalaran.dev/docs/reference/types/archetypes/series_points). You can do
 this by logging both archetypes to the same path, or alternatively configuring
 the plot-specific archetypes through the blueprint.
 
@@ -24,9 +24,9 @@ the plot-specific archetypes through the blueprint.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Scalars`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Scalars.html)
- * 🐍 [Python API docs for `Scalars`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Scalars)
- * 🦀 [Rust API docs for `Scalars`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Scalars.html)
+ * 🌊 [C++ API docs for `Scalars`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Scalars.html)
+ * 🐍 [Python API docs for `Scalars`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Scalars)
+ * 🦀 [Rust API docs for `Scalars`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Scalars.html)
 
 ## Examples
 

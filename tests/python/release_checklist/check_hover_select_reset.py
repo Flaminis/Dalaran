@@ -4,7 +4,7 @@ import os
 from argparse import Namespace
 from uuid import uuid4
 
-import rerun as rr
+import dalaran as dl
 
 README = """\
 # Hover, Select, Deselect, and Reset
@@ -45,22 +45,22 @@ selected instead.
 
 
 def log_readme() -> None:
-    rr.log("readme", rr.TextDocument(README, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("readme", dl.TextDocument(README, media_type=dl.MediaType.MARKDOWN), static=True)
 
 
 def log_plots() -> None:
     from math import cos, sin, tau
 
-    rr.log("plots/cos", rr.SeriesPoints())
+    dl.log("plots/cos", dl.SeriesPoints())
 
     for t in range(int(tau * 2 * 10.0)):
-        rr.set_time("frame_nr", sequence=t)
+        dl.set_time("frame_nr", sequence=t)
 
         sin_of_t = sin(float(t) / 10.0)
-        rr.log("plots/sin", rr.Scalars(sin_of_t))
+        dl.log("plots/sin", dl.Scalars(sin_of_t))
 
         cos_of_t = cos(float(t) / 10.0)
-        rr.log("plots/cos", rr.Scalars(cos_of_t))
+        dl.log("plots/cos", dl.Scalars(cos_of_t))
 
 
 def log_points_3d() -> None:
@@ -72,7 +72,7 @@ def log_points_3d() -> None:
     colors = rng.uniform(0, 255, size=[10, 3])
     radii = rng.uniform(0, 1, size=[10])
 
-    rr.log("3D/points", rr.Points3D(positions, colors=colors, radii=radii))
+    dl.log("3D/points", dl.Points3D(positions, colors=colors, radii=radii))
 
 
 def log_points_2d() -> None:
@@ -84,19 +84,19 @@ def log_points_2d() -> None:
     colors = rng.uniform(0, 255, size=[10, 3])
     radii = rng.uniform(0, 1, size=[10])
 
-    rr.log("2D/points", rr.Points2D(positions, colors=colors, radii=radii))
+    dl.log("2D/points", dl.Points2D(positions, colors=colors, radii=radii))
 
 
 def log_graph() -> None:
-    rr.log("graph", rr.GraphNodes(["a", "b"], labels=["A", "B"]))
+    dl.log("graph", dl.GraphNodes(["a", "b"], labels=["A", "B"]))
 
 
 def log_map() -> None:
-    rr.log("points", rr.GeoPoints(lat_lon=[[47.6344, 19.1397], [47.6334, 19.1399]], radii=rr.Radius.ui_points(20.0)))
+    dl.log("points", dl.GeoPoints(lat_lon=[[47.6344, 19.1397], [47.6334, 19.1399]], radii=dl.Radius.ui_points(20.0)))
 
 
 def run(args: Namespace) -> None:
-    rr.script_setup(args, f"{os.path.basename(__file__)}", recording_id=uuid4())
+    dl.script_setup(args, f"{os.path.basename(__file__)}", recording_id=uuid4())
 
     log_readme()
     log_plots()
@@ -105,13 +105,13 @@ def run(args: Namespace) -> None:
     log_graph()
     log_map()
 
-    rr.send_blueprint(rr.blueprint.Blueprint(auto_layout=True, auto_views=True), make_active=True, make_default=True)
+    dl.send_blueprint(dl.blueprint.Blueprint(auto_layout=True, auto_views=True), make_active=True, make_default=True)
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Interactive release checklist")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
     run(args)

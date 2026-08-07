@@ -5,7 +5,7 @@ title: "AxisLength"
 
 The length of an axis in local units of the space.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -15,9 +15,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `AxisLength`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1AxisLength.html)
- * 🐍 [Python API docs for `AxisLength`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.AxisLength)
- * 🦀 [Rust API docs for `AxisLength`](https://docs.rs/rerun/latest/rerun/components/struct.AxisLength.html)
+ * 🌊 [C++ API docs for `AxisLength`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1AxisLength.html)
+ * 🐍 [Python API docs for `AxisLength`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.AxisLength)
+ * 🦀 [Rust API docs for `AxisLength`](https://docs.rs/dalaran/latest/dalaran/components/struct.AxisLength.html)
 
 
 ## Used by

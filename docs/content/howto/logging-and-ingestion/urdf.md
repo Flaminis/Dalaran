@@ -4,10 +4,10 @@ order: 900
 description: Load and visualize robot models defined in URDF
 ---
 
-Rerun features a built-in [importer](https://rerun.io/docs/concepts/logging-and-ingestion/importers/overview) for [URDF](https://en.wikipedia.org/wiki/URDF) files.
+Dalaran features a built-in [importer](https://dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview) for [URDF](https://en.wikipedia.org/wiki/URDF) files.
 
 <picture style="zoom: 0.5">
-  <img src="https://static.rerun.io/urdf-viewer/ebdefa158ab6f26f9dc1cb1924fce4b846fe8db2/full.png" alt="A robot model loaded from an URDF file visualized in Rerun.">
+  <img src="https://static.rerun.io/urdf-viewer/ebdefa158ab6f26f9dc1cb1924fce4b846fe8db2/full.png" alt="A robot model loaded from an URDF file visualized in Dalaran.">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/urdf-viewer/ebdefa158ab6f26f9dc1cb1924fce4b846fe8db2/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/urdf-viewer/ebdefa158ab6f26f9dc1cb1924fce4b846fe8db2/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/urdf-viewer/ebdefa158ab6f26f9dc1cb1924fce4b846fe8db2/1024w.png">
@@ -15,10 +15,10 @@ Rerun features a built-in [importer](https://rerun.io/docs/concepts/logging-and-
 
 ## Overview
 
-Using a `URDF` in Rerun only requires you to load the file with the logging API.
+Using a `URDF` in Dalaran only requires you to load the file with the logging API.
 This will automatically invoke the importer, which will take care of:
 * resolving paths to meshes
-* loading meshes and shapes as Rerun entities
+* loading meshes and shapes as Dalaran entities
 * loading the joint transforms and associated frame IDs of links
 
 Once that is done, the joints can be updated by sending [`Transform3D`](../../reference/types/archetypes/transform3d.md)s, where you have to set the `parent_frame` and `child_frame` fields explicitly to each joint's specific frame IDs.
@@ -37,17 +37,17 @@ For a full animation example, see the [Python animated URDF example](https://git
 
 ## URDF utilities (Python)
 
-Rerun provides the [`rr.urdf`](https://github.com/rerun-io/rerun/tree/main/rerun_py/rerun_sdk/rerun/urdf.py) Python module that can facilitate the handling of URDF models in your code.
+Dalaran provides the [`dl.urdf`](https://github.com/rerun-io/rerun/tree/main/rerun_py/rerun_sdk/rerun/urdf.py) Python module that can facilitate the handling of URDF models in your code.
 It can be used as an alternative to other 3rd-party packages like [yourdfpy](https://yourdfpy.readthedocs.io/en/latest/index.html) or [pytransforms3d](https://dfki-ric.github.io/pytransform3d/index.html).
 As shown below, you can use it e.g. to access individual joints of the URDF model and to compute their respective transforms based on joint states (e.g. angles for revolute joints).
-These transforms can be directly sent to Rerun.
+These transforms can be directly sent to Dalaran.
 
 ### UrdfTree
 
 Load a URDF file and access its structure:
 
 ```python
-urdf_tree = rr.urdf.UrdfTree.from_file_path("robot.urdf", entity_path_prefix=None)
+urdf_tree = dl.urdf.UrdfTree.from_file_path("robot.urdf", entity_path_prefix=None)
 
 # Access properties
 robot_name = urdf_tree.name
@@ -61,7 +61,7 @@ urdf_tree.get_link_by_name("base_link")
 # Get the entity paths of collision or visual geometries of a link.
 # This can be used for example to update the color / transparency during runtime:
 for visual_path in urdf_tree.get_visual_geometry_paths("gripper"):
-    rec.log(visual_path, rr.Asset3D.from_fields(albedo_factor=[255, 0, 0, 100]), static=True)
+    rec.log(visual_path, dl.Asset3D.from_fields(albedo_factor=[255, 0, 0, 100]), static=True)
 ```
 
 #### Frame prefix
@@ -69,8 +69,8 @@ for visual_path in urdf_tree.get_visual_geometry_paths("gripper"):
 When loading the same URDF multiple times (e.g. a dual-arm setup), use `frame_prefix` to give each instance unique frame IDs and `entity_path_prefix` to separate their geometry in the entity tree. Use `log_urdf_to_recording()` to log the model with prefixed frame IDs:
 
 ```python
-left = rr.urdf.UrdfTree.from_file_path("robot.urdf", entity_path_prefix="left", frame_prefix="left/")
-right = rr.urdf.UrdfTree.from_file_path("robot.urdf", entity_path_prefix="right", frame_prefix="right/")
+left = dl.urdf.UrdfTree.from_file_path("robot.urdf", entity_path_prefix="left", frame_prefix="left/")
+right = dl.urdf.UrdfTree.from_file_path("robot.urdf", entity_path_prefix="right", frame_prefix="right/")
 
 left.log_urdf_to_recording()
 right.log_urdf_to_recording()
@@ -99,9 +99,9 @@ rec.log("transforms", transform)
 
 ## Load URDF into an existing recording
 
-If you already have a recording with transforms loaded in Rerun and want to add an URDF to it, you can do so via drag-and-drop or the menu ("Import into current recording").
+If you already have a recording with transforms loaded in Dalaran and want to add an URDF to it, you can do so via drag-and-drop or the menu ("Import into current recording").
 
-In this video, we load an ROS 2 `.mcap` file with TF messages that automatically get translated into Rerun [`Transform3D`](../../reference/types/archetypes/transform3d.md).
+In this video, we load an ROS 2 `.mcap` file with TF messages that automatically get translated into Dalaran [`Transform3D`](../../reference/types/archetypes/transform3d.md).
 As indicated by the errors displayed in the viewer, there are some connections missing in the transform tree of this example MCAP.
 In our case, these missing transforms are static links that are stored in URDF models separate from the MCAP file.
 
@@ -113,6 +113,6 @@ To add them, we can simply drag the corresponding URDF files into the viewer whe
 
 ## References
 
-* [🐍 Python `log_file_from_path`](https://ref.rerun.io/docs/python/stable/common/logging_functions/#rerun.log_file_from_path)
-* [🦀 Rust `log_file_from_path`](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.log_file_from_path)
-* [🌊 C++ `log_file_from_path`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#a20798d7ea74cce5c8174e5cacd0a2c47)
+* [🐍 Python `log_file_from_path`](https://ref.dalaran.dev/docs/python/stable/common/logging_functions/#dalaran.log_file_from_path)
+* [🦀 Rust `log_file_from_path`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.log_file_from_path)
+* [🌊 C++ `log_file_from_path`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#a20798d7ea74cce5c8174e5cacd0a2c47)

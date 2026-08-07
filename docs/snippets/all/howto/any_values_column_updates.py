@@ -9,16 +9,16 @@ from __future__ import annotations
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_any_values_column_updates", spawn=True)
+dl.init("dalaran_example_any_values_column_updates", spawn=True)
 
 timestamps = np.arange(0, 64)
 
-rr.send_columns(
+dl.send_columns(
     "/",
-    indexes=[rr.TimeColumn("step", sequence=timestamps)],
-    columns=rr.AnyValues.columns(
+    indexes=[dl.TimeColumn("step", sequence=timestamps)],
+    columns=dl.AnyValues.columns(
         sin=np.sin(timestamps / 10.0), cos=np.cos(timestamps / 10.0)
     ),
 )

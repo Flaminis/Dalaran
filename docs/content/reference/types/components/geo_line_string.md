@@ -12,9 +12,9 @@ List(non-null FixedSizeList(2 x non-null Float64))
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `GeoLineString`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1GeoLineString.html)
- * 🐍 [Python API docs for `GeoLineString`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.GeoLineString)
- * 🦀 [Rust API docs for `GeoLineString`](https://docs.rs/rerun/latest/rerun/components/struct.GeoLineString.html)
+ * 🌊 [C++ API docs for `GeoLineString`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1GeoLineString.html)
+ * 🐍 [Python API docs for `GeoLineString`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.GeoLineString)
+ * 🦀 [Rust API docs for `GeoLineString`](https://docs.rs/dalaran/latest/dalaran/components/struct.GeoLineString.html)
 
 
 ## Used by

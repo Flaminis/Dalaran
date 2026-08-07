@@ -8,7 +8,7 @@ Length, or one-dimensional size.
 Measured in its local coordinate system; consult the archetype in use to determine which
 axis or part of the entity this is the length of.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -18,9 +18,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Length`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Length.html)
- * 🐍 [Python API docs for `Length`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Length)
- * 🦀 [Rust API docs for `Length`](https://docs.rs/rerun/latest/rerun/components/struct.Length.html)
+ * 🌊 [C++ API docs for `Length`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Length.html)
+ * 🐍 [Python API docs for `Length`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Length)
+ * 🦀 [Rust API docs for `Length`](https://docs.rs/dalaran/latest/dalaran/components/struct.Length.html)
 
 
 ## Used by

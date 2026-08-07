@@ -1,10 +1,10 @@
-"""Register a few DROID episodes to a local Rerun catalog so the rest of the example has data to index.
+"""Register a few DROID episodes to a local Dalaran catalog so the rest of the example has data to index.
 
 Two sources, auto-selected (override with `--source`):
 
-* **Bundled** — the `tests/assets/rrd/sample_5` episodes shipped in the Rerun repo (via git-LFS).
+* **Bundled** — the `tests/assets/rrd/sample_5` episodes shipped in the Dalaran repo (via git-LFS).
   Used automatically in a monorepo checkout: no download, works offline.
-* **Hugging Face** — a few episodes from the [`rerun/droid_sample`](https://huggingface.co/datasets/rerun/droid_sample)
+* **Hugging Face** — a few episodes from the [`dalaran/droid_sample`](https://huggingface.co/datasets/dalaran/droid_sample)
   dataset, downloaded into `./data`. Used when the bundled episodes aren't available
   (e.g. a standalone sparse-checkout of just this example).
 
@@ -15,7 +15,7 @@ They carry H.264 `VideoStream`s but no pre-computed embeddings, so `ingest.py` w
 Episodes are optimized first to derive keyframe markers, so the compute path can decode
 frames (DROID doesn't log the markers the decoder needs). Pass `--no-optimize` to skip.
 
-Run inside the rerun SDK venv, with a `rerun server` running in another terminal, e.g.:
+Run inside the dalaran SDK venv, with a `dalaran server` running in another terminal, e.g.:
 
     uv run python prepare_dataset.py
 """
@@ -28,16 +28,16 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-import rerun as rr
-from rerun.experimental import OptimizationProfile, RrdReader
+import dalaran as dl
+from dalaran.experimental import OptimizationProfile, RrdReader
 
 # `tests/assets/rrd/sample_5`, relative to this file at `examples/python/droid_semantic_search/`.
 BUNDLED_SAMPLE_DIR = Path(__file__).resolve().parents[3] / "tests" / "assets" / "rrd" / "sample_5"
-DEFAULT_REPO_ID = "rerun/droid_sample"
+DEFAULT_REPO_ID = "dalaran/droid_sample"
 DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parent / "data"
 DEFAULT_OPTIMIZED_DIR = Path(__file__).resolve().parent / "optimized"
 DEFAULT_DATASET_NAME = "droid:sample"
-DEFAULT_CATALOG_URL = "rerun+http://127.0.0.1:51234"
+DEFAULT_CATALOG_URL = "dalaran+http://127.0.0.1:51234"
 
 _LFS_POINTER_PREFIX = b"version https://git-lfs.github.com/spec/v1"
 
@@ -132,11 +132,11 @@ def register_to_catalog(rrd_paths: list[Path], *, catalog_url: str, dataset_name
     silently on `wait()`.
     """
     print(f"\nRegistering {len(rrd_paths)} episode(s) to {catalog_url} as dataset '{dataset_name}' …")
-    client = rr.catalog.CatalogClient(catalog_url)
+    client = dl.catalog.CatalogClient(catalog_url)
     dataset = client.create_dataset(dataset_name, exist_ok=True)
 
     uris = [f"file://{p.resolve()}" for p in rrd_paths]
-    on_duplicate = rr.catalog.OnDuplicateSegmentLayer(rr.catalog.OnDuplicateSegmentLayer.REPLACE)
+    on_duplicate = dl.catalog.OnDuplicateSegmentLayer(dl.catalog.OnDuplicateSegmentLayer.REPLACE)
     handle = dataset.register(uris, on_duplicate=on_duplicate)
 
     failures: list[str] = []
@@ -192,7 +192,7 @@ def main() -> None:
     parser.add_argument(
         "--catalog-url",
         default=DEFAULT_CATALOG_URL,
-        help="Rerun catalog URL to register episodes with. Pass an empty string to skip registration.",
+        help="Dalaran catalog URL to register episodes with. Pass an empty string to skip registration.",
     )
     parser.add_argument(
         "--dataset-name",

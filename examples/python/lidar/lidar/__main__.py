@@ -10,7 +10,7 @@ import matplotlib
 import numpy as np
 from nuscenes import nuscenes
 
-import rerun as rr
+import dalaran as dl
 
 from .download_dataset import MINISPLIT_SCENES, download_minisplit
 
@@ -54,7 +54,7 @@ def log_nuscenes_lidar(root_dir: pathlib.Path, dataset_version: str, scene_name:
 
     scene = next(s for s in nusc.scene if s["name"] == scene_name)
 
-    rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
+    dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Z_UP, static=True)
 
     first_sample = nusc.get("sample", scene["first_sample_token"])
     current_lidar_token = first_sample["data"]["LIDAR_TOP"]
@@ -68,14 +68,14 @@ def log_nuscenes_lidar(root_dir: pathlib.Path, dataset_version: str, scene_name:
         point_colors = cmap(norm(point_distances))
 
         # timestamps are in microseconds
-        rr.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
-        rr.log("world/lidar", rr.Points3D(points, colors=point_colors))
+        dl.set_time("timestamp", timestamp=sample_data["timestamp"] * 1e-6)
+        dl.log("world/lidar", dl.Points3D(points, colors=point_colors))
 
         current_lidar_token = sample_data["next"]
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Visualizes lidar scans using the Rerun SDK.")
+    parser = argparse.ArgumentParser(description="Visualizes lidar scans using the Dalaran SDK.")
     parser.add_argument(
         "--root-dir",
         type=pathlib.Path,
@@ -89,15 +89,15 @@ def main() -> None:
         help="Scene name to visualize (typically of form 'scene-xxxx')",
     )
     parser.add_argument("--dataset-version", type=str, default="v1.0-mini", help="Scene id to visualize")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     ensure_scene_available(args.root_dir, args.dataset_version, args.scene_name)
 
-    rr.script_setup(args, "rerun_example_lidar")
+    dl.script_setup(args, "dalaran_example_lidar")
     log_nuscenes_lidar(args.root_dir, args.dataset_version, args.scene_name)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

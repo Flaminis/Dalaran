@@ -7,7 +7,7 @@ import subprocess
 
 import av
 
-import rerun as rr
+import dalaran as dl
 
 
 def setup_camera_input(video_device: str | None = None) -> av.container.InputContainer:
@@ -88,14 +88,14 @@ def setup_output_stream(width: int, height: int, codec: str = "h264") -> av.vide
     return output_stream
 
 
-def stream_video_to_rerun(
+def stream_video_to_dalaran(
     input: av.container.InputContainer, output: av.video.VideoStream, codec: str = "h264"
 ) -> None:
-    """Streams the video continuously to Rerun."""
+    """Streams the video continuously to Dalaran."""
 
     # Log codec only once as static data (it naturally never changes). This isn't strictly necessary, but good practice.
-    video_codec = rr.VideoCodec.H264 if codec == "h264" else rr.VideoCodec.AV1
-    rr.log("video_stream", rr.VideoStream(codec=video_codec), static=True)
+    video_codec = dl.VideoCodec.H264 if codec == "h264" else dl.VideoCodec.AV1
+    dl.log("video_stream", dl.VideoStream(codec=video_codec), static=True)
 
     while True:
         try:
@@ -109,14 +109,14 @@ def stream_video_to_rerun(
                 for packet in output.encode(frame):
                     if packet.pts is None:
                         continue
-                    rr.set_time("time", duration=float(packet.pts * packet.time_base))
-                    rr.log("video_stream", rr.VideoStream.from_fields(sample=bytes(packet)))
+                    dl.set_time("time", duration=float(packet.pts * packet.time_base))
+                    dl.log("video_stream", dl.VideoStream.from_fields(sample=bytes(packet)))
         except av.BlockingIOError:
             pass
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Streams compressed video from camera to Rerun.")
+    parser = argparse.ArgumentParser(description="Streams compressed video from camera to Dalaran.")
     parser.add_argument(
         "--video-device",
         type=str,
@@ -130,10 +130,10 @@ def main() -> None:
         help="Video codec to use for encoding (default: h264).",
     )
 
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_video_stream_camera")
+    dl.script_setup(args, "dalaran_example_video_stream_camera")
 
     av.logging.set_level(av.logging.VERBOSE)
 
@@ -143,11 +143,11 @@ def main() -> None:
     )
 
     try:
-        stream_video_to_rerun(input_container, output_stream, args.codec)
+        stream_video_to_dalaran(input_container, output_stream, args.codec)
     except KeyboardInterrupt:
         print("Recording stopped by user")
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -18,7 +18,7 @@ thumbnail_dimensions = [480, 480]
 
 An example of how to load and animate a URDF given some changing joint angles.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
 This example demonstrates how to:
 
@@ -29,8 +29,8 @@ This example demonstrates how to:
 The key steps are:
 
 ```python
-import rerun as rr
-import rerun.urdf import UrdfTree
+import dalaran as dl
+import dalaran.urdf import UrdfTree
 
 # Log the URDF file once, as a static resource
 rec.log_file_from_path(urdf_path, static=True)

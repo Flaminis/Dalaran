@@ -30,7 +30,7 @@ fn main() {
 
     let mut snippets = Vec::new();
 
-    dl_build_tools::rerun_if_changed(&all_path);
+    dl_build_tools::dalaran_if_changed(&all_path);
     for subdir in fs::read_dir(&all_path).unwrap().flatten() {
         if !subdir.path().is_dir() {
             continue;

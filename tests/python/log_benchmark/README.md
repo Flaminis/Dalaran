@@ -1,11 +1,11 @@
 # Python SDK logging benchmarks
 
-Manual performance benchmarks for the Rerun Python SDK logging pipeline.
+Manual performance benchmarks for the Dalaran Python SDK logging pipeline.
 These are **not** run in CI — they are intended for local profiling and regression checks.
 
 ## Running benchmarks
 
-From the `rerun/` directory:
+From the `dalaran/` directory:
 
 ```bash
 # Run all benchmarks:
@@ -38,7 +38,7 @@ uvpy -m tests.python.log_benchmark.test_log_benchmark transform3d
 # With options:
 uvpy -m tests.python.log_benchmark.test_log_benchmark transform3d --num-entities 10 --num-time-steps 10000 --static
 
-# Connect to a running Rerun viewer (start `rerun` first):
+# Connect to a running Dalaran viewer (start `dalaran` first):
 uvpy -m tests.python.log_benchmark.test_log_benchmark transform3d --connect
 ```
 
@@ -46,7 +46,7 @@ uvpy -m tests.python.log_benchmark.test_log_benchmark transform3d --connect
 
 ```bash
 # Generate a flamegraph (on Linux, add --native for native stack traces):
-sudo PYTHONPATH=rerun_py/rerun_sdk:rerun_py py-spy record -o flamegraph.svg -- \
+sudo PYTHONPATH=dalaran_py/dalaran_sdk:dalaran_py py-spy record -o flamegraph.svg -- \
     .venv/bin/python -m tests.python.log_benchmark.test_log_benchmark transform3d
 
 # Then open flamegraph.svg in a browser

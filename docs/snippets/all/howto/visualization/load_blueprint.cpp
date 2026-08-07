@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     std::string path_to_rbl = argv[2];
 
     const auto rec =
-        rerun::RecordingStream("rerun_example_dataframe_view_query_external");
+        dalaran::RecordingStream("dalaran_example_dataframe_view_query_external");
     rec.spawn().exit_on_failure();
 
     // Log the files

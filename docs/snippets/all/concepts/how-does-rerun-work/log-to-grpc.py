@@ -1,10 +1,10 @@
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_log_to_grpc")
+dl.init("dalaran_example_log_to_grpc")
 
-# Connect to the Rerun gRPC server using the default address and url: rerun+http://localhost:9876/proxy
-rr.connect_grpc()
+# Connect to the Dalaran gRPC server using the default address and url: dalaran+http://localhost:9876/proxy
+dl.connect_grpc()
 
 # Log data as usual, thereby pushing it into the gRPC connection.
 while True:
-    rr.log("/", rr.TextLog("Logging things…"))
+    dl.log("/", dl.TextLog("Logging things…"))

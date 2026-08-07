@@ -5,7 +5,7 @@ title: "VoxelValue"
 
 Optional scalar occupancy or value associated with a voxel.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -15,9 +15,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `VoxelValue`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1VoxelValue.html)
- * 🐍 [Python API docs for `VoxelValue`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.VoxelValue)
- * 🦀 [Rust API docs for `VoxelValue`](https://docs.rs/rerun/latest/rerun/components/struct.VoxelValue.html)
+ * 🌊 [C++ API docs for `VoxelValue`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1VoxelValue.html)
+ * 🐍 [Python API docs for `VoxelValue`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.VoxelValue)
+ * 🦀 [Rust API docs for `VoxelValue`](https://docs.rs/dalaran/latest/dalaran/components/struct.VoxelValue.html)
 
 
 ## Used by

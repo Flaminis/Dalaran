@@ -6,19 +6,19 @@ description: Define view layouts and visualization defaults programmatically
 
 ## What are Blueprints?
 
-When you work with the Rerun Viewer, understanding blueprints is important if you want to build consistency around your Viewer experience.
+When you work with the Dalaran Viewer, understanding blueprints is important if you want to build consistency around your Viewer experience.
 
 *For a video overview, check out the [Blueprints video](https://www.youtube.com/embed/kxbkbFVAsBo?si=k2JPz3RbhR1--pcw) on YouTube.*
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/kxbkbFVAsBo?si=k2JPz3RbhR1--pcw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 
-A way to think about the Rerun View is that
+A way to think about the Dalaran View is that
 
 -   The **recording** provides the actual data you are visualizing
 -   The **blueprint** determines how that data is displayed
 
-Both pieces are crucial. Without a recording there is nothing to show. Without a blueprint there is no way to show it. Even when you use Rerun without explicitly loading a blueprint, the Viewer creates one automatically for you.
+Both pieces are crucial. Without a recording there is nothing to show. Without a blueprint there is no way to show it. Even when you use Dalaran without explicitly loading a blueprint, the Viewer creates one automatically for you.
 
 ## What blueprints control
 
@@ -57,10 +57,10 @@ The Viewer provides two types of blueprint reset, accessible from the blueprint 
 </picture>
 
 ### Reset to heuristic blueprint
-This generates a new blueprint automatically based on your current data. The Viewer analyzes what you've logged and creates an appropriate layout using built-in heuristics. This is useful when you want to start fresh and let Rerun figure out a reasonable layout.
+This generates a new blueprint automatically based on your current data. The Viewer analyzes what you've logged and creates an appropriate layout using built-in heuristics. This is useful when you want to start fresh and let Dalaran figure out a reasonable layout.
 
 ### Reset to default blueprint
-This returns to your programmatically specified blueprint (sent from code) or a saved blueprint file (`.rbl`). If you've sent a blueprint using `rr.send_blueprint()` or loaded a `.rbl` file, this becomes your "default." The reset button in the blueprint panel will restore this default whenever you need it.
+This returns to your programmatically specified blueprint (sent from code) or a saved blueprint file (`.rbl`). If you've sent a blueprint using `dl.send_blueprint()` or loaded a `.rbl` file, this becomes your "default." The reset button in the blueprint panel will restore this default whenever you need it.
 
 When no default blueprint has been set, the reset button will use the heuristic blueprint instead.
 
@@ -95,25 +95,25 @@ Blueprint files are portable and can be version-controlled alongside your code.
 
 ### 3. Programmatically
 Write blueprint code that configures the Viewer automatically:
--   Define layouts in Python using `rerun.blueprint` APIs
--   Send blueprints with `rr.send_blueprint()` or via `default_blueprint` parameter
+-   Define layouts in Python using `dalaran.blueprint` APIs
+-   Send blueprints with `dl.send_blueprint()` or via `default_blueprint` parameter
 -   Generate layouts dynamically based on your data
 -   Perfect for creating consistent views for specific debugging scenarios
 
 For example, you might send different blueprints automatically based on detected issues in your application (e.g., a robot enters an error state and surfaces the correct blueprint to help you debug that)
 
 ```python
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 if robot_error:
     # Show diagnostic views for debugging
-    blueprint = rrb.Grid(
-        rrb.Spatial3DView(name="Robot view", origin="/world/robot"),
-        rrb.TextLogView(name="Error Logs", origin="/diagnostics"),
-        rrb.TimeSeriesView(name="Sensor Data", origin="/sensors"),
+    blueprint = dlb.Grid(
+        dlb.Spatial3DView(name="Robot view", origin="/world/robot"),
+        dlb.TextLogView(name="Error Logs", origin="/diagnostics"),
+        dlb.TimeSeriesView(name="Sensor Data", origin="/sensors"),
     )
-    rr.send_blueprint(blueprint, make_active=True)
+    dl.send_blueprint(blueprint, make_active=True)
 ```
 
 See [Configure the Viewer](../../getting-started/configure-the-viewer/navigating-the-viewer.md#programmatic-blueprints) for detailed examples and our guide on how to [build a blueprint programmatically](../../howto/visualization/build-a-blueprint-programmatically.md).
@@ -144,10 +144,10 @@ Generate blueprints programmatically based on runtime conditions. For instance, 
 Under the hood, blueprints are just data. They are structured using the same [Entity Component System](../logging-and-ingestion/entity-component.md) as your recordings, but with blueprint-specific archetypes and a separate blueprint timeline. This architecture provides several advantages:
 
 -   **Anything you modify in the Viewer can be saved and shared** as a blueprint file
--   **Blueprints can be produced programmatically** using just the Rerun SDK without depending on the Viewer
+-   **Blueprints can be produced programmatically** using just the Dalaran SDK without depending on the Viewer
 -   **Blueprint data is fully expressive**, enabling [blueprint overrides](customize-views.md#component-mappings) that are as powerful as logged data
 -   **The full time-series nature** simplifies future features like snapshots and undo/redo
--   **Debugging tools for Rerun data** can inspect blueprint state just like recording data
+-   **Debugging tools for Dalaran data** can inspect blueprint state just like recording data
 
 ### Viewer operation
 
@@ -165,4 +165,4 @@ This means the Viewer output is a deterministic function of the blueprint and th
 -   **Learn to use blueprints**: See [Configure the Viewer](../../getting-started/configure-the-viewer.md) for hands-on tutorials covering interactive, file-based, and programmatic workflows
 -   **Understand the UI**: Check the [Blueprint Panel Reference](../../reference/viewer/blueprints.md) for details on UI controls
 -   **Customize visualizations**: Learn about [Visualizers and Overrides](customize-views.md) for advanced per-entity customization
--   **Explore the API**: Browse the [Blueprint API Reference](https://ref.rerun.io/docs/python/stable/common/blueprint_apis/) for programmatic control (Python)
+-   **Explore the API**: Browse the [Blueprint API Reference](https://ref.dalaran.dev/docs/python/stable/common/blueprint_apis/) for programmatic control (Python)

@@ -23,7 +23,7 @@ Type: List of `Utf8`
 
 The names of the dimensions of the tensor (optional).
 
-If set, should be the same length as [`datatypes.TensorData#shape`](https://rerun.io/docs/reference/types/datatypes/tensor_data).
+If set, should be the same length as [`datatypes.TensorData#shape`](https://dalaran.dev/docs/reference/types/datatypes/tensor_data).
 If it has a different length your names may show up improperly,
 and some constructors may produce a warning or even an error.
 
@@ -58,9 +58,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `TensorData`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1TensorData.html)
- * 🐍 [Python API docs for `TensorData`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.TensorData)
- * 🦀 [Rust API docs for `TensorData`](https://docs.rs/rerun/latest/rerun/datatypes/struct.TensorData.html)
+ * 🌊 [C++ API docs for `TensorData`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1TensorData.html)
+ * 🐍 [Python API docs for `TensorData`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.TensorData)
+ * 🦀 [Rust API docs for `TensorData`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.TensorData.html)
 
 
 ## Used by

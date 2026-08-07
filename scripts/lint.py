@@ -25,10 +25,10 @@ from gitignore_parser import parse_gitignore
 
 # -----------------------------------------------------------------------------
 
-# Path prefix from git root to the rerun directory.
-# "./rerun/" in the monorepo (reality), "./" in the standalone rerun repo.
+# Path prefix from git root to the dalaran directory.
+# "./dalaran/" in the monorepo (reality), "./" in the standalone dalaran repo.
 # Set in main().
-rerun_prefix = "./"
+dalaran_prefix = "./"
 
 debug_format_of_err = re.compile(r"\{\:#?\?\}.*, \w*err")
 error_match_name = re.compile(r"Err\((\w+)\)")
@@ -72,14 +72,14 @@ debug_formatted_error = re.compile(r"\{\w*err:#?\?\}")
 debug_tracing_error = re.compile(r"\?\w*err\b")
 debug_formatted_ui_label = re.compile(r"ui\.\w+\([^)]*\n?[^)]*:\?")
 quoted_string = re.compile(r'"([^"]*)"')
-deprecated_rerun_cloud = re.compile(r"\bRerun\s+Cloud\b", re.IGNORECASE)
-deprecated_rerun_base = re.compile(r"\bRerun\s+Base\b", re.IGNORECASE)
-deprecated_rerun_data_platform = re.compile(r"\bRerun\s+Data\s+Platform\b", re.IGNORECASE)
+deprecated_dalaran_cloud = re.compile(r"\bDalaran\s+Cloud\b", re.IGNORECASE)
+deprecated_dalaran_base = re.compile(r"\bDalaran\s+Base\b", re.IGNORECASE)
+deprecated_dalaran_data_platform = re.compile(r"\bDalaran\s+Data\s+Platform\b", re.IGNORECASE)
 deprecated_data_platform = re.compile(r"\bData\s+Platform\b", re.IGNORECASE)
 deprecated_dataplatform = re.compile(r"(?<![/\[,])dataplatform(?![/\],])", re.IGNORECASE)
-rerun_hub = re.compile(r"\bRerun\s+Hub\b", re.IGNORECASE)
+dalaran_hub = re.compile(r"\bDalaran\s+Hub\b", re.IGNORECASE)
 recording_stream_app_id = re.compile(r'(RecordingStreamBuilder::new|\.init|RecordingStream)\("([^"]*)')
-script_setup_app_id = re.compile(r'(rr.script_setup)\(args, "(\w*)')
+script_setup_app_id = re.compile(r'(dl.script_setup)\(args, "(\w*)')
 
 # reStructuredText syntax that we don't want in Python docstrings.
 # Our Python API docs use MkDocs + mkdocstrings (not Sphinx), so rST isn't rendered.
@@ -95,19 +95,19 @@ rst_double_backtick = re.compile(r"(?<!`)``[^`\n]+``(?!`)")
 Frontmatter = dict[str, Any]
 
 
-def get_rerun_root() -> str:
-    # Search upward for .RERUN_ROOT sentinel file
+def get_dalaran_root() -> str:
+    # Search upward for .DALARAN_ROOT sentinel file
     # TODO(RR-3355): Use a shared utility for this
     current = Path(__file__).resolve().parent
     while current != current.parent:
         # Look for sentinel file
-        if (current / ".RERUN_ROOT").exists():
+        if (current / ".DALARAN_ROOT").exists():
             return str(current)
         # Break if we reach a git root
         if (current / ".git").exists():
             break
         current = current.parent
-    raise FileNotFoundError(f"Could not find .RERUN_ROOT sentinel file in any parent directory under {current}")
+    raise FileNotFoundError(f"Could not find .DALARAN_ROOT sentinel file in any parent directory under {current}")
 
 
 def is_valid_todo_part(part: str) -> bool:
@@ -194,7 +194,7 @@ def lint_line(
     prev_line: str | None,
     file_extension: str = "rs",
     is_in_docstring: bool = False,
-    is_in_oss_rerun_repo: bool = True,
+    is_in_oss_dalaran_repo: bool = True,
 ) -> str | None:
     if line == "":
         return None
@@ -232,7 +232,7 @@ def lint_line(
         if err := lint_url(found_url):
             return err
 
-    if file_extension != "" and is_in_oss_rerun_repo:
+    if file_extension != "" and is_in_oss_dalaran_repo:
         # We lint against writing ellipsis using three dots for the sake of our UI:
         # * We want it consistent
         # * We want it beautiful (`…` looks different from `...`)
@@ -298,7 +298,7 @@ def lint_line(
     if malformed_todo.search(line):
         return "TODO:s should be written as `TODO(yourname): what to do`"
 
-    if file_extension == "rs" and is_in_oss_rerun_repo and tokio_runtime_creation.search(line):
+    if file_extension == "rs" and is_in_oss_dalaran_repo and tokio_runtime_creation.search(line):
         return (
             "Create Tokio runtimes only at audited process or thread ownership boundaries. "
             "Library code should accept `dl_async::AsyncRuntimeHandle`. Add a NOLINT with the ownership reason if this runtime is required."
@@ -387,36 +387,36 @@ def lint_line(
                 "(our Python API docs are built with MkDocs, not Sphinx)"
             )
 
-    if is_in_oss_rerun_repo:
+    if is_in_oss_dalaran_repo:
         # Deprecated brand names. Replacement is context-dependent:
-        #   - 'Rerun Hub'      → commercial managed offering
+        #   - 'Dalaran Hub'      → commercial managed offering
         #   - 'catalog server' → generic OSS or managed
         #   - or rephrase to avoid naming the product
-        # Matched case-insensitively so that lowercase variants (e.g. 'rerun cloud') are also caught.
-        deprecated_msg = "is a deprecated name. Use 'Rerun Hub' (commercial), 'catalog server' (generic), or rephrase."
-        if deprecated_rerun_cloud.search(line):
-            return f"'Rerun Cloud' {deprecated_msg}"
-        if deprecated_rerun_base.search(line):
-            return f"'Rerun Base' {deprecated_msg}"
-        if deprecated_rerun_data_platform.search(line):
-            return f"'Rerun Data Platform' {deprecated_msg}"
+        # Matched case-insensitively so that lowercase variants (e.g. 'dalaran cloud') are also caught.
+        deprecated_msg = "is a deprecated name. Use 'Dalaran Hub' (commercial), 'catalog server' (generic), or rephrase."
+        if deprecated_dalaran_cloud.search(line):
+            return f"'Dalaran Cloud' {deprecated_msg}"
+        if deprecated_dalaran_base.search(line):
+            return f"'Dalaran Base' {deprecated_msg}"
+        if deprecated_dalaran_data_platform.search(line):
+            return f"'Dalaran Data Platform' {deprecated_msg}"
         if deprecated_data_platform.search(line):
             return f"'Data Platform' {deprecated_msg}"
         # Skip URL paths (`/dataplatform/`) and python package extras specifiers
-        # (`rerun-sdk[dataloader,dataplatform]`) — those reference the feature name, not prose.
+        # (`dalaran-sdk[dataloader,dataplatform]`) — those reference the feature name, not prose.
         if deprecated_dataplatform.search(line):
             return f"'dataplatform' {deprecated_msg}"
 
-        # Enforce 'Rerun Hub' capitalization: flag any case variant that isn't exactly 'Rerun Hub'.
-        for m in rerun_hub.finditer(line):
-            if m.group(0) != "Rerun Hub":
-                return "'Rerun Hub' must be properly capitalized."
+        # Enforce 'Dalaran Hub' capitalization: flag any case variant that isn't exactly 'Dalaran Hub'.
+        for m in dalaran_hub.finditer(line):
+            if m.group(0) != "Dalaran Hub":
+                return "'Dalaran Hub' must be properly capitalized."
 
     if not is_in_docstring:
         if m := recording_stream_app_id.search(line) or script_setup_app_id.search(line):
             app_id = m.group(2)
-            if not app_id.startswith("rerun_example_") and app_id != "<your_app_name>":
-                return f"All examples should have an app_id starting with 'rerun_example_'. Found '{app_id}'"
+            if not app_id.startswith("dalaran_example_") and app_id != "<your_app_name>":
+                return f"All examples should have an app_id starting with 'dalaran_example_'. Found '{app_id}'"
 
     # Deref impls should be marked #[inline] or #[inline(always)].
     if "fn deref(&self)" in line or "fn deref_mut(&mut self)" in line:
@@ -494,8 +494,8 @@ def test_lint_line() -> None:
         "The theme is great",
         "template <typename... Args>",
         '_TFunc = TypeVar("_TFunc", bound=Callable[..., Any])',
-        'rr.init("rerun_example_app")',
-        'rr.script_setup(args, "rerun_example_app")',
+        'dl.init("dalaran_example_app")',
+        'dl.script_setup(args, "dalaran_example_app")',
         """
         #[inline]
         fn foo(mut self) -> Self {
@@ -541,11 +541,11 @@ def test_lint_line() -> None:
         # URL paths and python package extras still reference the feature name.
         "Visit /dataplatform/docs for more info",
         "The https://example.com/dataplatform/api endpoint",
-        'dependencies = ["rerun-sdk[dataloader,dataplatform]"]',
-        'override-dependencies = ["rerun-sdk[dataplatform]"]',
+        'dependencies = ["dalaran-sdk[dataloader,dataplatform]"]',
+        'override-dependencies = ["dalaran-sdk[dataplatform]"]',
         'extras = ["dataplatform,extra"]',
         # New approved names.
-        "Connect to Rerun Hub for hosted catalogs.",
+        "Connect to Dalaran Hub for hosted catalogs.",
         "Spin up a catalog server locally.",
         "We use the catalog server in production.",
         # %err (Display) in tracing macros is good
@@ -627,7 +627,7 @@ def test_lint_line() -> None:
         "if let Err(error) = foo",
         "Ok(Err(status))",
         "map_err(|e| …)",
-        "We use WASM in Rerun",
+        "We use WASM in Dalaran",
         "nb_instances",
         "inner_nb_instances",
         "let Some(foo) = bar else {return;};",
@@ -645,14 +645,14 @@ def test_lint_line() -> None:
         "The the problem with double words",
         "More than meets the eye...",
         'dl_log::trace!("Performing migrations...");',
-        'rr.log("/", rr.TextLog("Logging things..."))',
+        'dl.log("/", dl.TextLog("Logging things..."))',
         'logging.info("Detection finished...")',
         'RecordingStreamBuilder::new("missing_prefix")',
-        'args.rerun.init("missing_prefix")',
+        'args.dalaran.init("missing_prefix")',
         'RecordingStream("missing_prefix")',
-        'rr.init("missing_prefix")',
-        'rr.script_setup(args, "missing_prefix")',
-        'rr.script_setup(args, "")',
+        'dl.init("missing_prefix")',
+        'dl.script_setup(args, "missing_prefix")',
+        'dl.script_setup(args, "")',
         "I accidentally wrote the same same word twice",
         "fn deref(&self) -> Self::Target {",
         "fn deref_mut(&mut self) -> &mut Self::Target",
@@ -662,27 +662,27 @@ def test_lint_line() -> None:
         "fn take_any_mut(thing: &mut dyn std::any::Any)",
         "fn take_any(thing: &dyn Any)",
         "fn take_any_mut(thing: &mut dyn Any)",
-        # Deprecated brand names — must use 'Rerun Hub' or 'catalog server' instead.
+        # Deprecated brand names — must use 'Dalaran Hub' or 'catalog server' instead.
         # Matched case-insensitively, so lowercase variants must also error.
         "The dataplatform is powerful",
         "Using dataplatform for analytics",
         "Using DATAPLATFORM in caps",
         "I love the data platform",
-        "The Rerun data platform is great",
-        "We use the Rerun Data Platform.",
-        "We use the RERUN DATA PLATFORM.",
-        "Connect via Rerun Cloud today.",
-        "Connect via rerun cloud today.",
-        "Connect via RERUN CLOUD today.",
+        "The Dalaran data platform is great",
+        "We use the Dalaran Data Platform.",
+        "We use the DALARAN DATA PLATFORM.",
+        "Connect via Dalaran Cloud today.",
+        "Connect via dalaran cloud today.",
+        "Connect via DALARAN CLOUD today.",
         "The Data Platform stores recordings.",
         "The data platform stores recordings.",
-        "Rerun Base is the new commercial offering.",
-        "rerun base is the new commercial offering.",
-        # Wrong 'Rerun Hub' capitalization.
-        "Connect to Rerun hub today.",
-        "Use rerun Hub for catalogs.",
-        "Use rerun hub for catalogs.",
-        "USE RERUN HUB FOR CATALOGS.",
+        "Dalaran Base is the new commercial offering.",
+        "dalaran base is the new commercial offering.",
+        # Wrong 'Dalaran Hub' capitalization.
+        "Connect to Dalaran hub today.",
+        "Use dalaran Hub for catalogs.",
+        "Use dalaran hub for catalogs.",
+        "USE DALARAN HUB FOR CATALOGS.",
         # Inline sensitive data in log messages (bad pattern) - only error/warn are linted
         'dl_log::warn!("Failed to open URL {url}: {err}");',
         'dl_log::error!("Failed to read file at {path}: {err}");',
@@ -701,7 +701,7 @@ def test_lint_line() -> None:
         "(SN)—and the storage node",
         # En dash used as a sentence dash (should be em dash).
         "Foo – the description",
-        "[Python](./install-rerun/python.md) – the Python SDK",
+        "[Python](./install-dalaran/python.md) – the Python SDK",
         "done – next step",
         # Method `.zip(` / `.chain(` — prefer `std::iter::*` or `itertools::izip!/chain!`.
         "let it = a.iter().zip(b.iter());",
@@ -728,15 +728,15 @@ def test_lint_line() -> None:
     assert not debug_formatted_ui_label.search('ui.error_label(format!("Value: {value}"));')
 
     runtime_creation = "tokio::runtime::Runtime::new()"
-    assert lint_line(runtime_creation, None, is_in_oss_rerun_repo=True) is not None
-    assert lint_line(runtime_creation, None, is_in_oss_rerun_repo=False) is None
+    assert lint_line(runtime_creation, None, is_in_oss_dalaran_repo=True) is not None
+    assert lint_line(runtime_creation, None, is_in_oss_dalaran_repo=False) is None
 
     # rST (reStructuredText) is not rendered by MkDocs/mkdocstrings.
     # Flagged inside Python docstrings and Rust `///` doc comments only.
     rst_should_fail_in_docstring = [
         "A :class:`Foo` object.",
         "See :meth:`Foo.bar` for details.",
-        "Use :func:`rerun.init` to start.",
+        "Use :func:`dalaran.init` to start.",
         "Reference :attr:`Foo.x`.",
         ".. warning::",
         "    .. warning::",
@@ -762,7 +762,7 @@ def test_lint_line() -> None:
 
     rst_should_pass_in_docstring = [
         "Use [`Foo`][] instead.",
-        "Reference [`Foo.bar`][rerun.Foo.bar].",
+        "Reference [`Foo.bar`][dalaran.Foo.bar].",
         "!!! warning",
         "    !!! warning",
         "!!! note",
@@ -992,10 +992,10 @@ def lint_pyclass_requirements(lines_in: list[str]) -> tuple[list[str], list[int]
                 error_codes.append("py-cls-eq")
 
             # Check if the correct module is specified
-            expected_module = 'module = "rerun_bindings.rerun_bindings"'
+            expected_module = 'module = "dalaran_bindings.dalaran_bindings"'
             if expected_module not in pyclass_content:
                 errors.append(
-                    f"{original_line_nr}: #[pyclass(...)] should include 'module = \"rerun_bindings.rerun_bindings\"' parameter"
+                    f"{original_line_nr}: #[pyclass(...)] should include 'module = \"dalaran_bindings.dalaran_bindings\"' parameter"
                 )
                 error_linenumbers.append(original_line_nr)
                 error_codes.append("py-cls-mod")
@@ -1175,46 +1175,46 @@ def test_lint_pyclass_requirements() -> None:
 
     should_pass = [
         # Simple pyclass with eq and module
-        '#[pyclass(eq, module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(eq, module = "dalaran_bindings.dalaran_bindings")]',
         # Multiple parameters including eq and module
-        '#[pyclass(frozen, eq, hash, module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(frozen, eq, hash, module = "dalaran_bindings.dalaran_bindings")]',
         # eq in different position
-        '#[pyclass(eq, frozen, module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(eq, frozen, module = "dalaran_bindings.dalaran_bindings")]',
         # Multi-line pyclass with eq and module
-        '#[pyclass(\n    frozen,\n    eq,\n    hash,\n    module = "rerun_bindings.rerun_bindings"\n)]',
+        '#[pyclass(\n    frozen,\n    eq,\n    hash,\n    module = "dalaran_bindings.dalaran_bindings"\n)]',
         # eq at the end
-        '#[pyclass(frozen, hash, eq, module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(frozen, hash, eq, module = "dalaran_bindings.dalaran_bindings")]',
         # With module specification and eq
-        '#[pyclass(eq, module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(eq, module = "dalaran_bindings.dalaran_bindings")]',
         # Complex real-world example
         """#[pyclass(
             frozen,
             eq,
             hash,
             name = "IndexColumnDescriptor",
-            module = "rerun_bindings.rerun_bindings"
+            module = "dalaran_bindings.dalaran_bindings"
         )]""",
         # With name parameter
-        '#[pyclass(eq, name = "MyClass", module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(eq, name = "MyClass", module = "dalaran_bindings.dalaran_bindings")]',
         # Internal class (via name param) without eq should be auto-skipped
-        '#[pyclass(name = "FooInternal", module = "rerun_bindings.rerun_bindings")]\npub struct PyFooInternal {}',
+        '#[pyclass(name = "FooInternal", module = "dalaran_bindings.dalaran_bindings")]\npub struct PyFooInternal {}',
         # Internal class (via struct name fallback) without eq should be auto-skipped
-        '#[pyclass(module = "rerun_bindings.rerun_bindings")]\npub struct PyFooInternal {}',
+        '#[pyclass(module = "dalaran_bindings.dalaran_bindings")]\npub struct PyFooInternal {}',
     ]
 
     should_error = [
         # Missing eq parameter
-        '#[pyclass(frozen, module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(frozen, module = "dalaran_bindings.dalaran_bindings")]',
         # Multiple parameters but no eq
-        '#[pyclass(frozen, hash, module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(frozen, hash, module = "dalaran_bindings.dalaran_bindings")]',
         # With module but no eq
-        '#[pyclass(module = "rerun_bindings.rerun_bindings")]',
+        '#[pyclass(module = "dalaran_bindings.dalaran_bindings")]',
         # With eq but no module
         "#[pyclass(eq, frozen)]",
         # Missing both eq and module
         "#[pyclass(frozen)]",
         # Multi-line without eq
-        '#[pyclass(\n    frozen,\n    hash,\n    module = "rerun_bindings.rerun_bindings"\n)]',
+        '#[pyclass(\n    frozen,\n    hash,\n    module = "dalaran_bindings.dalaran_bindings"\n)]',
         # Multi-line without module
         "#[pyclass(\n    frozen,\n    eq,\n    hash\n)]",
         # Complex example without eq
@@ -1222,7 +1222,7 @@ def test_lint_pyclass_requirements() -> None:
             frozen,
             hash,
             name = "IndexColumnDescriptor",
-            module = "rerun_bindings.rerun_bindings"
+            module = "dalaran_bindings.dalaran_bindings"
         )]""",
         # Complex example without module
         """#[pyclass(
@@ -1288,7 +1288,7 @@ force_capitalized = [
     "Q2",
     "Q3",
     "Q4",
-    "Rerun",
+    "Dalaran",
     "Rust",
     "SAM",
     "SDK",
@@ -1304,11 +1304,11 @@ force_capitalized = [
 
 allow_capitalized = [
     "Viewer",
-    # Referring to the Rerun Viewer as just "the Viewer" is fine, but not all mentions of "viewer" are capitalized.
+    # Referring to the Dalaran Viewer as just "the Viewer" is fine, but not all mentions of "viewer" are capitalized.
     "Arrow",
     # Referring to the Apache Arrow project as just "Arrow" is fine, but not all mentions of "arrow" are capitalized.
     "Hub",
-    # Referring to Rerun Hub as just "Hub" is fine, but "hub" as a common noun isn't capitalized.
+    # Referring to Dalaran Hub as just "Hub" is fine, but "hub" as a common noun isn't capitalized.
 ]
 
 force_capitalized_as_lower = [word.lower() for word in force_capitalized]
@@ -1357,9 +1357,9 @@ def test_is_emoji() -> None:
 def test_split_words() -> None:
     test_cases = [
         ("hello world", ["hello", " ", "world"]),
-        ("hello foo@rerun.io", ["hello", " ", "foo@rerun.io"]),
-        ("www.rerun.io", ["www.rerun.io"]),
-        ("`rerun`", ["`rerun`"]),
+        ("hello foo@dalaran.dev", ["hello", " ", "foo@dalaran.dev"]),
+        ("www.dalaran.dev", ["www.dalaran.dev"]),
+        ("`dalaran`", ["`dalaran`"]),
     ]
 
     for input, expected in test_cases:
@@ -1482,7 +1482,7 @@ def lint_markdown(filepath: str, source: SourceFile) -> tuple[list[str], list[st
         if in_metadata and line.startswith("-->"):
             in_metadata = False
 
-        if not in_code_block and not source.should_ignore(line_nr) and filepath.startswith(rerun_prefix):
+        if not in_code_block and not source.should_ignore(line_nr) and filepath.startswith(dalaran_prefix):
             if not in_metadata:
                 # Check the casing on markdown headers
                 if m := re.match(r"(\#+ )(.*)", line):
@@ -1524,7 +1524,7 @@ def lint_markdown(filepath: str, source: SourceFile) -> tuple[list[str], list[st
 def lint_example_description(filepath: str) -> list[str]:
     # only applies to examples' readme
 
-    if not filepath.startswith(f"{rerun_prefix}examples/python") or not filepath.endswith("README.md"):
+    if not filepath.startswith(f"{dalaran_prefix}examples/python") or not filepath.endswith("README.md"):
         return []
 
     return []
@@ -1670,7 +1670,7 @@ def lint_file(filepath: str, args: Any) -> int:
     error: str | None
 
     is_in_docstring = False
-    is_in_oss_rerun_repo = filepath.startswith(rerun_prefix)
+    is_in_oss_dalaran_repo = filepath.startswith(dalaran_prefix)
 
     prev_line = None
     for line_nr, line in enumerate(source.lines):
@@ -1683,7 +1683,7 @@ def lint_file(filepath: str, args: Any) -> int:
             line = line[:-1]
             if line.strip() == '"""':
                 is_in_docstring = not is_in_docstring
-            error = lint_line(line, prev_line, source.ext, is_in_docstring, is_in_oss_rerun_repo)
+            error = lint_line(line, prev_line, source.ext, is_in_docstring, is_in_oss_dalaran_repo)
             prev_line = line
         if error is not None:
             num_errors += 1
@@ -1720,8 +1720,8 @@ def lint_file(filepath: str, args: Any) -> int:
             print(source.error(error))
         num_errors += len(errors)
 
-        # Check for pyclass requirements (eq and module) in rerun_py Rust files
-        if filepath.startswith(f"{rerun_prefix}rerun_py/") and filepath.endswith(".rs"):
+        # Check for pyclass requirements (eq and module) in dalaran_py Rust files
+        if filepath.startswith(f"{dalaran_prefix}dalaran_py/") and filepath.endswith(".rs"):
             pyclass_errors, error_lines, error_codes = lint_pyclass_requirements(source.lines)
             valid_errors = 0
             for error, line_number, error_code in zip(pyclass_errors, error_lines, error_codes, strict=True):
@@ -1733,7 +1733,7 @@ def lint_file(filepath: str, args: Any) -> int:
                     valid_errors += 1
             num_errors += valid_errors
 
-            # Check for pymethods requirements (__str__ method) in rerun_py Rust files
+            # Check for pymethods requirements (__str__ method) in dalaran_py Rust files
             pymethods_errors, pymethods_error_lines, pymethods_error_codes = lint_pymethods_requirements(source.lines)
             valid_pymethods_errors = 0
             for error, line_number, error_code in zip(
@@ -1762,7 +1762,7 @@ def lint_file(filepath: str, args: Any) -> int:
         elif 0 < num_errors:
             print(f"Run with --fix to automatically fix {num_errors} errors.")
 
-    if filepath.endswith("Cargo.toml") and not filepath.startswith(f"{rerun_prefix}examples/rust"):
+    if filepath.endswith("Cargo.toml") and not filepath.startswith(f"{dalaran_prefix}examples/rust"):
         is_workspace = "[workspace]" in source.content
         if not is_workspace:
             error = lint_workspace_lints(source.content)
@@ -1785,10 +1785,10 @@ def lint_file(filepath: str, args: Any) -> int:
 _worker_args: argparse.Namespace | None = None
 
 
-def _init_lint_worker(args: argparse.Namespace, worker_rerun_prefix: str) -> None:
-    global _worker_args, rerun_prefix
+def _init_lint_worker(args: argparse.Namespace, worker_dalaran_prefix: str) -> None:
+    global _worker_args, dalaran_prefix
     _worker_args = args
-    rerun_prefix = worker_rerun_prefix
+    dalaran_prefix = worker_dalaran_prefix
 
 
 def _lint_file_worker(filepath: str) -> tuple[int, str]:
@@ -1807,7 +1807,7 @@ def lint_files(filepaths: list[str], args: argparse.Namespace) -> int:
     with ProcessPoolExecutor(
         max_workers=min(args.jobs, len(filepaths)),
         initializer=_init_lint_worker,
-        initargs=(args, rerun_prefix),
+        initargs=(args, dalaran_prefix),
     ) as executor:
         for file_errors, output in executor.map(_lint_file_worker, filepaths, chunksize=16):
             print(output, end="")
@@ -1819,8 +1819,8 @@ def lint_files(filepaths: list[str], args: argparse.Namespace) -> int:
 def lint_crate_docs() -> int:
     """Make sure ARCHITECTURE.md talks about every single crate we have."""
 
-    crates_dir = Path(f"{rerun_prefix}crates")
-    architecture_md_file = Path(f"{rerun_prefix}ARCHITECTURE.md")
+    crates_dir = Path(f"{dalaran_prefix}crates")
+    architecture_md_file = Path(f"{dalaran_prefix}ARCHITECTURE.md")
 
     architecture_md = architecture_md_file.read_text("utf-8")
 
@@ -1914,73 +1914,73 @@ def main() -> None:
         "yml",
     ]
 
-    rerun_root = get_rerun_root()
+    dalaran_root = get_dalaran_root()
 
-    # Find the git root. In the monorepo (reality), it's the parent of rerun_root.
-    # In the standalone rerun repo, it IS rerun_root.
-    repo = git.Repo(rerun_root, search_parent_directories=True)
+    # Find the git root. In the monorepo (reality), it's the parent of dalaran_root.
+    # In the standalone dalaran repo, it IS dalaran_root.
+    repo = git.Repo(dalaran_root, search_parent_directories=True)
     assert repo.working_tree_dir is not None, "Expected a non-bare git repository"
     repo_root = repo.working_tree_dir
     os.chdir(repo_root)
 
-    # Path prefix from git root to the rerun directory.
-    # Monorepo: "./rerun/", Standalone: "./"
-    global rerun_prefix
-    rerun_relative = Path(rerun_root).relative_to(repo_root)
-    rerun_prefix = str(rerun_relative).replace("\\", "/")
-    if rerun_prefix == ".":
-        rerun_prefix = "./"
+    # Path prefix from git root to the dalaran directory.
+    # Monorepo: "./dalaran/", Standalone: "./"
+    global dalaran_prefix
+    dalaran_relative = Path(dalaran_root).relative_to(repo_root)
+    dalaran_prefix = str(dalaran_relative).replace("\\", "/")
+    if dalaran_prefix == ".":
+        dalaran_prefix = "./"
     else:
-        rerun_prefix = "./" + rerun_prefix + "/"
+        dalaran_prefix = "./" + dalaran_prefix + "/"
 
-    # Helper to build a path relative to the git root, inside the rerun directory.
-    def rerun(path: str) -> str:
-        return f"{rerun_prefix}{path}"
+    # Helper to build a path relative to the git root, inside the dalaran directory.
+    def dalaran(path: str) -> str:
+        return f"{dalaran_prefix}{path}"
 
     exclude_paths = (
         "./dataplatform/crates/redap_protos/Cargo.toml",  # intentional [lints.clippy] override (see file header)
         "./dataplatform/crates/redap_protos/src/v1alpha1",  # auto-generated
-        rerun(".github/workflows/reusable_checks.yml"),  # zombie TODO hunting job
-        rerun(".nox"),
-        rerun(".pytest_cache"),
-        rerun("CODE_STYLE.md"),
-        rerun("crates/build/dl_types_builder/src/reflection.rs"),  # auto-generated
-        rerun("crates/store/dl_protos/proto/schema_snapshot.yaml"),  # auto-generated
-        rerun("crates/store/dl_protos/src/v0"),  # auto-generated
-        rerun("crates/store/dl_protos/src/v1alpha1"),  # auto-generated
-        rerun("crates/viewer/dl_ui/data/Inter-README.txt"),  # third-party font readme (Inter)
-        rerun("crates/viewer/dl_web_viewer_server/web_viewer/dl_viewer.js"),  # auto-generated by wasm_bindgen
-        rerun("docs/content/concepts/app-model.md"),  # this really needs custom letter casing
-        rerun("docs/content/reference/cli.md"),  # auto-generated
-        rerun("docs/snippets/all/tutorials/custom-application-id.cpp"),  # nuh-uh, I don't want rerun_example_ here
-        rerun("docs/snippets/all/tutorials/custom-application-id.py"),  # nuh-uh, I don't want rerun_example_ here
-        rerun("docs/snippets/all/tutorials/custom-application-id.rs"),  # nuh-uh, I don't want rerun_example_ here
-        rerun("examples/assets"),
-        rerun("examples/python/detect_and_track_objects/cache/version.txt"),
-        rerun("examples/python/objectron/objectron/proto/"),  # auto-generated
-        rerun("examples/rust/objectron/src/objectron.rs"),  # auto-generated
-        rerun("rerun_cpp/docs/doxygen-awesome/"),  # copied from an external repository
-        rerun("rerun_cpp/docs/html"),
-        rerun("rerun_cpp/src/rerun/c/arrow_c_data_interface.h"),  # Not our code
-        rerun("rerun_cpp/src/rerun/third_party/cxxopts.hpp"),  # vendored
-        rerun("rerun_js/docs/"),  # auto-generated
-        rerun("rerun_js/node_modules"),
-        rerun("rerun_js/web-viewer-react/node_modules"),
-        rerun("rerun_js/web-viewer/index.js"),
-        rerun("rerun_js/web-viewer/inlined.js"),
-        rerun("rerun_js/web-viewer/node_modules"),
-        rerun("rerun_js/web-viewer/re_viewer_bg.js"),  # auto-generated by wasm_bindgen
-        rerun("rerun_js/web-viewer/dl_viewer.js"),
-        rerun("rerun_notebook/node_modules"),
-        rerun("rerun_notebook/src/rerun_notebook/static"),
-        rerun("rerun_py/.pytest_cache/"),
-        rerun("rerun_py/site/"),  # is in `.gitignore` which this script doesn't fully respect
-        rerun("run_wasm/README.md"),  # Has a "2d" lowercase example in a code snippet
-        rerun("scripts/lint.py"),  # we contain all the patterns we are linting against
-        rerun("scripts/zombie_todos.py"),
-        rerun("tests/assets/lerobot/apple_storage/README.md"),  # not ours
-        rerun("tests/python/gil_stress/main.py"),
-        rerun("tests/python/release_checklist/main.py"),
+        dalaran(".github/workflows/reusable_checks.yml"),  # zombie TODO hunting job
+        dalaran(".nox"),
+        dalaran(".pytest_cache"),
+        dalaran("CODE_STYLE.md"),
+        dalaran("crates/build/dl_types_builder/src/reflection.rs"),  # auto-generated
+        dalaran("crates/store/dl_protos/proto/schema_snapshot.yaml"),  # auto-generated
+        dalaran("crates/store/dl_protos/src/v0"),  # auto-generated
+        dalaran("crates/store/dl_protos/src/v1alpha1"),  # auto-generated
+        dalaran("crates/viewer/dl_ui/data/Inter-README.txt"),  # third-party font readme (Inter)
+        dalaran("crates/viewer/dl_web_viewer_server/web_viewer/dl_viewer.js"),  # auto-generated by wasm_bindgen
+        dalaran("docs/content/concepts/app-model.md"),  # this really needs custom letter casing
+        dalaran("docs/content/reference/cli.md"),  # auto-generated
+        dalaran("docs/snippets/all/tutorials/custom-application-id.cpp"),  # nuh-uh, I don't want dalaran_example_ here
+        dalaran("docs/snippets/all/tutorials/custom-application-id.py"),  # nuh-uh, I don't want dalaran_example_ here
+        dalaran("docs/snippets/all/tutorials/custom-application-id.rs"),  # nuh-uh, I don't want dalaran_example_ here
+        dalaran("examples/assets"),
+        dalaran("examples/python/detect_and_track_objects/cache/version.txt"),
+        dalaran("examples/python/objectron/objectron/proto/"),  # auto-generated
+        dalaran("examples/rust/objectron/src/objectron.rs"),  # auto-generated
+        dalaran("dalaran_cpp/docs/doxygen-awesome/"),  # copied from an external repository
+        dalaran("dalaran_cpp/docs/html"),
+        dalaran("dalaran_cpp/src/dalaran/c/arrow_c_data_interface.h"),  # Not our code
+        dalaran("dalaran_cpp/src/dalaran/third_party/cxxopts.hpp"),  # vendored
+        dalaran("dalaran_js/docs/"),  # auto-generated
+        dalaran("dalaran_js/node_modules"),
+        dalaran("dalaran_js/web-viewer-react/node_modules"),
+        dalaran("dalaran_js/web-viewer/index.js"),
+        dalaran("dalaran_js/web-viewer/inlined.js"),
+        dalaran("dalaran_js/web-viewer/node_modules"),
+        dalaran("dalaran_js/web-viewer/re_viewer_bg.js"),  # auto-generated by wasm_bindgen
+        dalaran("dalaran_js/web-viewer/dl_viewer.js"),
+        dalaran("dalaran_notebook/node_modules"),
+        dalaran("dalaran_notebook/src/dalaran_notebook/static"),
+        dalaran("dalaran_py/.pytest_cache/"),
+        dalaran("dalaran_py/site/"),  # is in `.gitignore` which this script doesn't fully respect
+        dalaran("run_wasm/README.md"),  # Has a "2d" lowercase example in a code snippet
+        dalaran("scripts/lint.py"),  # we contain all the patterns we are linting against
+        dalaran("scripts/zombie_todos.py"),
+        dalaran("tests/assets/lerobot/apple_storage/README.md"),  # not ours
+        dalaran("tests/python/gil_stress/main.py"),
+        dalaran("tests/python/release_checklist/main.py"),
     )
 
     should_ignore = parse_gitignore(".gitignore")  # TODO(#6730): parse all .gitignore files, not just top-level
@@ -1999,13 +1999,13 @@ def main() -> None:
             filepath = "./" + filepath
             filepath = filepath.replace("\\", "/")
 
-            # Only lint files inside the rerun or dataplatform directories.
-            # In the standalone rerun repo `rerun_prefix` is "./" so everything matches.
+            # Only lint files inside the dalaran or dataplatform directories.
+            # In the standalone dalaran repo `dalaran_prefix` is "./" so everything matches.
             # In the monorepo (reality) we explicitly include both top-level Rust
-            # workspaces (`./rerun/` and `./dataplatform/`) so they share the same
+            # workspaces (`./dalaran/` and `./dataplatform/`) so they share the same
             # custom lints, and skip everything else (`node_modules/`, `landing/`, …).
-            allowed_prefixes: tuple[str, ...] = (rerun_prefix,)
-            if rerun_prefix != "./":
+            allowed_prefixes: tuple[str, ...] = (dalaran_prefix,)
+            if dalaran_prefix != "./":
                 allowed_prefixes += ("./dataplatform/",)
             if not filepath.startswith(allowed_prefixes):
                 continue

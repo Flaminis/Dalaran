@@ -12,9 +12,9 @@ UInt32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `UInt32`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1UInt32.html)
- * 🐍 [Python API docs for `UInt32`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.UInt32)
- * 🦀 [Rust API docs for `UInt32`](https://docs.rs/rerun/latest/rerun/datatypes/struct.UInt32.html)
+ * 🌊 [C++ API docs for `UInt32`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1UInt32.html)
+ * 🐍 [Python API docs for `UInt32`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.UInt32)
+ * 🦀 [Rust API docs for `UInt32`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.UInt32.html)
 
 
 ## Used by

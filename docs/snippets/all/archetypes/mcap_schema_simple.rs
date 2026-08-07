@@ -1,7 +1,7 @@
 //! Log a simple MCAP schema definition.
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_mcap_schema")
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_mcap_schema")
         .spawn()?;
 
     // Example ROS2 message definition for a simple Point message
@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     rec.log(
         "mcap/schemas/geometry_point",
-        &rerun::McapSchema::new(
+        &dalaran::McapSchema::new(
             42,
             "geometry_msgs/msg/Point",
             "ros2msg",

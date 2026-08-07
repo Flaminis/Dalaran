@@ -6,7 +6,7 @@ thumbnail = "https://static.rerun.io/nv12/3bffd358462a453c6358aa3cc4c8555b12fc0d
 thumbnail_dimensions = [480, 480]
 -->
 
-This example displays an NV12 encoded video stream from a webcam in rerun.
+This example displays an NV12 encoded video stream from a webcam in dalaran.
 
 <img src="https://static.rerun.io/nv12/3bffd358462a453c6358aa3cc4c8555b12fc0d35/480w.png">
 

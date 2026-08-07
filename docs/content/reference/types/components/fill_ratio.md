@@ -5,12 +5,12 @@ title: "FillRatio"
 
 How much a primitive fills out the available space.
 
-Used for instance to scale the points of the point cloud created from [`archetypes.DepthImage`](https://rerun.io/docs/reference/types/archetypes/depth_image) projection in 3D views.
+Used for instance to scale the points of the point cloud created from [`archetypes.DepthImage`](https://dalaran.dev/docs/reference/types/archetypes/depth_image) projection in 3D views.
 Valid range is from 0 to max float although typically values above 1.0 are not useful.
 
 Defaults to 1.0.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -20,9 +20,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `FillRatio`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1FillRatio.html)
- * 🐍 [Python API docs for `FillRatio`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.FillRatio)
- * 🦀 [Rust API docs for `FillRatio`](https://docs.rs/rerun/latest/rerun/components/struct.FillRatio.html)
+ * 🌊 [C++ API docs for `FillRatio`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1FillRatio.html)
+ * 🐍 [Python API docs for `FillRatio`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.FillRatio)
+ * 🦀 [Rust API docs for `FillRatio`](https://docs.rs/dalaran/latest/dalaran/components/struct.FillRatio.html)
 
 
 ## Used by

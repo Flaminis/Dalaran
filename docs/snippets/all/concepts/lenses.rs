@@ -2,20 +2,20 @@
 
 use std::sync::Arc;
 
-use rerun::external::arrow::array::{
+use dalaran::external::arrow::array::{
     Array as _, ArrayRef, AsArray as _, Float64Array, Int64Array, ListArray,
     StringArray, StructArray,
 };
-use rerun::external::arrow::buffer::OffsetBuffer;
-use rerun::external::arrow::compute;
-use rerun::external::arrow::datatypes::{DataType, Field, Float64Type};
-use rerun::lenses::{ChunkExt as _, Lens, Selector};
-use rerun::log::{Chunk, TimeColumn};
-use rerun::time::TimeType;
+use dalaran::external::arrow::buffer::OffsetBuffer;
+use dalaran::external::arrow::compute;
+use dalaran::external::arrow::datatypes::{DataType, Field, Float64Type};
+use dalaran::lenses::{ChunkExt as _, Lens, Selector};
+use dalaran::log::{Chunk, TimeColumn};
+use dalaran::time::TimeType;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_lenses").spawn()?;
+        dalaran::RecordingStreamBuilder::new("dalaran_example_lenses").spawn()?;
 
     // region: log_data
     // Build a chunk with a struct-typed component.
@@ -54,12 +54,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [TimeColumn::new_sequence("frame", [0, 1, 2])],
         [
             (
-                rerun::ComponentDescriptor::partial("Imu:accel")
+                dalaran::ComponentDescriptor::partial("Imu:accel")
                     .with_archetype("Imu".into()),
                 imu_list,
             ),
             (
-                rerun::ComponentDescriptor::partial("Imu:status")
+                dalaran::ComponentDescriptor::partial("Imu:status")
                     .with_archetype("Imu".into()),
                 status_list,
             ),
@@ -70,7 +70,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Extract the "x" field as a Scalar on the same entity.
     let extract_x = Lens::derive("Imu:accel")
         .to_component(
-            rerun::Scalars::descriptor_scalars(),
+            dalaran::Scalars::descriptor_scalars(),
             Selector::parse(".x")?,
         )
         .build()?;
@@ -80,7 +80,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let extract_y = Lens::derive("Imu:accel")
         .output_entity("/new_entity/accel_y")
         .to_component(
-            rerun::Scalars::descriptor_scalars(),
+            dalaran::Scalars::descriptor_scalars(),
             Selector::parse(".y")?,
         )
         .to_timeline(
@@ -102,7 +102,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let scale_x = Lens::derive("Imu:accel")
         .output_entity("/new_entity/accel_scaled_x")
         .to_component(
-            rerun::Scalars::descriptor_scalars(),
+            dalaran::Scalars::descriptor_scalars(),
             Selector::parse(".x")?.pipe(|arr: &ArrayRef| {
                 let scaled: Float64Array =
                     compute::unary(arr.as_primitive::<Float64Type>(), |v| {
@@ -118,7 +118,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let results = chunk
         .apply_lenses(
             &[extract_x, extract_y, simplify_accel, scale_x],
-            &rerun::lenses::default_runtime(),
+            &dalaran::lenses::default_runtime(),
         )
         .map_err(|partial| {
             let errors: Vec<_> =

@@ -46,7 +46,7 @@ When you expand an entity you will see both the components that are associated w
 Selecting entities or events in the streams view shows additional information in the selection panel about them respectively.
 
 ### Discontinuity skipping
-Rerun automatically detects discontinuities in the selected timeline and will skip over them while playing.
+Dalaran automatically detects discontinuities in the selected timeline and will skip over them while playing.
 This is particularly useful whenever you have large gaps in the timestamps of your data recordings.
 Detected discontinuities are visualized with a zigzag cut in the timeline.
 

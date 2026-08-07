@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import rerun.blueprint as rrb
+import dalaran.blueprint as dlb
 
-blueprint = rrb.Blueprint(
-    rrb.Spatial3DView(origin="/test1"),
-    rrb.TimePanel(state="collapsed"),
-    rrb.SelectionPanel(state="collapsed"),
-    rrb.BlueprintPanel(state="collapsed"),
+blueprint = dlb.Blueprint(
+    dlb.Spatial3DView(origin="/test1"),
+    dlb.TimePanel(state="collapsed"),
+    dlb.SelectionPanel(state="collapsed"),
+    dlb.BlueprintPanel(state="collapsed"),
 )
 
-blueprint.save("rerun_example_blueprint_test.rbl")
+blueprint.save("dalaran_example_blueprint_test.rbl")

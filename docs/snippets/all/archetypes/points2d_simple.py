@@ -1,15 +1,15 @@
 """Log some very simple points."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_points2d", spawn=True)
+dl.init("dalaran_example_points2d", spawn=True)
 
-rr.log("points", rr.Points2D([[0, 0], [1, 1]]))
+dl.log("points", dl.Points2D([[0, 0], [1, 1]]))
 
 # Set view bounds:
-rr.send_blueprint(
-    rrb.Spatial2DView(
-        visual_bounds=rrb.VisualBounds2D(x_range=[-1, 2], y_range=[-1, 2])
+dl.send_blueprint(
+    dlb.Spatial2DView(
+        visual_bounds=dlb.VisualBounds2D(x_range=[-1, 2], y_range=[-1, 2])
     )
 )

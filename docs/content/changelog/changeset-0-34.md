@@ -22,7 +22,7 @@ You could ask your agent to
 
 The agent has full control over the Viewer, meaning it can see and click any widget.
 
-Here's an example where Claude Sonnet was asked to create a fancy particle animation of the Rerun logo and verify its
+Here's an example where Claude Sonnet was asked to create a fancy particle animation of the Dalaran logo and verify its
 work using the mcp in the open Viewer (sped up by a lot, except when showing the end result):
 
 https://github.com/user-attachments/assets/14ffe7ed-6000-4193-900c-627784682125
@@ -34,8 +34,8 @@ and then debugged why the fade out animation was still showing particles on the 
 <details>
   <summary>Full prompt</summary>
 
-  > /goal Create a new rerun python example in this folder that uses reruns 2D shapes to recreate the rerun logo (rerun-wordmark-black.svg).
-  > There should be a nice fade-in animation in the beginning, 10 frames duration. Then pause a bit with the full rerun logo visible and then
+  > /goal Create a new dalaran python example in this folder that uses dalarans 2D shapes to recreate the dalaran logo (dalaran-wordmark-black.svg).
+  > There should be a nice fade-in animation in the beginning, 10 frames duration. Then pause a bit with the full dalaran logo visible and then
   > the shapes should explosively fade away with a 20 frame animation before the recording ends.
   >
   > You may only stop once the recreated logo in the viewer looks close to the provided svg (black text, white background).
@@ -43,32 +43,32 @@ and then debugged why the fade out animation was still showing particles on the 
   > closely it looks to the original image. Keep going until it's convinced that it looks close.
 </details>
 
-See our [mcp docs](https://rerun.io/docs/reference/viewer/mcp) to get started.
+See our [mcp docs](https://dalaran.dev/docs/reference/viewer/mcp) to get started.
 
 ### Learning course
 
-https://rerun.io/learn is a great way to learn how the Rerun data model covers the full physical AI experiment loop.
+https://dalaran.dev/learn is a great way to learn how the Dalaran data model covers the full physical AI experiment loop.
 It is a short, hands-on course for robotics ML engineers who want the full robot learning data loop in one place:
 ```
 raw data -> RRD -> derived layers -> dataset queries -> training -> evaluation
 ```
 
-### Rerun agent skills
+### Dalaran agent skills
 
-We added new skills to the Rerun repo to make it easier to investigate existing robotics data with Rerun.
+We added new skills to the Dalaran repo to make it easier to investigate existing robotics data with Dalaran.
 You can install the skills in your project via:
 ```sh
 npx skills add rerun-io/rerun
 ```
 
-The new [learning course](https://rerun.io/learn) also shows how these agent skills can be used to collect, refine and train with robotics data.
+The new [learning course](https://dalaran.dev/learn) also shows how these agent skills can be used to collect, refine and train with robotics data.
 
 ### `VoxelGridMap` archetype
 
-Rerun now supports sparse voxel grids through a new [`VoxelGridMap`](https://rerun.io/docs/reference/types/archetypes/voxel_grid_map) archetype (thanks to [@makeecat](https://github.com/makeecat) for the contribution!).
+Dalaran now supports sparse voxel grids through a new [`VoxelGridMap`](https://dalaran.dev/docs/reference/types/archetypes/voxel_grid_map) archetype (thanks to [@makeecat](https://github.com/makeecat) for the contribution!).
 The archetype supports sparse indexing, anisotropic voxel sizes, pose offsets, and optional explicit colors or values & colormap per voxel.
 
-Rerun's MCAP importer now also converts the *dense* ROS `nav2_msgs/VoxelGrid` and Foxglove `VoxelGrid` formats to Rerun `VoxelGridMap`.
+Dalaran's MCAP importer now also converts the *dense* ROS `nav2_msgs/VoxelGrid` and Foxglove `VoxelGrid` formats to Dalaran `VoxelGridMap`.
 
 And if you wonder how the smooth 3D navigation through the [voxel scene](https://github.com/ephtracy/voxel-model) in this video was done, see below!
 
@@ -116,26 +116,26 @@ The initial defaults are controlled by environment variables, read once on first
 
 | Variable         | Default | Effect                                                            |
 |------------------|---------|-------------------------------------------------------------------|
-| `RERUN_LOG_TICK` | off     | Set truthy (`1`/`true`/`on`/…) to inject the `log_tick` timeline. |
-| `RERUN_LOG_TIME` | on      | Set falsy (`0`/`false`/`off`/…) to skip the `log_time` timeline.  |
+| `DALARAN_LOG_TICK` | off     | Set truthy (`1`/`true`/`on`/…) to inject the `log_tick` timeline. |
+| `DALARAN_LOG_TIME` | on      | Set falsy (`0`/`false`/`off`/…) to skip the `log_time` timeline.  |
 
 They can also be toggled at runtime, either on the active recording or on a specific `RecordingStream`:
 
 snippet: migration/log_tick_enabled
 
-If you relied on the `log_tick` timeline being present, set `RERUN_LOG_TICK=1` (or call `set_log_tick_enabled(true)`) to restore the old behavior.
+If you relied on the `log_tick` timeline being present, set `DALARAN_LOG_TICK=1` (or call `set_log_tick_enabled(true)`) to restore the old behavior.
 
-### `rerun.recording` module removed
+### `dalaran.recording` module removed
 
-The `rerun.recording` module — `Recording`, `RRDArchive`, `load_recording`, `load_archive` — has been removed, having been deprecated in 0.32.
-The related `rr.send_recording()`, `RecordingStream.send_recording()`, `Recording.from_chunks()`, and `DatasetEntry.download_segment()` are removed as well.
+The `dalaran.recording` module — `Recording`, `RRDArchive`, `load_recording`, `load_archive` — has been removed, having been deprecated in 0.32.
+The related `dl.send_recording()`, `RecordingStream.send_recording()`, `Recording.from_chunks()`, and `DatasetEntry.download_segment()` are removed as well.
 
-Use `rerun.experimental.RrdReader` instead.
-See the [0.32 migration guide](../reference/migration/migration-0-32.md#rerunrecording-deprecated-in-favor-of-rrdreader) for more details.
+Use `dalaran.experimental.RrdReader` instead.
+See the [0.32 migration guide](../reference/migration/migration-0-32.md#dalaranrecording-deprecated-in-favor-of-rrdreader) for more details.
 
 ### Remove embedded base64-encoded table blueprints & replace with blueprint registration
 
-Table blueprints are no longer read from the Arrow schema metadata key `rerun:table_blueprint`.
+Table blueprints are no longer read from the Arrow schema metadata key `dalaran:table_blueprint`.
 If you previously stored `base64:…` encoded `.rbl` bytes in table metadata, export that blueprint as a regular `.rbl` file and register it with `TableEntry.register_blueprint(...)` instead.
 Tables without a registered blueprint fall back to Arrow field metadata and viewer heuristics.
 
@@ -153,11 +153,11 @@ No public replacement is offered.
 
 The `DatasetEntry` methods `create_fts_search_index`,  `create_vector_search_index`, `delete_search_indexes`, `search_fts`, and `search_vector` have been removed, having been deprecated in 0.31.
 
-This change does not impact your ability to search through your dataset via [dataframe queries](https://rerun.io/docs/concepts/query-and-transform/dataframe-queries).
+This change does not impact your ability to search through your dataset via [dataframe queries](https://dalaran.dev/docs/concepts/query-and-transform/dataframe-queries).
 
-### `rr.send_dataframe` is now stricter and built on `Chunk.from_record_batch`
+### `dl.send_dataframe` is now stricter and built on `Chunk.from_record_batch`
 
-`rr.send_dataframe` / `rr.send_record_batch` are now thin wrappers over the new `rerun.experimental.Chunk.from_record_batch` (and `Chunk.from_dataframe`), which turns an Arrow record batch into one chunk per entity path.
+`dl.send_dataframe` / `dl.send_record_batch` are now thin wrappers over the new `dalaran.experimental.Chunk.from_record_batch` (and `Chunk.from_dataframe`), which turns an Arrow record batch into one chunk per entity path.
 This makes the Arrow → chunk interpretation a first-class, well-specified capability, but it changes a few behaviors that previously happened silently.
 
 Consequently, the following breaking behavior changes are introduced:
@@ -167,16 +167,16 @@ Consequently, the following breaking behavior changes are introduced:
 - Entity-path recognition from a column name now requires a leading `/`.
   Names without it are no longer parsed for an entity path: `foo` and `foo:bar` previously became the entity `/foo`, and now land on the root entity `/` as components.
   Only `/entity:component` names are split.
-  (Column names emitted by the Rerun SDK always have the `/` prefix.)
+  (Column names emitted by the Dalaran SDK always have the `/` prefix.)
 - As a consequence, `property:…` columns now land on the root entity `/` rather than an entity named `property`.
   Neither map back to `/__properties` — proper handling of this is not yet implemented.
 - `component_type` is no longer defaulted to the literal `"Unknown"` when absent; it is left unset.
 
 ### `ParquetReader` column rules removed in favor of lenses
 
-`rerun.experimental.ParquetReader` no longer accepts the `column_rules` parameter, and the `ColumnRule` class has been removed.
+`dalaran.experimental.ParquetReader` no longer accepts the `column_rules` parameter, and the `ColumnRule` class has been removed.
 `ParquetReader` is now a pure reader — it turns raw parquet columns into grouped, time-indexed chunks of struct/scalar components.
-Mapping those struct fields into Rerun archetypes is now done with lenses on the reader's `.stream()`.
+Mapping those struct fields into Dalaran archetypes is now done with lenses on the reader's `.stream()`.
 
 ### `SaveScreenshot` gRPC endpoint moved to new `ViewerControlService`
 

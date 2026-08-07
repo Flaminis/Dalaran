@@ -12,8 +12,8 @@ FixedSizeList(16 x non-null UInt8)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Uuid`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1Uuid.html)
- * 🐍 [Python API docs for `Uuid`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.Uuid)
- * 🦀 [Rust API docs for `Uuid`](https://docs.rs/rerun/latest/rerun/datatypes/struct.Uuid.html)
+ * 🌊 [C++ API docs for `Uuid`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1Uuid.html)
+ * 🐍 [Python API docs for `Uuid`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.Uuid)
+ * 🦀 [Rust API docs for `Uuid`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.Uuid.html)
 
 

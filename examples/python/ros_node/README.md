@@ -1,34 +1,34 @@
 <!--[metadata]
 title = "ROS node"
-description = "A minimal ROS 2 Python node that forwards pose, images, scans, point clouds, and velocities into Rerun."
+description = "A minimal ROS 2 Python node that forwards pose, images, scans, point clouds, and velocities into Dalaran."
 tags = ["2D", "3D", "Pinhole camera", "ROS", "Time series", "URDF"]
 thumbnail = "https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/480w.png"
 thumbnail_dimensions = [480, 318]
 -->
 
-A minimal example of creating a ROS node that subscribes to topics and converts the messages to Rerun log calls.
+A minimal example of creating a ROS node that subscribes to topics and converts the messages to Dalaran log calls.
 
-The solution here is mostly a toy example to show how ROS concepts can be mapped to Rerun.
+The solution here is mostly a toy example to show how ROS concepts can be mapped to Dalaran.
 
 <picture>
-  <img src="https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/full.png" alt="Rerun viewer showing data streamed from the example ROS node">
+  <img src="https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/full.png" alt="Dalaran viewer showing data streamed from the example ROS node">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/1024w.png">
   <source media="(max-width: 1200px)" srcset="https://static.rerun.io/ros_node_example_new/e15b81b183ccafd8ee2994a6abf0b06cbdf22741/1200w.png">
 </picture>
 
-## Used Rerun types
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`DepthImage`](https://rerun.io/docs/reference/types/archetypes/depth_image), [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole), [`Transform3D`](https://www.rerun.io/docs/reference/types/archetypes/transform3d), [`GridMap`](https://www.rerun.io/docs/reference/types/archetypes/grid_map), [`Points3D`](https://www.rerun.io/docs/reference/types/archetypes/points3d), [`LineStrips3D`](https://www.rerun.io/docs/reference/types/archetypes/line_strips3d), [`Scalars`](https://www.rerun.io/docs/reference/types/archetypes/scalars)
+## Used Dalaran types
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`DepthImage`](https://dalaran.dev/docs/reference/types/archetypes/depth_image), [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole), [`Transform3D`](https://www.dalaran.dev/docs/reference/types/archetypes/transform3d), [`GridMap`](https://www.dalaran.dev/docs/reference/types/archetypes/grid_map), [`Points3D`](https://www.dalaran.dev/docs/reference/types/archetypes/points3d), [`LineStrips3D`](https://www.dalaran.dev/docs/reference/types/archetypes/line_strips3d), [`Scalars`](https://www.dalaran.dev/docs/reference/types/archetypes/scalars)
 
 ## Background
 The [Robot Operating System (ROS)](https://www.ros.org) helps build robot applications through software libraries and tools.
-Although Rerun doesn't have native ROS support, you can easily create a basic ROS 2 Python node to subscribe to common ROS topics and log them to Rerun.
-In this example, Rerun visualizes simulation data, including robot pose, images, camera position, laser scans, point clouds, and velocities, as the robot navigates the environment.
+Although Dalaran doesn't have native ROS support, you can easily create a basic ROS 2 Python node to subscribe to common ROS topics and log them to Dalaran.
+In this example, Dalaran visualizes simulation data, including robot pose, images, camera position, laser scans, point clouds, and velocities, as the robot navigates the environment.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-Find the detailed code walkthrough and explanation for visualizing this example here: [Using Rerun with ROS 2](https://www.rerun.io/docs/howto/integrations/ros2-nav-turtlebot).
+Find the detailed code walkthrough and explanation for visualizing this example here: [Using Dalaran with ROS 2](https://www.dalaran.dev/docs/howto/integrations/ros2-nav-turtlebot).
 
 For more information on future improved ROS support, see tracking issue: [#1527](https://github.com/rerun-io/rerun/issues/1537)
 
@@ -50,22 +50,22 @@ sudo apt install ros-kilted-desktop ros-kilted-nav2-bringup
 ```
 (`ros-kilted-nav2-bringup` pulls in all the navigation and simulation packages we need as dependencies, if not installed yet)
 
-Then clone the Rerun repository to get the example code:
+Then clone the Dalaran repository to get the example code:
 ```bash
 git clone https://github.com/rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 
 Make sure to use a Python virtual environment. Here, we use `venv` (`sudo apt install python3-venv`):
 ```bash
-python3 -m venv --system-site-packages rerun-ros-example
-source rerun-ros-example/bin/activate
+python3 -m venv --system-site-packages dalaran-ros-example
+source dalaran-ros-example/bin/activate
 ```
 
-Then install the latest Rerun SDK and the necessary libraries specified in the requirements file of this example:
+Then install the latest Dalaran SDK and the necessary libraries specified in the requirements file of this example:
 ```bash
-pip install --upgrade rerun-sdk
+pip install --upgrade dalaran-sdk
 pip install -r examples/python/ros_node/requirements.txt
 ```
 

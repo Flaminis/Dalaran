@@ -2,11 +2,11 @@
 //!
 //! This is semantically equivalent to the `scalar_row_updates` example, albeit much faster.
 
-use rerun::TimeColumn;
+use dalaran::TimeColumn;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_scalar_column_updates",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_scalar_column_updates",
     )
     .spawn()?;
 
@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rec.send_columns(
         "scalars",
         [times],
-        rerun::Scalars::new(scalars).columns_of_unit_batches()?,
+        dalaran::Scalars::new(scalars).columns_of_unit_batches()?,
     )?;
 
     Ok(())

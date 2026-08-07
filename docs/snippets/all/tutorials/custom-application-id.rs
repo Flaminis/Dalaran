@@ -1,1 +1,1 @@
-rerun::RecordingStreamBuilder::new("rerun_example_shared_recording")
+dalaran::RecordingStreamBuilder::new("dalaran_example_shared_recording")

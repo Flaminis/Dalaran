@@ -12,9 +12,9 @@ Boolean
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Bool`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1Bool.html)
- * 🐍 [Python API docs for `Bool`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.Bool)
- * 🦀 [Rust API docs for `Bool`](https://docs.rs/rerun/latest/rerun/datatypes/struct.Bool.html)
+ * 🌊 [C++ API docs for `Bool`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1Bool.html)
+ * 🐍 [Python API docs for `Bool`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.Bool)
+ * 🦀 [Rust API docs for `Bool`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.Bool.html)
 
 
 ## Used by

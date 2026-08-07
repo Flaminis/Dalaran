@@ -26,9 +26,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `TensorDimensionSelection`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1TensorDimensionSelection.html)
- * 🐍 [Python API docs for `TensorDimensionSelection`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.TensorDimensionSelection)
- * 🦀 [Rust API docs for `TensorDimensionSelection`](https://docs.rs/rerun/latest/rerun/datatypes/struct.TensorDimensionSelection.html)
+ * 🌊 [C++ API docs for `TensorDimensionSelection`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1TensorDimensionSelection.html)
+ * 🐍 [Python API docs for `TensorDimensionSelection`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.TensorDimensionSelection)
+ * 🦀 [Rust API docs for `TensorDimensionSelection`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.TensorDimensionSelection.html)
 
 
 ## Used by

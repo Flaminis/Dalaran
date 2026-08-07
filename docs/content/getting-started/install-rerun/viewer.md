@@ -9,20 +9,20 @@ Make sure that your library version matches the version of the Viewer you're usi
 
 There are many ways to install the viewer. Please pick whatever works best for your setup:
 
--   Download `rerun-cli` for your platform from the [GitHub Release artifacts](https://github.com/rerun-io/rerun/releases/latest/).
+-   Download `dalaran-cli` for your platform from the [GitHub Release artifacts](https://github.com/rerun-io/rerun/releases/latest/).
 -   Via Cargo
-    -   `cargo binstall rerun-cli` - download binaries via [`cargo binstall`](https://github.com/cargo-bins/cargo-binstall)
-    -   `cargo install rerun-cli --locked` - build it from source (this requires Rust 1.95+)
+    -   `cargo binstall dalaran-cli` - download binaries via [`cargo binstall`](https://github.com/cargo-bins/cargo-binstall)
+    -   `cargo install dalaran-cli --locked` - build it from source (this requires Rust 1.95+)
 -   Via Snap (_community maintained_)
-    -   `snap install rerun` - download the viewer from the [Store](https://snapcraft.io/rerun).
--   Together with the Rerun [Python SDK](./python.md):
-    -   `pip3 install rerun-sdk` - download it via pip
-    -   `conda install -c conda-forge rerun-sdk` - download via Conda
-    -   `pixi global install rerun-sdk` - download it via [Pixi](https://pixi.sh/latest/)
+    -   `snap install dalaran` - download the viewer from the [Store](https://snapcraft.io/dalaran).
+-   Together with the Dalaran [Python SDK](./python.md):
+    -   `pip3 install dalaran-sdk` - download it via pip
+    -   `conda install -c conda-forge dalaran-sdk` - download via Conda
+    -   `pixi global install dalaran-sdk` - download it via [Pixi](https://pixi.sh/latest/)
 
-In any case you should be able to run `rerun` afterwards to start the Viewer.
+In any case you should be able to run `dalaran` afterwards to start the Viewer.
 You'll be welcomed by an overview page that allows you to jump into some examples.
 
 If you're facing any difficulties, don't hesitate to [open an issue](https://github.com/rerun-io/rerun/issues/new/choose) or [join the Discord server](https://discord.gg/PXtCgFBSmH).
 
-The Rerun Viewer has built-in support for opening many kinds of files, and can be [extended to open any other file type](../../getting-started/data-in/open-any-file.md) without needing to modify the Rerun codebase itself.
+The Dalaran Viewer has built-in support for opening many kinds of files, and can be [extended to open any other file type](../../getting-started/data-in/open-any-file.md) without needing to modify the Dalaran codebase itself.

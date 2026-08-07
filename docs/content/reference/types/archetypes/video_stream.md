@@ -6,13 +6,13 @@ title: "VideoStream"
 ⚠️ **This type is _unstable_ and may change significantly in a way that the data won't be backwards compatible.**
 Video stream consisting of raw video chunks.
 
-For logging video containers like mp4, refer to [`archetypes.AssetVideo`](https://rerun.io/docs/reference/types/archetypes/asset_video) and [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference/types/archetypes/video_frame_reference).
-To learn more about video support in Rerun, check the [video reference](https://rerun.io/docs/reference/video).
+For logging video containers like mp4, refer to [`archetypes.AssetVideo`](https://dalaran.dev/docs/reference/types/archetypes/asset_video) and [`archetypes.VideoFrameReference`](https://dalaran.dev/docs/reference/types/archetypes/video_frame_reference).
+To learn more about video support in Dalaran, check the [video reference](https://dalaran.dev/docs/reference/video).
 
 All components except `sample` are typically logged statically once per entity.
 `sample` is then logged repeatedly for each frame on the timeline.
 
-TODO(#10422): [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference/types/archetypes/video_frame_reference) does not yet work with [`archetypes.VideoStream`](https://rerun.io/docs/reference/types/archetypes/video_stream).
+TODO(#10422): [`archetypes.VideoFrameReference`](https://dalaran.dev/docs/reference/types/archetypes/video_frame_reference) does not yet work with [`archetypes.VideoStream`](https://dalaran.dev/docs/reference/types/archetypes/video_stream).
 
 ## Fields
 ### Required
@@ -33,9 +33,9 @@ TODO(#10422): [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `VideoStream`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1VideoStream.html)
- * 🐍 [Python API docs for `VideoStream`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.VideoStream)
- * 🦀 [Rust API docs for `VideoStream`](https://docs.rs/rerun/latest/rerun/archetypes/struct.VideoStream.html)
+ * 🌊 [C++ API docs for `VideoStream`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1VideoStream.html)
+ * 🐍 [Python API docs for `VideoStream`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.VideoStream)
+ * 🦀 [Rust API docs for `VideoStream`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.VideoStream.html)
 
 ## Example
 

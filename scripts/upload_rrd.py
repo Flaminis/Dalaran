@@ -49,8 +49,8 @@ from google.cloud import storage
 
 class Uploader:
     def __init__(self) -> None:
-        gcs = storage.Client("rerun-open")
-        self.bucket = gcs.bucket("rerun-rrd")
+        gcs = storage.Client("dalaran-open")
+        self.bucket = gcs.bucket("dalaran-rrd")
 
     def upload_data(
         self,
@@ -94,13 +94,13 @@ def data_hash(data: bytes) -> str:
     return hashlib.sha1(data, usedforsecurity=False).hexdigest()
 
 
-DESCRIPTION = """Upload an .rrd to static.rerun.io.
+DESCRIPTION = """Upload an .rrd to static.dalaran.dev.
 
     pixi run upload-rrd --version 0.15.0 path/to/recording.rrd
 
     The version is used for two things:
     A) used as a folder name in the GCS bucket.
-    B) used to generate a link to the correct version of the Rerun web viewer.
+    B) used to generate a link to the correct version of the Dalaran web viewer.
 """
 
 
@@ -113,7 +113,7 @@ def main() -> None:
         required=False,
         help="Name of the recording. If not supplied, the file name is used.",
     )
-    parser.add_argument("--version", type=str, required=True, help="The Rerun version, e.g. '0.15.0'.")
+    parser.add_argument("--version", type=str, required=True, help="The Dalaran version, e.g. '0.15.0'.")
     parser.add_argument("--debug", action="store_true", help="Enable debug logging.")
     args = parser.parse_args()
 
@@ -144,7 +144,7 @@ def main() -> None:
 
         recording_url = f"https://static.rerun.io/rrd/{gcp_path}"
         print(f"Recording at: {recording_url}")
-        print(f"View it at:   https://rerun.io/viewer/version/{version}/?url={recording_url}")
+        print(f"View it at:   https://dalaran.dev/viewer/version/{version}/?url={recording_url}")
 
     except RuntimeError as e:
         print(f"Error: {e.args[0]}", file=sys.stderr)

@@ -8,7 +8,7 @@ dependencies = [
   "numpy",
   "pydicom==2.4.5",
   "requests>=2.31,<3",
-  "rerun-sdk",
+  "dalaran-sdk",
   "types-requests>=2.31,<3",
 ]
 

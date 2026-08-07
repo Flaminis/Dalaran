@@ -48,9 +48,9 @@ UInt8
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ChannelDatatype`](https://ref.rerun.io/docs/cpp/stable/namespacererun_1_1datatypes.html)
- * 🐍 [Python API docs for `ChannelDatatype`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.ChannelDatatype)
- * 🦀 [Rust API docs for `ChannelDatatype`](https://docs.rs/rerun/latest/rerun/datatypes/enum.ChannelDatatype.html)
+ * 🌊 [C++ API docs for `ChannelDatatype`](https://ref.dalaran.dev/docs/cpp/stable/namespacedalaran_1_1datatypes.html)
+ * 🐍 [Python API docs for `ChannelDatatype`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.ChannelDatatype)
+ * 🦀 [Rust API docs for `ChannelDatatype`](https://docs.rs/dalaran/latest/dalaran/datatypes/enum.ChannelDatatype.html)
 
 
 ## Used by

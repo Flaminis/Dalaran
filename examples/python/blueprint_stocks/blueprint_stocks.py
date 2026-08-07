@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-A simple application that fetches stock data from Yahoo Finance and visualizes it using the Rerun SDK.
+A simple application that fetches stock data from Yahoo Finance and visualizes it using the Dalaran SDK.
 
 The main focus of this example is using blueprints to control how the data is displayed in the viewer.
 """
@@ -15,36 +15,36 @@ import humanize
 import pytz
 import yfinance as yf
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 ################################################################################
 # Helper functions to create blueprints
 ################################################################################
 
 
-def auto_blueprint() -> rrb.BlueprintLike:
+def auto_blueprint() -> dlb.BlueprintLike:
     """A blueprint enabling auto views, which matches the application default."""
-    return rrb.Blueprint(auto_views=True, auto_layout=True)
+    return dlb.Blueprint(auto_views=True, auto_layout=True)
 
 
-def one_stock(symbol: str) -> rrb.ContainerLike:
+def one_stock(symbol: str) -> dlb.ContainerLike:
     """Create a blueprint showing a single stock."""
-    return rrb.TimeSeriesView(name=f"{symbol}", origin=f"/stocks/{symbol}")
+    return dlb.TimeSeriesView(name=f"{symbol}", origin=f"/stocks/{symbol}")
 
 
-def one_stock_with_info(symbol: str) -> rrb.ContainerLike:
+def one_stock_with_info(symbol: str) -> dlb.ContainerLike:
     """Create a blueprint showing a single stock with its info arranged vertically."""
-    return rrb.Vertical(
-        rrb.TextDocumentView(name=f"{symbol}", origin=f"/stocks/{symbol}/info"),
-        rrb.TimeSeriesView(name=f"{symbol}", origin=f"/stocks/{symbol}"),
+    return dlb.Vertical(
+        dlb.TextDocumentView(name=f"{symbol}", origin=f"/stocks/{symbol}/info"),
+        dlb.TimeSeriesView(name=f"{symbol}", origin=f"/stocks/{symbol}"),
         row_shares=[1, 4],
     )
 
 
-def compare_two(symbol1: str, symbol2: str, day: Any) -> rrb.ContainerLike:
+def compare_two(symbol1: str, symbol2: str, day: Any) -> dlb.ContainerLike:
     """Create a blueprint comparing 2 stocks for a single day."""
-    return rrb.TimeSeriesView(
+    return dlb.TimeSeriesView(
         name=f"{symbol1} vs {symbol2} ({day})",
         contents=[
             f"+ /stocks/{symbol1}/{day}",
@@ -53,13 +53,13 @@ def compare_two(symbol1: str, symbol2: str, day: Any) -> rrb.ContainerLike:
     )
 
 
-def one_stock_no_peaks(symbol: str) -> rrb.ContainerLike:
+def one_stock_no_peaks(symbol: str) -> dlb.ContainerLike:
     """
     Create a blueprint showing a single stock without annotated peaks.
 
     This uses an exclusion pattern to hide the peaks.
     """
-    return rrb.TimeSeriesView(
+    return dlb.TimeSeriesView(
         name=f"{symbol}",
         origin=f"/stocks/{symbol}",
         contents=[
@@ -69,13 +69,13 @@ def one_stock_no_peaks(symbol: str) -> rrb.ContainerLike:
     )
 
 
-def stock_grid(symbols: list[str], dates: list[Any]) -> rrb.ContainerLike:
+def stock_grid(symbols: list[str], dates: list[Any]) -> dlb.ContainerLike:
     """Create a grid of stocks and their time series over all days."""
-    return rrb.Vertical(
+    return dlb.Vertical(
         contents=[
-            rrb.Horizontal(
-                contents=[rrb.TextDocumentView(name=f"{symbol}", origin=f"/stocks/{symbol}/info")]
-                + [rrb.TimeSeriesView(name=f"{day}", origin=f"/stocks/{symbol}/{day}") for day in dates],
+            dlb.Horizontal(
+                contents=[dlb.TextDocumentView(name=f"{symbol}", origin=f"/stocks/{symbol}/info")]
+                + [dlb.TimeSeriesView(name=f"{day}", origin=f"/stocks/{symbol}/{day}") for day in dates],
                 name=symbol,
             )
             for symbol in symbols
@@ -83,12 +83,12 @@ def stock_grid(symbols: list[str], dates: list[Any]) -> rrb.ContainerLike:
     )
 
 
-def hide_panels(viewport: rrb.ContainerLike) -> rrb.BlueprintLike:
+def hide_panels(viewport: dlb.ContainerLike) -> dlb.BlueprintLike:
     """Wrap a viewport in a blueprint that hides the time and selection panels."""
-    return rrb.Blueprint(
+    return dlb.Blueprint(
         viewport,
-        rrb.TimePanel(state="collapsed"),
-        rrb.SelectionPanel(state="collapsed"),
+        dlb.TimePanel(state="collapsed"),
+        dlb.SelectionPanel(state="collapsed"),
     )
 
 
@@ -105,15 +105,15 @@ brand_colors = {
 }
 
 
-def style_plot(symbol: str) -> rr.SeriesLines:
-    return rr.SeriesLines(
+def style_plot(symbol: str) -> dl.SeriesLines:
+    return dl.SeriesLines(
         colors=brand_colors[symbol],
         names=symbol,
     )
 
 
-def style_peak(symbol: str) -> rr.SeriesPoints:
-    return rr.SeriesPoints(
+def style_peak(symbol: str) -> dl.SeriesPoints:
+    return dl.SeriesPoints(
         colors=0xFF0000FF,
         names=f"{symbol} (peak)",
         markers="up",
@@ -126,7 +126,7 @@ def style_peak(symbol: str) -> rr.SeriesPoints:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Visualize stock data using the Rerun SDK")
+    parser = argparse.ArgumentParser(description="Visualize stock data using the Dalaran SDK")
     parser.add_argument(
         "--blueprint",
         choices=["auto", "one-stock", "one-stock-with-info", "compare-two", "one-stock-no-peaks", "grid"],
@@ -139,7 +139,7 @@ def main() -> None:
         help="Show the time and selection panels",
     )
 
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     et_timezone = pytz.timezone("America/New_York")
@@ -168,14 +168,14 @@ def main() -> None:
         else:
             blueprint = viewport
 
-    rr.script_setup(args, "rerun_example_blueprint_stocks")
-    rr.send_blueprint(blueprint)
+    dl.script_setup(args, "dalaran_example_blueprint_stocks")
+    dl.send_blueprint(blueprint)
 
     # In a future blueprint release, this can move into the blueprint as well
     for symbol in symbols:
         for day in dates:
-            rr.log(f"stocks/{symbol}/{day}", style_plot(symbol), static=True)
-            rr.log(f"stocks/{symbol}/peaks/{day}", style_peak(symbol), static=True)
+            dl.log(f"stocks/{symbol}/{day}", style_plot(symbol), static=True)
+            dl.log(f"stocks/{symbol}/peaks/{day}", style_peak(symbol), static=True)
 
     for symbol in symbols:
         stock = yf.Ticker(symbol)
@@ -192,9 +192,9 @@ def main() -> None:
             f"- **Total Revenue**: ${revenue}\n"
         )
 
-        rr.log(
+        dl.log(
             f"stocks/{symbol}/info",
-            rr.TextDocument(info_md, media_type=rr.MediaType.MARKDOWN),
+            dl.TextDocument(info_md, media_type=dl.MediaType.MARKDOWN),
             static=True,
         )
 
@@ -210,12 +210,12 @@ def main() -> None:
             peak = hist.High.idxmax()
 
             for row in hist.itertuples():
-                rr.set_time("time", duration=row.Index)
-                rr.log(f"stocks/{symbol}/{day}", rr.Scalars(row.High))
+                dl.set_time("time", duration=row.Index)
+                dl.log(f"stocks/{symbol}/{day}", dl.Scalars(row.High))
                 if row.Index == peak:
-                    rr.log(f"stocks/{symbol}/peaks/{day}", rr.Scalars(row.High))
+                    dl.log(f"stocks/{symbol}/peaks/{day}", dl.Scalars(row.High))
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -5,19 +5,19 @@ from __future__ import annotations
 
 import argparse
 
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Example of using the Rerun visualizer")
-    rr.script_add_args(parser)
+    parser = argparse.ArgumentParser(description="Example of using the Dalaran visualizer")
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_my_example_name")
+    dl.script_setup(args, "dalaran_example_my_example_name")
 
     # … example code
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

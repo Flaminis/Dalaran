@@ -39,9 +39,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `VisibleTimeRange`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1VisibleTimeRange.html)
- * 🐍 [Python API docs for `VisibleTimeRange`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.VisibleTimeRange)
- * 🦀 [Rust API docs for `VisibleTimeRange`](https://docs.rs/rerun/latest/rerun/datatypes/struct.VisibleTimeRange.html)
+ * 🌊 [C++ API docs for `VisibleTimeRange`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1VisibleTimeRange.html)
+ * 🐍 [Python API docs for `VisibleTimeRange`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.VisibleTimeRange)
+ * 🦀 [Rust API docs for `VisibleTimeRange`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.VisibleTimeRange.html)
 
 ## Example
 

@@ -1,8 +1,8 @@
 """Log a simple MCAP message with binary data."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_mcap_message", spawn=True)
+dl.init("dalaran_example_mcap_message", spawn=True)
 
 # Example binary message data (could be from a ROS message, protobuf, etc.)
 # This represents a simple sensor reading encoded as bytes
@@ -10,9 +10,9 @@ sensor_data = (
     b"sensor_reading: temperature=23.5, humidity=65.2, timestamp=1743465600"
 )
 
-rr.log(
+dl.log(
     "mcap/messages/sensor_reading",
-    rr.McapMessage(
+    dl.McapMessage(
         data=sensor_data,
     ),
 )

@@ -2,10 +2,10 @@
 title: Roadmap
 order: 0
 ---
-Rerun is building a data management and visualization engine for multimodal data that changes over time.
+Dalaran is building a data management and visualization engine for multimodal data that changes over time.
 We aim to make it fast, simple to use, and easy to adapt and integrate into your existing workflows.
 
-Open an issue or pull request on [GitHub](https://github.com/rerun-io/rerun) or join us on [Discord](https://discord.gg/PXtCgFBSmH) to let the community know what you'd like to see. Or if you're open for a conversation, [sign up here](https://rerun.io/feedback).
+Open an issue or pull request on [GitHub](https://github.com/rerun-io/rerun) or join us on [Discord](https://discord.gg/PXtCgFBSmH) to let the community know what you'd like to see. Or if you're open for a conversation, [sign up here](https://dalaran.dev/feedback).
 
 
 This page is meant to give an high level overview of ongoing and planned work. This roadmap is subject to change; GitHub will be the most authoritative source for active development.
@@ -14,8 +14,8 @@ This page is meant to give an high level overview of ongoing and planned work. T
 - Performance improvements
 - UX & DX improvements
 - Supporting more data types
-- Rerun Hub features (commercial)
-    - Get in touch on hi@rerun.io if you're interested in becoming a design partner
+- Dalaran Hub features (commercial)
+    - Get in touch on hi@dalaran.dev if you're interested in becoming a design partner
 
 ## Roadmap of major feature areas
 
@@ -32,7 +32,7 @@ This page is meant to give an high level overview of ongoing and planned work. T
 - Dataset views that give zero-copy modified views into large datasets
 
 ### Longer term
-- Callbacks and the ability to build interactive applications with Rerun
+- Callbacks and the ability to build interactive applications with Dalaran
     - For example: UI for tweaking configs, custom data annotation tools, etc
 - Official ROS2 bridge
 - Extensibility of all parts of the stack

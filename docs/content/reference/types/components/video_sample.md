@@ -8,9 +8,9 @@ Video sample data (also known as "video chunk").
 Each video sample must contain enough data for exactly one video frame
 (this restriction may be relaxed in the future for some codecs).
 
-Keyframes may require additional data, for details see [`components.VideoCodec`](https://rerun.io/docs/reference/types/components/video_codec).
+Keyframes may require additional data, for details see [`components.VideoCodec`](https://dalaran.dev/docs/reference/types/components/video_codec).
 
-## Rerun datatype
+## Dalaran datatype
 [`Blob`](../datatypes/blob.md)
 
 
@@ -20,9 +20,9 @@ List(non-null UInt8)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `VideoSample`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1VideoSample.html)
- * 🐍 [Python API docs for `VideoSample`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.VideoSample)
- * 🦀 [Rust API docs for `VideoSample`](https://docs.rs/rerun/latest/rerun/components/struct.VideoSample.html)
+ * 🌊 [C++ API docs for `VideoSample`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1VideoSample.html)
+ * 🐍 [Python API docs for `VideoSample`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.VideoSample)
+ * 🦀 [Rust API docs for `VideoSample`](https://docs.rs/dalaran/latest/dalaran/components/struct.VideoSample.html)
 
 
 ## Used by

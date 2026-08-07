@@ -1,28 +1,28 @@
 """Log different data on different timelines."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_different_data_per_timeline", spawn=True)
+dl.init("dalaran_example_different_data_per_timeline", spawn=True)
 
-rr.set_time("blue timeline", sequence=0)
-rr.set_time("red timeline", duration=0.0)
-rr.log("points", rr.Points2D([[0, 0], [1, 1]], radii=rr.Radius.ui_points(10.0)))
+dl.set_time("blue timeline", sequence=0)
+dl.set_time("red timeline", duration=0.0)
+dl.log("points", dl.Points2D([[0, 0], [1, 1]], radii=dl.Radius.ui_points(10.0)))
 
 # Log a red color on one timeline.
-rr.reset_time()  # Clears all set timeline info.
-rr.set_time("red timeline", duration=1.0)
-rr.log("points", rr.Points2D.from_fields(colors=[255, 0, 0]))
+dl.reset_time()  # Clears all set timeline info.
+dl.set_time("red timeline", duration=1.0)
+dl.log("points", dl.Points2D.from_fields(colors=[255, 0, 0]))
 
 # And a blue color on the other.
-rr.reset_time()  # Clears all set timeline info.
-rr.set_time("blue timeline", sequence=1)
-rr.log("points", rr.Points2D.from_fields(colors=[0, 0, 255]))
+dl.reset_time()  # Clears all set timeline info.
+dl.set_time("blue timeline", sequence=1)
+dl.log("points", dl.Points2D.from_fields(colors=[0, 0, 255]))
 
 
 # Set view bounds:
-rr.send_blueprint(
-    rrb.Spatial2DView(
-        visual_bounds=rrb.VisualBounds2D(x_range=[-1, 2], y_range=[-1, 2])
+dl.send_blueprint(
+    dlb.Spatial2DView(
+        visual_bounds=dlb.VisualBounds2D(x_range=[-1, 2], y_range=[-1, 2])
     )
 )

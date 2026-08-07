@@ -1,9 +1,9 @@
 // Set different types of indices.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_different_indices");
+    const auto rec = dalaran::RecordingStream("dalaran_example_different_indices");
     rec.spawn().exit_on_failure();
 
     rec.set_time_sequence("frame_nr", 42);
@@ -15,5 +15,5 @@ int main(int argc, char* argv[]) {
     );
 
     // All following logged data will be timestamped with the above times:
-    rec.log("points", rerun::Points2D({{0.0, 0.0}, {1.0, 1.0}}));
+    rec.log("points", dalaran::Points2D({{0.0, 0.0}, {1.0, 1.0}}));
 }

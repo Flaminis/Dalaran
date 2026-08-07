@@ -21,15 +21,15 @@ import numpy as np
 import pyarrow as pa
 from datafusion import col
 
-import rerun as rr
+import dalaran as dl
 
 sample_video_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "video_sample"
 )
 
-server = rr.server.Server(datasets={"video_dataset": sample_video_path})
+server = dl.server.Server(datasets={"video_dataset": sample_video_path})
 CATALOG_URL = server.url()
-client = rr.catalog.CatalogClient(CATALOG_URL)
+client = dl.catalog.CatalogClient(CATALOG_URL)
 dataset = client.get_dataset(name="video_dataset")
 df = dataset.filter_contents(["/video_stream/**"]).reader(index="log_time")
 times = pa.table(df.select("log_time"))["log_time"].to_numpy()
@@ -38,12 +38,12 @@ times = pa.table(df.select("log_time"))["log_time"].to_numpy()
 # region: check_codec
 codec_column = "/video_stream:VideoStream:codec"
 num_codec_matches = df.select(
-    col(codec_column)[0] == rr.VideoCodec.H264.value
+    col(codec_column)[0] == dl.VideoCodec.H264.value
 ).count()
 
 if num_codec_matches != df.select(codec_column).count():
     raise ValueError(
-        f"Expected H.264 codec {rr.VideoCodec.H264.value}, "
+        f"Expected H.264 codec {dl.VideoCodec.H264.value}, "
         f"got {df.select(codec_column).limit(1)}"
     )
 # endregion: check_codec

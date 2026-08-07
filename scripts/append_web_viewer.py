@@ -6,13 +6,13 @@ This script creates a zip archive of the web viewer assets and appends it to the
 end of a binary, along with metadata needed to locate and extract the assets at runtime.
 
 Format of trailing data:
-    [Original Binary] [ZIP Archive] [ZIP Offset: 8 bytes LE] [Magic: "RERUNWEB"]
+    [Original Binary] [ZIP Archive] [ZIP Offset: 8 bytes LE] [Magic: "DALARANWEB"]
 
 Usage:
     python3 scripts/append_web_viewer.py <binary_path> <web_viewer_dir>
 
 Example:
-    python3 scripts/append_web_viewer.py target/release/rerun rerun/crates/viewer/dl_web_viewer_server/web_viewer
+    python3 scripts/append_web_viewer.py target/release/dalaran dalaran/crates/viewer/dl_web_viewer_server/web_viewer
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ from pathlib import Path
 
 from create_web_viewer_zip import create_web_viewer_zip
 
-MAGIC = b"RERUNWEB"
+MAGIC = b"DALARANWEB"
 MAGIC_LEN = 8
 OFFSET_LEN = 8
 

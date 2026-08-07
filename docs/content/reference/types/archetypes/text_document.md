@@ -20,9 +20,9 @@ Supports raw text and markdown.
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `TextDocument`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1TextDocument.html)
- * 🐍 [Python API docs for `TextDocument`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.TextDocument)
- * 🦀 [Rust API docs for `TextDocument`](https://docs.rs/rerun/latest/rerun/archetypes/struct.TextDocument.html)
+ * 🌊 [C++ API docs for `TextDocument`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1TextDocument.html)
+ * 🐍 [Python API docs for `TextDocument`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.TextDocument)
+ * 🦀 [Rust API docs for `TextDocument`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.TextDocument.html)
 
 ## Example
 

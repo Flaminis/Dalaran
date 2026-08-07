@@ -12,9 +12,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Angle`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1Angle.html)
- * 🐍 [Python API docs for `Angle`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.Angle)
- * 🦀 [Rust API docs for `Angle`](https://docs.rs/rerun/latest/rerun/datatypes/struct.Angle.html)
+ * 🌊 [C++ API docs for `Angle`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1Angle.html)
+ * 🐍 [Python API docs for `Angle`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.Angle)
+ * 🦀 [Rust API docs for `Angle`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.Angle.html)
 
 
 ## Used by

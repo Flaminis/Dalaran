@@ -9,12 +9,12 @@ from __future__ import annotations
 
 import math
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_any_values_row_updates", spawn=True)
+dl.init("dalaran_example_any_values_row_updates", spawn=True)
 
 for step in range(64):
-    rr.set_time("step", sequence=step)
-    rr.log(
-        "/", rr.AnyValues(sin=math.sin(step / 10.0), cos=math.cos(step / 10.0))
+    dl.set_time("step", sequence=step)
+    dl.log(
+        "/", dl.AnyValues(sin=math.sin(step / 10.0), cos=math.cos(step / 10.0))
     )

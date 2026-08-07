@@ -2,11 +2,11 @@
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_arrow2d").spawn()?;
+        dalaran::RecordingStreamBuilder::new("dalaran_example_arrow2d").spawn()?;
 
     rec.log(
         "arrows",
-        &rerun::Arrows2D::from_vectors([[1.0, 0.0], [0.0, -1.0], [-0.7, 0.7]])
+        &dalaran::Arrows2D::from_vectors([[1.0, 0.0], [0.0, -1.0], [-0.7, 0.7]])
             .with_radii([0.025])
             .with_origins([[0.25, 0.0], [0.25, 0.0], [-0.1, -0.1]])
             .with_colors([[255, 0, 0], [0, 255, 0], [127, 0, 255]])

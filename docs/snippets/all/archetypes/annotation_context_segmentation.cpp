@@ -1,21 +1,21 @@
 // Log a segmentation image with annotations.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm> // fill_n
 #include <vector>
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_annotation_context_segmentation");
+        dalaran::RecordingStream("dalaran_example_annotation_context_segmentation");
     rec.spawn().exit_on_failure();
 
     // create an annotation context to describe the classes
     rec.log_static(
         "segmentation",
-        rerun::AnnotationContext({
-            rerun::AnnotationInfo(1, "red", rerun::Rgba32(255, 0, 0)),
-            rerun::AnnotationInfo(2, "green", rerun::Rgba32(0, 255, 0)),
+        dalaran::AnnotationContext({
+            dalaran::AnnotationInfo(1, "red", dalaran::Rgba32(255, 0, 0)),
+            dalaran::AnnotationInfo(2, "green", dalaran::Rgba32(0, 255, 0)),
         })
     );
 
@@ -36,6 +36,6 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "segmentation/image",
-        rerun::SegmentationImage(data.data(), {WIDTH, HEIGHT})
+        dalaran::SegmentationImage(data.data(), {WIDTH, HEIGHT})
     );
 }

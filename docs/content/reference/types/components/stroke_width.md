@@ -5,7 +5,7 @@ title: "StrokeWidth"
 
 The width of a stroke specified in UI points.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -15,9 +15,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `StrokeWidth`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1StrokeWidth.html)
- * 🐍 [Python API docs for `StrokeWidth`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.StrokeWidth)
- * 🦀 [Rust API docs for `StrokeWidth`](https://docs.rs/rerun/latest/rerun/components/struct.StrokeWidth.html)
+ * 🌊 [C++ API docs for `StrokeWidth`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1StrokeWidth.html)
+ * 🐍 [Python API docs for `StrokeWidth`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.StrokeWidth)
+ * 🦀 [Rust API docs for `StrokeWidth`](https://docs.rs/dalaran/latest/dalaran/components/struct.StrokeWidth.html)
 
 
 ## Used by

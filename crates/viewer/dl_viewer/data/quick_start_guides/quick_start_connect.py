@@ -1,13 +1,13 @@
 """Connect to the viewer and log some data."""
 
 import numpy as np
-import dalaran as rr
+import dalaran as dl
 
 # Initialize the SDK and give our recording a unique name
-rr.init("dalaran_example_quick_start_connect")
+dl.init("dalaran_example_quick_start_connect")
 
 # Connect to a local viewer using the default port
-rr.connect_grpc()
+dl.connect_grpc()
 
 
 # Create some data
@@ -20,9 +20,9 @@ col_grid = np.meshgrid(*[np.linspace(0, 255, SIZE)] * 3)
 colors = np.vstack([c.reshape(-1) for c in col_grid]).astype(np.uint8).T
 
 # Log the data
-rr.log(
+dl.log(
     # name under which this entity is logged (known as "entity path")
     "my_points",
     # log data as a 3D point cloud archetype
-    rr.Points3D(positions, colors=colors, radii=0.5),
+    dl.Points3D(positions, colors=colors, radii=0.5),
 )

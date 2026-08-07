@@ -11,15 +11,15 @@ import pyarrow as pa
 from datafusion import col
 from PIL import Image
 
-import rerun as rr
+import dalaran as dl
 
 sample_video_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "video_sample"
 )
 
-server = rr.server.Server(datasets={"video_dataset": sample_video_path})
+server = dl.server.Server(datasets={"video_dataset": sample_video_path})
 CATALOG_URL = server.url()
-client = rr.catalog.CatalogClient(CATALOG_URL)
+client = dl.catalog.CatalogClient(CATALOG_URL)
 dataset = client.get_dataset(name="video_dataset")
 df = dataset.filter_contents([
     "/compressed_images/**",
@@ -45,7 +45,7 @@ row = df.filter(col("log_time") == times[0]).select(
 table = pa.table(row)
 format_details = table[format_column][0][0]
 flattened_image = table[content_column].to_numpy()[0][0]
-num_channels = rr.datatypes.color_model.ColorModel.auto(
+num_channels = dl.datatypes.color_model.ColorModel.auto(
     int(format_details["color_model"].as_py())
 ).num_channels()
 image = flattened_image.reshape(

@@ -4,7 +4,7 @@ order: 80
 description: Generate clickable URLs that open segments in the Viewer
 ---
 
-The [`segment_url`](https://ref.rerun.io/docs/python/stable/common/utilities/#rerun.utilities.datafusion.functions.url_generation.segment_url) DataFusion utility can be used to generate Rerun URLs that are clickable within the viewer.
+The [`segment_url`](https://ref.dalaran.dev/docs/python/stable/common/utilities/#dalaran.utilities.datafusion.functions.url_generation.segment_url) DataFusion utility can be used to generate Dalaran URLs that are clickable within the viewer.
 The generated URLs can optionally seek to a timestamp, select a time range, or select an entity path.
 
 ## Setup
@@ -22,9 +22,9 @@ snippet: howto/query-and-transform/segment_url[basic]
 Output:
 
 ```
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>
 ```
 
 ## Specify the time cursor position
@@ -39,9 +39,9 @@ snippet: howto/query-and-transform/segment_url[timestamp]
 Output:
 
 ```
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#when=real_time@2023-11-14T22:13:20Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#when=real_time@2023-11-14T22:13:21Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#when=real_time@2023-11-14T22:13:22Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#when=real_time@2023-11-14T22:13:20Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#when=real_time@2023-11-14T22:13:21Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#when=real_time@2023-11-14T22:13:22Z
 ```
 
 ## Selecting a time range
@@ -54,9 +54,9 @@ snippet: howto/query-and-transform/segment_url[time_range]
 Output:
 
 ```
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#time_selection=real_time@2023-11-14T22:13:20Z..2023-11-14T22:13:20.5Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#time_selection=real_time@2023-11-14T22:13:21Z..2023-11-14T22:13:21.5Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#time_selection=real_time@2023-11-14T22:13:22Z..2023-11-14T22:13:22.5Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#time_selection=real_time@2023-11-14T22:13:20Z..2023-11-14T22:13:20.5Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#time_selection=real_time@2023-11-14T22:13:21Z..2023-11-14T22:13:21.5Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#time_selection=real_time@2023-11-14T22:13:22Z..2023-11-14T22:13:22.5Z
 ```
 
 ## Selecting an entity
@@ -71,9 +71,9 @@ snippet: howto/query-and-transform/segment_url[selection]
 Output:
 
 ```
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#selection=/camera/rgb
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#selection=/observation/joint_positions
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#selection=/observation/gripper_state
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#selection=/camera/rgb
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#selection=/observation/joint_positions
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#selection=/observation/gripper_state
 ```
 
 ## Combining features
@@ -85,9 +85,9 @@ snippet: howto/query-and-transform/segment_url[combined]
 Output:
 
 ```
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:20Z&time_selection=real_time@2023-11-14T22:13:20Z..2023-11-14T22:13:20.5Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#selection=/observation/joint_positions&when=real_time@2023-11-14T22:13:21Z&time_selection=real_time@2023-11-14T22:13:21Z..2023-11-14T22:13:21.5Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#selection=/observation/gripper_state&when=real_time@2023-11-14T22:13:22Z&time_selection=real_time@2023-11-14T22:13:22Z..2023-11-14T22:13:22.5Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:20Z&time_selection=real_time@2023-11-14T22:13:20Z..2023-11-14T22:13:20.5Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#selection=/observation/joint_positions&when=real_time@2023-11-14T22:13:21Z&time_selection=real_time@2023-11-14T22:13:21Z..2023-11-14T22:13:21.5Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#selection=/observation/gripper_state&when=real_time@2023-11-14T22:13:22Z&time_selection=real_time@2023-11-14T22:13:22Z..2023-11-14T22:13:22.5Z
 ```
 
 ## Using expressions
@@ -100,7 +100,7 @@ snippet: howto/query-and-transform/segment_url[expressions]
 Output:
 
 ```
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:20Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:21Z
-rerun+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:22Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_1>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:20Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_2>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:21Z
+dalaran+http://localhost:51234/dataset/<DATASET_ID>?segment_id=<SEGMENT_ID_3>#selection=/camera/rgb&when=real_time@2023-11-14T22:13:22Z
 ```

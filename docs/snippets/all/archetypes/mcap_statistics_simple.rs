@@ -2,12 +2,12 @@
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_mcap_statistics")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_mcap_statistics")
             .spawn()?;
 
     rec.log(
         "mcap/statistics/recording_overview",
-        &rerun::McapStatistics::update_fields()
+        &dalaran::McapStatistics::update_fields()
             .with_message_count(12500u64)
             .with_schema_count(3u64)
             .with_channel_count(5u64)

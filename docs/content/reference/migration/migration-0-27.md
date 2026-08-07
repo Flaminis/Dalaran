@@ -11,7 +11,7 @@ We've dropped official support for Intel (x86) macOS in [PR #11719](https://gith
 
 This means our Python wheels on PyPi.org and our other pre-built artifact does no longer include Intel Mac binaries.
 
-You can still build Rerun from source.
+You can still build Dalaran from source.
 There are instructions for that in [`BUILD.md`](https://github.com/rerun-io/rerun/blob/main/BUILD.md).
 
 

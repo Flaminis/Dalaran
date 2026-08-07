@@ -9,11 +9,11 @@ channel = "release"
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/G9Xxf0sNYcQ?si=jfb-WrY9WrFGh6mB" title="Any Scalar Example" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-*A 6-minute narrated walkthrough of using the Rerun UI to plot arbitrary scalar data from a dataset (MCAP) is available on [Youtube](https://www.youtube.com/embed/G9Xxf0sNYcQ?si=jfb-WrY9WrFGh6mB).*
+*A 6-minute narrated walkthrough of using the Dalaran UI to plot arbitrary scalar data from a dataset (MCAP) is available on [Youtube](https://www.youtube.com/embed/G9Xxf0sNYcQ?si=jfb-WrY9WrFGh6mB).*
 
 ## Overview
 
-This example demonstrates how to visualize arbitrary data, even when it was not logged with specific Rerun-semantics. With the **"Any Scalar"** feature, you can log complex data structures (like dictionaries or structs) once and use **Selectors** in the Blueprint to "pick" which internal fields to plot.
+This example demonstrates how to visualize arbitrary data, even when it was not logged with specific Dalaran-semantics. With the **"Any Scalar"** feature, you can log complex data structures (like dictionaries or structs) once and use **Selectors** in the Blueprint to "pick" which internal fields to plot.
 
 **Key Benefits:**
 
@@ -24,12 +24,12 @@ This example demonstrates how to visualize arbitrary data, even when it was not 
 
 ## Run the code
 
-To run this example, make sure you have the [required Python version](https://ref.rerun.io/docs/python/main/common#supported-python-versions), the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the [required Python version](https://ref.dalaran.dev/docs/python/main/common#supported-python-versions), the Dalaran repository checked out and the latest SDK installed:
 
 ```sh
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 
@@ -59,7 +59,7 @@ python -m any_scalar --help
 
 **Goal:** Visualize a control loop's internal state without logging separate scalars for every field.
 
-In `robotics_demo.py`, we simulate a joint controller. Instead of logging `error`, `effort`, and `position` as individual Rerun entities, we log a single **Telemetry struct** per time step.
+In `robotics_demo.py`, we simulate a joint controller. Instead of logging `error`, `effort`, and `position` as individual Dalaran entities, we log a single **Telemetry struct** per time step.
 
 **Tutorial highlights:**
 
@@ -87,7 +87,7 @@ In `market_demo.py`, we fetch real stock data. We log the raw prices and a "norm
 **Tutorial highlights:**
 
 - **Dynamic normalization:** We log the price relative to the morning opening.
-- **Dynamic archetype:** We log the stock data as a dictionary using `rerun.DynamicArchetype`.
+- **Dynamic archetype:** We log the stock data as a dictionary using `dalaran.DynamicArchetype`.
 - **Selectors:** We use [`jq`](https://jqlang.org/)-style selectors, like `.prices.normalized` and `.prices.close`, to power different parts of the dashboard.
 
 What you should see when running `python -m any_scalar --demo market`:
@@ -104,7 +104,7 @@ What you should see when running `python -m any_scalar --demo market`:
 
 **Goal:** Plot values from dataset files without writing any code.
 
-Because Rerun can now plot **Any Scalar**, you can drag an `.mcap` or `.rrd` file into the viewer and create a `Time Series` view. Use the UI in the viewer to drill into nested ROS messages or telemetry logs and start plotting immediately.
+Because Dalaran can now plot **Any Scalar**, you can drag an `.mcap` or `.rrd` file into the viewer and create a `Time Series` view. Use the UI in the viewer to drill into nested ROS messages or telemetry logs and start plotting immediately.
 
 > [!TIP]
 > **Watch the video at the top of this page** to see a step-by-step walkthrough of how to use the UI to plot any field from an MCAP/RRD file.
@@ -115,11 +115,11 @@ Because Rerun can now plot **Any Scalar**, you can drag an `.mcap` or `.rrd` fil
 
 ### What is "Any Scalar"?
 
-Traditionally, to plot a graph, you had to log data specifically as one of Rerun's `Scalar` archetypes. With **Any Scalar**, you can log complex blobs (Dictionaries, TypedDicts, Arrow Structs) and Rerun will let you "map" internal fields to visualizers.
+Traditionally, to plot a graph, you had to log data specifically as one of Dalaran's `Scalar` archetypes. With **Any Scalar**, you can log complex blobs (Dictionaries, TypedDicts, Arrow Structs) and Dalaran will let you "map" internal fields to visualizers.
 
 ### Selectors (jq-style)
 
-Rerun uses a path syntax inspired by [`jq`](https://jqlang.org/) to reach into your data:
+Dalaran uses a path syntax inspired by [`jq`](https://jqlang.org/) to reach into your data:
 - `.state.position` -> reaches into the `state` dict and finds `position`.
 - `.prices.normalized` -> pulls the calculated performance from the market tick.
 
@@ -133,13 +133,13 @@ Rerun uses a path syntax inspired by [`jq`](https://jqlang.org/) to reach into y
 
 ## Resources
 
-- [Customize views](https://rerun.io/docs/concepts/visualization/customize-views)
-- [Plot any scalar](https://rerun.io/docs/howto/visualization/plot-any-scalar)
-- [Component Mappings Guide](https://rerun.io/docs/howto/visualization/component-mappings)
+- [Customize views](https://dalaran.dev/docs/concepts/visualization/customize-views)
+- [Plot any scalar](https://dalaran.dev/docs/howto/visualization/plot-any-scalar)
+- [Component Mappings Guide](https://dalaran.dev/docs/howto/visualization/component-mappings)
 
 ---
 
-## Used Rerun types
+## Used Dalaran types
 
-[`DynamicArchetype`](https://ref.rerun.io/docs/python/stable/common/custom_data/#rerun.dynamic_archetype.DynamicArchetype), [`SeriesLines`](https://rerun.io/docs/reference/types/archetypes/series_lines), [`SeriesPoints`](https://rerun.io/docs/reference/types/archetypes/series_points)
+[`DynamicArchetype`](https://ref.dalaran.dev/docs/python/stable/common/custom_data/#dalaran.dynamic_archetype.DynamicArchetype), [`SeriesLines`](https://dalaran.dev/docs/reference/types/archetypes/series_lines), [`SeriesPoints`](https://dalaran.dev/docs/reference/types/archetypes/series_points)
 

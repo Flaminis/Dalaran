@@ -1,5 +1,5 @@
 #include <cstdio>
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
     const std::string path_to_mcap = argv[1];
 
     // Initialize the SDK and give our recording a unique name
-    const auto rec = rerun::RecordingStream("rerun_example_load_mcap");
+    const auto rec = dalaran::RecordingStream("dalaran_example_load_mcap");
     rec.spawn().exit_on_failure();
 
     // Load the MCAP file

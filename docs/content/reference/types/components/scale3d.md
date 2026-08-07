@@ -9,7 +9,7 @@ A scale of 1.0 means no scaling.
 A scale of 2.0 means doubling the size.
 Each component scales along the corresponding axis.
 
-## Rerun datatype
+## Dalaran datatype
 [`Vec3D`](../datatypes/vec3d.md)
 
 
@@ -19,9 +19,9 @@ FixedSizeList(3 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Scale3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Scale3D.html)
- * 🐍 [Python API docs for `Scale3D`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Scale3D)
- * 🦀 [Rust API docs for `Scale3D`](https://docs.rs/rerun/latest/rerun/components/struct.Scale3D.html)
+ * 🌊 [C++ API docs for `Scale3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Scale3D.html)
+ * 🐍 [Python API docs for `Scale3D`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Scale3D)
+ * 🦀 [Rust API docs for `Scale3D`](https://docs.rs/dalaran/latest/dalaran/components/struct.Scale3D.html)
 
 
 ## Used by

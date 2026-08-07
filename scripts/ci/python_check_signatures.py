@@ -1,5 +1,5 @@
 """
-Compares the signatures in `rerun_bindings.pyi` with the actual runtime signatures in `rerun_bindings.so`.
+Compares the signatures in `dalaran_bindings.pyi` with the actual runtime signatures in `dalaran_bindings.so`.
 
 This does not check that the type annotations match. However, it does ensure that the number of arguments,
 the argument names, and whether the arguments are required or have defaults match between the stub and runtime.
@@ -296,7 +296,7 @@ def compare_signatures(stub_signatures: TotalSignature, runtime_signatures: Tota
     if result > 0:
         print()
         print(
-            f"{result} error(s) found. Please update rerun_py/rerun_bindings/rerun_bindings.pyi to match the runtime."
+            f"{result} error(s) found. Please update dalaran_py/dalaran_bindings/dalaran_bindings.pyi to match the runtime."
         )
 
     else:
@@ -307,11 +307,11 @@ def compare_signatures(stub_signatures: TotalSignature, runtime_signatures: Tota
 
 def main() -> int:
     # load the stub file
-    path_to_stub = Path(__file__).parent.parent.parent / "rerun_py" / "rerun_bindings" / "rerun_bindings.pyi"
+    path_to_stub = Path(__file__).parent.parent.parent / "dalaran_py" / "dalaran_bindings" / "dalaran_bindings.pyi"
     stub_signatures = load_stub_signatures(path_to_stub)
 
     # load the runtime signatures
-    runtime_signatures = load_runtime_signatures("rerun_bindings")
+    runtime_signatures = load_runtime_signatures("dalaran_bindings")
 
     sys.exit(compare_signatures(stub_signatures, runtime_signatures))
 

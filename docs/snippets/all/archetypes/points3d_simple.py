@@ -1,7 +1,7 @@
 """Log some very simple points."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_points3d", spawn=True)
+dl.init("dalaran_example_points3d", spawn=True)
 
-rr.log("points", rr.Points3D([[0, 0, 0], [1, 1, 1]]))
+dl.log("points", dl.Points3D([[0, 0, 0], [1, 1, 1]]))

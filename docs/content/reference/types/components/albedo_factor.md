@@ -5,7 +5,7 @@ title: "AlbedoFactor"
 
 A color multiplier, usually applied to a whole entity, e.g. a mesh.
 
-## Rerun datatype
+## Dalaran datatype
 [`Rgba32`](../datatypes/rgba32.md)
 
 
@@ -15,9 +15,9 @@ UInt32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `AlbedoFactor`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1AlbedoFactor.html)
- * 🐍 [Python API docs for `AlbedoFactor`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.AlbedoFactor)
- * 🦀 [Rust API docs for `AlbedoFactor`](https://docs.rs/rerun/latest/rerun/components/struct.AlbedoFactor.html)
+ * 🌊 [C++ API docs for `AlbedoFactor`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1AlbedoFactor.html)
+ * 🐍 [Python API docs for `AlbedoFactor`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.AlbedoFactor)
+ * 🦀 [Rust API docs for `AlbedoFactor`](https://docs.rs/dalaran/latest/dalaran/components/struct.AlbedoFactor.html)
 
 
 ## Used by

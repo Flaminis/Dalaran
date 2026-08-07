@@ -4,8 +4,8 @@ import os
 from argparse import Namespace
 from uuid import uuid4
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 README = """\
 # Modal scrolling
@@ -17,22 +17,22 @@ README = """\
 
 
 def log_readme() -> None:
-    rr.log("readme", rr.TextDocument(README, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("readme", dl.TextDocument(README, media_type=dl.MediaType.MARKDOWN), static=True)
 
 
 def log_many_entities() -> None:
     for i in range(1000):
-        rr.log(f"points/{i}", rr.Points2D([(i, i)]))
+        dl.log(f"points/{i}", dl.Points2D([(i, i)]))
 
 
 def run(args: Namespace) -> None:
-    rr.script_setup(
+    dl.script_setup(
         args,
         f"{os.path.basename(__file__)}",
         recording_id=uuid4(),
     )
-    rr.send_blueprint(
-        rrb.Grid(rrb.Spatial2DView(origin="/"), rrb.TextDocumentView(origin="readme")),
+    dl.send_blueprint(
+        dlb.Grid(dlb.Spatial2DView(origin="/"), dlb.TextDocumentView(origin="readme")),
         make_active=True,
         make_default=True,
     )
@@ -45,6 +45,6 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Interactive release checklist")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
     run(args)

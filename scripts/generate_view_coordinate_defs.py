@@ -72,7 +72,7 @@ def doclines(coords: ViewCoordinates) -> list[str]:
     if is_left_handed(coords):
         docs.append("")
         docs.append(
-            "⚠️ This is a left-handed coordinate system, which is [not yet supported by Rerun](https://github.com/rerun-io/rerun/issues/5032).",
+            "⚠️ This is a left-handed coordinate system, which is [not yet supported by Dalaran](https://github.com/rerun-io/rerun/issues/5032).",
         )
     return docs
 
@@ -151,7 +151,7 @@ def gen_rust_cmp_decl() -> list[str]:
 ################################################################################
 # Python Archetype
 
-PYTHON_ARCHETYPE_EXTENSION_FILE = "rerun_py/rerun_sdk/rerun/archetypes/view_coordinates_ext.py"
+PYTHON_ARCHETYPE_EXTENSION_FILE = "dalaran_py/dalaran_sdk/dalaran/archetypes/view_coordinates_ext.py"
 
 
 def py_arch_decl(coords: ViewCoordinates) -> str:
@@ -190,7 +190,7 @@ def gen_py_arch_def() -> list[str]:
 ################################################################################
 # Python Component
 
-PYTHON_COMPONENT_EXTENSION_FILE = "rerun_py/rerun_sdk/rerun/components/view_coordinates_ext.py"
+PYTHON_COMPONENT_EXTENSION_FILE = "dalaran_py/dalaran_sdk/dalaran/components/view_coordinates_ext.py"
 
 
 def py_cmp_decl(coords: ViewCoordinates) -> str:
@@ -229,12 +229,12 @@ def gen_py_cmp_def() -> list[str]:
 
 ################################################################################
 # CPP Archetype
-CPP_ARCHETYPE_EXTENSION_FILE = "rerun_cpp/src/rerun/archetypes/view_coordinates_ext.cpp"
+CPP_ARCHETYPE_EXTENSION_FILE = "dalaran_cpp/src/dalaran/archetypes/view_coordinates_ext.cpp"
 
 
 def cpp_arch_decl(coords: ViewCoordinates) -> str:
     docstring = "".join(f"/// {docline}\n" for docline in doclines(coords))
-    return f"{docstring}RERUN_SDK_EXPORT static const rerun::archetypes::ViewCoordinates {coords.name};\n\n"
+    return f"{docstring}DALARAN_SDK_EXPORT static const dalaran::archetypes::ViewCoordinates {coords.name};\n\n"
 
 
 def gen_cpp_arch_decl() -> list[str]:
@@ -252,7 +252,7 @@ def gen_cpp_arch_decl() -> list[str]:
 def cpp_arch_def(coords: ViewCoordinates) -> str:
     return (
         f"const ViewCoordinates ViewCoordinates::{coords.name} = ViewCoordinates(\n"
-        f"rerun::components::ViewCoordinates::{coords.name}\n"
+        f"dalaran::components::ViewCoordinates::{coords.name}\n"
         ");\n"
     )
 
@@ -271,12 +271,12 @@ def gen_cpp_arch_def() -> list[str]:
 
 ################################################################################
 # CPP Component
-CPP_COMPONENT_EXTENSION_FILE = "rerun_cpp/src/rerun/components/view_coordinates_ext.cpp"
+CPP_COMPONENT_EXTENSION_FILE = "dalaran_cpp/src/dalaran/components/view_coordinates_ext.cpp"
 
 
 def cpp_cmp_decl(coords: ViewCoordinates) -> str:
     docstring = "".join(f"/// {docline}\n" for docline in doclines(coords))
-    return f"{docstring}RERUN_SDK_EXPORT static const rerun::components::ViewCoordinates {coords.name};\n\n"
+    return f"{docstring}DALARAN_SDK_EXPORT static const dalaran::components::ViewCoordinates {coords.name};\n\n"
 
 
 def gen_cpp_cmp_decl() -> list[str]:
@@ -294,7 +294,7 @@ def gen_cpp_cmp_decl() -> list[str]:
 def cpp_cmp_def(coords: ViewCoordinates) -> str:
     return (
         f"const ViewCoordinates ViewCoordinates::{coords.name} = ViewCoordinates(\n"
-        f"rerun::datatypes::ViewDir::{coords.x}, rerun::datatypes::ViewDir::{coords.y}, rerun::datatypes::ViewDir::{coords.z}\n"
+        f"dalaran::datatypes::ViewDir::{coords.x}, dalaran::datatypes::ViewDir::{coords.y}, dalaran::datatypes::ViewDir::{coords.z}\n"
         ");\n"
     )
 

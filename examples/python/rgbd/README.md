@@ -19,64 +19,64 @@ Visualizes an example recording from [the NYUD dataset](https://cs.nyu.edu/~ferg
   <img src="https://static.rerun.io/rgbd/4109d29ed52fa0a8f980fcdd0e9673360c76879f/full.png" alt="RGBD example screenshot">
 </picture>
 
-## Used Rerun types
+## Used Dalaran types
 
-[`Image`](https://www.rerun.io/docs/reference/types/archetypes/image), [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole), [`DepthImage`](https://www.rerun.io/docs/reference/types/archetypes/depth_image)
+[`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image), [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole), [`DepthImage`](https://www.dalaran.dev/docs/reference/types/archetypes/depth_image)
 
 ## Background
 
 The dataset, known as the NYU Depth V2 dataset, consists of synchronized pairs of RGB and depth frames recorded by the Microsoft Kinect in various indoor scenes.
 This example visualizes one scene of this dataset, and offers a rich source of data for object recognition, scene understanding, depth estimation, and more.
 
-## Logging and visualizing with Rerun
+## Logging and visualizing with Dalaran
 
-The visualizations in this example were created with the following Rerun code:
+The visualizations in this example were created with the following Dalaran code:
 
 ### Timelines
 
-All data logged using Rerun in the following sections is connected to a specific time.
-Rerun assigns a timestamp to each piece of logged data, and these timestamps are associated with a [`timeline`](https://www.rerun.io/docs/concepts/logging-and-ingestion/timelines).
+All data logged using Dalaran in the following sections is connected to a specific time.
+Dalaran assigns a timestamp to each piece of logged data, and these timestamps are associated with a [`timeline`](https://www.dalaran.dev/docs/concepts/logging-and-ingestion/timelines).
 
 ```python
-rr.set_time("time", timestamp=time.timestamp())
+dl.set_time("time", timestamp=time.timestamp())
 ```
 
 ### Image
 
-The example image is logged as [`Image`](https://www.rerun.io/docs/reference/types/archetypes/image) to the `world/camera/image/rgb` entity.
+The example image is logged as [`Image`](https://www.dalaran.dev/docs/reference/types/archetypes/image) to the `world/camera/image/rgb` entity.
 
 ```python
-rr.log("world/camera/image/rgb", rr.Image(img_rgb).compress(jpeg_quality=95))
+dl.log("world/camera/image/rgb", dl.Image(img_rgb).compress(jpeg_quality=95))
 ```
 
 ### Depth image
 
-Pinhole camera is utilized for achieving a 3D view and camera perspective through the use of the [`Pinhole`](https://www.rerun.io/docs/reference/types/archetypes/pinhole).
+Pinhole camera is utilized for achieving a 3D view and camera perspective through the use of the [`Pinhole`](https://www.dalaran.dev/docs/reference/types/archetypes/pinhole).
 
 ```python
-rr.log(
+dl.log(
     "world/camera/image",
-    rr.Pinhole(
+    dl.Pinhole(
         resolution=[img_depth.shape[1], img_depth.shape[0]],
         focal_length=0.7 * img_depth.shape[1],
     ),
 )
 ```
 
-Then, the depth image is logged as a [`DepthImage`](https://www.rerun.io/docs/reference/types/archetypes/depth_image) to the `world/camera/image/depth` entity.
+Then, the depth image is logged as a [`DepthImage`](https://www.dalaran.dev/docs/reference/types/archetypes/depth_image) to the `world/camera/image/depth` entity.
 
 ```python
-rr.log("world/camera/image/depth", rr.DepthImage(img_depth, meter=DEPTH_IMAGE_SCALING))
+dl.log("world/camera/image/depth", dl.DepthImage(img_depth, meter=DEPTH_IMAGE_SCALING))
 ```
 
 ## Run the code
 
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 

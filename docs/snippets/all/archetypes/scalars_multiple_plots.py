@@ -4,9 +4,9 @@ from math import cos, sin, tau
 
 import numpy as np
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_scalar_multiple_plots", spawn=True)
+dl.init("dalaran_example_scalar_multiple_plots", spawn=True)
 lcg_state = np.int64(0)
 
 # Set up plot styling:
@@ -14,14 +14,14 @@ lcg_state = np.int64(0)
 # all timelines.
 # Log two lines series under a shared root so that they show in the same
 # plot by default.
-rr.log(
+dl.log(
     "trig/sin",
-    rr.SeriesLines(colors=[255, 0, 0], names="sin(0.01t)"),
+    dl.SeriesLines(colors=[255, 0, 0], names="sin(0.01t)"),
     static=True,
 )
-rr.log(
+dl.log(
     "trig/cos",
-    rr.SeriesLines(colors=[0, 255, 0], names="cos(0.01t)"),
+    dl.SeriesLines(colors=[0, 255, 0], names="cos(0.01t)"),
     static=True,
 )
 
@@ -35,15 +35,15 @@ rr.log(
 
 # Log scattered points under a different root so that they show in a
 # different plot by default.
-rr.log("scatter/lcg", rr.SeriesPoints(), static=True)
+dl.log("scatter/lcg", dl.SeriesPoints(), static=True)
 
 # Log the data on a timeline called "step".
 for t in range(int(tau * 2 * 100.0)):
-    rr.set_time("step", sequence=t)
+    dl.set_time("step", sequence=t)
 
-    rr.log("trig/sin", rr.Scalars(sin(float(t) / 100.0)))
-    rr.log("trig/cos", rr.Scalars(cos(float(t) / 100.0)))
+    dl.log("trig/sin", dl.Scalars(sin(float(t) / 100.0)))
+    dl.log("trig/cos", dl.Scalars(cos(float(t) / 100.0)))
 
     # simple linear congruency generator
     lcg_state = (1140671485 * lcg_state + 128201163) % 16777216
-    rr.log("scatter/lcg", rr.Scalars(lcg_state.astype(np.float64)))
+    dl.log("scatter/lcg", dl.Scalars(lcg_state.astype(np.float64)))

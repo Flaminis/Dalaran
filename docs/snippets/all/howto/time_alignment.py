@@ -8,15 +8,15 @@ from pathlib import Path
 import numpy as np
 from datafusion import col
 
-import rerun as rr
+import dalaran as dl
 
 sample_5_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
 )
 
-server = rr.server.Server(datasets={"sample_dataset": sample_5_path})
+server = dl.server.Server(datasets={"sample_dataset": sample_5_path})
 CATALOG_URL = server.url()
-client = rr.catalog.CatalogClient(CATALOG_URL)
+client = dl.catalog.CatalogClient(CATALOG_URL)
 dataset = client.get_dataset(name="sample_dataset")
 # endregion: setup
 

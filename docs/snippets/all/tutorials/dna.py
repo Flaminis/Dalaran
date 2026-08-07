@@ -5,20 +5,20 @@ from math import tau
 
 import numpy as np
 
-import rerun as rr
-from rerun.utilities import bounce_lerp, build_color_spiral
+import dalaran as dl
+from dalaran.utilities import bounce_lerp, build_color_spiral
 
 # endregion: imports
 
 
 def main() -> None:
     # region: init
-    rr.init("rerun_example_dna_abacus", spawn=True)
+    dl.init("dalaran_example_dna_abacus", spawn=True)
     # endregion: init
 
     # The fix for the latest-at lesson — see "Latest-at semantics" in tutorial.
     # region: latest_at_fix
-    rr.set_time("stable_time", duration=0)
+    dl.set_time("stable_time", duration=0)
     # endregion: latest_at_fix
 
     NUM_POINTS = 100
@@ -27,18 +27,18 @@ def main() -> None:
     points1, colors1 = build_color_spiral(NUM_POINTS)
     points2, colors2 = build_color_spiral(NUM_POINTS, angular_offset=tau * 0.5)
 
-    rr.log(
-        "dna/structure/left", rr.Points3D(points1, colors=colors1, radii=0.08)
+    dl.log(
+        "dna/structure/left", dl.Points3D(points1, colors=colors1, radii=0.08)
     )
-    rr.log(
-        "dna/structure/right", rr.Points3D(points2, colors=colors2, radii=0.08)
+    dl.log(
+        "dna/structure/right", dl.Points3D(points2, colors=colors2, radii=0.08)
     )
     # endregion: first_points
 
     # region: scaffolding
-    rr.log(
+    dl.log(
         "dna/structure/scaffolding",
-        rr.LineStrips3D(
+        dl.LineStrips3D(
             np.stack((points1, points2), axis=1), colors=[128, 128, 128]
         ),
     )
@@ -53,9 +53,9 @@ def main() -> None:
     colors = [
         [int(bounce_lerp(80, 230, offsets[n] * 2))] for n in range(NUM_POINTS)
     ]
-    rr.log(
+    dl.log(
         "dna/structure/scaffolding/beads",
-        rr.Points3D(beads, radii=0.06, colors=np.repeat(colors, 3, axis=-1)),
+        dl.Points3D(beads, radii=0.06, colors=np.repeat(colors, 3, axis=-1)),
     )
     # endregion: beads
 
@@ -64,7 +64,7 @@ def main() -> None:
     # region: time_loop
     for i in range(400):
         time = i * 0.01
-        rr.set_time("stable_time", duration=time)
+        dl.set_time("stable_time", duration=time)
 
         times = np.repeat(time, NUM_POINTS) + time_offsets
         beads = [
@@ -74,9 +74,9 @@ def main() -> None:
         colors = [
             [int(bounce_lerp(80, 230, times[n] * 2))] for n in range(NUM_POINTS)
         ]
-        rr.log(
+        dl.log(
             "dna/structure/scaffolding/beads",
-            rr.Points3D(
+            dl.Points3D(
                 beads, radii=0.06, colors=np.repeat(colors, 3, axis=-1)
             ),
         )
@@ -85,11 +85,11 @@ def main() -> None:
     # region: transform_loop
     for i in range(400):
         time = i * 0.01
-        rr.set_time("stable_time", duration=time)
-        rr.log(
+        dl.set_time("stable_time", duration=time)
+        dl.log(
             "dna/structure",
-            rr.Transform3D(
-                rotation=rr.RotationAxisAngle(
+            dl.Transform3D(
+                rotation=dl.RotationAxisAngle(
                     axis=[0, 0, 1], radians=time / 4.0 * tau
                 )
             ),

@@ -3,7 +3,7 @@ Test showing that memory can be drained from a memory recording as valid RRD fil
 
 After running:
 ```bash
-rerun *.rrd
+dalaran *.rrd
 ```
 """
 
@@ -14,24 +14,24 @@ import threading
 import time
 from typing import TYPE_CHECKING, Any
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
 
-@rr.thread_local_stream("rerun_example_memory_drain")
+@dl.thread_local_stream("dalaran_example_memory_drain")
 def job(name: str) -> Iterator[tuple[str, int, bytes]]:
-    mem = rr.memory_recording()
+    mem = dl.memory_recording()
 
-    blueprint = rrb.Blueprint(rrb.TextLogView(name="My Logs", origin="test"))
+    blueprint = dlb.Blueprint(dlb.TextLogView(name="My Logs", origin="test"))
 
-    rr.send_blueprint(blueprint)
+    dl.send_blueprint(blueprint)
 
     for i in range(5):
         time.sleep(0.2)
-        rr.log("test", rr.TextLog(f"Job {name} Message {i}"))
+        dl.log("test", dl.TextLog(f"Job {name} Message {i}"))
 
         print(f"YIELD {name} {i}")
         yield (name, i, mem.drain_as_bytes())

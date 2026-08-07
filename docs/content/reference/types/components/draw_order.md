@@ -10,7 +10,7 @@ Within an entity draw order is governed by the order of the components.
 
 Draw order for entities with the same draw order is generally undefined.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -20,9 +20,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `DrawOrder`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1DrawOrder.html)
- * 🐍 [Python API docs for `DrawOrder`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.DrawOrder)
- * 🦀 [Rust API docs for `DrawOrder`](https://docs.rs/rerun/latest/rerun/components/struct.DrawOrder.html)
+ * 🌊 [C++ API docs for `DrawOrder`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1DrawOrder.html)
+ * 🐍 [Python API docs for `DrawOrder`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.DrawOrder)
+ * 🦀 [Rust API docs for `DrawOrder`](https://docs.rs/dalaran/latest/dalaran/components/struct.DrawOrder.html)
 
 
 ## Used by

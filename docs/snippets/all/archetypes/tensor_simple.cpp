@@ -1,13 +1,13 @@
 // Create and log a tensor.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm> // std::generate
 #include <random>
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_tensor");
+    const auto rec = dalaran::RecordingStream("dalaran_example_tensor");
     rec.spawn().exit_on_failure();
 
     std::default_random_engine gen;
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "tensor",
-        rerun::Tensor({8, 6, 3, 5}, data)
+        dalaran::Tensor({8, 6, 3, 5}, data)
             .with_dim_names({"width", "height", "channel", "batch"})
     );
 }

@@ -2,7 +2,7 @@
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_grid_map").spawn()?;
+        dalaran::RecordingStreamBuilder::new("dalaran_example_grid_map").spawn()?;
 
     let width: usize = 64;
     let height: usize = 64;
@@ -24,12 +24,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     rec.log(
         "world/map",
-        &rerun::GridMap::new(
+        &dalaran::GridMap::new(
             grid,
-            rerun::components::ImageFormat::from_color_model(
+            dalaran::components::ImageFormat::from_color_model(
                 [width as u32, height as u32],
-                rerun::ColorModel::L,
-                rerun::ChannelDatatype::U8,
+                dalaran::ColorModel::L,
+                dalaran::ChannelDatatype::U8,
             ),
             cell_size,
         )
@@ -38,7 +38,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             -(height as f32) * cell_size / 2.0,
             0.0,
         ])
-        .with_colormap(rerun::components::Colormap::RvizMap),
+        .with_colormap(dalaran::components::Colormap::RvizMap),
     )?;
 
     Ok(())

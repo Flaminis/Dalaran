@@ -22,13 +22,13 @@ import pyarrow as pa
 from datafusion import col
 from datafusion import functions as F
 
-import rerun as rr
+import dalaran as dl
 
 sample_video_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "video_sample"
 )
 
-server = rr.server.Server(datasets={"video_dataset": sample_video_path})
+server = dl.server.Server(datasets={"video_dataset": sample_video_path})
 client = server.client()
 dataset = client.get_dataset(name="video_dataset")
 df = dataset.filter_contents(["/video_stream/**"]).reader(index="log_time")
@@ -74,14 +74,14 @@ first_segment_id = segment_ids[0]
 # Create time column and content using the columnar API
 # Make sure the timeline matches the original video stream
 timeline = "log_time"
-time_column = rr.TimeColumn(timeline=timeline, timestamp=keyframe_times)
-content = rr.DynamicArchetype.columns(
+time_column = dl.TimeColumn(timeline=timeline, timestamp=keyframe_times)
+content = dl.DynamicArchetype.columns(
     archetype="KeyframeData", components={"is_keyframe": keyframe_values}
 )
 
 # Write to a new file as a layer
 layer_path = TMP_DIR / "keyframe_layer.rrd"
-with rr.RecordingStream(
+with dl.RecordingStream(
     application_id="keyframes",
     recording_id=first_segment_id,  # Match original recording_id
 ) as rec:

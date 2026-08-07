@@ -2,7 +2,7 @@
 Upload Vulkan SDK artifacts to GCloud storage for CI.
 
 This script downloads Vulkan SDK installers from LunarG and uploads them to
-the rerun-test-assets GCloud bucket so they can be used by the
+the dalaran-test-assets GCloud bucket so they can be used by the
 rerun-io/install-vulkan-sdk-action in CI.
 """
 
@@ -16,7 +16,7 @@ from pathlib import Path
 VULKAN_VERSION = "1.3.290.0"
 
 # GCloud bucket for Vulkan SDK binaries
-GCLOUD_BUCKET = "rerun-test-assets"
+GCLOUD_BUCKET = "dalaran-test-assets"
 
 
 def run(args: list[str]) -> subprocess.CompletedProcess[str]:
@@ -98,7 +98,7 @@ def download_and_upload_vulkan_sdk(version: str, platform: str) -> None:
     print(f"   Destination: {gcloud_url}")
 
     try:
-        client = storage.Client("rerun-open")
+        client = storage.Client("dalaran-open")
         bucket = client.bucket(GCLOUD_BUCKET)
         blob = bucket.blob(blob_path)
 

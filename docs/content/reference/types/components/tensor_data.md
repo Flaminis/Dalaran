@@ -12,7 +12,7 @@ a 2D RGB Image, the shape would be `[height, width, channel]`.
 These dimensions are combined with an index to look up values from the `buffer` field,
 which stores a contiguous array of typed values.
 
-## Rerun datatype
+## Dalaran datatype
 [`TensorData`](../datatypes/tensor_data.md)
 
 
@@ -39,9 +39,9 @@ Struct(
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `TensorData`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1TensorData.html)
- * 🐍 [Python API docs for `TensorData`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.TensorData)
- * 🦀 [Rust API docs for `TensorData`](https://docs.rs/rerun/latest/rerun/components/struct.TensorData.html)
+ * 🌊 [C++ API docs for `TensorData`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1TensorData.html)
+ * 🐍 [Python API docs for `TensorData`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.TensorData)
+ * 🦀 [Rust API docs for `TensorData`](https://docs.rs/dalaran/latest/dalaran/components/struct.TensorData.html)
 
 
 ## Used by

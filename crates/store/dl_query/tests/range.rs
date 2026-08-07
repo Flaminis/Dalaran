@@ -812,25 +812,25 @@ fn invalidation() {
 
 // Test the following scenario:
 // ```py
-// rr.log("points", rr.Points3D([1, 2, 3]), static=True)
+// dl.log("points", dl.Points3D([1, 2, 3]), static=True)
 //
 // # Do first query here: LatestAt(+inf)
 // # Expected: points=[[1,2,3]] colors=[]
 //
-// rr.set_time(2)
-// rr.log("points", rr.components.MyColor(0xFF0000))
+// dl.set_time(2)
+// dl.log("points", dl.components.MyColor(0xFF0000))
 //
 // # Do second query here: LatestAt(+inf)
 // # Expected: points=[[1,2,3]] colors=[0xFF0000]
 //
-// rr.set_time(3)
-// rr.log("points", rr.components.MyColor(0x0000FF))
+// dl.set_time(3)
+// dl.log("points", dl.components.MyColor(0x0000FF))
 //
 // # Do third query here: LatestAt(+inf)
 // # Expected: points=[[1,2,3]] colors=[0x0000FF]
 //
-// rr.set_time(3)
-// rr.log("points", rr.components.MyColor(0x00FF00))
+// dl.set_time(3)
+// dl.log("points", dl.components.MyColor(0x00FF00))
 //
 // # Do fourth query here: LatestAt(+inf)
 // # Expected: points=[[1,2,3]] colors=[0x00FF00]

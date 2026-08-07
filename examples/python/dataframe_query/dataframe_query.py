@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import argparse
 
-import rerun as rr
+import dalaran as dl
 
 DESCRIPTION = """
 Usage: python dataframe_query.py <path_to_rrd> [entity_path_filter]
@@ -14,7 +14,7 @@ This example will query for the first 10 rows of data in your recording of choic
 and display the results as a table in your terminal.
 
 You can use one of your recordings, or grab one from our hosted examples, e.g.:
-  curl 'https://app.rerun.io/version/latest/examples/dna.rrd' -o - > /tmp/dna.rrd
+  curl 'https://app.dalaran.dev/version/latest/examples/dna.rrd' -o - > /tmp/dna.rrd
 
 The results can be filtered further by specifying an entity filter expression:
   {bin_name} my_recording.rrd /helix/structure/**
@@ -22,7 +22,7 @@ The results can be filtered further by specifying an entity filter expression:
 
 
 def query(path_to_rrd: str, entity_path_filter: str) -> None:
-    with rr.server.Server(datasets={"recording": [path_to_rrd]}) as server:
+    with dl.server.Server(datasets={"recording": [path_to_rrd]}) as server:
         dataset = server.client().get_dataset("recording")
 
         # Query the data

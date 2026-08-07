@@ -2,12 +2,12 @@
 name = "robot_data_preprocessing"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["pyarrow", "rerun-sdk"]
+dependencies = ["pyarrow", "dalaran-sdk"]
 
 [project.scripts]
 robot_data_preprocessing = "robot_data_preprocessing:main"
 
-[tool.rerun-example]
+[tool.dalaran-example]
 skip = true
 
 [build-system]

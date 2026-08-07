@@ -7,7 +7,7 @@ The metric size of one grid cell in local scene units.
 
 E.g. for 2D grid maps, this is the physical size represented by a single pixel or cell.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -17,9 +17,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `CellSize`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1CellSize.html)
- * 🐍 [Python API docs for `CellSize`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.CellSize)
- * 🦀 [Rust API docs for `CellSize`](https://docs.rs/rerun/latest/rerun/components/struct.CellSize.html)
+ * 🌊 [C++ API docs for `CellSize`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1CellSize.html)
+ * 🐍 [Python API docs for `CellSize`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.CellSize)
+ * 🦀 [Rust API docs for `CellSize`](https://docs.rs/dalaran/latest/dalaran/components/struct.CellSize.html)
 
 
 ## Used by

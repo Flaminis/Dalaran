@@ -13,7 +13,7 @@ this value would be `1000`.
 Note that the only effect on 2D views is the physical depth values shown when hovering the image.
 In 3D views on the other hand, this affects where the points of the point cloud are placed.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -23,9 +23,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `DepthMeter`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1DepthMeter.html)
- * 🐍 [Python API docs for `DepthMeter`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.DepthMeter)
- * 🦀 [Rust API docs for `DepthMeter`](https://docs.rs/rerun/latest/rerun/components/struct.DepthMeter.html)
+ * 🌊 [C++ API docs for `DepthMeter`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1DepthMeter.html)
+ * 🐍 [Python API docs for `DepthMeter`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.DepthMeter)
+ * 🦀 [Rust API docs for `DepthMeter`](https://docs.rs/dalaran/latest/dalaran/components/struct.DepthMeter.html)
 
 
 ## Used by

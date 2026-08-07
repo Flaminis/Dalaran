@@ -11,9 +11,9 @@ from __future__ import annotations
 
 import numpy as np
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.blueprint.datatypes import ComponentSourceKind, VisualizerComponentMapping
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran.blueprint.datatypes import ComponentSourceKind, VisualizerComponentMapping
 
 
 def simulate_robot_controller() -> None:
@@ -52,7 +52,7 @@ def simulate_robot_controller() -> None:
         position += velocity * dt
 
         # Deeply nested telemetry: state, control, status
-        # This showcases Rerun's powerful jq-style selectors for hierarchical data.
+        # This showcases Dalaran's powerful jq-style selectors for hierarchical data.
         telemetry_data.append([
             {
                 "state": {
@@ -68,10 +68,10 @@ def simulate_robot_controller() -> None:
         ])
 
     # Log telemetry using send_columns
-    rr.send_columns(
+    dl.send_columns(
         "robot/joint_0",
-        indexes=[rr.TimeColumn("robot_step", sequence=np.arange(steps))],
-        columns=[*rr.DynamicArchetype.columns(archetype="ControllerTelemetry", components={"data": telemetry_data})],
+        indexes=[dl.TimeColumn("robot_step", sequence=np.arange(steps))],
+        columns=[*dl.DynamicArchetype.columns(archetype="ControllerTelemetry", components={"data": telemetry_data})],
     )
 
 
@@ -80,17 +80,17 @@ def run_robotics_simulation() -> None:
     simulate_robot_controller()
 
 
-def generate_blueprint() -> rrb.Blueprint:
+def generate_blueprint() -> dlb.Blueprint:
     """Generate the blueprint for the robotics demo."""
-    return rrb.Blueprint(
-        rrb.Vertical(
+    return dlb.Blueprint(
+        dlb.Vertical(
             # View 1: Main Control Performance (Multiple Visualizers + Nested Selectors)
-            rrb.TimeSeriesView(
+            dlb.TimeSeriesView(
                 name="Control Performance",
                 origin="/robot/joint_0",
                 overrides={
                     "robot/joint_0": [
-                        rr.SeriesLines(names="Setpoint", colors=[100, 100, 255]).visualizer(
+                        dl.SeriesLines(names="Setpoint", colors=[100, 100, 255]).visualizer(
                             mappings=[
                                 VisualizerComponentMapping(
                                     target="Scalars:scalars",
@@ -100,7 +100,7 @@ def generate_blueprint() -> rrb.Blueprint:
                                 )
                             ]
                         ),
-                        rr.SeriesLines(names="Position", colors=[255, 100, 0]).visualizer(
+                        dl.SeriesLines(names="Position", colors=[255, 100, 0]).visualizer(
                             mappings=[
                                 VisualizerComponentMapping(
                                     target="Scalars:scalars",
@@ -111,7 +111,7 @@ def generate_blueprint() -> rrb.Blueprint:
                             ]
                         ),
                         # Multiple visualizers on the SAME field (.control.error)
-                        rr.SeriesLines(names="Error (Line)", colors=[255, 0, 0]).visualizer(
+                        dl.SeriesLines(names="Error (Line)", colors=[255, 0, 0]).visualizer(
                             mappings=[
                                 VisualizerComponentMapping(
                                     target="Scalars:scalars",
@@ -121,7 +121,7 @@ def generate_blueprint() -> rrb.Blueprint:
                                 )
                             ]
                         ),
-                        rr.SeriesPoints(names="Error (Dots)", colors=[255, 0, 0]).visualizer(
+                        dl.SeriesPoints(names="Error (Dots)", colors=[255, 0, 0]).visualizer(
                             mappings=[
                                 VisualizerComponentMapping(
                                     target="Scalars:scalars",
@@ -135,12 +135,12 @@ def generate_blueprint() -> rrb.Blueprint:
                 },
             ),
             # View 2: Internals (Step Interpolation & Nested Booleans)
-            rrb.TimeSeriesView(
+            dlb.TimeSeriesView(
                 name="Controller Internals",
                 origin="/robot/joint_0",
                 overrides={
                     "robot/joint_0": [
-                        rr.SeriesLines(names="Effort", colors=[0, 200, 200], interpolation_mode="StepAfter").visualizer(
+                        dl.SeriesLines(names="Effort", colors=[0, 200, 200], interpolation_mode="StepAfter").visualizer(
                             mappings=[
                                 VisualizerComponentMapping(
                                     target="Scalars:scalars",
@@ -150,7 +150,7 @@ def generate_blueprint() -> rrb.Blueprint:
                                 )
                             ]
                         ),
-                        rr.SeriesLines(
+                        dl.SeriesLines(
                             names="Stability Flag", colors=[0, 255, 0], interpolation_mode="StepAfter"
                         ).visualizer(
                             mappings=[
@@ -166,10 +166,10 @@ def generate_blueprint() -> rrb.Blueprint:
                 },
             ),
             # View 3: Dataframe Inspector
-            rrb.DataframeView(
+            dlb.DataframeView(
                 name="Telemetry Inspector",
                 origin="/robot/joint_0",
-                query=rrb.archetypes.DataframeQuery(
+                query=dlb.archetypes.DataframeQuery(
                     auto_scroll=True,
                 ),
             ),
@@ -178,11 +178,11 @@ def generate_blueprint() -> rrb.Blueprint:
 
 
 def main() -> None:
-    rr.init("rerun_example_any_scalar_robotics", spawn=True)
+    dl.init("dalaran_example_any_scalar_robotics", spawn=True)
 
     run_robotics_simulation()
 
-    rr.send_blueprint(generate_blueprint())
+    dl.send_blueprint(generate_blueprint())
 
 
 if __name__ == "__main__":

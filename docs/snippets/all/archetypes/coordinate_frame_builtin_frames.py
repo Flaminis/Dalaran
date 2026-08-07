@@ -1,27 +1,27 @@
 """Demonstrates using explicit `CoordinateFrame` with implicit transforms."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_transform3d_hierarchy", spawn=True)
+dl.init("dalaran_example_transform3d_hierarchy", spawn=True)
 
-rr.set_time("time", sequence=0)
-rr.log(
+dl.set_time("time", sequence=0)
+dl.log(
     "red_box",
-    rr.Boxes3D(half_sizes=[0.5, 0.5, 0.5], colors=[255, 0, 0]),
+    dl.Boxes3D(half_sizes=[0.5, 0.5, 0.5], colors=[255, 0, 0]),
     # Use Transform3D to place the box, so we actually change the underlying
     # coordinate frame and not just the box's pose.
-    rr.Transform3D(translation=[2.0, 0.0, 0.0]),
+    dl.Transform3D(translation=[2.0, 0.0, 0.0]),
 )
-rr.log(
+dl.log(
     "blue_box",
-    rr.Boxes3D(half_sizes=[0.5, 0.5, 0.5], colors=[0, 0, 255]),
+    dl.Boxes3D(half_sizes=[0.5, 0.5, 0.5], colors=[0, 0, 255]),
     # Use Transform3D to place the box, so we actually change the underlying
     # coordinate frame and not just the box's pose.
-    rr.Transform3D(translation=[-2.0, 0.0, 0.0]),
+    dl.Transform3D(translation=[-2.0, 0.0, 0.0]),
 )
-rr.log("point", rr.Points3D([0.0, 0.0, 0.0], radii=0.5))
+dl.log("point", dl.Points3D([0.0, 0.0, 0.0], radii=0.5))
 
 # Change where the point is located by cycling through its coordinate frame.
 for t, frame_id in enumerate(["tf#/red_box", "tf#/blue_box"]):
-    rr.set_time("time", sequence=t + 1)  # leave it untouched at t==0.
-    rr.log("point", rr.CoordinateFrame(frame_id))
+    dl.set_time("time", sequence=t + 1)  # leave it untouched at t==0.
+    dl.log("point", dl.CoordinateFrame(frame_id))

@@ -2,7 +2,7 @@
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_line_segments3d")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_line_segments3d")
             .spawn()?;
 
     let points = [
@@ -15,7 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         [0., 1., 0.],
         [0., 1., 1.],
     ];
-    rec.log("segments", &rerun::LineStrips3D::new(points.chunks(2)))?;
+    rec.log("segments", &dalaran::LineStrips3D::new(points.chunks(2)))?;
 
     Ok(())
 }

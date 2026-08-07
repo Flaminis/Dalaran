@@ -7,7 +7,7 @@ When the recording started.
 
 Should be an absolute time, i.e. relative to Unix Epoch.
 
-## Rerun datatype
+## Dalaran datatype
 [`TimeInt`](../datatypes/time_int.md)
 
 
@@ -17,9 +17,9 @@ Int64
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Timestamp`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Timestamp.html)
- * 🐍 [Python API docs for `Timestamp`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Timestamp)
- * 🦀 [Rust API docs for `Timestamp`](https://docs.rs/rerun/latest/rerun/components/struct.Timestamp.html)
+ * 🌊 [C++ API docs for `Timestamp`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Timestamp.html)
+ * 🐍 [Python API docs for `Timestamp`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Timestamp)
+ * 🦀 [Rust API docs for `Timestamp`](https://docs.rs/dalaran/latest/dalaran/components/struct.Timestamp.html)
 
 
 ## Used by

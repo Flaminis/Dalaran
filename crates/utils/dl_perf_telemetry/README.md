@@ -37,9 +37,9 @@ The integration works pretty well for both out-of-process and in-process profili
 
 We'll use the following script as an example:
 ```py
-import dalaran as rr
+import dalaran as dl
 
-client = rr.catalog.CatalogClient("dalaran://sandbox.redap.dalaran.dev")
+client = dl.catalog.CatalogClient("dalaran://sandbox.redap.dalaran.dev")
 client.dataset_entries()
 
 dataset = client.get_dataset_entry(name="droid:raw")

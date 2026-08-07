@@ -5,9 +5,9 @@ title: "ImageBuffer"
 
 A buffer that is known to store image data.
 
-To interpret the contents of this buffer, see, [`components.ImageFormat`](https://rerun.io/docs/reference/types/components/image_format).
+To interpret the contents of this buffer, see, [`components.ImageFormat`](https://dalaran.dev/docs/reference/types/components/image_format).
 
-## Rerun datatype
+## Dalaran datatype
 [`Blob`](../datatypes/blob.md)
 
 
@@ -17,9 +17,9 @@ List(non-null UInt8)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ImageBuffer`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1ImageBuffer.html)
- * 🐍 [Python API docs for `ImageBuffer`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.ImageBuffer)
- * 🦀 [Rust API docs for `ImageBuffer`](https://docs.rs/rerun/latest/rerun/components/struct.ImageBuffer.html)
+ * 🌊 [C++ API docs for `ImageBuffer`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1ImageBuffer.html)
+ * 🐍 [Python API docs for `ImageBuffer`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.ImageBuffer)
+ * 🦀 [Rust API docs for `ImageBuffer`](https://docs.rs/dalaran/latest/dalaran/components/struct.ImageBuffer.html)
 
 
 ## Used by

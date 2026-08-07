@@ -2,23 +2,23 @@
 
 from math import pi
 
-import rerun as rr
-from rerun.datatypes import Angle, RotationAxisAngle
+import dalaran as dl
+from dalaran.datatypes import Angle, RotationAxisAngle
 
-rr.init("rerun_example_transform3d", spawn=True)
+dl.init("dalaran_example_transform3d", spawn=True)
 
-arrow = rr.Arrows3D(origins=[0, 0, 0], vectors=[0, 1, 0])
+arrow = dl.Arrows3D(origins=[0, 0, 0], vectors=[0, 1, 0])
 
-rr.log("base", arrow)
+dl.log("base", arrow)
 
-rr.log("base/translated", rr.Transform3D(translation=[1, 0, 0]))
-rr.log("base/translated", arrow)
+dl.log("base/translated", dl.Transform3D(translation=[1, 0, 0]))
+dl.log("base/translated", arrow)
 
-rr.log(
+dl.log(
     "base/rotated_scaled",
-    rr.Transform3D(
+    dl.Transform3D(
         rotation=RotationAxisAngle(axis=[0, 0, 1], angle=Angle(rad=pi / 4)),
         scale=2,
     ),
 )
-rr.log("base/rotated_scaled", arrow)
+dl.log("base/rotated_scaled", arrow)

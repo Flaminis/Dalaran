@@ -10,8 +10,8 @@ import pandas as pd
 import requests
 from tqdm.auto import tqdm
 
-import rerun as rr
-from rerun import blueprint as rrb
+import dalaran as dl
+from dalaran import blueprint as dlb
 
 DATA_DIR = Path(__file__).parent / "dataset"
 
@@ -26,34 +26,34 @@ def main() -> None:
     if not dataset_path.exists():
         _download_dataset(DATA_DIR)
 
-    parser = argparse.ArgumentParser(description="Visualizes the TUM Visual-Inertial dataset using the Rerun SDK.")
+    parser = argparse.ArgumentParser(description="Visualizes the TUM Visual-Inertial dataset using the Dalaran SDK.")
     parser.add_argument(
         "--seconds",
         type=float,
         default=float("inf"),
         help="If specified, limits the number of seconds logged",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    blueprint = rrb.Horizontal(
-        rrb.Vertical(
-            rrb.TimeSeriesView(
+    blueprint = dlb.Horizontal(
+        dlb.Vertical(
+            dlb.TimeSeriesView(
                 origin="gyroscope",
                 name="Gyroscope",
-                overrides={"/gyroscope": rr.SeriesLines(names=XYZ_AXIS_NAMES, colors=XYZ_AXIS_COLORS)},
+                overrides={"/gyroscope": dl.SeriesLines(names=XYZ_AXIS_NAMES, colors=XYZ_AXIS_COLORS)},
             ),
-            rrb.TimeSeriesView(
+            dlb.TimeSeriesView(
                 origin="accelerometer",
                 name="Accelerometer",
-                overrides={"/accelerometer": rr.SeriesLines(names=XYZ_AXIS_NAMES, colors=XYZ_AXIS_COLORS)},
+                overrides={"/accelerometer": dl.SeriesLines(names=XYZ_AXIS_NAMES, colors=XYZ_AXIS_COLORS)},
             ),
         ),
-        rrb.Spatial3DView(origin="/", name="World position"),
+        dlb.Spatial3DView(origin="/", name="World position"),
         column_shares=[0.45, 0.55],
     )
 
-    rr.script_setup(args, "rerun_example_imu_signals", default_blueprint=blueprint)
+    dl.script_setup(args, "dalaran_example_imu_signals", default_blueprint=blueprint)
 
     _log_imu_data(args.seconds)
     _log_image_data(args.seconds)
@@ -99,13 +99,13 @@ def _log_imu_data(max_time_sec: float) -> None:
     selected = imu_data[imu_data["timestamp"] <= max_time_ns]
 
     timestamps = selected["timestamp"].astype("datetime64[ns]")
-    times = rr.TimeColumn("timestamp", timestamp=timestamps)
+    times = dl.TimeColumn("timestamp", timestamp=timestamps)
 
     gyro = selected[["gyro.x", "gyro.y", "gyro.z"]].to_numpy()
-    rr.send_columns("/gyroscope", indexes=[times], columns=rr.Scalars.columns(scalars=gyro))
+    dl.send_columns("/gyroscope", indexes=[times], columns=dl.Scalars.columns(scalars=gyro))
 
     accel = selected[["accel.x", "accel.y", "accel.z"]]
-    rr.send_columns("/accelerometer", indexes=[times], columns=rr.Scalars.columns(scalars=accel))
+    dl.send_columns("/accelerometer", indexes=[times], columns=dl.Scalars.columns(scalars=accel))
 
 
 def _log_image_data(max_time_sec: float) -> None:
@@ -118,15 +118,15 @@ def _log_image_data(max_time_sec: float) -> None:
         dtype={"filename": str},
     )
 
-    rr.set_time("timestamp", timestamp=times["timestamp"][0])
-    rr.log(
+    dl.set_time("timestamp", timestamp=times["timestamp"][0])
+    dl.log(
         "/world",
-        rr.Transform3D(rotation_axis_angle=rr.RotationAxisAngle(axis=(1, 0, 0), angle=-np.pi / 2)),
+        dl.Transform3D(rotation_axis_angle=dl.RotationAxisAngle(axis=(1, 0, 0), angle=-np.pi / 2)),
         static=True,
     )
-    rr.log(
+    dl.log(
         "/world/cam0",
-        rr.Pinhole(
+        dl.Pinhole(
             focal_length=(0.373 * 512, 0.373 * 512),
             resolution=(512, 512),
             image_plane_distance=0.4,
@@ -140,8 +140,8 @@ def _log_image_data(max_time_sec: float) -> None:
             break
 
         image_path = DATA_DIR / DATASET_NAME / "dso/cam0/images" / f"{filename}.png"
-        rr.set_time("timestamp", timestamp=timestamp)
-        rr.log("/world/cam0/image", rr.EncodedImage(path=image_path))
+        dl.set_time("timestamp", timestamp=timestamp)
+        dl.log("/world/cam0/image", dl.EncodedImage(path=image_path))
 
 
 def _log_gt_imu(max_time_sec: float) -> None:
@@ -158,7 +158,7 @@ def _log_gt_imu(max_time_sec: float) -> None:
     selected = gt_imu[gt_imu["timestamp"] <= max_time_ns]
 
     timestamps = selected["timestamp"].astype("datetime64[ns]")
-    times = rr.TimeColumn("timestamp", timestamp=timestamps)
+    times = dl.TimeColumn("timestamp", timestamp=timestamps)
 
     translations = selected[["t.x", "t.y", "t.z"]]
     quaternions = selected[
@@ -169,10 +169,10 @@ def _log_gt_imu(max_time_sec: float) -> None:
             "q.w",
         ]
     ]
-    rr.send_columns(
+    dl.send_columns(
         "/world/cam0",
         indexes=[times],
-        columns=rr.Transform3D.columns(
+        columns=dl.Transform3D.columns(
             translation=translations,
             quaternion=quaternions,
         ),

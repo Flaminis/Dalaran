@@ -5,12 +5,12 @@ title: "VideoFrameReference"
 
 References a single video frame.
 
-Used to display individual video frames from a [`archetypes.AssetVideo`](https://rerun.io/docs/reference/types/archetypes/asset_video).
+Used to display individual video frames from a [`archetypes.AssetVideo`](https://dalaran.dev/docs/reference/types/archetypes/asset_video).
 To show an entire video, a video frame reference for each frame of the video should be logged.
 
-See <https://rerun.io/docs/reference/video> for details of what is and isn't supported.
+See <https://dalaran.dev/docs/reference/video> for details of what is and isn't supported.
 
-TODO(#10422): [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference/types/archetypes/video_frame_reference) does not yet work with [`archetypes.VideoStream`](https://rerun.io/docs/reference/types/archetypes/video_stream).
+TODO(#10422): [`archetypes.VideoFrameReference`](https://dalaran.dev/docs/reference/types/archetypes/video_frame_reference) does not yet work with [`archetypes.VideoStream`](https://dalaran.dev/docs/reference/types/archetypes/video_stream).
 
 ## Fields
 ### Required
@@ -28,9 +28,9 @@ TODO(#10422): [`archetypes.VideoFrameReference`](https://rerun.io/docs/reference
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `VideoFrameReference`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1VideoFrameReference.html)
- * 🐍 [Python API docs for `VideoFrameReference`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.VideoFrameReference)
- * 🦀 [Rust API docs for `VideoFrameReference`](https://docs.rs/rerun/latest/rerun/archetypes/struct.VideoFrameReference.html)
+ * 🌊 [C++ API docs for `VideoFrameReference`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1VideoFrameReference.html)
+ * 🐍 [Python API docs for `VideoFrameReference`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.VideoFrameReference)
+ * 🦀 [Rust API docs for `VideoFrameReference`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.VideoFrameReference.html)
 
 ## Examples
 

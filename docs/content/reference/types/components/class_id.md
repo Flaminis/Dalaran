@@ -5,7 +5,7 @@ title: "ClassId"
 
 A 16-bit ID representing a type of semantic class.
 
-## Rerun datatype
+## Dalaran datatype
 [`ClassId`](../datatypes/class_id.md)
 
 
@@ -15,9 +15,9 @@ UInt16
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ClassId`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1ClassId.html)
- * 🐍 [Python API docs for `ClassId`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.ClassId)
- * 🦀 [Rust API docs for `ClassId`](https://docs.rs/rerun/latest/rerun/components/struct.ClassId.html)
+ * 🌊 [C++ API docs for `ClassId`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1ClassId.html)
+ * 🐍 [Python API docs for `ClassId`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.ClassId)
+ * 🦀 [Rust API docs for `ClassId`](https://docs.rs/dalaran/latest/dalaran/components/struct.ClassId.html)
 
 
 ## Used by

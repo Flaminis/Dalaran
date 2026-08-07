@@ -1,4 +1,4 @@
-![Rerun.io](https://static.rerun.io/d0f5443d4803cac65c73fcc064936c09f5e7f208_rerun_banner.png)
+![Dalaran.io](https://static.rerun.io/d0f5443d4803cac65c73fcc064936c09f5e7f208_rerun_banner.png)
 
 # Interactive release checklist
 Welcome to the release checklist.

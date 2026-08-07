@@ -1,12 +1,12 @@
 """Log a batch of 3D line strips."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_line_strip3d_batch", spawn=True)
+dl.init("dalaran_example_line_strip3d_batch", spawn=True)
 
-rr.log(
+dl.log(
     "strips",
-    rr.LineStrips3D(
+    dl.LineStrips3D(
         [
             [
                 [0, 0, 2],

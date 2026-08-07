@@ -8,7 +8,7 @@ dependencies = [
   "numpy",
   "opencv-python",
   "pandas",
-  "rerun-sdk",
+  "dalaran-sdk",
   "scipy",
   "tqdm",
   "trimesh",

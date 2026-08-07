@@ -6,16 +6,16 @@ title: "ViewCoordinates"
 ⚠️ **This type is _unstable_ and may change significantly in a way that the data won't be backwards compatible.**
 An orientation convention for a camera or 3D view.
 
-On [`archetypes.Pinhole`](https://rerun.io/docs/reference/types/archetypes/pinhole), this component controls the camera orientation and projection direction.
-On [SpatialInformation](https://rerun.io/docs/reference/types/views/spatial3d_view), it controls the 3D view's eye orientation, navigation, and default grid plane.
-A logged [`archetypes.ViewCoordinates`](https://rerun.io/docs/reference/types/archetypes/view_coordinates) provides the default for [SpatialInformation](https://rerun.io/docs/reference/types/views/spatial3d_view).
+On [`archetypes.Pinhole`](https://dalaran.dev/docs/reference/types/archetypes/pinhole), this component controls the camera orientation and projection direction.
+On [SpatialInformation](https://dalaran.dev/docs/reference/types/views/spatial3d_view), it controls the 3D view's eye orientation, navigation, and default grid plane.
+A logged [`archetypes.ViewCoordinates`](https://dalaran.dev/docs/reference/types/archetypes/view_coordinates) provides the default for [SpatialInformation](https://dalaran.dev/docs/reference/types/views/spatial3d_view).
 
 The three directions are always ordered as [x, y, z] and specify where each positive axis points.
 For example, [Right, Down, Forward] means that +X points right, +Y points down, and +Z points forward.
 
-⚠ [Rerun does not yet support left-handed coordinate systems](https://github.com/rerun-io/rerun/issues/5032).
+⚠ [Dalaran does not yet support left-handed coordinate systems](https://github.com/rerun-io/rerun/issues/5032).
 
-## Rerun datatype
+## Dalaran datatype
 [`ViewCoordinates`](../datatypes/view_coordinates.md)
 
 
@@ -25,9 +25,9 @@ FixedSizeList(3 x non-null UInt8)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `ViewCoordinates`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1ViewCoordinates.html)
- * 🐍 [Python API docs for `ViewCoordinates`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.ViewCoordinates)
- * 🦀 [Rust API docs for `ViewCoordinates`](https://docs.rs/rerun/latest/rerun/components/struct.ViewCoordinates.html)
+ * 🌊 [C++ API docs for `ViewCoordinates`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1ViewCoordinates.html)
+ * 🐍 [Python API docs for `ViewCoordinates`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.ViewCoordinates)
+ * 🦀 [Rust API docs for `ViewCoordinates`](https://docs.rs/dalaran/latest/dalaran/components/struct.ViewCoordinates.html)
 
 
 ## Used by

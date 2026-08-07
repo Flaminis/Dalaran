@@ -2,7 +2,7 @@
 //!
 //! This is the core implementation for the Arrow → chunk interpretation that the SDKs and the
 //! platform share. It is surfaced in Python through `Chunk.from_record_batch` and
-//! `rr.send_dataframe`.
+//! `dl.send_dataframe`.
 
 use std::collections::HashMap;
 use std::sync::Arc;

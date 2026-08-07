@@ -38,8 +38,8 @@ from typing import Any
 from git import Repo  # pip install GitPython
 from tqdm import tqdm
 
-OWNER = "rerun-io"
-REPO = "rerun"
+OWNER = "dalaran-io"
+REPO = "dalaran"
 INCLUDE_LABELS = False  # It adds quite a bit of visual noise
 
 # Cache for contributor classification to avoid repeated API calls
@@ -100,7 +100,7 @@ def unique_user_names(user_names: list[str]) -> list[str]:
 
 
 def is_external_contributor(user_name: str) -> bool:
-    """Return whether a GitHub user looks external to Rerun.
+    """Return whether a GitHub user looks external to Dalaran.
 
     We intentionally use the repository permissions endpoint instead of the org members endpoint,
     since the latter only returns public org memberships.
@@ -229,11 +229,11 @@ def fetch_reality_pr_info(commit_hash: str) -> PrInfo | None:
 # Slow
 def fetch_pr_info_from_commit_info(commit_info: CommitInfo) -> PrInfo | None:
     """
-    Fetch PR info with Reality-first, Rerun-fallback strategy.
+    Fetch PR info with Reality-first, Dalaran-fallback strategy.
 
     Priority order:
     1. Try the Reality repo using the Source-Ref commit hash, if present.
-    2. Fall back to the Rerun repo using the PR number.
+    2. Fall back to the Dalaran repo using the PR number.
 
     Either way the contributors come from the PR's commit authors, which the API resolves to real
     logins and tags with an account `type`, so private emails are recovered and bots are dropped.
@@ -243,9 +243,9 @@ def fetch_pr_info_from_commit_info(commit_info: CommitInfo) -> PrInfo | None:
         reality_pr_info = fetch_reality_pr_info(commit_info.source_ref_hash)
         if reality_pr_info is not None:
             return reality_pr_info
-        # If Reality lookup fails, fall through to Rerun repo fallback
+        # If Reality lookup fails, fall through to Dalaran repo fallback
 
-    # Priority 2: Fallback to Rerun repo using PR number
+    # Priority 2: Fallback to Dalaran repo using PR number
     if commit_info.pr_number is not None:
         pr_info = fetch_pr_info(commit_info.pr_number)
         if pr_info is not None:
@@ -323,7 +323,7 @@ def changeset_path(new_version: str) -> Path:
 
 def changeset_url(new_version: str) -> str:
     major, minor, _ = new_version.split(".")
-    return f"https://rerun.io/docs/changelog/changeset-{major}-{minor}"
+    return f"https://dalaran.dev/docs/changelog/changeset-{major}-{minor}"
 
 
 def changeset_headings(path: Path, section: str) -> list[str]:
@@ -489,7 +489,7 @@ def main() -> None:
                 summary = f"{title} [#{pr_number}](https://github.com/{OWNER}/{REPO}/pull/{pr_number})"
                 dup_checks = [f"[#{pr_number}]"]
             else:
-                # No PR number in title, but we have Reality PR info - use hash of synced commit in Rerun repo
+                # No PR number in title, but we have Reality PR info - use hash of synced commit in Dalaran repo
                 summary = f"{title} [{hexsha_short}](https://github.com/{OWNER}/{REPO}/commit/{hexsha_full})"
                 # The changelog records the short hash in brackets and the full hash in the URL, so check both.
                 dup_checks = [f"[{hexsha_short}]", f"[{hexsha_full}]"]

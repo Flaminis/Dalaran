@@ -1,18 +1,18 @@
 //! Log a simple undirected graph.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_graph_undirected");
+    const auto rec = dalaran::RecordingStream("dalaran_example_graph_undirected");
     rec.spawn().exit_on_failure();
 
     rec.log(
         "simple",
-        rerun::GraphNodes({"a", "b", "c"})
+        dalaran::GraphNodes({"a", "b", "c"})
             .with_positions({{0.0, 100.0}, {-100.0, 0.0}, {100.0, 0.0}})
             .with_labels({"A", "B", "C"}),
-        rerun::GraphEdges({{"a", "b"}, {"b", "c"}, {"c", "a"}})
+        dalaran::GraphEdges({{"a", "b"}, {"b", "c"}, {"c", "a"}})
             // Optional: graphs are undirected by default.
-            .with_graph_type(rerun::GraphType::Undirected)
+            .with_graph_type(dalaran::GraphType::Undirected)
     );
 }

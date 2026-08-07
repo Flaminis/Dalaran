@@ -1,7 +1,7 @@
 import sys
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_log_file", spawn=True)
+dl.init("dalaran_example_log_file", spawn=True)
 
-rr.log_file_from_path(sys.argv[1])
+dl.log_file_from_path(sys.argv[1])

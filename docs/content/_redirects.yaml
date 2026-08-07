@@ -18,19 +18,19 @@
 # defined in this file. Remove one or the other to resolve conflicts.
 
 # Overview section
-overview/installing-viewer: getting-started/install-rerun
-overview/installing-rerun: getting-started/install-rerun
-overview/installing-rerun/python: getting-started/install-rerun/python
-overview/installing-rerun/cpp: getting-started/install-rerun/cpp
-overview/installing-rerun/rust: getting-started/install-rerun/rust
-overview/installing-rerun/viewer: getting-started/install-rerun/viewer
-overview/installing-rerun/troubleshooting: getting-started/install-rerun/troubleshooting
+overview/installing-viewer: getting-started/install-dalaran
+overview/installing-dalaran: getting-started/install-dalaran
+overview/installing-dalaran/python: getting-started/install-dalaran/python
+overview/installing-dalaran/cpp: getting-started/install-dalaran/cpp
+overview/installing-dalaran/rust: getting-started/install-dalaran/rust
+overview/installing-dalaran/viewer: getting-started/install-dalaran/viewer
+overview/installing-dalaran/troubleshooting: getting-started/install-dalaran/troubleshooting
 
 # Getting Started section
-getting-started/what-is-rerun: overview/what-is-rerun
+getting-started/what-is-dalaran: overview/what-is-dalaran
 getting-started/navigating-the-viewer: getting-started/configure-the-viewer/navigating-the-viewer
-getting-started/troubleshooting: getting-started/install-rerun/troubleshooting
-getting-started/installing-viewer: getting-started/install-rerun/viewer
+getting-started/troubleshooting: getting-started/install-dalaran/troubleshooting
+getting-started/installing-viewer: getting-started/install-dalaran/viewer
 getting-started/data-out/analyze-and-log: getting-started/data-out/analyze-and-send
 getting-started/data-out/query-data: getting-started/data-out
 getting-started/quick-start: getting-started
@@ -42,7 +42,7 @@ getting-started/data-in/python: getting-started/data-in
 getting-started/data-in/rust: getting-started/data-in
 
 # Concepts section (old paths moved to subfolders)
-concepts/app-model: concepts/how-does-rerun-work
+concepts/app-model: concepts/how-does-dalaran-work
 concepts/apps-and-recordings: concepts/logging-and-ingestion/recordings
 concepts/logging-and-ingestion/apps-and-recordings: concepts/logging-and-ingestion/recordings
 concepts/annotation-context: concepts/visualization/annotation-context
@@ -93,7 +93,7 @@ howto/callbacks: howto/visualization/callbacks
 howto/configure-viewer-through-code: getting-started/configure-the-viewer/navigating-the-viewer#programmatic-blueprints
 howto/logging-and-ingestion/convert-existing-data: concepts/logging-and-ingestion/chunk-processing-api
 howto/dataframe-api: howto/query-and-transform/get-data-out
-howto/embed-rerun-viewer: howto/integrations/embed-web
+howto/embed-dalaran-viewer: howto/integrations/embed-web
 howto/fixed-window-plot: howto/visualization/fixed-window-plot
 howto/get-data-out: howto/query-and-transform/get-data-out
 howto/limit-ram: howto/visualization/limit-ram

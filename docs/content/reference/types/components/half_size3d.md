@@ -10,7 +10,7 @@ Measured in its local coordinate system.
 The box extends both in negative and positive direction along each axis.
 Negative sizes indicate that the box is flipped along the respective axis, but this has no effect on how it is displayed.
 
-## Rerun datatype
+## Dalaran datatype
 [`Vec3D`](../datatypes/vec3d.md)
 
 
@@ -20,9 +20,9 @@ FixedSizeList(3 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `HalfSize3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1HalfSize3D.html)
- * 🐍 [Python API docs for `HalfSize3D`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.HalfSize3D)
- * 🦀 [Rust API docs for `HalfSize3D`](https://docs.rs/rerun/latest/rerun/components/struct.HalfSize3D.html)
+ * 🌊 [C++ API docs for `HalfSize3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1HalfSize3D.html)
+ * 🐍 [Python API docs for `HalfSize3D`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.HalfSize3D)
+ * 🦀 [Rust API docs for `HalfSize3D`](https://docs.rs/dalaran/latest/dalaran/components/struct.HalfSize3D.html)
 
 
 ## Used by

@@ -27,9 +27,9 @@ title: "Arrows2D"
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Arrows2D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Arrows2D.html)
- * 🐍 [Python API docs for `Arrows2D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Arrows2D)
- * 🦀 [Rust API docs for `Arrows2D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Arrows2D.html)
+ * 🌊 [C++ API docs for `Arrows2D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Arrows2D.html)
+ * 🐍 [Python API docs for `Arrows2D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Arrows2D)
+ * 🦀 [Rust API docs for `Arrows2D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Arrows2D.html)
 
 ## Example
 

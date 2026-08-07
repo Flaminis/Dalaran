@@ -3,7 +3,7 @@ and display the results as a table in your terminal.
 
 You can use one of your recordings, or grab one from our hosted examples, e.g.:
 ```bash
-curl 'https://app.rerun.io/version/latest/examples/dna.rrd' -o - > /tmp/dna.rrd
+curl 'https://app.dalaran.dev/version/latest/examples/dna.rrd' -o - > /tmp/dna.rrd
 ```
 
 The results can be filtered further by specifying an entity filter expression:

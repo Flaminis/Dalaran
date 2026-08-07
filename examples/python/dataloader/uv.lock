@@ -287,7 +287,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "huggingface-hub" },
     { name = "lerobot", extra = ["dataset"] },
-    { name = "rerun-sdk", extra = ["catalog", "dataloader", "tracing"] },
+    { name = "dalaran-sdk", extra = ["catalog", "dataloader", "tracing"] },
 ]
 
 [package.dev-dependencies]
@@ -299,7 +299,7 @@ dev = [
 requires-dist = [
     { name = "huggingface-hub", specifier = ">=1.0" },
     { name = "lerobot", extras = ["dataset"], specifier = "==0.6.0" },
-    { name = "rerun-sdk", extras = ["dataloader", "catalog", "tracing"], editable = "../../../rerun_py" },
+    { name = "dalaran-sdk", extras = ["dataloader", "catalog", "tracing"], editable = "../../../dalaran_py" },
 ]
 
 [package.metadata.requires-dev]
@@ -1224,8 +1224,8 @@ wheels = [
 ]
 
 [[package]]
-name = "rerun-sdk"
-source = { editable = "../../../rerun_py" }
+name = "dalaran-sdk"
+source = { editable = "../../../dalaran_py" }
 dependencies = [
     { name = "attrs" },
     { name = "numpy" },
@@ -1279,8 +1279,8 @@ requires-dist = [
     { name = "psutil", specifier = ">=7.0" },
     { name = "pyarrow", specifier = ">=18.0.0" },
     { name = "pytest", marker = "extra == 'tests'", specifier = "==9.0.3" },
-    { name = "rerun-notebook", marker = "extra == 'all'", editable = "../../../rerun_notebook" },
-    { name = "rerun-notebook", marker = "extra == 'notebook'", editable = "../../../rerun_notebook" },
+    { name = "dalaran-notebook", marker = "extra == 'all'", editable = "../../../dalaran_notebook" },
+    { name = "dalaran-notebook", marker = "extra == 'notebook'", editable = "../../../dalaran_notebook" },
     { name = "semver", marker = "extra == 'tests'", specifier = ">=3.0,<3.1" },
     { name = "syrupy", marker = "extra == 'tests'", specifier = "==5.0.0" },
     { name = "tomli", marker = "extra == 'tests'", specifier = "==2.0.1" },

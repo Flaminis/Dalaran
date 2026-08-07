@@ -1,12 +1,12 @@
 // Log a simple set of line segments.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <array>
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_line_segments3d");
+    const auto rec = dalaran::RecordingStream("dalaran_example_line_segments3d");
     rec.spawn().exit_on_failure();
 
     std::vector<std::vector<std::array<float, 3>>> points = {
@@ -16,5 +16,5 @@ int main(int argc, char* argv[]) {
         {{0.f, 1.f, 0.f}, {0.f, 1.f, 1.f}},
     };
 
-    rec.log("segments", rerun::LineStrips3D(points));
+    rec.log("segments", dalaran::LineStrips3D(points));
 }

@@ -5,7 +5,7 @@ title: "SchemaId"
 
 A 16-bit unique identifier for a schema within the MCAP file.
 
-## Rerun datatype
+## Dalaran datatype
 [`UInt16`](../datatypes/uint16.md)
 
 
@@ -15,9 +15,9 @@ UInt16
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `SchemaId`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1SchemaId.html)
- * 🐍 [Python API docs for `SchemaId`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.SchemaId)
- * 🦀 [Rust API docs for `SchemaId`](https://docs.rs/rerun/latest/rerun/components/struct.SchemaId.html)
+ * 🌊 [C++ API docs for `SchemaId`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1SchemaId.html)
+ * 🐍 [Python API docs for `SchemaId`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.SchemaId)
+ * 🦀 [Rust API docs for `SchemaId`](https://docs.rs/dalaran/latest/dalaran/components/struct.SchemaId.html)
 
 
 ## Used by

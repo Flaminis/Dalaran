@@ -100,12 +100,12 @@ def main() -> None:
     parser.add_argument(
         "--no-py-build",
         action="store_true",
-        help="Skip building rerun-sdk for Python",
+        help="Skip building dalaran-sdk for Python",
     )
     parser.add_argument(
         "--no-cpp-build",
         action="store_true",
-        help="Skip cmake configure and ahead of time build for rerun_c & rerun_prebuilt_cpp",
+        help="Skip cmake configure and ahead of time build for dalaran_c & dalaran_prebuilt_cpp",
     )
     parser.add_argument("--full-dump", action="store_true", help="Dump both rrd files as tables")
     parser.add_argument(
@@ -148,7 +148,7 @@ def main() -> None:
         pass  # No need to build the Python SDK
     else:
         if args.no_py_build:
-            print("Skipping building python rerun-sdk - assuming it is already built and up-to-date!")
+            print("Skipping building python dalaran-sdk - assuming it is already built and up-to-date!")
         else:
             build_python_sdk(build_env)
         # Use uv to install the snippet dependencies
@@ -160,7 +160,7 @@ def main() -> None:
                 "snippets",
                 "--inexact",
                 "--no-install-package",
-                "rerun-sdk",
+                "dalaran-sdk",
             ],
             env=build_env,
         )
@@ -169,7 +169,7 @@ def main() -> None:
         pass  # No need to build the C++ SDK
     elif args.no_cpp_build:
         print(
-            "Skipping cmake configure & build for rerun_c & rerun_prebuilt_cpp - assuming it is already built and up-to-date!",
+            "Skipping cmake configure & build for dalaran_c & dalaran_prebuilt_cpp - assuming it is already built and up-to-date!",
         )
     else:
         build_cpp_snippets()
@@ -365,21 +365,21 @@ def build_rust_snippets(
 
 def build_python_sdk(build_env: dict[str, str]) -> None:
     print("----------------------------------------------------------")
-    print("Building rerun-sdk for Python…")
+    print("Building dalaran-sdk for Python…")
     start_time = time.time()
     run(["pixi", "run", "py-build"], env=build_env, timeout=12000)
     elapsed = time.time() - start_time
-    print(f"rerun-sdk for Python built in {elapsed:.1f} seconds")
+    print(f"dalaran-sdk for Python built in {elapsed:.1f} seconds")
     print()
 
 
 def build_cpp_snippets() -> None:
     print("----------------------------------------------------------")
-    print("Build rerun_c & rerun_prebuilt_cpp…")
+    print("Build dalaran_c & dalaran_prebuilt_cpp…")
     start_time = time.time()
     run(["pixi", "run", "-e", "cpp", "cpp-build-snippets"], timeout=12000)
     elapsed = time.time() - start_time
-    print(f"rerun-sdk for C++ built in {elapsed:.1f} seconds")
+    print(f"dalaran-sdk for C++ built in {elapsed:.1f} seconds")
     print()
 
 

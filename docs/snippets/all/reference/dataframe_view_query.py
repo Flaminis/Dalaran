@@ -2,23 +2,23 @@
 
 import sys
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
 path_to_rrd = sys.argv[1]
 
-rr.init("rerun_example_dataframe_view_query", spawn=True)
+dl.init("dalaran_example_dataframe_view_query", spawn=True)
 
-rr.log_file_from_path(path_to_rrd)
+dl.log_file_from_path(path_to_rrd)
 
-blueprint = rrb.Blueprint(
-    rrb.DataframeView(
+blueprint = dlb.Blueprint(
+    dlb.DataframeView(
         origin="/",
-        query=rrb.archetypes.DataframeQuery(
+        query=dlb.archetypes.DataframeQuery(
             timeline="log_time",
             apply_latest_at=True,
         ),
     ),
 )
 
-rr.send_blueprint(blueprint)
+dl.send_blueprint(blueprint)

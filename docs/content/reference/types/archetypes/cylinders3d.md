@@ -6,9 +6,9 @@ title: "Cylinders3D"
 3D cylinders with flat caps.
 
 This archetype is for cylinder primitives defined by their axial length and radius.
-For points whose radii are for visualization purposes, use [`archetypes.Points3D`](https://rerun.io/docs/reference/types/archetypes/points3d) instead.
+For points whose radii are for visualization purposes, use [`archetypes.Points3D`](https://dalaran.dev/docs/reference/types/archetypes/points3d) instead.
 
-Orienting and placing cylinders forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d).
+Orienting and placing cylinders forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d).
 
 ## Fields
 ### Required
@@ -35,9 +35,9 @@ Orienting and placing cylinders forms a separate transform that is applied prior
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Cylinders3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Cylinders3D.html)
- * 🐍 [Python API docs for `Cylinders3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Cylinders3D)
- * 🦀 [Rust API docs for `Cylinders3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Cylinders3D.html)
+ * 🌊 [C++ API docs for `Cylinders3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Cylinders3D.html)
+ * 🐍 [Python API docs for `Cylinders3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Cylinders3D)
+ * 🦀 [Rust API docs for `Cylinders3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Cylinders3D.html)
 
 ## Example
 

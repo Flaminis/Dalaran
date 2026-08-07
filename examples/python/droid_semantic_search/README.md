@@ -1,13 +1,13 @@
 <!--[metadata]
 title = "DROID semantic frame search"
-description = "Find moments in robot demonstrations by describing them in plain language. Embeddings flow from a Rerun dataset into a vector store and deep-link back into the viewer."
-tags = ["Robotics", "Semantic search", "Embeddings", "SigLIP", "LanceDB", "Qdrant", "Rerun Hub"]
+description = "Find moments in robot demonstrations by describing them in plain language. Embeddings flow from a Dalaran dataset into a vector store and deep-link back into the viewer."
+tags = ["Robotics", "Semantic search", "Embeddings", "SigLIP", "LanceDB", "Qdrant", "Dalaran Hub"]
 thumbnail = "https://static.rerun.io/droid_semantic_search/fd265e110c9d05c9fdd018c68dd83561aa836c52/480w.png"
 thumbnail_dimensions = [480, 320]
 include_in_manifest = true
 -->
 
-Find moments in robot demonstrations by describing them in plain language, and jump straight to the matching frame in the Rerun viewer.
+Find moments in robot demonstrations by describing them in plain language, and jump straight to the matching frame in the Dalaran viewer.
 
 <picture>
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/droid_semantic_search/fd265e110c9d05c9fdd018c68dd83561aa836c52/480w.png">
@@ -17,9 +17,9 @@ Find moments in robot demonstrations by describing them in plain language, and j
   <img src="https://static.rerun.io/droid_semantic_search/fd265e110c9d05c9fdd018c68dd83561aa836c52/full.png" alt="DROID semantic frame search screenshot">
 </picture>
 
-This pulls frame embeddings from a Rerun dataset, indexes them in an external vector store, and resolves text queries back into deep-links that open the relevant frames in the viewer.
+This pulls frame embeddings from a Dalaran dataset, indexes them in an external vector store, and resolves text queries back into deep-links that open the relevant frames in the viewer.
 It ships two interchangeable backends — [LanceDB](https://lancedb.com) (default) and [Qdrant](https://qdrant.tech), both fully local on disk and selected with `--backend`.
-They're worked examples of one pattern — embeddings out of Rerun, search in your vector database of choice, deep-links back into the viewer — that applies to any vector store.
+They're worked examples of one pattern — embeddings out of Dalaran, search in your vector database of choice, deep-links back into the viewer — that applies to any vector store.
 
 ## What it shows off
 
@@ -49,37 +49,37 @@ Each backend keeps its index in its own directory (`./droid_lancedb` vs `./droid
 
 ### 1. Install dependencies
 
-This example has its own `uv` project, separate from the workspace `.venv`, because it needs the experimental `rerun-sdk[dataloader]` extras plus heavy ML deps (`transformers`, `lancedb`).
+This example has its own `uv` project, separate from the workspace `.venv`, because it needs the experimental `dalaran-sdk[dataloader]` extras plus heavy ML deps (`transformers`, `lancedb`).
 
-**Standalone** (sparse-checkout of just this directory, no local Rerun build):
+**Standalone** (sparse-checkout of just this directory, no local Dalaran build):
 
 ```bash
 uv sync --no-sources --no-dev
 ```
 
-**Monorepo dev** (full repo checkout, editable local `rerun-sdk`):
+**Monorepo dev** (full repo checkout, editable local `dalaran-sdk`):
 
 ```bash
 cd examples/python/droid_semantic_search
-RERUN_ALLOW_MISSING_BIN=1 uv sync
-uv pip install ../../../rerun_py/rerun_dev_fixup
+DALARAN_ALLOW_MISSING_BIN=1 uv sync
+uv pip install ../../../dalaran_py/dalaran_dev_fixup
 ```
 
-The second command installs the `.pth` shim that points `import rerun` (and the `rerun` CLI) at the in-repo editable source tree.
+The second command installs the `.pth` shim that points `import dalaran` (and the `dalaran` CLI) at the in-repo editable source tree.
 It's a separate `uv pip install` rather than a dev-group dependency because uv resolves all dependency groups unconditionally, so a path-only package in `pyproject.toml` would break the standalone `--no-sources` resolution above.
 
 Then either `source .venv/bin/activate` or prefix subsequent commands with `uv run`.
 
-### 2. Start a local Rerun server
+### 2. Start a local Dalaran server
 
-This example reads data from a local open-source Rerun catalog server.
+This example reads data from a local open-source Dalaran catalog server.
 In a separate terminal, start one:
 
 ```bash
-rerun server
+dalaran server
 ```
 
-This serves a catalog at `rerun+http://127.0.0.1:51234` — the default the scripts use.
+This serves a catalog at `dalaran+http://127.0.0.1:51234` — the default the scripts use.
 Leave it running; the steps below connect to it.
 
 ### 3. Register a dataset
@@ -93,7 +93,7 @@ uv run python prepare_dataset.py
 By default it auto-selects the source:
 
 - **Monorepo checkout** — it uses the episodes bundled in the repo at `tests/assets/rrd/sample_5` (via git-LFS), so there's nothing to download. If those are un-pulled LFS pointers, run `git lfs install && git lfs pull` first.
-- **Standalone checkout** — when the bundled episodes aren't present, it downloads a few from [`rerun/droid_sample`](https://huggingface.co/datasets/rerun/droid_sample) on the Hugging Face Hub into `./data`.
+- **Standalone checkout** — when the bundled episodes aren't present, it downloads a few from [`dalaran/droid_sample`](https://huggingface.co/datasets/dalaran/droid_sample) on the Hugging Face Hub into `./data`.
 
 Useful flags:
 
@@ -144,7 +144,7 @@ Run `ingest.py --help` and `search.py --help` for the full flag list — index m
 ## Scope and extension points
 
 - **Text or image queries.** Search by a text prompt or, with `--image <path>`, by an example frame. SigLIP-2 puts text and image features in one space, so image-to-image search reuses the exact same index and ranking — only the query encoder differs.
-- **Bring your own vector store.** Rerun supplies the embeddings (read from the dataset, or computed from platform-hosted video) and resolves matches back into viewer deep-links; search itself runs in an external store. This example ships two backends, LanceDB and Qdrant, behind the small `VectorStore` interface in `vector_store.py` — the same write-then-query flow drops onto any vector database, so adding a third is a single subclass.
+- **Bring your own vector store.** Dalaran supplies the embeddings (read from the dataset, or computed from platform-hosted video) and resolves matches back into viewer deep-links; search itself runs in an external store. This example ships two backends, LanceDB and Qdrant, behind the small `VectorStore` interface in `vector_store.py` — the same write-then-query flow drops onto any vector database, so adding a third is a single subclass.
 
 ## Notes and gotchas
 

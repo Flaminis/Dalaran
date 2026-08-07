@@ -6,7 +6,7 @@ from pathlib import Path
 
 from datafusion import col
 
-import rerun as rr
+import dalaran as dl
 
 TMP_FILE = tempfile.NamedTemporaryFile(suffix=".rrd")
 RRD_PATH = TMP_FILE.name
@@ -15,11 +15,11 @@ RRD_PATH = TMP_FILE.name
 sample_dataset_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "dataset"
 )
-server = rr.server.Server(datasets={"dataset": sample_dataset_path})
+server = dl.server.Server(datasets={"dataset": sample_dataset_path})
 # Using OSS server for demonstration but in practice replace with
 # the URL of your cloud instance
 CATALOG_URL = server.url()
-client = rr.catalog.CatalogClient(CATALOG_URL)
+client = dl.catalog.CatalogClient(CATALOG_URL)
 dataset = client.get_dataset(name="dataset")
 # endregion: get_dataset
 
@@ -28,7 +28,7 @@ dataset = client.get_dataset(name="dataset")
     dataset
     .get_index_ranges()
     .select(
-        "rerun_segment_id",
+        "dalaran_segment_id",
         "time_1:start",
         "time_1:end",
         "time_2:start",
@@ -36,7 +36,7 @@ dataset = client.get_dataset(name="dataset")
         "time_3:start",
         "time_3:end",
     )
-    .sort("rerun_segment_id")
+    .sort("dalaran_segment_id")
     .show()
 )
 # endregion: view_index_ranges
@@ -44,7 +44,7 @@ dataset = client.get_dataset(name="dataset")
 # region: original_data
 time_index = "time_3"
 columns_of_interest = [
-    "rerun_segment_id",
+    "dalaran_segment_id",
     time_index,
     "/obj1:Points3D:positions",
     "/obj2:Points3D:positions",
@@ -54,12 +54,12 @@ columns_of_interest = [
     dataset
     .reader(index=time_index)
     .select(*columns_of_interest)
-    .sort("rerun_segment_id", time_index)
+    .sort("dalaran_segment_id", time_index)
     .show()
 )
 
 # +----------------------------------+--------+--------------------------+--------------------------+--------------------------+
-# | rerun_segment_id                 | time_3 | /obj1:Points3D:positions | /obj2:Points3D:positions | /obj3:Points3D:positions |
+# | dalaran_segment_id                 | time_3 | /obj1:Points3D:positions | /obj2:Points3D:positions | /obj3:Points3D:positions |
 # +----------------------------------+--------+--------------------------+--------------------------+--------------------------+
 # | 141a866deb2d49f69eb3215e8a404ffc | 1      | [[49.0, 0.0, 0.0]]       | [[44.0, 1.0, 0.0]]       | [[1.0, 2.0, 0.0]]        |
 # | 141a866deb2d49f69eb3215e8a404ffc | 2      | [[27.0, 0.0, 0.0]]       | [[42.0, 1.0, 0.0]]       |                          |
@@ -76,7 +76,7 @@ times_of_interest = (
     dataset
     .reader(index=time_index)
     .filter(col(resample_column).is_not_null())
-    .select("rerun_segment_id", time_index)
+    .select("dalaran_segment_id", time_index)
 )
 
 (
@@ -87,12 +87,12 @@ times_of_interest = (
         fill_latest_at=True,
     )
     .select(*columns_of_interest)
-    .sort("rerun_segment_id", time_index)
+    .sort("dalaran_segment_id", time_index)
     .show()
 )
 
 # +----------------------------------+--------+--------------------------+--------------------------+--------------------------+
-# | rerun_segment_id                 | time_3 | /obj1:Points3D:positions | /obj2:Points3D:positions | /obj3:Points3D:positions |
+# | dalaran_segment_id                 | time_3 | /obj1:Points3D:positions | /obj2:Points3D:positions | /obj3:Points3D:positions |
 # +----------------------------------+--------+--------------------------+--------------------------+--------------------------+
 # | 141a866deb2d49f69eb3215e8a404ffc | 1      | [[49.0, 0.0, 0.0]]       | [[44.0, 1.0, 0.0]]       | [[1.0, 2.0, 0.0]]        |
 # | 141a866deb2d49f69eb3215e8a404ffc | 3      | [[25.0, 0.0, 0.0]]       | [[30.0, 1.0, 0.0]]       | [[3.0, 2.0, 0.0]]        |

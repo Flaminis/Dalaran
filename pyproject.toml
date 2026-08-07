@@ -3,27 +3,27 @@
 # Pixi (pixi.toml) manages build tools, while uv uses this file to manage
 # Python runtime dependencies in a .venv directory. The two work together:
 #
-#   pixi run py-build    # Uses maturin to build rerun-sdk into .venv
+#   pixi run py-build    # Uses maturin to build dalaran-sdk into .venv
 #   pixi run uv run …  # Runs Python scripts using .venv
 #
-# Workspace members (rerun_py, rerun_notebook, examples) are defined in
+# Workspace members (dalaran_py, dalaran_notebook, examples) are defined in
 # [tool.uv.workspace] below.
 
 [project]
-name = "rerun-workspace"
+name = "dalaran-workspace"
 version = "0.28.0-alpha.1+dev"
-description = "Rerun Python workspace"
+description = "Dalaran Python workspace"
 requires-python = ">=3.10,<3.13"
 
 [dependency-groups]
 dev = [
-  # NOTE: we leave `rerun-sdk` and `rerun-notebook` out of the basic dev dependency list.
+  # NOTE: we leave `dalaran-sdk` and `dalaran-notebook` out of the basic dev dependency list.
   # This is because they can be slow to build in a clean environment and it's useful to
   # be able to run tools like linting, etc. without having built all the bindings.
   #
-  # This fixup package installs a .pth file that makes `import rerun` work
-  # with editable installs by adding rerun_py/rerun_sdk to the Python path.
-  "rerun-dev-fixup",
+  # This fixup package installs a .pth file that makes `import dalaran` work
+  # with editable installs by adding dalaran_py/dalaran_sdk to the Python path.
+  "dalaran-dev-fixup",
   "opentelemetry-exporter-otlp-proto-grpc==1.39.0",
   "maturin>=1.14.1",
   "ruff==0.15.7",
@@ -40,7 +40,7 @@ dev = [
   "colorama>=0.4",
   "types-colorama>=0.4.15",
   "Pillow>=12.3.0,<13", # has py.typed, no stubs needed
-  "types-psutil>=7.0", # Stubs for `psutil`, used by `rerun.tracing_session()`.
+  "types-psutil>=7.0", # Stubs for `psutil`, used by `dalaran.tracing_session()`.
   # Typed packages needed for linting scripts/examples
   "attrs>=23.1.0",
   "semver>=3.0,<3.1",
@@ -54,7 +54,7 @@ dev = [
   "pytest-benchmark",
   "inline-snapshot>=0.31",
   "syrupy>=4.0",
-  # Notebook dependencies (needed for linting rerun_notebook)
+  # Notebook dependencies (needed for linting dalaran_notebook)
   "anywidget>=0.9",
   "jupyter-ui-poll>=0.2",
   "ipywidgets>=8.0",
@@ -79,7 +79,7 @@ dev = [
   "tabulate>=0.9.0",
   "types-tabulate>=0.9.0",
 ]
-snippets = ["rerun-sdk[dataloader]", "av", "pandas"]
+snippets = ["dalaran-sdk[dataloader]", "av", "pandas"]
 examples = [
   # External deps used by examples
   "polars>=0.12.0",
@@ -168,9 +168,9 @@ package = false
 constraint-dependencies = ["pyarrow>=23.0.1,<24", "pymdown-extensions>=11.0.0"]
 
 [tool.uv.sources]
-rerun-sdk = { workspace = true }
-rerun-notebook = { workspace = true }
-rerun-dev-fixup = { path = "rerun_py/rerun_dev_fixup", editable = false }
+dalaran-sdk = { workspace = true }
+dalaran-notebook = { workspace = true }
+dalaran-dev-fixup = { path = "dalaran_py/dalaran_dev_fixup", editable = false }
 # Example packages
 air_traffic_data = { workspace = true }
 animated_urdf = { workspace = true }
@@ -224,8 +224,8 @@ using_index_values = { workspace = true }
 
 [tool.uv.workspace]
 members = [
-  "rerun_py",
-  "rerun_notebook",
+  "dalaran_py",
+  "dalaran_notebook",
   # Examples
   "examples/python/air_traffic_data",
   "examples/python/animated_urdf",
@@ -287,7 +287,7 @@ members = [
 [tool.ruff]
 line-length = 120
 preview = true
-src = ["rerun_py", "rerun_py/rerun_sdk", "rerun_notebook"]
+src = ["dalaran_py", "dalaran_py/dalaran_sdk", "dalaran_notebook"]
 extend-exclude = [
   "crates",
   "target",
@@ -414,15 +414,15 @@ python_version = "3.10"
 # Examples and docs are managed independently of the SDK.
 # in ini file adjacent to this.
 files = [
-  "rerun_py/rerun_sdk/rerun",
-  "rerun_py/rerun_bindings",
-  "rerun_py/tests",
-  "rerun_notebook/src/rerun_notebook",
+  "dalaran_py/dalaran_sdk/dalaran",
+  "dalaran_py/dalaran_bindings",
+  "dalaran_py/tests",
+  "dalaran_notebook/src/dalaran_notebook",
   "tests/python",
 ]
-# These paths allow mypy to find rerun and rerun_bindings without needing
+# These paths allow mypy to find dalaran and dalaran_bindings without needing
 # to run maturin develop first (which installs the .pth file).
-mypy_path = ["rerun_py", "rerun_py/rerun_sdk"]
+mypy_path = ["dalaran_py", "dalaran_py/dalaran_sdk"]
 namespace_packages = true
 show_error_codes = true
 strict = true
@@ -450,20 +450,20 @@ module = [
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-# rerun_draft is a sandbox for testing new APIs - we don't care about strict type checking
-module = ["api_sandbox.rerun_draft.*", "rerun_draft.*"]
+# dalaran_draft is a sandbox for testing new APIs - we don't care about strict type checking
+module = ["api_sandbox.dalaran_draft.*", "dalaran_draft.*"]
 ignore_errors = true
 ignore_missing_imports = true
 
 [tool.ty.environment]
-extra-paths = ["rerun_py", "rerun_py/rerun_sdk"]
+extra-paths = ["dalaran_py", "dalaran_py/dalaran_sdk"]
 
 [tool.ty.src]
 include = [
-  "rerun_py/rerun_sdk/rerun",
-  "rerun_py/rerun_bindings",
-  "rerun_py/tests",
-  "rerun_notebook/src/rerun_notebook",
+  "dalaran_py/dalaran_sdk/dalaran",
+  "dalaran_py/dalaran_bindings",
+  "dalaran_py/tests",
+  "dalaran_notebook/src/dalaran_notebook",
   "tests/python",
 ]
 

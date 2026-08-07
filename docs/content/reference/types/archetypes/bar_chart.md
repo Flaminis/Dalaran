@@ -22,9 +22,9 @@ The bar heights will be the provided values, and the x coordinates of the bars w
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `BarChart`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1BarChart.html)
- * 🐍 [Python API docs for `BarChart`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.BarChart)
- * 🦀 [Rust API docs for `BarChart`](https://docs.rs/rerun/latest/rerun/archetypes/struct.BarChart.html)
+ * 🌊 [C++ API docs for `BarChart`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1BarChart.html)
+ * 🐍 [Python API docs for `BarChart`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.BarChart)
+ * 🦀 [Rust API docs for `BarChart`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.BarChart.html)
 
 ## Example
 

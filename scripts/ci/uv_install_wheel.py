@@ -6,7 +6,7 @@ Install a wheel from a folder in the current uv environment.
 Example:
 -------
 ```
-python3 scripts/ci/uv_install_wheel.py --dir wheel --package rerun-sdk
+python3 scripts/ci/uv_install_wheel.py --dir wheel --package dalaran-sdk
 ```
 
 """

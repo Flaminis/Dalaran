@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Examples of logging graph data to Rerun and performing a force-based layout."""
+"""Examples of logging graph data to Dalaran and performing a force-based layout."""
 
 from __future__ import annotations
 
 import argparse
 import itertools
 
-import rerun as rr
+import dalaran as dl
 
 NUM_NODES = 10
 
@@ -14,7 +14,7 @@ DESCRIPTION = """
 # Graph Lattice
 This is a minimal example that logs a graph (node-link diagram) that represents a lattice.
 
-In this example, the node positions — and therefore the graph layout — are computed by Rerun internally.
+In this example, the node positions — and therefore the graph layout — are computed by Dalaran internally.
 
 The full source code for this example is available
 [on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/graph_lattice).
@@ -22,7 +22,7 @@ The full source code for this example is available
 
 
 def log_data() -> None:
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     coordinates = itertools.product(range(NUM_NODES), range(NUM_NODES))
 
@@ -30,16 +30,16 @@ def log_data() -> None:
         *[
             (
                 str(i),
-                rr.components.Color([round((x / (NUM_NODES - 1)) * 255), round((y / (NUM_NODES - 1)) * 255), 0]),
+                dl.components.Color([round((x / (NUM_NODES - 1)) * 255), round((y / (NUM_NODES - 1)) * 255), 0]),
             )
             for i, (x, y) in enumerate(coordinates)
         ],
         strict=False,
     )
 
-    rr.log(
+    dl.log(
         "/lattice",
-        rr.GraphNodes(
+        dl.GraphNodes(
             nodes,
             colors=colors,
             labels=[f"({x}, {y})" for x, y in itertools.product(range(NUM_NODES), range(NUM_NODES))],
@@ -58,17 +58,17 @@ def log_data() -> None:
             target = y * NUM_NODES + x
             edges.append((str(source), str(target)))
 
-    rr.log("/lattice", rr.GraphEdges(edges, graph_type="directed"), static=True)
+    dl.log("/lattice", dl.GraphEdges(edges, graph_type="directed"), static=True)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Logs a graph lattice using the Rerun SDK.")
-    rr.script_add_args(parser)
+    parser = argparse.ArgumentParser(description="Logs a graph lattice using the Dalaran SDK.")
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_graph_lattice")
+    dl.script_setup(args, "dalaran_example_graph_lattice")
     log_data()
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

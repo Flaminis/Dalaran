@@ -3,13 +3,13 @@ from __future__ import annotations
 from datafusion import col
 
 # region: build_store
-import rerun as rr
-from rerun.experimental import Chunk, ChunkStore
+import dalaran as dl
+from dalaran.experimental import Chunk, ChunkStore
 
 chunk = Chunk.from_columns(
     "/sensor",
-    indexes=[rr.TimeColumn("frame", sequence=[0, 1, 2, 3])],
-    columns=rr.Scalars.columns(scalars=[0.0, 0.5, 1.0, 1.5]),
+    indexes=[dl.TimeColumn("frame", sequence=[0, 1, 2, 3])],
+    columns=dl.Scalars.columns(scalars=[0.0, 0.5, 1.0, 1.5]),
 )
 store = ChunkStore.from_chunks([chunk])
 # endregion: build_store

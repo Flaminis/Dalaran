@@ -3,7 +3,7 @@
 """
 Script to auto-approve workflow runs if certain criteria are met.
 
-Checks for a `@rerun-bot approve` comment made by an official Rerun team member,
+Checks for a `@dalaran-bot approve` comment made by an official Dalaran team member,
 and approves any workflow runs with pending approval.
 
 This is expected to be run by the `auto_approve.yml` GitHub workflow.
@@ -21,7 +21,7 @@ from github.NamedUser import NamedUser
 if TYPE_CHECKING:
     from github.WorkflowRun import WorkflowRun
 
-APPROVAL = "@rerun-bot approve"
+APPROVAL = "@dalaran-bot approve"
 
 
 def approve(github_token: str, workflow_run: WorkflowRun) -> None:

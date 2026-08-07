@@ -1,4 +1,4 @@
-"""Demonstrate converting Rerun recording to LeRobot dataset."""
+"""Demonstrate converting Dalaran recording to LeRobot dataset."""
 
 from __future__ import annotations
 
@@ -17,11 +17,11 @@ from pathlib import Path
 from lerobot.datasets.lerobot_dataset import (
     LeRobotDataset,  # type: ignore[import-untyped,import-not-found]
 )
-from rerun_lerobot.converter import convert_dataframe_to_episode
-from rerun_lerobot.feature_inference import infer_features
-from rerun_lerobot.types import LeRobotConversionConfig, VideoSpec
+from dalaran_lerobot.converter import convert_dataframe_to_episode
+from dalaran_lerobot.feature_inference import infer_features
+from dalaran_lerobot.types import LeRobotConversionConfig, VideoSpec
 
-import rerun as rr
+import dalaran as dl
 
 # Start a server with RRD recordings
 # In practice, you would point this to your directory of RRD files
@@ -29,7 +29,7 @@ sample_5_path = (
     Path(__file__).parents[4] / "tests" / "assets" / "rrd" / "sample_5"
 )
 
-server = rr.server.Server(datasets={"robot_dataset": sample_5_path})
+server = dl.server.Server(datasets={"robot_dataset": sample_5_path})
 client = server.client()
 dataset = client.get_dataset(name="robot_dataset")
 # endregion: setup
@@ -73,7 +73,7 @@ videos = [
 ]
 
 # Configure the conversion parameters
-# This maps Rerun's flexible data model to LeRobot's standardized format
+# This maps Dalaran's flexible data model to LeRobot's standardized format
 config = LeRobotConversionConfig(
     fps=15,  # Target frame rate for the dataset
     index_column="real_time",  # Timeline to use for alignment
@@ -99,7 +99,7 @@ features = infer_features(
 # region: create_dataset
 # Create the LeRobot dataset structure on disk
 lerobot_dataset = LeRobotDataset.create(
-    repo_id="rerun/droid_lerobot",  # Dataset identifier
+    repo_id="dalaran/droid_lerobot",  # Dataset identifier
     fps=config.fps,
     features=features,
     root=TMP_DIR / "lerobot_dataset",
@@ -128,7 +128,7 @@ lerobot_dataset.finalize()
 # region: multi_episode_export
 # Create a new LeRobot dataset for multiple episodes
 lerobot_dataset = LeRobotDataset.create(
-    repo_id="rerun/droid_lerobot_full",
+    repo_id="dalaran/droid_lerobot_full",
     fps=config.fps,
     features=features,
     root=TMP_DIR / "lerobot_dataset_full",

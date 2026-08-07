@@ -16,7 +16,7 @@ than `values` falls back to defaults for the missing entries.
 
 It's generally recommended to log this type as static.
 
-The underlying data needs to be logged to the same entity path using [`archetypes.StateChange`](https://rerun.io/docs/reference/types/archetypes/state_change).
+The underlying data needs to be logged to the same entity path using [`archetypes.StateChange`](https://dalaran.dev/docs/reference/types/archetypes/state_change).
 
 ## Fields
 ### Optional
@@ -31,9 +31,9 @@ The underlying data needs to be logged to the same entity path using [`archetype
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `StateConfiguration`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1StateConfiguration.html)
- * 🐍 [Python API docs for `StateConfiguration`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.StateConfiguration)
- * 🦀 [Rust API docs for `StateConfiguration`](https://docs.rs/rerun/latest/rerun/archetypes/struct.StateConfiguration.html)
+ * 🌊 [C++ API docs for `StateConfiguration`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1StateConfiguration.html)
+ * 🐍 [Python API docs for `StateConfiguration`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.StateConfiguration)
+ * 🦀 [Rust API docs for `StateConfiguration`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.StateConfiguration.html)
 
 ## Example
 

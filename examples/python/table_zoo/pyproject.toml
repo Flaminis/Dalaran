@@ -2,7 +2,7 @@
 name = "table_zoo"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["pyarrow", "lancedb", "platformdirs", "rerun-sdk"]
+dependencies = ["pyarrow", "lancedb", "platformdirs", "dalaran-sdk"]
 
 [project.scripts]
 table_zoo = "table_zoo:main"

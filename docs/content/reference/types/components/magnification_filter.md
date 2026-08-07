@@ -33,9 +33,9 @@ UInt8
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `MagnificationFilter`](https://ref.rerun.io/docs/cpp/stable/namespacererun_1_1components.html)
- * 🐍 [Python API docs for `MagnificationFilter`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.MagnificationFilter)
- * 🦀 [Rust API docs for `MagnificationFilter`](https://docs.rs/rerun/latest/rerun/components/enum.MagnificationFilter.html)
+ * 🌊 [C++ API docs for `MagnificationFilter`](https://ref.dalaran.dev/docs/cpp/stable/namespacedalaran_1_1components.html)
+ * 🐍 [Python API docs for `MagnificationFilter`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.MagnificationFilter)
+ * 🦀 [Rust API docs for `MagnificationFilter`](https://docs.rs/dalaran/latest/dalaran/components/enum.MagnificationFilter.html)
 
 
 ## Used by

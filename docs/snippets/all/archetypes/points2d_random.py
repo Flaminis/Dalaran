@@ -2,21 +2,21 @@
 
 from numpy.random import default_rng
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_points2d_random", spawn=True)
+dl.init("dalaran_example_points2d_random", spawn=True)
 rng = default_rng(12345)
 
 positions = rng.uniform(-3, 3, size=[10, 2])
 colors = rng.uniform(0, 255, size=[10, 4])
 radii = rng.uniform(0, 1, size=[10])
 
-rr.log("random", rr.Points2D(positions, colors=colors, radii=radii))
+dl.log("random", dl.Points2D(positions, colors=colors, radii=radii))
 
 # Set view bounds:
-rr.send_blueprint(
-    rrb.Spatial2DView(
-        visual_bounds=rrb.VisualBounds2D(x_range=[-4, 4], y_range=[-4, 4])
+dl.send_blueprint(
+    dlb.Spatial2DView(
+        visual_bounds=dlb.VisualBounds2D(x_range=[-4, 4], y_range=[-4, 4])
     )
 )

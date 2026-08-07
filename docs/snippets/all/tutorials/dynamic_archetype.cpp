@@ -1,13 +1,13 @@
 // Log arbitrary archetype data.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <arrow/array/builder_binary.h>
 #include <arrow/array/builder_primitive.h>
 #include <cstdio>
 
 arrow::Status run_main() {
-    const auto rec = rerun::RecordingStream("rerun_example_dynamic_archetype");
+    const auto rec = dalaran::RecordingStream("dalaran_example_dynamic_archetype");
     rec.spawn().exit_on_failure();
 
     std::shared_ptr<arrow::Array> arrow_array;
@@ -15,32 +15,32 @@ arrow::Status run_main() {
     arrow::DoubleBuilder confidences_builder;
     ARROW_RETURN_NOT_OK(confidences_builder.AppendValues({1.2, 3.4, 5.6}));
     ARROW_RETURN_NOT_OK(confidences_builder.Finish(&arrow_array));
-    auto confidences = rerun::ComponentBatch::from_arrow_array(
+    auto confidences = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("MyArchetype:confidence")
-            .with_component_type(rerun::Loggable<rerun::Scalar>::ComponentType)
+        dalaran::ComponentDescriptor("MyArchetype:confidence")
+            .with_component_type(dalaran::Loggable<dalaran::Scalar>::ComponentType)
             .with_archetype("MyArchetype")
     );
 
     arrow::StringBuilder description_builder;
     ARROW_RETURN_NOT_OK(description_builder.Append("Bla bla bla…"));
     ARROW_RETURN_NOT_OK(description_builder.Finish(&arrow_array));
-    auto description = rerun::ComponentBatch::from_arrow_array(
+    auto description = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("MyArchetype:description")
+        dalaran::ComponentDescriptor("MyArchetype:description")
             .with_component_type(
 
-                rerun::Loggable<rerun::Text>::ComponentType
+                dalaran::Loggable<dalaran::Text>::ComponentType
             )
             .with_archetype("MyArchetype")
     );
     // URIs will become clickable links
     arrow::StringBuilder homepage_builder;
-    ARROW_RETURN_NOT_OK(homepage_builder.Append("https://www.rerun.io"));
+    ARROW_RETURN_NOT_OK(homepage_builder.Append("https://www.dalaran.dev"));
     ARROW_RETURN_NOT_OK(homepage_builder.Finish(&arrow_array));
-    auto homepage = rerun::ComponentBatch::from_arrow_array(
+    auto homepage = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("MyArchetype:homepage")
+        dalaran::ComponentDescriptor("MyArchetype:homepage")
             .with_archetype("MyArchetype")
     );
 
@@ -49,9 +49,9 @@ arrow::Status run_main() {
         repository_builder.Append("https://github.com/rerun-io/rerun")
     );
     ARROW_RETURN_NOT_OK(repository_builder.Finish(&arrow_array));
-    auto repository = rerun::ComponentBatch::from_arrow_array(
+    auto repository = dalaran::ComponentBatch::from_arrow_array(
         std::move(arrow_array),
-        rerun::ComponentDescriptor("MyArchetype:repository")
+        dalaran::ComponentDescriptor("MyArchetype:repository")
             .with_archetype("MyArchetype")
     );
 

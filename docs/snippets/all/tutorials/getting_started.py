@@ -11,9 +11,9 @@ from pathlib import Path
 
 import torch.multiprocessing
 
-import rerun as rr
+import dalaran as dl
 
-# Rerun's tokio runtime is not fork-safe; DataLoader workers must use `spawn`.
+# Dalaran's tokio runtime is not fork-safe; DataLoader workers must use `spawn`.
 torch.multiprocessing.set_start_method("spawn", force=True)
 
 # Run from a fresh temp dir so the .rrd files this snippet writes don't
@@ -23,26 +23,26 @@ os.chdir(tempfile.mkdtemp())
 # Materialize the .rrd that the catalog regions below register against.
 # Same code as the Log step's three-language snippet, repeated here so this
 # file runs end-to-end.
-with rr.RecordingStream(
-    "rerun_example_getting_started", recording_id="run-1"
+with dl.RecordingStream(
+    "dalaran_example_getting_started", recording_id="run-1"
 ) as _rec:
     _rec.save("run-1.rrd")
     for _t in range(10):
         _rec.set_time("step", sequence=_t)
-        _rec.log("/arm/shoulder", rr.Scalars(math.sin(_t * 0.5)))
-        _rec.log("/arm/elbow", rr.Scalars(math.cos(_t * 0.5)))
+        _rec.log("/arm/shoulder", dl.Scalars(math.sin(_t * 0.5)))
+        _rec.log("/arm/elbow", dl.Scalars(math.cos(_t * 0.5)))
 
 # Start an in-process catalog server on a random port so this snippet runs
-# end-to-end. In a real workflow you'd run `rerun server` in a separate
+# end-to-end. In a real workflow you'd run `dalaran server` in a separate
 # terminal, which is what the docs show.
-_server = rr.server.Server()
+_server = dl.server.Server()
 server_url = _server.url()
 
 
 # region: setup
-# `server_url` is the catalog URL — defaults to "rerun+http://127.0.0.1:51234"
-# when running `rerun server` locally.
-client = rr.catalog.CatalogClient(server_url)
+# `server_url` is the catalog URL — defaults to "dalaran+http://127.0.0.1:51234"
+# when running `dalaran server` locally.
+client = dl.catalog.CatalogClient(server_url)
 # endregion: setup
 
 
@@ -53,12 +53,12 @@ dataset.register([Path("run-1.rrd").absolute().as_uri()]).wait()
 
 
 # region: annotate
-with rr.RecordingStream(
-    "rerun_example_getting_started", recording_id="run-1"
+with dl.RecordingStream(
+    "dalaran_example_getting_started", recording_id="run-1"
 ) as ann:
     ann.save("run-1-properties.rrd")
     ann.send_property(
-        "episode", rr.AnyValues(success=True, task="pick_and_place")
+        "episode", dl.AnyValues(success=True, task="pick_and_place")
     )
 
 dataset.register(
@@ -71,7 +71,7 @@ dataset.register(
 df = dataset.filter_contents(["/arm/**"]).reader(index="step")
 print(
     df.select(
-        "rerun_segment_id",
+        "dalaran_segment_id",
         "/arm/shoulder:Scalars:scalars",
         "/arm/elbow:Scalars:scalars",
     )
@@ -81,14 +81,14 @@ print(
 # region: train
 from torch.utils.data import DataLoader
 
-from rerun.experimental.dataloader import (
+from dalaran.experimental.dataloader import (
     DataSource,
     Field,
     NumericDecoder,
-    RerunIterableDataset,
+    DalaranIterableDataset,
 )
 
-ds = RerunIterableDataset(
+ds = DalaranIterableDataset(
     source=DataSource(dataset=dataset),
     index="step",
     fields={

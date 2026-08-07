@@ -4,9 +4,9 @@ order: 250
 description: Update only the components that change between frames
 ---
 
-Rerun allows you to log only the data that has changed in-between frames (or whatever atomic unit [your timeline](../../concepts/logging-and-ingestion/timelines.md) is using), i.e. you can think of this as a sort of diffs or delta encodings.
+Dalaran allows you to log only the data that has changed in-between frames (or whatever atomic unit [your timeline](../../concepts/logging-and-ingestion/timelines.md) is using), i.e. you can think of this as a sort of diffs or delta encodings.
 
-This is a natural consequence of how Rerun [ingests, stores](../../concepts/logging-and-ingestion/chunks.md) and finally [queries](../../concepts/visualization/entity-queries.md) data: Rerun *always* operates that way, whether you're aware of it or not. Consider this simple snippet:
+This is a natural consequence of how Dalaran [ingests, stores](../../concepts/logging-and-ingestion/chunks.md) and finally [queries](../../concepts/visualization/entity-queries.md) data: Dalaran *always* operates that way, whether you're aware of it or not. Consider this simple snippet:
 
 snippet: archetypes/points3d_simple
 

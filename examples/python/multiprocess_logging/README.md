@@ -1,12 +1,12 @@
 <!--[metadata]
 title = "Multiprocess logging"
-description = "Log to the same Rerun viewer from multiple Python processes with `multiprocessing` and `@rr.shutdown_at_exit`."
+description = "Log to the same Dalaran viewer from multiple Python processes with `multiprocessing` and `@dl.shutdown_at_exit`."
 thumbnail = "https://static.rerun.io/multiprocessing/959e2c675f52a7ca83e11e5170903e8f0f53f5ed/480w.png"
 thumbnail_dimensions = [480, 480]
 tags = ["API example"]
 -->
 
-Demonstrates how Rerun can work with the Python `multiprocessing` library.
+Demonstrates how Dalaran can work with the Python `multiprocessing` library.
 
 <picture>
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/multiprocessing/72bcb7550d84f8e5ed5a39221093239e655f06de/480w.png">
@@ -16,51 +16,51 @@ Demonstrates how Rerun can work with the Python `multiprocessing` library.
   <img src="https://static.rerun.io/multiprocessing/72bcb7550d84f8e5ed5a39221093239e655f06de/full.png" alt="">
 </picture>
 
-## Used Rerun types
-[`Boxes2D`](https://www.rerun.io/docs/reference/types/archetypes/boxes2d), [`TextLog`](https://www.rerun.io/docs/reference/types/archetypes/text_log)
+## Used Dalaran types
+[`Boxes2D`](https://www.dalaran.dev/docs/reference/types/archetypes/boxes2d), [`TextLog`](https://www.dalaran.dev/docs/reference/types/archetypes/text_log)
 
-## Logging and visualizing with Rerun
-This example demonstrates how to use the Rerun SDK with `multiprocessing` to log data from multiple processes to the same Rerun viewer.
+## Logging and visualizing with Dalaran
+This example demonstrates how to use the Dalaran SDK with `multiprocessing` to log data from multiple processes to the same Dalaran viewer.
 It starts with the definition of the function for logging, the `task`, followed by typical usage of Python's `multiprocessing` library.
 
-The function `task` is decorated with `@rr.shutdown_at_exit`. This decorator ensures that data is flushed when the task completes, even if the normal `atexit`-handlers are not called at the termination of a multiprocessing process.
+The function `task` is decorated with `@dl.shutdown_at_exit`. This decorator ensures that data is flushed when the task completes, even if the normal `atexit`-handlers are not called at the termination of a multiprocessing process.
 
 ```python
-@rr.shutdown_at_exit
+@dl.shutdown_at_exit
 def task(child_index: int) -> None:
-    rr.init("rerun_example_multiprocessing")
+    dl.init("dalaran_example_multiprocessing")
 
-    rr.connect_grpc()
+    dl.connect_grpc()
 
     title = f"task_{child_index}"
-    rr.log(
+    dl.log(
         "log",
-        rr.TextLog(
-            f"Logging from pid={os.getpid()}, thread={threading.get_ident()} using the Rerun recording id {rr.get_recording_id()}"
+        dl.TextLog(
+            f"Logging from pid={os.getpid()}, thread={threading.get_ident()} using the Dalaran recording id {dl.get_recording_id()}"
         ),
     )
     if child_index == 0:
-        rr.log(title, rr.Boxes2D(array=[5, 5, 80, 80], array_format=rr.Box2DFormat.XYWH, labels=title))
+        dl.log(title, dl.Boxes2D(array=[5, 5, 80, 80], array_format=dl.Box2DFormat.XYWH, labels=title))
     else:
-        rr.log(
+        dl.log(
             title,
-            rr.Boxes2D(
+            dl.Boxes2D(
                 array=[10 + child_index * 10, 20 + child_index * 5, 30, 40],
-                array_format=rr.Box2DFormat.XYWH,
+                array_format=dl.Box2DFormat.XYWH,
                 labels=title,
             ),
         )
 ```
 
-The main function initializes Rerun with a specific application ID and manages the multiprocessing processes for logging data to the Rerun viewer.
+The main function initializes Dalaran with a specific application ID and manages the multiprocessing processes for logging data to the Dalaran viewer.
 
 > Caution: Ensure that the `recording id` specified in the main function matches the one used in the logging functions
  ```python
 def main() -> None:
     # … existing code …
 
-    rr.init("rerun_example_multiprocessing")
-    rr.spawn(connect=False)  # this is the Viewer that each child process will connect to
+    dl.init("dalaran_example_multiprocessing")
+    dl.spawn(connect=False)  # this is the Viewer that each child process will connect to
 
     task(0)
 
@@ -71,11 +71,11 @@ def main() -> None:
  ```
 
 ## Run the code
-To run this example, make sure you have the Rerun repository checked out and the latest SDK installed:
+To run this example, make sure you have the Dalaran repository checked out and the latest SDK installed:
 ```bash
-pip install --upgrade rerun-sdk  # install the latest Rerun SDK
+pip install --upgrade dalaran-sdk  # install the latest Dalaran SDK
 git clone git@github.com:rerun-io/rerun.git  # Clone the repository
-cd rerun
+cd dalaran
 git checkout latest  # Check out the commit matching the latest SDK release
 ```
 Install the necessary libraries specified in the requirements file:

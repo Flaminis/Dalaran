@@ -9,7 +9,7 @@ In PR [#5395](https://github.com/rerun-io/rerun/pull/5395) we removed the `Insta
 
 What were instance keys?
 
-In Rerun, each entity can be a batch of _instances_.
+In Dalaran, each entity can be a batch of _instances_.
 For instance, a point cloud is usually logged as one entity where each point is an instance of that entity.
 An entity is made up of several components (e.g. position, color, …), and you may log these different components separately.
 For example, this lets you update only the colors of a point cloud, keeping the same positions.
@@ -24,9 +24,9 @@ We still support _splatting_, where you log one single color for the whole point
 If you were relying on `InstanceKey` solely to identify your instances when inspecting them in the viewer, then you can replace it with a custom value using [custom data](../../howto/logging-and-ingestion/custom-data.md):
 
 ```python
-rr.log(
+dl.log(
     "my/points",
-    rr.AnyValues(point_id=[17, 42, 103]),
+    dl.AnyValues(point_id=[17, 42, 103]),
 )
 ```
 

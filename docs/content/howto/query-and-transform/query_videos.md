@@ -10,7 +10,7 @@ For more details about the different video types we support see our [video refer
 This guide focuses on querying [`VideoStream`](../../reference/types/archetypes/video_stream.md) data from a catalog server,
 including how to decode individual frames and how to export entire streams to MP4 files.
 
-The dependencies in this example require `rerun-sdk[all]` and `av` for video decoding.
+The dependencies in this example require `dalaran-sdk[all]` and `av` for video decoding.
 
 ## Setup
 
@@ -95,10 +95,10 @@ you may want to log keyframe indicators separately at recording time.
 
 ### Timestamp handling
 
-Video timestamps in Rerun are typically stored in nanoseconds.
+Video timestamps in Dalaran are typically stored in nanoseconds.
 When using PyAV for decoding or muxing, ensure you set the correct `time_base` (typically `Fraction(1, 1_000_000_000)`).
 
 ### B-frames
 
-Currently, Rerun's [`VideoStream`](../../reference/types/archetypes/video_stream.md) does not support B-frames,
+Currently, Dalaran's [`VideoStream`](../../reference/types/archetypes/video_stream.md) does not support B-frames,
 so `dts` (decode timestamp) equals `pts` (presentation timestamp).

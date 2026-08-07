@@ -1,18 +1,18 @@
 """Log a simple line strip."""
 
-import rerun as rr
-import rerun.blueprint as rrb
+import dalaran as dl
+import dalaran.blueprint as dlb
 
-rr.init("rerun_example_line_strip2d", spawn=True)
+dl.init("dalaran_example_line_strip2d", spawn=True)
 
-rr.log(
+dl.log(
     "strip",
-    rr.LineStrips2D([[[0, 0], [2, 1], [4, -1], [6, 0]]]),
+    dl.LineStrips2D([[[0, 0], [2, 1], [4, -1], [6, 0]]]),
 )
 
 # Set view bounds:
-rr.send_blueprint(
-    rrb.Spatial2DView(
-        visual_bounds=rrb.VisualBounds2D(x_range=[-1, 7], y_range=[-3, 3])
+dl.send_blueprint(
+    dlb.Spatial2DView(
+        visual_bounds=dlb.VisualBounds2D(x_range=[-1, 7], y_range=[-3, 3])
     )
 )

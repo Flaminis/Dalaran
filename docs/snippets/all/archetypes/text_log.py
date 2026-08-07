@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Log a `TextLog`."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_text_log", spawn=True)
+dl.init("dalaran_example_text_log", spawn=True)
 
-rr.log("log", rr.TextLog("Application started.", level=rr.TextLogLevel.INFO))
+dl.log("log", dl.TextLog("Application started.", level=dl.TextLogLevel.INFO))

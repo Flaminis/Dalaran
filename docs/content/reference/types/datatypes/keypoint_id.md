@@ -12,9 +12,9 @@ UInt16
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `KeypointId`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1datatypes_1_1KeypointId.html)
- * 🐍 [Python API docs for `KeypointId`](https://ref.rerun.io/docs/python/stable/common/datatypes#rerun.datatypes.KeypointId)
- * 🦀 [Rust API docs for `KeypointId`](https://docs.rs/rerun/latest/rerun/datatypes/struct.KeypointId.html)
+ * 🌊 [C++ API docs for `KeypointId`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1datatypes_1_1KeypointId.html)
+ * 🐍 [Python API docs for `KeypointId`](https://ref.dalaran.dev/docs/python/stable/common/datatypes#dalaran.datatypes.KeypointId)
+ * 🦀 [Rust API docs for `KeypointId`](https://docs.rs/dalaran/latest/dalaran/datatypes/struct.KeypointId.html)
 
 
 ## Used by

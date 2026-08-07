@@ -6,11 +6,11 @@
 
 use std::sync::Arc;
 
-use rerun::{TimeColumn, external::arrow};
+use dalaran::{TimeColumn, external::arrow};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_any_values_column_updates",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_any_values_column_updates",
     )
     .spawn()?;
 
@@ -18,18 +18,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let times = TimeColumn::new_sequence("step", 0..STEPS);
 
-    let sin = rerun::SerializedComponentBatch::new(
+    let sin = dalaran::SerializedComponentBatch::new(
         Arc::new(arrow::array::Float64Array::from_iter(
             (0..STEPS).map(|v| ((v as f64) / 10.0).sin()),
         )),
-        rerun::ComponentDescriptor::partial("sin"),
+        dalaran::ComponentDescriptor::partial("sin"),
     );
 
-    let cos = rerun::SerializedComponentBatch::new(
+    let cos = dalaran::SerializedComponentBatch::new(
         Arc::new(arrow::array::Float64Array::from_iter(
             (0..STEPS).map(|v| ((v as f64) / 10.0).cos()),
         )),
-        rerun::ComponentDescriptor::partial("cos"),
+        dalaran::ComponentDescriptor::partial("cos"),
     );
 
     rec.send_columns(

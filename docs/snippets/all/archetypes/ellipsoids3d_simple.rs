@@ -4,7 +4,7 @@ use rand::prelude::*;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_ellipsoid_simple")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_ellipsoid_simple")
             .spawn()?;
 
     let sigmas: [f32; 3] = [5., 3., 1.];
@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     rec.log(
         "points",
-        &rerun::Points3D::new((0..50_000).map(|_| {
+        &dalaran::Points3D::new((0..50_000).map(|_| {
             (
                 sigmas[0] * normal.sample(&mut rng),
                 sigmas[1] * normal.sample(&mut rng),
@@ -22,18 +22,18 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             )
         }))
         .with_radii([0.02])
-        .with_colors([rerun::Color::from_rgb(188, 77, 185)]),
+        .with_colors([dalaran::Color::from_rgb(188, 77, 185)]),
     )?;
 
     rec.log(
         "ellipsoid",
-        &rerun::Ellipsoids3D::from_centers_and_half_sizes(
+        &dalaran::Ellipsoids3D::from_centers_and_half_sizes(
             [(0.0, 0.0, 0.0), (0.0, 0.0, 0.0)],
             [sigmas, [sigmas[0] * 3., sigmas[1] * 3., sigmas[2] * 3.]],
         )
         .with_colors([
-            rerun::Color::from_rgb(255, 255, 0),
-            rerun::Color::from_rgb(64, 64, 0),
+            dalaran::Color::from_rgb(255, 255, 0),
+            dalaran::Color::from_rgb(64, 64, 0),
         ]),
     )?;
 

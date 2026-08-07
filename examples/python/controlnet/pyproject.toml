@@ -11,7 +11,7 @@ dependencies = [
   "numpy",
   "torch", # this will use the version defined in the uv workspace
   "transformers>=5.5.0", # >=5.5.0 clears three code-execution advisories in 4.x
-  "rerun-sdk",
+  "dalaran-sdk",
 ]
 
 [project.scripts]

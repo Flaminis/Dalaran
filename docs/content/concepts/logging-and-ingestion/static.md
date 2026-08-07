@@ -5,14 +5,14 @@ description: Logging data that holds across every timeline
 ---
 
 
-The Rerun SDK allows you to store data as _static_. Static data belongs to all timelines (existing ones, and ones not yet created) and shadows any temporal data of the same type on the same entity.
+The Dalaran SDK allows you to store data as _static_. Static data belongs to all timelines (existing ones, and ones not yet created) and shadows any temporal data of the same type on the same entity.
 
 That is, any time you log static data to an entity path, all past, present and future temporal data on that same entity path and component is _semantically_ discarded in favor of the static one (which doesn't necessarily mean that it is _physically_ discarded, more on that below).
 
 
 ## How to store static data?
 
-Internally, all data in Rerun is stored as chunks of columns. Specifically, each chunk holds zero or more time columns (the indices), and zero or more component columns (the data).
+Internally, all data in Dalaran is stored as chunks of columns. Specifically, each chunk holds zero or more time columns (the indices), and zero or more component columns (the data).
 Static data is data that lives in a chunk whose set of time columns is the empty set.
 
 The easiest way to create such chunks is by using the `log` family of methods, which exposes a `static` flag where appropriate:
@@ -45,8 +45,8 @@ Similarly, [coordinate systems](transforms.md) or [annotation context](../visual
 
 ### Memory savings
 
-When you store _temporal_ data in Rerun, it is always appended to the existing dataset: there is no such thing as overwriting temporal data. The dataset only grows, it never shrinks.
-To compensate for that, the Rerun viewer has a [garbage collection mechanism](../../howto/visualization/limit-ram.md) that will drop the oldest data from the store when memory becomes scarce.
+When you store _temporal_ data in Dalaran, it is always appended to the existing dataset: there is no such thing as overwriting temporal data. The dataset only grows, it never shrinks.
+To compensate for that, the Dalaran viewer has a [garbage collection mechanism](../../howto/visualization/limit-ram.md) that will drop the oldest data from the store when memory becomes scarce.
 
 For example, the following snippet stores 10 images at index `4` on the `frame` [timeline](timelines.md):
 
@@ -61,7 +61,7 @@ In the following snippet, only the data from latest log call (in execution order
 
 snippet: concepts/static/log_static_10x
 
-In practice, the Rerun datastore will rely on these semantics to physically drop the superfluous static data where possible, therefore drastically reducing memory costs. See ["Understanding storage costs"](#understanding-storage-costs) for more information.
+In practice, the Dalaran datastore will rely on these semantics to physically drop the superfluous static data where possible, therefore drastically reducing memory costs. See ["Understanding storage costs"](#understanding-storage-costs) for more information.
 
 
 ## Understanding storage costs
@@ -75,20 +75,20 @@ How these semantics actually translate to physical storage depends on the contex
 
 ### In recordings
 
-Rerun recordings (`.rrd` files) are just streams of binary messages: they have no semantics whatsoever, therefore they don't know what static means and can't do anything about it.
+Dalaran recordings (`.rrd` files) are just streams of binary messages: they have no semantics whatsoever, therefore they don't know what static means and can't do anything about it.
 
-If you were to log the snippet above to a file (using e.g. `rr.save()`), you'd find that the recording does in fact contains your 10 images.
+If you were to log the snippet above to a file (using e.g. `dl.save()`), you'd find that the recording does in fact contains your 10 images.
 
 If you wanted the recording file itself to only contain a single static value, you would need to either:
 * Stream the data to the viewer, and then save the recording directly out of the viewer using `Menu > Save recording` (or the equivalent palette command).
-* Manually recompact your recording using the [Rerun CLI](../../reference/cli.md#rerun-rrd-optimize) so that the data overwrite semantics can get appropriately applied, e.g.: `rerun rrd optimize -o compacted.rrd myrecording.rrd`.
+* Manually recompact your recording using the [Dalaran CLI](../../reference/cli.md#dalaran-rrd-optimize) so that the data overwrite semantics can get appropriately applied, e.g.: `dalaran rrd optimize -o compacted.rrd myrecording.rrd`.
 
 
 ### In the viewer
 
-The data store that backs the Rerun viewer natively understands these temporal/garbage-collected vs. static/overwritten semantics.
+The data store that backs the Dalaran viewer natively understands these temporal/garbage-collected vs. static/overwritten semantics.
 
-If you were to log the snippet above directly to the Rerun viewer (using e.g. `rr.connect_grpc()`), you'd notice that the viewer's memory usage stays constant: the data is automatically being overwritten as new updates come in.
+If you were to log the snippet above directly to the Dalaran viewer (using e.g. `dl.connect_grpc()`), you'd notice that the viewer's memory usage stays constant: the data is automatically being overwritten as new updates come in.
 For data where you don't need to keep track of historical values, this effectively to logs its new values indefinitely.
 
 In the following example, you can see our [face tracking example]() indefinitely tracking my face while maintaining constant memory usage by logging all data as static:

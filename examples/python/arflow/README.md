@@ -1,13 +1,13 @@
 <!--[metadata]
 title = "ARFlow: a framework for simplifying AR experimentation workflow"
-description = "External AR research framework that uses Rerun to visualize multi-modal sensor data from a mobile client in real time."
+description = "External AR research framework that uses Dalaran to visualize multi-modal sensor data from a mobile client in real time."
 source = "https://github.com/cake-lab/ARFlow"
 tags = ["3D", "Augmented reality", "Spatial computing", "Integration"]
 thumbnail = "https://static.rerun.io/arflow/a6b509af10a42b3c7ad3909d44e972a3cb1a9c41/480w.png"
 thumbnail_dimensions = [480, 480]
 -->
 
-This is an external project that uses Rerun as a core component.
+This is an external project that uses Dalaran as a core component.
 
 ## External project presentation
 
@@ -17,7 +17,7 @@ This is an external project that uses Rerun as a core component.
 
 ARFlow is designed to lower the barrier for AR researchers to evaluate ideas in hours instead of weeks or months, following:
 - **Efficient AR experiment data collection** from various data sources, including camera, depth sensors, and IMU sensors with an efficient thin mobile client.
-- Flexible AR runtime data **management** with **real-time visualization** (powered by Rerun).
+- Flexible AR runtime data **management** with **real-time visualization** (powered by Dalaran).
 - **Easy integration** with existing AR research projects without breaking the experimentation logic.
 
 Watch our demo video:

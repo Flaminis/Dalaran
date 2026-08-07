@@ -8,7 +8,7 @@ A 3x3 transformation matrix Matrix.
 3x3 matrixes are able to represent any affine transformation in 3D space,
 i.e. rotation, scaling, shearing, reflection etc.
 
-Matrices in Rerun are stored as flat list of coefficients in column-major order:
+Matrices in Dalaran are stored as flat list of coefficients in column-major order:
 ```text
             column 0       column 1       column 2
        -------------------------------------------------
@@ -17,7 +17,7 @@ row 1 | flat_columns[1] flat_columns[4] flat_columns[7]
 row 2 | flat_columns[2] flat_columns[5] flat_columns[8]
 ```
 
-## Rerun datatype
+## Dalaran datatype
 [`Mat3x3`](../datatypes/mat3x3.md)
 
 
@@ -27,9 +27,9 @@ FixedSizeList(9 x non-null Float32)
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `TransformMat3x3`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1TransformMat3x3.html)
- * 🐍 [Python API docs for `TransformMat3x3`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.TransformMat3x3)
- * 🦀 [Rust API docs for `TransformMat3x3`](https://docs.rs/rerun/latest/rerun/components/struct.TransformMat3x3.html)
+ * 🌊 [C++ API docs for `TransformMat3x3`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1TransformMat3x3.html)
+ * 🐍 [Python API docs for `TransformMat3x3`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.TransformMat3x3)
+ * 🦀 [Rust API docs for `TransformMat3x3`](https://docs.rs/dalaran/latest/dalaran/components/struct.TransformMat3x3.html)
 
 
 ## Used by

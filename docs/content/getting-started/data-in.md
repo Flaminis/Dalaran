@@ -3,7 +3,7 @@ title: Log and Ingest
 order: 400
 ---
 
-In this section we'll log and visualize our first non-trivial dataset, putting many of Rerun's core concepts and features to use.
+In this section we'll log and visualize our first non-trivial dataset, putting many of Dalaran's core concepts and features to use.
 
 In a few lines of code, we'll go from a blank sheet to something you don't see every day: an animated, interactive, DNA-shaped abacus:
 
@@ -14,18 +14,18 @@ In a few lines of code, we'll go from a blank sheet to something you don't see e
 This guide aims to go wide instead of deep.
 There are links to other doc pages where you can learn more about specific topics.
 
-The complete code listings for this tutorial live alongside the Rerun source tree:
+The complete code listings for this tutorial live alongside the Dalaran source tree:
 [Python](https://github.com/rerun-io/rerun/tree/latest/examples/python/dna/dna.py),
 [Rust](https://github.com/rerun-io/rerun/tree/latest/examples/rust/dna/src/main.rs),
 [C++](https://github.com/rerun-io/rerun/tree/latest/examples/cpp/dna/main.cpp).
 
 ## Prerequisites
 
-Before starting, make sure you've [installed the SDK](./install-rerun.md) and [set up a project](./project-setup.md) for your language of choice.
+Before starting, make sure you've [installed the SDK](./install-dalaran.md) and [set up a project](./project-setup.md) for your language of choice.
 
 ## Initializing the SDK
 
-Create a new file (or project), import the relevant utilities from your language's SDK, and initialize a recording. Initialization names the recording with a stable [`ApplicationId`](../concepts/logging-and-ingestion/recordings.md), then spawns a [Rerun Viewer](../reference/viewer/overview.md) and connects the recording to it:
+Create a new file (or project), import the relevant utilities from your language's SDK, and initialize a recording. Initialization names the recording with a stable [`ApplicationId`](../concepts/logging-and-ingestion/recordings.md), then spawns a [Dalaran Viewer](../reference/viewer/overview.md) and connects the recording to it:
 
 snippet: tutorials/dna[imports]
 
@@ -50,7 +50,7 @@ The core structure of our DNA-looking shape can easily be described using two po
 snippet: tutorials/dna[first_points]
 
 Run your program and you should now see this scene in the viewer.
-If the Viewer was still running, Rerun will simply connect to this existing session and replace the data with this new [_recording_](../concepts/logging-and-ingestion/recordings.md).
+If the Viewer was still running, Dalaran will simply connect to this existing session and replace the data with this new [_recording_](../concepts/logging-and-ingestion/recordings.md).
 
 <picture>
   <img src="https://static.rerun.io/logging_data3_first_points/95c9c556160159eb2e47fb160ced89c899f2fcef/full.png" alt="">
@@ -69,13 +69,13 @@ This tiny snippet of code actually holds much more than meets the eye…
 
 ### Archetypes
 
-The easiest way to log geometric primitives is to use the SDK's `log` method with one of the built-in archetype classes (such as `Points3D` here). Archetypes take care of building batches of components that are recognized and correctly displayed by the Rerun viewer.
+The easiest way to log geometric primitives is to use the SDK's `log` method with one of the built-in archetype classes (such as `Points3D` here). Archetypes take care of building batches of components that are recognized and correctly displayed by the Dalaran viewer.
 
 ### Components
 
-Under the hood, the Rerun SDK logs individual _components_ like positions, colors, and radii. Archetypes are just one high-level, convenient way of building such collections of components. For advanced use cases, it's possible to add custom components to archetypes, or even log entirely custom sets of components, bypassing archetypes altogether.
+Under the hood, the Dalaran SDK logs individual _components_ like positions, colors, and radii. Archetypes are just one high-level, convenient way of building such collections of components. For advanced use cases, it's possible to add custom components to archetypes, or even log entirely custom sets of components, bypassing archetypes altogether.
 
-For more information on how the Rerun data model works, refer to our section on [Entities and Components](../concepts/logging-and-ingestion/entity-component.md). For supplying your own components, see [Use custom data](../howto/logging-and-ingestion/custom-data.md).
+For more information on how the Dalaran data model works, refer to our section on [Entities and Components](../concepts/logging-and-ingestion/entity-component.md). For supplying your own components, see [Use custom data](../howto/logging-and-ingestion/custom-data.md).
 
 ### Entities & hierarchies
 
@@ -87,7 +87,7 @@ These are [_entity paths_](../concepts/logging-and-ingestion/entity-component.md
 ### Component batches
 
 One final observation: notice how we're logging a whole batch of points and colors all at once.
-[Component batches](../concepts/logging-and-ingestion/batches.md) are first-class citizens in Rerun and come with all sorts of performance benefits and dedicated features.
+[Component batches](../concepts/logging-and-ingestion/batches.md) are first-class citizens in Dalaran and come with all sorts of performance benefits and dedicated features.
 You're looking at one of these dedicated features right now: notice how we're only logging a single radius for all these points, yet somehow it applies to all of them. We call this _clamping_.
 
 ---
@@ -105,7 +105,7 @@ Which only leaves the beads:
 
 snippet: tutorials/dna[beads]
 
-Once again, although we are getting fancier with our array manipulations, there is nothing new here: it's all about populating archetypes and feeding them to the Rerun API.
+Once again, although we are getting fancier with our array manipulations, there is nothing new here: it's all about populating archetypes and feeding them to the Dalaran API.
 
 <picture>
   <img src="https://static.rerun.io/logging_data5_beads/53afa6ca96259c4451a8b7722a8856252c2fdba6/full.png" alt="">
@@ -119,9 +119,9 @@ Once again, although we are getting fancier with our array manipulations, there 
 
 ### Introducing time
 
-Up until this point, we've completely set aside one of the core concepts of Rerun: [Time and Timelines](../concepts/logging-and-ingestion/timelines.md).
+Up until this point, we've completely set aside one of the core concepts of Dalaran: [Time and Timelines](../concepts/logging-and-ingestion/timelines.md).
 
-Even so, if you look at your [Timeline View](../reference/viewer/timeline.md) right now, you'll notice that Rerun has kept track of time on your behalf anyway by memorizing when each log call occurred.
+Even so, if you look at your [Timeline View](../reference/viewer/timeline.md) right now, you'll notice that Dalaran has kept track of time on your behalf anyway by memorizing when each log call occurred.
 
 <picture>
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/logging_data6_timeline/f22a3c92ae4f9f3a04901ec907a245e03e9dad68/480w.png">
@@ -134,7 +134,7 @@ Even so, if you look at your [Timeline View](../reference/viewer/timeline.md) ri
 Unfortunately, the logging time isn't particularly helpful to us in this case: we can't have our beads animate depending on the logging time, else they would move at different speeds depending on the performance of the logging process!
 For that, we need to introduce our own custom timeline that uses a deterministic clock which we control.
 
-Rerun has rich support for time: whether you want concurrent or disjoint timelines, out-of-order insertions or even data that lives _outside_ the timeline(s). You will find a lot of flexibility in there.
+Dalaran has rich support for time: whether you want concurrent or disjoint timelines, out-of-order insertions or even data that lives _outside_ the timeline(s). You will find a lot of flexibility in there.
 
 Replace the section that logs the beads with a loop that logs them at different timestamps:
 
@@ -158,7 +158,7 @@ Enter…
 
 ### Latest-at semantics
 
-That's because the Rerun Viewer has switched to displaying your custom timeline by default, but the original data was only logged to the _default_ timeline (called `log_time`).
+That's because the Dalaran Viewer has switched to displaying your custom timeline by default, but the original data was only logged to the _default_ timeline (called `log_time`).
 To fix this, set the custom timeline to time zero before logging the original structure:
 
 snippet: tutorials/dna[latest_at_fix]
@@ -171,16 +171,16 @@ snippet: tutorials/dna[latest_at_fix]
   <img src="https://static.rerun.io/logging_data8_latest_at/295492c6cbc68bff129fbe80bf861793b73b0d29/full.png" alt="screenshot after using latest-at">
 </picture>
 
-This fix actually introduces yet another very important concept in Rerun: "latest-at" semantics.
+This fix actually introduces yet another very important concept in Dalaran: "latest-at" semantics.
 Notice how entities `"dna/structure/left"` & `"dna/structure/right"` have only ever been logged at time zero, and yet they are still visible when querying times far beyond that point.
 
-_Rerun always reasons in terms of "latest" data: for a given entity, it retrieves all of its most recent components at a given time._
+_Dalaran always reasons in terms of "latest" data: for a given entity, it retrieves all of its most recent components at a given time._
 
 ## Transforming space
 
 There's only one thing left: our original scene had the abacus rotate along its principal axis.
 
-As was the case with time, (hierarchical) space transformations are first-class citizens in Rerun.
+As was the case with time, (hierarchical) space transformations are first-class citizens in Dalaran.
 Now it's just a matter of combining the two: we need to log the transform of the scaffolding at each timestamp.
 
 Either expand the previous loop to include logging transforms or simply add a second loop like this:
@@ -197,43 +197,43 @@ Voila!
 
 `spawn` is great when you're experimenting on a single machine like we did in this tutorial, but what if the logging happens on, for example, a headless computer?
 
-Rerun offers several solutions for such use cases.
+Dalaran offers several solutions for such use cases.
 
 ### Logging data over the network
 
-At any time, you can start a Rerun Viewer by running `rerun`. This Viewer is in fact a server that's ready to accept data over gRPC (it's listening on `0.0.0.0:9876` by default).
+At any time, you can start a Dalaran Viewer by running `dalaran`. This Viewer is in fact a server that's ready to accept data over gRPC (it's listening on `0.0.0.0:9876` by default).
 
 On the logger side, replace the `spawn` call from above with a `connect_grpc` call to send data to any gRPC address:
 
 snippet: tutorials/dna_connect_grpc
 
-Run `rerun --help` for more options.
+Run `dalaran --help` for more options.
 
 ### Saving & loading to/from RRD files
 
 Sometimes, sending data over the network is not an option. Maybe you'd like to share the data, attach it to a bug report, etc.
 
-Rerun has you covered: each SDK exposes a `save` method (Python: [`rr.save`](https://ref.rerun.io/docs/python/stable/common/initialization_functions/#rerun.save), Rust: [`RecordingStream::save`](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.save), C++: [`RecordingStream::save`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#a555a7940a076c93d951de5b139d14918)) that streams all logged data to disk. View the resulting file with `rerun path/to/recording.rrd`.
+Dalaran has you covered: each SDK exposes a `save` method (Python: [`dl.save`](https://ref.dalaran.dev/docs/python/stable/common/initialization_functions/#dalaran.save), Rust: [`RecordingStream::save`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.save), C++: [`RecordingStream::save`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#a555a7940a076c93d951de5b139d14918)) that streams all logged data to disk. View the resulting file with `dalaran path/to/recording.rrd`.
 
 You can also save a recording (or a portion of it) as you're visualizing it, directly from the viewer.
 
 ### RRD file backwards compatibility
 
-RRD files saved with Rerun 0.23 or later can be opened with a newer Rerun version.
-For more details and potential limitations, please refer to [our blog post](https://rerun.io/blog/release-0.23).
+RRD files saved with Dalaran 0.23 or later can be opened with a newer Dalaran version.
+For more details and potential limitations, please refer to [our blog post](https://dalaran.dev/blog/release-0.23).
 
 > [!WARNING]
-> At the moment, we only guarantee compatibility across adjacent minor versions (e.g. Rerun 0.24 can open RRDs from 0.23).
+> At the moment, we only guarantee compatibility across adjacent minor versions (e.g. Dalaran 0.24 can open RRDs from 0.23).
 
 ### Rust-only: showing the Viewer in-process
 
-The Rust SDK can host the Viewer directly inside your application via [`rerun::native_viewer::show`](https://docs.rs/rerun/latest/rerun/native_viewer/fn.show.html), which expects a complete recording from memory rather than a live stream. This requires enabling the `native_viewer` feature in `Cargo.toml`. The Viewer blocks the main thread until closed; see the Rust API docs for details.
+The Rust SDK can host the Viewer directly inside your application via [`dalaran::native_viewer::show`](https://docs.rs/dalaran/latest/dalaran/native_viewer/fn.show.html), which expects a complete recording from memory rather than a live stream. This requires enabling the `native_viewer` feature in `Cargo.toml`. The Viewer blocks the main thread until closed; see the Rust API docs for details.
 
 ## Closing
 
-This closes our whirlwind tour of logging with Rerun. We've barely scratched the surface of what's possible, but this should have hopefully given you plenty of pointers to start experimenting.
+This closes our whirlwind tour of logging with Dalaran. We've barely scratched the surface of what's possible, but this should have hopefully given you plenty of pointers to start experimenting.
 
-As a next step, browse through our [example gallery](https://rerun.io/examples) for some more realistic example use-cases, browse the [Types](../reference/types.md) section for more simple examples of how to use the main datatypes, or dig deeper into [querying your logged data](data-out.md).
+As a next step, browse through our [example gallery](https://dalaran.dev/examples) for some more realistic example use-cases, browse the [Types](../reference/types.md) section for more simple examples of how to use the main datatypes, or dig deeper into [querying your logged data](data-out.md).
 
 ## Opening files
 

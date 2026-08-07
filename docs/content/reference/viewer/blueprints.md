@@ -17,7 +17,7 @@ For a complete understanding of blueprints, see [Blueprints](../../concepts/visu
 ### Reset button
 The reset button in the blueprint panel header provides two reset options:
 
-- **Reset to Default Blueprint**: Returns to your programmatically specified blueprint (sent from code via `rr.send_blueprint()`) or a loaded blueprint file (`.rbl`). This becomes the "default" whenever you send or load a blueprint.
+- **Reset to Default Blueprint**: Returns to your programmatically specified blueprint (sent from code via `dl.send_blueprint()`) or a loaded blueprint file (`.rbl`). This becomes the "default" whenever you send or load a blueprint.
 
 - **Reset to Heuristic Blueprint**: Generates a new blueprint automatically based on your current data. The Viewer analyzes your logged data and creates an appropriate layout using built-in heuristics.
 

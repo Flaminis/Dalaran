@@ -17,14 +17,14 @@ import numpy.typing as npt
 import requests
 from PIL import Image
 
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
 DESCRIPTION = """
 # Detect and track objects
 
 This is a more elaborate example applying simple object detection and segmentation on a video using the Huggingface
 `transformers` library. Tracking across frames is performed using optical flow from OpenCV. The results are
-visualized using Rerun.
+visualized using Dalaran.
 
 The full source code for this example is available
 [on GitHub](https://github.com/rerun-io/rerun/blob/latest/examples/python/detect_and_track_objects).
@@ -101,7 +101,7 @@ class Detector:
         _, _, scaled_height, scaled_width = inputs["pixel_values"].shape
         scaled_size = (scaled_width, scaled_height)
         rgb_scaled = cv2.resize(rgb, scaled_size)
-        rr.log("segmentation/rgb_scaled", rr.Image(rgb_scaled).compress(jpeg_quality=85))
+        dl.log("segmentation/rgb_scaled", dl.Image(rgb_scaled).compress(jpeg_quality=85))
 
         logging.debug("Pass image to detection network")
         outputs = self.model(**inputs)
@@ -116,7 +116,7 @@ class Detector:
         )[0]
 
         mask = segmentation_mask.detach().cpu().numpy().astype(np.uint8)
-        rr.log("segmentation", rr.SegmentationImage(mask))
+        dl.log("segmentation", dl.SegmentationImage(mask))
 
         boxes = detections["boxes"].detach().cpu().numpy()
         class_ids = detections["labels"].detach().cpu().numpy()
@@ -146,22 +146,22 @@ class Detector:
 
         thing_boxes = boxes[things_np, :]
         thing_class_ids = class_ids_np[things_np]
-        rr.log(
+        dl.log(
             "segmentation/detections/things",
-            rr.Boxes2D(
+            dl.Boxes2D(
                 array=thing_boxes,
-                array_format=rr.Box2DFormat.XYXY,
+                array_format=dl.Box2DFormat.XYXY,
                 class_ids=thing_class_ids,
             ),
         )
 
         background_boxes = boxes[~things_np, :]
         background_class_ids = class_ids[~things_np]
-        rr.log(
+        dl.log(
             "segmentation/detections/background",
-            rr.Boxes2D(
+            dl.Boxes2D(
                 array=background_boxes,
-                array_format=rr.Box2DFormat.XYXY,
+                array_format=dl.Box2DFormat.XYXY,
                 class_ids=background_class_ids,
             ),
         )
@@ -263,16 +263,16 @@ class Tracker:
 
     def log_tracked(self) -> None:
         if self.is_tracking:
-            rr.log(
+            dl.log(
                 f"video/tracked/{self.tracking_id}",
-                rr.Boxes2D(
+                dl.Boxes2D(
                     array=self.tracked.bbox_xywh,
-                    array_format=rr.Box2DFormat.XYWH,
+                    array_format=dl.Box2DFormat.XYWH,
                     class_ids=self.tracked.class_id,
                 ),
             )
         else:
-            rr.log(f"video/tracked/{self.tracking_id}", rr.Boxes2D.cleared())
+            dl.log(f"video/tracked/{self.tracking_id}", dl.Boxes2D.cleared())
 
     def update_with_detection(self, detection: Detection, bgr: cv2.typing.MatLike) -> None:
         self.num_recent_undetected_frames = 0
@@ -390,19 +390,19 @@ def track_objects(video_path: str, *, max_frame_count: int | None) -> None:
     with open(COCO_CATEGORIES_PATH, encoding="utf8") as f:
         coco_categories = json.load(f)
     class_descriptions = [
-        rr.AnnotationInfo(id=cat["id"], color=cat["color"], label=cat["name"]) for cat in coco_categories
+        dl.AnnotationInfo(id=cat["id"], color=cat["color"], label=cat["name"]) for cat in coco_categories
     ]
-    rr.log("/", rr.AnnotationContext(class_descriptions), static=True)
+    dl.log("/", dl.AnnotationContext(class_descriptions), static=True)
 
     logging.info("Initializing detector…")
     # This call has a tendency to hard exit on failure (no exceptions):
     detector = Detector(coco_categories=coco_categories)
     logging.info("Detector initialized.")
 
-    video_asset = rr.AssetVideo(path=video_path)
+    video_asset = dl.AssetVideo(path=video_path)
     frame_timestamps_ns = video_asset.read_frame_timestamps_nanos()
 
-    rr.log("video", video_asset, static=True)
+    dl.log("video", video_asset, static=True)
 
     logging.info("Loading input video: %s", str(video_path))
     cap = cv2.VideoCapture(video_path)
@@ -416,14 +416,14 @@ def track_objects(video_path: str, *, max_frame_count: int | None) -> None:
             break
 
         ret, bgr = cap.read()
-        rr.set_time("frame", sequence=frame_idx)
+        dl.set_time("frame", sequence=frame_idx)
 
         if not ret:
             logging.info("End of video")
             break
 
         rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-        rr.log("video", rr.VideoFrameReference(nanoseconds=frame_timestamps_ns[frame_idx]))
+        dl.log("video", dl.VideoFrameReference(nanoseconds=frame_timestamps_ns[frame_idx]))
 
         if not trackers or frame_idx % 40 == 0:
             detections = detector.detect_objects_to_track(rgb=rgb, frame_idx=frame_idx)
@@ -459,9 +459,9 @@ def get_downloaded_path(dataset_dir: Path, video_name: str) -> str:
 
 def setup_logging() -> None:
     logger = logging.getLogger()
-    rerun_handler = rr.LoggingHandler("logs")
-    rerun_handler.setLevel(-1)
-    logger.addHandler(rerun_handler)
+    dalaran_handler = dl.LoggingHandler("logs")
+    dalaran_handler.setLevel(-1)
+    logger.addHandler(dalaran_handler)
 
 
 def main() -> None:
@@ -484,14 +484,14 @@ def main() -> None:
         type=int,
         help="Stop after processing this many frames. If not specified, will run until interrupted.",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_detect_and_track_objects")
+    dl.script_setup(args, "dalaran_example_detect_and_track_objects")
 
     setup_logging()
 
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     video_path: str = args.video_path
     if not video_path:
@@ -499,7 +499,7 @@ def main() -> None:
 
     track_objects(video_path, max_frame_count=args.max_frame)
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

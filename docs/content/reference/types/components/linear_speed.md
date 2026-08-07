@@ -5,7 +5,7 @@ title: "LinearSpeed"
 
 Linear speed, used for translation speed for example.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float64`](../datatypes/float64.md)
 
 
@@ -15,8 +15,8 @@ Float64
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `LinearSpeed`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1LinearSpeed.html)
- * 🐍 [Python API docs for `LinearSpeed`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.LinearSpeed)
- * 🦀 [Rust API docs for `LinearSpeed`](https://docs.rs/rerun/latest/rerun/components/struct.LinearSpeed.html)
+ * 🌊 [C++ API docs for `LinearSpeed`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1LinearSpeed.html)
+ * 🐍 [Python API docs for `LinearSpeed`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.LinearSpeed)
+ * 🦀 [Rust API docs for `LinearSpeed`](https://docs.rs/dalaran/latest/dalaran/components/struct.LinearSpeed.html)
 
 

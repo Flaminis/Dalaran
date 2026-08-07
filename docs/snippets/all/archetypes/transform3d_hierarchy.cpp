@@ -1,12 +1,12 @@
 // Log different transforms between three arrows.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 constexpr float TAU = 6.28318530717958647692528676655900577f;
 
 int main(int argc, char* argv[]) {
     const auto rec =
-        rerun::RecordingStream("rerun_example_transform3d_hierarchy");
+        dalaran::RecordingStream("dalaran_example_transform3d_hierarchy");
     rec.spawn().exit_on_failure();
 
     // TODO(#5521): log two views as in the python example
@@ -14,37 +14,37 @@ int main(int argc, char* argv[]) {
     rec.set_time_duration_secs("sim_time", 0.0);
 
     // Planetary motion is typically in the XY plane.
-    rec.log_static("/", rerun::ViewCoordinates::RIGHT_HAND_Z_UP);
+    rec.log_static("/", dalaran::ViewCoordinates::RIGHT_HAND_Z_UP);
 
     // Setup spheres, all are in the center of their own space:
     rec.log(
         "sun",
-        rerun::Ellipsoids3D::from_centers_and_half_sizes(
+        dalaran::Ellipsoids3D::from_centers_and_half_sizes(
             {{0.0f, 0.0f, 0.0f}},
             {{1.0f, 1.0f, 1.0f}}
         )
-            .with_colors(rerun::Color(255, 200, 10))
-            .with_fill_mode(rerun::FillMode::Solid)
+            .with_colors(dalaran::Color(255, 200, 10))
+            .with_fill_mode(dalaran::FillMode::Solid)
     );
 
     rec.log(
         "sun/planet",
-        rerun::Ellipsoids3D::from_centers_and_half_sizes(
+        dalaran::Ellipsoids3D::from_centers_and_half_sizes(
             {{0.0f, 0.0f, 0.0f}},
             {{0.4f, 0.4f, 0.4f}}
         )
-            .with_colors(rerun::Color(40, 80, 200))
-            .with_fill_mode(rerun::FillMode::Solid)
+            .with_colors(dalaran::Color(40, 80, 200))
+            .with_fill_mode(dalaran::FillMode::Solid)
     );
 
     rec.log(
         "sun/planet/moon",
-        rerun::Ellipsoids3D::from_centers_and_half_sizes(
+        dalaran::Ellipsoids3D::from_centers_and_half_sizes(
             {{0.0f, 0.0f, 0.0f}},
             {{0.15f, 0.15f, 0.15f}}
         )
-            .with_colors(rerun::Color(180, 180, 180))
-            .with_fill_mode(rerun::FillMode::Solid)
+            .with_colors(dalaran::Color(180, 180, 180))
+            .with_fill_mode(dalaran::FillMode::Solid)
     );
 
     // Draw fixed paths where the planet & moon move.
@@ -60,11 +60,11 @@ int main(int argc, char* argv[]) {
     }
     rec.log(
         "sun/planet_path",
-        rerun::LineStrips3D(rerun::LineStrip3D(planet_path))
+        dalaran::LineStrips3D(dalaran::LineStrip3D(planet_path))
     );
     rec.log(
         "sun/planet/moon_path",
-        rerun::LineStrips3D(rerun::LineStrip3D(moon_path))
+        dalaran::LineStrips3D(dalaran::LineStrip3D(moon_path))
     );
 
     // Movement via transforms.
@@ -76,22 +76,22 @@ int main(int argc, char* argv[]) {
 
         rec.log(
             "sun/planet",
-            rerun::Transform3D::from_translation_rotation(
+            dalaran::Transform3D::from_translation_rotation(
                 {std::sin(r_planet) * d_planet,
                  std::cos(r_planet) * d_planet,
                  0.0f},
-                rerun::RotationAxisAngle{
+                dalaran::RotationAxisAngle{
                     {1.0, 0.0f, 0.0f},
-                    rerun::Angle::degrees(20.0f),
+                    dalaran::Angle::degrees(20.0f),
                 }
             )
         );
         rec.log(
             "sun/planet/moon",
-            rerun::Transform3D::from_translation(
+            dalaran::Transform3D::from_translation(
                 {std::cos(r_moon) * d_moon, std::sin(r_moon) * d_moon, 0.0f}
             )
-                .with_relation(rerun::TransformRelation::ChildFromParent)
+                .with_relation(dalaran::TransformRelation::ChildFromParent)
         );
     }
 }

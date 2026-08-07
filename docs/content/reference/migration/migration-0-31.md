@@ -8,22 +8,22 @@ hidden: true
 
 ### MCAP "layers" renamed to "decoders"
 
-The `-l` / `--layer` flag for `rerun mcap convert` has been renamed to `-d` / `--decoder`.
+The `-l` / `--layer` flag for `dalaran mcap convert` has been renamed to `-d` / `--decoder`.
 
-This change is motivated by the ambiguity of the term "layer", which is also a core concept of the Rerun catalog server.
+This change is motivated by the ambiguity of the term "layer", which is also a core concept of the Dalaran catalog server.
 
 Before:
 
 ```bash
-rerun mcap convert input.mcap -l protobuf -l stats -o output.rrd
-rerun mcap convert input.mcap -l ros2msg -l raw -l recording_info -o output.rrd
+dalaran mcap convert input.mcap -l protobuf -l stats -o output.rrd
+dalaran mcap convert input.mcap -l ros2msg -l raw -l recording_info -o output.rrd
 ```
 
 After:
 
 ```bash
-rerun mcap convert input.mcap -d protobuf -d stats -o output.rrd
-rerun mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.rrd
+dalaran mcap convert input.mcap -d protobuf -d stats -o output.rrd
+dalaran mcap convert input.mcap -d ros2msg -d raw -d recording_info -o output.rrd
 ```
 
 When no `-d` flags are specified, all available decoders are still used by default (same behavior as before).
@@ -34,9 +34,9 @@ When no `-d` flags are specified, all available decoders are still used by defau
 
 Several server and catalog APIs have been renamed for clarity:
 
-- **CLI**: `rerun server --address …` is now `rerun server --host …`
-- **Python `rr.Server`**: The `addr` constructor argument is now `host`, and the `address` method is now `url`
-- **Python `rr.CatalogClient`**: The `address` parameter is now `url`
+- **CLI**: `dalaran server --address …` is now `dalaran server --host …`
+- **Python `dl.Server`**: The `addr` constructor argument is now `host`, and the `address` method is now `url`
+- **Python `dl.CatalogClient`**: The `address` parameter is now `url`
 
 ### `Entry.update()` deprecated in favor of `Entry.set_name()`
 

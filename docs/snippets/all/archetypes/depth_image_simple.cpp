@@ -1,12 +1,12 @@
 // Create and log a depth image.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <algorithm> // fill_n
 #include <vector>
 
 int main(int argc, char* argv[]) {
-    const auto rec = rerun::RecordingStream("rerun_example_depth_image_simple");
+    const auto rec = dalaran::RecordingStream("dalaran_example_depth_image_simple");
     rec.spawn().exit_on_failure();
 
     // create a synthetic depth image.
@@ -30,6 +30,6 @@ int main(int argc, char* argv[]) {
 
     rec.log(
         "depth",
-        rerun::DepthImage(pixels.data(), {WIDTH, HEIGHT}).with_meter(10000.0)
+        dalaran::DepthImage(pixels.data(), {WIDTH, HEIGHT}).with_meter(10000.0)
     );
 }

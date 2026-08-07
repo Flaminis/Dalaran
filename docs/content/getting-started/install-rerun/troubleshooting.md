@@ -11,7 +11,7 @@ or [join our Discord](https://discord.gg/Gcm8BbTaAj).
 
 ## Running on Linux
 
-Rerun should work out-of-the-box on Mac and Windows, but on Linux you need to first run:
+Dalaran should work out-of-the-box on Mac and Windows, but on Linux you need to first run:
 
 ```sh
 sudo apt-get -y install \
@@ -43,7 +43,7 @@ sudo dnf install \
 ```
 
 [TODO(#1250)](https://github.com/rerun-io/rerun/issues/1250): Running with the wayland window manager
-sometimes causes Rerun to crash. Try unsetting the wayland display (`unset WAYLAND_DISPLAY` or `WAYLAND_DISPLAY= `) as a workaround.
+sometimes causes Dalaran to crash. Try unsetting the wayland display (`unset WAYLAND_DISPLAY` or `WAYLAND_DISPLAY= `) as a workaround.
 
 ## Running on WSL2 (Ubuntu)
 
@@ -68,11 +68,11 @@ And unset the wayland display either by `unset WAYLAND_DISPLAY` or `WAYLAND_DISP
 
 ## `pip install` issues
 
-If you see the following when running `pip install rerun-sdk` or `pip install rerun-notebook` on a supported platform:
+If you see the following when running `pip install dalaran-sdk` or `pip install dalaran-notebook` on a supported platform:
 
 ```sh
-ERROR: Could not find a version that satisfies the requirement rerun-sdk (from versions: none)
-ERROR: No matching distribution found for rerun-sdk
+ERROR: Could not find a version that satisfies the requirement dalaran-sdk (from versions: none)
+ERROR: No matching distribution found for dalaran-sdk
 ```
 
 Then this is likely because you're running a version of pip that is too old.
@@ -85,10 +85,10 @@ If you're running a version of pip 20 or older, you should upgrade it with `pip 
 
 ## Startup issues
 
-If Rerun is having trouble starting, you can try resetting its memory with:
+If Dalaran is having trouble starting, you can try resetting its memory with:
 
 ```
-rerun reset
+dalaran reset
 ```
 
 ## Graphics issues
@@ -106,9 +106,9 @@ The configuration we use for wgpu can be influenced in the following ways:
     either `webgl` or `webgpu` for the web viewer (see also `--web-viewer` argument).
     Naturally, support depends on your OS. The default backend is `vulkan` everywhere except on Mac where we use `metal`.
     On the web we prefer WebGPU and fall back automatically to WebGL if no support for WebGPU was detected.
-    -   For instance, you can try `rerun --renderer=gl` or for the web viewer respectively `rerun --web-viewer --renderer=webgl`.
+    -   For instance, you can try `dalaran --renderer=gl` or for the web viewer respectively `dalaran --web-viewer --renderer=webgl`.
     -   Alternatively, for the native viewer you can also use the `WGPU_BACKEND` environment variable with the above values.
-    -   The web viewer is configured by the `renderer=<backend>` url argument, e.g. [https://rerun.io/viewer?renderer=webgl]
+    -   The web viewer is configured by the `renderer=<backend>` url argument, e.g. [https://dalaran.dev/viewer?renderer=webgl]
 -   `WGPU_POWER_PREF`: Overwrites the power setting used for choosing a graphics adapter, must be `high` or `low`. (Default is `high`)
 
 We recommend setting these only if you're asked to try them or know what you're doing,

@@ -16,18 +16,18 @@ import numpy.typing as npt
 import pydicom as dicom
 import requests
 
-import rerun as rr  # pip install rerun-sdk
+import dalaran as dl  # pip install dalaran-sdk
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
 DESCRIPTION = """
 # Dicom MRI
-This example visualizes an MRI scan using Rerun.
+This example visualizes an MRI scan using Dalaran.
 
 The visualization of the data consists of just the following line
 ```python
-rr.log("tensor", rr.Tensor(voxels_volume_u16, dim_names=["right", "back", "up"]))
+dl.log("tensor", dl.Tensor(voxels_volume_u16, dim_names=["right", "back", "up"]))
 ```
 
 The full source code for this example is available
@@ -55,14 +55,14 @@ def list_dicom_files(dir: Path) -> Iterable[Path]:
 
 
 def read_and_log_dicom_dataset(dicom_files: Iterable[Path]) -> None:
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     voxels_volume, _ = extract_voxel_data(dicom_files)
 
     # the data is i16, but in range [0, 536].
     voxels_volume_u16: npt.NDArray[np.uint16] = np.require(voxels_volume, np.uint16)
 
-    rr.log("tensor", rr.Tensor(voxels_volume_u16, dim_names=["right", "back", "up"]))
+    dl.log("tensor", dl.Tensor(voxels_volume_u16, dim_names=["right", "back", "up"]))
 
 
 def ensure_dataset_downloaded() -> Iterable[Path]:
@@ -80,12 +80,12 @@ def ensure_dataset_downloaded() -> Iterable[Path]:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Example using MRI scan data in the DICOM format.")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
-    rr.script_setup(args, "rerun_example_dicom_mri")
+    dl.script_setup(args, "dalaran_example_dicom_mri")
     dicom_files = ensure_dataset_downloaded()
     read_and_log_dicom_dataset(dicom_files)
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

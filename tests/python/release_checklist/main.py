@@ -6,7 +6,7 @@ import glob
 import importlib
 from os.path import basename, dirname, isfile, join
 
-import rerun as rr
+import dalaran as dl
 
 
 def log_checks(args: argparse.Namespace) -> None:
@@ -20,18 +20,18 @@ def log_checks(args: argparse.Namespace) -> None:
 
 def log_readme() -> None:
     with open(join(dirname(__file__), "README.md"), encoding="utf8") as f:
-        rr.log("readme", rr.TextDocument(f.read(), media_type=rr.MediaType.MARKDOWN), static=True)
+        dl.log("readme", dl.TextDocument(f.read(), media_type=dl.MediaType.MARKDOWN), static=True)
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Interactive release checklist")
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
     log_checks(args)
 
     # Log instructions last so that's what people see first.
-    rr.script_setup(args, "instructions")
+    dl.script_setup(args, "instructions")
     log_readme()
 
 

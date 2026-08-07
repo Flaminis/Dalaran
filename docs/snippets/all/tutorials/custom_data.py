@@ -9,10 +9,10 @@ import numpy as np
 import numpy.typing as npt
 import pyarrow as pa
 
-import rerun as rr
+import dalaran as dl
 
 
-class ConfidenceBatch(rr.ComponentBatchMixin):  # type: ignore[misc]
+class ConfidenceBatch(dl.ComponentBatchMixin):  # type: ignore[misc]
     """A batch of confidence data."""
 
     def __init__(self: Any, confidence: npt.ArrayLike) -> None:
@@ -23,22 +23,22 @@ class ConfidenceBatch(rr.ComponentBatchMixin):  # type: ignore[misc]
         return pa.array(self.confidence, type=pa.float32())
 
 
-class CustomPoints3D(rr.AsComponents):  # type: ignore[misc]
+class CustomPoints3D(dl.AsComponents):  # type: ignore[misc]
     """A custom archetype extending the builtin `Points3D` with extra data."""
 
     def __init__(
         self: Any, positions: npt.ArrayLike, confidences: npt.ArrayLike
     ) -> None:
-        self.points3d = rr.Points3D(positions)
+        self.points3d = dl.Points3D(positions)
         self.confidences = ConfidenceBatch(confidences).described(
-            rr.ComponentDescriptor(
+            dl.ComponentDescriptor(
                 "user.CustomPoints3D:confidences",
                 archetype="user.CustomPoints3D",
                 component_type="user.Confidence",
             )
         )
 
-    def as_component_batches(self) -> list[rr.DescribedComponentBatch]:
+    def as_component_batches(self) -> list[dl.DescribedComponentBatch]:
         return [
             # The components from Points3D
             *self.points3d.as_component_batches(),
@@ -52,7 +52,7 @@ def log_custom_data() -> None:
     z, y, x = np.meshgrid(lin, lin, lin, indexing="ij")
     point_grid = np.vstack([x.flatten(), y.flatten(), z.flatten()]).T
 
-    rr.log(
+    dl.log(
         "left/my_confident_point_cloud",
         CustomPoints3D(
             positions=point_grid,
@@ -60,7 +60,7 @@ def log_custom_data() -> None:
         ),
     )
 
-    rr.log(
+    dl.log(
         "right/my_polarized_point_cloud",
         CustomPoints3D(
             positions=point_grid, confidences=np.arange(0, len(point_grid))
@@ -70,14 +70,14 @@ def log_custom_data() -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Logs rich data using the Rerun SDK."
+        description="Logs rich data using the Dalaran SDK."
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_custom_data")
+    dl.script_setup(args, "dalaran_example_custom_data")
     log_custom_data()
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@ title: "Boxes3D"
 3D boxes with half-extents and optional center, rotations, colors etc.
 
 If there's more instance poses than half sizes, the last box's orientation will be repeated for the remaining poses.
-Orienting and placing boxes forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://rerun.io/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://rerun.io/docs/reference/types/archetypes/transform3d).
+Orienting and placing boxes forms a separate transform that is applied prior to [`archetypes.InstancePoses3D`](https://dalaran.dev/docs/reference/types/archetypes/instance_poses3d) and [`archetypes.Transform3D`](https://dalaran.dev/docs/reference/types/archetypes/transform3d).
 
 ## Fields
 ### Required
@@ -32,9 +32,9 @@ Orienting and placing boxes forms a separate transform that is applied prior to 
 * [DataframeView](../views/dataframe_view.md)
 
 ## API reference links
- * 🌊 [C++ API docs for `Boxes3D`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1archetypes_1_1Boxes3D.html)
- * 🐍 [Python API docs for `Boxes3D`](https://ref.rerun.io/docs/python/stable/common/archetypes#rerun.archetypes.Boxes3D)
- * 🦀 [Rust API docs for `Boxes3D`](https://docs.rs/rerun/latest/rerun/archetypes/struct.Boxes3D.html)
+ * 🌊 [C++ API docs for `Boxes3D`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1archetypes_1_1Boxes3D.html)
+ * 🐍 [Python API docs for `Boxes3D`](https://ref.dalaran.dev/docs/python/stable/common/archetypes#dalaran.archetypes.Boxes3D)
+ * 🦀 [Rust API docs for `Boxes3D`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.Boxes3D.html)
 
 ## Examples
 

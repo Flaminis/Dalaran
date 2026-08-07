@@ -1,6 +1,6 @@
 # Documentation snippets
 
-Small, self-contained examples in `all/`, organized by category (`archetypes/`, `howto/`, `tutorials/`, `views/`, etc.). Most snippets have `.py`, `.rs`, and `.cpp` versions with the same base name, and are automatically used as docstrings for the `Archetype` APIs and the [Archetypes](https://www.rerun.io/docs/reference/types) documentation.
+Small, self-contained examples in `all/`, organized by category (`archetypes/`, `howto/`, `tutorials/`, `views/`, etc.). Most snippets have `.py`, `.rs`, and `.cpp` versions with the same base name, and are automatically used as docstrings for the `Archetype` APIs and the [Archetypes](https://www.dalaran.dev/docs/reference/types) documentation.
 
 ## Running snippets
 
@@ -39,4 +39,4 @@ These tests verify:
 
 - Pick a name, look at existing examples to get started
 - Use the same name across languages: `<name>.rs`, `<name>.cpp`, `<name>.py`
-- Set `app_id` to `rerun_example_<name>`
+- Set `app_id` to `dalaran_example_<name>`

@@ -18,8 +18,8 @@ import tqdm
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -83,17 +83,17 @@ class GestureDetectorLogger:
         )
         self.recognizer = vision.GestureRecognizer.create_from_options(options)
 
-        rr.log(
+        dl.log(
             "/",
-            rr.AnnotationContext(
-                rr.ClassDescription(
-                    info=rr.AnnotationInfo(id=0, label="Hand3D"),
+            dl.AnnotationContext(
+                dl.ClassDescription(
+                    info=dl.AnnotationInfo(id=0, label="Hand3D"),
                     keypoint_connections=mp.solutions.hands.HAND_CONNECTIONS,
                 ),
             ),
             static=True,
         )
-        rr.log("hand3d", rr.ViewCoordinates.LEFT_HAND_Y_DOWN, static=True)
+        dl.log("hand3d", dl.ViewCoordinates.LEFT_HAND_Y_DOWN, static=True)
 
     @staticmethod
     def convert_landmarks_to_image_coordinates(
@@ -119,7 +119,7 @@ class GestureDetectorLogger:
         )
 
         for log_key in ["hand2d/points", "hand2d/connections", "hand3d/points"]:
-            rr.log(log_key, rr.Clear(recursive=True))
+            dl.log(log_key, dl.Clear(recursive=True))
 
         for gesture in recognition_result.gestures:
             # Get the top gesture from the recognition result
@@ -131,9 +131,9 @@ class GestureDetectorLogger:
 
             landmark_positions_3d = self.convert_landmarks_to_3d(hand_landmarks)
             if landmark_positions_3d is not None:
-                rr.log(
+                dl.log(
                     "hand3d/points",
-                    rr.Points3D(
+                    dl.Points3D(
                         landmark_positions_3d,
                         radii=20,
                         class_ids=0,
@@ -145,7 +145,7 @@ class GestureDetectorLogger:
             points = self.convert_landmarks_to_image_coordinates(hand_landmarks, width, height)
 
             # Log points to the image and Hand Entity
-            rr.log("hand2d/points", rr.Points2D(points, radii=10, colors=[255, 0, 0]))
+            dl.log("hand2d/points", dl.Points2D(points, radii=10, colors=[255, 0, 0]))
 
             # Obtain hand connections from MediaPipe
             mp_hands_connections = mp.solutions.hands.HAND_CONNECTIONS
@@ -153,7 +153,7 @@ class GestureDetectorLogger:
             points2 = [points[connection[1]] for connection in mp_hands_connections]
 
             # Log connections to the image and Hand Entity [128, 128, 128]
-            rr.log("hand2d/connections", rr.LineStrips2D(np.stack((points1, points2), axis=1), colors=[255, 165, 0]))
+            dl.log("hand2d/connections", dl.LineStrips2D(np.stack((points1, points2), axis=1), colors=[255, 165, 0]))
 
     def present_detected_gesture(self, category: str) -> None:
         # Get the corresponding ulr of the picture for the detected gesture category
@@ -163,9 +163,9 @@ class GestureDetectorLogger:
         )
 
         # Log the detection by using the appropriate image
-        rr.log(
+        dl.log(
             "detection",
-            rr.TextDocument(f"![Image]({GESTURE_URL + gesture_pic})".strip(), media_type=rr.MediaType.MARKDOWN),
+            dl.TextDocument(f"![Image]({GESTURE_URL + gesture_pic})".strip(), media_type=dl.MediaType.MARKDOWN),
         )
 
 
@@ -199,7 +199,7 @@ def run_from_sample_image(path: Path | str) -> None:
     """Run the gesture recognition on a single image."""
     image = cv2.imread(str(path))
     # image = resize_image(image, max_dim)
-    rr.log("media/image", rr.Image(image, color_model="BGR"))
+    dl.log("media/image", dl.Image(image, color_model="BGR"))
 
     detect_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     logger = GestureDetectorLogger(video_mode=False)
@@ -245,10 +245,10 @@ def run_from_video_capture(vid: int | str, max_frame_count: int | None) -> None:
                 frame_time_nano = int(frame_idx * 1000 / fps * 1e6)
 
             # log data
-            rr.set_time("frame_nr", sequence=frame_idx)
-            rr.set_time("frame_time", duration=1e-9 * frame_time_nano)
+            dl.set_time("frame_nr", sequence=frame_idx)
+            dl.set_time("frame_time", duration=1e-9 * frame_time_nano)
             detector.detect_and_log(frame, frame_time_nano)
-            rr.log("media/video", rr.Image(frame, color_model="BGR").compress(jpeg_quality=75))
+            dl.log("media/video", dl.Image(frame, color_model="BGR").compress(jpeg_quality=75))
 
     except KeyboardInterrupt:
         pass
@@ -292,26 +292,26 @@ def main() -> None:
         help="Stop after processing this many frames. If not specified, will run until interrupted.",
     )
 
-    # Add Rerun specific arguments
-    rr.script_add_args(parser)
+    # Add Dalaran specific arguments
+    dl.script_add_args(parser)
 
     # Parse command line arguments
     args, unknown = parser.parse_known_args()
     for arg in unknown:  # Log any unknown arguments
         logging.warning(f"unknown arg: {arg}")
 
-    # Set up Rerun with script name
-    rr.script_setup(
+    # Set up Dalaran with script name
+    dl.script_setup(
         args,
-        "rerun_example_mp_gesture_recognition",
-        default_blueprint=rrb.Horizontal(
-            rrb.Spatial2DView(name="Input & Hand", contents=["media/**", "hand2d/**"]),
-            rrb.Vertical(
-                rrb.Tabs(
-                    rrb.Spatial3DView(name="Hand 3D", origin="hand3d"),
-                    rrb.Spatial2DView(name="Hand 2D", origin="hand2d"),
+        "dalaran_example_mp_gesture_recognition",
+        default_blueprint=dlb.Horizontal(
+            dlb.Spatial2DView(name="Input & Hand", contents=["media/**", "hand2d/**"]),
+            dlb.Vertical(
+                dlb.Tabs(
+                    dlb.Spatial3DView(name="Hand 3D", origin="hand3d"),
+                    dlb.Spatial2DView(name="Hand 2D", origin="hand2d"),
                 ),
-                rrb.TextDocumentView(name="Detection", origin="detection"),
+                dlb.TextDocumentView(name="Detection", origin="detection"),
                 row_shares=[3, 2],
             ),
             column_shares=[3, 1],
@@ -338,8 +338,8 @@ def main() -> None:
             download_file(SAMPLE_VIDEO_URL, SAMPLE_VIDEO_PATH)
         run_from_video_capture(str(SAMPLE_VIDEO_PATH), args.max_frame)
 
-    # Tear down Rerun script
-    rr.script_teardown(args)
+    # Tear down Dalaran script
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

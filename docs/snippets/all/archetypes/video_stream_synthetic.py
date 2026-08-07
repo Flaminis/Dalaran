@@ -1,20 +1,20 @@
-"""Video encode images using av and stream them to Rerun."""
+"""Video encode images using av and stream them to Dalaran."""
 
 import av
 import numpy as np
 import numpy.typing as npt
 
-import rerun as rr
+import dalaran as dl
 
 fps = 30
 duration_seconds = 4
 width = 480
 height = 320
 ball_radius = 30
-codec = rr.VideoCodec.H265  # rr.VideoCodec.H264
+codec = dl.VideoCodec.H265  # dl.VideoCodec.H264
 
-formats = {rr.VideoCodec.H265: "hevc", rr.VideoCodec.H264: "h264"}
-encoders = {rr.VideoCodec.H265: "libx265", rr.VideoCodec.H264: "libx264"}
+formats = {dl.VideoCodec.H265: "hevc", dl.VideoCodec.H264: "h264"}
+encoders = {dl.VideoCodec.H265: "libx265", dl.VideoCodec.H264: "libx264"}
 
 
 def create_example_video_frame(frame_i: int) -> npt.NDArray[np.uint8]:
@@ -35,7 +35,7 @@ def create_example_video_frame(frame_i: int) -> npt.NDArray[np.uint8]:
     return img
 
 
-rr.init("rerun_example_video_stream_synthetic")
+dl.init("dalaran_example_video_stream_synthetic")
 
 # Setup encoding pipeline.
 av.logging.set_level(av.logging.VERBOSE)
@@ -47,28 +47,28 @@ stream = container.add_stream(encoders[codec], rate=fps)
 assert isinstance(stream, av.video.stream.VideoStream)
 stream.width = width
 stream.height = height
-# TODO(#10090): Rerun Video Streams don't support b-frames yet.
+# TODO(#10090): Dalaran Video Streams don't support b-frames yet.
 # Note that b-frames are generally not recommended for low-latency streaming
 # and may make logging more complex.
 stream.max_b_frames = 0
 
 # Log codec only once as static data (it naturally never changes).
 # This isn't strictly necessary, but good practice.
-rr.log("video_stream", rr.VideoStream(codec=codec), static=True)
+dl.log("video_stream", dl.VideoStream(codec=codec), static=True)
 
-# Generate frames and stream them directly to Rerun.
+# Generate frames and stream them directly to Dalaran.
 for frame_i in range(fps * duration_seconds):
     img = create_example_video_frame(frame_i)
     frame = av.VideoFrame.from_ndarray(img, format="rgb24")
     for packet in stream.encode(frame):
         if packet.pts is None:
             continue
-        rr.set_time("time", duration=float(packet.pts * packet.time_base))
-        rr.log("video_stream", rr.VideoStream.from_fields(sample=bytes(packet)))
+        dl.set_time("time", duration=float(packet.pts * packet.time_base))
+        dl.log("video_stream", dl.VideoStream.from_fields(sample=bytes(packet)))
 
 # Flush stream.
 for packet in stream.encode():
     if packet.pts is None:
         continue
-    rr.set_time("time", duration=float(packet.pts * packet.time_base))
-    rr.log("video_stream", rr.VideoStream.from_fields(sample=bytes(packet)))
+    dl.set_time("time", duration=float(packet.pts * packet.time_base))
+    dl.log("video_stream", dl.VideoStream.from_fields(sample=bytes(packet)))

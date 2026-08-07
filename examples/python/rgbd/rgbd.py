@@ -21,8 +21,8 @@ import numpy.typing as npt
 import requests
 from tqdm import tqdm
 
-import rerun as rr  # pip install rerun-sdk
-import rerun.blueprint as rrb
+import dalaran as dl  # pip install dalaran-sdk
+import dalaran.blueprint as dlb
 
 DESCRIPTION = """
 # RGBD
@@ -60,7 +60,7 @@ def read_depth_image(buf: bytes) -> npt.NDArray[Any]:
 
 
 def log_nyud_data(recording_path: Path, subset_idx: int, frames: int) -> None:
-    rr.log("world", rr.ViewCoordinates.RIGHT_HAND_Y_DOWN, static=True)
+    dl.log("world", dl.ViewCoordinates.RIGHT_HAND_Y_DOWN, static=True)
 
     with zipfile.ZipFile(recording_path, "r") as archive:
         archive_dirs = [f.filename for f in archive.filelist if f.is_dir()]
@@ -80,21 +80,21 @@ def log_nyud_data(recording_path: Path, subset_idx: int, frames: int) -> None:
             files_with_timestamps = files_with_timestamps[:frames]
 
         for time, f in files_with_timestamps:
-            rr.set_time("time", timestamp=time.timestamp())
+            dl.set_time("time", timestamp=time.timestamp())
 
             if f.filename.endswith(".ppm"):
                 buf = archive.read(f)
                 img_bgr = read_image_bgr(buf)
-                rr.log("world/camera/image/rgb", rr.Image(img_bgr, color_model="BGR").compress(jpeg_quality=95))
+                dl.log("world/camera/image/rgb", dl.Image(img_bgr, color_model="BGR").compress(jpeg_quality=95))
 
             elif f.filename.endswith(".pgm"):
                 buf = archive.read(f)
                 img_depth = read_depth_image(buf)
 
                 # Log the camera transforms:
-                rr.log(
+                dl.log(
                     "world/camera/image",
-                    rr.Pinhole(
+                    dl.Pinhole(
                         resolution=[img_depth.shape[1], img_depth.shape[0]],
                         focal_length=0.7 * img_depth.shape[1],
                         # Intentionally off-center to demonstrate that we support it
@@ -103,7 +103,7 @@ def log_nyud_data(recording_path: Path, subset_idx: int, frames: int) -> None:
                 )
 
                 # Log the depth image to the cameras image-space:
-                rr.log("world/camera/image/depth", rr.DepthImage(img_depth, meter=DEPTH_IMAGE_SCALING))
+                dl.log("world/camera/image/depth", dl.DepthImage(img_depth, meter=DEPTH_IMAGE_SCALING))
 
 
 def ensure_recording_downloaded(name: str) -> Path:
@@ -173,29 +173,29 @@ def main() -> None:
         default=sys.maxsize,
         help="If specified, limits the number of frames logged",
     )
-    rr.script_add_args(parser)
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(
+    dl.script_setup(
         args,
-        "rerun_example_rgbd",
-        default_blueprint=rrb.Horizontal(
-            rrb.Vertical(
-                rrb.Spatial3DView(name="3D", origin="world"),
-                rrb.TextDocumentView(name="Description", origin="/description"),
+        "dalaran_example_rgbd",
+        default_blueprint=dlb.Horizontal(
+            dlb.Vertical(
+                dlb.Spatial3DView(name="3D", origin="world"),
+                dlb.TextDocumentView(name="Description", origin="/description"),
                 row_shares=[7, 3],
             ),
-            rrb.Vertical(
+            dlb.Vertical(
                 # Put the origin for both 2D spaces where the pinhole is logged. Doing so allows them to understand how they're connected to the 3D space.
                 # This enables interactions like clicking on a point in the 3D space to show the corresponding point in the 2D spaces and vice versa.
-                rrb.Spatial2DView(
+                dlb.Spatial2DView(
                     name="RGB & Depth",
                     origin="world/camera/image",
-                    overrides={"world/camera/image/rgb": rr.Image.from_fields(opacity=0.5)},
+                    overrides={"world/camera/image/rgb": dl.Image.from_fields(opacity=0.5)},
                 ),
-                rrb.Tabs(
-                    rrb.Spatial2DView(name="RGB", origin="world/camera/image", contents="world/camera/image/rgb"),
-                    rrb.Spatial2DView(name="Depth", origin="world/camera/image", contents="world/camera/image/depth"),
+                dlb.Tabs(
+                    dlb.Spatial2DView(name="RGB", origin="world/camera/image", contents="world/camera/image/rgb"),
+                    dlb.Spatial2DView(name="Depth", origin="world/camera/image", contents="world/camera/image/depth"),
                 ),
                 name="2D",
                 row_shares=[3, 3, 2],
@@ -206,7 +206,7 @@ def main() -> None:
 
     recording_path = ensure_recording_downloaded(args.recording)
 
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
 
     log_nyud_data(
         recording_path=recording_path,
@@ -214,7 +214,7 @@ def main() -> None:
         frames=args.frames,
     )
 
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@
 //!
 //! See also the `any_values_column_updates` example, which achieves the same thing in a single operation.
 
-#include <rerun.hpp>
+#include <dalaran.hpp>
 
 #include <arrow/array/builder_primitive.h>
 #include <cmath>
@@ -10,7 +10,7 @@
 
 arrow::Status run_main() {
     const auto rec =
-        rerun::RecordingStream("rerun_example_any_values_row_updates");
+        dalaran::RecordingStream("dalaran_example_any_values_row_updates");
     rec.spawn().exit_on_failure();
 
     for (int64_t i = 0; i < 64; i++) {
@@ -23,7 +23,7 @@ arrow::Status run_main() {
             sin_builder.Append(sin(static_cast<double>(i) / 10.0))
         );
         ARROW_RETURN_NOT_OK(sin_builder.Finish(&arrow_array));
-        auto sin_result = rerun::ComponentBatch::from_arrow_array(
+        auto sin_result = dalaran::ComponentBatch::from_arrow_array(
             std::move(arrow_array),
             "sin"
         );
@@ -34,7 +34,7 @@ arrow::Status run_main() {
             cos_builder.Append(cos(static_cast<double>(i) / 10.0))
         );
         ARROW_RETURN_NOT_OK(cos_builder.Finish(&arrow_array));
-        auto cos_result = rerun::ComponentBatch::from_arrow_array(
+        auto cos_result = dalaran::ComponentBatch::from_arrow_array(
             std::move(arrow_array),
             "cos"
         );

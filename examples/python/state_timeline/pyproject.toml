@@ -2,7 +2,7 @@
 name = "state_timeline"
 version = "0.1.0"
 readme = "README.md"
-dependencies = ["rerun-sdk"]
+dependencies = ["dalaran-sdk"]
 
 [project.scripts]
 state_timeline = "state_timeline:main"

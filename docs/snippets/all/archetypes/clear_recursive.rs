@@ -1,10 +1,10 @@
 //! Log and then clear data recursively.
 
-use rerun::external::glam;
+use dalaran::external::glam;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let rec =
-        rerun::RecordingStreamBuilder::new("rerun_example_clear_recursive")
+        dalaran::RecordingStreamBuilder::new("dalaran_example_clear_recursive")
             .spawn()?;
 
     #[rustfmt::skip]
@@ -20,16 +20,16 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     {
         rec.log(
             format!("arrows/{i}"),
-            &rerun::Arrows3D::from_vectors([vector])
+            &dalaran::Arrows3D::from_vectors([vector])
                 .with_origins([origin])
-                .with_colors([rerun::Color::from_rgb(
+                .with_colors([dalaran::Color::from_rgb(
                     color.0, color.1, color.2,
                 )]),
         )?;
     }
 
     // Now clear all of them at once.
-    rec.log("arrows", &rerun::Clear::recursive())?;
+    rec.log("arrows", &dalaran::Clear::recursive())?;
 
     Ok(())
 }

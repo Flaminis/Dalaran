@@ -6,9 +6,9 @@ Generate comparison between examples and their related screenshots.
 This script builds/gather RRDs and corresponding screenshots and displays
 them side-by-side. It pulls from the following sources:
 
-- The screenshots listed in .fbs files (crates/store/dl_sdk_types/definitions/rerun/**/*.fbs),
+- The screenshots listed in .fbs files (crates/store/dl_sdk_types/definitions/dalaran/**/*.fbs),
   and the corresponding snippets in the docs (docs/snippets/*.rs)
-- The `rerun.io/viewer` examples, as built by the `dl_dev_tools`/`build_examples` script.
+- The `dalaran.dev/viewer` examples, as built by the `dl_dev_tools`/`build_examples` script.
 
 The comparisons are generated in the `compare_screenshot` directory. Use the `--serve`
 option to show them in a browser.
@@ -45,8 +45,8 @@ STATIC_ASSETS = SCRIPT_DIR_PATH / "assets" / "static"
 TEMPLATE_DIR = SCRIPT_DIR_PATH / "assets" / "templates"
 INDEX_TEMPLATE = Template((TEMPLATE_DIR / "index.html").read_text())
 EXAMPLE_TEMPLATE = Template((TEMPLATE_DIR / "example.html").read_text())
-RERUN_DIR = SCRIPT_DIR_PATH.parent.parent
-SNIPPETS_DIR = RERUN_DIR / "docs" / "snippets"
+DALARAN_DIR = SCRIPT_DIR_PATH.parent.parent
+SNIPPETS_DIR = DALARAN_DIR / "docs" / "snippets"
 
 
 def measure_thumbnail(url: str) -> Any:
@@ -109,7 +109,7 @@ def build_python_sdk() -> None:
 
 
 def extract_snippet_urls_from_fbs() -> dict[str, str]:
-    fbs_path = SCRIPT_DIR_PATH.parent.parent / "crates" / "store" / "dl_sdk_types" / "definitions" / "rerun"
+    fbs_path = SCRIPT_DIR_PATH.parent.parent / "crates" / "store" / "dl_sdk_types" / "definitions" / "dalaran"
 
     urls = {}
     for fbs in fbs_path.glob("**/*.fbs"):
@@ -140,7 +140,7 @@ def build_snippets() -> None:
     ]
 
     for name in SNIPPET_URLS:
-        run([*cmd, name], cwd=RERUN_DIR)
+        run([*cmd, name], cwd=DALARAN_DIR)
 
 
 def collect_snippets() -> Iterable[Example]:
@@ -169,7 +169,7 @@ def build_examples() -> None:
         # TODO(andreas): nightly channel would be better, but the dependencies that requires make things hard to get to run.
         "--channel", "main",
     ]
-    run(cmd, cwd=RERUN_DIR)
+    run(cmd, cwd=DALARAN_DIR)
 
     cmd = [
         "pixi", "run", "-e", "examples",
@@ -179,12 +179,12 @@ def build_examples() -> None:
         # TODO(andreas): nightly channel would be better, but the dependencies that requires make things hard to get to run.
         "--channel", "main",
     ]
-    run(cmd, cwd=RERUN_DIR)
+    run(cmd, cwd=DALARAN_DIR)
     # fmt: on
 
 
 def collect_examples() -> Iterable[Example]:
-    example_dir = RERUN_DIR / "example_data"
+    example_dir = DALARAN_DIR / "example_data"
     assert example_dir.exists(), "Examples have not been built yet."
 
     manifest = json.loads((example_dir / "examples_manifest.json").read_text())
@@ -241,19 +241,19 @@ def serve_files() -> None:
         )
         server.serve_forever()
 
-    def serve_rerun() -> None:
-        import rerun as rr
+    def serve_dalaran() -> None:
+        import dalaran as dl
 
-        os.environ["RUST_LOG"] = "rerun=warn"
+        os.environ["RUST_LOG"] = "dalaran=warn"
 
-        rr.init("rerun_example_screenshot_compare")
-        connect_to = rr.serve_grpc()
-        rr.serve_web_viewer(open_browser=False, connect_to=connect_to)
+        dl.init("dalaran_example_screenshot_compare")
+        connect_to = dl.serve_grpc()
+        dl.serve_web_viewer(open_browser=False, connect_to=connect_to)
 
     threading.Thread(target=serve, daemon=True).start()
 
     # use a sub-process so the target can change env variables without affecting the parent
-    process = multiprocessing.Process(target=serve_rerun, daemon=True)
+    process = multiprocessing.Process(target=serve_dalaran, daemon=True)
     process.run()
 
 

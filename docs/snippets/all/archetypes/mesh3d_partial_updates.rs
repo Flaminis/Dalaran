@@ -1,10 +1,10 @@
 //! Log a simple colored triangle, then update its vertices' positions each frame.
 
-use rerun::external::glam;
+use dalaran::external::glam;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let rec = rerun::RecordingStreamBuilder::new(
-        "rerun_example_mesh3d_partial_updates",
+    let rec = dalaran::RecordingStreamBuilder::new(
+        "dalaran_example_mesh3d_partial_updates",
     )
     .spawn()?;
 
@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rec.set_time_sequence("frame", 0);
     rec.log(
         "triangle",
-        &rerun::Mesh3D::new(vertex_positions)
+        &dalaran::Mesh3D::new(vertex_positions)
             .with_vertex_normals([[0.0, 0.0, 1.0]])
             .with_vertex_colors([0xFF0000FF, 0x00FF00FF, 0x0000FFFF]),
     )?;
@@ -31,7 +31,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         ];
         rec.log(
             "triangle",
-            &rerun::Mesh3D::update_fields()
+            &dalaran::Mesh3D::update_fields()
                 .with_vertex_positions(vertex_positions),
         )?;
     }

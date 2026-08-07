@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pyarrow as pa
 
-import rerun.experimental as rrx
+import dalaran.experimental as rrx
 
 # region: body
 # Create an index column.

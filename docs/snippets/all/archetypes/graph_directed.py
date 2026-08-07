@@ -1,17 +1,17 @@
 """Log a simple directed graph."""
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_graph_directed", spawn=True)
+dl.init("dalaran_example_graph_directed", spawn=True)
 
-rr.log(
+dl.log(
     "simple",
-    rr.GraphNodes(
+    dl.GraphNodes(
         node_ids=["a", "b", "c"],
         positions=[(0.0, 100.0), (-100.0, 0.0), (100.0, 0.0)],
         labels=["A", "B", "C"],
     ),
-    rr.GraphEdges(
+    dl.GraphEdges(
         edges=[("a", "b"), ("b", "c"), ("c", "a")], graph_type="directed"
     ),
 )

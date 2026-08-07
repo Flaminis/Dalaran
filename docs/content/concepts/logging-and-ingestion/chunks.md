@@ -1,21 +1,21 @@
 ---
 title: Chunks
 order: 700
-description: The Arrow-backed storage unit Rerun uses internally
+description: The Arrow-backed storage unit Dalaran uses internally
 ---
 
-A *Chunk* is the core datastructure at the heart of Rerun: it dictates how data gets logged, injected, stored, and queried.
-A basic understanding of chunks is important in order to understand why and how Rerun and its APIs work the way they work.
+A *Chunk* is the core datastructure at the heart of Dalaran: it dictates how data gets logged, injected, stored, and queried.
+A basic understanding of chunks is important in order to understand why and how Dalaran and its APIs work the way they work.
 
 
-## How Rerun stores data
+## How Dalaran stores data
 
-All the data you send into Rerun is stored in chunks, always.
+All the data you send into Dalaran is stored in chunks, always.
 
 A chunk is an [Arrow](https://arrow.apache.org/)-encoded, column-oriented table of binary data:
 
 <picture>
-  <img src="https://static.rerun.io/a_chunk/c3536f34028a9cc4976fa428d98c802fe3ac07a4/full.png" alt="A Rerun Chunk">
+  <img src="https://static.rerun.io/a_chunk/c3536f34028a9cc4976fa428d98c802fe3ac07a4/full.png" alt="A Dalaran Chunk">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/a_chunk/c3536f34028a9cc4976fa428d98c802fe3ac07a4/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/a_chunk/c3536f34028a9cc4976fa428d98c802fe3ac07a4/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/a_chunk/c3536f34028a9cc4976fa428d98c802fe3ac07a4/1024w.png">
@@ -35,10 +35,10 @@ This design allows for keeping chunks within a target size range, even for recor
 </picture>
 
 
-Here's an excerpt from a real-world chunk (taken from the [Helix example](https://app.rerun.io/?url=https%3A%2F%2Fapp.rerun.io%2Fversion%2Flatest%2Fexamples%2Fdna.rrd)) (you might want to open [this image](https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/full.png) in a new tab):
+Here's an excerpt from a real-world chunk (taken from the [Helix example](https://app.dalaran.dev/?url=https%3A%2F%2Fapp.dalaran.dev%2Fversion%2Flatest%2Fexamples%2Fdna.rrd)) (you might want to open [this image](https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/full.png) in a new tab):
 
 <picture>
-  <img src="https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/full.png" alt="A real-world Rerun chunk">
+  <img src="https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/full.png" alt="A real-world Dalaran chunk">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/a_real_chunk/2c4c16303dd1a04ba8ad8962ed85386a6568773e/1024w.png">
@@ -50,50 +50,50 @@ You can see that this matches very closely the diagram above:
 * Multiple *time*/*index* columns (`log_tick`, `log_time`, `stable_time`).
 * Multiple component columns (`Points3D:colors`, `Points3D:positions`, `Points3D:radii`).
 
-Within each row of each component column, the individual cells are [*Component Batches*](batches.md). Component batches are the atomic unit of data in Rerun.
+Within each row of each component column, the individual cells are [*Component Batches*](batches.md). Component batches are the atomic unit of data in Dalaran.
 
 The data in this specific chunk was logged with the following code:
 
 snippet: concepts/how_helix_was_logged
 
-You can learn more about chunks and how they came to be in [this blog post](https://rerun.io/blog/column-chunks#storage-is-based-around-chunks-of-component-columns).
+You can learn more about chunks and how they came to be in [this blog post](https://dalaran.dev/blog/column-chunks#storage-is-based-around-chunks-of-component-columns).
 
 
-## Getting chunks into Rerun
+## Getting chunks into Dalaran
 
-If you've used the Rerun SDK before, you know it doesn't actually force you to craft these chunks manually, which would be rather cumbersome!
+If you've used the Dalaran SDK before, you know it doesn't actually force you to craft these chunks manually, which would be rather cumbersome!
 
-How does one create and store chunks in Rerun, then?
+How does one create and store chunks in Dalaran, then?
 
 
 ### The row-oriented logging: `log`
 
-The `log` API is generally [what we show in the getting-started guides](https://rerun.io/docs/getting-started/data-in#logging-our-first-points) since it's the easiest to use:
+The `log` API is generally [what we show in the getting-started guides](https://dalaran.dev/docs/getting-started/data-in#logging-our-first-points) since it's the easiest to use:
 
 snippet: archetypes/scalars_row_updates
 
-The `log` API makes it possible to send data into Rerun on a row-by-row basis, without requiring any extra effort.
+The `log` API makes it possible to send data into Dalaran on a row-by-row basis, without requiring any extra effort.
 This row-oriented interface makes it very easy to integrate into existing codebase and just start logging data as it comes (hence the name).
 
 Reference:
-* [🐍 Python `log`](https://ref.rerun.io/docs/python/stable/common/logging_functions/#rerun.log)
-* [🦀 Rust `log`](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.log)
-* [🌊 C++ `log`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#a7badac918d44d66e04e948f38818ff11)
+* [🐍 Python `log`](https://ref.dalaran.dev/docs/python/stable/common/logging_functions/#dalaran.log)
+* [🦀 Rust `log`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.log)
+* [🌊 C++ `log`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#a7badac918d44d66e04e948f38818ff11)
 
-But if you're handing a bunch of rows of data over to Rerun, how does it end up neatly packaged in columnar chunks?
+But if you're handing a bunch of rows of data over to Dalaran, how does it end up neatly packaged in columnar chunks?
 
 
 #### How are these rows turned into columns?
 
-Before logging data, you can use the `rr.set_time_` APIs to update the SDK's time context with timestamps for custom timelines.
-For example, `rr.set_time("frame", sequence=42)` will set the "frame" timeline's current value to 42 in the time context.
+Before logging data, you can use the `dl.set_time_` APIs to update the SDK's time context with timestamps for custom timelines.
+For example, `dl.set_time("frame", sequence=42)` will set the "frame" timeline's current value to 42 in the time context.
 
-When you later call `rr.log`, the SDK will generate a row id and a value for the built-in `log_time` timeline (enabled by default), as well as `log_tick` if you have opted in to it.
+When you later call `dl.log`, the SDK will generate a row id and a value for the built-in `log_time` timeline (enabled by default), as well as `log_tick` if you have opted in to it.
 It will also grab the current values for any custom timelines from the time context.
-Any data passed to `rr.log` becomes component batches.
+Any data passed to `dl.log` becomes component batches.
 
 <picture>
-  <img src="https://static.rerun.io/build-row/c617d2b5c233c36ae78f723528c9e0cc3acf1bb0/full.png" alt="A diagram showing how a row gets created in Rerun">
+  <img src="https://static.rerun.io/build-row/c617d2b5c233c36ae78f723528c9e0cc3acf1bb0/full.png" alt="A diagram showing how a row gets created in Dalaran">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/build-row/c617d2b5c233c36ae78f723528c9e0cc3acf1bb0/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/build-row/c617d2b5c233c36ae78f723528c9e0cc3acf1bb0/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/build-row/c617d2b5c233c36ae78f723528c9e0cc3acf1bb0/1024w.png">
@@ -104,7 +104,7 @@ The row id, timestamps, and logged component batches are then encoded as Apache 
 That row is then passed to a batcher, which appends the values from the row to the current chunk for the entity path.
 
 <picture>
-  <img src="https://static.rerun.io/build-chunk/b5a7e1c15a814add0a42c9d77e82f2a44aba585c/full.png" alt="A diagram showing how a chunk gets created in Rerun">
+  <img src="https://static.rerun.io/build-chunk/b5a7e1c15a814add0a42c9d77e82f2a44aba585c/full.png" alt="A diagram showing how a chunk gets created in Dalaran">
   <source media="(max-width: 480px)" srcset="https://static.rerun.io/build-chunk/b5a7e1c15a814add0a42c9d77e82f2a44aba585c/480w.png">
   <source media="(max-width: 768px)" srcset="https://static.rerun.io/build-chunk/b5a7e1c15a814add0a42c9d77e82f2a44aba585c/768w.png">
   <source media="(max-width: 1024px)" srcset="https://static.rerun.io/build-chunk/b5a7e1c15a814add0a42c9d77e82f2a44aba585c/1024w.png">
@@ -118,7 +118,7 @@ You can read about how to configure the batcher [here](../../reference/sdk/micro
 ### The column-oriented logging: `send_columns`
 
 The `log` API showcased above is designed to extract data from your running code as it's being generated. It is, by nature, *row-oriented*.
-If you already have data stored in something more *column-oriented*, it can be both a lot easier and more efficient to send it to Rerun in that form directly.
+If you already have data stored in something more *column-oriented*, it can be both a lot easier and more efficient to send it to Dalaran in that form directly.
 
 This is what the `send_columns` API is for: it lets you efficiently update the state of an entity over time, sending data for multiple index and component columns in a single operation.
 
@@ -130,9 +130,9 @@ This is what the `send_columns` API is for: it lets you efficiently update the s
 snippet: archetypes/scalars_column_updates
 
 Reference:
-* [🐍 Python `send_columns`](https://ref.rerun.io/docs/python/stable/common/columnar_api/#rerun.send_columns)
-* [🦀 Rust `send_columns`](https://docs.rs/rerun/latest/rerun/struct.RecordingStream.html#method.send_columns)
-* [🌊 C++ `send_columns`](https://ref.rerun.io/docs/cpp/stable/classrerun_1_1RecordingStream.html#a7e326526d1473c02fcb2ed94afe6da69)
+* [🐍 Python `send_columns`](https://ref.dalaran.dev/docs/python/stable/common/columnar_api/#dalaran.send_columns)
+* [🦀 Rust `send_columns`](https://docs.rs/dalaran/latest/dalaran/struct.RecordingStream.html#method.send_columns)
+* [🌊 C++ `send_columns`](https://ref.dalaran.dev/docs/cpp/stable/classdalaran_1_1RecordingStream.html#a7e326526d1473c02fcb2ed94afe6da69)
 
 
 ### Sending actual chunks: `send_chunks`
@@ -142,11 +142,11 @@ You can build a chunk from, e.g., time/component columns, inspect or transform e
 
 snippet: concepts/build_chunk
 
-Alternatively, chunks can be created from an existing Arrow [`RecordBatch`](https://arrow.apache.org/docs/python/generated/pyarrow.RecordBatch.html) using [`Chunk.from_record_batch`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.Chunk.from_record_batch):
+Alternatively, chunks can be created from an existing Arrow [`RecordBatch`](https://arrow.apache.org/docs/python/generated/pyarrow.RecordBatch.html) using [`Chunk.from_record_batch`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.Chunk.from_record_batch):
 
 snippet: concepts/build_chunk_from_record_batch[body]
 
-`send_chunks` also accepts iterables of chunks, as well as instances of [`LazyChunkStream`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.LazyChunkStream), [`ChunkStore`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.ChunkStore), and [`LazyStore`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.LazyStore).
+`send_chunks` also accepts iterables of chunks, as well as instances of [`LazyChunkStream`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyChunkStream), [`ChunkStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.ChunkStore), and [`LazyStore`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.LazyStore).
 For example, to forward every chunk of an existing RRD into a new recording stream:
 
 snippet: concepts/send_chunks
@@ -155,17 +155,17 @@ Like `send_columns`, this path bypasses the time context and the [micro-batcher]
 See the [Chunk Processing API](chunk-processing-api.md) for building ingestion, transformation, and conversion pipelines out of these primitives.
 
 Reference:
-* [🐍 Python `Chunk`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.Chunk)
-* [🐍 Python `Chunk.from_columns`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.Chunk.from_columns)
-* [🐍 Python `Chunk.from_record_batch`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.Chunk.from_record_batch)
-* [🐍 Python `send_chunks`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.send_chunks)
+* [🐍 Python `Chunk`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.Chunk)
+* [🐍 Python `Chunk.from_columns`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.Chunk.from_columns)
+* [🐍 Python `Chunk.from_record_batch`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.Chunk.from_record_batch)
+* [🐍 Python `send_chunks`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.send_chunks)
 
 
 ### Dataframe logging: `Chunk.from_dataframe` and `send_dataframe`
 
-[`rr.send_dataframe`](https://ref.rerun.io/docs/python/stable/common/columnar_api/#rerun.send_dataframe) and the related [`Chunk.from_dataframe`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.Chunk.from_dataframe) extend the single record batch equivalent and accept a full PyArrow [`Table`](https://arrow.apache.org/docs/python/generated/pyarrow.Table.html) (or a [`RecordBatchReader`](https://arrow.apache.org/docs/python/generated/pyarrow.RecordBatchReader.html), or any Arrow-C-stream object such as a `datafusion.DataFrame`) carrying any number of entities, and yields the chunks of each record batch in turn.
+[`dl.send_dataframe`](https://ref.dalaran.dev/docs/python/stable/common/columnar_api/#dalaran.send_dataframe) and the related [`Chunk.from_dataframe`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.Chunk.from_dataframe) extend the single record batch equivalent and accept a full PyArrow [`Table`](https://arrow.apache.org/docs/python/generated/pyarrow.Table.html) (or a [`RecordBatchReader`](https://arrow.apache.org/docs/python/generated/pyarrow.RecordBatchReader.html), or any Arrow-C-stream object such as a `datafusion.DataFrame`) carrying any number of entities, and yields the chunks of each record batch in turn.
 
-To map columns of the dataframe to Rerun timelines and components, the dataframe must carry the same `rerun:*` metadata as above.
+To map columns of the dataframe to Dalaran timelines and components, the dataframe must carry the same `dalaran:*` metadata as above.
 For example, here we hand-craft a dataframe containing a Points3D entity:
 
 snippet: concepts/send_dataframe[build_table]
@@ -174,7 +174,7 @@ snippet: concepts/send_dataframe[build_table]
 
 snippet: concepts/send_dataframe[from_dataframe]
 
-`rr.send_dataframe` is a thin logging convenience wrapper over `Chunk.from_dataframe`: it builds those same chunks and forwards them to the active recording stream in one call.
+`dl.send_dataframe` is a thin logging convenience wrapper over `Chunk.from_dataframe`: it builds those same chunks and forwards them to the active recording stream in one call.
 
 snippet: concepts/send_dataframe[send_dataframe]
 
@@ -184,8 +184,8 @@ Manually crafting the required metadata is obviously inconvenient.
 This API is instead designed to compose with [dataframe queries](../query-and-transform/dataframe-queries.md), which produce dataframes already populated with metadata derived from the originally queried data.
 
 Reference:
-* [🐍 Python `Chunk.from_dataframe`](https://ref.rerun.io/docs/python/stable/experimental/#rerun.experimental.Chunk.from_dataframe)
-* [🐍 Python `send_dataframe`](https://ref.rerun.io/docs/python/stable/common/columnar_api/#rerun.send_dataframe)
-* [🐍 Python `send_record_batch`](https://ref.rerun.io/docs/python/stable/common/columnar_api/#rerun.send_record_batch)
+* [🐍 Python `Chunk.from_dataframe`](https://ref.dalaran.dev/docs/python/stable/experimental/#dalaran.experimental.Chunk.from_dataframe)
+* [🐍 Python `send_dataframe`](https://ref.dalaran.dev/docs/python/stable/common/columnar_api/#dalaran.send_dataframe)
+* [🐍 Python `send_record_batch`](https://ref.dalaran.dev/docs/python/stable/common/columnar_api/#dalaran.send_record_batch)
 
 

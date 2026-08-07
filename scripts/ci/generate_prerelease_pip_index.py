@@ -30,14 +30,14 @@ def generate_pip_index(title: str, dir: str, upload: bool, check: bool) -> None:
 
     # Initialize the GCS clients
     t0 = time.time()
-    gcs_client = storage.Client(project="rerun-open")
+    gcs_client = storage.Client(project="dalaran-open")
     print(f"GCS client initialized in {time.time() - t0:.2f}s")
 
     # Prepare the found_builds list
     found_builds = []
-    wheels_bucket = gcs_client.bucket("rerun-builds")
+    wheels_bucket = gcs_client.bucket("dalaran-builds")
 
-    print(f'Listing blobs at "gs://rerun-builds/{dir}"…')
+    print(f'Listing blobs at "gs://dalaran-builds/{dir}"…')
 
     found: dict[str, Any] = {}
 
@@ -94,7 +94,7 @@ def generate_pip_index(title: str, dir: str, upload: bool, check: bool) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Generate a minimal pip index")
     parser.add_argument("--title", required=True, help="Index title")
-    parser.add_argument("--dir", required=True, help="GCS directory to search in rerun-builds")
+    parser.add_argument("--dir", required=True, help="GCS directory to search in dalaran-builds")
     parser.add_argument("--upload", action="store_true", help="Upload the index to GCS")
     parser.add_argument("--check", action="store_true", help="Check if all required builds are present")
     args = parser.parse_args()

@@ -18,13 +18,13 @@ In these instances of unsupported files, we expose two ways of implementing and 
 
 ### External importers
 
-The easiest way to create your own `Importer` is by implementing what we call an "external importer": a stand alone executable written in any language that the Rerun SDK ships for. Any executable on your `$PATH` with a name that starts with `rerun-importer-` (or `rerun-loader-` for backwards compatibility) will be treated as an `Importer`.
+The easiest way to create your own `Importer` is by implementing what we call an "external importer": a stand alone executable written in any language that the Dalaran SDK ships for. Any executable on your `$PATH` with a name that starts with `dalaran-importer-` (or `dalaran-loader-` for backwards compatibility) will be treated as an `Importer`.
 
-This executable takes a file path as a command line argument and outputs Rerun logs on `stdout`.
-It will be called by the Rerun Viewer/SDK when the user opens a file, and be passed the path to that file.
+This executable takes a file path as a command line argument and outputs Dalaran logs on `stdout`.
+It will be called by the Dalaran Viewer/SDK when the user opens a file, and be passed the path to that file.
 From there, it can log data as usual, using the [`stdout` logging sink](../../../reference/sdk/operating-modes.md#standard-inputoutput-stdout).
 
-The Rerun Viewer/SDK will then automatically load the data streamed to the external importer's standard output.
+The Dalaran Viewer/SDK will then automatically load the data streamed to the external importer's standard output.
 
 <picture>
   <img src="https://static.rerun.io/data-loader-external-overview/97e978000c709b78290f50d52c229a91f7543648/full.png" alt="">
@@ -35,7 +35,7 @@ The Rerun Viewer/SDK will then automatically load the data streamed to the exter
 </picture>
 
 Like any other `Importer`, an external importer will be notified of all file openings, unconditionally.
-To indicate that it does not support a given file, the importer has to exit with a [dedicated status code](https://docs.rs/rerun/latest/rerun/constant.EXTERNAL_DATA_LOADER_INCOMPATIBLE_EXIT_CODE.html).
+To indicate that it does not support a given file, the importer has to exit with a [dedicated status code](https://docs.rs/dalaran/latest/dalaran/constant.EXTERNAL_DATA_LOADER_INCOMPATIBLE_EXIT_CODE.html).
 
 When the Viewer and/or SDK executes an external importer, it will pass to it a set of recommended settings in the form of CLI parameters (in addition to the file path to be loaded, which is passed as the one and only positional argument):
 
@@ -74,20 +74,20 @@ When the Viewer and/or SDK executes an external importer, it will pass to it a s
 
     The data is expected to be logged at these specific duration times.
 
-    The timestamps are expected to be in nanoseconds: use `rr.set_time_duration_nanos` (Python) / `RecordingStream::set_time_duration_nanos` (C++, Rust) appropriately.
+    The timestamps are expected to be in nanoseconds: use `dl.set_time_duration_nanos` (Python) / `RecordingStream::set_time_duration_nanos` (C++, Rust) appropriately.
 
 * `--time_timestamp_nanos <timeline1>=<timestamp1> <timeline2>=<timestamp2> …` (optional)
 
     The data is expected to be logged at these specific timestamp times.
 
-    The timestamps are expected to be in nanoseconds since Unix epoch: use `rr.set_time_timestamp_nanos` (Python) / `RecordingStream::set_time_timestamp_nanos` (C++, Rust) appropriately.
+    The timestamps are expected to be in nanoseconds since Unix epoch: use `dl.set_time_timestamp_nanos` (Python) / `RecordingStream::set_time_timestamp_nanos` (C++, Rust) appropriately.
 
 Check out our examples for [C++](https://github.com/rerun-io/rerun/tree/main/examples/cpp/external_importer), [Python](https://github.com/rerun-io/rerun/tree/main/examples/python/external_importer) and [Rust](https://github.com/rerun-io/rerun/tree/main/examples/rust/external_importer) that cover every steps in details.
 
 ### Custom Rust importers
 
-Another Rust-specific approach is to implement the `Importer` trait yourself and register it in the Rerun Viewer/SDK.
+Another Rust-specific approach is to implement the `Importer` trait yourself and register it in the Dalaran Viewer/SDK.
 
-To do so, you'll need to import `rerun` as a library, register your `Importer` and then start the Viewer/SDK from code.
+To do so, you'll need to import `dalaran` as a library, register your `Importer` and then start the Viewer/SDK from code.
 
 Check out our [example](https://github.com/rerun-io/rerun/tree/main/examples/rust/custom_importer) that covers all these steps in details.

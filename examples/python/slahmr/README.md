@@ -9,7 +9,7 @@ thumbnail_dimensions = [480, 480]
 
 
 This example is a visual walkthrough of the paper “Decoupling Human and Camera Motion from Videos in the Wild”.
-All the visualizations were created by editing the original source code to log data with the Rerun SDK.
+All the visualizations were created by editing the original source code to log data with the Dalaran SDK.
 
 ## Visual paper walkthrough
 

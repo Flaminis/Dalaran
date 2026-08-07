@@ -12,7 +12,7 @@ UI points are independent of zooming in Views, but are sensitive to the applicat
 at 100% UI scaling, UI points are equal to pixels
 The Viewer's UI scaling defaults to the OS scaling which typically is 100% for full HD screens and 200% for 4k screens.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float32`](../datatypes/float32.md)
 
 
@@ -22,9 +22,9 @@ Float32
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Radius`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Radius.html)
- * 🐍 [Python API docs for `Radius`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Radius)
- * 🦀 [Rust API docs for `Radius`](https://docs.rs/rerun/latest/rerun/components/struct.Radius.html)
+ * 🌊 [C++ API docs for `Radius`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Radius.html)
+ * 🐍 [Python API docs for `Radius`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Radius)
+ * 🦀 [Rust API docs for `Radius`](https://docs.rs/dalaran/latest/dalaran/components/struct.Radius.html)
 
 
 ## Used by

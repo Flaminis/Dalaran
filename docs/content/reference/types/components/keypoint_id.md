@@ -5,7 +5,7 @@ title: "KeypointId"
 
 A 16-bit ID representing a type of semantic keypoint within a class.
 
-## Rerun datatype
+## Dalaran datatype
 [`KeypointId`](../datatypes/keypoint_id.md)
 
 
@@ -15,9 +15,9 @@ UInt16
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `KeypointId`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1KeypointId.html)
- * 🐍 [Python API docs for `KeypointId`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.KeypointId)
- * 🦀 [Rust API docs for `KeypointId`](https://docs.rs/rerun/latest/rerun/components/struct.KeypointId.html)
+ * 🌊 [C++ API docs for `KeypointId`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1KeypointId.html)
+ * 🐍 [Python API docs for `KeypointId`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.KeypointId)
+ * 🦀 [Rust API docs for `KeypointId`](https://docs.rs/dalaran/latest/dalaran/components/struct.KeypointId.html)
 
 
 ## Used by

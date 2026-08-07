@@ -7,7 +7,7 @@ A scalar value, encoded as a 64-bit floating point.
 
 Used for time series plots.
 
-## Rerun datatype
+## Dalaran datatype
 [`Float64`](../datatypes/float64.md)
 
 
@@ -17,9 +17,9 @@ Float64
 ```
 
 ## API reference links
- * 🌊 [C++ API docs for `Scalar`](https://ref.rerun.io/docs/cpp/stable/structrerun_1_1components_1_1Scalar.html)
- * 🐍 [Python API docs for `Scalar`](https://ref.rerun.io/docs/python/stable/common/components#rerun.components.Scalar)
- * 🦀 [Rust API docs for `Scalar`](https://docs.rs/rerun/latest/rerun/components/struct.Scalar.html)
+ * 🌊 [C++ API docs for `Scalar`](https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1components_1_1Scalar.html)
+ * 🐍 [Python API docs for `Scalar`](https://ref.dalaran.dev/docs/python/stable/common/components#dalaran.components.Scalar)
+ * 🦀 [Rust API docs for `Scalar`](https://docs.rs/dalaran/latest/dalaran/components/struct.Scalar.html)
 
 
 ## Used by

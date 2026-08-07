@@ -9,10 +9,10 @@ from __future__ import annotations
 
 import math
 
-import rerun as rr
+import dalaran as dl
 
-rr.init("rerun_example_scalar_row_updates", spawn=True)
+dl.init("dalaran_example_scalar_row_updates", spawn=True)
 
 for step in range(64):
-    rr.set_time("step", sequence=step)
-    rr.log("scalars", rr.Scalars(math.sin(step / 10.0)))
+    dl.set_time("step", sequence=step)
+    dl.log("scalars", dl.Scalars(math.sin(step / 10.0)))

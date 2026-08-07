@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Examples of logging graph data to Rerun and performing force-based layouts."""
+"""Examples of logging graph data to Dalaran and performing force-based layouts."""
 
 from __future__ import annotations
 
@@ -9,11 +9,11 @@ import random
 
 import numpy as np
 
-import rerun as rr
-import rerun.blueprint as rrb
-from rerun.blueprint.archetypes.force_collision_radius import ForceCollisionRadius
-from rerun.blueprint.archetypes.force_link import ForceLink
-from rerun.blueprint.archetypes.force_many_body import ForceManyBody
+import dalaran as dl
+import dalaran.blueprint as dlb
+from dalaran.blueprint.archetypes.force_collision_radius import ForceCollisionRadius
+from dalaran.blueprint.archetypes.force_link import ForceLink
+from dalaran.blueprint.archetypes.force_many_body import ForceManyBody
 
 color_scheme = [
     [228, 26, 28, 255],  # Red
@@ -29,8 +29,8 @@ color_scheme = [
 
 DESCRIPTION = """
 # Graphs
-This example shows various graph visualizations that you can create using Rerun.
-In this example, the node positions — and therefore the graph layout — are computed by Rerun internally using a force-based layout algorithm.
+This example shows various graph visualizations that you can create using Dalaran.
+In this example, the node positions — and therefore the graph layout — are computed by Dalaran internally using a force-based layout algorithm.
 
 You can modify how these graphs look by changing the parameters of the force-based layout algorithm in the selection panel.
 
@@ -50,16 +50,16 @@ def log_lattice(num_nodes: int) -> None:
         *[
             (
                 str(i),
-                rr.components.Color([round((x / (num_nodes - 1)) * 255), round((y / (num_nodes - 1)) * 255), 0, 255]),
+                dl.components.Color([round((x / (num_nodes - 1)) * 255), round((y / (num_nodes - 1)) * 255), 0, 255]),
             )
             for i, (x, y) in enumerate(coordinates)
         ],
         strict=False,
     )
 
-    rr.log(
+    dl.log(
         "lattice",
-        rr.GraphNodes(
+        dl.GraphNodes(
             nodes,
             colors=colors,
             labels=[f"({x}, {y})" for x, y in itertools.product(range(num_nodes), range(num_nodes))],
@@ -78,7 +78,7 @@ def log_lattice(num_nodes: int) -> None:
             target = y * num_nodes + x
             edges.append((str(source), str(target)))
 
-    rr.log("lattice", rr.GraphEdges(edges, graph_type="directed"), static=True)
+    dl.log("lattice", dl.GraphEdges(edges, graph_type="directed"), static=True)
 
 
 def log_trees() -> None:
@@ -96,15 +96,15 @@ def log_trees() -> None:
         colors.append(random.choice(color_scheme))
         edges.append((existing, new_node))
 
-        rr.set_time("frame", sequence=i)
-        rr.log(
+        dl.set_time("frame", sequence=i)
+        dl.log(
             "node_link",
-            rr.GraphNodes(nodes, labels=nodes, radii=radii, colors=colors),
-            rr.GraphEdges(edges, graph_type=rr.GraphType.Directed),
+            dl.GraphNodes(nodes, labels=nodes, radii=radii, colors=colors),
+            dl.GraphEdges(edges, graph_type=dl.GraphType.Directed),
         )
-        rr.log(
+        dl.log(
             "bubble_chart",
-            rr.GraphNodes(nodes, labels=nodes, radii=radii, colors=colors),
+            dl.GraphNodes(nodes, labels=nodes, radii=radii, colors=colors),
         )
 
 
@@ -142,46 +142,46 @@ def log_markov_chain() -> None:
         colors = [inactive_color] * len(state_names)
         colors[next_state_index] = active_colors[next_state_index]
 
-        rr.set_time("frame", sequence=i)
-        rr.log(
+        dl.set_time("frame", sequence=i)
+        dl.log(
             "markov_chain",
-            rr.GraphNodes(state_names, labels=state_names, colors=colors, positions=positions),
-            rr.GraphEdges(edges, graph_type="directed"),
+            dl.GraphNodes(state_names, labels=state_names, colors=colors, positions=positions),
+            dl.GraphEdges(edges, graph_type="directed"),
         )
 
 
 def log_blueprint() -> None:
-    rr.send_blueprint(
-        rrb.Blueprint(
-            rrb.Grid(
-                rrb.GraphView(
+    dl.send_blueprint(
+        dlb.Blueprint(
+            dlb.Grid(
+                dlb.GraphView(
                     origin="node_link",
                     name="Node-link diagram",
                     force_link=ForceLink(distance=60),
                     force_many_body=ForceManyBody(strength=-60),
                 ),
-                rrb.GraphView(
+                dlb.GraphView(
                     origin="bubble_chart",
                     name="Bubble chart",
                     force_link=ForceLink(enabled=False),
                     force_many_body=ForceManyBody(enabled=False),
                     force_collision_radius=ForceCollisionRadius(enabled=True),
-                    defaults=[rr.GraphNodes.from_fields(show_labels=False)],
+                    defaults=[dl.GraphNodes.from_fields(show_labels=False)],
                 ),
-                rrb.GraphView(
+                dlb.GraphView(
                     origin="lattice",
                     name="Lattice",
                     force_link=ForceLink(distance=60),
                     force_many_body=ForceManyBody(strength=-60),
-                    defaults=[rr.GraphNodes.from_fields(show_labels=False, radii=10)],
+                    defaults=[dl.GraphNodes.from_fields(show_labels=False, radii=10)],
                 ),
-                rrb.Horizontal(
-                    rrb.GraphView(
+                dlb.Horizontal(
+                    dlb.GraphView(
                         origin="markov_chain",
                         name="Markov Chain",
                         # We don't need any forces for this graph, because the nodes have fixed positions.
                     ),
-                    rrb.TextDocumentView(origin="description", name="Description"),
+                    dlb.TextDocumentView(origin="description", name="Description"),
                 ),
             ),
         ),
@@ -189,17 +189,17 @@ def log_blueprint() -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Logs various graphs using the Rerun SDK.")
-    rr.script_add_args(parser)
+    parser = argparse.ArgumentParser(description="Logs various graphs using the Dalaran SDK.")
+    dl.script_add_args(parser)
     args = parser.parse_args()
 
-    rr.script_setup(args, "rerun_example_graphs")
-    rr.log("description", rr.TextDocument(DESCRIPTION, media_type=rr.MediaType.MARKDOWN), static=True)
+    dl.script_setup(args, "dalaran_example_graphs")
+    dl.log("description", dl.TextDocument(DESCRIPTION, media_type=dl.MediaType.MARKDOWN), static=True)
     log_trees()
     log_lattice(10)
     log_markov_chain()
     log_blueprint()
-    rr.script_teardown(args)
+    dl.script_teardown(args)
 
 
 if __name__ == "__main__":
