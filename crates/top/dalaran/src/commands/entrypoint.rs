@@ -610,7 +610,8 @@ enum Command {
     #[command(subcommand)]
     Auth(AuthCommands),
 
-    /// Convert supported files into a single Dalaran .dlr recording.
+    // NOTE: no doc comment here on purpose: a doc comment on the variant would override the
+    // (much richer) one on `ConvertCommand` itself, and `--help` would lose the examples.
     Convert(ConvertCommand),
 
     /// Download recordings and save them as .dlr files.
@@ -2036,6 +2037,50 @@ fn record_cli_command_analytics(args: &Args) {
         detach_process: *detach_process,
         test_receive: *test_receive,
     });
+}
+
+#[cfg(test)]
+mod cli_tests {
+    use super::*;
+
+    /// Catches malformed clap definitions (duplicate flags, bad value names, broken help
+    /// templates) that would otherwise only blow up at runtime, in front of a user.
+    #[test]
+    fn test_cli_definition_is_valid() {
+        Args::command().debug_assert();
+    }
+
+    #[test]
+    fn test_convert_help_renders() {
+        let mut command = Args::command();
+        let convert = command
+            .get_subcommands_mut()
+            .find(|subcommand| subcommand.get_name() == "convert")
+            .expect("the `convert` subcommand should be registered")
+            .render_long_help()
+            .to_string();
+
+        for expected in [
+            "--output",
+            "--app-id",
+            "--overwrite",
+            "--list-formats",
+            "dalaran convert session.mcap -o session.dlr",
+        ] {
+            assert!(
+                convert.contains(expected),
+                "`dalaran convert --help` is missing {expected:?}:\n{convert}"
+            );
+        }
+    }
+
+    /// The markdown manual is generated from the same clap definition, so this also guards
+    /// against a subcommand that renders fine but breaks the manual generator.
+    #[test]
+    fn test_markdown_manual_covers_convert() {
+        let manual = Args::generate_markdown_manual();
+        assert!(manual.contains("## dalaran convert"), "{manual}");
+    }
 }
 
 #[cfg(all(test, feature = "native_viewer"))]
