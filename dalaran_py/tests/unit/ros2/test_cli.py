@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from dalaran.ros2 import cli
 
 from .test_bag import write_bag
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @pytest.fixture
@@ -16,7 +19,7 @@ def bag(tmp_path: Path) -> Path:
     return tmp_path / "my_bag"
 
 
-def test_a_subcommand_is_required(capsys: pytest.CaptureFixture[str]) -> None:
+def test_a_subcommand_is_required() -> None:
     with pytest.raises(SystemExit):
         cli.main([])
 
@@ -38,7 +41,7 @@ def test_info_on_a_missing_bag_fails_cleanly(tmp_path: Path, capsys: pytest.Capt
 
 def test_rate_limits_are_parsed_as_topic_equals_hz() -> None:
     assert cli._parse_rate("/camera/*=5") == ("/camera/*", 5.0)
-    with pytest.raises(Exception, match="Hz|number"):
+    with pytest.raises(Exception, match=r"Hz|number"):
         cli._parse_rate("/camera/*=fast")
     with pytest.raises(Exception, match="TOPIC=HZ"):
         cli._parse_rate("/camera/*")

@@ -16,11 +16,13 @@ from __future__ import annotations
 
 import argparse
 import sys
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING
 
 from .bridge import DEFAULT_DENY, QOS_PRESETS, Ros2Bridge
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from .bag import Rosbag2Reader
 
 __all__ = ["main"]

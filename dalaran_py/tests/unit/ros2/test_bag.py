@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from dalaran.ros2.bag import BagMessage, SqliteBagReader, open_bag, replay_bag
 from dalaran.ros2.bridge import Ros2Bridge
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 TOPICS = [
     (1, "/scan", "sensor_msgs/msg/LaserScan"),
@@ -128,7 +131,7 @@ def test_a_directory_without_db3_files_is_rejected(tmp_path: Path) -> None:
         SqliteBagReader(tmp_path / "hollow")
 
 
-def test_replay_skips_topics_with_no_converter(bag: Path, fake_dl, captured, monkeypatch) -> None:
+def test_replay_skips_topics_with_no_converter(bag: Path, _fake_dl, captured, monkeypatch) -> None:
     # `/rosout` has no converter and `/scan` needs a real CDR decoder, so replay
     # only the topic we can decode here, with deserialization stubbed out.
     from dalaran.ros2 import bag as bag_module
@@ -142,7 +145,7 @@ def test_replay_skips_topics_with_no_converter(bag: Path, fake_dl, captured, mon
     assert captured.logs[0].entity_path == "status"
 
 
-def test_replay_of_an_all_denied_bag_does_nothing(bag: Path, fake_dl, captured) -> None:
+def test_replay_of_an_all_denied_bag_does_nothing(bag: Path, _fake_dl, captured) -> None:
     bridge = Ros2Bridge(allow=["/nothing_here"], on_unknown_type=lambda _name: None)
     bridge.context.sink = captured
     assert replay_bag(bag, bridge) == 0

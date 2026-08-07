@@ -50,7 +50,7 @@ class _FakeModule(types.ModuleType):
 
 
 @pytest.fixture
-def fake_dl(monkeypatch: pytest.MonkeyPatch) -> types.ModuleType:
+def _fake_dl(monkeypatch: pytest.MonkeyPatch) -> types.ModuleType:
     """Replace `dalaran` with a module whose attributes record their arguments."""
     real = sys.modules["dalaran"]
 
@@ -80,10 +80,7 @@ class Captured:
 
     def by_path(self, entity_path: str) -> list[FakeArchetype]:
         return [
-            archetype
-            for record in self.logs
-            if record.entity_path == entity_path
-            for archetype in record.archetypes
+            archetype for record in self.logs if record.entity_path == entity_path for archetype in record.archetypes
         ]
 
     def names(self) -> list[str]:

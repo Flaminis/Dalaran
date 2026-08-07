@@ -5,8 +5,8 @@ from __future__ import annotations
 import pytest
 from dalaran.ros2.bridge import DEFAULT_DENY, Ros2Bridge, bridge_topics
 from dalaran.ros2.naming import (
-    TopicFilter,
     Throttler,
+    TopicFilter,
     entity_path_join,
     sanitize_path_part,
     stamp_to_nanos,
@@ -184,7 +184,7 @@ def _string_msg(text: str) -> Simple:
     return Simple(data=text)
 
 
-def test_handle_message_converts_and_reports_success(fake_dl, captured) -> None:
+def test_handle_message_converts_and_reports_success(_fake_dl, captured) -> None:
     bridge = Ros2Bridge()
     bridge.context.sink = captured
 
@@ -192,13 +192,13 @@ def test_handle_message_converts_and_reports_success(fake_dl, captured) -> None:
     assert captured.logs[0].entity_path == "status"
 
 
-def test_handle_message_returns_false_for_unknown_types(fake_dl, captured) -> None:
+def test_handle_message_returns_false_for_unknown_types(_fake_dl, captured) -> None:
     bridge = Ros2Bridge()
     bridge.context.sink = captured
     assert not bridge.handle_message("/x", "nowhere_msgs/msg/Nothing", Simple(), wall_time=0.0)
 
 
-def test_handle_message_honors_the_rate_limit(fake_dl, captured) -> None:
+def test_handle_message_honors_the_rate_limit(_fake_dl, captured) -> None:
     bridge = Ros2Bridge(max_hz={"/status": 1.0})
     bridge.context.sink = captured
 
@@ -208,7 +208,7 @@ def test_handle_message_honors_the_rate_limit(fake_dl, captured) -> None:
     assert len(captured.logs) == 2
 
 
-def test_the_rate_limit_follows_the_header_stamp_when_there_is_one(fake_dl, captured) -> None:
+def test_the_rate_limit_follows_the_header_stamp_when_there_is_one(_fake_dl, captured) -> None:
     bridge = Ros2Bridge(max_hz={"/scan": 1.0})
     bridge.context.sink = captured
 

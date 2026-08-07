@@ -86,7 +86,7 @@ class TestExtensionApi:
 
     def test_one_converter_can_serve_several_types(self) -> None:
         @register("my_pkg/msg/BatteryPack", "my_pkg/msg/Other")
-        def log_anything(msg, entity_path, context) -> None:
+        def log_anything(_msg, _entity_path, _context) -> None:
             pass
 
         assert lookup("my_pkg/msg/Other") is log_anything
@@ -95,7 +95,7 @@ class TestExtensionApi:
         with pytest.raises(ValueError, match="already registered"):
 
             @register("sensor_msgs/msg/Imu")
-            def shadow(msg, entity_path, context) -> None:
+            def shadow(_msg, _entity_path, _context) -> None:
                 pass
 
     def test_a_built_in_can_be_replaced_deliberately(self, ctx, captured) -> None:
@@ -103,7 +103,7 @@ class TestExtensionApi:
         try:
 
             @register("sensor_msgs/msg/Imu", override=True)
-            def replacement(msg, entity_path, context) -> None:
+            def replacement(_msg, entity_path, context) -> None:
                 context.log(entity_path, "mine")
 
             assert convert("sensor_msgs/Imu", None, "imu", ctx)
@@ -119,7 +119,7 @@ class TestExtensionApi:
 # -- converters -------------------------------------------------------------
 
 
-def test_laser_scan_becomes_points_in_the_sensor_frame(fake_dl, ctx, captured) -> None:
+def test_laser_scan_becomes_points_in_the_sensor_frame(_fake_dl, ctx, captured) -> None:
     scan = Simple(
         header=header(frame_id="laser"),
         ranges=[1.0, 2.0, np.inf, 4.0],
@@ -138,7 +138,7 @@ def test_laser_scan_becomes_points_in_the_sensor_frame(fake_dl, ctx, captured) -
     np.testing.assert_allclose(positions[1], [0.0, 2.0, 0.0], atol=1e-6)
 
 
-def test_imu_logs_orientation_arrows_and_per_axis_series(fake_dl, ctx, captured) -> None:
+def test_imu_logs_orientation_arrows_and_per_axis_series(_fake_dl, ctx, captured) -> None:
     imu = Simple(
         header=header(frame_id="imu_link"),
         orientation=quat(0.0, 0.0, 0.0, 1.0),
@@ -153,7 +153,7 @@ def test_imu_logs_orientation_arrows_and_per_axis_series(fake_dl, ctx, captured)
     assert captured.by_path("imu/angular_velocity/z")[0].args == (0.5,)
 
 
-def test_imu_without_a_valid_orientation_logs_no_transform(fake_dl, ctx, captured) -> None:
+def test_imu_without_a_valid_orientation_logs_no_transform(_fake_dl, ctx, captured) -> None:
     imu = Simple(
         header=header(frame_id="imu_link"),
         orientation=quat(),
@@ -165,7 +165,7 @@ def test_imu_without_a_valid_orientation_logs_no_transform(fake_dl, ctx, capture
     assert "Transform3D" not in captured.names()
 
 
-def test_joint_state_logs_one_series_per_joint_and_quantity(fake_dl, ctx, captured) -> None:
+def test_joint_state_logs_one_series_per_joint_and_quantity(_fake_dl, ctx, captured) -> None:
     state = Simple(
         header=header(),
         name=["arm/shoulder", "elbow"],
@@ -184,7 +184,7 @@ def test_joint_state_logs_one_series_per_joint_and_quantity(fake_dl, ctx, captur
     ]
 
 
-def test_odometry_logs_a_transform_and_a_twist(fake_dl, ctx, captured) -> None:
+def test_odometry_logs_a_transform_and_a_twist(_fake_dl, ctx, captured) -> None:
     odom = Simple(
         header=header(frame_id="odom"),
         pose=Simple(pose=pose(vec3(1.0, 2.0, 0.0))),
@@ -197,19 +197,19 @@ def test_odometry_logs_a_transform_and_a_twist(fake_dl, ctx, captured) -> None:
     assert captured.by_path("odom/linear_velocity/x")[0].args == (0.5,)
 
 
-def test_nav_sat_fix_without_a_fix_is_skipped(fake_dl, ctx, captured) -> None:
+def test_nav_sat_fix_without_a_fix_is_skipped(_fake_dl, ctx, captured) -> None:
     fix = Simple(status=Simple(status=-1), latitude=0.0, longitude=0.0, altitude=0.0)
     msg_map.convert_nav_sat_fix(fix, "gps", ctx)
     assert captured.logs == []
 
 
-def test_nav_sat_fix_with_a_fix_becomes_geo_points(fake_dl, ctx, captured) -> None:
+def test_nav_sat_fix_with_a_fix_becomes_geo_points(_fake_dl, ctx, captured) -> None:
     fix = Simple(status=Simple(status=0), latitude=59.33, longitude=18.06, altitude=12.0)
     msg_map.convert_nav_sat_fix(fix, "gps", ctx)
     np.testing.assert_allclose(captured.first("GeoPoints").kwargs["lat_lon"], [[59.33, 18.06]])
 
 
-def test_occupancy_grid_becomes_a_native_grid_map(fake_dl, ctx, captured) -> None:
+def test_occupancy_grid_becomes_a_native_grid_map(_fake_dl, ctx, captured) -> None:
     grid = Simple(
         header=header(frame_id="map"),
         info=Simple(
@@ -230,7 +230,7 @@ def test_occupancy_grid_becomes_a_native_grid_map(fake_dl, ctx, captured) -> Non
     assert grid_map.kwargs["colormap"] == "Colormap.RvizMap"
 
 
-def test_tf_messages_drive_the_shared_transform_tree(fake_dl, ctx, captured) -> None:
+def test_tf_messages_drive_the_shared_transform_tree(_fake_dl, ctx) -> None:
     tf = Simple(
         transforms=[
             transform_stamped("odom", "base_link", translation=(1.0, 0.0, 0.0)),
@@ -245,13 +245,13 @@ def test_tf_messages_drive_the_shared_transform_tree(fake_dl, ctx, captured) -> 
     np.testing.assert_allclose(ctx.tree.lookup("odom", "lidar")[:3, 3], [1.0, 0.0, 0.3])
 
 
-def test_tf_static_is_logged_as_static_data(fake_dl, ctx, captured) -> None:
+def test_tf_static_is_logged_as_static_data(_fake_dl, ctx, captured) -> None:
     tf = Simple(transforms=[transform_stamped("base_link", "lidar")])
     msg_map.convert_tf_message(tf, "tf_static", ctx)
     assert captured.logs[0].static is True
 
 
-def test_sensor_data_lands_on_its_tf_frame_once_tf_is_known(fake_dl, ctx, captured) -> None:
+def test_sensor_data_lands_on_its_tf_frame_once_tf_is_known(_fake_dl, ctx, captured) -> None:
     msg_map.convert_tf_message(Simple(transforms=[transform_stamped("base_link", "laser")]), "tf", ctx)
     captured.logs.clear()
 
@@ -273,13 +273,13 @@ def test_marker_entity_paths_are_namespaced_by_ns_and_id() -> None:
     assert marker_entity_path(Simple(ns="", id=0), "markers") == "markers/default/0"
 
 
-def test_a_delete_all_marker_clears_the_subtree(fake_dl, ctx, captured) -> None:
+def test_a_delete_all_marker_clears_the_subtree(_fake_dl, ctx, captured) -> None:
     msg_map.convert_marker(Simple(action=3, ns="obstacles", id=0), "markers", ctx)
     assert captured.first("Clear").kwargs == {"recursive": True}
     assert captured.logs[0].entity_path == "markers"
 
 
-def test_a_sphere_marker_becomes_an_ellipsoid(fake_dl, ctx, captured) -> None:
+def test_a_sphere_marker_becomes_an_ellipsoid(_fake_dl, ctx, captured) -> None:
     marker = Simple(
         action=0,
         type=2,
@@ -299,7 +299,7 @@ def test_a_sphere_marker_becomes_an_ellipsoid(fake_dl, ctx, captured) -> None:
     assert captured.logs[0].entity_path == "markers/obstacles/3"
 
 
-def test_a_line_list_marker_becomes_one_strip_per_segment(fake_dl, ctx, captured) -> None:
+def test_a_line_list_marker_becomes_one_strip_per_segment(_fake_dl, ctx, captured) -> None:
     marker = Simple(
         action=0,
         type=5,
@@ -316,7 +316,7 @@ def test_a_line_list_marker_becomes_one_strip_per_segment(fake_dl, ctx, captured
     assert len(strips) == 2
 
 
-def test_a_marker_array_logs_every_marker(fake_dl, ctx, captured) -> None:
+def test_a_marker_array_logs_every_marker(_fake_dl, ctx, captured) -> None:
     def sphere(index: int) -> Simple:
         return Simple(
             action=0,
@@ -338,16 +338,16 @@ def test_a_marker_array_logs_every_marker(fake_dl, ctx, captured) -> None:
     ("data", "expected"),
     [(True, 1.0), (3, 3.0), (2.5, 2.5)],
 )
-def test_std_msgs_scalars_become_scalar_series(fake_dl, ctx, captured, data, expected) -> None:
+def test_std_msgs_scalars_become_scalar_series(_fake_dl, ctx, captured, data, expected) -> None:
     msg_map.convert_std_msg(Simple(data=data), "battery", ctx)
     assert captured.first("Scalars").args == (expected,)
 
 
-def test_std_msgs_strings_become_text_logs(fake_dl, ctx, captured) -> None:
+def test_std_msgs_strings_become_text_logs(_fake_dl, ctx, captured) -> None:
     msg_map.convert_std_msg(Simple(data="all systems nominal"), "status", ctx)
     assert captured.first("TextLog").args == ("all systems nominal",)
 
 
-def test_std_msgs_arrays_become_a_scalar_batch(fake_dl, ctx, captured) -> None:
+def test_std_msgs_arrays_become_a_scalar_batch(_fake_dl, ctx, captured) -> None:
     msg_map.convert_std_msg(Simple(data=[1.0, 2.0, 3.0]), "cells", ctx)
     np.testing.assert_allclose(captured.first("Scalars").args[0], [1.0, 2.0, 3.0])

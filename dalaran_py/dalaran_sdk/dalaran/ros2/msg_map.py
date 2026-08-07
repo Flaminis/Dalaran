@@ -28,7 +28,8 @@ refer to the same entry.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable, Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
@@ -178,7 +179,7 @@ def registered_types() -> list[str]:
     return sorted(_REGISTRY)
 
 
-def convert(type_name: str, msg: Any, entity_path: str, ctx: Context) -> bool:
+def convert(type_name: str, msg: Any, entity_path: str, ctx: Context) -> bool:  # noqa: PLR0917
     """
     Convert and log one message, returning whether a converter was found.
 
@@ -224,10 +225,10 @@ def _points(points: Iterable[Any]) -> npt.NDArray[np.float32]:
 
 def _color(color: Any) -> tuple[int, int, int, int]:
     return (
-        int(round(float(color.r) * 255.0)),
-        int(round(float(color.g) * 255.0)),
-        int(round(float(color.b) * 255.0)),
-        int(round(float(color.a) * 255.0)),
+        round(float(color.r) * 255.0),
+        round(float(color.g) * 255.0),
+        round(float(color.b) * 255.0),
+        round(float(color.a) * 255.0),
     )
 
 
@@ -393,7 +394,7 @@ def convert_imu(msg: Any, entity_path: str, ctx: Context) -> None:
             f"{path}/{name}",
             dl.Arrows3D(vectors=[vector * scale], origins=[[0.0, 0.0, 0.0]], colors=[color]),
         )
-        for axis, component in zip("xyz", vector):
+        for axis, component in zip("xyz", vector, strict=False):
             ctx.log(f"{path}/{name}/{axis}", dl.Scalars(float(component)))
 
 
@@ -410,7 +411,7 @@ def convert_joint_state(msg: Any, entity_path: str, ctx: Context) -> None:
     names = [sanitize_path_part(str(name)) for name in msg.name]
     for quantity in ("position", "velocity", "effort"):
         values = list(getattr(msg, quantity, ()) or ())
-        for name, value in zip(names, values):
+        for name, value in zip(names, values, strict=False):
             ctx.log(f"{entity_path}/{quantity}/{name}", dl.Scalars(float(value)))
 
 
@@ -449,7 +450,7 @@ def convert_odometry(msg: Any, entity_path: str, ctx: Context) -> None:
 
     twist = msg.twist.twist
     for name, vector in (("linear_velocity", _xyz(twist.linear)), ("angular_velocity", _xyz(twist.angular))):
-        for axis, component in zip("xyz", vector):
+        for axis, component in zip("xyz", vector, strict=False):
             ctx.log(f"{entity_path}/{name}/{axis}", dl.Scalars(float(component)))
 
 
@@ -529,7 +530,6 @@ def convert_pose_array(msg: Any, entity_path: str, ctx: Context) -> None:
     short arrow along each pose's local +x rather than as a full transform.
     """
     import dalaran as dl
-
     from dalaran.robot._math import quaternion_to_matrix
 
     poses = list(msg.poses)
@@ -566,7 +566,7 @@ def convert_twist(msg: Any, entity_path: str, ctx: Context) -> None:
         dl.Arrows3D(vectors=[angular], origins=[[0.0, 0.0, 0.0]], colors=[(255, 140, 80)]),
     )
     for name, vector in (("linear", linear), ("angular", angular)):
-        for axis, component in zip("xyz", vector):
+        for axis, component in zip("xyz", vector, strict=False):
             ctx.log(f"{entity_path}/{name}/{axis}", dl.Scalars(float(component)))
 
 
@@ -642,8 +642,13 @@ def convert_tf_message(msg: Any, entity_path: str, ctx: Context) -> None:
 
 
 @register("geometry_msgs/msg/TransformStamped")
-def convert_transform_stamped(msg: Any, entity_path: str, ctx: Context) -> None:
-    """Feed a bare `geometry_msgs/TransformStamped` into the transform tree."""
+def convert_transform_stamped(msg: Any, entity_path: str, ctx: Context) -> None:  # noqa: ARG001
+    """
+    Feed a bare `geometry_msgs/TransformStamped` into the transform tree.
+
+    `entity_path` is deliberately ignored: like `/tf`, a transform belongs on the
+    entity its child frame owns, not on the topic it happened to arrive over.
+    """
     apply_transform_stamped(msg, ctx)
 
 

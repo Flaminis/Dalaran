@@ -21,11 +21,13 @@ import sqlite3
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Iterator, Sequence
+from typing import TYPE_CHECKING, Any
 
 from .msg_map import normalize_type_name
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
+
     from .bridge import Ros2Bridge
 
 __all__ = [
@@ -153,11 +155,9 @@ class SqliteBagReader(Rosbag2Reader):
 
         """
         counts: dict[str, int] = dict.fromkeys(self.topics, 0)
-        for file, ids in zip(self._files, self._topic_ids):
+        for file, ids in zip(self._files, self._topic_ids, strict=False):
             with self._connect(file) as connection:
-                for topic_id, count in connection.execute(
-                    "SELECT topic_id, COUNT(*) FROM messages GROUP BY topic_id"
-                ):
+                for topic_id, count in connection.execute("SELECT topic_id, COUNT(*) FROM messages GROUP BY topic_id"):
                     topic = ids.get(int(topic_id))
                     if topic is not None:
                         counts[topic] = counts.get(topic, 0) + int(count)
@@ -178,7 +178,7 @@ class SqliteBagReader(Rosbag2Reader):
     def messages(self, topics: Sequence[str] | None = None) -> Iterator[BagMessage]:
         """Yield the bag's messages in timestamp order, still CDR-serialized."""
         wanted = set(topics) if topics is not None else None
-        for file, ids in zip(self._files, self._topic_ids):
+        for file, ids in zip(self._files, self._topic_ids, strict=False):
             with self._connect(file) as connection:
                 rows = connection.execute("SELECT topic_id, timestamp, data FROM messages ORDER BY timestamp")
                 for topic_id, timestamp, data in rows:

@@ -11,15 +11,17 @@ recording, or the native bindings being present.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 __all__ = ["Context", "RecordedLog"]
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from dalaran.robot import TransformTree
 
 
-class RecordedLog(tuple):  # noqa: SLOT001
+class RecordedLog(tuple):
     """
     One captured `log` call: `(entity_path, archetypes, static)`.
 

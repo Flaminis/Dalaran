@@ -13,7 +13,7 @@ numpy arrays, so it can be tested without ROS or a Dalaran recording.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import numpy as np
 
@@ -21,8 +21,8 @@ if TYPE_CHECKING:
     import numpy.typing as npt
 
 __all__ = [
-    "GridPlacement",
     "OCCUPANCY_UNKNOWN",
+    "GridPlacement",
     "occupancy_grid_placement",
     "occupancy_to_rgba",
 ]

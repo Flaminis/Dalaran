@@ -16,11 +16,13 @@ it can be unit tested (and used offline on rosbag data) without ROS installed.
 from __future__ import annotations
 
 from dataclasses import dataclass, field as dataclass_field
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     import numpy.typing as npt
 
 __all__ = [
@@ -203,7 +205,7 @@ def fields_to_dtype(
         raise ValueError(msg)
 
     itemsize = int(point_step)
-    end = max(off + np.dtype(fmt).itemsize for off, fmt in zip(offsets, formats))
+    end = max(off + np.dtype(fmt).itemsize for off, fmt in zip(offsets, formats, strict=False))
     if itemsize < end:
         msg = f"point_step ({itemsize}) is smaller than the fields it must hold ({end} bytes)"
         raise ValueError(msg)

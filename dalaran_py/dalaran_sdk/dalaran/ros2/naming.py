@@ -13,11 +13,14 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from fnmatch import fnmatchcase
-from typing import Any, Iterable, Sequence
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
 
 __all__ = [
-    "TopicFilter",
     "Throttler",
+    "TopicFilter",
     "entity_path_join",
     "sanitize_path_part",
     "stamp_to_nanos",

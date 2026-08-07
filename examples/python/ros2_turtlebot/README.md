@@ -45,6 +45,7 @@ not, because `dalaran.ros2` imports `rclpy` lazily.
   ```python
   from dalaran.ros2 import register
 
+
   @register("sensor_msgs/msg/BatteryState")
   def log_battery_state(msg, entity_path, ctx):
       ctx.log(f"{entity_path}/percentage", dl.Scalars(float(msg.percentage)))

@@ -14,13 +14,15 @@ because the same package is used to replay rosbag2 files offline.
 from __future__ import annotations
 
 import time
-from typing import TYPE_CHECKING, Any, Callable, Iterable, Mapping, Sequence
+from typing import TYPE_CHECKING, Any
 
 from .context import Context
 from .msg_map import convert, lookup, normalize_type_name
 from .naming import Throttler, TopicFilter, stamp_to_nanos, topic_to_entity_path
 
 if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable, Mapping, Sequence
+
     from dalaran.recording_stream import RecordingStream
 
 __all__ = ["DEFAULT_DENY", "QOS_PRESETS", "Ros2Bridge", "qos_profile"]
@@ -316,8 +318,7 @@ class Ros2Bridge:
         import logging
 
         logging.getLogger("dalaran.ros2").info(
-            "No Dalaran converter registered for %r; register one with "
-            "`@dalaran.ros2.register(%r)` to visualize it",
+            "No Dalaran converter registered for %r; register one with `@dalaran.ros2.register(%r)` to visualize it",
             type_name,
             type_name,
         )
