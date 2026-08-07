@@ -106,7 +106,13 @@ impl App {
                 // blueprint management. Catalog registration must preserve retargeting to the
                 // currently open `ApplicationId`.
                 // If the internal catalog is enabled, route `.dlr` files through it.
-                if path.extension().is_some_and(|ext| ext == "dlr")
+                // `.rrd` is the legacy Rerun spelling of the very same format.
+                if path
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .is_some_and(|ext| {
+                        ext.eq_ignore_ascii_case("dlr") || ext.eq_ignore_ascii_case("rrd")
+                    })
                     && self.app_options().experimental.use_internal_catalog
                     && self.connection_registry.internal_origin().is_some()
                 {
@@ -317,9 +323,10 @@ impl App {
     fn should_register_via_internal_catalog(&self, path: &std::path::Path) -> bool {
         // TODO(RR-5309): Keep `.dbl` files on the legacy importer until the server supports
         // blueprint management and catalog registration can preserve `ApplicationId` retargeting.
+        // `.rrd` is the legacy Rerun spelling of `.dlr` and is read natively.
         path.extension()
             .and_then(|ext| ext.to_str())
-            .is_some_and(|ext| ext.eq_ignore_ascii_case("dlr"))
+            .is_some_and(|ext| ext.eq_ignore_ascii_case("dlr") || ext.eq_ignore_ascii_case("rrd"))
             && self.app_options().experimental.use_internal_catalog
             && self.connection_registry.internal_origin().is_some()
     }

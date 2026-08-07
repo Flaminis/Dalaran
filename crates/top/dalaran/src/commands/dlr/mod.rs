@@ -23,6 +23,9 @@ use self::stats::StatsCommand;
 use self::verify::VerifyCommand;
 
 /// Manipulate the contents of .dlr and .dbl files.
+///
+/// Legacy Rerun `.rrd`/`.rbl` files use the same on-disk format and are accepted everywhere a
+/// `.dlr`/`.dbl` is.
 #[derive(Debug, Clone, Subcommand)]
 pub enum RrdCommands {
     /// Compares the data between 2 .dlr files, returning a successful shell exit code if they

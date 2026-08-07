@@ -270,7 +270,12 @@ impl LogDataSource {
         match self {
             Self::HttpUrl { url } => {
                 let path = url.path();
-                let is_dlr = path.ends_with(".dlr") || path.ends_with(".dbl");
+                // `.rrd`/`.rbl` are the legacy Rerun spellings of `.dlr`/`.dbl`; the framing is
+                // identical, so they can be streamed the exact same way.
+                let path_lowercase = path.to_ascii_lowercase();
+                let is_dlr = [".dlr", ".dbl", ".rrd", ".rbl"]
+                    .iter()
+                    .any(|extension| path_lowercase.ends_with(extension));
                 if is_dlr {
                     Ok(stream_from_http_to_channel(url.to_string()))
                 } else {
@@ -515,6 +520,9 @@ mod tests {
             "foo.png",
             "/foo/bar/baz.dbl",
             "D:/file.jpg",
+            // Legacy Rerun recordings/blueprints are read natively:
+            "foo.rrd",
+            "/foo/bar/baz.rbl",
         ];
         let http = [
             "http://example.com/foo.dlr",
@@ -530,6 +538,9 @@ mod tests {
             // Since the path has an explicit extension, this will be parsed as a DataSource and
             // not a `ViewerOpenUrl` (see invalid section below)
             "https://example.com/some-file.dlr?url=recording.dlr",
+            // Legacy Rerun recordings/blueprints are read natively:
+            "https://example.com/foo.rrd",
+            "https://example.com/blueprint.rbl",
         ];
         // Extensionless URLs — only accepted when accept_extensionless_http is true
         let extensionless_http = [
