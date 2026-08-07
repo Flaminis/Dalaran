@@ -1,0 +1,260 @@
+# Release pipeline.
+#
+# This workflow is deliberately conservative: every publishing step is a dry run
+# unless it is started manually with `dry_run: false` *and* the corresponding
+# repository secret is configured. A fork or a contributor without secrets gets a
+# fully green run that builds and packages everything without pushing anywhere.
+#
+# Required repository secrets (all optional, each one only unlocks its own job):
+#
+#   PYPI_API_TOKEN     PyPI API token used by `maturin publish` for `dalaran-sdk`.
+#   CARGO_REGISTRY_TOKEN  crates.io token used by `cargo publish` for the `dl_*`,
+#                      `dalaran` and `dalaran-cli` crates.
+#   NPM_TOKEN          npm automation token used by `npm publish` for the
+#                      `@dalaran-io/web-viewer` packages.
+#
+# See `.github/workflows/README.md` for the full release checklist.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Package everything but do not publish"
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+
+jobs:
+  config:
+    name: Resolve release configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      dry_run: ${{ steps.resolve.outputs.dry_run }}
+      has_pypi_token: ${{ steps.secrets.outputs.has_pypi_token }}
+      has_cargo_token: ${{ steps.secrets.outputs.has_cargo_token }}
+      has_npm_token: ${{ steps.secrets.outputs.has_npm_token }}
+    steps:
+      # Tag pushes only ever package. Actually publishing is a manual, deliberate
+      # act, so that an accidental tag can never ship a release.
+      - name: Resolve dry-run mode
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "false" ]; then
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "dry_run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # The `secrets` context is not available in job-level `if:`, so we turn the
+      # presence of each secret into a plain output that jobs can gate on.
+      - name: Detect available secrets
+        id: secrets
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          test -n "$PYPI_API_TOKEN" && echo "has_pypi_token=true" >> "$GITHUB_OUTPUT" || echo "has_pypi_token=false" >> "$GITHUB_OUTPUT"
+          test -n "$CARGO_REGISTRY_TOKEN" && echo "has_cargo_token=true" >> "$GITHUB_OUTPUT" || echo "has_cargo_token=false" >> "$GITHUB_OUTPUT"
+          test -n "$NPM_TOKEN" && echo "has_npm_token=true" >> "$GITHUB_OUTPUT" || echo "has_npm_token=false" >> "$GITHUB_OUTPUT"
+
+      - name: Summary
+        run: |
+          {
+            echo "| setting | value |"
+            echo "| --- | --- |"
+            echo "| dry run | ${{ steps.resolve.outputs.dry_run }} |"
+            echo "| PYPI_API_TOKEN | ${{ steps.secrets.outputs.has_pypi_token }} |"
+            echo "| CARGO_REGISTRY_TOKEN | ${{ steps.secrets.outputs.has_cargo_token }} |"
+            echo "| NPM_TOKEN | ${{ steps.secrets.outputs.has_npm_token }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  wheels:
+    name: Wheel (${{ matrix.platform.target }} on ${{ matrix.platform.runner }})
+    needs: config
+    runs-on: ${{ matrix.platform.runner }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - runner: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - runner: macos-14
+            target: aarch64-apple-darwin
+          - runner: windows-latest
+            target: x86_64-pc-windows-msvc
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: arduino/setup-protoc@v3
+        with:
+          version: "27.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libssl-dev pkg-config
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release-${{ matrix.platform.target }}
+          save-if: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # The bindings are `abi3-py310`, so one wheel per platform covers every
+      # supported interpreter.
+      - uses: PyO3/maturin-action@v1
+        with:
+          command: build
+          args: --release --manifest-path dalaran_py/Cargo.toml --out dist
+          target: ${{ matrix.platform.target }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.platform.target }}
+          path: dist/*.whl
+          if-no-files-found: error
+
+  publish-wheels:
+    name: Publish wheels to PyPI
+    needs: [config, wheels]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist
+
+      - name: List the artifacts
+        run: ls -l dist
+
+      - name: Skipped
+        if: needs.config.outputs.dry_run != 'false' || needs.config.outputs.has_pypi_token != 'true'
+        run: |
+          echo "Not publishing: dry_run=${{ needs.config.outputs.dry_run }}," \
+               "PYPI_API_TOKEN present=${{ needs.config.outputs.has_pypi_token }}." >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/setup-python@v5
+        if: needs.config.outputs.dry_run == 'false' && needs.config.outputs.has_pypi_token == 'true'
+        with:
+          python-version: "3.11"
+
+      - name: twine upload
+        if: needs.config.outputs.dry_run == 'false' && needs.config.outputs.has_pypi_token == 'true'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          pipx run twine check dist/*.whl
+          pipx run twine upload --non-interactive dist/*.whl
+
+  crates:
+    name: Publish crates to crates.io
+    needs: config
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: arduino/setup-protoc@v3
+        with:
+          version: "27.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libatk1.0-dev \
+            libgtk-3-dev \
+            libssl-dev \
+            libudev-dev \
+            libxkbcommon-dev \
+            pkg-config
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: release-crates
+          save-if: false
+
+      # `cargo package` is the honest dry run: it builds the exact `.crate` files
+      # that would be uploaded, without needing a token.
+      - name: cargo package (dry run)
+        if: needs.config.outputs.dry_run != 'false' || needs.config.outputs.has_cargo_token != 'true'
+        run: cargo package --locked -p dl_types -p dl_log_types -p dl_sdk -p dalaran --no-verify
+
+      - name: cargo publish
+        if: needs.config.outputs.dry_run == 'false' && needs.config.outputs.has_cargo_token == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          # `--workspace` publishes in dependency order and skips crates marked
+          # `publish = false`.
+          cargo publish --locked --workspace --no-verify
+
+  npm:
+    name: Publish the web viewer to npm
+    needs: config
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install the JS workspace
+        working-directory: dalaran_js
+        run: yarn install --frozen-lockfile
+
+      # The published tarballs contain a WASM build of the viewer, which is not
+      # produced by this workflow yet; `npm pack --dry-run` still validates the
+      # package metadata and the file list.
+      - name: npm pack (dry run)
+        if: needs.config.outputs.dry_run != 'false' || needs.config.outputs.has_npm_token != 'true'
+        working-directory: dalaran_js/web-viewer
+        run: npm pack --dry-run
+
+      - name: npm publish
+        if: needs.config.outputs.dry_run == 'false' && needs.config.outputs.has_npm_token == 'true'
+        working-directory: dalaran_js/web-viewer
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
