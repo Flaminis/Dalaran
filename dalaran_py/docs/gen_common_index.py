@@ -57,6 +57,7 @@ DOCUMENTED_PACKAGES: Final[dict[str, tuple[str, ...]]] = {
     "dalaran.server": ("Server",),
     "dalaran.robot": ("Robotics",),
     "dalaran.ros2": ("ROS 2",),
+    "dalaran.tools": ("Command line tools",),
     "dalaran.urdf": ("URDF Support",),
     "dalaran.notebook": ("Notebook",),
     "dalaran.auth": ("Authentication",),
