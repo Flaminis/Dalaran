@@ -11,7 +11,7 @@
 ## Languages
 We prefer Rust.
 
-We have a bunch of Bash and Python scripts that [we want to replace with Rust](https://github.com/rerun-io/rerun/issues/3349).
+We have a bunch of Bash and Python scripts under `scripts/` that are gradually being replaced with Rust.
 
 For configs we like JSON and TOML, and [dislike YAML](https://ruudvanasseldonk.com/2023/01/11/the-yaml-document-from-hell).
 
