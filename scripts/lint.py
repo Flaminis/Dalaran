@@ -1940,7 +1940,6 @@ def main() -> None:
     exclude_paths = (
         "./dataplatform/crates/redap_protos/Cargo.toml",  # intentional [lints.clippy] override (see file header)
         "./dataplatform/crates/redap_protos/src/v1alpha1",  # auto-generated
-        dalaran(".github/workflows/reusable_checks.yml"),  # zombie TODO hunting job
         dalaran(".nox"),
         dalaran(".pytest_cache"),
         dalaran("CODE_STYLE.md"),
