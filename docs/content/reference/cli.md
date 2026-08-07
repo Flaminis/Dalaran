@@ -20,6 +20,7 @@ The Dalaran command-line interface:
 
 * `analytics`: Configure the behavior of our analytics.
 * `auth`: Authentication with the redap.
+* `convert`: Convert supported files into a single Dalaran .dlr recording.
 * `download`: Download recordings and save them as .dlr files.
 * `man`: Generates the Dalaran CLI manual (markdown).
 * `mcap`: Manipulate the contents of .mcap files.
@@ -35,7 +36,8 @@ The Dalaran command-line interface:
 > - A gRPC url to a Dalaran server
 > - A path to a Dalaran .dlr recording
 > - A path to a Dalaran .dbl blueprint
-> - An HTTP(S) URL to an .dlr or .dbl file to load
+> - A path to a legacy Rerun .rrd recording or .rbl blueprint (read natively, no conversion needed)
+> - An HTTP(S) URL to an .dlr, .dbl, .rrd or .rbl file to load
 > - A path to an image or mesh, or any other file that Dalaran can load (see https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview)
 >
 > If no arguments are given, a server will be hosted which a Dalaran SDK can connect to.
@@ -335,6 +337,55 @@ It's closer to an API key than an access token, as it can be revoked before it e
 > [`read`, `read-write`]
 >
 > [Default: `read`]
+
+## dalaran convert
+
+Convert supported files into a single Dalaran .dlr recording.
+
+The same importers the Viewer uses are reused here, so anything that can be dragged into the Viewer can be converted: MCAP (including ROS 2 and Foxglove messages), ROS bags exported to MCAP, URDF robot descriptions, meshes, point clouds, images, video, Parquet, `LeRobot` datasets, and of course Dalaran recordings themselves — including the legacy Rerun `.rrd`/`.rbl` spelling.
+
+Multiple inputs are merged into one output file. Recordings keep their own identity (store id) unless `--app-id` is given, in which case every store is retargeted to that application.
+
+Examples:
+
+* Convert an MCAP file recorded on a robot:
+  `dalaran convert session.mcap -o session.dlr`
+
+* Merge a robot description and a log into one recording:
+  `dalaran convert robot.urdf session.mcap -o session.dlr --app-id my_robot`
+
+* Normalize a legacy Rerun recording (Dalaran can also read it as-is):
+  `dalaran convert legacy.rrd -o legacy.dlr`
+
+* List everything this build can ingest:
+  `dalaran convert --list-formats`
+
+**Usage**: `dalaran convert [OPTIONS] [INPUT]…`
+
+**Arguments**
+
+* `<INPUT>`
+> The files (or directories) to convert.
+>
+> Directories are traversed recursively, like they are in the Viewer.
+
+**Options**
+
+* `-o, --output <OUTPUT.dlr>`
+> Where to write the resulting recording.
+>
+> Required unless `--list-formats` is passed.
+
+* `--app-id <ID>`
+> Force the application id of every converted store.
+>
+> By default each importer picks one, usually derived from the input file name.
+
+* `--overwrite`
+> Overwrite the output file if it already exists.
+
+* `--list-formats`
+> Print every file extension this build can ingest, then exit.
 
 ## dalaran download
 
