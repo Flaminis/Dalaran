@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ros2_turtlebot"
+version = "0.1.0"
+readme = "README.md"
+dependencies = ["numpy", "dalaran-sdk"]
+
+[project.scripts]
+ros2_turtlebot = "ros2_turtlebot:main"
+
+[tool.dalaran-example]
+#skip = false
+extra-args = ["simulate", "--steps=200"]
