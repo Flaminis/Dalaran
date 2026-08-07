@@ -165,7 +165,6 @@ def lint_url(url: str) -> str | None:
         "https://github.com/Flaminis/Dalaran/blob/main/CODE_OF_CONDUCT.md",
         "https://github.com/Flaminis/Dalaran/blob/main/CONTRIBUTING.md",
         "https://github.com/Flaminis/Dalaran/blob/main/LICENSE",
-        "https://github.com/Flaminis/Dalaran/blob/main/LICENSE",
     }
 
     if url in ALLOW_LIST_URLS:
