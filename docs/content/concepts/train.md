@@ -30,7 +30,7 @@ For timestamp timelines, `FixedRateSampling` defines the sampling grid and the s
 
 ### Decoders
 
-Each `Field` has a `ColumnDecoder` ([`_decoders.py`](https://github.com/Flaminis/Dalaran/blob/main/rerun_py/rerun_sdk/rerun/experimental/dataloader/_decoders.py)) that converts a raw Arrow column to a `torch.Tensor`:
+Each `Field` has a `ColumnDecoder` ([`_decoders.py`](https://github.com/Flaminis/Dalaran/blob/main/dalaran_py/dalaran_sdk/dalaran/experimental/dataloader/_decoders.py)) that converts a raw Arrow column to a `torch.Tensor`:
 
 - [`NumericDecoder`](https://ref.dalaran.dev/docs/python/stable/experimental_dataloader/#dalaran.experimental.dataloader.NumericDecoder) — scalars and numeric lists
 - [`ImageDecoder`](https://ref.dalaran.dev/docs/python/stable/experimental_dataloader/#dalaran.experimental.dataloader.ImageDecoder) — JPEG/PNG blobs

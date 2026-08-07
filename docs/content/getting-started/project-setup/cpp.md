@@ -23,7 +23,7 @@ add_executable(example_project main.cpp)
 # Download the dalaran_sdk
 include(FetchContent)
 FetchContent_Declare(dalaran_sdk URL
-    https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip)
+    https://github.com/Flaminis/Dalaran/releases/latest/download/dalaran_cpp_sdk.zip)
 FetchContent_MakeAvailable(dalaran_sdk)
 
 # Link against dalaran_sdk.
