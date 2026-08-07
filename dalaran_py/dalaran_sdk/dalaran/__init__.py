@@ -27,6 +27,7 @@ from . import (
     blueprint as blueprint,
     catalog as catalog,
     experimental as experimental,
+    robot as robot,
     server as server,
     urdf as urdf,
 )
