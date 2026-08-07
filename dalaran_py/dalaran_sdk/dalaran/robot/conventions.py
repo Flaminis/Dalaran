@@ -182,9 +182,7 @@ def convert_frame_convention(
         return homogeneous @ arr @ homogeneous.T
 
     if arr.ndim == 0 or arr.shape[-1] != 3:
-        msg = (
-            f"Expected a (4, 4) transform or an array with a trailing dimension of 3, got shape {arr.shape}"
-        )
+        msg = f"Expected a (4, 4) transform or an array with a trailing dimension of 3, got shape {arr.shape}"
         raise ValueError(msg)
 
     return arr @ rot.T

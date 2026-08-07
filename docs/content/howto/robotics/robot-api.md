@@ -36,7 +36,7 @@ for step in range(200):
 
 ## Transform trees
 
-A [`TransformTree`](https://www.dalaran.dev/docs/reference/python/robot) maps
+A `TransformTree` maps
 named coordinate frames onto Dalaran entity paths. Declaring
 `world -> base_link -> lidar` gives the entity path `world/base_link/lidar`, and
 `tree.set("lidar", ...)` logs a `Transform3D` on exactly that entity.
@@ -86,7 +86,7 @@ between frames.
 
 ## Robots and joints
 
-[`Robot`](https://www.dalaran.dev/docs/reference/python/robot) owns a transform
+`Robot` owns a transform
 tree, a timeline and the odometry trail.
 
 ```python
