@@ -13,7 +13,7 @@ use crate::{SerializationResult, SerializedComponentBatch};
 ///
 /// Have a look at our [Custom Data Importer] example to learn more about handwritten bundles.
 ///
-/// [IDL definitions]: https://github.com/Flaminis/Dalaran/tree/latest/crates/store/dl_sdk_types/definitions/rerun
+/// [IDL definitions]: https://github.com/Flaminis/Dalaran/tree/latest/crates/store/dl_sdk_types/definitions/dalaran
 /// [Custom Data Importer]: https://github.com/Flaminis/Dalaran/blob/latest/examples/rust/custom_importer
 /// [`Component`]: [crate::Component]
 pub trait AsComponents {

@@ -3,7 +3,7 @@
 \tableofcontents
 
 The Dalaran C++ SDK is meant to be built from source and everything described on this page will do just that.
-Its [CMake build script](https://github.com/Flaminis/Dalaran/blob/latest/rerun_cpp/CMakeLists.txt)
+Its [CMake build script](https://github.com/Flaminis/Dalaran/blob/latest/dalaran_cpp/CMakeLists.txt)
 is ready to be used from outside of the Dalaran repo.
 
 ## Download via FetchContent
@@ -25,7 +25,7 @@ All other workflows and configuration are there to best address more specific ne
 
 ## From Dalaran repository
 
-Alternatively, you can add the source of `https://github.com/Flaminis/Dalaran/blob/latest/rerun_cpp/` directly to your own
+Alternatively, you can add the source of `https://github.com/Flaminis/Dalaran/blob/latest/dalaran_cpp/` directly to your own
 project and then use `add_subdirectory`.
 
 In this case you will also need to make sure the Dalaran C static libraries are available for your target platforms.
@@ -104,7 +104,7 @@ to pick up a system-version of Arrow instead of the one you built against.
 ## DALARAN_C_LIB
 Path to the static Dalaran C library to link against.
 
-`dalaran_c` is a static library built from a [Rust crate](https://github.com/Flaminis/Dalaran/tree/latest/crates/top/rerun_c).
+`dalaran_c` is a static library built from a [Rust crate](https://github.com/Flaminis/Dalaran/tree/latest/crates/top/dalaran_c).
 It provides a minimalistic C interface that encapsulates the shared building blocks of all Dalaran SDKs.
 
 By default points to where a pre-built library for the currently active platform

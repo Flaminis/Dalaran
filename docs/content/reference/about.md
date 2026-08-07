@@ -8,7 +8,7 @@ To learn more about Dalaran, the company, visit our Website at [https://www.dala
 Code & License
 --------------
 The Dalaran SDK & Viewer are open source, all code is available on [GitHub](https://github.com/Flaminis/Dalaran/) and open for contributions.
-Licensing is permissive, the project is dual licensed under [MIT](https://github.com/Flaminis/Dalaran/blob/main/LICENSE-MIT) & [Apache 2.0](https://github.com/Flaminis/Dalaran/blob/main/LICENSE-APACHE).
+Licensing is permissive, the project is dual licensed under & [Apache 2.0](https://github.com/Flaminis/Dalaran/blob/main/LICENSE).
 
 
 Under the hood

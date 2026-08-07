@@ -64,12 +64,12 @@ Check the [general doc page on types](https://www.dalaran.dev/docs/reference/typ
 
 From a build system perspective, the SDK consists of three dependencies:
 
-* [C++ SDK source](https://github.com/Flaminis/Dalaran/tree/latest/rerun_cpp/src/)
+* [C++ SDK source](https://github.com/Flaminis/Dalaran/tree/latest/dalaran_cpp/src/)
   * This includes **both** source and header files!
   * To avoid compatibility issues across different platforms, compiler versions and C++ standard library versions
 we recommend to build the C++ SDK directly from source.
 Note that this also what happens when you follow the CMake setup in the [quickstart guide](https://www.dalaran.dev/docs/getting-started/data-in/cpp).
-* [dalaran_c](https://github.com/Flaminis/Dalaran/tree/latest/crates/top/rerun_c/) static libraries
+* [dalaran_c](https://github.com/Flaminis/Dalaran/tree/latest/crates/top/dalaran_c/) static libraries
   * Dalaran C is a minimal C SDK and forms the bridge to the shared Rust codebase
   * Due to the rigidity of the C ABI and lack of complex standard library types in the interface,
     compatibility issues between compilers are less of a concern
@@ -84,7 +84,7 @@ Note that this also what happens when you follow the CMake setup in the [quickst
 For convenience, Dalaran provides a C++ SDK bundle with every release.
 You can find the latest release artifacts [here](https://github.com/Flaminis/Dalaran/releases/latest).
 
-This is a simple zip archive containing the SDK from the [repository](https://github.com/Flaminis/Dalaran/tree/latest/rerun_cpp)
+This is a simple zip archive containing the SDK from the [repository](https://github.com/Flaminis/Dalaran/tree/latest/dalaran_cpp)
 (excluding the `tests` folder) and a `lib` folder with prebuilt dalaran_c libraries for all major desktop platforms.
 The dalaran_c libraries follow a simple name schema that the CMake script can pick up.
 
@@ -99,7 +99,7 @@ how to use the SDK's `CMakeLists.txt` and an overview over all CMake configurati
 We don't have first class support for other build systems yet,
 but it should be possible to setup Dalaran C++ without CMake fairly easily:
 
-You have to add all files from the [src/](https://github.com/Flaminis/Dalaran/tree/latest/rerun_cpp/src/) folder
+You have to add all files from the [src/](https://github.com/Flaminis/Dalaran/tree/latest/dalaran_cpp/src/) folder
 either directly to your project or a library.
 In addition, you need to link the `dalaran_c` libraries and the [Arrow C++ library](https://arrow.apache.org/docs/cpp/index.html).
 For more information on how to install Arrow, see [Install Arrow C++](arrow_cpp_install.md).

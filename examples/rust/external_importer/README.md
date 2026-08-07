@@ -1,6 +1,6 @@
 ---
 title: External importer example
-python: https://github.com/Flaminis/Dalaran/tree/latest/examples/python/external_importer/rerun-importer-python-file.py
+python: https://github.com/Flaminis/Dalaran/tree/latest/examples/python/external_importer/dalaran-importer-python-file.py
 rust: https://github.com/Flaminis/Dalaran/tree/latest/examples/rust/external_importer/src/main.rs
 cpp: https://github.com/Flaminis/Dalaran/tree/latest/examples/cpp/external_importer/main.cpp
 thumbnail: https://static.rerun.io/external_data_loader_rs/74eecea3b16fee7fab01045e3bfdd90ba6c59bc9/480w.png
