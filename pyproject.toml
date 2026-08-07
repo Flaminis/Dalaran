@@ -141,7 +141,7 @@ examples = [
 ]
 docs = [
   # Documentation build dependencies (mkdocs and plugins)
-  "griffe>=1.14,<2",
+  "griffe>=1.14,<3",
   "griffe-public-redundant-aliases==0.3.0",
   "griffe-warnings-deprecated==1.1.0",
   "mkdocs==1.6.1",
