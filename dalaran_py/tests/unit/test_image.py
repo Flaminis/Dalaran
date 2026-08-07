@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 import torch
 from dalaran.archetypes.image import Image
 from dalaran.datatypes.tensor_data import TensorData

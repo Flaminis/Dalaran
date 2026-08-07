@@ -10,10 +10,10 @@ from __future__ import annotations
 
 from typing import Any
 
+import dalaran as dl
 import numpy as np
 import numpy.typing as npt
 import pytest
-import dalaran as dl
 
 
 def get_color_column(columns: list[Any]) -> list[Any]:

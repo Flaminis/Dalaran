@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import pytest
 import dalaran as dl
 import dalaran.blueprint as dlb
+import pytest
 
 
 def test_background_construction() -> None:

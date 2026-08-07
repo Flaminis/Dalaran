@@ -58,7 +58,9 @@ logger = logging.getLogger("dalaran")
 # token can reset cleanly. The name "object" rather than the concrete
 # `_MetricsCollectorHandle` keeps this module importable when the catalog
 # bindings aren't available in the local build.
-_active_collectors: ContextVar[tuple[object, ...]] = ContextVar("dalaran_query_metrics_collectors", default=())  # NOLINT
+_active_collectors: ContextVar[tuple[object, ...]] = ContextVar(
+    "dalaran_query_metrics_collectors", default=()
+)  # NOLINT
 
 
 @dataclass(frozen=True)

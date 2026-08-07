@@ -3,9 +3,9 @@ from __future__ import annotations
 import pprint
 from typing import TYPE_CHECKING
 
+import dalaran as dl
 import polars as pl
 import pyarrow as pa
-import dalaran as dl
 from inline_snapshot import snapshot as inline_snapshot
 
 if TYPE_CHECKING:

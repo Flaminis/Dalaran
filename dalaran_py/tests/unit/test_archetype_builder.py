@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import dalaran as dl
 import numpy as np
 import pyarrow as pa
-import dalaran as dl
 
 
 def test_archetype_builder() -> None:

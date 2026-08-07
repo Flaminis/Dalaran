@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 from dalaran.components import TensorData, TensorDataBatch
 from dalaran.datatypes import TensorBuffer, TensorDataLike
 

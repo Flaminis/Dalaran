@@ -4,10 +4,10 @@ import os
 import tempfile
 from typing import TYPE_CHECKING
 
-import pytest
 import dalaran as dl
-from inline_snapshot import snapshot as inline_snapshot
+import pytest
 from dalaran.catalog import AlreadyExistsError, OnDuplicateSegmentLayer, SegmentRegistrationResult
+from inline_snapshot import snapshot as inline_snapshot
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator, Sequence

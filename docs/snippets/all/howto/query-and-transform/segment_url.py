@@ -50,7 +50,9 @@ meta_df = ctx.from_arrow(meta)
 # endregion: setup
 
 # region: basic
-basic = view.segment_table().select("dalaran_segment_id").sort("dalaran_segment_id")
+basic = (
+    view.segment_table().select("dalaran_segment_id").sort("dalaran_segment_id")
+)
 basic = basic.with_column("url", segment_url(dataset))
 for url in basic.select("url").to_pydict()["url"]:
     print(url)
@@ -99,7 +101,11 @@ for url in sel.select("url").to_pydict()["url"]:
 
 # region: combined
 combined = view.segment_table(join_meta=meta_df).select(
-    "dalaran_segment_id", "event_time", "range_start", "range_end", "entity_path"
+    "dalaran_segment_id",
+    "event_time",
+    "range_start",
+    "range_end",
+    "entity_path",
 )
 combined = combined.sort("dalaran_segment_id")
 combined = combined.with_column(

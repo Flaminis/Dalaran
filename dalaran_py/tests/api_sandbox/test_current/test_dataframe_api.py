@@ -3,8 +3,8 @@ from __future__ import annotations
 import datetime
 from typing import TYPE_CHECKING
 
-import numpy as np
 import dalaran as dl
+import numpy as np
 from datafusion import col, lit
 from datafusion.functions import in_list
 from inline_snapshot import snapshot as inline_snapshot

@@ -3,8 +3,8 @@ from __future__ import annotations
 import itertools
 from typing import TYPE_CHECKING
 
-import numpy as np
 import dalaran as dl
+import numpy as np
 from dalaran.components import PinholeProjectionBatch, ResolutionBatch, ViewCoordinatesBatch
 
 if TYPE_CHECKING:

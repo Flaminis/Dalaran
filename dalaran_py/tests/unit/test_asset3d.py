@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pathlib
 
-import numpy as np
 import dalaran as dl
+import numpy as np
 
 CUBE_FILEPATH = pathlib.Path(__file__).parent.parent.parent.parent / "tests" / "assets" / "mesh" / "cube.glb"
 assert CUBE_FILEPATH.is_file()

@@ -3,10 +3,10 @@ from __future__ import annotations
 import math
 from pathlib import Path
 
-import pyarrow as pa
-import pytest
 import dalaran as dl
 import dalaran.urdf as rru
+import pyarrow as pa
+import pytest
 from dalaran.experimental import Chunk, DeriveLens, LazyChunkStream, RrdReader, Selector, StreamingReader
 
 REPO_ROOT = Path(__file__).resolve().parents[3]

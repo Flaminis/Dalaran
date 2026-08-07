@@ -33,12 +33,12 @@ from dalaran._tracing import tracing_scope, with_tracing
 from dalaran.catalog import CatalogClient
 from dalaran.experimental.dataloader import (
     BlockShuffle,
+    DalaranIterableDataset,
+    DalaranMapDataset,
     DataSource,
     Field,
     NoShuffle,
     NumericDecoder,
-    DalaranIterableDataset,
-    DalaranMapDataset,
     SampleShuffle,
     ShuffleStrategy,
     VideoFrameDecoder,

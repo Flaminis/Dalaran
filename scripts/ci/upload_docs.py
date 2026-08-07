@@ -591,7 +591,8 @@ def main(argv: Iterable[str] | None = None) -> int:
     pu.add_argument("--mark-latest", action="store_true", help="set this version as `latest` in versions.json")
     pu.add_argument("--dalaran-commit", help="override the dalaran commit SHA (default: git HEAD)")
     pu.add_argument(
-        "--dalaran-root", help="path to a dalaran checkout to read docs/examples from (default: this monorepo's dalaran/)"
+        "--dalaran-root",
+        help="path to a dalaran checkout to read docs/examples from (default: this monorepo's dalaran/)",
     )
 
     pd = sub.add_parser("delete", help="delete a version")

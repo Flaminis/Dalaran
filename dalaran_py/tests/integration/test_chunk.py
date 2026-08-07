@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import dalaran as dl
 import pyarrow as pa
 import pytest
-import dalaran as dl
-from inline_snapshot import snapshot as inline_snapshot
 from dalaran.experimental import Chunk, DeriveLens, LazyChunkStream, Lens, MutateLens, RrdReader, Selector
+from inline_snapshot import snapshot as inline_snapshot
 
 if TYPE_CHECKING:
     from pathlib import Path

@@ -1,4 +1,5 @@
-"""Test configuration for the Dalaran Python unit tests.
+"""
+Test configuration for the Dalaran Python unit tests.
 
 Some parts of the SDK are deliberately pure Python + numpy (`dalaran.robot`,
 `dalaran.tools`, `dalaran.ros2`) so that they can be reasoned about, tested and

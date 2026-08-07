@@ -217,7 +217,9 @@ def save(
     """
 
     if not is_recording_enabled(recording):
-        logging.warning("Dalaran is disabled - save() call ignored. You must call dalaran.init before saving a recording.")
+        logging.warning(
+            "Dalaran is disabled - save() call ignored. You must call dalaran.init before saving a recording."
+        )
         return
 
     from dalaran.recording_stream import get_application_id
@@ -281,7 +283,9 @@ def stdout(
     """
 
     if not is_recording_enabled(recording):
-        logging.warning("Dalaran is disabled - save() call ignored. You must call dalaran.init before saving a recording.")
+        logging.warning(
+            "Dalaran is disabled - save() call ignored. You must call dalaran.init before saving a recording."
+        )
         return
 
     from dalaran.recording_stream import get_application_id

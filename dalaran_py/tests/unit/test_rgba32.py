@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 from dalaran.datatypes import Rgba32ArrayLike, Rgba32Batch
 from dalaran.error_utils import DalaranWarning
 

@@ -3,8 +3,8 @@ from __future__ import annotations
 import itertools
 from typing import TYPE_CHECKING, cast
 
-import numpy as np
 import dalaran as dl
+import numpy as np
 from dalaran.components import Position3DBatch, Vector3DBatch
 
 from .common_arrays import (

@@ -7,8 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import pytest
 import dalaran as dl
+import pytest
 from dalaran.experimental import ChunkStore, RrdReader
 
 if TYPE_CHECKING:

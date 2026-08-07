@@ -3,10 +3,10 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
+import dalaran as dl
 import numpy as np
 import pyarrow as pa
 import pytest
-import dalaran as dl
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

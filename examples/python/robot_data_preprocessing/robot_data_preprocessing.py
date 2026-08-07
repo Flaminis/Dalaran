@@ -20,7 +20,15 @@ from pathlib import Path
 import pyarrow as pa
 
 import dalaran as dl
-from dalaran.experimental import Chunk, DeriveLens, LazyChunkStream, McapReader, MutateLens, OptimizationProfile, Selector
+from dalaran.experimental import (
+    Chunk,
+    DeriveLens,
+    LazyChunkStream,
+    McapReader,
+    MutateLens,
+    OptimizationProfile,
+    Selector,
+)
 from dalaran.urdf import UrdfTree
 
 PARENT_DIR = Path(__file__).parent

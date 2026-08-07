@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING
 
 import pyarrow as pa
 import pytest
-from datafusion import SessionContext
 from dalaran.utilities.datafusion.collect import collect_to_string_list
+from datafusion import SessionContext
 
 if TYPE_CHECKING:
     from datafusion import DataFrame

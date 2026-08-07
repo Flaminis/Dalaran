@@ -5,11 +5,11 @@ from __future__ import annotations
 import subprocess
 from typing import TYPE_CHECKING
 
+import dalaran as dl
 import pyarrow.compute as pc
 import pytest
-import dalaran as dl
-from inline_snapshot import snapshot as inline_snapshot
 from dalaran.experimental import Chunk, DeriveLens, LazyChunkStream, MutateLens, RrdReader, Selector
+from inline_snapshot import snapshot as inline_snapshot
 
 from .conftest import TEST_APP_ID as APP_ID, TEST_RECORDING_ID as RECORDING_ID
 

@@ -3,9 +3,9 @@ from __future__ import annotations
 import itertools
 from typing import TYPE_CHECKING, Any, cast
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 import torch
 from dalaran.components.line_strip3d import LineStrip3DArrayLike, LineStrip3DBatch
 from dalaran.datatypes import Float32ArrayLike, Vec3D

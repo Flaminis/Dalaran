@@ -11,18 +11,18 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
 import av
+import dalaran as dl
 import numpy as np
 import pyarrow as pa
 import pytest
-import dalaran as dl
 import torch
 from av.bitstream import BitStreamFilterContext
 from dalaran.experimental.dataloader import (
+    DalaranMapDataset,
     DataSource,
     Field,
     FixedRateSampling,
     NumericDecoder,
-    DalaranMapDataset,
     VideoFrameDecoder,
 )
 

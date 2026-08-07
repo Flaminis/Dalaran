@@ -23,6 +23,8 @@ if TYPE_CHECKING:
 __all__ = [
     "BlockShuffle",
     "ColumnDecoder",
+    "DalaranIterableDataset",
+    "DalaranMapDataset",
     "DataSource",
     "Field",
     "FixedRateSampling",
@@ -30,8 +32,6 @@ __all__ = [
     "Manifest",
     "NoShuffle",
     "NumericDecoder",
-    "DalaranIterableDataset",
-    "DalaranMapDataset",
     "SampleIndex",
     "SampleShuffle",
     "SegmentMetadata",

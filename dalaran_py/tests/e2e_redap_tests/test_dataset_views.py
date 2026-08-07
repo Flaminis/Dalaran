@@ -9,8 +9,8 @@ import datafusion as dfn
 import numpy as np
 import pyarrow as pa
 import pytest
-from inline_snapshot import snapshot as inline_snapshot
 from dalaran.catalog import ContentFilter
+from inline_snapshot import snapshot as inline_snapshot
 
 if TYPE_CHECKING:
     from pathlib import Path

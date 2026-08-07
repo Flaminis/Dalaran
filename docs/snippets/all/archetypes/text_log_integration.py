@@ -1,4 +1,4 @@
-"""Shows integration of Dalaran's `TextLog` with the native logging interface."""
+"""Shows integration of Dalaran's `TextLog` with Python's `logging` module."""
 
 import logging
 

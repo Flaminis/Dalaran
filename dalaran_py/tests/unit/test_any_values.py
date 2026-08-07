@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
+import dalaran as dl
 import numpy as np
 import pyarrow as pa
 import pytest
-import dalaran as dl
 from dalaran.error_utils import DalaranWarning
 
 

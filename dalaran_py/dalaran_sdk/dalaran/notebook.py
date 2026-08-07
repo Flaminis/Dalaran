@@ -59,8 +59,8 @@ __all__ = [
 
 HAS_NOTEBOOK = True
 try:
-    from ipywidgets import HTML as _HTML, VBox as _VBox
     from dalaran_notebook import ErrorWidget as _ErrorWidget, Viewer as _Viewer
+    from ipywidgets import HTML as _HTML, VBox as _VBox
 except ModuleNotFoundError:
     HAS_NOTEBOOK = False
 

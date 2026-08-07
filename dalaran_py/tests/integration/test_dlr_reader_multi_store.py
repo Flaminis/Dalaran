@@ -5,10 +5,10 @@ from __future__ import annotations
 import subprocess
 from typing import TYPE_CHECKING
 
-import pytest
 import dalaran as dl
-from inline_snapshot import snapshot as inline_snapshot
+import pytest
 from dalaran.experimental import RrdReader
+from inline_snapshot import snapshot as inline_snapshot
 
 if TYPE_CHECKING:
     from pathlib import Path

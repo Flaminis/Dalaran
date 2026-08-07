@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import pyarrow as pa
+from dalaran.utilities.datafusion.functions.url_generation import segment_url
 from datafusion import SessionContext, col, lit
 from inline_snapshot import snapshot as inline_snapshot
-from dalaran.utilities.datafusion.functions.url_generation import segment_url
 
 from ._helpers import redact_segment_url
 

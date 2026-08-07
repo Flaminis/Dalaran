@@ -127,7 +127,9 @@ def update_url_map_rewrite_rules(project: str, version: str, language: str, dry_
 
     if not any("docs.dalaran.dev" in hr.hosts for hr in url_map.host_rules):
         logging.info("Adding host rule for docs.dalaran.dev")
-        url_map.host_rules.append(compute_v1.types.HostRule(hosts=["docs.dalaran.dev"], path_matcher="prose-path-matcher"))
+        url_map.host_rules.append(
+            compute_v1.types.HostRule(hosts=["docs.dalaran.dev"], path_matcher="prose-path-matcher")
+        )
 
     # --- Update stable rewrite rules for ref.dalaran.dev ---
 

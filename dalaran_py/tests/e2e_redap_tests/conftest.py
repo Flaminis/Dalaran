@@ -13,9 +13,9 @@ import platform
 import re
 from typing import TYPE_CHECKING
 
+import dalaran as dl
 import pyarrow as pa
 import pytest
-import dalaran as dl
 from dalaran.catalog import CatalogClient, TableEntry
 from dalaran.server import Server
 from syrupy.extensions.amber import AmberSnapshotExtension

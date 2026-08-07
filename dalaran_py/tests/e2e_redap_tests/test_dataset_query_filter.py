@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from datafusion import Expr, col, functions as f, lit
 from dalaran.experimental import query_metrics
+from datafusion import Expr, col, functions as f, lit
 
 if TYPE_CHECKING:
     import pyarrow as pa
@@ -102,7 +102,9 @@ def test_df_filters(catalog_client: CatalogClient, readonly_test_dataset: Datase
                 _PUSHABLE,
             ),
             (
-                (col("dalaran_segment_id") == segments[0]) & (col(time_index) > s1_lower) & (col(time_index) < s1_upper),
+                (col("dalaran_segment_id") == segments[0])
+                & (col(time_index) > s1_lower)
+                & (col(time_index) < s1_upper),
                 _PUSHABLE,
             ),
             # Segment + time combinations with no results — still pushable shape.

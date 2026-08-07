@@ -3,8 +3,8 @@ from __future__ import annotations
 import importlib
 from unittest.mock import Mock, patch
 
-import pytest
 import dalaran.utilities.datafusion.functions.url_generation
+import pytest
 from dalaran.error_utils import DalaranMissingDependencyError
 
 

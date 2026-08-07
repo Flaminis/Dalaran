@@ -82,10 +82,10 @@ print(
 from torch.utils.data import DataLoader
 
 from dalaran.experimental.dataloader import (
+    DalaranIterableDataset,
     DataSource,
     Field,
     NumericDecoder,
-    DalaranIterableDataset,
 )
 
 ds = DalaranIterableDataset(

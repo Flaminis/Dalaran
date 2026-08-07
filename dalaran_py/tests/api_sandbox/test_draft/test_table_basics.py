@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import pyarrow as pa
 import dalaran_draft as dl
+import pyarrow as pa
 from inline_snapshot import snapshot as inline_snapshot
 
 

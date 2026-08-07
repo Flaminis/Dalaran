@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import pytest
 import dalaran as dl
+import pytest
 from dalaran.experimental import Chunk
 
 

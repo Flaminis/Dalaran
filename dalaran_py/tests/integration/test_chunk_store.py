@@ -5,15 +5,15 @@ from __future__ import annotations
 import pathlib
 from typing import TYPE_CHECKING
 
-import pytest
 import dalaran as dl
-from inline_snapshot import snapshot as inline_snapshot
+import pytest
 from dalaran.experimental import (
     ChunkStore,
     LazyChunkStream,
     OptimizationProfile,
     RrdReader,
 )
+from inline_snapshot import snapshot as inline_snapshot
 
 from .conftest import TEST_APP_ID as APP_ID, TEST_RECORDING_ID as RECORDING_ID
 
@@ -105,7 +105,9 @@ def _build_video_stream_dlr(tmp_dir: Path, filename: str, codec: dl.VideoCodec) 
         }.get(codec)
         bsf = BitStreamFilterContext(filter_name, video_stream) if filter_name else None
 
-        with dl.RecordingStream("dalaran_example_video_compact", recording_id=f"video-compact-{video_path.stem}") as rec:
+        with dl.RecordingStream(
+            "dalaran_example_video_compact", recording_id=f"video-compact-{video_path.stem}"
+        ) as rec:
             rec.save(dlr_path)
             rec.log("/video", dl.VideoStream(codec=codec), static=True)
 

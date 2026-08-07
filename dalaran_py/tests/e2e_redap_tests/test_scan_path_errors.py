@@ -24,8 +24,8 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-import pytest
 import dalaran as dl
+import pytest
 from dalaran.server import Server
 
 # In debug builds, dl_server injects this fixed trace-id into every response.

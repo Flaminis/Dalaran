@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import pytest
 import dalaran as dl
+import pytest
 
 
 def test_time_range_boundary_failure_cases() -> None:

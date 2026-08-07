@@ -3,9 +3,9 @@ from __future__ import annotations
 import itertools
 from typing import Any
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 import torch
 from dalaran.components import DepthMeter, ImageFormat
 from dalaran.datatypes import ChannelDatatype, Float32Like

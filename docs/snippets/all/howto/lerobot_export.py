@@ -14,12 +14,12 @@ atexit.register(lambda: shutil.rmtree(TMP_DIR) if TMP_DIR.exists() else None)
 
 from pathlib import Path
 
-from lerobot.datasets.lerobot_dataset import (
-    LeRobotDataset,  # type: ignore[import-untyped,import-not-found]
-)
 from dalaran_lerobot.converter import convert_dataframe_to_episode
 from dalaran_lerobot.feature_inference import infer_features
 from dalaran_lerobot.types import LeRobotConversionConfig, VideoSpec
+from lerobot.datasets.lerobot_dataset import (
+    LeRobotDataset,  # type: ignore[import-untyped,import-not-found]
+)
 
 import dalaran as dl
 

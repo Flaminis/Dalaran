@@ -17,8 +17,8 @@ import datetime
 from typing import TYPE_CHECKING
 
 import pytest
-from datafusion import col, lit
 from dalaran.experimental import query_metrics
+from datafusion import col, lit
 
 if TYPE_CHECKING:
     from dalaran.catalog import DatasetEntry

@@ -21,12 +21,12 @@ from typing import TYPE_CHECKING
 
 import pyarrow as pa
 import pytest
-from datafusion import col
 from dalaran.experimental import query_metrics
+from datafusion import col
 
 if TYPE_CHECKING:
-    from datafusion import DataFrame
     from dalaran.catalog import DatasetEntry
+    from datafusion import DataFrame
     from syrupy import SnapshotAssertion
 
 
@@ -228,12 +228,17 @@ def test_filter_contents_view_narrowing_intersection(readonly_test_dataset: Data
     """
     view = readonly_test_dataset.filter_contents(["/obj1/**", "/obj2/**"])
 
-    narrowed = view.reader(index=time_idx).select("dalaran_segment_id", time_idx, OBJ1).sort("dalaran_segment_id", time_idx)
+    narrowed = (
+        view.reader(index=time_idx).select("dalaran_segment_id", time_idx, OBJ1).sort("dalaran_segment_id", time_idx)
+    )
 
     # Baseline within the same view (still excludes /obj3) — selecting both view-allowed
     # entity columns means narrowing keeps both, so this is the full row set for the view.
     full_view = (
-        view.reader(index=time_idx).select("dalaran_segment_id", time_idx, OBJ1, OBJ2).sort("dalaran_segment_id", time_idx)
+        view
+        .reader(index=time_idx)
+        .select("dalaran_segment_id", time_idx, OBJ1, OBJ2)
+        .sort("dalaran_segment_id", time_idx)
     )
 
     expected = (

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import numpy as np
 import dalaran as dl
+import numpy as np
 
 
 def test_blob() -> None:

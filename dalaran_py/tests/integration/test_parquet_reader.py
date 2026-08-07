@@ -12,10 +12,10 @@ from __future__ import annotations
 import itertools
 from typing import TYPE_CHECKING, Any
 
+import dalaran as dl
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
-import dalaran as dl
 from dalaran.experimental import Chunk, DeriveLens, IndexColumn, LazyChunkStream, ParquetReader, StreamingReader
 
 if TYPE_CHECKING:

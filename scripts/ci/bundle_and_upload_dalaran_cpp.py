@@ -71,7 +71,10 @@ def test_fetch_content(git_hash: str) -> None:
     logging.info("-> Testing without installing dalaran…")
     with tempfile.TemporaryDirectory() as testdir:
         shutil.copytree("examples/cpp/minimal/", testdir, dirs_exist_ok=True)
-        run(["cmake", f"-DDALARAN_CPP_URL=https://build.dalaran.dev/commit/{git_hash}/dalaran_cpp_sdk.zip", "."], cwd=testdir)
+        run(
+            ["cmake", f"-DDALARAN_CPP_URL=https://build.dalaran.dev/commit/{git_hash}/dalaran_cpp_sdk.zip", "."],
+            cwd=testdir,
+        )
         run(["cmake", "--build", ".", "--parallel", str(multiprocessing.cpu_count())], cwd=testdir)
 
 

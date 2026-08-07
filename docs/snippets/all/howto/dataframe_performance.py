@@ -48,7 +48,9 @@ cache_df.count()  # basically free
 # Create a new sparse layer identifying interesting events
 segment_id = dataset.segment_ids()[0]
 second_to_last_timestamp = pa.table(df)["log_time"].to_numpy()[-2]
-with dl.RecordingStream("dalaran_example_layer", recording_id=segment_id) as rec:
+with dl.RecordingStream(
+    "dalaran_example_layer", recording_id=segment_id
+) as rec:
     rec.save(DLR_PATH)
     rec.set_time("log_time", timestamp=second_to_last_timestamp)
     rec.log("/events", dl.AnyValues(flag=True))

@@ -8,8 +8,8 @@ import sys
 import time
 from typing import TYPE_CHECKING
 
-import pytest
 import dalaran as dl
+import pytest
 from dalaran.experimental import ViewerClient
 
 if TYPE_CHECKING:

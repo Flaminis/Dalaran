@@ -3,9 +3,9 @@ from __future__ import annotations
 import itertools
 from typing import TYPE_CHECKING, cast
 
-import numpy as np
 import dalaran as dl
 import dalaran.blueprint as dlb
+import numpy as np
 
 from .common_arrays import none_empty_or_value
 

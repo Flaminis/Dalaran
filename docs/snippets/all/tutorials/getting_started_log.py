@@ -3,7 +3,9 @@ import math
 import dalaran as dl
 
 with dl.RecordingStream(
-    "dalaran_example_getting_started", recording_id="run-1", send_properties=False
+    "dalaran_example_getting_started",
+    recording_id="run-1",
+    send_properties=False,
 ) as rec:
     rec.save("run-1.dlr")
     for t in range(10):

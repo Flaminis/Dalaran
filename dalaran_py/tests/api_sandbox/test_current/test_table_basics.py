@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import pyarrow as pa
 import dalaran as dl
+import pyarrow as pa
 from inline_snapshot import snapshot as inline_snapshot
 
 if TYPE_CHECKING:

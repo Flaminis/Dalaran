@@ -5,9 +5,9 @@ import math
 from fractions import Fraction
 from typing import cast
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 import torch
 from dalaran.datatypes import (
     Angle,

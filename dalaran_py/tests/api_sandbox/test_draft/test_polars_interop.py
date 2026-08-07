@@ -3,8 +3,8 @@ from __future__ import annotations
 import pprint
 from typing import TYPE_CHECKING
 
-import pyarrow as pa
 import dalaran_draft as dl
+import pyarrow as pa
 from datafusion import col, lit
 from datafusion.functions import in_list
 from inline_snapshot import snapshot as inline_snapshot

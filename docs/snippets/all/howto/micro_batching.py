@@ -18,7 +18,9 @@ config = dl.ChunkBatcherConfig(
     flush_tick=timedelta(seconds=10),
 )
 
-rec = dl.RecordingStream("dalaran_example_micro_batching", batcher_config=config)
+rec = dl.RecordingStream(
+    "dalaran_example_micro_batching", batcher_config=config
+)
 rec.spawn()
 
 # These 10 log calls are guaranteed be batched together, and end up in the

@@ -36,11 +36,11 @@ dataset.register(uris).wait()
 
 # region: describe_sample
 from dalaran.experimental.dataloader import (
+    DalaranIterableDataset,
     DataSource,
     Field,
     FixedRateSampling,
     NumericDecoder,
-    DalaranIterableDataset,
 )
 
 source = DataSource(

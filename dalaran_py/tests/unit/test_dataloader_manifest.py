@@ -18,11 +18,11 @@ import pytest
 import torch
 from dalaran.experimental.dataloader import (
     BlockShuffle,
+    DalaranIterableDataset,
     Field,
     Manifest,
     NoShuffle,
     NumericDecoder,
-    DalaranIterableDataset,
     SampleShuffle,
     _iterable_dataset as iterable_dataset,
 )

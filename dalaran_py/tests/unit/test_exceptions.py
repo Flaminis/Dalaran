@@ -3,8 +3,8 @@ from __future__ import annotations
 import inspect
 from typing import Any
 
-import pytest
 import dalaran as dl
+import pytest
 from dalaran.error_utils import DalaranWarning, catch_and_log_exceptions
 
 

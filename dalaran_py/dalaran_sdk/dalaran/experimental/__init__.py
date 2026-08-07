@@ -10,6 +10,7 @@ from __future__ import annotations
 from . import video as video
 from ._chunk import Chunk as Chunk
 from ._chunk_store import ChunkStore as ChunkStore
+from ._dlr_reader import RrdReader as RrdReader
 from ._hdf5_reader import DatasetInfo as DatasetInfo, Hdf5Reader as Hdf5Reader
 from ._index_column import IndexColumn as IndexColumn
 from ._indexed_reader import IndexedReader as IndexedReader
@@ -32,7 +33,6 @@ from ._query_metrics import (
     QueryMetrics as QueryMetrics,
     query_metrics as query_metrics,
 )
-from ._dlr_reader import RrdReader as RrdReader
 from ._selector import Selector as Selector
 from ._send_chunks import send_chunks as send_chunks
 from ._store_entry import StoreEntry as StoreEntry

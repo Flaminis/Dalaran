@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import dalaran_draft as dl
 import datafusion
 import pyarrow as pa
-import dalaran_draft as dl
 from inline_snapshot import snapshot as inline_snapshot
 
 

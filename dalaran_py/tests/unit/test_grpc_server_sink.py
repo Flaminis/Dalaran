@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import pytest
 import dalaran as dl
+import pytest
 
 
 def test_grpc_server_sink_creation() -> None:

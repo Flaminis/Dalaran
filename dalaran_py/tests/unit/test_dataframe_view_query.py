@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import pytest
 import dalaran as dl
 import dalaran.blueprint.components as blueprint_components
+import pytest
 from dalaran import TimeInt, datatypes
 from dalaran.blueprint.archetypes import DataframeQuery
 

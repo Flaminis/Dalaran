@@ -393,7 +393,9 @@ def lint_line(
         #   - 'catalog server' → generic OSS or managed
         #   - or rephrase to avoid naming the product
         # Matched case-insensitively so that lowercase variants (e.g. 'dalaran cloud') are also caught.
-        deprecated_msg = "is a deprecated name. Use 'Dalaran Hub' (commercial), 'catalog server' (generic), or rephrase."
+        deprecated_msg = (
+            "is a deprecated name. Use 'Dalaran Hub' (commercial), 'catalog server' (generic), or rephrase."
+        )
         if deprecated_dalaran_cloud.search(line):
             return f"'Dalaran Cloud' {deprecated_msg}"
         if deprecated_dalaran_base.search(line):

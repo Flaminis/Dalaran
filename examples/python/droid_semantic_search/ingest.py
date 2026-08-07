@@ -202,10 +202,10 @@ def compute_embedding_table(
     from tqdm import tqdm
 
     from dalaran.experimental.dataloader import (
+        DalaranMapDataset,
         DataSource,
         Field,
         FixedRateSampling,
-        DalaranMapDataset,
         VideoFrameDecoder,
     )
 

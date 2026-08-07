@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import pytest
 import dalaran as dl
+import pytest
 
 
 def test_visible_time_ranges_warns_on_duplicate_entry() -> None:

@@ -7,8 +7,8 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import pytest
 import dalaran as dl
+import pytest
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

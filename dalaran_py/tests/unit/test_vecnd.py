@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from fractions import Fraction
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 from dalaran.datatypes import (
     Vec2D,
     Vec2DArrayLike,

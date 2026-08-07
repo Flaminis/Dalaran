@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import pytest
 import dalaran as dl
+import pytest
 from dalaran.experimental import (
     LazyStore,
     OptimizationProfile,

@@ -5,10 +5,9 @@ from __future__ import annotations
 import uuid
 from typing import TYPE_CHECKING
 
+import dalaran as dl
 import pyarrow as pa
 import pytest
-import dalaran as dl
-from inline_snapshot import snapshot as inline_snapshot
 from dalaran import (
     DALARAN_KIND,
     DALARAN_KIND_CONTROL,
@@ -20,6 +19,7 @@ from dalaran import (
     SORBET_INDEX_NAME,
 )
 from dalaran.experimental import RrdReader
+from inline_snapshot import snapshot as inline_snapshot
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -165,7 +165,9 @@ def test_index_kind_without_index_name(
     schema = pa.schema([
         pa.field("my_time", index.type, metadata={DALARAN_KIND: DALARAN_KIND_INDEX}),
         pa.field(
-            "/e:C:c", _VALUES.type, metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"}
+            "/e:C:c",
+            _VALUES.type,
+            metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"},
         ),
     ])
     [chunk] = send_dataframe_and_get_chunks(pa.Table.from_arrays([index, _VALUES], schema=schema))
@@ -206,10 +208,14 @@ def test_multiple_entities(
     schema = pa.schema([
         pa.field("frame", index.type, metadata={SORBET_INDEX_NAME: b"frame", DALARAN_KIND: DALARAN_KIND_INDEX}),
         pa.field(
-            "/a:C:c", _VALUES.type, metadata={SORBET_ENTITY_PATH: b"/a", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"}
+            "/a:C:c",
+            _VALUES.type,
+            metadata={SORBET_ENTITY_PATH: b"/a", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"},
         ),
         pa.field(
-            "/b:C:c", _VALUES.type, metadata={SORBET_ENTITY_PATH: b"/b", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"}
+            "/b:C:c",
+            _VALUES.type,
+            metadata={SORBET_ENTITY_PATH: b"/b", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"},
         ),
     ])
     chunks = send_dataframe_and_get_chunks(pa.Table.from_arrays([index, _VALUES, _VALUES], schema=schema))
@@ -234,7 +240,9 @@ def test_control_kind_is_treated_as_row_id() -> None:
         pa.field("frame", index.type, metadata={SORBET_INDEX_NAME: b"frame", DALARAN_KIND: DALARAN_KIND_INDEX}),
         pa.field("ctrl", control.type, metadata={DALARAN_KIND: DALARAN_KIND_CONTROL}),
         pa.field(
-            "/e:C:c", _VALUES.type, metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"}
+            "/e:C:c",
+            _VALUES.type,
+            metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"},
         ),
     ])
     rb = pa.RecordBatch.from_arrays([index, control, _VALUES], schema=schema)
@@ -272,7 +280,9 @@ def test_no_index_is_ambiguous() -> None:
 
     schema = pa.schema([
         pa.field(
-            "/e:C:c", _VALUES.type, metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"}
+            "/e:C:c",
+            _VALUES.type,
+            metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"},
         ),
     ])
     with pytest.raises(ValueError):
@@ -305,7 +315,9 @@ def test_static_index_none_with_index_metadata_is_contradiction(
     schema = pa.schema([
         pa.field("frame", index.type, metadata={SORBET_INDEX_NAME: b"frame", DALARAN_KIND: DALARAN_KIND_INDEX}),
         pa.field(
-            "/e:C:c", _VALUES.type, metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"}
+            "/e:C:c",
+            _VALUES.type,
+            metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"},
         ),
     ])
     with pytest.raises(ValueError):
@@ -320,7 +332,9 @@ def test_record_batch_reader_input(
     schema = pa.schema([
         pa.field("frame", index.type, metadata={SORBET_INDEX_NAME: b"frame", DALARAN_KIND: DALARAN_KIND_INDEX}),
         pa.field(
-            "/e:C:c", _VALUES.type, metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"}
+            "/e:C:c",
+            _VALUES.type,
+            metadata={SORBET_ENTITY_PATH: b"/e", SORBET_COMPONENT: b"C:c", DALARAN_KIND: b"data"},
         ),
     ])
     table = pa.Table.from_arrays([index, _VALUES], schema=schema)

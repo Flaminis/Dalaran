@@ -72,7 +72,9 @@ with dl.server.Server(datasets={"dataset": dlr_paths}) as server:
     # region: query
     df = dataset.filter_contents("__properties/**").reader(index=None)
     df = df.sort("property:RecordingInfo:name").select(
-        "dalaran_segment_id", "property:RecordingInfo:name", "property:info:index"
+        "dalaran_segment_id",
+        "property:RecordingInfo:name",
+        "property:info:index",
     )
 
     print(df)

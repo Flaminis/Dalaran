@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+import dalaran_draft as dl
 import pyarrow as pa
 import pytest
-import dalaran_draft as dl
 from inline_snapshot import snapshot as inline_snapshot
 
 from .utils import sorted_schema_str
@@ -107,7 +107,12 @@ def test_dataset_register(dlr_paths: list[Path]) -> None:
         with pytest.raises(ValueError):
             ds.register([p.as_uri() for p in dlr_paths], layer_name=["not", "enough"]).wait()
 
-        df = ds._manifest().select("dalaran_layer_name", "dalaran_segment_id").sort("dalaran_layer_name", "dalaran_segment_id")
+        df = (
+            ds
+            ._manifest()
+            .select("dalaran_layer_name", "dalaran_segment_id")
+            .sort("dalaran_layer_name", "dalaran_segment_id")
+        )
         df_schema = df.schema()
         for batch in df.collect():
             assert batch.schema.equals(df_schema, check_metadata=True)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import numpy as np
 import dalaran as dl
+import numpy as np
 from dalaran.components import ClearIsRecursive, ClearIsRecursiveBatch
 
 

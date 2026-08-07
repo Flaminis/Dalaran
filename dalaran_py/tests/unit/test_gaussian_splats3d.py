@@ -1,8 +1,8 @@
 from __future__ import annotations
 
+import dalaran as dl
 import numpy as np
 import pytest
-import dalaran as dl
 
 
 def test_spherical_harmonics3rgb_accepts_coefficient_major_shapes() -> None:
