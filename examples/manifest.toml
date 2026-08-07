@@ -35,6 +35,7 @@ examples = [
   "droid_dataset",
   "droid_semantic_search",
   "animated_urdf",
+  "nav2_costmap",
   "robot_data_preprocessing",
   "dalaran_export",
   "ros_node",
