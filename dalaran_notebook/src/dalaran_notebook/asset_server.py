@@ -31,16 +31,16 @@ class AssetHandler(http.server.SimpleHTTPRequestHandler):
     def do_HEAD(self) -> None:
         if self.path == "/widget.js":
             self._serve_HEAD("widget.js")
-        elif self.path == "/re_viewer_bg.wasm":
-            self._serve_HEAD("re_viewer_bg.wasm")
+        elif self.path == "/dl_viewer_bg.wasm":
+            self._serve_HEAD("dl_viewer_bg.wasm")
         else:
             self.send_error(404, "File not found")
 
     def do_GET(self) -> None:
         if self.path == "/widget.js":  # remap this path
             self._serve_GET("widget.js")
-        elif self.path == "/re_viewer_bg.wasm":
-            self._serve_GET("re_viewer_bg.wasm")
+        elif self.path == "/dl_viewer_bg.wasm":
+            self._serve_GET("dl_viewer_bg.wasm")
         else:
             # Serve other requests normally
             self.send_error(404, "File Not Found")
@@ -88,7 +88,7 @@ def serve_assets(
         print("Loading assets into memory…")
         assets = {
             "widget.js": _Asset(WIDGET_PATH, "text/javascript"),
-            "re_viewer_bg.wasm": _Asset(WASM_PATH, "application/wasm", encode_gzip=True),
+            "dl_viewer_bg.wasm": _Asset(WASM_PATH, "application/wasm", encode_gzip=True),
         }
 
     httpd = socketserver.TCPServer((bind_address, port), AssetHandler)

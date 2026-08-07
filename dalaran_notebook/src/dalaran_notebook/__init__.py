@@ -29,7 +29,7 @@ PanelState = Literal["expanded", "collapsed", "hidden"]
 
 STATIC_DIR = pathlib.Path(__file__).parent / "static"
 WIDGET_PATH = STATIC_DIR / "widget.js"
-WASM_PATH = STATIC_DIR / "re_viewer_bg.wasm"
+WASM_PATH = STATIC_DIR / "dl_viewer_bg.wasm"
 CSS_PATH = STATIC_DIR / "widget.css"
 
 # We need to bootstrap the value of ESM_MOD before the Viewer class is instantiated.

@@ -3,7 +3,7 @@ var filesToCache = [
   "./",
   "./index.html",
   "./dl_viewer.js",
-  "./re_viewer_bg.wasm",
+  "./dl_viewer_bg.wasm",
 ];
 
 /* Start the service worker and cache all of the app's content */

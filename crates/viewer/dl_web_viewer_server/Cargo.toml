@@ -20,7 +20,7 @@ include = [
   "web_viewer/apple-touch-icon.png",
   "web_viewer/favicon.ico",
   "web_viewer/index.html",
-  "web_viewer/re_viewer_bg.wasm",
+  "web_viewer/dl_viewer_bg.wasm",
   "web_viewer/dl_viewer.js",
   "web_viewer/sw.js",
   "web_viewer/signed-in.html",

@@ -29,7 +29,7 @@ REQUIRED_FILES = [
     "apple-touch-icon.png",
     "sw.js",
     "dl_viewer.js",
-    "re_viewer_bg.wasm",
+    "dl_viewer_bg.wasm",
     "signed-in.html",
     "signed-out.html",
 ]

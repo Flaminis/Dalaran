@@ -42,8 +42,8 @@ async function fetch_viewer_wasm(
 ): Promise<Response> {
   //!<INLINE-MARKER-OPEN>
   const url = base_url
-    ? new URL("./re_viewer_bg.wasm", base_url)
-    : new URL("./re_viewer_bg.wasm", import.meta.url);
+    ? new URL("./dl_viewer_bg.wasm", base_url)
+    : new URL("./dl_viewer_bg.wasm", import.meta.url);
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(

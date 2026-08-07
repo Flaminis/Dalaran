@@ -47,13 +47,13 @@ def build_and_upload(bucket: Bucket, gcs_dir: str) -> str:
 
 
 def publish_notebook_asset(bucket: Bucket, gcs_dir: str, wheel: str) -> None:
-    """Extract widget.js and re_viewer_bg.wasm from the notebook wheel and upload to the web viewer bucket."""
+    """Extract widget.js and dl_viewer_bg.wasm from the notebook wheel and upload to the web viewer bucket."""
 
     with zipfile.ZipFile(wheel, "r") as archive:
         archive.extract("dalaran_notebook/static/widget.js", "extracted")
-        archive.extract("dalaran_notebook/static/re_viewer_bg.wasm", "extracted")
+        archive.extract("dalaran_notebook/static/dl_viewer_bg.wasm", "extracted")
 
-    for filename in ["widget.js", "re_viewer_bg.wasm"]:
+    for filename in ["widget.js", "dl_viewer_bg.wasm"]:
         local_path = f"extracted/dalaran_notebook/static/{filename}"
         blob = bucket.blob(f"{gcs_dir}/{filename}")
         print(f"Uploading {local_path} to gs://{bucket.name}/{blob.name}")
@@ -66,7 +66,7 @@ def main() -> None:
     parser.add_argument(
         "--notebook-dir",
         required=False,
-        help="Upload notebook assets (widget.js, re_viewer_bg.wasm) to the given directory in the web viewer bucket",
+        help="Upload notebook assets (widget.js, dl_viewer_bg.wasm) to the given directory in the web viewer bucket",
     )
     args = parser.parse_args()
 

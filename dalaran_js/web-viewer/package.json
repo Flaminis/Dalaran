@@ -46,8 +46,8 @@
     "index.js.map",
     "index.ts",
     "package.json",
-    "re_viewer_bg.wasm",
-    "re_viewer_bg.wasm.d.ts",
+    "dl_viewer_bg.wasm",
+    "dl_viewer_bg.wasm.d.ts",
     "dl_viewer.d.ts",
     "dl_viewer.js",
     "tsconfig.json"

@@ -3,7 +3,7 @@ dalaran_cpp/docs/**/*
 dalaran_py/docs/templates/**
 dalaran_py/site/**
 
-dalaran_js/web-viewer/re_viewer_bg.js
+dalaran_js/web-viewer/dl_viewer_bg.js
 dalaran_js/web-viewer/dl_viewer.js
 crates/viewer/dl_web_viewer_server/web_viewer/dl_viewer.js
 

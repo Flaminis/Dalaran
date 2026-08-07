@@ -11,9 +11,6 @@
     ".pixi",
     "build"
   ],
-  "ignore": [
-    "dalaran_py/dalaran"
-  ],
   "defineConstant": {
     "DEBUG": true
   },

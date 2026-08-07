@@ -38,7 +38,7 @@
 
     let urls = [
       widget_url,
-      set_url_filename(widget_url, "re_viewer_bg.wasm"),
+      set_url_filename(widget_url, "dl_viewer_bg.wasm"),
     ].map(async (url) => [url, await url_exists(url)]);
 
     let bad_urls = (await Promise.all(urls))

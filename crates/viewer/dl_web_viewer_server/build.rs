@@ -41,7 +41,7 @@ fn main() {
 
     if needs_wasm {
         let viewer_js_path = std::path::Path::new("./web_viewer/dl_viewer.js");
-        let viewer_wasm_path = std::path::Path::new("./web_viewer/re_viewer_bg.wasm");
+        let viewer_wasm_path = std::path::Path::new("./web_viewer/dl_viewer_bg.wasm");
 
         assert!(
             viewer_js_path.exists() && viewer_wasm_path.exists(),

@@ -30,7 +30,7 @@ be set prior to your import because `AnyWidget` stores the resource on the widge
 once at import time.
 
 The assets are:
-- `re_viewer_bg.wasm`, which is our Viewer compiled to Wasm, and
+- `dl_viewer_bg.wasm`, which is our Viewer compiled to Wasm, and
 - `widget.js`, which is the glue code used to bind it to a Jupyter widget.
 
 Both can be built in the [`dalaran`](https://github.com/Flaminis/Dalaran) repository by running `pixi run py-build-notebook`.
@@ -72,7 +72,7 @@ Note that we require the URL to point to a `widget.js` file, but the Wasm file m
 a URL directly adjacent to it. Your server should provide both files:
 
 - `https://your-hosted-asset-url.com/widget.js`
-- `https://your-hosted-asset-url.com/re_viewer_bg.wasm`
+- `https://your-hosted-asset-url.com/dl_viewer_bg.wasm`
 
 The `dalaran_notebook` package has a minimal server that can be used to serve the assets manually by running:
 ```

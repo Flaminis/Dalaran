@@ -207,7 +207,7 @@ impl WebViewerData {
             apple_touch_icon: extract_file(zip, "apple-touch-icon.png")?,
             sw_js: extract_file(zip, "sw.js")?,
             viewer_js: extract_file(zip, "dl_viewer.js")?,
-            viewer_wasm: extract_file(zip, "re_viewer_bg.wasm")?,
+            viewer_wasm: extract_file(zip, "dl_viewer_bg.wasm")?,
             signed_in_html: extract_file(zip, "signed-in.html")?,
             signed_out_html: extract_file(zip, "signed-out.html")?,
         })
@@ -225,7 +225,7 @@ impl WebViewerData {
             apple_touch_icon: Cow::Borrowed(include_bytes!("../web_viewer/apple-touch-icon.png")),
             sw_js: Cow::Borrowed(include_bytes!("../web_viewer/sw.js")),
             viewer_js: Cow::Borrowed(include_bytes!("../web_viewer/dl_viewer.js")),
-            viewer_wasm: Cow::Borrowed(include_bytes!("../web_viewer/re_viewer_bg.wasm")),
+            viewer_wasm: Cow::Borrowed(include_bytes!("../web_viewer/dl_viewer_bg.wasm")),
             signed_in_html: Cow::Borrowed(include_bytes!("../web_viewer/signed-in.html")),
             signed_out_html: Cow::Borrowed(include_bytes!("../web_viewer/signed-out.html")),
         })
@@ -524,7 +524,7 @@ impl WebViewerServerInner {
             "/apple-touch-icon.png" => ("image/png", data.apple_touch_icon()),
             "/sw.js" => ("text/javascript", data.sw_js()),
             "/dl_viewer.js" => ("text/javascript", data.viewer_js()),
-            "/re_viewer_bg.wasm" => {
+            "/dl_viewer_bg.wasm" => {
                 self.on_serve_wasm();
                 ("application/wasm", data.viewer_wasm())
             }
@@ -579,7 +579,7 @@ mod tests {
         "apple-touch-icon.png",
         "sw.js",
         "dl_viewer.js",
-        "re_viewer_bg.wasm",
+        "dl_viewer_bg.wasm",
         "signed-in.html",
         "signed-out.html",
     ];
@@ -607,7 +607,7 @@ mod tests {
 
         let data = WebViewerData::from_archive(&path).unwrap();
         assert_eq!(data.index_html(), b"index.html");
-        assert_eq!(data.viewer_wasm(), b"re_viewer_bg.wasm");
+        assert_eq!(data.viewer_wasm(), b"dl_viewer_bg.wasm");
         assert_eq!(data.signed_out_html(), b"signed-out.html");
     }
 
