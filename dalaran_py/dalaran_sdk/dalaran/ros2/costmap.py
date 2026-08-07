@@ -34,12 +34,18 @@ the cost boundaries can be tested without ROS, a viewer or a recording.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 import numpy as np
 
+from .occupancy_grid import occupancy_grid_placement
+
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     import numpy.typing as npt
+
+    from .occupancy_grid import GridPlacement
 
 __all__ = [
     "COST_FREE",
@@ -48,12 +54,19 @@ __all__ = [
     "COST_MAX_GRADIENT",
     "COST_NO_INFORMATION",
     "DALARAN_COST_PALETTE",
+    "DEFAULT_DRAW_ORDER_STEP",
+    "DEFAULT_UPPER_LAYER_OPACITY",
     "RVIZ_COST_PALETTE",
     "CostPalette",
     "CostScale",
+    "CostmapLayer",
+    "PlannedLayer",
+    "costmap_layer_rgba",
     "costmap_to_rgba",
+    "log_costmap_layers",
     "normalize_cost_values",
     "occupancy_byte_to_raw_cost",
+    "plan_costmap_layers",
     "raw_cost_to_occupancy_byte",
 ]
 
@@ -365,3 +378,333 @@ def costmap_to_rgba(
     out[unknown, :3] = np.asarray(palette.unknown, dtype=np.uint8)
     out[unknown, 3] = np.uint8(palette.unknown_alpha)
     return out
+
+
+# -- layered costmaps -------------------------------------------------------
+
+#: Opacity given to a stacked layer that does not ask for one of its own.
+#:
+#: The bottom layer stays fully opaque and everything above it is translucent, so
+#: an operator can see the static map through the obstacle and inflation layers
+#: that refine it.
+DEFAULT_UPPER_LAYER_OPACITY = 0.7
+
+#: How much `draw_order` each layer gains over the one below it.
+DEFAULT_DRAW_ORDER_STEP = 1.0
+
+
+@dataclass(frozen=True)
+class CostmapLayer:
+    """
+    One layer of a nav2 costmap: `static`, `obstacle`, `inflation`, `voxel`, ...
+
+    A layer holds cost values in the message's own bottom-up order; the placement
+    it is logged with supplies the pose, resolution and dimensions, since every
+    layer of one costmap shares the same grid.
+
+    Attributes
+    ----------
+    name:
+        The layer's name, which becomes the last part of its entity path.
+    cells:
+        Cost values in ROS order (`data[y * width + x]`, row `0` at the origin),
+        either flat or already `(height, width)`.
+    scale:
+        Which cost spelling `cells` uses. See [`CostScale`][dalaran.ros2.costmap.CostScale].
+    palette:
+        Colors for this layer.
+    opacity:
+        Explicit opacity in `[0, 1]`. `None` means "opaque if this is the bottom
+        layer, [`DEFAULT_UPPER_LAYER_OPACITY`][dalaran.ros2.costmap.DEFAULT_UPPER_LAYER_OPACITY]
+        otherwise".
+    draw_order:
+        Explicit draw order. `None` means "one step above the layer below me".
+
+    Examples
+    --------
+    ```python
+    from dalaran.ros2.costmap import CostmapLayer
+
+    static = CostmapLayer("static", [0, 0, 254, 0])
+    inflation = CostmapLayer("inflation", [0, 200, 253, 200], opacity=0.5)
+    assert inflation.opacity == 0.5
+    ```
+
+    """
+
+    name: str
+    cells: npt.ArrayLike
+    scale: CostScale = "raw"
+    palette: CostPalette = RVIZ_COST_PALETTE
+    opacity: float | None = None
+    draw_order: float | None = None
+
+
+@dataclass(frozen=True)
+class PlannedLayer:
+    """
+    Where and how one [`CostmapLayer`][dalaran.ros2.costmap.CostmapLayer] should be logged.
+
+    Produced by [`plan_costmap_layers`][dalaran.ros2.costmap.plan_costmap_layers]. It
+    exists so that the stacking rules - entity paths, draw order and opacity - are a
+    pure function that can be asserted on without logging anything.
+
+    Attributes
+    ----------
+    layer:
+        The layer this plan is for.
+    entity_path:
+        The entity path the layer belongs on.
+    draw_order:
+        The layer's `draw_order`; higher values render on top.
+    opacity:
+        The layer's resolved opacity in `[0, 1]`.
+
+    """
+
+    layer: CostmapLayer
+    entity_path: str
+    draw_order: float
+    opacity: float
+
+
+def plan_costmap_layers(
+    layers: Sequence[CostmapLayer],
+    *,
+    entity_path: str = "costmap",
+    base_draw_order: float = 0.0,
+    draw_order_step: float = DEFAULT_DRAW_ORDER_STEP,
+    upper_layer_opacity: float = DEFAULT_UPPER_LAYER_OPACITY,
+) -> list[PlannedLayer]:
+    """
+    Resolve entity paths, draw order and opacity for a stack of costmap layers.
+
+    `layers` is ordered bottom-up, exactly like a `nav2_costmap_2d` plugin list: the
+    static map first, then the obstacle and voxel layers that add sensor data, then
+    the inflation layer on top. Each layer gets its own entity below `entity_path`,
+    so a layer can be toggled, styled or blueprint-selected on its own, and a
+    monotonically increasing `draw_order` so the viewer stacks them in that order
+    rather than in whatever order the chunks happen to arrive.
+
+    Parameters
+    ----------
+    layers:
+        The layers, bottom-most first.
+    entity_path:
+        The entity path the stack lives under.
+    base_draw_order:
+        `draw_order` for the bottom layer.
+    draw_order_step:
+        How much each layer gains over the one below it.
+    upper_layer_opacity:
+        Opacity for layers above the bottom one that do not set their own.
+
+    Returns
+    -------
+    list of PlannedLayer
+        One plan per layer, in the given order.
+
+    Raises
+    ------
+    ValueError
+        If two layers would land on the same entity path, which would silently make
+        one overwrite the other.
+
+    Examples
+    --------
+    ```python
+    from dalaran.ros2.costmap import CostmapLayer, plan_costmap_layers
+
+    plans = plan_costmap_layers(
+        [CostmapLayer("static", [0]), CostmapLayer("inflation", [0])],
+        entity_path="map/global_costmap",
+    )
+    assert [plan.entity_path for plan in plans] == [
+        "map/global_costmap/static",
+        "map/global_costmap/inflation",
+    ]
+    assert plans[1].draw_order > plans[0].draw_order
+    assert plans[0].opacity == 1.0  # the base layer stays fully opaque
+    assert plans[1].opacity < 1.0  # you can see the base layer through it
+    ```
+
+    """
+    from .naming import entity_path_join, sanitize_path_part
+
+    plans: list[PlannedLayer] = []
+    seen: set[str] = set()
+    for index, layer in enumerate(layers):
+        name = sanitize_path_part(layer.name) or f"layer{index}"
+        path = entity_path_join(entity_path, name)
+        if path in seen:
+            msg = f"Two costmap layers both map to the entity path {path!r}; give them distinct names"
+            raise ValueError(msg)
+        seen.add(path)
+
+        draw_order = layer.draw_order
+        if draw_order is None:
+            draw_order = base_draw_order + index * draw_order_step
+
+        opacity = layer.opacity
+        if opacity is None:
+            opacity = 1.0 if index == 0 else upper_layer_opacity
+
+        plans.append(
+            PlannedLayer(
+                layer=layer,
+                entity_path=path,
+                draw_order=float(draw_order),
+                opacity=float(np.clip(opacity, 0.0, 1.0)),
+            )
+        )
+    return plans
+
+
+def costmap_layer_rgba(layer: CostmapLayer, placement: GridPlacement) -> npt.NDArray[np.uint8]:
+    """
+    Colorize one layer into a top-down `(height, width, 4)` RGBA buffer.
+
+    The row flip and the dimension check are delegated to
+    [`occupancy_grid_placement`][dalaran.ros2.occupancy_grid.occupancy_grid_placement],
+    so a layer is oriented by exactly the same code as the map it is stacked on and
+    cannot drift out of alignment with it.
+
+    Parameters
+    ----------
+    layer:
+        The layer to colorize.
+    placement:
+        The placement every layer of this costmap shares, which supplies the
+        dimensions and resolution.
+
+    Returns
+    -------
+    numpy.ndarray
+        `(height, width, 4)` uint8 RGBA in image order.
+
+    Examples
+    --------
+    ```python
+    import numpy as np
+    from dalaran.ros2.costmap import CostmapLayer, costmap_layer_rgba
+    from dalaran.ros2.occupancy_grid import occupancy_grid_placement
+
+    placement = occupancy_grid_placement([0, 0, 0, 0], width=2, height=2, resolution=0.05)
+    # Cost 254 sits at ROS (x=0, y=0), i.e. the bottom-left of the image.
+    rgba = costmap_layer_rgba(CostmapLayer("obstacle", [254, 0, 0, 0]), placement)
+    np.testing.assert_array_equal(rgba[1, 0], [255, 0, 255, 255])
+    assert rgba[0, 0, 3] == 0  # free space stays see-through
+    ```
+
+    """
+    oriented = occupancy_grid_placement(
+        layer.cells,
+        width=placement.width,
+        height=placement.height,
+        resolution=placement.cell_size,
+    ).cells
+    return costmap_to_rgba(oriented, scale=layer.scale, palette=layer.palette)
+
+
+def log_costmap_layers(
+    entity_path: str,
+    layers: Sequence[CostmapLayer],
+    placement: GridPlacement,
+    *,
+    ctx: Any = None,
+    recording: Any = None,
+    static: bool = False,
+    base_draw_order: float = 0.0,
+    draw_order_step: float = DEFAULT_DRAW_ORDER_STEP,
+    upper_layer_opacity: float = DEFAULT_UPPER_LAYER_OPACITY,
+) -> list[str]:
+    """
+    Log a stack of costmap layers as separate, correctly ordered [`dalaran.GridMap`][]s.
+
+    Every layer shares one `placement`, so they line up exactly; each gets its own
+    entity, its own `draw_order` and its own `opacity`. The buffers are RGBA rather
+    than single-channel-plus-colormap because per-cell alpha is what lets an upper
+    layer's free and unknown cells stay see-through - without it, an inflation layer
+    would paint over the static map it is supposed to annotate.
+
+    Parameters
+    ----------
+    entity_path:
+        The entity path the stack lives under.
+    layers:
+        The layers, bottom-most first.
+    placement:
+        The shared placement, normally from
+        [`occupancy_grid_placement`][dalaran.ros2.occupancy_grid.occupancy_grid_placement].
+    ctx:
+        An optional [`dalaran.ros2.Context`][] to log through. The ROS 2 converters
+        pass theirs; call sites outside the bridge can leave this unset.
+    recording:
+        The [`dalaran.RecordingStream`][] to log to when `ctx` is not given.
+    static:
+        Log the layers as static data.
+    base_draw_order:
+        `draw_order` for the bottom layer.
+    draw_order_step:
+        How much each layer gains over the one below it.
+    upper_layer_opacity:
+        Opacity for layers above the bottom one that do not set their own.
+
+    Returns
+    -------
+    list of str
+        The entity path each layer was logged to, bottom-most first.
+
+    Examples
+    --------
+    ```python
+    import dalaran as dl
+    from dalaran.ros2.costmap import CostmapLayer, log_costmap_layers
+    from dalaran.ros2.occupancy_grid import occupancy_grid_placement
+
+    dl.init("dalaran_example_costmap_layers", spawn=True)
+
+    placement = occupancy_grid_placement([0] * 16, width=4, height=4, resolution=0.05)
+    log_costmap_layers(
+        "map/global_costmap",
+        [
+            CostmapLayer("static", [0, 0, 254, 0] * 4),
+            CostmapLayer("inflation", [0, 200, 253, 200] * 4),
+        ],
+        placement,
+    )
+    ```
+
+    """
+    import dalaran as dl
+
+    plans = plan_costmap_layers(
+        layers,
+        entity_path=entity_path,
+        base_draw_order=base_draw_order,
+        draw_order_step=draw_order_step,
+        upper_layer_opacity=upper_layer_opacity,
+    )
+
+    for plan in plans:
+        rgba = costmap_layer_rgba(plan.layer, placement)
+        grid_map = dl.GridMap(
+            data=rgba.tobytes(),
+            format=dl.components.ImageFormat(
+                width=placement.width,
+                height=placement.height,
+                color_model="RGBA",
+                channel_datatype="U8",
+            ),
+            cell_size=placement.cell_size,
+            translation=placement.translation,
+            quaternion=placement.quaternion,
+            opacity=plan.opacity,
+            draw_order=plan.draw_order,
+        )
+        if ctx is not None:
+            ctx.log(plan.entity_path, grid_map, static=static)
+        else:
+            dl.log(plan.entity_path, grid_map, static=static, recording=recording)
+
+    return [plan.entity_path for plan in plans]
