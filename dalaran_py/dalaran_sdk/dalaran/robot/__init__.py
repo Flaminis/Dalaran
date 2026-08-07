@@ -9,7 +9,9 @@ that turn archetypes into a correct robot visualization:
   [`TransformTree.lookup`][dalaran.robot.TransformTree.lookup].
 * [`Robot`][dalaran.robot.Robot] - a handle with `log_pose`, `log_odometry`,
   `log_twist`, `log_joint_states`, `log_trajectory` and a `timestep` context
-  manager that stamps a whole block of logging.
+  manager that stamps a whole block of logging. Point it at a URDF with
+  `Robot("arm", urdf="arm.urdf")` and joint-state messages animate the real
+  link tree, mimic joints and limits included.
 * Sensor helpers - [`log_lidar_scan`][dalaran.robot.log_lidar_scan],
   [`log_pointcloud`][dalaran.robot.log_pointcloud], [`log_imu`][dalaran.robot.log_imu]
   and [`log_camera`][dalaran.robot.log_camera].
@@ -74,6 +76,11 @@ from .sensors import (
     log_lidar_scan as log_lidar_scan,
     log_pointcloud as log_pointcloud,
 )
+from .urdf_model import (
+    JointSpec as JointSpec,
+    MimicSpec as MimicSpec,
+    UrdfModel as UrdfModel,
+)
 
 __all__ = [
     "FLU",
@@ -82,8 +89,11 @@ __all__ = [
     "RUB",
     "Frame",
     "Joint",
+    "JointSpec",
+    "MimicSpec",
     "Robot",
     "TransformTree",
+    "UrdfModel",
     "colormap_scalars",
     "convention_matrix",
     "conventions",

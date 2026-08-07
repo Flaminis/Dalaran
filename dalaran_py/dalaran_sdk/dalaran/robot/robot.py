@@ -2,18 +2,21 @@
 
 from __future__ import annotations
 
+import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING
+from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import numpy.typing as npt
 
 from ._math import euler_to_matrix, make_matrix, quaternion_to_matrix
 from .frames import TransformTree
+from .urdf_model import UrdfModel
 
 if TYPE_CHECKING:
-    from collections.abc import Iterator, Sequence
+    from collections.abc import Iterator, Mapping, Sequence
 
     from dalaran.recording_stream import RecordingStream
 
@@ -77,6 +80,23 @@ def _axis_angle_to_matrix(axis: npt.NDArray[np.float64], angle: float) -> npt.ND
     return np.eye(3) + np.sin(angle) * k + (1.0 - np.cos(angle)) * (k @ k)
 
 
+def _resolve_urdf_source(source: str | Path | UrdfModel | Any) -> tuple[UrdfModel, Any]:
+    """
+    Normalize whatever the caller passed into `(model, native_tree_or_None)`.
+
+    A `dalaran.urdf.UrdfTree` is recognized by its duck-typed surface rather
+    than by `isinstance`, so this keeps working without the native bindings.
+    """
+    if isinstance(source, UrdfModel):
+        return source, None
+    if isinstance(source, (str, Path)):
+        return UrdfModel.from_file(source), None
+    if hasattr(source, "joints") and hasattr(source, "root_link"):
+        return UrdfModel.from_urdf_tree(source), source
+    msg = f"Expected a URDF path, a UrdfTree or a UrdfModel, got {type(source).__name__}"
+    raise TypeError(msg)
+
+
 class Robot:
     """
     A high-level handle for logging one robot.
@@ -107,6 +127,12 @@ class Robot:
         defaults to the current active data recording, if there is one.
     prefix:
         Optional entity path prefix for this robot's frames.
+    urdf:
+        Optional robot description: a path to a URDF file, a
+        [`dalaran.urdf.UrdfTree`][], or an already-parsed
+        [`UrdfModel`][dalaran.robot.urdf_model.UrdfModel]. Shorthand for calling
+        [`Robot.load_urdf`][dalaran.robot.Robot.load_urdf] right after
+        construction.
 
     Examples
     --------
@@ -142,6 +168,7 @@ class Robot:
         timeline: str = "time",
         recording: RecordingStream | None = None,
         prefix: str | None = None,
+        urdf: str | Path | UrdfModel | Any | None = None,
     ) -> None:
         self.name = name
         """The robot's name."""
@@ -155,6 +182,13 @@ class Robot:
         self._tree.add(base_frame, root_frame)
         self._joints: dict[str, Joint] = {}
         self._trajectory: list[list[float]] = []
+        self._urdf: UrdfModel | None = None
+        self._urdf_link_frames: dict[str, str] = {}
+        self._urdf_joint_frames: dict[str, str] = {}
+        self._unknown_joints_warned = False
+
+        if urdf is not None:
+            self.load_urdf(urdf)
 
     # -- structure ---------------------------------------------------------
 
@@ -180,8 +214,184 @@ class Robot:
 
     @property
     def joints(self) -> list[str]:
-        """The names of all declared joints."""
-        return list(self._joints)
+        """The names of all declared joints, whether declared by hand or loaded from a URDF."""
+        return list(self._joints) + [name for name in self._urdf_joint_frames if name not in self._joints]
+
+    # -- URDF --------------------------------------------------------------
+
+    @property
+    def urdf(self) -> UrdfModel | None:
+        """The loaded [`UrdfModel`][dalaran.robot.urdf_model.UrdfModel], or `None`."""
+        return self._urdf
+
+    def link_frame(self, link: str) -> str:
+        """
+        Return the transform-tree frame name that a URDF link was registered under.
+
+        The names only differ from the URDF link names when `load_urdf` was
+        given a `prefix`, or for the URDF root link when it was merged into the
+        robot's base frame.
+        """
+        try:
+            return self._urdf_link_frames[link]
+        except KeyError:
+            msg = f"Unknown URDF link {link!r}; this robot knows {sorted(self._urdf_link_frames)}"
+            raise KeyError(msg) from None
+
+    def link_path(self, link: str) -> str:
+        """Return the entity path a URDF link's transform is logged to."""
+        return self._tree.entity_path(self.link_frame(link))
+
+    def load_urdf(
+        self,
+        source: str | Path | UrdfModel | Any,
+        *,
+        prefix: str | None = None,
+        log_model: bool = True,
+        entity_path_prefix: str | None = None,
+    ) -> UrdfModel:
+        """
+        Load a robot description and wire its links and joints into this robot.
+
+        This does three things at once:
+
+        1. every URDF link becomes a frame in the robot's
+           [`TransformTree`][dalaran.robot.TransformTree], hanging off the base
+           frame, so `robot.tree.lookup("base_link", "gripper")` works;
+        2. every joint's zero pose is logged, `fixed` joints as static data;
+        3. every non-`fixed` joint is registered by name, so that
+           [`Robot.log_joint_states`][dalaran.robot.Robot.log_joint_states]
+           animates the real link tree - including `<mimic>` joints, which move
+           even though they never appear in a `sensor_msgs/JointState` message.
+
+        The URDF root link is *merged into* the robot's base frame when the two
+        have the same name. When they differ, the root link is added as a child
+        of the base frame with an identity transform, so `log_pose` keeps moving
+        the whole robot and both names remain addressable.
+
+        Parameters
+        ----------
+        source:
+            A path to a URDF file, a [`dalaran.urdf.UrdfTree`][], or an
+            already-parsed [`UrdfModel`][dalaran.robot.urdf_model.UrdfModel].
+        prefix:
+            Optional prefix for the frame names derived from the URDF links.
+            Use it when loading the same URDF onto several robots in one
+            recording. Joint *names* are never prefixed, because they have to
+            keep matching the incoming joint-state messages.
+        log_model:
+            Whether to log the URDF's visual geometry. This needs the native
+            bindings; when they are unavailable a warning is emitted and only
+            the kinematics are set up.
+        entity_path_prefix:
+            Where the geometry is logged. Defaults to the base frame's entity
+            path, so the model inherits the robot's pose.
+
+        Returns
+        -------
+        UrdfModel
+            The parsed model, also available afterwards as `robot.urdf`.
+
+        Examples
+        --------
+        ```python
+        import numpy as np
+        import dalaran as dl
+
+        dl.init("dalaran_example_robot_urdf", spawn=True)
+
+        robot = dl.robot.Robot("arm", urdf="arm.urdf")
+        for step in range(100):
+            with robot.timestep(step):
+                # No `add_joint` calls: the URDF already declared the joints.
+                robot.log_joint_states(["shoulder", "elbow"], [np.sin(step / 10.0), 0.4])
+        ```
+
+        """
+        if self._urdf is not None:
+            msg = f"Robot {self.name!r} already has a URDF loaded"
+            raise ValueError(msg)
+
+        model, tree = _resolve_urdf_source(source)
+        self._urdf = model
+
+        if log_model:
+            self._log_urdf_model(source, tree, entity_path_prefix=entity_path_prefix)
+
+        self._register_urdf_frames(model, prefix=prefix)
+        return model
+
+    def _log_urdf_model(self, source: Any, tree: Any, *, entity_path_prefix: str | None) -> None:
+        """Log the URDF's geometry, which is the one part that needs the native bindings."""
+        target = self.base_path if entity_path_prefix is None else entity_path_prefix
+        if tree is None:
+            if isinstance(source, (str, Path)):
+                try:
+                    from dalaran.urdf import UrdfTree
+                except ImportError:
+                    warnings.warn(
+                        "Could not import `dalaran.urdf`, so the URDF geometry was not logged; "
+                        "the kinematics are still set up.",
+                        UserWarning,
+                        stacklevel=3,
+                    )
+                    return
+                tree = UrdfTree.from_file_path(source, target)
+            else:
+                # A pre-parsed `UrdfModel` carries no geometry to log.
+                return
+        tree.log_urdf_to_recording(self._recording)
+
+    def _register_urdf_frames(self, model: UrdfModel, *, prefix: str | None) -> None:
+        """Declare a frame per URDF link and log every joint's zero pose."""
+        pre = prefix or ""
+        root = model.root_link
+        self._urdf_link_frames = {root: self._base_frame if pre + root == self._base_frame else pre + root}
+        if self._urdf_link_frames[root] != self._base_frame:
+            # A URDF whose root is called something else still has to hang off
+            # the robot's body frame; the two are rigidly identical.
+            self._tree.set(self._urdf_link_frames[root], parent=self._base_frame, static=True)
+
+        for joint in model.iter_joints_parents_first():
+            parent_frame = self._urdf_link_frames[joint.parent_link]
+            child_frame = pre + joint.child_link
+            self._urdf_link_frames[joint.child_link] = child_frame
+            self._tree.set(
+                child_frame,
+                parent=parent_frame,
+                matrix=joint.transform(0.0),
+                static=not joint.is_moving,
+            )
+            if joint.is_moving:
+                self._urdf_joint_frames[joint.name] = child_frame
+
+    def _animate_urdf(self, positions: Mapping[str, float]) -> dict[str, npt.NDArray[np.float64]]:
+        """Move every frame implied by `positions`, mimic joints included."""
+        model = self._urdf
+        if model is None:
+            return {}
+        moved: dict[str, npt.NDArray[np.float64]] = {}
+        for name, value in model.resolve_positions(positions).items():
+            frame = self._urdf_joint_frames.get(name)
+            if frame is None:
+                continue
+            moved[frame] = self._tree.set(frame, matrix=model.joint(name).transform(value, clamp=False))
+        return moved
+
+    def _warn_unknown_joints(self, names: Sequence[str]) -> None:
+        """Warn once about joint names this robot cannot place in its tree."""
+        if self._urdf is None or self._unknown_joints_warned:
+            return
+        unknown = [name for name in self._urdf.unknown_joints(names) if name not in self._joints]
+        if not unknown:
+            return
+        self._unknown_joints_warned = True
+        warnings.warn(
+            f"Joint(s) {sorted(set(unknown))} are not in the URDF loaded for robot {self.name!r}; "
+            "their values are plotted but nothing moves. Further unknown joints are not reported.",
+            UserWarning,
+            stacklevel=3,
+        )
 
     # -- time --------------------------------------------------------------
 
@@ -404,9 +614,17 @@ class Robot:
         Log a `sensor_msgs/JointState`-style reading.
 
         Each joint position is logged as a scalar time series under
-        `<data_path>/joints/<name>/position`, and joints that were declared with
-        [`Robot.add_joint`][dalaran.robot.Robot.add_joint] additionally move
-        their frame in the transform tree.
+        `<data_path>/joints/<name>/position`, and joints that this robot knows
+        about additionally move their frame in the transform tree. A joint is
+        known if it was declared with
+        [`Robot.add_joint`][dalaran.robot.Robot.add_joint] or if it came from a
+        URDF loaded with [`Robot.load_urdf`][dalaran.robot.Robot.load_urdf]. With
+        a URDF loaded, values are clamped into the joint limits and `<mimic>`
+        joints follow their driver automatically.
+
+        Once a URDF is loaded, joint names that it does not declare are still
+        plotted, but the first time one shows up a `UserWarning` is emitted:
+        a typo in a joint name is otherwise completely invisible.
 
         Parameters
         ----------
@@ -464,6 +682,10 @@ class Robot:
             joint = self._joints.get(joint_name)
             if joint is not None and animate:
                 self._tree.set(joint.frame, matrix=joint.transform(float(pos[index])))
+
+        if animate and self._urdf is not None:
+            self._animate_urdf({name: float(value) for name, value in zip(names, pos, strict=True)})
+        self._warn_unknown_joints(names)
 
     # -- motion ------------------------------------------------------------
 
@@ -684,4 +906,5 @@ class Robot:
         )
 
     def __repr__(self) -> str:
-        return f"Robot(name={self.name!r}, base_frame={self._base_frame!r}, joints={len(self._joints)})"
+        urdf = "" if self._urdf is None else f", urdf={self._urdf.name!r}"
+        return f"Robot(name={self.name!r}, base_frame={self._base_frame!r}, joints={len(self.joints)}{urdf})"
