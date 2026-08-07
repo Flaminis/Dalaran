@@ -15,12 +15,35 @@ The motif is an observatory: an outer dome ring, two crossing ley-line orbits,
 and a lens at the centre. It is meant to read as "point the instrument at the
 data and actually see it", which is what the project is for.
 
-Both files are hand-written SVG under 1 KB, use no external references, no
-embedded raster data, and no gradients or filters, so they scale cleanly and
-stay diff-friendly. The wordmark renders its text with a system sans-serif
-stack (`Inter` first, falling back to Helvetica/Arial); if you need a mark that
-is guaranteed pixel-identical everywhere, export a PNG from the SVG rather than
-substituting a different font.
+Both files are hand-written SVG, use no external references and no embedded
+raster data, so they scale cleanly and stay diff-friendly.
+
+The wordmark contains **no text elements and depends on no font**. The letterforms
+are constructed from straight stroked segments on a 120-unit cap height, with the
+bowls of `D` and `R` chamfered rather than curved. That is deliberate:
+
+- it renders identically everywhere, with no font to install, substitute or license
+- it stays legible when the viewer tints it and scales it to a ~12px cap height in
+  the menu bar, which is its most common appearance
+- straight segments avoid the seams that appear where an arc meets a stem in some
+  rasterizers
+
+## Derived raster assets
+
+These are generated from the marks above and should be regenerated rather than
+edited by hand:
+
+| File | Size | Use |
+| --- | --- | --- |
+| `crates/viewer/dl_viewer/data/app_icon_mac.png` | 1024 | macOS window/Dock icon; also the source for `Dalaran.icns` |
+| `crates/viewer/dl_viewer/data/app_icon.png` | 512 | Windows/Linux window icon |
+| `crates/viewer/dl_ui/data/icons/dalaran_logo.png` | 256 | The mark inside the viewer UI |
+| `crates/viewer/dl_ui/data/icons/dalaran_wordmark.svg` | — | Tinted wordmark in the viewer menu button |
+| `crates/viewer/dl_web_viewer_server/web_viewer/favicon.ico` | 16-256 | Web viewer favicon |
+| `crates/viewer/dl_web_viewer_server/web_viewer/apple-touch-icon.png` | 180 | Web viewer home-screen icon |
+
+At 32px and below the mark drops its orbits and anchor nodes and keeps only the
+ring and the lens, because the orbits turn to mush at that size.
 
 ## Palette
 

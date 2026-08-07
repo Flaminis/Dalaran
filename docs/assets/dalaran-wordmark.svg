@@ -1,14 +1,35 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64" role="img" aria-label="Dalaran">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 979 140" width="979" height="140" role="img" aria-label="Dalaran">
   <title>Dalaran</title>
-  <g transform="translate(4 4) scale(0.875)">
-    <circle cx="32" cy="32" r="26" fill="none" stroke="#6C4CF1" stroke-width="3" />
-    <ellipse cx="32" cy="32" rx="26" ry="10" fill="none" stroke="#2BB8D9" stroke-width="2"
-             transform="rotate(-32 32 32)" />
-    <ellipse cx="32" cy="32" rx="26" ry="10" fill="none" stroke="#2BB8D9" stroke-width="2"
-             transform="rotate(32 32 32)" />
-    <polygon points="32,17 41,32 32,47 23,32" fill="#6C4CF1" />
-    <polygon points="32,24 36.5,32 32,40 27.5,32" fill="#E8B44A" />
+  <!-- Horizontal lockup: the mark plus the wordmark. Original artwork, Apache-2.0. -->
+  <g transform="translate(0,10) scale(1.875)">
+    <!-- The Dalaran mark: an observatory ring, two ley-line orbits, and the arcane
+       lens you look through. Built from geometric primitives only. Original
+       artwork, Apache-2.0. -->
+  <g fill="none" stroke-linecap="round">
+    <!-- ley-line orbits, clipped to the inside of the ring -->
+    <clipPath id="dl-ring"><circle cx="32" cy="32" r="24.4"/></clipPath>
+    <g clip-path="url(#dl-ring)" stroke="#2BB8D9" stroke-width="2.2">
+      <ellipse cx="32" cy="32" rx="24" ry="9.2" transform="rotate(-32 32 32)"/>
+      <ellipse cx="32" cy="32" rx="24" ry="9.2" transform="rotate(32 32 32)"/>
+    </g>
+    <!-- observatory ring -->
+    <circle cx="32" cy="32" r="26" stroke="#F5F6FA" stroke-width="3.2"/>
   </g>
-  <text x="72" y="42" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif"
-        font-size="30" font-weight="600" letter-spacing="5" fill="#6C4CF1">DALARAN</text>
+  <!-- arcane lens -->
+  <polygon points="32,15.6 42.4,32 32,48.4 21.6,32" fill="#6C4CF1"/>
+  <polygon points="32,23.5 36.8,32 32,40.5 27.2,32" fill="#E8B44A"/>
+  <!-- horizon anchor nodes -->
+  <circle cx="6" cy="32" r="2.9" fill="#2BB8D9"/>
+  <circle cx="58" cy="32" r="2.9" fill="#2BB8D9"/>
+  </g>
+  <g transform="translate(166,10)" fill="none" stroke="#F5F6FA" stroke-width="20"
+     stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="8">
+    <path d="M58,110 H10 V10 H58 L95,44 V76 Z" transform="translate(0,0)" />
+    <path d="M8,110 L50,10 L92,110 M26,74 H74" transform="translate(123,0)" />
+    <path d="M12,10 V110 H78" transform="translate(241,0)" />
+    <path d="M8,110 L50,10 L92,110 M26,74 H74" transform="translate(347,0)" />
+    <path d="M12,110 V10 H54 L84,34 V50 L54,72 H12 M50,72 L86,110" transform="translate(465,0)" />
+    <path d="M8,110 L50,10 L92,110 M26,74 H74" transform="translate(579,0)" />
+    <path d="M12,110 V10 L84,110 V10" transform="translate(697,0)" />
+  </g>
 </svg>

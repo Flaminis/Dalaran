@@ -42,7 +42,7 @@ reasoning, which is worth printing next to a suspicious sensor:
 from dalaran.robot import conventions
 
 conventions.infer_convention("camera_color_optical_frame")  # 'RDF'
-conventions.infer_convention("velodyne")                     # 'FLU'
+conventions.infer_convention("velodyne")  # 'FLU'
 
 why = conventions.explain_convention("camera_color_optical_frame")
 print(why)
@@ -50,7 +50,7 @@ print(why)
 # REP-103 reserves for optical frames: x right, y down, z forward ...)
 
 # The explanation carries the rotation, so you can act on it directly:
-ray_flu = why.matrix_to(conventions.FLU) @ [0.0, 0.0, 1.0]   # [1, 0, 0]
+ray_flu = why.matrix_to(conventions.FLU) @ [0.0, 0.0, 1.0]  # [1, 0, 0]
 ```
 
 Entity-path-style names (`world/base_link/camera_optical_frame`) are understood,
@@ -72,7 +72,7 @@ import numpy as np
 from dalaran.robot import conventions
 
 # Positions and vectors, any shape ending in 3.
-conventions.enu_to_ned([10.0, 0.0, 2.0])        # [0., 10., -2.]
+conventions.enu_to_ned([10.0, 0.0, 2.0])  # [0., 10., -2.]
 conventions.ned_to_enu(gnss_velocity_ned)
 
 # Orientations, as quaternions (xyzw) or as 3x3 matrices.
@@ -80,7 +80,7 @@ q_ned = conventions.enu_to_ned_quaternion(imu_msg_orientation_xyzw)
 r_enu = conventions.ned_to_enu_rotation_matrix(r_ned)
 
 # Whole poses.
-pose_ned = conventions.enu_to_ned(pose_enu)     # (4, 4) in, (4, 4) out
+pose_ned = conventions.enu_to_ned(pose_enu)  # (4, 4) in, (4, 4) out
 ```
 
 The mental check: an `FLU` robot with identity orientation in ENU is facing
@@ -124,7 +124,7 @@ import dalaran as dl
 from dalaran.robot.conventions import Rep105Chain
 
 dl.init("rep105_demo", spawn=True)
-chain = Rep105Chain()          # declares map -> odom -> base_link
+chain = Rep105Chain()  # declares map -> odom -> base_link
 
 # In the odometry callback:
 chain.set_odometry(translation=[x, y, 0.0], quaternion=q)
@@ -133,9 +133,9 @@ chain.set_odometry(translation=[x, y, 0.0], quaternion=q)
 chain.set_localization(translation=[dx, dy, 0.0], rpy=[0.0, 0.0, dtheta])
 
 # Reading the robot's pose is a question, not a publication:
-chain.pose_in_map()               # map_from_base, composed from the chain
-chain.pose_in_odom()              # odom_from_base, the smooth one
-chain.localization_correction()   # map_from_odom, the drift absorbed so far
+chain.pose_in_map()  # map_from_base, composed from the chain
+chain.pose_in_odom()  # odom_from_base, the smooth one
+chain.localization_correction()  # map_from_odom, the drift absorbed so far
 ```
 
 ### "But I only have the pose in the map"
@@ -149,11 +149,11 @@ correction that makes the existing odometry agree with the estimate,
 ```python
 from dalaran.robot._math import make_matrix
 
-chain.set_odometry(translation=[10.0, 0.0, 0.0])          # odometry says 10.0 m
+chain.set_odometry(translation=[10.0, 0.0, 0.0])  # odometry says 10.0 m
 chain.set_pose_in_map(make_matrix(translation=[10.5, 0.0, 0.0]))  # GPS says 10.5 m
 
-chain.pose_in_map()[:3, 3]    # [10.5, 0, 0] - the estimate is honoured
-chain.pose_in_odom()[:3, 3]   # [10. , 0, 0] - the odometry is untouched
+chain.pose_in_map()[:3, 3]  # [10.5, 0, 0] - the estimate is honoured
+chain.pose_in_odom()[:3, 3]  # [10. , 0, 0] - the odometry is untouched
 ```
 
 ### Sensors on the chain
@@ -162,8 +162,8 @@ chain.pose_in_odom()[:3, 3]   # [10. , 0, 0] - the odometry is untouched
 name implies, so mounting a camera and knowing it is `RDF` is one call:
 
 ```python
-chain.attach("camera_color_optical_frame")   # 'RDF'
-chain.attach("velodyne")                     # 'FLU'
+chain.attach("camera_color_optical_frame")  # 'RDF'
+chain.attach("velodyne")  # 'FLU'
 ```
 
 `Rep105Chain` wraps an ordinary [`TransformTree`](robot-api.md#transform-trees),

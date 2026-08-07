@@ -98,8 +98,8 @@ model:
 robot = dl.robot.Robot("rover", base_frame="chassis")
 robot.load_urdf("rover.urdf")  # root link is "body"
 
-robot.log_pose(translation=[3.0, 0.0, 0.0])   # moves everything
-robot.link_path("body")                        # 'world/chassis/body'
+robot.log_pose(translation=[3.0, 0.0, 0.0])  # moves everything
+robot.link_path("body")  # 'world/chassis/body'
 ```
 
 When the root link and the base frame have the same name they are simply merged,
@@ -128,11 +128,11 @@ extension - so it is useful on its own for forward kinematics and for tests:
 from dalaran.robot import UrdfModel
 
 model = UrdfModel.from_file("ur5e.urdf")
-model.root_link              # 'base_link'
-model.actuated_joint_names   # joints a message can drive directly
-model.mimic_joint_names      # joints that follow another one
+model.root_link  # 'base_link'
+model.actuated_joint_names  # joints a message can drive directly
+model.mimic_joint_names  # joints that follow another one
 
-poses = model.link_transforms({"elbow_joint": 1.2})   # root_from_link, 4x4 each
+poses = model.link_transforms({"elbow_joint": 1.2})  # root_from_link, 4x4 each
 values = model.resolve_positions({"left_finger": 0.03})  # mimics expanded, limits applied
 ```
 
