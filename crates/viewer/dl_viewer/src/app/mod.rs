@@ -1297,6 +1297,11 @@ impl eframe::App for App {
 
         #[cfg(not(target_arch = "wasm32"))]
         if self.screenshotter.update(ui).quit {
+            // Put the `StoreHub` back before bailing out: `logic_impl` and this
+            // function both `take()` it every frame and `expect()` it to be
+            // there, and at least one more frame runs between asking the
+            // viewport to close and the process actually exiting.
+            self.store_hub = Some(store_hub);
             ui.send_viewport_cmd(egui::ViewportCommand::Close);
             return;
         }

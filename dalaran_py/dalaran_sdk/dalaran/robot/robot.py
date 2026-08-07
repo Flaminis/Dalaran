@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import tempfile
 import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
@@ -80,15 +81,27 @@ def _axis_angle_to_matrix(axis: npt.NDArray[np.float64], angle: float) -> npt.ND
     return np.eye(3) + np.sin(angle) * k + (1.0 - np.cos(angle)) * (k @ k)
 
 
+def _looks_like_urdf_xml(source: str) -> bool:
+    """Is this URDF markup rather than a path to a file containing it?"""
+    return source.lstrip()[:1] == "<"
+
+
 def _resolve_urdf_source(source: str | Path | UrdfModel | Any) -> tuple[UrdfModel, Any]:
     """
     Normalize whatever the caller passed into `(model, native_tree_or_None)`.
+
+    A `str` may be either a path or the URDF markup itself; markup is detected by
+    its leading `<`, because passing a small inline URDF is common in tests,
+    snippets and generated robots, and treating it as a path fails with a
+    confusing "File name too long" from the OS.
 
     A `dalaran.urdf.UrdfTree` is recognized by its duck-typed surface rather
     than by `isinstance`, so this keeps working without the native bindings.
     """
     if isinstance(source, UrdfModel):
         return source, None
+    if isinstance(source, str) and _looks_like_urdf_xml(source):
+        return UrdfModel.from_string(source), None
     if isinstance(source, (str, Path)):
         return UrdfModel.from_file(source), None
     if hasattr(source, "joints") and hasattr(source, "root_link"):
@@ -336,6 +349,19 @@ class Robot:
                         stacklevel=3,
                     )
                     return
+
+                if isinstance(source, str) and _looks_like_urdf_xml(source):
+                    # The native loader only takes a path, so inline markup has to be
+                    # materialized. Relative mesh paths inside inline URDFs would
+                    # resolve against the temporary directory, so they are unsupported
+                    # here; a URDF with meshes should be passed as a path.
+                    with tempfile.TemporaryDirectory() as tmp_dir:
+                        tmp_path = Path(tmp_dir) / "inline.urdf"
+                        tmp_path.write_text(source, encoding="utf-8")
+                        tree = UrdfTree.from_file_path(str(tmp_path), target)
+                        tree.log_urdf_to_recording(self._recording)
+                    return
+
                 tree = UrdfTree.from_file_path(source, target)
             else:
                 # A pre-parsed `UrdfModel` carries no geometry to log.

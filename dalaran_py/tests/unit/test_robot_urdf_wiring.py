@@ -290,3 +290,32 @@ def test_hand_declared_joints_still_work_alongside_a_urdf() -> None:
 
 def test_repr_mentions_the_urdf() -> None:
     assert repr(make_robot()) == "Robot(name='arm', base_frame='base_link', joints=3, urdf='arm')"
+
+
+def test_inline_urdf_markup_is_not_treated_as_a_path() -> None:
+    """`Robot(urdf=...)` accepts URDF markup directly, not just a path.
+
+    Passing a small inline URDF is common in tests and snippets. Before this was
+    handled, the string was passed to `Path.read_text` and the OS raised a
+    confusing "File name too long" error.
+    """
+    from dalaran.robot.robot import _looks_like_urdf_xml, _resolve_urdf_source
+
+    markup = """<robot name="inline">
+      <link name="base_link"/><link name="tip"/>
+      <joint name="j" type="revolute">
+        <parent link="base_link"/><child link="tip"/>
+        <origin xyz="0 0 0.1"/><axis xyz="0 0 1"/>
+        <limit lower="-1" upper="1" effort="1" velocity="1"/>
+      </joint>
+    </robot>"""
+
+    assert _looks_like_urdf_xml(markup)
+    assert _looks_like_urdf_xml("\n  <robot/>")
+    assert not _looks_like_urdf_xml("/tmp/arm.urdf")
+    assert not _looks_like_urdf_xml("arm.urdf")
+
+    model, native = _resolve_urdf_source(markup)
+    assert native is None
+    assert model.actuated_joint_names == ["j"]
+    assert model.root_link == "base_link"

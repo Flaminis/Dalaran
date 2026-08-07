@@ -153,13 +153,23 @@ roadmap. What is *not* built yet lives in [ROADMAP.md](ROADMAP.md).
 ## Reading existing `.rrd` recordings
 
 Dalaran did not change the storage container. The on-disk format still uses the
-`RRF2` fourcc, so a `.dlr` file and an upstream `.rrd` file of the same
-generation are the same bytes with a different extension, and you can rename an
-`.rrd` to `.dlr` to open it. Native `.rrd` extension handling — so that
-`dalaran recording.rrd` just works without renaming — is *in progress*. Deep
-schema compatibility across major versions is bounded by the same migration
-rules that apply upstream: recordings from very old versions may need a
-migration pass.
+`RRF2` fourcc, so `dalaran recording.rrd` opens an upstream recording directly —
+no renaming and no conversion step — and `dalaran convert` will turn one into a
+`.dlr` if you want it normalized.
+
+How far that goes, stated precisely, because "compatible" is easy to overclaim:
+
+- **Container and framing: compatible.** The stream header, framing and footer
+  are unchanged, and legacy `.rrd`/`.rbl` extensions are accepted everywhere
+  `.dlr`/`.dbl` are.
+- **Chunk data: compatible.** Upstream writes its Arrow metadata under `rerun:*`
+  and Dalaran writes `dalaran:*`; readers accept both, so chunks, entity paths,
+  timelines and segment ids resolve out of an upstream file.
+- **Blueprints from upstream: partial.** Some component descriptors in upstream
+  blueprint stores do not yet resolve here, so a recording's saved layout may be
+  ignored while its data loads. Being worked on.
+- **Very old recordings:** bounded by the same migration rules that apply
+  upstream. Recordings from long-past versions may need a migration pass.
 
 ## Architecture
 
