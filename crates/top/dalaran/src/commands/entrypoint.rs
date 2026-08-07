@@ -15,10 +15,10 @@ use super::auth::AuthCommands;
 use crate::CallSource;
 #[cfg(feature = "analytics")]
 use crate::commands::AnalyticsCommands;
-use crate::commands::DownloadCommand;
 #[cfg(feature = "importers")]
 use crate::commands::McapCommands;
 use crate::commands::RrdCommands;
+use crate::commands::{ConvertCommand, DownloadCommand};
 
 // ---
 
@@ -610,6 +610,9 @@ enum Command {
     #[command(subcommand)]
     Auth(AuthCommands),
 
+    /// Convert supported files into a single Dalaran .dlr recording.
+    Convert(ConvertCommand),
+
     /// Download recordings and save them as .dlr files.
     ///
     /// Supports downloading from Dalaran Hub as well as any other supported URI.
@@ -759,6 +762,8 @@ where
 
             #[cfg(feature = "analytics")]
             Command::Analytics(analytics) => analytics.run().map_err(Into::into),
+
+            Command::Convert(cmd) => cmd.run(),
 
             Command::Download(cmd) => cmd.run(tokio_runtime.handle()),
 
@@ -1995,6 +2000,8 @@ fn record_cli_command_analytics(args: &Args) {
 
         #[cfg(feature = "native_viewer")]
         Some(Command::ViewerMcp) => ("viewer-mcp", None),
+
+        Some(Command::Convert(_)) => ("convert", None),
 
         Some(Command::Download(_)) => ("download", None),
 

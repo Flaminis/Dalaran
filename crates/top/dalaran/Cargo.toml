@@ -117,6 +117,7 @@ run = [
   "dep:dl_chunk_store",
   "dep:dl_crash_handler",
   "dep:dl_data_source",
+  "dep:dl_importer",
   "dl_log_encoding/decoder",
   "dl_log_encoding/encoder",
   "sdk",
@@ -188,6 +189,7 @@ dl_crash_handler = { workspace = true, optional = true }
 dl_data_source = { workspace = true, optional = true }
 dl_dataframe = { workspace = true, optional = true }
 dl_grpc_server = { workspace = true, optional = true }
+dl_importer = { workspace = true, optional = true }
 dl_mcap = { workspace = true, optional = true }
 mcap = { workspace = true, optional = true }
 dl_sdk = { workspace = true, optional = true }
@@ -214,6 +216,9 @@ url = { workspace = true, optional = true }
 
 [target.'cfg(target_family = "unix")'.dependencies]
 libc = { workspace = true, optional = true }
+
+[dev-dependencies]
+tempfile.workspace = true
 
 [build-dependencies]
 dl_build_tools.workspace = true

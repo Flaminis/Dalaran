@@ -25,10 +25,11 @@ impl CallSource {
 mod auth;
 mod download;
 
+mod convert;
+mod dlr;
 mod entrypoint;
 #[cfg(feature = "importers")]
 mod mcap;
-mod dlr;
 mod stdio;
 
 #[cfg(feature = "analytics")]
@@ -36,11 +37,12 @@ mod analytics;
 
 #[cfg(feature = "analytics")]
 pub(crate) use self::analytics::AnalyticsCommands;
+pub use self::convert::ConvertCommand;
+pub use self::dlr::RrdCommands;
 pub use self::download::DownloadCommand;
 pub use self::entrypoint::run;
 #[cfg(feature = "importers")]
 pub use self::mcap::McapCommands;
-pub use self::dlr::RrdCommands;
 pub use self::stdio::{
-    InputSource, read_raw_dlr_streams_from_file_or_stdin, read_dlr_streams_from_file_or_stdin,
+    InputSource, read_dlr_streams_from_file_or_stdin, read_raw_dlr_streams_from_file_or_stdin,
 };
