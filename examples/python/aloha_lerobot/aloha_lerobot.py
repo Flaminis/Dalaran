@@ -45,6 +45,22 @@ def fetch_dataset(root: Path) -> None:
 
 CAMERA_FRAME = "camera_top"
 CAMERA_PATH = "world/camera_top"
+# The URDF's root link name is also its frame name, and it is the frame the 3D view
+# targets, so the camera hangs off it.
+ROBOT_ROOT_FRAME = "torso"
+
+
+def quaternion_from_rpy(roll: float, pitch: float, yaw: float) -> tuple[float, float, float, float]:
+    """Fixed-axis RPY to an `xyzw` quaternion, matching REP-103 and URDF."""
+    cr, sr = np.cos(roll / 2), np.sin(roll / 2)
+    cp, sp = np.cos(pitch / 2), np.sin(pitch / 2)
+    cy, sy = np.cos(yaw / 2), np.sin(yaw / 2)
+    return (
+        float(sr * cp * cy - cr * sp * sy),
+        float(cr * sp * cy + sr * cp * sy),
+        float(cr * cp * sy - sr * sp * cy),
+        float(cr * cp * cy + sr * sp * sy),
+    )
 
 
 def _box(x, y, z, ox=0.0, oy=0.0, oz=0.0, rgba="0.55 0.58 0.68 1"):
@@ -206,32 +222,37 @@ dl.send_blueprint(
 
 robot = Robot("aloha", base_frame="torso", root_frame="world", urdf=URDF, timeline="time")
 
-# The overhead camera is a real video. Two things it needs to sit correctly in the
-# scene:
+# The overhead camera is a real video. Three things it needs to sit correctly in
+# the scene:
 #
 # 1. Its frames are indexed on the SAME timeline as the robot ("time"), otherwise a
 #    view showing this entity on the robot's timeline has nothing to display.
 #    Episode 0 is the head of the video, so the timestamps line up.
-# 2. It is declared as a frame in the transform tree. Everything under the 3D view
-#    has to be reachable in the frame graph; an entity logged under /world with no
-#    frame of its own makes the viewer report "No transform path from
-#    tf#/world/camera_top to the view's target frame".
-robot.tree.add(CAMERA_FRAME, parent="world")
-robot.tree.set(
-    CAMERA_FRAME,
-    translation=(0.35, 0.0, 1.05),
-    # Look down at the table: the optical frame is RDF, so rotate the camera to
-    # point its +Z along world -Z.
-    rpy=(0.0, np.pi / 2, 0.0),
+# 2. It has to join the FRAME graph, not just the entity hierarchy. The URDF logger
+#    publishes frame-based transforms (`Transform3D` carrying `parent_frame` and
+#    `child_frame`, plus a `CoordinateFrame` per entity), and the 3D view resolves
+#    everything against that graph. An entity that only has a parent/child transform
+#    from the entity hierarchy is not reachable there, which is what
+#    "No transform path from tf#/world/camera_top to the view's target frame
+#    (torso)" means.
+# 3. A Pinhole, so it draws as a frustum in 3D rather than only existing as a 2D view.
+dl.log(
+    "tf_static",
+    dl.Transform3D(
+        translation=(0.35, 0.0, 1.05),
+        # Look down at the table: the optical frame is RDF, so +Z points along world -Z.
+        quaternion=quaternion_from_rpy(0.0, np.pi / 2, 0.0),
+        parent_frame=ROBOT_ROOT_FRAME,
+        child_frame=CAMERA_FRAME,
+    ),
     static=True,
 )
-camera_path = robot.tree.entity_path(CAMERA_FRAME)
-assert camera_path == CAMERA_PATH, f"blueprint points at {CAMERA_PATH}, tree logs to {camera_path}"
+dl.log(CAMERA_PATH, dl.CoordinateFrame(frame=CAMERA_FRAME), static=True)
 
 video = dl.AssetVideo(path=ROOT / "top.mp4")
-dl.log(camera_path, video, static=True)
+dl.log(CAMERA_PATH, video, static=True)
 dl.log(
-    camera_path,
+    CAMERA_PATH,
     dl.Pinhole(
         width=640,
         height=480,
@@ -244,7 +265,7 @@ dl.log(
 frame_nanos = video.read_frame_timestamps_nanos()
 n_frames = min(len(frame_nanos), int(episode.sum()))
 dl.send_columns(
-    camera_path,
+    CAMERA_PATH,
     indexes=[dl.TimeColumn("time", duration=1e-9 * frame_nanos[:n_frames])],
     columns=dl.VideoFrameReference.columns_nanos(frame_nanos[:n_frames]),
 )
