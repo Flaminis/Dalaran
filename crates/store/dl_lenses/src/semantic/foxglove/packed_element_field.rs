@@ -398,7 +398,7 @@ fn extract_colors_with_stride(
                 let a = alpha_desc.as_ref().map_or(255, |d| {
                     d.numeric_type.read_as_u8(data, base + d.byte_offset)
                 });
-                // Convert to packed RGBA u32 format expected by Rerun.
+                // Convert to packed RGBA u32 format expected by Dalaran.
                 builder.values().append_value(
                     ((r as u32) << 24) | ((g as u32) << 16) | ((b as u32) << 8) | (a as u32),
                 );

@@ -270,13 +270,13 @@ impl App {
                     return true; // We expect data soon, so fade-in
                 }
 
-                // We start a gRPC server by default in native rerun, i.e. when just running `rerun`,
+                // We start a gRPC server by default in native dalaran, i.e. when just running `dalaran`,
                 // and in that case fading in the welcome screen would be slightly annoying.
                 // However, we also use the gRPC server for sending data from the logging SDKs
                 // when they call `spawn()`, and in that case we really want to fade in the welcome screen.
                 // Therefore `spawn()` uses the special `--expect-data-soon` flag
                 // (handled earlier in this function), so here we know we are in the other case:
-                // a user calling `rerun` in their terminal (don't fade in).
+                // a user calling `dalaran` in their terminal (don't fade in).
                 LogSource::MessageProxy { .. } => {}
             }
         }

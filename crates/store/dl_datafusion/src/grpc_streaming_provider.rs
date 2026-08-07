@@ -746,7 +746,7 @@ mod table_query_pipeline_tests {
     }
 
     fn make_pending() -> PendingTableQueryAnalytics {
-        let origin: Origin = "rerun+http://localhost:51234".parse().unwrap();
+        let origin: Origin = "dalaran+http://localhost:51234".parse().unwrap();
         let analytics = ConnectionAnalytics::disabled_for_test(origin);
         analytics.begin_table_query(
             TableQueryInfo {

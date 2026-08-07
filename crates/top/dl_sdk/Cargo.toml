@@ -2,7 +2,7 @@
 name = "dl_sdk"
 authors.workspace = true
 categories = ["visualization", "computer-vision"]
-description = "Rerun logging SDK"
+description = "Dalaran logging SDK"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -24,9 +24,9 @@ all-features = true
 [features]
 default = []
 
-## Support for using Rerun's importers directly from the SDK.
+## Support for using Dalaran's importers directly from the SDK.
 ##
-## See our `log_file` example and <https://www.rerun.io/docs/concepts/logging-and-ingestion/importers/overview>
+## See our `log_file` example and <https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview>
 ## for more information.
 importers = ["dep:dl_importer", "dep:dl_log_channel"]
 

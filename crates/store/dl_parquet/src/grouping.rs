@@ -1,4 +1,4 @@
-//! Column grouping algorithm for mapping parquet columns to Rerun entities.
+//! Column grouping algorithm for mapping parquet columns to Dalaran entities.
 
 use dl_chunk::EntityPath;
 

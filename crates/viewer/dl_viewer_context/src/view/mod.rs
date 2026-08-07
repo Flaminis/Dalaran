@@ -1,6 +1,6 @@
-//! Rerun View class definition
+//! Dalaran View class definition
 //!
-//! Defines a framework & utilities for defining classes of views in the Rerun viewer.
+//! Defines a framework & utilities for defining classes of views in the Dalaran viewer.
 //! Does not implement any concrete view.
 
 // TODO(andreas): Can we move some of these to the `dl_view` crate?

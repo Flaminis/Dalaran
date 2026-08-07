@@ -1,6 +1,6 @@
 # dl_crash_handler
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_crash_handler.svg)](https://crates.io/crates/dl_crash_handler)
 [![Documentation](https://docs.rs/dl_crash_handler/badge.svg)](https://docs.rs/dl_crash_handler)

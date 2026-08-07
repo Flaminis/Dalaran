@@ -1,4 +1,4 @@
-//! Rerun Spatial Views
+//! Dalaran Spatial Views
 //!
 //! Views that show entities in a 2D or 3D spatial relationship.
 

@@ -9,20 +9,20 @@ use dl_log_types::{
     EntityPath, EntryName, LogMsg, SetStoreInfo, StoreId, StoreInfo, StoreKind, StoreSource,
 };
 use dl_protos::cloud::v1alpha1::ext::RegisterWithDatasetDataframe;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService as _;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService as _;
 use dl_protos::cloud::v1alpha1::{
     CreateDatasetEntryRequest, DataSource, DataSourceKind, GetDatasetSchemaRequest,
     RegisterWithDatasetRequest, VersionRequest,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
-use dl_server::RerunCloudHandlerBuilder;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
+use dl_server::DalaranCloudHandlerBuilder;
 use wasm_bindgen_test::wasm_bindgen_test;
 
 wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
 
 #[wasm_bindgen_test]
 async fn version() {
-    let service = RerunCloudHandlerBuilder::new().build();
+    let service = DalaranCloudHandlerBuilder::new().build();
 
     let response = service
         .version(tonic::Request::new(VersionRequest {}))
@@ -45,7 +45,7 @@ async fn register_rrd_without_footer_from_file_url_in_opfs() {
 }
 
 async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
-    let service = RerunCloudHandlerBuilder::new().build();
+    let service = DalaranCloudHandlerBuilder::new().build();
     let footer_suffix = if with_footer {
         "with_footer"
     } else {
@@ -94,14 +94,14 @@ async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
         .expect("registration response should match its declared schema");
     assert_eq!(
         registered
-            .rerun_storage_url
+            .dalaran_storage_url
             .into_iter_owned()
             .collect::<Vec<_>>(),
         [url]
     );
     assert_eq!(
         registered
-            .rerun_segment_type
+            .dalaran_segment_type
             .into_iter_owned()
             .collect::<Vec<_>>(),
         ["rrd"]
@@ -120,10 +120,10 @@ async fn register_rrd_from_file_url_in_opfs(with_footer: bool) {
     assert!(schema.fields().iter().any(|field| {
         let metadata = field.metadata();
         metadata
-            .get("rerun:entity_path")
+            .get("dalaran:entity_path")
             .is_some_and(|path| path == "/test/entity")
             && metadata
-                .get("rerun:component")
+                .get("dalaran:component")
                 .is_some_and(|component| component == "example.MyPoints:points")
     }));
 }

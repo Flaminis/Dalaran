@@ -9,7 +9,7 @@ use std::borrow::Cow;
 ///
 /// There are a few other cases though, like
 /// - `git` is not installed
-/// - the user downloaded rerun as a tarball and then imported via a `path = …` import
+/// - the user downloaded dalaran as a tarball and then imported via a `path = …` import
 /// - others?
 #[derive(Clone, Debug)]
 pub struct BuildInfo {
@@ -34,10 +34,10 @@ pub struct BuildInfo {
     /// Current git branch, or empty string.
     pub git_branch: Cow<'static, str>,
 
-    /// True if we are building within the rerun repository workspace.
+    /// True if we are building within the dalaran repository workspace.
     ///
     /// This is a good proxy for "user checked out the project and built it from source".
-    pub is_in_rerun_workspace: bool,
+    pub is_in_dalaran_workspace: bool,
 
     /// Target architecture and OS
     ///
@@ -88,7 +88,7 @@ impl std::fmt::Display for BuildInfo {
             llvm_version,
             git_hash,
             git_branch,
-            is_in_rerun_workspace: _,
+            is_in_dalaran_workspace: _,
             target_triple,
             datetime,
             is_debug_build,
@@ -140,7 +140,7 @@ impl std::fmt::Display for BuildInfo {
 use crate::CrateVersion;
 
 impl CrateVersion {
-    /// Attempts to parse a [`CrateVersion`] from a [`BuildInfo`]'s string representation (`rerun --version`).
+    /// Attempts to parse a [`CrateVersion`] from a [`BuildInfo`]'s string representation (`dalaran --version`).
     ///
     /// Refer to `BuildInfo as std::fmt::Display>::fmt` to see what the string representation is
     /// expected to look like. Roughly:
@@ -178,7 +178,7 @@ fn crate_version_from_build_info_string() {
         llvm_version: "16.0.5".into(),
         git_hash: "".into(),
         git_branch: "".into(),
-        is_in_rerun_workspace: true,
+        is_in_dalaran_workspace: true,
         target_triple: "x86_64-unknown-linux-gnu".into(),
         datetime: "".into(),
         is_debug_build: true,

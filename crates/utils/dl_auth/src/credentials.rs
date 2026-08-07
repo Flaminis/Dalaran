@@ -2,7 +2,7 @@ use crate::Jwt;
 
 #[derive(Debug, thiserror::Error)]
 pub enum CredentialsProviderError {
-    #[error("session expired; please login using `rerun auth login`")]
+    #[error("session expired; please login using `dalaran auth login`")]
     SessionExpired,
 
     #[error("{0}")]

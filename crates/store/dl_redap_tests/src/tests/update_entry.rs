@@ -4,13 +4,13 @@ use dl_protos::cloud::v1alpha1::ext::{
     TableEntry, UpdateDatasetEntryRequest, UpdateEntryRequest, UpdateEntryResponse,
     UpdateTableEntryRequest,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{DeleteEntryRequest, ReadTableEntryRequest};
 use dl_protos::common::v1alpha1::ext::SegmentId;
 
 use super::common::{create_table_entry_with_name, entry_name};
 
-pub async fn update_entry_tests(service: impl RerunCloudService) {
+pub async fn update_entry_tests(service: impl DalaranCloudService) {
     //
     // Create a dataset
     //
@@ -176,7 +176,7 @@ pub async fn update_entry_tests(service: impl RerunCloudService) {
     );
 }
 
-pub async fn update_table_entry_blueprint_details(service: impl RerunCloudService) {
+pub async fn update_table_entry_blueprint_details(service: impl DalaranCloudService) {
     let table_dir = tempfile::tempdir().expect("create temp dir");
     let table_entry =
         create_table_entry_with_name(&service, "table_with_blueprint", &table_dir).await;
@@ -220,7 +220,7 @@ pub async fn update_table_entry_blueprint_details(service: impl RerunCloudServic
     );
 }
 
-pub async fn update_table_entry_rejects_invalid_blueprint_details(service: impl RerunCloudService) {
+pub async fn update_table_entry_rejects_invalid_blueprint_details(service: impl DalaranCloudService) {
     let table_dir = tempfile::tempdir().expect("create temp dir");
     let table_entry =
         create_table_entry_with_name(&service, "table_with_invalid_blueprint", &table_dir).await;
@@ -289,7 +289,7 @@ pub async fn update_table_entry_rejects_invalid_blueprint_details(service: impl 
 }
 
 pub async fn update_dataset_entry_rejects_invalid_blueprint_details(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     let dataset_entry = create_dataset_entry(&service, "dataset_with_blueprint_validation")
         .await
@@ -406,7 +406,7 @@ pub async fn update_dataset_entry_rejects_invalid_blueprint_details(
 
 /// Updating a dataset without providing an asset dataset keeps the existing one. The field is
 /// managed by the server, so a client that doesn't know about it cannot accidentally clear it.
-pub async fn update_dataset_entry_keeps_asset_dataset(service: impl RerunCloudService) {
+pub async fn update_dataset_entry_keeps_asset_dataset(service: impl DalaranCloudService) {
     let dataset_entry = create_dataset_entry(&service, "dataset_keeps_asset_dataset")
         .await
         .unwrap();
@@ -440,7 +440,7 @@ pub async fn update_dataset_entry_keeps_asset_dataset(service: impl RerunCloudSe
 /// A dataset whose asset dataset was deleted is left with a dangling reference. Updating the
 /// entry replaces the dangling reference with a new asset dataset, whether the client omits the
 /// reference or sends the stale one back unchanged.
-pub async fn update_dataset_entry_replaces_deleted_asset_dataset(service: impl RerunCloudService) {
+pub async fn update_dataset_entry_replaces_deleted_asset_dataset(service: impl DalaranCloudService) {
     let dataset_entry = create_dataset_entry(&service, "dataset_replaces_deleted_asset")
         .await
         .unwrap();
@@ -509,7 +509,7 @@ pub async fn update_dataset_entry_replaces_deleted_asset_dataset(service: impl R
 }
 
 /// The asset dataset reference of a dataset must point to an existing asset dataset.
-pub async fn update_dataset_entry_rejects_invalid_asset_details(service: impl RerunCloudService) {
+pub async fn update_dataset_entry_rejects_invalid_asset_details(service: impl DalaranCloudService) {
     let dataset_entry = create_dataset_entry(&service, "dataset_with_asset_validation")
         .await
         .unwrap();
@@ -560,7 +560,7 @@ pub async fn update_dataset_entry_rejects_invalid_asset_details(service: impl Re
     );
 }
 
-pub async fn update_entry_bumps_timestamp(service: impl RerunCloudService) {
+pub async fn update_entry_bumps_timestamp(service: impl DalaranCloudService) {
     //
     // Create a dataset
     //
@@ -628,7 +628,7 @@ pub async fn update_entry_bumps_timestamp(service: impl RerunCloudService) {
 // ---
 
 async fn create_dataset_entry(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     name: &str,
 ) -> tonic::Result<DatasetEntry> {
     service
@@ -644,7 +644,7 @@ async fn create_dataset_entry(
 }
 
 async fn update_entry(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     request: UpdateEntryRequest,
 ) -> tonic::Result<UpdateEntryResponse> {
     service
@@ -654,7 +654,7 @@ async fn update_entry(
 }
 
 async fn update_dataset_entry(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     request: UpdateDatasetEntryRequest,
 ) -> tonic::Result<DatasetEntry> {
     service
@@ -664,7 +664,7 @@ async fn update_dataset_entry(
 }
 
 async fn update_table_entry(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     request: UpdateTableEntryRequest,
 ) -> tonic::Result<TableEntry> {
     service
@@ -674,7 +674,7 @@ async fn update_table_entry(
 }
 
 async fn read_table_entry(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     table_id: EntryId,
 ) -> tonic::Result<TableEntry> {
     service

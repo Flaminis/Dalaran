@@ -1,6 +1,6 @@
-//! Rerun Viewer GUI.
+//! Dalaran Viewer GUI.
 //!
-//! This crate contains all the GUI code for the Rerun Viewer,
+//! This crate contains all the GUI code for the Dalaran Viewer,
 //! including all 2D and 3D visualization code.
 //!
 //! # Failure handling overview
@@ -75,7 +75,7 @@ pub use dl_viewer_context::{
     CommandReceiver, CommandSender, SystemCommand, SystemCommandSender, command_channel,
 };
 pub use startup_options::{LoginOptions, StartupOptions};
-pub use ui::about_rerun_ui;
+pub use ui::about_dalaran_ui;
 pub(crate) use ui::dev_panel;
 
 pub mod external {
@@ -128,20 +128,20 @@ pub fn build_info() -> dl_build_info::BuildInfo {
 /// Used for analytics.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum AppEnvironment {
-    /// Created from the Rerun C SDK.
+    /// Created from the Dalaran C SDK.
     CSdk,
 
-    /// Created from the Rerun Python SDK.
+    /// Created from the Dalaran Python SDK.
     PythonSdk(dl_log_types::PythonVersion),
 
-    /// Created from the Rerun Rust SDK.
+    /// Created from the Dalaran Rust SDK.
     RustSdk {
         rustc_version: String,
         llvm_version: String,
     },
 
-    /// Running the Rust `rerun` binary from the CLI.
-    RerunCli {
+    /// Running the Rust `dalaran` binary from the CLI.
+    DalaranCli {
         rustc_version: String,
         llvm_version: String,
     },
@@ -194,7 +194,7 @@ impl AppEnvironment {
             Self::CSdk => "c_sdk",
             Self::PythonSdk(_) => "python_sdk",
             Self::RustSdk { .. } => "rust_sdk",
-            Self::RerunCli { .. } => "rerun_cli",
+            Self::DalaranCli { .. } => "dalaran_cli",
             Self::Web { .. } => "web_viewer",
             Self::Custom(_) => "custom",
             Self::Test => "test",
@@ -251,7 +251,7 @@ pub(crate) fn wgpu_options(force_wgpu_backend: Option<&str>) -> egui_wgpu::WgpuC
     }
 }
 
-/// Customize eframe and egui to suit the rerun viewer.
+/// Customize eframe and egui to suit the dalaran viewer.
 pub fn customize_eframe_and_setup_renderer(
     cc: &eframe::CreationContext<'_>,
 ) -> Result<(), dl_renderer::RenderContextError> {
@@ -298,7 +298,7 @@ pub fn reset_viewer_persistence() -> anyhow::Result<()> {
         }
         _ => {
             let Some(data_dir) = eframe::storage_dir(native::APP_ID) else {
-                anyhow::bail!("Failed to figure out where Rerun stores its data.")
+                anyhow::bail!("Failed to figure out where Dalaran stores its data.")
             };
 
             // Note: `remove_dir_all` fails if the directory doesn't exist.
@@ -319,7 +319,7 @@ pub fn reset_viewer_persistence() -> anyhow::Result<()> {
                     std::fs::write(&analytics_file_path, analytics).ok();
                 }
             } else {
-                dl_log::info!("Rerun state was already cleared.");
+                dl_log::info!("Dalaran state was already cleared.");
             }
 
             // Clear the default cache directory if it exists

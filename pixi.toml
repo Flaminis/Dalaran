@@ -35,7 +35,7 @@ platforms = [
   "win-64",
 ]
 readme = "README.md"
-repository = "https://github.com/rerun-io/rerun"
+repository = "https://github.com/Flaminis/Dalaran"
 version = "0.1.0" # TODO(emilk): sync version with `Cargo.toml` with help from `crates.py`
 requires-pixi = ">=0.71.3" # Make sure to keep this in sync with the version on our CI jobs!
 

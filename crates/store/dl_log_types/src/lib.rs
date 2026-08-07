@@ -1,4 +1,4 @@
-//! The different types that make up the rerun log format.
+//! The different types that make up the dalaran log format.
 //!
 //! ## Feature flags
 #![doc = document_features::document_features!()]
@@ -6,7 +6,7 @@
 //! ## Mono-components
 //!
 //! Some components, mostly transform related ones, are "mono-components".
-//! This means that Rerun makes assumptions that depend on this component
+//! This means that Dalaran makes assumptions that depend on this component
 //! only taking on a singular value for all instances of an Entity. Where possible,
 //! exposed APIs will force these components to be logged as a singular instance.
 //! However, it is an error with undefined behavior to manually use lower-level
@@ -587,7 +587,7 @@ pub struct StoreInfo {
 
     pub store_source: StoreSource,
 
-    /// The Rerun version used to encoded the RRD data.
+    /// The Dalaran version used to encoded the RRD data.
     ///
     // NOTE: The version comes directly from the decoded RRD stream's header, duplicating it here
     // would probably only lead to more issues down the line.
@@ -815,13 +815,13 @@ impl FileSource {
 pub enum StoreSource {
     Unknown,
 
-    /// The official Rerun C Logging SDK
+    /// The official Dalaran C Logging SDK
     CSdk,
 
-    /// The official Rerun Python Logging SDK
+    /// The official Dalaran Python Logging SDK
     PythonSdk(PythonVersion),
 
-    /// The official Rerun Rust Logging SDK
+    /// The official Dalaran Rust Logging SDK
     RustSdk {
         /// Rust version of the code compiling the Rust SDK
         rustc_version: String,

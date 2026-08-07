@@ -1,7 +1,7 @@
 [package]
 name = "dl_chunk_store"
 authors.workspace = true
-description = "A storage engine for Rerun's Chunks"
+description = "A storage engine for Dalaran's Chunks"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -26,7 +26,7 @@ default = []
 deadlock_detection = ["parking_lot/deadlock_detection"]
 
 [dependencies]
-# Rerun dependencies:
+# Dalaran dependencies:
 dl_arrow_util.workspace = true
 dl_byte_size.workspace = true
 dl_chunk.workspace = true

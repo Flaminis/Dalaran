@@ -18,9 +18,9 @@ use dl_renderer::{Color32, Hsva, LineDrawableBuilder, PointCloudBuilder, Size};
 mod framework;
 
 struct Render2D {
-    rerun_logo_texture: GpuTexture2D,
-    rerun_logo_texture_width: u32,
-    rerun_logo_texture_height: u32,
+    dalaran_logo_texture: GpuTexture2D,
+    dalaran_logo_texture_width: u32,
+    dalaran_logo_texture_height: u32,
 }
 
 impl framework::Example for Render2D {
@@ -29,29 +29,29 @@ impl framework::Example for Render2D {
     }
 
     fn new(re_ctx: &dl_renderer::RenderContext) -> Self {
-        let rerun_logo =
+        let dalaran_logo =
             image::load_from_memory(include_bytes!("../dl_ui/data/logo_dark_mode.png")).unwrap();
 
-        let image_data = rerun_logo.as_rgba8().unwrap().to_vec();
+        let image_data = dalaran_logo.as_rgba8().unwrap().to_vec();
 
-        let rerun_logo_texture = re_ctx
+        let dalaran_logo_texture = re_ctx
             .texture_manager_2d
             .create(
                 re_ctx,
                 ImageDataDesc {
-                    label: "rerun logo".into(),
+                    label: "dalaran logo".into(),
                     data: image_data.into(),
                     format: wgpu::TextureFormat::Rgba8UnormSrgb.into(),
-                    width_height: [rerun_logo.width(), rerun_logo.height()],
+                    width_height: [dalaran_logo.width(), dalaran_logo.height()],
                     alpha_channel_usage: dl_renderer::AlphaChannelUsage::DontKnow,
                 },
             )
-            .expect("Failed to create texture for rerun logo");
+            .expect("Failed to create texture for dalaran logo");
         Self {
-            rerun_logo_texture,
+            dalaran_logo_texture,
 
-            rerun_logo_texture_width: rerun_logo.width(),
-            rerun_logo_texture_height: rerun_logo.height(),
+            dalaran_logo_texture_width: dalaran_logo.width(),
+            dalaran_logo_texture_height: dalaran_logo.height(),
         }
     }
 
@@ -259,10 +259,10 @@ impl framework::Example for Render2D {
             &[
                 TexturedRect {
                     top_left_corner_position: glam::vec3(500.0, 120.0, -0.05),
-                    extent_u: self.rerun_logo_texture_width as f32 * image_scale * glam::Vec3::X,
-                    extent_v: self.rerun_logo_texture_height as f32 * image_scale * glam::Vec3::Y,
+                    extent_u: self.dalaran_logo_texture_width as f32 * image_scale * glam::Vec3::X,
+                    extent_v: self.dalaran_logo_texture_height as f32 * image_scale * glam::Vec3::Y,
                     colormapped_texture: ColormappedTexture::from_unorm_rgba(
-                        self.rerun_logo_texture.clone(),
+                        self.dalaran_logo_texture.clone(),
                     ),
                     options: RectangleOptions {
                         texture_filter_magnification: TextureFilterMag::Nearest,
@@ -274,13 +274,13 @@ impl framework::Example for Render2D {
                     top_left_corner_position: glam::vec3(
                         500.0,
                         // Intentionally overlap pictures to illustrate z-fighting resolution
-                        170.0 + self.rerun_logo_texture_height as f32 * image_scale * 0.25,
+                        170.0 + self.dalaran_logo_texture_height as f32 * image_scale * 0.25,
                         -0.05,
                     ),
-                    extent_u: self.rerun_logo_texture_width as f32 * image_scale * glam::Vec3::X,
-                    extent_v: self.rerun_logo_texture_height as f32 * image_scale * glam::Vec3::Y,
+                    extent_u: self.dalaran_logo_texture_width as f32 * image_scale * glam::Vec3::X,
+                    extent_v: self.dalaran_logo_texture_height as f32 * image_scale * glam::Vec3::Y,
                     colormapped_texture: ColormappedTexture::from_unorm_rgba(
-                        self.rerun_logo_texture.clone(),
+                        self.dalaran_logo_texture.clone(),
                     ),
                     options: RectangleOptions {
                         texture_filter_magnification: TextureFilterMag::Linear,

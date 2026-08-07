@@ -4,16 +4,16 @@
 //! cargo run -p test_data_density_graph
 //! ```
 
-use rerun::RecordingStream;
-use rerun::external::dl_log_types::NonMinI64;
-use rerun::external::{dl_chunk_store, dl_log};
-use rerun::time::TimeInt;
+use dalaran::RecordingStream;
+use dalaran::external::dl_log_types::NonMinI64;
+use dalaran::external::{dl_chunk_store, dl_log};
+use dalaran::time::TimeInt;
 
 fn main() -> anyhow::Result<()> {
     dl_log::setup_logging();
 
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_test_data_density_graph")
-        .spawn_opts(&rerun::SpawnOptions {
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_test_data_density_graph")
+        .spawn_opts(&dalaran::SpawnOptions {
             wait_for_bind: true,
             extra_env: {
                 use dl_chunk_store::ChunkStoreConfig as C;
@@ -39,7 +39,7 @@ fn run(rec: &RecordingStream) -> anyhow::Result<()> {
     ";
     rec.log_static(
         "description",
-        &rerun::TextDocument::from_markdown(DESCRIPTION),
+        &dalaran::TextDocument::from_markdown(DESCRIPTION),
     )?;
 
     let entities = [
@@ -72,21 +72,21 @@ fn log(
     sorted: bool,
     time_start_ms: i64,
 ) -> anyhow::Result<()> {
-    let entity_path = rerun::EntityPath::parse_strict(entity_path)?;
+    let entity_path = dalaran::EntityPath::parse_strict(entity_path)?;
 
     // log points
     rec.send_chunk(
-        rerun::log::Chunk::builder(entity_path.clone())
+        dalaran::log::Chunk::builder(entity_path.clone())
             .with_archetype(
-                rerun::log::RowId::new(),
+                dalaran::log::RowId::new(),
                 [
                     (
-                        rerun::Timeline::log_time(),
-                        rerun::time::TimeInt::from_millis(NonMinI64::ZERO),
+                        dalaran::Timeline::log_time(),
+                        dalaran::time::TimeInt::from_millis(NonMinI64::ZERO),
                     ),
-                    (rerun::Timeline::log_tick(), TimeInt::ZERO),
+                    (dalaran::Timeline::log_tick(), TimeInt::ZERO),
                 ],
-                &rerun::Points3D::new(rerun::demo_util::grid(
+                &dalaran::Points3D::new(dalaran::demo_util::grid(
                     (-10.0, -10.0, -10.0).into(),
                     (10.0, 10.0, 10.0).into(),
                     10,
@@ -113,18 +113,18 @@ fn log(
 
         let components = (0..num_rows_per_chunk).map(|i| {
             let angle_deg = i as f32 % 360.0;
-            rerun::Transform3D::from_rotation(rerun::Rotation3D::AxisAngle(
-                ((0.0, 0.0, 1.0), rerun::Angle::from_degrees(angle_deg)).into(),
+            dalaran::Transform3D::from_rotation(dalaran::Rotation3D::AxisAngle(
+                ((0.0, 0.0, 1.0), dalaran::Angle::from_degrees(angle_deg)).into(),
             ))
         });
 
-        let mut chunk = rerun::log::Chunk::builder(entity_path.clone());
+        let mut chunk = dalaran::log::Chunk::builder(entity_path.clone());
         for (time, component) in std::iter::zip(&log_times, components) {
             chunk = chunk.with_archetype(
-                rerun::log::RowId::new(),
+                dalaran::log::RowId::new(),
                 [(
-                    rerun::Timeline::log_time(),
-                    rerun::time::TimeInt::from_millis((*time).try_into().unwrap_or_default()),
+                    dalaran::Timeline::log_time(),
+                    dalaran::time::TimeInt::from_millis((*time).try_into().unwrap_or_default()),
                 )],
                 &component,
             );

@@ -174,7 +174,7 @@ impl std::ops::DerefMut for RowId {
     }
 }
 
-crate::delegate_arrow_tuid!(RowId as "rerun.controls.RowId");
+crate::delegate_arrow_tuid!(RowId as "dalaran.controls.RowId");
 
 #[test]
 fn test_row_id_parse() {

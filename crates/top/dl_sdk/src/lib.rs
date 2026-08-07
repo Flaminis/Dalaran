@@ -1,10 +1,10 @@
-//! The Rerun logging SDK
+//! The Dalaran logging SDK
 //!
-//! This is the bare-bones version of the [`rerun`](https://docs.rs/rerun/) crate.
-//! `rerun` exports everything in `dl_sdk`, so in most cases you want to use `rerun`
+//! This is the bare-bones version of the [`dalaran`](https://docs.rs/dalaran/) crate.
+//! `dalaran` exports everything in `dl_sdk`, so in most cases you want to use `dalaran`
 //! instead.
 //!
-//! Please read [the docs for the `rerun` crate](https://docs.rs/rerun/) instead.
+//! Please read [the docs for the `dalaran` crate](https://docs.rs/dalaran/) instead.
 //!
 //! ## Feature flags
 #![doc = document_features::document_features!()]
@@ -36,14 +36,14 @@ pub use self::recording_stream::{
     forced_sink_path,
 };
 
-/// The default port of a Rerun gRPC /proxy server.
+/// The default port of a Dalaran gRPC /proxy server.
 pub const DEFAULT_SERVER_PORT: u16 = dl_uri::DEFAULT_PROXY_PORT;
 
-/// The default URL of a Rerun gRPC /proxy server.
+/// The default URL of a Dalaran gRPC /proxy server.
 ///
 /// This isn't used to _host_ the server, only to _connect_ to it.
 pub const DEFAULT_CONNECT_URL: &str =
-    const_format::concatcp!("rerun+http://127.0.0.1:", DEFAULT_SERVER_PORT, "/proxy");
+    const_format::concatcp!("dalaran+http://127.0.0.1:", DEFAULT_SERVER_PORT, "/proxy");
 
 pub use global::cleanup_if_forked_child;
 pub use dl_log_types::{
@@ -172,51 +172,51 @@ pub use web_viewer::serve_web_viewer;
 // -----
 // Misc:
 
-/// The version of the Rerun SDK.
+/// The version of the Dalaran SDK.
 pub fn build_info() -> dl_build_info::BuildInfo {
     dl_build_info::build_info!()
 }
 
-const RERUN_ENV_VAR: &str = "RERUN";
+const DALARAN_ENV_VAR: &str = "DALARAN";
 
-/// Helper to get the value of the `RERUN` environment variable.
-fn get_rerun_env() -> Option<bool> {
-    let s = std::env::var(RERUN_ENV_VAR).ok()?;
+/// Helper to get the value of the `DALARAN` environment variable.
+fn get_dalaran_env() -> Option<bool> {
+    let s = std::env::var(DALARAN_ENV_VAR).ok()?;
     match s.to_lowercase().as_str() {
         "0" | "false" | "off" => Some(false),
         "1" | "true" | "on" => Some(true),
         _ => {
             dl_log::warn!(
-                "Invalid value for environment variable {RERUN_ENV_VAR}={s:?}. Expected 'on' or 'off'. It will be ignored"
+                "Invalid value for environment variable {DALARAN_ENV_VAR}={s:?}. Expected 'on' or 'off'. It will be ignored"
             );
             None
         }
     }
 }
 
-/// Checks the `RERUN` environment variable. If not found, returns the argument.
+/// Checks the `DALARAN` environment variable. If not found, returns the argument.
 ///
 /// Also adds some helpful logging.
 pub fn decide_logging_enabled(default_enabled: bool) -> bool {
     // We use `info_once` so that we can call this function
     // multiple times without spamming the log.
-    match get_rerun_env() {
+    match get_dalaran_env() {
         Some(true) => {
             dl_log::info_once!(
-                "Rerun Logging is enabled by the '{RERUN_ENV_VAR}' environment variable."
+                "Dalaran Logging is enabled by the '{DALARAN_ENV_VAR}' environment variable."
             );
             true
         }
         Some(false) => {
             dl_log::info_once!(
-                "Rerun Logging is disabled by the '{RERUN_ENV_VAR}' environment variable."
+                "Dalaran Logging is disabled by the '{DALARAN_ENV_VAR}' environment variable."
             );
             false
         }
         None => {
             if !default_enabled {
                 dl_log::info_once!(
-                    "Rerun Logging has been disabled. Turn it on with the '{RERUN_ENV_VAR}' environment variable."
+                    "Dalaran Logging has been disabled. Turn it on with the '{DALARAN_ENV_VAR}' environment variable."
                 );
             }
             default_enabled

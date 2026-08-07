@@ -5,14 +5,14 @@ use itertools::Itertools as _;
 use dl_protos::cloud::v1alpha1::FetchChunksRequest;
 use dl_protos::cloud::v1alpha1::ext::QueryDatasetDataframe;
 use dl_protos::cloud::v1alpha1::ext::QueryDatasetRequest;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::common::v1alpha1::ext::ScanParameters;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_sdk::external::dl_log_encoding::ToApplication as _;
 
 use crate::RecordBatchTestExt as _;
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, concat_record_batches,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches,
     entry_name,
 };
 
@@ -22,7 +22,7 @@ use crate::tests::common::{
 /// chunks can be split/compacted/etc. arbitrarily by the implementation). So this test is
 /// conceptually incorrect and works only because the data/chunk layout used is very basic and
 /// predictable.
-pub async fn simple_dataset_fetch_chunk_snapshot(service: impl RerunCloudService) {
+pub async fn simple_dataset_fetch_chunk_snapshot(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -86,7 +86,7 @@ pub async fn simple_dataset_fetch_chunk_snapshot(service: impl RerunCloudService
 
 /// This test runs a `FetchChunks` spanning multiple datasets and ensures all requested chunks
 /// are successfully returned.
-pub async fn multi_dataset_fetch_chunk_completeness(service: impl RerunCloudService) {
+pub async fn multi_dataset_fetch_chunk_completeness(service: impl DalaranCloudService) {
     //
     // Create first dataset
     //

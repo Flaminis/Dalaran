@@ -45,7 +45,7 @@ impl Default for MapViewState {
             map_memory: Default::default(),
             selected_provider: Default::default(),
 
-            // default to Rerun HQ whenever we have no data (either now or historically) to provide
+            // default to Dalaran HQ whenever we have no data (either now or historically) to provide
             // a better location
             last_center_position: walkers::lat_lon(59.319224, 18.075514),
             last_gpu_picking_result: None,
@@ -138,7 +138,7 @@ impl ViewClass for MapView {
 
     fn help(&self, os: egui::os::OperatingSystem) -> Help {
         Help::new("Map view")
-            .docs_link("https://rerun.io/docs/reference/types/views/map_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/map_view")
             .control("Pan", (icons::LEFT_MOUSE_CLICK, "+", "drag"))
             .control(
                 "Zoom",

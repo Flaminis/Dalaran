@@ -1,0 +1,14 @@
+namespace dalaran.blueprint.components;
+
+/// All the contents in the container.
+table IncludedContent (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Default"
+) {
+  /// List of the contents by [datatypes.EntityPath].
+  ///
+  /// This must be a path in the blueprint store.
+  /// Typically structure as `<blueprint_registry>/<uuid>`.
+  // TODO(jleibs): Maybe make this a typed UUID in the future.
+  contents: dalaran.datatypes.EntityPath (order: 100);
+}

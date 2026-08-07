@@ -384,7 +384,7 @@ mod tests {
         });
 
         let selection = Item::from(EntityPath::parse_forgiving("entity/path"));
-        let origin = dl_uri::Origin::from_str("rerun+http://example.com").unwrap();
+        let origin = dl_uri::Origin::from_str("dalaran+http://example.com").unwrap();
         let dataset_id = dl_tuid::Tuid::from_u128(0x182342300c5f8c327a7b4a6e5a379ac4);
 
         let modal = Arc::new(Mutex::new(ShareModal::default()));

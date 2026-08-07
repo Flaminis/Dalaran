@@ -2,7 +2,7 @@
 
 use dl_chunk::EntityPath;
 
-/// Strategy for grouping parquet columns into Rerun chunks.
+/// Strategy for grouping parquet columns into Dalaran chunks.
 ///
 /// Grouping reduces RRD size by sharing timeline data and row IDs across
 /// columns in the same chunk instead of duplicating them per column.
@@ -70,7 +70,7 @@ impl ParquetConfig {
     }
 }
 
-/// Specifies how a parquet column maps to a Rerun timeline.
+/// Specifies how a parquet column maps to a Dalaran timeline.
 #[derive(Debug, Clone)]
 pub struct IndexColumn {
     /// Column name in the parquet file.

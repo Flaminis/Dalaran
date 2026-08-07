@@ -15,7 +15,7 @@ pub enum SourceImageDataFormat {
     /// The source format is already in a wgpu compatible format.
     ///
     /// ⚠️ Only because a format is listed in `wgpu::TextureFormat` doesn't mean we can use it on the currently active backend.
-    /// TODO(andreas): This is a temporary measure until we cover what rerun covers.
+    /// TODO(andreas): This is a temporary measure until we cover what dalaran covers.
     ///                 We'd really like incoming data to not reason with [`wgpu::TextureFormat`] since it's so hard to know
     ///                 what's appropriate & available for a given device.
     WgpuCompatible(wgpu::TextureFormat),

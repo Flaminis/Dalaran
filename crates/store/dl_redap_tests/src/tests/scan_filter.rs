@@ -5,18 +5,18 @@ use arrow::array::{RecordBatch, StringArray};
 use futures::TryStreamExt as _;
 use itertools::Itertools as _;
 use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     ScanDatasetManifestRequest, ScanSegmentTableRequest, SegmentIdFilter, SegmentIdList,
     segment_id_filter,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, entry_name,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
 };
 
-const SEGMENT_ID_COL: &str = ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME;
+const SEGMENT_ID_COL: &str = ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME;
 
 fn scan_only(ids: &[&str]) -> SegmentIdFilter {
     SegmentIdFilter {
@@ -34,7 +34,7 @@ fn skip(ids: &[&str]) -> SegmentIdFilter {
     }
 }
 
-async fn setup(service: &impl RerunCloudService, dataset_name: &str) {
+async fn setup(service: &impl DalaranCloudService, dataset_name: &str) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -56,14 +56,14 @@ fn segment_ids(batches: Vec<RecordBatch>) -> Vec<String> {
             let column = column
                 .as_any()
                 .downcast_ref::<StringArray>()
-                .expect("rerun_segment_id should be a Utf8 column");
+                .expect("dalaran_segment_id should be a Utf8 column");
             ids.extend(column.iter().flatten().map(str::to_owned));
         }
     }
     ids
 }
 
-pub async fn scan_segment_table_filter(service: impl RerunCloudService) {
+pub async fn scan_segment_table_filter(service: impl DalaranCloudService) {
     let dataset_name = "my_dataset";
     setup(&service, dataset_name).await;
 
@@ -139,7 +139,7 @@ pub async fn scan_segment_table_filter(service: impl RerunCloudService) {
     assert_eq!(projected, vec!["my_segment_id2".to_owned()]);
 }
 
-pub async fn scan_dataset_manifest_filter(service: impl RerunCloudService) {
+pub async fn scan_dataset_manifest_filter(service: impl DalaranCloudService) {
     let dataset_name = "my_dataset";
     setup(&service, dataset_name).await;
 

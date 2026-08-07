@@ -29,11 +29,11 @@ fn fake_local_and_example_recordings_test() {
     // fake an example recording
     let mut example_entity_db = EntityDb::new(StoreId::new(
         StoreKind::Recording,
-        "rerun_example_dna",
+        "dalaran_example_dna",
         "dna_rec_id",
     ));
     example_entity_db.data_source = Some(dl_log_channel::LogSource::HttpStream {
-        url: "https://app.rerun.io/version/nightly/examples/dna.rrd".to_owned(),
+        url: "https://app.dalaran.dev/version/nightly/examples/dna.rrd".to_owned(),
     });
     store_hub.insert_entity_db(example_entity_db);
 

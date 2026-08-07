@@ -37,7 +37,7 @@ pub async fn watch_events_auto_refresh_test() {
     // Open the viewer *directly at* the persistent dataset. This connects to the server,
     // which spawns the `WatchEvents` listener for this origin.
     let dataset_url = format!(
-        "rerun+http://localhost:{}/entry/{}",
+        "dalaran+http://localhost:{}/entry/{}",
         server.port(),
         persistent.details.id
     );

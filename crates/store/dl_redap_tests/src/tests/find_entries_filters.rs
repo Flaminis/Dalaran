@@ -1,19 +1,19 @@
 //! Conformance tests for `FindEntries` kind filtering (`EntryFilter.entry_kinds`).
 //!
 //! Assertions are deliberately robust to the two servers under test (`dl_server` and the
-//! Rerun Hub frontend) returning different overall entry counts (e.g. the virtual
+//! Dalaran Hub frontend) returning different overall entry counts (e.g. the virtual
 //! `__entries` system table, which has kind `Table`): we check "all returned kinds are within
 //! the requested set" and "the entries we created are present", rather than exact totals.
 
 use dl_log_types::EntryName;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{EntryDetails, EntryFilter, EntryKind, FindEntriesRequest};
 
-use super::common::{RerunCloudServiceExt as _, create_table_entry_with_name};
+use super::common::{DalaranCloudServiceExt as _, create_table_entry_with_name};
 
 /// Fire a `FindEntries` request and return the raw entries, or the endpoint error.
 async fn find_entries(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     filter: EntryFilter,
 ) -> tonic::Result<Vec<EntryDetails>> {
     Ok(service
@@ -27,7 +27,7 @@ async fn find_entries(
 
 /// Like [`find_entries`], but panics on error (for the happy-path test bodies).
 async fn find_entries_ok(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     filter: EntryFilter,
 ) -> Vec<EntryDetails> {
     find_entries(service, filter)
@@ -40,7 +40,7 @@ async fn find_entries_ok(
 ///
 /// This is for maintaining backwards compatibility with clients older than 0.35.
 /// When 0.34 is out of support we should change this behavior to return no results.
-pub async fn find_entries_default_excludes_asset_datasets(service: impl RerunCloudService) {
+pub async fn find_entries_default_excludes_asset_datasets(service: impl DalaranCloudService) {
     let tmp_dir = tempfile::tempdir().expect("create temp dir");
     let dataset = service
         .create_dataset_entry_with_name("fef_default_dataset")
@@ -76,7 +76,7 @@ pub async fn find_entries_default_excludes_asset_datasets(service: impl RerunClo
 }
 
 /// `entry_kinds` restricts the result set to exactly the requested kinds.
-pub async fn find_entries_entry_kinds_exact(service: impl RerunCloudService) {
+pub async fn find_entries_entry_kinds_exact(service: impl DalaranCloudService) {
     let tmp_dir = tempfile::tempdir().expect("create temp dir");
     let dataset = service
         .create_dataset_entry_with_name("fef_exact_dataset")
@@ -158,7 +158,7 @@ pub async fn find_entries_entry_kinds_exact(service: impl RerunCloudService) {
 
 /// `entry_kinds` containing `ENTRY_KIND_UNSPECIFIED` is rejected, alone or mixed with a
 /// valid kind.
-pub async fn find_entries_entry_kinds_rejects_unspecified(service: impl RerunCloudService) {
+pub async fn find_entries_entry_kinds_rejects_unspecified(service: impl DalaranCloudService) {
     let status = find_entries(
         &service,
         EntryFilter {
@@ -191,7 +191,7 @@ pub async fn find_entries_entry_kinds_rejects_unspecified(service: impl RerunClo
 }
 
 /// The legacy singular `entry_kind` field still works when `entry_kinds` is empty.
-pub async fn find_entries_legacy_entry_kind_still_works(service: impl RerunCloudService) {
+pub async fn find_entries_legacy_entry_kind_still_works(service: impl DalaranCloudService) {
     let dataset = service
         .create_dataset_entry_with_name("fef_legacy_dataset")
         .await;
@@ -226,7 +226,7 @@ pub async fn find_entries_legacy_entry_kind_still_works(service: impl RerunCloud
 /// against all but `AssetDatasets`. This is odd but required for compatibility with clients older
 /// than 0.35. Make the behavior more meaningful (require an `entry_kinds` or return no results)
 /// when we deprecate old clients.
-pub async fn find_entries_asset_by_name_requires_explicit_kind(service: impl RerunCloudService) {
+pub async fn find_entries_asset_by_name_requires_explicit_kind(service: impl DalaranCloudService) {
     let dataset = service
         .create_dataset_entry_with_name("fef_asset_by_name_dataset")
         .await;
@@ -267,7 +267,7 @@ pub async fn find_entries_asset_by_name_requires_explicit_kind(service: impl Rer
 /// Unknown positive `entry_kinds` values (kinds not yet known to this server version) are
 /// silently ignored rather than rejected: a future kind added server-side must never break
 /// an intermediate-version client that happens to send it alongside known kinds.
-pub async fn find_entries_ignores_unknown_entry_kinds(service: impl RerunCloudService) {
+pub async fn find_entries_ignores_unknown_entry_kinds(service: impl DalaranCloudService) {
     let dataset = service
         .create_dataset_entry_with_name("fef_unknown_kind_dataset")
         .await;
@@ -297,7 +297,7 @@ pub async fn find_entries_ignores_unknown_entry_kinds(service: impl RerunCloudSe
 
 /// A name lookup combined with a multi-kind filter returns exactly the matching entry, with
 /// no error, even though the name only matches one of the requested kinds' store families.
-pub async fn find_entries_entry_kinds_multi_kind_name_lookup(service: impl RerunCloudService) {
+pub async fn find_entries_entry_kinds_multi_kind_name_lookup(service: impl DalaranCloudService) {
     let tmp_dir = tempfile::tempdir().expect("create temp dir");
     let table = create_table_entry_with_name(&service, "fef_multi_kind_table", &tmp_dir).await;
 
@@ -330,7 +330,7 @@ pub async fn find_entries_entry_kinds_multi_kind_name_lookup(service: impl Rerun
 /// against all but `AssetDatasets`. This is odd but required for compatibility with clients older
 /// than 0.35. Make the behavior more meaningful (require an `entry_kinds` or return no results)
 /// when we deprecate old clients.
-pub async fn find_entries_asset_by_id_requires_explicit_kind(service: impl RerunCloudService) {
+pub async fn find_entries_asset_by_id_requires_explicit_kind(service: impl DalaranCloudService) {
     let dataset = service
         .create_dataset_entry_with_name("fef_asset_by_id_dataset")
         .await;
@@ -389,7 +389,7 @@ pub async fn find_entries_asset_by_id_requires_explicit_kind(service: impl Rerun
 /// The legacy singular `entry_kind` field never surfaces `NotFound` as an error: a miss
 /// (a name that doesn't exist) contributes nothing, exactly like `entry_kinds` and the
 /// kind-less default.
-pub async fn find_entries_legacy_entry_kind_miss_returns_empty(service: impl RerunCloudService) {
+pub async fn find_entries_legacy_entry_kind_miss_returns_empty(service: impl DalaranCloudService) {
     // Deliberately exercises the deprecated `entry_kind` field: a legacy singular entry_kind
     // filter combined with a name that matches nothing must return an empty list, not error.
     let entries = find_entries_ok(
@@ -409,7 +409,7 @@ pub async fn find_entries_legacy_entry_kind_miss_returns_empty(service: impl Rer
 
 /// The legacy singular `entry_kind` field rejects `ENTRY_KIND_UNSPECIFIED`, exactly like
 /// `entry_kinds`.
-pub async fn find_entries_rejects_legacy_unspecified(service: impl RerunCloudService) {
+pub async fn find_entries_rejects_legacy_unspecified(service: impl DalaranCloudService) {
     // Deliberately exercises the deprecated `entry_kind` field: legacy singular
     // ENTRY_KIND_UNSPECIFIED must be rejected the same way as `entry_kinds` containing it.
     let status = find_entries(

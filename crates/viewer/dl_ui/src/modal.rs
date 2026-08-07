@@ -92,7 +92,7 @@ impl ModalHandler {
     }
 }
 
-/// Show a modal window with Rerun style using [`egui::Modal`].
+/// Show a modal window with Dalaran style using [`egui::Modal`].
 ///
 /// The modal sets the clip rect such as to allow full-span highlighting behavior (e.g. with
 /// [`crate::list_item::ListItem`]). Consider using [`crate::UiExt::full_span_separator`] to draw a

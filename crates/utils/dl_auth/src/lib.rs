@@ -1,4 +1,4 @@
-//! Basic authentication helpers for Rerun.
+//! Basic authentication helpers for Dalaran.
 //!
 //! Currently, this crate provides a simple [`Jwt`]-based authentication scheme on
 //! top of a rudimentary [`RedapProvider`] that uses a symmetric key to _both_
@@ -20,7 +20,7 @@ mod claims;
 mod service;
 mod token;
 
-/// Rerun Hub permissions
+/// Dalaran Hub permissions
 #[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum Permission {
     /// User can read data.

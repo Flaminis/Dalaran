@@ -131,7 +131,7 @@ impl RrdManifest {
     pub const FIELD_CHUNK_IS_STATIC: &str = RawRrdManifest::FIELD_CHUNK_IS_STATIC;
     pub const FIELD_CHUNK_BYTE_OFFSET: &str = RawRrdManifest::FIELD_CHUNK_BYTE_OFFSET;
     pub const FIELD_CHUNK_PARTITION_ID: &str = HubRrdManifest::FIELD_CHUNK_PARTITION_ID;
-    pub const FIELD_RERUN_PARTITION_LAYER: &str = HubRrdManifest::FIELD_RERUN_PARTITION_LAYER;
+    pub const FIELD_DALARAN_PARTITION_LAYER: &str = HubRrdManifest::FIELD_DALARAN_PARTITION_LAYER;
 
     /// All columns present in the pruned batch returned by [`Self::chunk_fetcher_rb()`].
     pub const CHUNK_FETCHER_COLUMNS: &[&str] = &[
@@ -140,7 +140,7 @@ impl RrdManifest {
         Self::FIELD_CHUNK_IS_STATIC,
         Self::FIELD_CHUNK_BYTE_OFFSET,
         Self::FIELD_CHUNK_PARTITION_ID,
-        Self::FIELD_RERUN_PARTITION_LAYER,
+        Self::FIELD_DALARAN_PARTITION_LAYER,
     ];
 }
 

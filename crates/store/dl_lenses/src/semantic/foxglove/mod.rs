@@ -1,4 +1,4 @@
-//! Lenses for converting Foxglove Protobuf messages to Rerun components and archetypes.
+//! Lenses for converting Foxglove Protobuf messages to Dalaran components and archetypes.
 
 use dl_log_types::TimeType;
 
@@ -35,7 +35,7 @@ pub use poses_in_frame::poses_in_frame;
 pub use raw_image::raw_image;
 pub use voxel_grid::voxel_grid;
 
-/// Name of the timestamp field in Foxglove messages and name of the corresponding Rerun timeline.
+/// Name of the timestamp field in Foxglove messages and name of the corresponding Dalaran timeline.
 const FOXGLOVE_TIMESTAMP: &str = "timestamp";
 
 /// Builds all Foxglove lenses with the specified time type.

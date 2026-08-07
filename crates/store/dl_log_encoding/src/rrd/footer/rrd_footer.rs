@@ -12,7 +12,7 @@ use super::RawRrdManifest;
 /// therefore a single `RrdFooter`.
 /// It is possible to break that invariant by concatenating streams using external tools,
 /// e.g. by doing something like `cat *.rrd > all_my_recordings.rrd`.
-/// Passing that stream back through Rerun tools, e.g. `cat *.rrd | rerun rrd merge > all_my_recordings.rrd`,
+/// Passing that stream back through Dalaran tools, e.g. `cat *.rrd | dalaran rrd merge > all_my_recordings.rrd`,
 /// would once again guarantee that only one `::End` message is present though.
 /// I.e. that invariant holds as long as one stays within our ecosystem of tools.
 ///

@@ -12,7 +12,7 @@
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -21,7 +21,7 @@ fn main() -> anyhow::Result<()> {
     use clap::Parser as _;
     let args = Args::parse();
 
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_label_compaction")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_label_compaction")?;
 
     // 20 points with multi-line labels, arranged in a grid
     for i in 0..20 {
@@ -29,7 +29,7 @@ fn main() -> anyhow::Result<()> {
         let y = (i / 5) as f32 * 3.0;
         rec.log(
             format!("points/{i}"),
-            &rerun::Points3D::new([(x, y, 0.0)]).with_labels([format!(
+            &dalaran::Points3D::new([(x, y, 0.0)]).with_labels([format!(
                 "Point {i}\n\
                  Position: ({x:.1}, {y:.1}, 0.0)\n\
                  Status: active\n\

@@ -86,7 +86,7 @@ impl std::str::FromStr for DataPath {
     /// * `/world/points:Points3D:Color`
     /// * `/world/points:Points3D:Color#colors`
     /// * `/world/points[#42]`
-    /// * `/world/points[#42]:rerun.components.Color`
+    /// * `/world/points[#42]:dalaran.components.Color`
     /// * `/world/points[#42]:Points3D:Color#colors`
     ///
     /// (the leadign slash is optional)
@@ -163,7 +163,7 @@ impl std::str::FromStr for DataPath {
 /// But when parsing [`EntityPath`]s we want to be a bit more forgiving, so we
 /// can accept things like `foo/bar.baz` and transform it into `foo/"bar.baz"`.
 /// This allows user to do things like `log(f"foo/{filename}", my_mesh)` without
-/// Rerun throwing a fit.
+/// Dalaran throwing a fit.
 impl EntityPath {
     /// Parse an entity path from a string, with strict checks for correctness.
     ///
@@ -507,7 +507,7 @@ mod tests {
         parse_err("/world/points:", PathParseError::TrailingColon);
         parse_err("/world/points", PathParseError::MissingComponentIdentifier);
         parse_err(
-            "/world/points[#42]:rerun.components.Color",
+            "/world/points[#42]:dalaran.components.Color",
             PathParseError::UnexpectedInstance(Instance(42)),
         );
         parse_err("/world/points:Points3D:", PathParseError::TrailingColon);

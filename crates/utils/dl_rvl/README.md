@@ -1,6 +1,6 @@
 # dl_rvl
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_rvl.svg)](https://crates.io/crates/dl_rvl)
 [![Documentation](https://docs.rs/dl_rvl/badge.svg)](https://docs.rs/dl_rvl)

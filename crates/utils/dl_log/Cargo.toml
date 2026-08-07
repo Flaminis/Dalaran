@@ -1,7 +1,7 @@
 [package]
 name = "dl_log"
 authors.workspace = true
-description = "Helpers for setting up and doing text logging in the Rerun crates."
+description = "Helpers for setting up and doing text logging in the Dalaran crates."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

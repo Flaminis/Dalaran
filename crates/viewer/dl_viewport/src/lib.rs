@@ -1,4 +1,4 @@
-//! Rerun Viewport Panel
+//! Dalaran Viewport Panel
 //!
 //! This crate provides the central panel that contains all views.
 

@@ -62,10 +62,10 @@ pub enum Mode {
     /// requires an `ffmpeg` executable.
     // TODO(#10090): emit B-frames directly once `VideoStream` can model DTS != PTS.
     Stream {
-        /// Should the samples be grouped into one Rerun chunk per GOP?
+        /// Should the samples be grouped into one Dalaran chunk per GOP?
         ///
-        /// If `true`, groups samples into one Rerun chunk per GOP (keyframe through the sample just
-        /// before the next keyframe). Otherwise, emits one Rerun chunk per sample.
+        /// If `true`, groups samples into one Dalaran chunk per GOP (keyframe through the sample just
+        /// before the next keyframe). Otherwise, emits one Dalaran chunk per sample.
         chunk_by_gop: bool,
 
         /// How to transcode the stream (output codec, GOP size, GPU acceleration).

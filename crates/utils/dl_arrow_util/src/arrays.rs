@@ -431,7 +431,7 @@ pub fn wrap_in_list_array(field: &Field, array: ArrayRef) -> (Field, ListArray) 
     let list_field = Field::new(
         field.name().clone(),
         list_array.data_type().clone(),
-        true, // All components in Rerun has "outer nullability"
+        true, // All components in Dalaran has "outer nullability"
     )
     .with_metadata(field.metadata().clone());
 

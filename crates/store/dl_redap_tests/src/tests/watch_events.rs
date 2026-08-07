@@ -2,18 +2,18 @@ use std::time::Duration;
 
 use anyhow::Context as _;
 use futures::StreamExt as _;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::watch_events_response::Kind;
 use dl_protos::cloud::v1alpha1::{DeleteEntryRequest, WatchEventsRequest};
 
-use super::common::RerunCloudServiceExt as _;
+use super::common::DalaranCloudServiceExt as _;
 
 type Result<T = ()> = anyhow::Result<T>;
 
 /// How long to wait for an expected event before giving up.
 const EVENT_TIMEOUT: Duration = Duration::from_secs(5);
 
-pub async fn watch_events_entry_created(service: impl RerunCloudService) -> Result {
+pub async fn watch_events_entry_created(service: impl DalaranCloudService) -> Result {
     // Subscribe *before* triggering: the server only delivers events sent after we subscribe.
     let stream = service
         .watch_events(tonic::Request::new(WatchEventsRequest::default()))
@@ -38,7 +38,7 @@ pub async fn watch_events_entry_created(service: impl RerunCloudService) -> Resu
     Ok(())
 }
 
-pub async fn watch_events_entry_deleted(service: impl RerunCloudService) -> Result {
+pub async fn watch_events_entry_deleted(service: impl DalaranCloudService) -> Result {
     let dataset_entry = service.create_dataset_entry_with_name("my_dataset").await;
 
     let stream = service

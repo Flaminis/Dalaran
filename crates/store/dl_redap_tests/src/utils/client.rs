@@ -1,6 +1,6 @@
 use futures::Stream;
 use dl_datafusion::DataframeClientAPI;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     FetchChunksRequest, FetchChunksResponse, GetDatasetSchemaRequest, GetDatasetSchemaResponse,
     QueryDatasetRequest, QueryDatasetResponse,
@@ -11,7 +11,7 @@ use std::sync::Arc;
 use tonic::codec::DecodeBuf;
 use tonic::{Request, Response, Status};
 
-pub(crate) struct TestClient<T: RerunCloudService> {
+pub(crate) struct TestClient<T: DalaranCloudService> {
     pub(crate) service: Arc<T>,
 
     /// Every `query_dataset` request seen by this client, in order. Lets a test
@@ -21,7 +21,7 @@ pub(crate) struct TestClient<T: RerunCloudService> {
     pub(crate) query_dataset_requests: Arc<parking_lot::Mutex<Vec<QueryDatasetRequest>>>,
 }
 
-impl<T: RerunCloudService> TestClient<T> {
+impl<T: DalaranCloudService> TestClient<T> {
     pub(crate) fn new(service: Arc<T>) -> Self {
         Self {
             service,
@@ -31,7 +31,7 @@ impl<T: RerunCloudService> TestClient<T> {
 }
 
 // Derive macros complain about unsatisfied bounds, so implement manually
-impl<T: RerunCloudService> Clone for TestClient<T> {
+impl<T: DalaranCloudService> Clone for TestClient<T> {
     fn clone(&self) -> Self {
         Self {
             service: Arc::clone(&self.service),
@@ -40,7 +40,7 @@ impl<T: RerunCloudService> Clone for TestClient<T> {
     }
 }
 
-impl<T: RerunCloudService> std::fmt::Debug for TestClient<T> {
+impl<T: DalaranCloudService> std::fmt::Debug for TestClient<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("TestClient").finish()
     }
@@ -86,7 +86,7 @@ where
 }
 
 #[async_trait::async_trait]
-impl<T: RerunCloudService> DataframeClientAPI for TestClient<T> {
+impl<T: DalaranCloudService> DataframeClientAPI for TestClient<T> {
     async fn get_dataset_schema(
         &mut self,
         request: Request<GetDatasetSchemaRequest>,
@@ -129,7 +129,7 @@ impl<T: RerunCloudService> DataframeClientAPI for TestClient<T> {
 
 pub async fn create_test_client<T>(service: T) -> TestClient<T>
 where
-    T: RerunCloudService,
+    T: DalaranCloudService,
 {
     TestClient::new(Arc::new(service))
 }

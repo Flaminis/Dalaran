@@ -1100,7 +1100,7 @@ pub enum VideoSource {
 
     /// An identifier pair the host resolves to the sample's bytes.
     ///
-    /// `id` identifies a container (e.g. a Rerun chunk for video streams),
+    /// `id` identifies a container (e.g. a Dalaran chunk for video streams),
     /// `sub_id` selects the sample within. `sub_id == None` can be used if
     /// the specific sample within the container is not known, for example
     /// when the sample is unloaded.

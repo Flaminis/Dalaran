@@ -1,9 +1,9 @@
-//! Gamepad input handling for the Rerun viewer.
+//! Gamepad input handling for the Dalaran viewer.
 //!
 //! The crate keeps device polling separate from view-specific camera behavior.
 //!
 //! Its default mapping uses a conventional dual-stick gamepad layout
-//! and returns 3D navigation intents in Rerun's RUB view space.
+//! and returns 3D navigation intents in Dalaran's RUB view space.
 
 use glam::{Vec2, Vec3};
 

@@ -57,7 +57,7 @@ impl SyncDav1dDecoder {
             if cfg!(target_os = "macos") && cfg!(target_arch = "aarch64") {
                 dl_log::warn_once!(
                     "The native AV1 video decoder is unnecessarily slow. \
-                    Speed it up by compiling Rerun with the `nasm` feature enabled."
+                    Speed it up by compiling Dalaran with the `nasm` feature enabled."
                 );
             } else {
                 // Better to return an error than to be perceived as being slow
@@ -340,7 +340,7 @@ fn yuv_matrix_coefficients(debug_name: &str, picture: &dav1d::Picture) -> YuvMat
         | dav1d::pixel::MatrixCoefficients::ST2085 => {
             // TODO(#7594): HDR support (we'll probably only care about `BT2020NonConstantLuminance`?)
             dl_log::warn_once!(
-                "Video {debug_name:?} specified HDR color primaries. Rerun doesn't handle HDR colors correctly yet. Color artifacts may be visible."
+                "Video {debug_name:?} specified HDR color primaries. Dalaran doesn't handle HDR colors correctly yet. Color artifacts may be visible."
             );
             YuvMatrixCoefficients::Bt709
         }

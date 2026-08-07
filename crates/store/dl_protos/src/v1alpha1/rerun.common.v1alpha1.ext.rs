@@ -271,16 +271,16 @@ impl From<crate::common::v1alpha1::DatasetKind> for DatasetKind {
     }
 }
 
-impl From<super::rerun_cloud_v1alpha1::EntryKind> for DatasetKind {
-    fn from(value: super::rerun_cloud_v1alpha1::EntryKind) -> Self {
+impl From<super::dalaran_cloud_v1alpha1::EntryKind> for DatasetKind {
+    fn from(value: super::dalaran_cloud_v1alpha1::EntryKind) -> Self {
         match value {
-            super::rerun_cloud_v1alpha1::EntryKind::BlueprintDataset => DatasetKind::Blueprint,
-            super::rerun_cloud_v1alpha1::EntryKind::AssetDataset => DatasetKind::Asset,
-            super::rerun_cloud_v1alpha1::EntryKind::Unspecified
-            | super::rerun_cloud_v1alpha1::EntryKind::Dataset
-            | super::rerun_cloud_v1alpha1::EntryKind::DatasetView
-            | super::rerun_cloud_v1alpha1::EntryKind::Table
-            | super::rerun_cloud_v1alpha1::EntryKind::TableView => DatasetKind::Recording,
+            super::dalaran_cloud_v1alpha1::EntryKind::BlueprintDataset => DatasetKind::Blueprint,
+            super::dalaran_cloud_v1alpha1::EntryKind::AssetDataset => DatasetKind::Asset,
+            super::dalaran_cloud_v1alpha1::EntryKind::Unspecified
+            | super::dalaran_cloud_v1alpha1::EntryKind::Dataset
+            | super::dalaran_cloud_v1alpha1::EntryKind::DatasetView
+            | super::dalaran_cloud_v1alpha1::EntryKind::Table
+            | super::dalaran_cloud_v1alpha1::EntryKind::TableView => DatasetKind::Recording,
         }
     }
 }
@@ -980,7 +980,7 @@ impl From<crate::common::v1alpha1::BuildInfo> for dl_build_info::BuildInfo {
             llvm_version: build_info.llvm_version().to_owned().into(),
             git_hash: build_info.git_hash().to_owned().into(),
             git_branch: build_info.git_branch().to_owned().into(),
-            is_in_rerun_workspace: false,
+            is_in_dalaran_workspace: false,
             target_triple: build_info.target_triple().to_owned().into(),
             datetime: build_info.build_time().to_owned().into(),
             is_debug_build: build_info.is_debug_build(),
@@ -1047,24 +1047,24 @@ impl From<crate::common::v1alpha1::semantic_version::Meta> for dl_build_info::Me
     }
 }
 
-// --- DataframePart / RerunChunk <-> RecordBatch ---
+// --- DataframePart / DalaranChunk <-> RecordBatch ---
 
-impl TryFrom<crate::common::v1alpha1::RerunChunk> for arrow::array::RecordBatch {
+impl TryFrom<crate::common::v1alpha1::DalaranChunk> for arrow::array::RecordBatch {
     type Error = TypeConversionError;
 
-    fn try_from(value: crate::common::v1alpha1::RerunChunk) -> Result<Self, Self::Error> {
+    fn try_from(value: crate::common::v1alpha1::DalaranChunk) -> Result<Self, Self::Error> {
         Self::try_from(&value)
     }
 }
 
-impl TryFrom<&crate::common::v1alpha1::RerunChunk> for arrow::array::RecordBatch {
+impl TryFrom<&crate::common::v1alpha1::DalaranChunk> for arrow::array::RecordBatch {
     type Error = TypeConversionError;
 
-    fn try_from(value: &crate::common::v1alpha1::RerunChunk) -> Result<Self, Self::Error> {
+    fn try_from(value: &crate::common::v1alpha1::DalaranChunk) -> Result<Self, Self::Error> {
         match value.encoder_version() {
             crate::common::v1alpha1::EncoderVersion::Unspecified => {
                 return Err(missing_field!(
-                    crate::common::v1alpha1::RerunChunk,
+                    crate::common::v1alpha1::DalaranChunk,
                     "encoder_version"
                 ));
             }
@@ -1080,7 +1080,7 @@ impl TryFrom<&crate::common::v1alpha1::RerunChunk> for arrow::array::RecordBatch
                     record_batch_from_ipc_bytes(bytes, Compression::Off, bytes.len() as u64)?
                 else {
                     return Err(invalid_field!(
-                        crate::common::v1alpha1::RerunChunk,
+                        crate::common::v1alpha1::DalaranChunk,
                         "payload",
                         "empty"
                     ));
@@ -1091,13 +1091,13 @@ impl TryFrom<&crate::common::v1alpha1::RerunChunk> for arrow::array::RecordBatch
     }
 }
 
-impl From<arrow::array::RecordBatch> for crate::common::v1alpha1::RerunChunk {
+impl From<arrow::array::RecordBatch> for crate::common::v1alpha1::DalaranChunk {
     fn from(value: arrow::array::RecordBatch) -> Self {
         Self::from(&value)
     }
 }
 
-impl From<&arrow::array::RecordBatch> for crate::common::v1alpha1::RerunChunk {
+impl From<&arrow::array::RecordBatch> for crate::common::v1alpha1::DalaranChunk {
     fn from(value: &arrow::array::RecordBatch) -> Self {
         let version = crate::common::v1alpha1::EncoderVersion::V0;
         Self {
@@ -1122,7 +1122,7 @@ impl TryFrom<&crate::common::v1alpha1::DataframePart> for arrow::array::RecordBa
         match value.encoder_version() {
             crate::common::v1alpha1::EncoderVersion::Unspecified => {
                 return Err(missing_field!(
-                    crate::common::v1alpha1::RerunChunk,
+                    crate::common::v1alpha1::DalaranChunk,
                     "encoder_version"
                 ));
             }
@@ -1143,7 +1143,7 @@ impl TryFrom<&crate::common::v1alpha1::DataframePart> for arrow::array::RecordBa
                     record_batch_from_ipc_bytes(bytes, compression, value.uncompressed_size)?
                 else {
                     return Err(invalid_field!(
-                        crate::common::v1alpha1::RerunChunk,
+                        crate::common::v1alpha1::DalaranChunk,
                         "payload",
                         "empty"
                     ));

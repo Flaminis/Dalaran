@@ -14,7 +14,7 @@ pub struct LeRobotDatasetImporter;
 
 impl Importer for LeRobotDatasetImporter {
     fn name(&self) -> String {
-        "rerun.importers.LeRobotDataset".into()
+        "dalaran.importers.LeRobotDataset".into()
     }
 
     fn import_from_path(

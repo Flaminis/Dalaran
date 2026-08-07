@@ -122,10 +122,10 @@ impl RecordBatchTestExt for arrow::array::RecordBatch {
     fn sort_index_columns(&self) -> Self {
         self.clone()
             .sort_columns_by(|f1, f2| {
-                if let Some(idx1) = f1.metadata().get("rerun:index")
-                    && let Some(idx2) = f2.metadata().get("rerun:index")
-                    && let Some(marker1) = f1.metadata().get("rerun:index_marker")
-                    && let Some(marker2) = f2.metadata().get("rerun:index_marker")
+                if let Some(idx1) = f1.metadata().get("dalaran:index")
+                    && let Some(idx2) = f2.metadata().get("dalaran:index")
+                    && let Some(marker1) = f1.metadata().get("dalaran:index_marker")
+                    && let Some(marker2) = f2.metadata().get("dalaran:index_marker")
                 {
                     if idx1 == idx2 {
                         marker1.cmp(marker2)

@@ -29,7 +29,7 @@ ignored = ["chrono", "getrandom"]
 default = []
 
 [dependencies]
-# Rerun dependencies:
+# Dalaran dependencies:
 dl_analytics.workspace = true
 dl_async.workspace = true
 dl_arrow_util.workspace = true

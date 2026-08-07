@@ -21,7 +21,7 @@ const NUM_SHOWN_VISUALIZER_COLORS: usize = 2;
 
 // Figma design for this can be found here:
 // https://www.figma.com/design/eGATW7RubxdRrcEP9ITiVh/Any-scalars?node-id=956-7840&t=L1YFvJijAXXLlaBZ-0
-// (accessible only by rerun team members)
+// (accessible only by dalaran team members)
 pub fn visualizer_ui_element(
     ui: &mut egui::Ui,
     ctx: &dl_viewer_context::ViewContext<'_>,

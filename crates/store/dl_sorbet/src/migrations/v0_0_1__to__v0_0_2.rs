@@ -29,7 +29,7 @@ impl super::Migration for Migration {
 
 #[derive(thiserror::Error, Debug)]
 #[error(
-    "Unknown `rerun:kind` {kind:?} in column {column_name:?}. Expect one of `row_id`, `index`, or `component`."
+    "Unknown `dalaran:kind` {kind:?} in column {column_name:?}. Expect one of `row_id`, `index`, or `component`."
 )]
 struct UnknownColumnKind {
     pub kind: String,
@@ -64,7 +64,7 @@ impl TryFrom<&ArrowField> for ColumnKind {
     type Error = UnknownColumnKind;
 
     fn try_from(field: &ArrowField) -> Result<Self, Self::Error> {
-        let Some(kind) = field.get_opt("rerun.kind") else {
+        let Some(kind) = field.get_opt("dalaran.kind") else {
             return Ok(Self::default());
         };
         match kind {
@@ -85,8 +85,8 @@ fn migrate_tuids(batch: &ArrowRecordBatch) -> ArrowRecordBatch {
     dl_tracing::profile_function!();
 
     let needs_migration = batch.schema_ref().fields().iter().any(|field| {
-        field.extension_type_name() == Some("rerun.datatypes.TUID")
-            || field.name() == "rerun.controls.RowId"
+        field.extension_type_name() == Some("dalaran.datatypes.TUID")
+            || field.name() == "dalaran.controls.RowId"
     });
     if !needs_migration {
         return batch.clone();
@@ -99,8 +99,8 @@ fn migrate_tuids(batch: &ArrowRecordBatch) -> ArrowRecordBatch {
     for (field, array) in itertools::izip!(batch.schema().fields(), batch.columns()) {
         let (mut field, mut array) = (field.clone(), array.clone());
 
-        let is_tuid = field.extension_type_name() == Some("rerun.datatypes.TUID")
-            || field.name() == "rerun.controls.RowId";
+        let is_tuid = field.extension_type_name() == Some("dalaran.datatypes.TUID")
+            || field.name() == "dalaran.controls.RowId";
         if is_tuid {
             (field, array) = migrate_tuid_column(field, array);
         }
@@ -131,7 +131,7 @@ fn migrate_tuid_column(
     dl_tracing::profile_function!();
 
     if let Some(struct_array) = array.as_struct_opt() {
-        // Maybe legacy struct (from Rerun 0.22 or earlier):
+        // Maybe legacy struct (from Dalaran 0.22 or earlier):
         let [nanos, counters] = struct_array.columns() else {
             return (field, array);
         };
@@ -179,23 +179,23 @@ fn migrate_record_batch(batch: &ArrowRecordBatch) -> ArrowRecordBatch {
     let archetype_renames = BTreeMap::from([
         // Deprecated in 0.23, removed in 0.24:
         (
-            "rerun.archetypes.Scalar",
+            "dalaran.archetypes.Scalar",
             ArchetypeRename {
-                new_name: "rerun.archetypes.Scalars",
+                new_name: "dalaran.archetypes.Scalars",
                 field_renames: [("scalar", "scalars")].into(),
             },
         ),
         (
-            "rerun.archetypes.SeriesLine",
+            "dalaran.archetypes.SeriesLine",
             ArchetypeRename {
-                new_name: "rerun.archetypes.SeriesLines",
+                new_name: "dalaran.archetypes.SeriesLines",
                 field_renames: [("color", "colors"), ("width", "widths"), ("name", "names")].into(),
             },
         ),
         (
-            "rerun.archetypes.SeriesPoint",
+            "dalaran.archetypes.SeriesPoint",
             ArchetypeRename {
-                new_name: "rerun.archetypes.SeriesPoints",
+                new_name: "dalaran.archetypes.SeriesPoints",
                 field_renames: [
                     ("color", "colors"),
                     ("marker", "markers"),
@@ -210,7 +210,7 @@ fn migrate_record_batch(batch: &ArrowRecordBatch) -> ArrowRecordBatch {
     let needs_migration = batch.schema_ref().fields().iter().any(|field| {
         field
             .metadata()
-            .get("rerun.archetype")
+            .get("dalaran.archetype")
             .is_some_and(|arch| archetype_renames.contains_key(arch.as_str()))
     });
     if !needs_migration {
@@ -223,7 +223,7 @@ fn migrate_record_batch(batch: &ArrowRecordBatch) -> ArrowRecordBatch {
 
     for (field, array) in itertools::izip!(batch.schema().fields(), batch.columns()) {
         let mut metadata = field.metadata().clone();
-        if let Some(archetype) = metadata.get_mut("rerun.archetype")
+        if let Some(archetype) = metadata.get_mut("dalaran.archetype")
             && let Some(archetype_rename) = archetype_renames.get(archetype.as_str())
         {
             dl_log::debug_once!(
@@ -235,7 +235,7 @@ fn migrate_record_batch(batch: &ArrowRecordBatch) -> ArrowRecordBatch {
             *archetype = archetype_rename.new_name.to_owned();
 
             // Renmame fields:
-            if let Some(archetype_field) = metadata.get_mut("rerun.archetype_field")
+            if let Some(archetype_field) = metadata.get_mut("dalaran.archetype_field")
                 && let Some(new_field_name) =
                     archetype_rename.field_renames.get(archetype_field.as_str())
             {

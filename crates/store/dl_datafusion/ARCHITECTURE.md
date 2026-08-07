@@ -7,7 +7,7 @@ the consumer only needs to stream the result incrementally as
 set by emitting batches as the source chunks become safe to release,
 rather than materialising the full result set before yielding.
 
-Incremental emit is constrained by rerun's **latest-at** semantics: the
+Incremental emit is constrained by dalaran's **latest-at** semantics: the
 value of entity `/a` at time `T` is the most recent chunk for `/a` with
 `time_min <= T`. A row at time `T` cannot be emitted until every chunk
 that could affect it has arrived. The **safe horizon** is the largest
@@ -78,8 +78,8 @@ This is the canonical "one dedicated CPU executor per process" design (DataFusio
 
 ### Sizing
 
-The pool gets one thread per available core, overridable via the `RERUN_SDK_NUM_CPUS` environment variable (parsed, clamped to `[1, available cores]`, and cached at first read — see `cpu_count.rs`).
-The same variable also sets `datafusion.execution.target_partitions` for Python catalog sessions (`catalog_client.rs` in `rerun_py`), so one knob scales plan fan-out and pool width together.
+The pool gets one thread per available core, overridable via the `DALARAN_SDK_NUM_CPUS` environment variable (parsed, clamped to `[1, available cores]`, and cached at first read — see `cpu_count.rs`).
+The same variable also sets `datafusion.execution.target_partitions` for Python catalog sessions (`catalog_client.rs` in `dalaran_py`), so one knob scales plan fan-out and pool width together.
 
 ## Network concurrency: the `query_dataset` fan-out
 
@@ -106,7 +106,7 @@ These run concurrently, bounded two ways:
 
 The width and the permit count are the same number
 (`DEFAULT_QUERY_DATASET_MAX_CONCURRENCY = 16`, overridable via
-`RERUN_QUERY_DATASET_MAX_CONCURRENCY`), so a lone scan never blocks on its own
+`DALARAN_QUERY_DATASET_MAX_CONCURRENCY`), so a lone scan never blocks on its own
 permits — the semaphore only bites under co-tenancy.
 
 ## Per-segment lifecycle
@@ -168,7 +168,7 @@ invariant the reorder buffer enforced is no longer required.
 `flush_incremental` rebuilds the `QueryHandle` with
 `filtered_index_range = (last_emitted, horizon]` on every cycle. The
 upper bound is a **correctness requirement**, not a tunable: emitting a
-row past the horizon under rerun's latest-at semantics means publishing
+row past the horizon under dalaran's latest-at semantics means publishing
 an entity's value as if it were final when a later chunk for that
 entity has not yet arrived. Downstream consumers cannot distinguish a
 "complete row" from an "incomplete row with carry-forward values", so
@@ -283,7 +283,7 @@ Resets of `force_overcommit`:
 ## Carry-forward protection in GC
 
 `gc_up_to_horizon` looks correct under range-based intuition: "drop chunks
-with `time_max < horizon`". That is **wrong** under rerun's latest-at
+with `time_max < horizon`". That is **wrong** under dalaran's latest-at
 semantics.
 
 Example: entity `/a` has its only chunk at `t=10`; entity `/b` has chunks
@@ -361,7 +361,7 @@ for any residual pathological case.
 
 #### B — operator sets cap too low via env
 
-`RERUN_PIPELINE_BUDGET_MAX=128MiB` or similar below observed peak
+`DALARAN_PIPELINE_BUDGET_MAX=128MiB` or similar below observed peak
 working set. Same code path as A, human-driven. Same resolution.
 
 #### C — many partitions × wide datasets
@@ -434,6 +434,6 @@ case.
 | `FLUSH_BATCH_ROWS`            | `2048`        | Inherited from non-streaming path (`#1794` / `#1822`).                                                         |
 | `FLUSH_BATCH_BYTES`           | `200 MiB`     | Same.                                                                                                          |
 
-All bytes-sized constants are overridable at runtime via `RERUN_PIPELINE_BUDGET_*`
+All bytes-sized constants are overridable at runtime via `DALARAN_PIPELINE_BUDGET_*`
 env vars. The thresholds and counts are not, by design — they're chosen for
 the architectural invariants above rather than per-deployment tuning.

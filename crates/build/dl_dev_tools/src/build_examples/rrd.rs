@@ -98,8 +98,8 @@ impl Example {
             // Configure flushing so that:
             // * the resulting file size is deterministic
             // * the file is chunked into small batches for better streaming
-            cmd.env("RERUN_FLUSH_TICK_SECS", 1_000_000_000.to_string());
-            cmd.env("RERUN_FLUSH_NUM_BYTES", (128 * 1024).to_string());
+            cmd.env("DALARAN_FLUSH_TICK_SECS", 1_000_000_000.to_string());
+            cmd.env("DALARAN_FLUSH_NUM_BYTES", (128 * 1024).to_string());
 
             if self.allow_warnings {
                 cmd.env("PYTHONWARNINGS", "default");
@@ -108,8 +108,8 @@ impl Example {
                 cmd.env("PYTHONWARNINGS", "error");
             }
 
-            cmd.env("RERUN_PANIC_ON_WARN", "1"); // any logged warnings/errors should cause a failure
-            cmd.env("RERUN_STRICT", "1"); // any misuse of the API should cause a failure
+            cmd.env("DALARAN_PANIC_ON_WARN", "1"); // any logged warnings/errors should cause a failure
+            cmd.env("DALARAN_STRICT", "1"); // any misuse of the API should cause a failure
 
             wait_for_output(cmd, &self.name, progress)?;
         }
@@ -118,7 +118,7 @@ impl Example {
         let final_rrd_path = output_dir.join(&self.name).with_extension("rrd");
 
         let mut cmd = Command::new("python3");
-        cmd.arg("-m").arg("rerun");
+        cmd.arg("-m").arg("dalaran");
         cmd.arg("rrd");
         cmd.arg("optimize");
         // Small chunks for better streaming:

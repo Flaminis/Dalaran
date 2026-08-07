@@ -903,7 +903,7 @@ async fn fetch_remaining_via_grpc<T: DataframeClientAPI>(
 /// This is the function that will run on the IO (main) tokio runtime that will listen
 /// to the gRPC channel for chunks coming in from the catalog server. This loop is started
 /// up by the execute fn of the physical plan, so we will start one per output DataFusion partition,
-/// which is different from the Rerun `segment_id`. The sorting by time index will happen within
+/// which is different from the Dalaran `segment_id`. The sorting by time index will happen within
 /// the cpu worker thread.
 ///
 /// `chunk_infos` is a list of batches with chunk information where each batch has info for

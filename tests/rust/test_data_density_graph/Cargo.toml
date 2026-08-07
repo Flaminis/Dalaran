@@ -11,7 +11,7 @@ workspace = true
 
 [dependencies]
 dl_log = { workspace = true, features = ["setup"] }
-rerun = { path = "../../../crates/top/rerun", features = ["clap"] }
+dalaran = { path = "../../../crates/top/dalaran", features = ["clap"] }
 
 anyhow.workspace = true
 rand = { workspace = true, features = ["std", "std_rng", "thread_rng"] }

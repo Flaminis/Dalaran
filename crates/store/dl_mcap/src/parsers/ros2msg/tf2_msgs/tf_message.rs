@@ -18,7 +18,7 @@ const STATIC_TF_TOPIC: &str = "/tf_static";
 
 fn static_chunk_timelines()
 -> dl_chunk::external::nohash_hasher::IntMap<dl_log_types::TimelineName, dl_chunk::TimeColumn> {
-    // Chunks without any timelines are treated as static by Rerun.
+    // Chunks without any timelines are treated as static by Dalaran.
     dl_chunk::external::nohash_hasher::IntMap::default()
 }
 

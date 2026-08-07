@@ -108,7 +108,7 @@ pub enum StaticColumnSelection {
     NonStaticOnly,
 }
 
-/// Describes a complete query for Rerun's dataframe API.
+/// Describes a complete query for Dalaran's dataframe API.
 ///
 /// ## Terminology: view vs. selection vs. filtering vs. sampling
 ///

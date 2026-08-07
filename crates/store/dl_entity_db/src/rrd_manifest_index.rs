@@ -381,7 +381,7 @@ impl RrdManifestIndex {
         let num_root_chunks = self.root_chunks.len();
         if 25_000 < num_root_chunks {
             dl_log::debug_warn!(
-                "There are {} root chunks in this recording. Consider running `rerun rrd optimize` on the original.",
+                "There are {} root chunks in this recording. Consider running `dalaran rrd optimize` on the original.",
                 dl_format::format_uint(num_root_chunks)
             );
         }

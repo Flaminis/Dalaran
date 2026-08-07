@@ -1,12 +1,12 @@
-//! `dl_viewer_mcp` — an MCP server that drives the Rerun viewer.
+//! `dl_viewer_mcp` — an MCP server that drives the Dalaran viewer.
 //!
 //! It reuses the full `egui_mcp` UI tool set (`query_tree`, `screenshot`, `click`, …) but, instead of
-//! dialing a local inspection socket, it drives the viewer over rerun's gRPC `ViewerControlService`.
+//! dialing a local inspection socket, it drives the viewer over dalaran's gRPC `ViewerControlService`.
 //!
 //! Each egui tool call becomes one `egui_inspection` request/response exchange, carried by a single
 //! `Inspect` RPC.
 //!
-//! The server is exposed two ways — the standalone `re-viewer-mcp` binary and the `rerun viewer-mcp`
+//! The server is exposed two ways — the standalone `re-viewer-mcp` binary and the `dalaran viewer-mcp`
 //! CLI subcommand.
 
 use std::sync::Arc;
@@ -66,7 +66,7 @@ impl Transport for GrpcInspector {
 }
 
 /// Dial the viewer once and build both the [`Bridge`] (which tunnels the egui tools over the
-/// unary `Inspect` RPC) and the gRPC client the rerun-specific tools call through — sharing the
+/// unary `Inspect` RPC) and the gRPC client the dalaran-specific tools call through — sharing the
 /// single connection between them.
 async fn connect_grpc(
     endpoint: &str,
@@ -101,7 +101,7 @@ async fn connect_grpc(
 }
 
 /// The live connection to the viewer: the egui [`UiServer`] (which tunnels the egui tools over
-/// the `Inspect` RPC) and the raw gRPC client (used by the rerun-specific tools). Both are
+/// the `Inspect` RPC) and the raw gRPC client (used by the dalaran-specific tools). Both are
 /// established together on `connect` and dropped together on `disconnect`, so they live behind a
 /// single lock.
 struct Connection {
@@ -109,7 +109,7 @@ struct Connection {
     client: ViewerControlServiceClient<Channel>,
 }
 
-/// The `dl_viewer_mcp` server: rerun-specific connection / state tools, plus the reusable `egui_mcp`
+/// The `dl_viewer_mcp` server: dalaran-specific connection / state tools, plus the reusable `egui_mcp`
 /// [`UiServer`], built on `connect` and dropped on `disconnect`, that drives the live viewer.
 #[derive(Clone)]
 struct ViewerMcpServer {
@@ -122,7 +122,7 @@ struct ViewerMcpServer {
     /// stay listed while disconnected; a call before `connect` returns `no app connected`.
     ui_router: ToolRouter<UiServer>,
 
-    /// Router for the rerun-specific tools layered on top of the egui ones.
+    /// Router for the dalaran-specific tools layered on top of the egui ones.
     tool_router: ToolRouter<Self>,
 }
 
@@ -210,7 +210,7 @@ impl From<StoreIdArg> for StoreId {
 
 #[derive(Debug, Default, Deserialize, schemars::JsonSchema)]
 struct OpenUrlArgs {
-    /// The URL to open in the viewer: a recording/blueprint file URL, a `rerun://` dataset URI, a redap server/catalog URL, or an intra-recording link.
+    /// The URL to open in the viewer: a recording/blueprint file URL, a `dalaran://` dataset URI, a redap server/catalog URL, or an intra-recording link.
     url: String,
 }
 
@@ -224,7 +224,7 @@ impl ViewerMcpServer {
         }
     }
 
-    /// The connected viewer's gRPC client, for the rerun-specific tools. Returns an owned clone
+    /// The connected viewer's gRPC client, for the dalaran-specific tools. Returns an owned clone
     /// (tonic clients are cheap to clone and share the channel) so the RPC runs without holding
     /// the lock, and errors with `not connected` when nothing is connected.
     fn client(&self) -> ToolResult<ViewerControlServiceClient<Channel>> {
@@ -235,7 +235,7 @@ impl ViewerMcpServer {
             .ok_or_else(|| "not connected — call `connect` first".to_owned())
     }
 
-    /// Connect to a running Rerun viewer over gRPC. The other tools will be available once the connection is established.
+    /// Connect to a running Dalaran viewer over gRPC. The other tools will be available once the connection is established.
     /// `endpoint` defaults to `http://127.0.0.1:9876` (the viewer's default gRPC address).
     /// Call `disconnect` to drop the connection.
     #[tool]
@@ -283,7 +283,7 @@ impl ViewerMcpServer {
         }
     }
 
-    /// Report the current Rerun viewer state as JSON: the active recording, the current page URL, and every open recording (recording id, application id) with its timelines, their time ranges, and its current time cursor.
+    /// Report the current Dalaran viewer state as JSON: the active recording, the current page URL, and every open recording (recording id, application id) with its timelines, their time ranges, and its current time cursor.
     /// Use this to learn which recording/timeline to drive and what time values are valid before calling `set_time`.
     /// Requires `connect`.
     #[tool]
@@ -302,7 +302,7 @@ impl ViewerMcpServer {
         )]))
     }
 
-    /// Set the time cursor (timeline position) of a recording in the Rerun viewer.
+    /// Set the time cursor (timeline position) of a recording in the Dalaran viewer.
     /// `time` is a sequence index for sequence timelines or nanoseconds for temporal timelines (call `viewer_state` first for each timeline's type and valid range).
     /// `store_id` and `timeline` default to the active recording / active timeline.
     /// If `play` is unset or `false`, the recording will be paused. If `true`, the recording will play from the selected time.
@@ -328,8 +328,8 @@ impl ViewerMcpServer {
         )]))
     }
 
-    /// Open a URL in the Rerun viewer.
-    /// The URL can be a recording/blueprint file URL, a `rerun://` dataset URI, a redap server/catalog URL, or an intra-recording link.
+    /// Open a URL in the Dalaran viewer.
+    /// The URL can be a recording/blueprint file URL, a `dalaran://` dataset URI, a redap server/catalog URL, or an intra-recording link.
     /// Requires `connect`.
     #[tool]
     async fn open_url(
@@ -464,7 +464,7 @@ fn text_error(msg: impl Into<String>) -> CallToolResult {
 /// descriptions cover each command in isolation; this establishes the cross-cutting workflow —
 /// `connect` first, then the observe→act→verify loop the egui tools share — that an agent
 /// otherwise has to infer.
-const INSTRUCTIONS: &str = r#"This MCP drives a live Rerun viewer: it reads the viewer's accessibility tree and synthesizes real input events. Work in an observe → act → verify loop.
+const INSTRUCTIONS: &str = r#"This MCP drives a live Dalaran viewer: it reads the viewer's accessibility tree and synthesizes real input events. Work in an observe → act → verify loop.
 
 Getting oriented:
 - Call `connect` first (it dials the viewer's gRPC server); every other tool errors until then.
@@ -494,7 +494,7 @@ impl ServerHandler for ViewerMcpServer {
         _request: Option<PaginatedRequestParams>,
         _context: RequestContext<RoleServer>,
     ) -> Result<ListToolsResult, McpError> {
-        // The rerun-specific tools plus the reusable egui UI tools. The egui router is
+        // The dalaran-specific tools plus the reusable egui UI tools. The egui router is
         // independent of the connection, so its tools stay listed even while disconnected.
         let mut tools = self.tool_router.list_all();
         tools.extend(self.ui_router.list_all());
@@ -510,7 +510,7 @@ impl ServerHandler for ViewerMcpServer {
         request: CallToolRequestParams,
         context: RequestContext<RoleServer>,
     ) -> Result<CallToolResult, McpError> {
-        // Rerun-specific tools run on `self`; everything else is delegated to the attached UI
+        // Dalaran-specific tools run on `self`; everything else is delegated to the attached UI
         // server, which exists only while connected.
         if self.tool_router.has_route(&request.name) {
             return self
@@ -529,7 +529,7 @@ impl ServerHandler for ViewerMcpServer {
 /// Serve the MCP server over stdio until the client disconnects.
 ///
 /// Assumes the caller has already set up a Tokio runtime (this must run inside one) and logging.
-/// Both the `rerun viewer-mcp` subcommand and the standalone `re-viewer-mcp` binary call this — each sets up
+/// Both the `dalaran viewer-mcp` subcommand and the standalone `re-viewer-mcp` binary call this — each sets up
 /// its own runtime and logging first.
 pub async fn serve() -> anyhow::Result<()> {
     let server = ViewerMcpServer::new();
@@ -565,7 +565,7 @@ mod tests {
         );
         surface.push_str("\n\n# Tools\n");
 
-        // The rerun-specific tools plus the reusable egui UI tools — the same set `list_tools`
+        // The dalaran-specific tools plus the reusable egui UI tools — the same set `list_tools`
         // serves.
         let mut tools = server.tool_router.list_all();
         tools.extend(server.ui_router.list_all());

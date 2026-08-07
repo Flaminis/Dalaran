@@ -1,0 +1,17 @@
+namespace dalaran.blueprint.archetypes;
+
+/// Similar to gravity, this force pulls nodes towards a specific position.
+struct ForcePosition (
+    "attr.dalaran.scope": "blueprint"
+) {
+    /// Whether the position force is enabled.
+    ///
+    /// The position force pulls nodes towards a specific position, similar to gravity.
+    enabled: dalaran.blueprint.components.Enabled ("attr.dalaran.component_optional", nullable, order: 100);
+
+    /// The strength of the force.
+    strength: dalaran.blueprint.components.ForceStrength ("attr.dalaran.component_optional", nullable, order: 200);
+
+    /// The position where the nodes should be pulled towards.
+    position: dalaran.components.Position2D ("attr.dalaran.component_optional", nullable, order: 300);
+}

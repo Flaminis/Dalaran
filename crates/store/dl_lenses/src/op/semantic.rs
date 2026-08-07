@@ -129,7 +129,7 @@ impl Transform for TimeSpecToNanos {
 }
 
 /// Transforms a `StringArray` of video codec names to a `UInt32Array`,
-/// where each u32 corresponds to a Rerun `VideoCodec` enum value.
+/// where each u32 corresponds to a Dalaran `VideoCodec` enum value.
 #[derive(Default)]
 pub struct StringToVideoCodecUInt32 {}
 

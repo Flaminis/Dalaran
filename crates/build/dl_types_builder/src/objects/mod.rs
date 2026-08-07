@@ -17,8 +17,8 @@ use camino::{Utf8Path, Utf8PathBuf};
 
 use crate::data_type::LazyDatatype;
 use crate::{
-    ATTR_RERUN_COMPONENT_OPTIONAL, ATTR_RERUN_COMPONENT_RECOMMENDED, ATTR_RERUN_COMPONENT_REQUIRED,
-    ATTR_RERUN_DEPRECATED_NOTICE, ATTR_RERUN_DEPRECATED_SINCE, ATTR_RERUN_STATE, Docs, Reporter,
+    ATTR_DALARAN_COMPONENT_OPTIONAL, ATTR_DALARAN_COMPONENT_RECOMMENDED, ATTR_DALARAN_COMPONENT_REQUIRED,
+    ATTR_DALARAN_DEPRECATED_NOTICE, ATTR_DALARAN_DEPRECATED_SINCE, ATTR_DALARAN_STATE, Docs, Reporter,
 };
 
 // ---
@@ -88,7 +88,7 @@ impl Objects {
                     let field_obj = &self[field_type_fqname];
                     if field_obj.is_arrow_transparent() {
                         let suggestion = if field_obj.name == "Utf8" {
-                            "Use `string (nullable)` instead of `rerun.datatypes.Utf8 (nullable)`."
+                            "Use `string (nullable)` instead of `dalaran.datatypes.Utf8 (nullable)`."
                                 .to_owned()
                         } else {
                             format!(
@@ -189,15 +189,15 @@ impl Objects {
 }
 
 /// Ensure that each field of an archetype has exactly one of the
-/// `attr.rerun.component_{required|recommended|optional}` attributes.
+/// `attr.dalaran.component_{required|recommended|optional}` attributes.
 fn validate_archetype_field_attributes(reporter: &Reporter, obj: &Object) {
     assert_eq!(obj.kind, ObjectKind::Archetype);
 
     for field in &obj.fields {
         if [
-            ATTR_RERUN_COMPONENT_OPTIONAL,
-            ATTR_RERUN_COMPONENT_RECOMMENDED,
-            ATTR_RERUN_COMPONENT_REQUIRED,
+            ATTR_DALARAN_COMPONENT_OPTIONAL,
+            ATTR_DALARAN_COMPONENT_RECOMMENDED,
+            ATTR_DALARAN_COMPONENT_REQUIRED,
         ]
         .iter()
         .filter(|attr| field.try_get_attr::<String>(attr).is_some())
@@ -207,7 +207,7 @@ fn validate_archetype_field_attributes(reporter: &Reporter, obj: &Object) {
             reporter.error(
                 &field.virtpath,
                 &field.fqname,
-                "field must have exactly one of the \"attr.rerun.component_{{required|recommended|\
+                "field must have exactly one of the \"attr.dalaran.component_{{required|recommended|\
                 optional}}\" attributes",
             );
         }
@@ -236,10 +236,10 @@ impl Objects {
 /// E.g.:
 /// ```ignore
 /// # let objects = Objects::default();
-/// let obj = &objects["rerun.datatypes.Vec3D"];
-/// let obj = &objects["rerun.datatypes.Angle"];
-/// let obj = &objects["rerun.components.Text"];
-/// let obj = &objects["rerun.archetypes.Position2D"];
+/// let obj = &objects["dalaran.datatypes.Vec3D"];
+/// let obj = &objects["dalaran.datatypes.Angle"];
+/// let obj = &objects["dalaran.components.Text"];
+/// let obj = &objects["dalaran.archetypes.Position2D"];
 /// ```
 impl std::ops::Index<&str> for Objects {
     type Output = Object;
@@ -253,7 +253,7 @@ impl std::ops::Index<&str> for Objects {
 
 // ---
 
-/// The kind of the object, as determined by its package root (e.g. `rerun.components`).
+/// The kind of the object, as determined by its package root (e.g. `dalaran.components`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ObjectKind {
     Datatype,
@@ -287,14 +287,14 @@ pub enum State {
 
 impl State {
     pub fn from_attrs(attrs: &Attributes) -> Result<Self, String> {
-        if let Some(state) = attrs.get_string(ATTR_RERUN_STATE) {
+        if let Some(state) = attrs.get_string(ATTR_DALARAN_STATE) {
             match state.as_str() {
                 "unstable" => Ok(Self::Unstable),
                 "stable" => Ok(Self::Stable),
                 "deprecated" => {
                     if let (Some(since), Some(notice)) = (
-                        attrs.get_string(ATTR_RERUN_DEPRECATED_SINCE),
-                        attrs.get_string(ATTR_RERUN_DEPRECATED_NOTICE),
+                        attrs.get_string(ATTR_DALARAN_DEPRECATED_SINCE),
+                        attrs.get_string(ATTR_DALARAN_DEPRECATED_NOTICE),
                     ) {
                         Ok(Self::Deprecated {
                             since: since.clone(),
@@ -302,14 +302,14 @@ impl State {
                         })
                     } else {
                         Err(format!(
-                            "Deprecated object must have {ATTR_RERUN_DEPRECATED_SINCE:?} and {ATTR_RERUN_DEPRECATED_NOTICE:?} set"
+                            "Deprecated object must have {ATTR_DALARAN_DEPRECATED_SINCE:?} and {ATTR_DALARAN_DEPRECATED_NOTICE:?} set"
                         ))
                     }
                 }
-                unknown => Err(format!("Unknown value for {ATTR_RERUN_STATE:?}: {unknown}")),
+                unknown => Err(format!("Unknown value for {ATTR_DALARAN_STATE:?}: {unknown}")),
             }
         } else {
-            Err(format!("Missing attribute {ATTR_RERUN_STATE:?}"))
+            Err(format!("Missing attribute {ATTR_DALARAN_STATE:?}"))
         }
     }
 
@@ -334,19 +334,19 @@ impl ObjectKind {
     pub fn from_pkg_name(pkg_name: &str, attrs: &Attributes) -> Self {
         assert!(!pkg_name.is_empty(), "Missing package name");
 
-        let scope = match attrs.try_get::<String>(pkg_name, crate::ATTR_RERUN_SCOPE) {
+        let scope = match attrs.try_get::<String>(pkg_name, crate::ATTR_DALARAN_SCOPE) {
             Some(scope) => format!(".{scope}"),
             None => String::new(),
         };
 
         let pkg_name = pkg_name.replace(".testing", "");
-        if pkg_name.starts_with(format!("rerun{scope}.datatypes").as_str()) {
+        if pkg_name.starts_with(format!("dalaran{scope}.datatypes").as_str()) {
             Self::Datatype
-        } else if pkg_name.starts_with(format!("rerun{scope}.components").as_str()) {
+        } else if pkg_name.starts_with(format!("dalaran{scope}.components").as_str()) {
             Self::Component
-        } else if pkg_name.starts_with(format!("rerun{scope}.archetypes").as_str()) {
+        } else if pkg_name.starts_with(format!("dalaran{scope}.archetypes").as_str()) {
             Self::Archetype
-        } else if pkg_name.starts_with("rerun.blueprint.views") {
+        } else if pkg_name.starts_with("dalaran.blueprint.views") {
             // Not bothering with scope attributes on views since they're always part of the blueprint.
             Self::View
         } else {
@@ -393,16 +393,16 @@ pub struct ViewReference {
 /// an enum.
 #[derive(Debug, Clone)]
 pub struct Object {
-    /// `Utf8Path` of the associated fbs definition in the Flatbuffers hierarchy, e.g. `//rerun/components/point2d.fbs`.
+    /// `Utf8Path` of the associated fbs definition in the Flatbuffers hierarchy, e.g. `//dalaran/components/point2d.fbs`.
     pub virtpath: String,
 
     /// Absolute filepath of the associated fbs definition.
     pub filepath: Utf8PathBuf,
 
-    /// Fully-qualified name of the object, e.g. `rerun.components.Position2D`.
+    /// Fully-qualified name of the object, e.g. `dalaran.components.Position2D`.
     pub fqname: String,
 
-    /// Fully-qualified package name of the object, e.g. `rerun.components`.
+    /// Fully-qualified package name of the object, e.g. `dalaran.components`.
     pub pkg_name: String,
 
     /// `PascalCase` name of the object type, e.g. `Position2D`.
@@ -529,7 +529,7 @@ impl Object {
     /// Try to find the relative file path of the `.fbs` source file.
     pub fn relative_filepath(&self) -> Option<&Utf8Path> {
         self.filepath
-            .strip_prefix(crate::rerun_workspace_path())
+            .strip_prefix(crate::dalaran_workspace_path())
             .ok()
     }
 
@@ -545,7 +545,7 @@ impl Object {
 
     /// e.g. `blueprint`
     pub fn scope(&self) -> Option<String> {
-        self.try_get_attr::<String>(crate::ATTR_RERUN_SCOPE)
+        self.try_get_attr::<String>(crate::ATTR_DALARAN_SCOPE)
             .or_else(|| (self.kind == ObjectKind::View).then(|| "blueprint".to_owned()))
     }
 
@@ -596,7 +596,7 @@ impl Object {
 }
 
 pub fn is_testing_fqname(fqname: &str) -> bool {
-    fqname.contains("rerun.testing")
+    fqname.contains("dalaran.testing")
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -671,16 +671,16 @@ impl ObjectClass {
 /// union value.
 #[derive(Debug, Clone)]
 pub struct ObjectField {
-    /// `Utf8Path` of the associated fbs definition in the Flatbuffers hierarchy, e.g. `//rerun/components/point2d.fbs`.
+    /// `Utf8Path` of the associated fbs definition in the Flatbuffers hierarchy, e.g. `//dalaran/components/point2d.fbs`.
     pub virtpath: String,
 
     /// Absolute filepath of the associated fbs definition.
     pub filepath: Utf8PathBuf,
 
-    /// Fully-qualified name of the field, e.g. `rerun.components.Position2D#position`.
+    /// Fully-qualified name of the field, e.g. `dalaran.components.Position2D#position`.
     pub fqname: String,
 
-    /// Fully-qualified package name of the field, e.g. `rerun.components`.
+    /// Fully-qualified package name of the field, e.g. `dalaran.components`.
     pub pkg_name: String,
 
     /// Name of the field, e.g. `x`.
@@ -759,11 +759,11 @@ impl ObjectField {
     }
 
     pub fn kind(&self) -> Option<FieldKind> {
-        if self.has_attr(crate::ATTR_RERUN_COMPONENT_REQUIRED) {
+        if self.has_attr(crate::ATTR_DALARAN_COMPONENT_REQUIRED) {
             Some(FieldKind::Required)
-        } else if self.has_attr(crate::ATTR_RERUN_COMPONENT_RECOMMENDED) {
+        } else if self.has_attr(crate::ATTR_DALARAN_COMPONENT_RECOMMENDED) {
             Some(FieldKind::Recommended)
-        } else if self.has_attr(crate::ATTR_RERUN_COMPONENT_OPTIONAL) {
+        } else if self.has_attr(crate::ATTR_DALARAN_COMPONENT_OPTIONAL) {
             Some(FieldKind::Optional)
         } else {
             None

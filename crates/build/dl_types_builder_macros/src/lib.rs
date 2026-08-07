@@ -1,24 +1,24 @@
-//! The `#[rerun_type]` attribute proc-macro used by Rerun's IDL definitions.
+//! The `#[dalaran_type]` attribute proc-macro used by Dalaran's IDL definitions.
 //!
-//! Rerun's type definitions are a subset of Rust that is parsed by `dl_types_builder` and
+//! Dalaran's type definitions are a subset of Rust that is parsed by `dl_types_builder` and
 //! *also* compiled by rustc, purely so that we get name resolution, typo-checking,
 //! rust-analyzer and `cargo fmt` for free. The definitions crate is never linked into anything.
 //!
 //! To make that work the definitions have to carry annotations that mean nothing to rustc:
 //!
 //! ```ignore
-//! #[rerun_type]
-//! #[rerun(state = "stable")]
+//! #[dalaran_type]
+//! #[dalaran(state = "stable")]
 //! #[rust(derive(Default, Copy, bytemuck::Pod))]
 //! #[arrow(transparent)]
 //! pub struct Position3D {
 //!     /// The position.
-//!     #[rerun(required)]
-//!     pub xyz: rerun::datatypes::Vec3D,
+//!     #[dalaran(required)]
+//!     pub xyz: dalaran::datatypes::Vec3D,
 //! }
 //! ```
 //!
-//! `#[rerun_type]` makes those compile. An attribute macro *consumes and replaces* the item it is
+//! `#[dalaran_type]` makes those compile. An attribute macro *consumes and replaces* the item it is
 //! applied to, so it can simply delete the annotations before rustc ever tries to resolve them.
 //! Note that this is not the same thing as helper-attribute registration: `attributes(…)` is a
 //! `#[proc_macro_derive]` parameter and has no equivalent for attribute macros — it is also not
@@ -31,21 +31,21 @@
 use proc_macro::TokenStream;
 use quote::quote;
 
-/// The annotations `#[rerun_type]` strips.
+/// The annotations `#[dalaran_type]` strips.
 ///
 /// Anything not in this list is passed through to rustc untouched — see the module docs.
-const RERUN_ATTRIBUTES: &[&str] = &["arrow", "cpp", "default", "docs", "python", "rerun", "rust"];
+const DALARAN_ATTRIBUTES: &[&str] = &["arrow", "cpp", "default", "docs", "python", "dalaran", "rust"];
 
-/// Strips Rerun's IDL annotations off a type definition so that rustc will accept it.
+/// Strips Dalaran's IDL annotations off a type definition so that rustc will accept it.
 ///
 /// See the [crate docs](crate) for what this is for and why it is an attribute macro.
 #[proc_macro_attribute]
-pub fn rerun_type(args: TokenStream, input: TokenStream) -> TokenStream {
+pub fn dalaran_type(args: TokenStream, input: TokenStream) -> TokenStream {
     if !args.is_empty() {
         let args = proc_macro2::TokenStream::from(args);
         return syn::Error::new_spanned(
             args,
-            "`#[rerun_type]` takes no arguments; put them in `#[rerun(…)]` instead",
+            "`#[dalaran_type]` takes no arguments; put them in `#[dalaran(…)]` instead",
         )
         .to_compile_error()
         .into();
@@ -70,7 +70,7 @@ pub fn rerun_type(args: TokenStream, input: TokenStream) -> TokenStream {
         other => {
             return syn::Error::new_spanned(
                 other,
-                "`#[rerun_type]` can only be applied to a `struct` or an `enum`",
+                "`#[dalaran_type]` can only be applied to a `struct` or an `enum`",
             )
             .to_compile_error()
             .into();
@@ -90,6 +90,6 @@ fn strip(attrs: &mut Vec<syn::Attribute>) {
     attrs.retain(|attr| {
         attr.path()
             .get_ident()
-            .is_none_or(|ident| !RERUN_ATTRIBUTES.contains(&ident.to_string().as_str()))
+            .is_none_or(|ident| !DALARAN_ATTRIBUTES.contains(&ident.to_string().as_str()))
     });
 }

@@ -37,7 +37,7 @@ fn test_cases(reflection: &Reflection) -> Vec<TestCase> {
         TestCase::from_component(
             ComponentColumnSelector::new(
                 &EntityPath::from("/world"),
-                "rerun.components.Position3D".to_owned(),
+                "dalaran.components.Position3D".to_owned(),
             ),
             "simple",
         ),
@@ -81,14 +81,14 @@ fn test_cases(reflection: &Reflection) -> Vec<TestCase> {
         ),
         TestCase::from_arrow(
             ComponentType::from("custom_url_string"),
-            arrow::array::StringArray::from(vec!["https://rerun.io"]),
+            arrow::array::StringArray::from(vec!["https://dalaran.dev"]),
             "any_value_url_string",
         ),
         //TODO(ab): this will look like the previous test case, but we eventually would like to have
         // a specific icon for it, so we already have a test case for it :)
         TestCase::from_arrow(
             ComponentType::from("custom_catalog_string"),
-            arrow::array::StringArray::from(vec!["rerun://rerun.io:1234/catalog"]),
+            arrow::array::StringArray::from(vec!["dalaran://dalaran.dev:1234/catalog"]),
             "any_value_url_string",
         ),
         TestCase::from_arrow(

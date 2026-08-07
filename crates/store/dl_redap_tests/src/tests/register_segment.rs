@@ -12,14 +12,14 @@ use dl_protos::cloud::v1alpha1::ext::{
     self, DatasetDetails, RegisterWithDatasetRequest, TableDetails, UpdateTableEntryRequest,
 };
 use dl_protos::cloud::v1alpha1::ext::{ScanDatasetManifestDataframe, ScanSegmentTableDataframe};
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     CreateDatasetEntryRequest, GetDatasetManifestSchemaRequest, GetSegmentTableSchemaRequest,
     ReadDatasetEntryRequest, ReadTableEntryRequest, ScanDatasetManifestRequest,
     ScanSegmentTableRequest,
 };
 use dl_protos::common::v1alpha1::ext::IfDuplicateBehavior;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_protos::{cloud::v1alpha1::ext as cloud_ext, common::v1alpha1::TaskId};
 use dl_sdk_types::{AnyValues, LayerName};
 use dl_types_core::AsComponents;
@@ -27,7 +27,7 @@ use dl_types_core::SegmentId;
 use url::Url;
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _,
     create_table_entry_with_name, entry_name, prop,
 };
 use crate::{
@@ -35,7 +35,7 @@ use crate::{
     create_simple_recording_in,
 };
 
-pub async fn register_and_scan_simple_dataset(service: impl RerunCloudService) {
+pub async fn register_and_scan_simple_dataset(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -59,7 +59,7 @@ pub async fn register_and_scan_simple_dataset(service: impl RerunCloudService) {
 }
 
 /// Make sure that registering to blueprint dataset works as expected for tables
-pub async fn register_and_attach_table_blueprint_dataset(service: impl RerunCloudService) {
+pub async fn register_and_attach_table_blueprint_dataset(service: impl DalaranCloudService) {
     let blueprint_segment_name = "table_blueprint_segment_id";
     let blueprint_segment = SegmentId::from(blueprint_segment_name);
     let table_dir = tempfile::tempdir().expect("create temp dir");
@@ -126,7 +126,7 @@ pub async fn register_and_attach_table_blueprint_dataset(service: impl RerunClou
 }
 
 /// Make sure that registering to blueprint dataset works as expected.
-pub async fn register_and_scan_blueprint_dataset(service: impl RerunCloudService) {
+pub async fn register_and_scan_blueprint_dataset(service: impl DalaranCloudService) {
     let dataset_name = "my_dataset1";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -160,7 +160,7 @@ pub async fn register_and_scan_blueprint_dataset(service: impl RerunCloudService
 }
 
 async fn register_simple_blueprint_segment(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     blueprint_dataset: dl_log_types::EntryId,
     blueprint_segment_name: &'static str,
     tuid_prefix: TuidPrefix,
@@ -194,7 +194,7 @@ async fn register_simple_blueprint_segment(
     blueprint_dataset_name
 }
 
-pub async fn register_and_scan_simple_dataset_with_properties(service: impl RerunCloudService) {
+pub async fn register_and_scan_simple_dataset_with_properties(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -242,11 +242,11 @@ pub async fn register_and_scan_simple_dataset_with_properties(service: impl Reru
 /// This test checks that the registration order takes precedence to resolve a segment's
 /// properties.
 ///
-/// Note: this is not great. We should probably use the "regular" Rerun way for that (aka row id
-/// timestamp). But this is not how Rerun Hub is currently working, and consistency is better than
+/// Note: this is not great. We should probably use the "regular" Dalaran way for that (aka row id
+/// timestamp). But this is not how Dalaran Hub is currently working, and consistency is better than
 /// correctness for the OSS server.
 pub async fn register_and_scan_simple_dataset_with_properties_out_of_order(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     let first_logged_data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         10, // <- mind this
@@ -291,7 +291,7 @@ pub async fn register_and_scan_simple_dataset_with_properties_out_of_order(
     scan_segment_table_and_snapshot(&service, dataset_name, "out_of_order_properties").await;
 
     // assert test correctness
-    let registration_time_col = ScanDatasetManifestDataframe::COLUMN_RERUN_REGISTRATION_TIME
+    let registration_time_col = ScanDatasetManifestDataframe::COLUMN_DALARAN_REGISTRATION_TIME
         .extract(&dataset_manifest)
         .unwrap();
 
@@ -313,7 +313,7 @@ pub async fn register_and_scan_simple_dataset_with_properties_out_of_order(
     );
 }
 
-pub async fn register_and_scan_simple_dataset_with_layers(service: impl RerunCloudService) {
+pub async fn register_and_scan_simple_dataset_with_layers(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -336,7 +336,7 @@ pub async fn register_and_scan_simple_dataset_with_layers(service: impl RerunClo
     scan_dataset_manifest_and_snapshot(&service, dataset_name, "simple_with_layers").await;
 }
 
-pub async fn register_and_scan_simple_dataset_multiple_timelines(service: impl RerunCloudService) {
+pub async fn register_and_scan_simple_dataset_multiple_timelines(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -387,7 +387,7 @@ pub async fn register_and_scan_simple_dataset_multiple_timelines(service: impl R
         .await;
 }
 
-pub async fn register_with_prefix(fe: impl RerunCloudService) {
+pub async fn register_with_prefix(fe: impl DalaranCloudService) {
     let root_dir = tempfile::tempdir().expect("creating temp dir");
 
     // Note: for this test, we don't use teh `DataSourceDefinition` abstraction here because we need
@@ -448,7 +448,7 @@ pub async fn register_with_prefix(fe: impl RerunCloudService) {
 
 // Scanning an empty dataset should return an empty dataframe with the expected schema -- not a
 // NOT_FOUND error.
-pub async fn register_and_scan_empty_dataset(service: impl RerunCloudService) {
+pub async fn register_and_scan_empty_dataset(service: impl DalaranCloudService) {
     let dataset_name = "empty_dataset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -465,7 +465,7 @@ pub async fn register_and_scan_empty_dataset(service: impl RerunCloudService) {
 ///
 /// The latter can be caused by attempting to build a `file://` with a relative path, leading to
 /// `file://path/to/file.rrd`. This is valid URI, but here `path` is the hostname.
-pub async fn register_bad_file_uri_should_error(service: impl RerunCloudService) {
+pub async fn register_bad_file_uri_should_error(service: impl DalaranCloudService) {
     let temp_dir = tempfile::tempdir().expect("creating temp dir");
     let temp_dir_uri = format!("file://{}/", temp_dir.path().display());
 
@@ -504,9 +504,9 @@ pub async fn register_bad_file_uri_should_error(service: impl RerunCloudService)
     }
 }
 
-pub async fn register_segment_bumps_timestamp(service: impl RerunCloudService) {
+pub async fn register_segment_bumps_timestamp(service: impl DalaranCloudService) {
     async fn get_dataset_updated_at_nanos(
-        service: &impl RerunCloudService,
+        service: &impl DalaranCloudService,
         dataset_name: &str,
     ) -> i64 {
         service
@@ -587,7 +587,7 @@ pub async fn register_segment_bumps_timestamp(service: impl RerunCloudService) {
 }
 
 /// Tests that registering the same segment twice with `IfDuplicateBehavior::Error` fails.
-pub async fn register_with_dataset_if_duplicate_behavior_error(service: impl RerunCloudService) {
+pub async fn register_with_dataset_if_duplicate_behavior_error(service: impl DalaranCloudService) {
     let dataset_name = "duplicate_error_test";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -629,7 +629,7 @@ pub async fn register_with_dataset_if_duplicate_behavior_error(service: impl Rer
 }
 
 /// Tests that registering a duplicate with `IfDuplicateBehavior::Skip` succeeds but keeps original data.
-pub async fn register_with_dataset_if_duplicate_behavior_skip(service: impl RerunCloudService) {
+pub async fn register_with_dataset_if_duplicate_behavior_skip(service: impl DalaranCloudService) {
     let dataset_name = "duplicate_skip_test";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -696,7 +696,7 @@ pub async fn register_with_dataset_if_duplicate_behavior_skip(service: impl Reru
 
 /// Tests that registering a duplicate with `IfDuplicateBehavior::Overwrite` replaces existing data.
 pub async fn register_with_dataset_if_duplicate_behavior_overwrite(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     let dataset_name = "duplicate_overwrite_test";
     service.create_dataset_entry_with_name(dataset_name).await;
@@ -768,7 +768,7 @@ pub async fn register_with_dataset_if_duplicate_behavior_overwrite(
 /// Intra-request duplicates are multiple data sources within a single registration request
 /// that resolve to the same `(partition_id, layer)` pair. The `IfDuplicateBehavior` flag
 /// only affects cross-request duplicates (conflicts with already-registered segments).
-pub async fn register_intra_request_duplicates(service: impl RerunCloudService) {
+pub async fn register_intra_request_duplicates(service: impl DalaranCloudService) {
     for on_duplicate in [
         IfDuplicateBehavior::Error,
         IfDuplicateBehavior::Skip,
@@ -847,7 +847,7 @@ pub async fn register_intra_request_duplicates(service: impl RerunCloudService) 
 }
 
 /// Tests that registering with an empty data sources list is rejected.
-pub async fn register_empty_request(service: impl RerunCloudService) {
+pub async fn register_empty_request(service: impl DalaranCloudService) {
     let dataset_name = "empty_request_test";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -876,7 +876,7 @@ pub async fn register_empty_request(service: impl RerunCloudService) {
 
 /// Tests that a registration where all partitions are skipped (cross-request duplicates)
 /// returns an empty response successfully.
-pub async fn register_fully_skipped(service: impl RerunCloudService) {
+pub async fn register_fully_skipped(service: impl DalaranCloudService) {
     let dataset_name = "fully_skipped_test";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -921,7 +921,7 @@ pub async fn register_fully_skipped(service: impl RerunCloudService) {
 // ---
 
 async fn scan_dataset_manifest(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
 ) -> RecordBatch {
     let responses: Vec<_> = service
@@ -954,7 +954,7 @@ async fn scan_dataset_manifest(
 // ---
 
 /// Test that two RRDs with conflicting data schemas cannot be registered together.
-pub async fn register_conflicting_schema(service: impl RerunCloudService) {
+pub async fn register_conflicting_schema(service: impl DalaranCloudService) {
     let results = register_and_wait_for_task_result(
         &service,
         "test_conflicting_schema",
@@ -1030,7 +1030,7 @@ pub async fn register_conflicting_schema(service: impl RerunCloudService) {
 }
 
 /// Test that two RRDs with conflicting property schemas cannot be registered together.
-pub async fn register_conflicting_property_schema(service: impl RerunCloudService) {
+pub async fn register_conflicting_property_schema(service: impl DalaranCloudService) {
     let results = register_and_wait_for_task_result(
         &service,
         "test_conflicting_property_schema",
@@ -1085,7 +1085,7 @@ pub async fn register_conflicting_property_schema(service: impl RerunCloudServic
 /// This test registers two segments with conflicting schemas in SEPARATE requests.
 /// The first registration should succeed, and the second should fail with a schema conflict.
 /// The segment table should only show the first (successful) segment.
-pub async fn register_conflicting_schema_filters_segment_table(service: impl RerunCloudService) {
+pub async fn register_conflicting_schema_filters_segment_table(service: impl DalaranCloudService) {
     use super::common::register_and_wait;
 
     let dataset_name = "test_conflicting_schema_filters_segment_table";
@@ -1136,7 +1136,7 @@ pub async fn register_conflicting_schema_filters_segment_table(service: impl Rer
     // Verify the segment table only contains segment1 (the successful one)
     let segment_table = scan_segment_table(&service, dataset_name).await;
 
-    let segment_id_col = ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID
+    let segment_id_col = ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID
         .extract(&segment_table)
         .expect("segment_id column expected");
 
@@ -1159,7 +1159,7 @@ pub async fn register_conflicting_schema_filters_segment_table(service: impl Rer
 /// The first registration should succeed, and the second should fail with a schema conflict.
 /// The segment table should show the segment with only the first (successful) layer.
 pub async fn register_conflicting_schema_same_segment_filters_layer(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     use super::common::register_and_wait;
 
@@ -1213,11 +1213,11 @@ pub async fn register_conflicting_schema_same_segment_filters_layer(
     // Verify the segment table shows segment1 with only the base layer
     let segment_table = scan_segment_table(&service, dataset_name).await;
 
-    let segment_id_col = ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID
+    let segment_id_col = ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID
         .extract(&segment_table)
         .expect("segment_id column expected");
 
-    let layer_names_col = ScanSegmentTableDataframe::COLUMN_RERUN_LAYER_NAMES
+    let layer_names_col = ScanSegmentTableDataframe::COLUMN_DALARAN_LAYER_NAMES
         .extract(&segment_table)
         .expect("layer_names column expected");
 
@@ -1278,7 +1278,7 @@ fn assert_task_failed(task_results: &[RecordBatch], expected_message_substring: 
 }
 
 /// Helper to scan the segment table for a dataset.
-async fn scan_segment_table(service: &impl RerunCloudService, dataset_name: &str) -> RecordBatch {
+async fn scan_segment_table(service: &impl DalaranCloudService, dataset_name: &str) -> RecordBatch {
     let responses: Vec<_> = service
         .scan_segment_table(
             tonic::Request::new(ScanSegmentTableRequest::all())
@@ -1320,7 +1320,7 @@ struct TaskResult {
 /// Helper to register data sources and wait for task completion.
 /// Returns a vec of task results, one per unique task.
 async fn register_and_wait_for_task_result(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     data_sources_def: DataSourcesDefinition,
 ) -> Vec<TaskResult> {
@@ -1351,9 +1351,9 @@ async fn register_and_wait_for_task_result(
 
     // Extract task IDs and group segments by task
     let ext::RegisterWithDatasetDataframe {
-        rerun_segment_id,
-        rerun_segment_layer,
-        rerun_task_id,
+        dalaran_segment_id,
+        dalaran_segment_layer,
+        dalaran_task_id,
         ..
     } = ext::RegisterWithDatasetDataframe::try_from(batch)
         .expect("valid RegisterWithDataset response dataframe");
@@ -1361,9 +1361,9 @@ async fn register_and_wait_for_task_result(
     // Group (segment_id, layer) by task_id
     let mut task_layers: HashMap<TaskId, Vec<(SegmentId, LayerName)>> = HashMap::default();
     for (task_id, segment_id, layer_name) in izip!(
-        rerun_task_id.into_iter_owned(),
-        rerun_segment_id.into_iter_owned(),
-        rerun_segment_layer.into_iter_owned()
+        dalaran_task_id.into_iter_owned(),
+        dalaran_segment_id.into_iter_owned(),
+        dalaran_segment_layer.into_iter_owned()
     ) {
         task_layers
             .entry(task_id)
@@ -1430,7 +1430,7 @@ async fn register_and_wait_for_task_result(
 // ---
 
 async fn scan_segment_table_and_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     snapshot_name: &str,
 ) -> RecordBatch {
@@ -1492,9 +1492,9 @@ async fn scan_segment_table_and_snapshot(
     );
 
     let unstable_column_names = vec![
-        ScanSegmentTableDataframe::COLUMN_RERUN_STORAGE_URLS_NAME,
-        ScanSegmentTableDataframe::COLUMN_RERUN_SIZE_BYTES_NAME,
-        ScanSegmentTableDataframe::COLUMN_RERUN_LAST_UPDATED_AT_NAME,
+        ScanSegmentTableDataframe::COLUMN_DALARAN_STORAGE_URLS_NAME,
+        ScanSegmentTableDataframe::COLUMN_DALARAN_SIZE_BYTES_NAME,
+        ScanSegmentTableDataframe::COLUMN_DALARAN_LAST_UPDATED_AT_NAME,
     ];
     let filtered_batch = batch
         .remove_columns(&unstable_column_names)
@@ -1516,7 +1516,7 @@ async fn scan_segment_table_and_snapshot(
 }
 
 async fn scan_dataset_manifest_and_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     snapshot_name: &str,
 ) -> RecordBatch {
@@ -1579,11 +1579,11 @@ async fn scan_dataset_manifest_and_snapshot(
 
     let unstable_column_names = vec![
         // implementation-dependent
-        ScanDatasetManifestDataframe::COLUMN_RERUN_STORAGE_URL_NAME,
-        ScanDatasetManifestDataframe::COLUMN_RERUN_SIZE_BYTES_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_STORAGE_URL_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_SIZE_BYTES_NAME,
         // unstable
-        ScanDatasetManifestDataframe::COLUMN_RERUN_LAST_UPDATED_AT_NAME,
-        ScanDatasetManifestDataframe::COLUMN_RERUN_REGISTRATION_TIME_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_LAST_UPDATED_AT_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_REGISTRATION_TIME_NAME,
     ];
     let filtered_batch = batch
         .remove_columns(&unstable_column_names)

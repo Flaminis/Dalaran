@@ -1,0 +1,16 @@
+
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// Whether the viewport layout is determined automatically.
+struct AutoLayout (
+  "attr.arrow.transparent",
+  "attr.python.aliases": "bool",
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Copy",
+  "attr.rust.repr": "transparent",
+  "attr.rust.tuple_struct"
+) {
+  auto_layout: dalaran.datatypes.Bool (order: 100);
+}

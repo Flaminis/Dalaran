@@ -1,4 +1,4 @@
-//! Integration tests for rerun and the in memory server.
+//! Integration tests for dalaran and the in memory server.
 
 mod kittest_harness_ext;
 mod test_data;
@@ -102,7 +102,7 @@ impl TestServer {
         let origin = dl_uri::Origin {
             host: Host::Domain("localhost".to_owned()),
             port: self.port,
-            scheme: dl_uri::Scheme::RerunHttp,
+            scheme: dl_uri::Scheme::DalaranHttp,
         };
         ConnectionRegistry::new_without_stored_credentials()
             .client(origin)

@@ -1,4 +1,4 @@
-//! Rerun GUI theme and helpers, built around [`egui`](https://www.egui.rs/).
+//! Dalaran GUI theme and helpers, built around [`egui`](https://www.egui.rs/).
 
 pub mod alert;
 mod color_table;
@@ -230,7 +230,7 @@ impl HasDesignTokens for egui::Visuals {
 /// Returns [`DesignTokensAlreadyInitializedError`] if the design tokens have already been
 /// initialized; in that case `dark` and `light` are dropped.
 ///
-/// Note: when `dl_ui` is built with hot-reloading enabled (only inside the rerun workspace),
+/// Note: when `dl_ui` is built with hot-reloading enabled (only inside the dalaran workspace),
 /// the file watcher may subsequently overwrite the supplied values.
 pub fn try_set_design_tokens(
     dark: DesignTokens,
@@ -239,7 +239,7 @@ pub fn try_set_design_tokens(
     self::hot_reload_design_tokens::try_set_design_tokens(dark, light)
 }
 
-/// Apply the Rerun design tokens to the given egui context and install image loaders.
+/// Apply the Dalaran design tokens to the given egui context and install image loaders.
 pub fn apply_style_and_install_loaders(egui_ctx: &egui::Context) {
     dl_tracing::profile_function!();
 

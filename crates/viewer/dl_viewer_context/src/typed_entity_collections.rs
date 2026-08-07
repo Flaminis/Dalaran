@@ -13,8 +13,8 @@ use crate::ViewSystemIdentifier;
 /// Types of matches when matching [`crate::VisualizabilityConstraints::SingleRequiredComponent`].
 ///
 /// Two components can be related on three different levels:
-/// * the *semantic* component type (e.g. `rerun.components.Position3D`),
-/// * the *encoding*, i.e. the Rerun datatype the component is built from (e.g. `rerun.datatypes.Vec3D`),
+/// * the *semantic* component type (e.g. `dalaran.components.Position3D`),
+/// * the *encoding*, i.e. the Dalaran datatype the component is built from (e.g. `dalaran.datatypes.Vec3D`),
 /// * the *physical* Arrow datatype (e.g. `FixedSizeList(3 x non-null Float32)`).
 ///
 /// Only the semantic type and the Arrow datatype are known at runtime — the encoding isn't tracked
@@ -27,7 +27,7 @@ pub enum DatatypeMatch {
 
         /// The semantic component type if any.
         ///
-        /// Note that `Some` doesn't necessarily mean that this is a Rerun type, it may still be a user supplied type.
+        /// Note that `Some` doesn't necessarily mean that this is a Dalaran type, it may still be a user supplied type.
         component_type: Option<dl_chunk::ComponentType>,
 
         /// If this match was found via nested field access, contains the selectors to extract those fields
@@ -36,16 +36,16 @@ pub enum DatatypeMatch {
         selectors: Vec<(Selector, arrow::datatypes::DataType)>,
     },
 
-    /// The Rerun native datatype was matched.
+    /// The Dalaran native datatype was matched.
     ///
-    /// For example the native type for a Rerun point cloud is `rerun.components.Position3D`.
+    /// For example the native type for a Dalaran point cloud is `dalaran.components.Position3D`.
     /// This is *not* concerned with the column name of the data, only the datatype.
     NativeSemantics {
         arrow_datatype: arrow::datatypes::DataType,
 
         /// The semantic component type if any.
         ///
-        /// Note that `Some` doesn't necessarily mean that this is a Rerun type, it may still be a user supplied type.
+        /// Note that `Some` doesn't necessarily mean that this is a Dalaran type, it may still be a user supplied type.
         component_type: Option<dl_chunk::ComponentType>,
     },
 }
@@ -147,7 +147,7 @@ impl VisualizableReason {
     /// i.e. its semantics are *not* the ones the visualizer natively works with.
     ///
     /// For example, `GaussianSplats3D:scales` (`Scale3D`) matches the `Points3D:positions`
-    /// (`Position3D`) slot only physically, since both share the `rerun.datatypes.Vec3D` encoding.
+    /// (`Position3D`) slot only physically, since both share the `dalaran.datatypes.Vec3D` encoding.
     ///
     /// Unlike the negation of [`Self::full_native_match`], components that aren't part of this
     /// match at all are *not* reported as physical-only.

@@ -1,9 +1,9 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! The Rerun chunk store, implemented on top of [Apache Arrow](https://arrow.apache.org/)
+//! The Dalaran chunk store, implemented on top of [Apache Arrow](https://arrow.apache.org/)
 //! using the [`arrow`] crate.
 //!
-//! This crate is an in-memory time series database for Rerun log data.
+//! This crate is an in-memory time series database for Dalaran log data.
 //! It is indexed by Entity path, component, timeline, and time.
 //! It supports out-of-order insertions, and fast `O(log(N))` queries.
 //!

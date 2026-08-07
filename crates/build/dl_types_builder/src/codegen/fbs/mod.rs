@@ -40,14 +40,14 @@ impl CodeGenerator for FbsCodeGenerator {
 
         self.add_include_for(reporter, &mut files_to_write, "attributes");
 
-        self.add_include_for(reporter, &mut files_to_write, "rerun/datatypes");
-        self.add_include_for(reporter, &mut files_to_write, "rerun/components");
-        self.add_include_for(reporter, &mut files_to_write, "rerun/archetypes");
+        self.add_include_for(reporter, &mut files_to_write, "dalaran/datatypes");
+        self.add_include_for(reporter, &mut files_to_write, "dalaran/components");
+        self.add_include_for(reporter, &mut files_to_write, "dalaran/archetypes");
 
-        self.add_include_for(reporter, &mut files_to_write, "rerun/blueprint/datatypes");
-        self.add_include_for(reporter, &mut files_to_write, "rerun/blueprint/components");
-        self.add_include_for(reporter, &mut files_to_write, "rerun/blueprint/archetypes");
-        self.add_include_for(reporter, &mut files_to_write, "rerun/blueprint/views");
+        self.add_include_for(reporter, &mut files_to_write, "dalaran/blueprint/datatypes");
+        self.add_include_for(reporter, &mut files_to_write, "dalaran/blueprint/components");
+        self.add_include_for(reporter, &mut files_to_write, "dalaran/blueprint/archetypes");
+        self.add_include_for(reporter, &mut files_to_write, "dalaran/blueprint/views");
 
         files_to_write
     }

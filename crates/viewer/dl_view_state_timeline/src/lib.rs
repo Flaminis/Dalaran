@@ -1,4 +1,4 @@
-//! Rerun state timeline View.
+//! Dalaran state timeline View.
 //!
 //! A View that shows state transitions as horizontal lanes over time.
 

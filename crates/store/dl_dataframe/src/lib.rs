@@ -1,4 +1,4 @@
-//! The Rerun public data APIs. Get dataframes back from your Rerun datastore.
+//! The Dalaran public data APIs. Get dataframes back from your Dalaran datastore.
 
 mod engine;
 mod query;

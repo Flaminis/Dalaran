@@ -11,7 +11,7 @@ fn test_notification_with_fields() {
     // Installs the global tracing subscriber (including the channel logger) once.
     dl_log::setup_logging();
 
-    // `target: "dl_ui"` so it passes the notification relevance filter (rerun-crate + WARN).
+    // `target: "dl_ui"` so it passes the notification relevance filter (dalaran-crate + WARN).
     dl_log::warn!(
         target: "dl_ui",
         user_name = "bob",

@@ -1,7 +1,7 @@
 [package]
 name = "dl_types_builder_macros"
 authors.workspace = true
-description = "The `#[rerun_type]` attribute macro used by Rerun's IDL definitions."
+description = "The `#[dalaran_type]` attribute macro used by Dalaran's IDL definitions."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

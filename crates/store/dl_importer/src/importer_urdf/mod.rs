@@ -1,4 +1,4 @@
-//! Rerun importer and utilities for URDF files.
+//! Dalaran importer and utilities for URDF files.
 
 pub mod joint_transform;
 mod robot_description_parser;
@@ -53,7 +53,7 @@ pub struct UrdfImporter;
 
 impl Importer for UrdfImporter {
     fn name(&self) -> crate::ImporterName {
-        "rerun.importers.Urdf".to_owned()
+        "dalaran.importers.Urdf".to_owned()
     }
 
     #[cfg(not(target_arch = "wasm32"))]
@@ -555,7 +555,7 @@ fn emit_geometry(
             )?;
         }
         Geometry::Cylinder { radius, length } => {
-            // URDF and Rerun both use Z as the main axis
+            // URDF and Dalaran both use Z as the main axis
             emit_archetype(
                 emit,
                 entity_path,
@@ -568,7 +568,7 @@ fn emit_geometry(
             )?;
         }
         Geometry::Capsule { radius, length } => {
-            // URDF and Rerun both use Z as the main axis
+            // URDF and Dalaran both use Z as the main axis
             emit_archetype(
                 emit,
                 entity_path,

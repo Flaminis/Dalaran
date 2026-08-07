@@ -27,7 +27,7 @@ macro_rules! build_info {
             git_branch: env!("RE_BUILD_GIT_BRANCH").into(),
             // TODO(cmc): `PartialEq` is not available in const contexts, so this won't actually
             // build if you try to instantiate a BuildInfo in a constant.
-            is_in_rerun_workspace: env!("RE_BUILD_IS_IN_RERUN_WORKSPACE") == "yes",
+            is_in_dalaran_workspace: env!("RE_BUILD_IS_IN_DALARAN_WORKSPACE") == "yes",
             target_triple: env!("RE_BUILD_TARGET_TRIPLE").into(),
             datetime: env!("RE_BUILD_DATETIME").into(),
             is_debug_build: cfg!(debug_assertions),

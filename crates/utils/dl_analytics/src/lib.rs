@@ -1,9 +1,9 @@
-//! Rerun's analytics SDK.
+//! Dalaran's analytics SDK.
 //!
 //! We never collect any personal identifiable information.
-//! You can always opt-out with `rerun analytics disable`.
+//! You can always opt-out with `dalaran analytics disable`.
 //!
-//! No analytics will be collected the first time you start the Rerun viewer,
+//! No analytics will be collected the first time you start the Dalaran viewer,
 //! giving you an opportunity to opt-out first if you wish.
 //!
 //! All the data we collect can be found in [`event`].
@@ -194,14 +194,14 @@ impl From<&str> for Property {
 
 #[cfg(not(target_arch = "wasm32"))]
 const DISCLAIMER: &str = "
-    Welcome to Rerun!
+    Welcome to Dalaran!
 
     This open source library collects anonymous usage data to
-    help the Rerun team improve the library.
+    help the Dalaran team improve the library.
 
     Summary:
-    - We only collect high level events about the features used within the Rerun Viewer.
-    - The actual data you log to Rerun, such as point clouds, images, or text logs,
+    - We only collect high level events about the features used within the Dalaran Viewer.
+    - The actual data you log to Dalaran, such as point clouds, images, or text logs,
       will never be collected.
     - We don't log IP addresses.
     - We don't log your user name, file paths, or any personal identifiable data.
@@ -209,12 +209,12 @@ const DISCLAIMER: &str = "
 
     For more details and instructions on how to opt out, run the command:
 
-      rerun analytics details
+      dalaran analytics details
 
     As this is this your first session, _no_ usage data has been sent yet,
     giving you an opportunity to opt-out first if you wish.
 
-    Happy Rerunning!
+    Happy Dalaranning!
 ";
 
 #[derive(thiserror::Error, Debug)]
@@ -474,7 +474,7 @@ impl Properties for dl_build_info::BuildInfo {
             llvm_version,
             git_hash: _,
             git_branch: _,
-            is_in_rerun_workspace,
+            is_in_dalaran_workspace,
             target_triple,
             datetime,
             is_debug_build,
@@ -482,13 +482,13 @@ impl Properties for dl_build_info::BuildInfo {
 
         event.insert("features", features.to_string());
         event.insert("git_hash", git_hash);
-        event.insert("rerun_version", version.to_string());
+        event.insert("dalaran_version", version.to_string());
         event.insert("rust_version", rustc_version.to_string());
         event.insert("llvm_version", llvm_version.to_string());
         event.insert("target", target_triple.to_string());
         event.insert("build_date", datetime.to_string());
         event.insert("debug", is_debug_build);
-        event.insert("rerun_workspace", is_in_rerun_workspace);
+        event.insert("dalaran_workspace", is_in_dalaran_workspace);
     }
 }
 

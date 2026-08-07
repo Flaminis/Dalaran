@@ -7,7 +7,7 @@ use serde::Deserialize;
 use super::{Context, DocumentData, DocumentKind};
 use crate::build_search_index::util::{CommandExt as _, ProgressBarExt as _};
 
-const RERUN_SDK: &str = "rerun_sdk";
+const DALARAN_SDK: &str = "dalaran_sdk";
 
 pub fn ingest(ctx: &Context) -> anyhow::Result<()> {
     let progress = ctx.progress_bar("python");
@@ -15,7 +15,7 @@ pub fn ingest(ctx: &Context) -> anyhow::Result<()> {
     // run `mkdocs` to generate documentation, which also produces a `objects.inv` file
     // this file contains every documented item and a URL to where it is documented
     progress.set("mkdocs build", ctx.is_tty());
-    let mkdocs_config = ctx.workspace_root().join("rerun_py/mkdocs.yml");
+    let mkdocs_config = ctx.workspace_root().join("dalaran_py/mkdocs.yml");
     println!("Running mkdocs build with config: {mkdocs_config}");
     println!(
         "Current working directory: {:?}",
@@ -44,40 +44,40 @@ pub fn ingest(ctx: &Context) -> anyhow::Result<()> {
 
     // run `sphobjinv` to convert the `objects.inv` file into JSON, and fully resolve all links/names
     progress.set("sphobjinv convert", ctx.is_tty());
-    let objects_inv_path = ctx.workspace_root().join("rerun_py/site/objects.inv");
+    let objects_inv_path = ctx.workspace_root().join("dalaran_py/site/objects.inv");
     println!("Looking for objects.inv at: {objects_inv_path}");
     println!("objects.inv exists: {}", objects_inv_path.exists());
 
     let inv: Inventory = Command::new("sphobjinv")
         .with_args(["convert", "json", "--expand"])
         .with_cwd(ctx.workspace_root())
-        .with_arg("rerun_py/site/objects.inv")
+        .with_arg("dalaran_py/site/objects.inv")
         .with_arg("-")
         .parse_json::<SphinxObjectInv>()
         .context(
-            "sphobjinv may not be installed, try running `pixi run pip install -r rerun_py/requirements-doc.txt`",
+            "sphobjinv may not be installed, try running `pixi run pip install -r dalaran_py/requirements-doc.txt`",
         )?
         .objects
         .into_values()
         .map(|o| (o.name.clone(), o))
         .collect();
 
-    // run `griffe` to obtain an tree of the entire public module hierarchy in `rerun_sdk`
+    // run `griffe` to obtain an tree of the entire public module hierarchy in `dalaran_sdk`
     // this dump is only used to obtain docstrings
     progress.set("griffe dump", ctx.is_tty());
     let dump: Dump = Command::new("griffe")
-        .with_args(["dump", "rerun_sdk", "-s", "rerun_py"])
+        .with_args(["dump", "dalaran_sdk", "-s", "dalaran_py"])
         .parse_json()
-        .context("either griffe or rerun_sdk is not installed, try running `pixi run pip install -r rerun_py/requirements-doc.txt` and building the SDK")?;
+        .context("either griffe or dalaran_sdk is not installed, try running `pixi run pip install -r dalaran_py/requirements-doc.txt` and building the SDK")?;
 
-    let docs = collect_docstrings(&dump[RERUN_SDK]);
+    let docs = collect_docstrings(&dump[DALARAN_SDK]);
 
     // index each documented item
     let base_url = format!(
-        "https://ref.rerun.io/docs/python/{version}",
+        "https://ref.dalaran.dev/docs/python/{version}",
         version = ctx.release_version()
     );
-    // let base_url = "https://ref.rerun.io/docs/python/main";
+    // let base_url = "https://ref.dalaran.dev/docs/python/main";
     #[expect(clippy::iter_over_hash_type)] // Search index insertion order is irrelevant.
     for (path, obj) in inv {
         ctx.push(DocumentData {

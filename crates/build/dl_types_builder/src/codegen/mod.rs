@@ -7,7 +7,7 @@ pub enum Target {
     Python,
     Rust,
 
-    /// Markdown files shown at <https://rerun.io/docs/reference/types>.
+    /// Markdown files shown at <https://dalaran.dev/docs/reference/types>.
     ///
     /// This target is also used for the markdown strings in the reflection API,
     /// for use with the in-viewer markdown renderer.

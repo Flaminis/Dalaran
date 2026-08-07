@@ -504,7 +504,7 @@ impl ChunkPrioritizer {
         // Latest-at fails, because a single entity can define the transform of multiple
         // parts of a hierarchy, and not all of the transform are required to be
         // available at each time point.
-        // More here: https://linear.app/rerun/issue/RR-3441/required-transform-frames-arent-always-loaded
+        // More here: https://linear.app/dalaran/issue/RR-3441/required-transform-frames-arent-always-loaded
         let new_chunks = Self::find_chunks_with_component_prefix(
             manifest,
             "Transform3D:", // Hard-coding this here is VERY hacky, but I want to ship MVP

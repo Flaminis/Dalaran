@@ -1,12 +1,12 @@
 # dl_datafusion
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_datafusion.svg)](https://crates.io/crates/dl_datafusion)
 [![Documentation](https://docs.rs/dl_datafusion/badge.svg)](https://docs.rs/dl_datafusion)
 ![MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Apache](https://img.shields.io/badge/license-Apache-blue.svg)
 
-DataFusion interfaces to Rerun gRPC queries
+DataFusion interfaces to Dalaran gRPC queries
 
 See [`PIPELINE_BUDGET.md`](PIPELINE_BUDGET.md) for an explanation of the memory backpressure mechanism used by `SegmentStreamExec` to bound RAM across the IO → channel → in-memory store pipeline, and why a byte-bounded channel is not sufficient.

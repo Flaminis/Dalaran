@@ -318,7 +318,7 @@ pub fn doc_as_lines(
         lines.push(docline_summary);
     }
 
-    let examples = if fqname.starts_with("rerun.blueprint.views") {
+    let examples = if fqname.starts_with("dalaran.blueprint.views") {
         Vec::new()
     } else {
         collect_snippets_for_api_docs(docs, "rs", true)

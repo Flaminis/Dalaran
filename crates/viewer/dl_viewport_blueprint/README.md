@@ -1,6 +1,6 @@
 # dl_viewport_blueprint
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_viewport_blueprint.svg)](https://crates.io/crates/dl_viewport_blueprint)
 [![Documentation](https://docs.rs/dl_viewport_blueprint/badge.svg)](https://docs.rs/dl_viewport_blueprint)

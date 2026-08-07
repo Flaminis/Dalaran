@@ -68,7 +68,7 @@ impl ViewClass for TensorView {
 
     fn help(&self, _os: egui::os::OperatingSystem) -> Help {
         Help::new("Tensor view")
-            .docs_link("https://rerun.io/docs/reference/types/views/tensor_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/tensor_view")
             .markdown(
                 "An N-dimensional tensor displayed as a 2D slice with a custom colormap.
 

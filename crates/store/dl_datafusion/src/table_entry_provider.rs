@@ -22,7 +22,7 @@ use dl_protos::cloud::v1alpha1::{
     EntryFilter, EntryKind, FindEntriesRequest, GetTableSchemaRequest, ScanTableRequest,
     ScanTableResponse,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_redap_client::{ApiError, ApiResult, ConnectionAnalyticsExporter, ConnectionClient};
 use tokio::runtime::Handle;
 use tracing::instrument;
@@ -153,7 +153,7 @@ impl TableEntryTableProvider {
                                 // Pass both `entry_kind` (deprecated) and `entry_kinds`
                                 // to be compatible with old Hub versions.
                                 // Drop `entry_kind` when no customer has a 0.14 deployment
-                                // or older of Rerun Hub.
+                                // or older of Dalaran Hub.
                                 entry_kind: Some(EntryKind::Table as i32),
                                 entry_kinds: vec![EntryKind::Table as i32],
                             }),

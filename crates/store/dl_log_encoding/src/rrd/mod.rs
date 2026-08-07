@@ -3,7 +3,7 @@
 //! ⚠️Make sure to familiarize yourself with the [crate-level docs](crate) first. ⚠️
 //!
 //! RRD streams are used everywhere gRPC isn't: files, standard I/O, HTTP fetches, importers, etc.
-//! This module is completely unrelated to the Rerun Data Protocol (Redap) gRPC API.
+//! This module is completely unrelated to the Dalaran Data Protocol (Redap) gRPC API.
 //! This module is also completely unrelated to the legacy SDK comms gRPC API.
 //!
 //! ## [`Encodable`]/[`Decodable`] vs. `Encoder`/`Decoder`
@@ -76,10 +76,10 @@ pub use self::frames::{
 
 // ---
 
-/// The currently used `FourCC` for Rerun RRD files.
+/// The currently used `FourCC` for Dalaran RRD files.
 pub const RRD_FOURCC: [u8; 4] = *b"RRF2";
 
-/// Previously used `FourCC`s for Rerun RRD files.
+/// Previously used `FourCC`s for Dalaran RRD files.
 pub const OLD_RRD_FOURCC: &[[u8; 4]] = &[*b"RRF0", *b"RRF1"];
 
 // ---

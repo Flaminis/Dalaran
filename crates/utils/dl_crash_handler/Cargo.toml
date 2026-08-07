@@ -22,7 +22,7 @@ all-features = true
 [features]
 default = ["analytics"]
 
-## Send analytics to Rerun on crashes
+## Send analytics to Dalaran on crashes
 analytics = ["dep:dl_analytics"]
 
 [dependencies]

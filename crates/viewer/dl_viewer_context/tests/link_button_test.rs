@@ -24,49 +24,49 @@ const TABLE_ENTRY_TUID: &str = "182755B45B963E7774455beb91701aef";
 const URLS: &[(&str, &str)] = &[
     (
         "Dataset segment (resolved)",
-        "rerun://example.rerun.io/dataset/1830B33B45B963E7774455beb91701ae?segment_id=segment-abc-12",
+        "dalaran://example.dalaran.dev/dataset/1830B33B45B963E7774455beb91701ae?segment_id=segment-abc-12",
     ),
     (
         "Dataset segment (unresolved)",
-        "rerun://example.rerun.io/dataset/abcdef0123456789abcdef0123456789?segment_id=seg99",
+        "dalaran://example.dalaran.dev/dataset/abcdef0123456789abcdef0123456789?segment_id=seg99",
     ),
     (
         "Dataset entry (resolved)",
-        "rerun://example.rerun.io/entry/9a3c5e7b1d2f486a0b4c6d8e0f123456",
+        "dalaran://example.dalaran.dev/entry/9a3c5e7b1d2f486a0b4c6d8e0f123456",
     ),
     (
         // Unresolved entries carry no kind, so this falls back to a dataset icon + short id — it
         // renders identically to the "Table entry (unresolved)" row below.
         "Dataset entry (unresolved)",
-        "rerun://example.rerun.io/entry/fedcba9876543210fedcba9876543210",
+        "dalaran://example.dalaran.dev/entry/fedcba9876543210fedcba9876543210",
     ),
     (
         "Table entry (resolved)",
-        "rerun://example.rerun.io/entry/182755B45B963E7774455beb91701aef",
+        "dalaran://example.dalaran.dev/entry/182755B45B963E7774455beb91701aef",
     ),
     (
         // Same id-only fallback as the unresolved dataset entry above.
         "Table entry (unresolved)",
-        "rerun://example.rerun.io/entry/0011223344556677889900aabbccddee",
+        "dalaran://example.dalaran.dev/entry/0011223344556677889900aabbccddee",
     ),
-    ("Catalog", "rerun://example.rerun.io/catalog"),
-    ("Proxy", "rerun://example.rerun.io/proxy"),
+    ("Catalog", "dalaran://example.dalaran.dev/catalog"),
+    ("Proxy", "dalaran://example.dalaran.dev/proxy"),
     (
         "Folder",
-        "rerun://example.rerun.io/folder/perception.detection",
+        "dalaran://example.dalaran.dev/folder/perception.detection",
     ),
     ("Intra-recording selection", "recording://camera/points"),
     ("Local file (file:// URL)", "file:///recordings/data.rrd"),
     ("Remote file", "https://example.com/recordings/data.rrd"),
     (
         "Web-viewer share link",
-        "https://rerun.io/viewer?url=https://example.com/inner.rrd",
+        "https://dalaran.dev/viewer?url=https://example.com/inner.rrd",
     ),
-    ("Non-redap URL (plain link)", "https://rerun.io/"),
+    ("Non-redap URL (plain link)", "https://dalaran.dev/"),
 ];
 
 fn lookup() -> Arc<UrlNameLookup> {
-    let origin: dl_uri::Origin = "rerun://example.rerun.io".parse().expect("valid origin");
+    let origin: dl_uri::Origin = "dalaran://example.dalaran.dev".parse().expect("valid origin");
 
     let mut lookup = UrlNameLookup::default();
     lookup.insert(
@@ -143,7 +143,7 @@ fn link_buttons_match_snapshot() {
 #[test]
 fn link_button_hovered_reveals_copy_button() {
     let lookup = lookup();
-    let url = "rerun://example.rerun.io/dataset/1830B33B45B963E7774455beb91701ae?segment_id=segment-abc-12";
+    let url = "dalaran://example.dalaran.dev/dataset/1830B33B45B963E7774455beb91701ae?segment_id=segment-abc-12";
 
     let mut harness = dl_ui::testing::new_harness(dl_ui::testing::TestOptions::Gui, [320.0, 80.0])
         .build_ui(move |ui| {

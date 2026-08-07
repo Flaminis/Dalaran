@@ -15,7 +15,7 @@ pub fn identify(
             rustc_version,
             llvm_version,
         }
-        | AppEnvironment::RerunCli {
+        | AppEnvironment::DalaranCli {
             rustc_version,
             llvm_version,
         } => (Some(rustc_version), Some(llvm_version), None),
@@ -76,10 +76,10 @@ pub fn open_recording(
         let application_id = store_id.application_id();
         let recording_id = store_id.recording_id();
 
-        let app_id_starts_with_rerun_example = application_id.as_str().starts_with("rerun_example");
+        let app_id_starts_with_dalaran_example = application_id.as_str().starts_with("dalaran_example");
 
         let (application_id_preprocessed, recording_id_preprocessed) =
-            if app_id_starts_with_rerun_example {
+            if app_id_starts_with_dalaran_example {
                 (
                     Id::Official(application_id.to_string()),
                     Id::Official(recording_id.to_string()),
@@ -146,7 +146,7 @@ pub fn open_recording(
             rust_version: rust_version_preprocessed,
             llvm_version: llvm_version_preprocessed,
             python_version: python_version_preprocessed,
-            app_id_starts_with_rerun_example,
+            app_id_starts_with_dalaran_example,
         }
     });
 
@@ -157,7 +157,7 @@ pub fn open_recording(
         dl_log_channel::LogSource::MessageProxy { .. } => Some("grpc"),
         // vvv spawn(), connect() vvv
         dl_log_channel::LogSource::RrdWebEvent => Some("web_event"),
-        dl_log_channel::LogSource::JsChannel { .. } => Some("javascript"), // mediated via rerun-js
+        dl_log_channel::LogSource::JsChannel { .. } => Some("javascript"), // mediated via dalaran-js
         dl_log_channel::LogSource::Sdk => Some("sdk"),                     // show()
         dl_log_channel::LogSource::Stdin => Some("stdin"),
     })?;

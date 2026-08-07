@@ -1,6 +1,6 @@
-# Rerun chunk store
+# Dalaran chunk store
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_chunk_store.svg)](https://crates.io/crates/dl_chunk_store)
 [![Documentation](https://docs.rs/dl_chunk_store/badge.svg)](https://docs.rs/dl_chunk_store)
@@ -9,4 +9,4 @@ Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
 
 [Apache Arrow](https://arrow.apache.org/) is a language-independent columnar memory format for arbitrary data.
 
-The `dl_chunk_store` crate is an in-memory time series database for Rerun log data. It is indexed by Entity path, component, timeline, and time. It supports out-of-order insertions, and fast `O(log(N))` queries.
+The `dl_chunk_store` crate is an in-memory time series database for Dalaran log data. It is indexed by Entity path, component, timeline, and time. It supports out-of-order insertions, and fast `O(log(N))` queries.

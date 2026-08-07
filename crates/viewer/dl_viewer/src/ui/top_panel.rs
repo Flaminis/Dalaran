@@ -98,7 +98,7 @@ fn top_bar_ui(
     ui: &mut egui::Ui,
     gpu_resource_stats: &WgpuResourcePoolStatistics,
 ) {
-    app.rerun_menu_button_ui(frame.wgpu_render_state(), store_context, ui);
+    app.dalaran_menu_button_ui(frame.wgpu_render_state(), store_context, ui);
 
     if !app.startup_options().web_history_enabled() {
         ui.add_space(12.0);
@@ -214,7 +214,7 @@ fn show_warnings(frame: &eframe::Frame, ui: &mut egui::Ui, app_env: &crate::AppE
                     .small()
                     .color(ui.visuals().warn_fg_color),
             )
-            .on_hover_text("Rerun was compiled with debug assertions enabled.");
+            .on_hover_text("Dalaran was compiled with debug assertions enabled.");
         });
     }
 
@@ -235,7 +235,7 @@ fn show_warnings(frame: &eframe::Frame, ui: &mut egui::Ui, app_env: &crate::AppE
                 .color(ui.visuals().warn_fg_color);
             let url = "https://github.com/rerun-io/rerun/issues/6835";
             ui.hyperlink_to(text,url).on_hover_ui(|ui| {
-                ui.label("It looks like the Rerun Viewer is running inside a Docker container. This is not officially supported, and may lead to subtle bugs. ");
+                ui.label("It looks like the Dalaran Viewer is running inside a Docker container. This is not officially supported, and may lead to subtle bugs. ");
                 ui.label("Click for more info.");
             });
         });
@@ -247,11 +247,11 @@ fn software_rasterizer_warning_ui(ui: &mut egui::Ui, info: &wgpu::AdapterInfo) {
         egui::RichText::new("⚠ Software rasterizer")
             .small()
             .color(ui.visuals().warn_fg_color),
-        "https://www.rerun.io/docs/overview/installing-rerun/troubleshooting#graphics-issues",
+        "https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting#graphics-issues",
     )
     .on_hover_ui(|ui| {
         ui.label("Software rasterizer detected - expect poor performance.");
-        ui.label("Rerun requires hardware accelerated graphics (i.e. a GPU) for good performance.");
+        ui.label("Dalaran requires hardware accelerated graphics (i.e. a GPU) for good performance.");
         ui.label("Click for troubleshooting.");
         ui.add_space(8.0);
         ui.label(format!(
@@ -533,7 +533,7 @@ fn frame_time_label_ui(ui: &mut egui::Ui, app: &App) {
         // we use monospace so the width doesn't fluctuate as the numbers change.
         let text = format!("{ms:.1} ms");
         ui.label(egui::RichText::new(text).monospace().color(color))
-            .on_hover_text("CPU time used by Rerun Viewer each frame. Lower is better.");
+            .on_hover_text("CPU time used by Dalaran Viewer each frame. Lower is better.");
     }
 }
 
@@ -657,7 +657,7 @@ fn memory_use_label_ui(
         let bytes_used_text = dl_format::format_bytes(rss as _);
         click_to_copy(ui, &bytes_used_text, |ui| {
             ui.label(format!(
-                "Rerun Viewer is using {} of Resident memory (RSS),\n\
+                "Dalaran Viewer is using {} of Resident memory (RSS),\n\
                 plus {} of GPU memory in {} textures and {} buffers.",
                 bytes_used_text,
                 dl_format::format_bytes(gpu_resource_stats.total_bytes() as _),
@@ -665,7 +665,7 @@ fn memory_use_label_ui(
                 format_uint(gpu_resource_stats.num_buffers),
             ));
             ui.label(
-                "To get more accurate memory reportings, consider configuring your Rerun \n\
+                "To get more accurate memory reportings, consider configuring your Dalaran \n\
                  viewer to use an AccountingAllocator by adding the following to your \n\
                  code's main entrypoint:",
             );
@@ -675,7 +675,7 @@ fn memory_use_label_ui(
     } else {
         click_to_copy(ui, "N/A MiB", |ui| {
             ui.label(
-                "The Rerun viewer was not configured to run with an AccountingAllocator,\n\
+                "The Dalaran viewer was not configured to run with an AccountingAllocator,\n\
                 consider adding the following to your code's main entrypoint:",
             );
             ui.code(CODE);

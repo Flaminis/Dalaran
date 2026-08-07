@@ -1,7 +1,7 @@
 [package]
 name = "dl_redap_client"
 authors.workspace = true
-description = "Official gRPC client for the Rerun Data Protocol"
+description = "Official gRPC client for the Dalaran Data Protocol"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -28,7 +28,7 @@ workspace = true
 [package.metadata.docs.rs]
 all-features = true
 
-[package.metadata.rerun.web-test]
+[package.metadata.dalaran.web-test]
 redap-server = true
 
 

@@ -39,7 +39,7 @@ impl ServerModalMode {
 enum AuthKind {
     None,
     Token(String),
-    RerunAccount(Option<Box<LoginFlow>>),
+    DalaranAccount(Option<Box<LoginFlow>>),
 }
 
 /// Authentication state for the server modal.
@@ -64,7 +64,7 @@ impl Authentication {
     /// This cleans up the login flow's resources, such as
     /// closing popup windows.
     fn reset_login_flow(&mut self) {
-        if let AuthKind::RerunAccount(flow) = &mut self.kind {
+        if let AuthKind::DalaranAccount(flow) = &mut self.kind {
             *flow = None;
         }
     }
@@ -74,7 +74,7 @@ impl Authentication {
         let result = LoginFlow::open(ui.ctx(), signed_in_url);
         match result {
             Ok(flow) => {
-                self.kind = AuthKind::RerunAccount(Some(Box::new(flow)));
+                self.kind = AuthKind::DalaranAccount(Some(Box::new(flow)));
                 self.error = None;
             }
             Err(err) => {
@@ -99,9 +99,9 @@ impl Default for ServerModal {
         Self {
             modal: Default::default(),
             mode: ServerModalMode::Add,
-            scheme: Scheme::RerunHttps,
+            scheme: Scheme::DalaranHttps,
             host: String::new(),
-            auth: Authentication::new(AuthKind::RerunAccount(None)),
+            auth: Authentication::new(AuthKind::DalaranAccount(None)),
             port: 443,
         }
     }
@@ -115,7 +115,7 @@ impl ServerModal {
         login_enabled: bool,
     ) {
         let default_auth_kind = if login_enabled {
-            AuthKind::RerunAccount(None)
+            AuthKind::DalaranAccount(None)
         } else {
             AuthKind::None
         };
@@ -139,7 +139,7 @@ impl ServerModal {
                         Authentication::new(AuthKind::Token(token.to_string()))
                     }
                     Some(dl_redap_client::Credentials::Stored) => {
-                        Authentication::new(AuthKind::RerunAccount(None))
+                        Authentication::new(AuthKind::DalaranAccount(None))
                     }
                     None => Authentication::new(AuthKind::None),
                 };
@@ -185,7 +185,7 @@ impl ServerModal {
             |ui| {
                 if self.mode.should_show_experimental_warning() {
                     ui.warning_label(
-                        "Rerun Hub is experimental and not generally \
+                        "Dalaran Hub is experimental and not generally \
                 available yet. Proceed with caution!",
                     );
                 }
@@ -199,7 +199,7 @@ impl ServerModal {
                         ui,
                         |ui| {
                             egui::ComboBox::new("scheme", "")
-                                .selected_text(if self.scheme == Scheme::RerunHttp {
+                                .selected_text(if self.scheme == Scheme::DalaranHttp {
                                     "http"
                                 } else {
                                     "https"
@@ -207,12 +207,12 @@ impl ServerModal {
                                 .show_ui(ui, |ui| {
                                     ui.selectable_value(
                                         &mut self.scheme,
-                                        Scheme::RerunHttps,
+                                        Scheme::DalaranHttps,
                                         "https",
                                     );
                                     ui.selectable_value(
                                         &mut self.scheme,
-                                        Scheme::RerunHttp,
+                                        Scheme::DalaranHttp,
                                         "http",
                                     );
                                 });
@@ -245,8 +245,8 @@ impl ServerModal {
                     // Then handle that gracefully! `from_str` requires the url
                     // with the "://" part so we just pass the whole url.
                     match url.scheme() {
-                        "https" => self.scheme = Scheme::RerunHttps,
-                        "http" => self.scheme = Scheme::RerunHttp,
+                        "https" => self.scheme = Scheme::DalaranHttps,
+                        "http" => self.scheme = Scheme::DalaranHttp,
                         _ => {
                             if let Ok(scheme) = Scheme::from_str(&self.host) {
                                 self.scheme = scheme;
@@ -279,12 +279,12 @@ impl ServerModal {
                                 strip.cell(|ui| {
                                     if ui
                                         .selectable_label(
-                                            matches!(self.auth.kind, AuthKind::RerunAccount(_)),
+                                            matches!(self.auth.kind, AuthKind::DalaranAccount(_)),
                                             "Account login",
                                         )
                                         .clicked()
                                     {
-                                        self.auth.kind = AuthKind::RerunAccount(None);
+                                        self.auth.kind = AuthKind::DalaranAccount(None);
                                     }
                                 });
                             }
@@ -335,7 +335,7 @@ impl ServerModal {
                         .map(dl_redap_client::Credentials::Token)
                         .map(Some)
                         .map_err(|_err| ()),
-                    AuthKind::RerunAccount(_) => {
+                    AuthKind::DalaranAccount(_) => {
                         if app_ctx.logged_in() {
                             Ok(Some(dl_redap_client::Credentials::Stored))
                         } else {
@@ -398,7 +398,7 @@ impl ServerModal {
 
                     let cancel_button_response = ui.add(ReButton::new("Cancel").small());
                     if cancel_button_response.clicked() {
-                        self.auth = Authentication::new(AuthKind::RerunAccount(None));
+                        self.auth = Authentication::new(AuthKind::DalaranAccount(None));
                         self.auth.reset_login_flow();
                         ui.close();
                     }
@@ -416,7 +416,7 @@ impl ServerModal {
 
 fn auth_ui(ui: &mut egui::Ui, ctx: &AppContext<'_>, auth: &mut Authentication) {
     match &mut auth.kind {
-        AuthKind::RerunAccount(login_flow) => {
+        AuthKind::DalaranAccount(login_flow) => {
             ui.label("Account login:");
 
             if let Some(flow) = login_flow {

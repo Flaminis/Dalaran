@@ -88,7 +88,7 @@ pub struct FileSinkOptions {
     /// grows unboundedly. Set to `false` to opt out: the resulting file is still valid RRD,
     /// but without the manifest which may hurt random-access performance.
     ///
-    /// A footer can be added after the fact via `rerun rrd optimize`.
+    /// A footer can be added after the fact via `dalaran rrd optimize`.
     pub write_footer: bool,
 }
 

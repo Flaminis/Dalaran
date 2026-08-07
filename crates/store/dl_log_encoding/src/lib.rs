@@ -1,8 +1,8 @@
 #![allow(clippy::iter_over_hash_type)]
 
 //! This crate covers two equally important but orthogonal matters:
-//! * Converting between transport-level and application-level Rerun types.
-//! * Encoding and decoding Rerun RRD streams.
+//! * Converting between transport-level and application-level Dalaran types.
+//! * Encoding and decoding Dalaran RRD streams.
 //!
 //! If you are working with one of the gRPC APIs (Redap or SDK comms), then you want to be looking
 //! at the [`ToTransport`]/[`ToApplication`] traits. The [`rrd`] module is completely irrelevant in
@@ -19,12 +19,12 @@
 //! application-level types are those that you find in `dl_log_types`.
 //!
 //! More generally, transport-level types are Rust objects that represent the decoded value of some
-//! Rerun bytes, *and nothing more than that*. It's all they do: they map raw bytes to their native
+//! Dalaran bytes, *and nothing more than that*. It's all they do: they map raw bytes to their native
 //! Rust representation and vice-versa. They never apply any application-level logic beyond that.
 //!
-//! Transport-level types are used to unopinionatedly transport Rerun data across the many mediums
-//! that Rerun support, while application-level types are used to build applications for end-users,
-//! such as the Rerun viewer itself.
+//! Transport-level types are used to unopinionatedly transport Dalaran data across the many mediums
+//! that Dalaran support, while application-level types are used to build applications for end-users,
+//! such as the Dalaran viewer itself.
 //!
 //! Application-level types on the other hand are *very* opinionated, and often perform a lot of
 //! transformations on the data, including but not limited to:
@@ -54,16 +54,16 @@
 //! * Finally, `dl_protos::log_msg::v1alpha1::log_msg::Msg` is the real transport-level type that we
 //!   care about. It is used all over the place when encoding and decoding RRD streams.
 //!
-//! ## What are the different protocols supported by Rerun?
+//! ## What are the different protocols supported by Dalaran?
 //!
-//! Rerun currently supports 3 protocols:
-//! * Redap (Rerun Data Protocol): our gRPC-based protocol used by our OSS and proprietary data platforms.
+//! Dalaran currently supports 3 protocols:
+//! * Redap (Dalaran Data Protocol): our gRPC-based protocol used by our OSS and proprietary data platforms.
 //! * SDK comms: our legacy gRPC-based protocol, currently used by everything relying on the old
 //!   `StoreHub` model (logging, message proxy, etc).
 //! * RRD streams: the binary protocol that we use for all stream-based interfaces (files, stdio,
 //!   importers, HTTP fetches, etc).
 //!
-//! *All these protocols use the exact same encoding*. There is only one encoding: the Rerun encoding.
+//! *All these protocols use the exact same encoding*. There is only one encoding: the Dalaran encoding.
 //! It often happens that one protocol makes use of some types while others don't (e.g. the
 //! top-level `LogMsg` object is never used in RRD streams, but is used in SDK comms), but for all
 //! the types they do share, the encoding will be the exact same.

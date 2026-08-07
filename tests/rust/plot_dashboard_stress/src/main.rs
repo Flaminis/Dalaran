@@ -15,7 +15,7 @@
 #![expect(clippy::cast_possible_wrap)]
 #![expect(clippy::disallowed_methods)]
 
-use rerun::external::dl_log;
+use dalaran::external::dl_log;
 
 #[derive(Debug, clap::ValueEnum, Clone)]
 enum Order {
@@ -36,7 +36,7 @@ enum SeriesType {
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 
     /// How many different plots?
     #[clap(long, default_value = "1")]
@@ -73,11 +73,11 @@ fn main() -> anyhow::Result<()> {
     use clap::Parser as _;
     let args = Args::parse();
 
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_plot_dashboard_stress")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_plot_dashboard_stress")?;
     run(&rec, &args)
 }
 
-fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
+fn run(rec: &dalaran::RecordingStream, args: &Args) -> anyhow::Result<()> {
     let plot_paths: Vec<_> = (0..args.num_plots).map(|i| format!("plot_{i}")).collect();
     let series_paths: Vec<_> = (0..args.num_series_per_plot)
         .map(|i| format!("series_{i}"))
@@ -157,14 +157,14 @@ fn run(rec: &rerun::RecordingStream, args: &Args) -> anyhow::Result<()> {
                     let values = series_values.iter().skip(offset).take(temporal_batch_size);
                     rec.send_columns(
                         path,
-                        [rerun::TimeColumn::new_duration_secs(
+                        [dalaran::TimeColumn::new_duration_secs(
                             "sim_time",
                             seconds.copied(),
                         )],
-                        rerun::Scalars::new(values.copied()).columns_of_unit_batches()?,
+                        dalaran::Scalars::new(values.copied()).columns_of_unit_batches()?,
                     )?;
                 } else {
-                    rec.log(path, &rerun::Scalars::single(series_values[offset]))?;
+                    rec.log(path, &dalaran::Scalars::single(series_values[offset]))?;
                 }
             }
         }

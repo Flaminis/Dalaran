@@ -1,6 +1,6 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! The Rerun public data APIs. Access `DataFusion` `TableProviders`.
+//! The Dalaran public data APIs. Access `DataFusion` `TableProviders`.
 
 mod analytics;
 mod batch_coalescer;
@@ -34,7 +34,7 @@ pub(crate) use analytics::{
 };
 pub use analytics::{TableKind, TableQueryCaller};
 pub use catalog_provider::RedapCatalogProviderList;
-pub use cpu_count::{available_cpus, rerun_sdk_num_cpus};
+pub use cpu_count::{available_cpus, dalaran_sdk_num_cpus};
 pub use dataframe_query_common::{
     DataframeClientAPI, DataframeQueryTableProvider, query_from_query_expression,
 };

@@ -18,12 +18,12 @@ pub struct Snippets {
 }
 
 fn install_snippet_deps() {
-    // uv sync --inexact --no-install-package rerun-sdk --group snippets
+    // uv sync --inexact --no-install-package dalaran-sdk --group snippets
     let mut cmd = Command::new("uv");
     cmd.arg("sync");
     cmd.arg("--inexact");
     cmd.arg("--no-install-package");
-    cmd.arg("rerun-sdk");
+    cmd.arg("dalaran-sdk");
     cmd.arg("--group");
     cmd.arg("snippets");
 
@@ -208,15 +208,15 @@ impl Snippet {
 
         cmd.envs([
             ("PYTHONWARNINGS", "error"), // raise exception on warnings, e.g. when using a @deprecated function
-            ("RERUN_FLUSH_NUM_ROWS", "0"),
-            ("RERUN_STRICT", "1"),
-            ("RERUN_PANIC_ON_WARN", "1"),
+            ("DALARAN_FLUSH_NUM_ROWS", "0"),
+            ("DALARAN_STRICT", "1"),
+            ("DALARAN_PANIC_ON_WARN", "1"),
         ]);
 
-        // Only set _RERUN_TEST_FORCE_SAVE if we expect an RRD output
+        // Only set _DALARAN_TEST_FORCE_SAVE if we expect an RRD output
         if !self.backwards_check_opted_out {
             cmd.env(
-                "_RERUN_TEST_FORCE_SAVE",
+                "_DALARAN_TEST_FORCE_SAVE",
                 rrd_path.to_string_lossy().as_ref(),
             );
         }

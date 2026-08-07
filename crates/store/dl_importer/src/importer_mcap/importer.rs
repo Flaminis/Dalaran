@@ -19,7 +19,7 @@ const MCAP_IMPORTER_NAME: &str = "McapImporter";
 ///
 /// There are many different ways to extract and interpret information from MCAP files.
 /// For example, it might be interesting to query for particular fields of messages,
-/// or show information directly in the Rerun viewer. Because use-cases can vary, the
+/// or show information directly in the Dalaran viewer. Because use-cases can vary, the
 /// [`McapImporter`] is made up of [`dl_mcap::Decoder`]s, each representing different views of the
 /// underlying data.
 ///

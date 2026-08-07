@@ -11,7 +11,7 @@ pub struct RrdImporter;
 impl crate::Importer for RrdImporter {
     #[inline]
     fn name(&self) -> String {
-        "rerun.importers.Rrd".into()
+        "dalaran.importers.Rrd".into()
     }
 
     #[cfg(not(target_arch = "wasm32"))]

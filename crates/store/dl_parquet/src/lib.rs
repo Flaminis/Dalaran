@@ -1,7 +1,7 @@
-//! Core parquet-to-chunk loading logic for Rerun.
+//! Core parquet-to-chunk loading logic for Dalaran.
 //!
 //! Reads any `.parquet` file, introspects its Arrow schema, and maps columns
-//! to Rerun components. Row groups are streamed as individual chunks via a
+//! to Dalaran components. Row groups are streamed as individual chunks via a
 //! pull-based iterator to reduce peak memory usage.
 
 mod config;

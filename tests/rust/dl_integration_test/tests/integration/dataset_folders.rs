@@ -85,7 +85,7 @@ pub async fn dataset_folders() {
     let origin = dl_uri::Origin {
         host: dl_uri::external::url::Host::Domain("localhost".to_owned()),
         port: server.port(),
-        scheme: dl_uri::Scheme::RerunHttp,
+        scheme: dl_uri::Scheme::DalaranHttp,
     };
     let folder_route = |path: &str| Route::RedapEntry {
         origin: origin.clone(),
@@ -103,7 +103,7 @@ pub async fn dataset_folders() {
     // Jump directly into the `perception` folder via URL.
     let mut harness = viewer_test_utils::viewer_harness(&HarnessOptions {
         startup_url: Some(format!(
-            "rerun+http://localhost:{}/folder/perception",
+            "dalaran+http://localhost:{}/folder/perception",
             server.port()
         )),
         ..Default::default()
@@ -173,7 +173,7 @@ pub async fn dataset_folders() {
 
     let mut table_harness = viewer_test_utils::viewer_harness(&HarnessOptions {
         startup_url: Some(format!(
-            "rerun+http://localhost:{}/folder/perception",
+            "dalaran+http://localhost:{}/folder/perception",
             server.port()
         )),
         ..Default::default()

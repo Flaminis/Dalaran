@@ -11,7 +11,7 @@ pub type DatatypeSet = std::collections::BTreeSet<arrow::datatypes::DataType>;
 /// that matches one of the given physical types.
 ///
 /// We additionally store the `target_component` in order to know which component on the visualizer is the required one.
-/// The `semantic_type` furthermore informs heuristics/recommendations for what Rerun type is a good fit.
+/// The `semantic_type` furthermore informs heuristics/recommendations for what Dalaran type is a good fit.
 ///
 /// If either side of the match is a known builtin enum, a semantic match is required
 /// (plain physical type overlap like `UInt8` is not sufficient).
@@ -28,7 +28,7 @@ pub struct SingleRequiredComponentConstraint {
 
     /// All supported physical Arrow data types.
     ///
-    /// Has to contain the physical data type that is covered by the Rerun semantic type.
+    /// Has to contain the physical data type that is covered by the Dalaran semantic type.
     physical_types: DatatypeSet,
 
     /// If false, ignores all static components.

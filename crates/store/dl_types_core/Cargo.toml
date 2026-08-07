@@ -1,7 +1,7 @@
 [package]
 name = "dl_types_core"
 authors.workspace = true
-description = "The core traits and types that power Rerun's data model."
+description = "The core traits and types that power Dalaran's data model."
 edition = "2024"
 homepage.workspace = true
 include.workspace = true
@@ -24,7 +24,7 @@ default = []
 
 
 [dependencies]
-# Rerun
+# Dalaran
 dl_arrow_util.workspace = true
 dl_byte_size.workspace = true
 dl_case.workspace = true

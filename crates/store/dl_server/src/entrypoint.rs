@@ -54,7 +54,7 @@ pub struct Args {
     /// Additional origin patterns allowed to make cross-origin requests to the server
     /// (can be specified multiple times).
     ///
-    /// By default, only `localhost`, `127.0.0.1`, and `rerun.io` are allowed.
+    /// By default, only `localhost`, `127.0.0.1`, and `dalaran.dev` are allowed.
     /// Patterns are matched against the full `Origin` header value,
     /// using glob-style matching where `*` matches any sequence of characters.
     #[clap(long = "cors-allow-origin")]
@@ -99,7 +99,7 @@ impl Args {
         } = self;
 
         let handler = {
-            let mut builder = crate::RerunCloudHandlerBuilder::new();
+            let mut builder = crate::DalaranCloudHandlerBuilder::new();
 
             for NamedPathCollection { name, paths } in datasets {
                 builder = builder
@@ -143,8 +143,8 @@ impl Args {
             builder.build()
         };
 
-        let rerun_cloud_server =
-            dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudServiceServer::new(
+        let dalaran_cloud_server =
+            dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudServiceServer::new(
                 handler,
             )
             .max_decoding_message_size(dl_grpc_server::MAX_DECODING_MESSAGE_SIZE)
@@ -155,7 +155,7 @@ impl Args {
 
         let server_builder = ServerBuilder::default()
             .with_address(ip_port)
-            .with_service(rerun_cloud_server)
+            .with_service(dalaran_cloud_server)
             .with_http_route(
                 "/version",
                 axum::routing::get(async move || dl_build_info::build_info!().to_string()),

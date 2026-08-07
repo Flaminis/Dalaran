@@ -145,7 +145,7 @@ pub async fn series_count_exceeds_max() {
         });
     }
 
-    // Set up a non-identity mapping: source `my_values` → target `rerun.components.Scalar`.
+    // Set up a non-identity mapping: source `my_values` → target `dalaran.components.Scalar`.
     let remapped_scalar = VisualizerComponentMapping {
         target: Scalars::descriptor_scalars().component.as_str().into(),
         source_kind: ComponentSourceKind::SourceComponent,

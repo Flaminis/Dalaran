@@ -1,3 +1,3 @@
 # dl_gamepad
 
-Gamepad input handling for the Rerun viewer.
+Gamepad input handling for the Dalaran viewer.

@@ -248,7 +248,7 @@ fn welcome_item_ui(
         Route::RedapServer(origin) if origin == &*EXAMPLES_ORIGIN
     );
 
-    let title = list_item::LabelContent::header("Welcome to rerun").with_icon(&icons::HOME);
+    let title = list_item::LabelContent::header("Welcome to dalaran").with_icon(&icons::HOME);
 
     let list_item = ui.list_item().header().selected(selected).active(active);
 
@@ -285,7 +285,7 @@ fn server_title(ctx: &AppContext<'_>, origin: &dl_uri::Origin, is_internal: bool
         "Viewer catalog".to_owned()
     } else {
         let host = origin.format_host();
-        if origin.scheme == dl_uri::Scheme::RerunHttps && origin.port == 443 {
+        if origin.scheme == dl_uri::Scheme::DalaranHttps && origin.port == 443 {
             host
         } else if ctx.egui_ctx.is_test() {
             format!("{host}:XXXX")

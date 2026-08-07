@@ -20,11 +20,11 @@ pub struct LoginOptions {
 }
 
 #[derive(Debug, thiserror::Error)]
-#[error("No credentials are stored on your machine, run `rerun auth login` first")]
+#[error("No credentials are stored on your machine, run `dalaran auth login` first")]
 struct NoCredentialsError;
 
 #[derive(Debug, thiserror::Error)]
-#[error("Your session ended due to inactivity, run `rerun auth login` first")]
+#[error("Your session ended due to inactivity, run `dalaran auth login` first")]
 struct ExpiredCredentialsError;
 
 /// Prints the token to stdout
@@ -44,7 +44,7 @@ pub async fn token() -> Result<(), Error> {
     }
 }
 
-/// Login to Rerun using Authorization Code flow.
+/// Login to Dalaran using Authorization Code flow.
 ///
 /// This first checks if valid credentials already exist locally,
 /// and doesn't perform the login flow if so, unless `options.force_login` is set to `true`.
@@ -57,7 +57,7 @@ pub async fn login(options: LoginOptions) -> Result<(), Error> {
             if options.org_id.is_none() {
                 println!("You're already logged in as: {}", credentials.user().email);
                 println!("Note: We've refreshed your credentials.");
-                println!("Note: Run `rerun auth login --force` to login again.");
+                println!("Note: Run `dalaran auth login --force` to login again.");
                 return Ok(());
             }
             *credentials
@@ -106,12 +106,12 @@ pub async fn login(options: LoginOptions) -> Result<(), Error> {
         "Success! You are now logged in as {}",
         credentials.user().email
     );
-    println!("Rerun will automatically use the credentials stored on your machine.");
+    println!("Dalaran will automatically use the credentials stored on your machine.");
 
     Ok(())
 }
 
-/// Log out of Rerun by clearing stored credentials.
+/// Log out of Dalaran by clearing stored credentials.
 pub fn logout(options: &LogoutOptions) -> Result<(), Error> {
     match crate::oauth::clear_credentials(None) {
         Ok(Some(outcome)) => {

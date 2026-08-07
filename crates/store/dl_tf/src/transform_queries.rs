@@ -184,7 +184,7 @@ pub fn query_and_resolve_tree_transform_at_entity(
     //
     // We bipass the query cache here:
     // * we're already doing special caching anyways
-    // * we don't want to merge over row-ids *at all* since our query handling here is a little bit different. The query cache is geared towards "regular Rerun semantics"
+    // * we don't want to merge over row-ids *at all* since our query handling here is a little bit different. The query cache is geared towards "regular Dalaran semantics"
     // * we already handled `Clear`/`ClearRecursive` upon pre-population of our cache entries (we know when a clear occurs on this entity!)
     let storage_engine = entity_db.storage_engine();
     let Some((chunk, row_index)) =
@@ -324,7 +324,7 @@ pub fn query_and_resolve_instance_poses_at_entity(
     //
     // We bipass the query cache here:
     // * we're already doing special caching anyways
-    // * we don't want to merge over row-ids *at all* since our query handling here is a little bit different. The query cache is geared towards "regular Rerun semantics"
+    // * we don't want to merge over row-ids *at all* since our query handling here is a little bit different. The query cache is geared towards "regular Dalaran semantics"
     // * we already handled `Clear`/`ClearRecursive` upon pre-population of our cache entries (we know when a clear occurs on this entity!)
     let storage_engine = entity_db.storage_engine();
     let Some((chunk, row_index)) =

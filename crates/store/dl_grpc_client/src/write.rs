@@ -46,7 +46,7 @@ impl GrpcFlushError {
                 duration_sec: started.elapsed().as_secs_f32(),
             },
             ClientConnectionState::Connected => Self::InternalError(
-                "gRPC connection is open, but flush still failed. Probably a bug in the Rerun SDK"
+                "gRPC connection is open, but flush still failed. Probably a bug in the Dalaran SDK"
                     .to_owned(),
             ),
             ClientConnectionState::Disconnected(Ok(())) => Self::GracefulDisconnect { uri },
@@ -186,7 +186,7 @@ impl Client {
                 })
             } else {
                 dl_log::warn_once!(
-                    "Single-threaded tokio runtime detected - please use a multi-threaded runtime for best performance with Rerun's gRPC client. Falling back to async send."
+                    "Single-threaded tokio runtime detected - please use a multi-threaded runtime for best performance with Dalaran's gRPC client. Falling back to async send."
                 );
                 self.cmd_tx.blocking_send(cmd).map_err(|_ignored_err| ())
             }

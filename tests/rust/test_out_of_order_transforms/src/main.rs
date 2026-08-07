@@ -4,8 +4,8 @@
 
 use std::f32::consts::TAU;
 
-use rerun::external::dl_log;
-use rerun::{
+use dalaran::external::dl_log;
+use dalaran::{
     Angle, Color, EntityPath, LineStrips3D, Points3D, Position3D, RecordingStream,
     RotationAxisAngle, Transform3D, TransformRelation, ViewCoordinates,
 };
@@ -108,7 +108,7 @@ fn log_transforms(rec: &RecordingStream, sim_time: f32) -> anyhow::Result<()> {
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 
     #[clap(long, default_value = "0.008")] // 120fps
     log_frequency_secs: f64,
@@ -160,7 +160,7 @@ fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
     let (rec, _serve_guard) = args
-        .rerun
-        .init("rerun_example_test_out_of_order_transforms")?;
+        .dalaran
+        .init("dalaran_example_test_out_of_order_transforms")?;
     run(&rec, &args)
 }

@@ -86,7 +86,7 @@ impl View3DState {
 
 pub fn help(os: egui::os::OperatingSystem) -> Help {
     Help::new("3D view")
-        .docs_link("https://rerun.io/docs/reference/types/views/spatial3d_view")
+        .docs_link("https://dalaran.dev/docs/reference/types/views/spatial3d_view")
         .control("Pan", (MouseButtonText(DRAG_PAN3D_BUTTON), "+", "drag"))
         .control("Zoom", icons::SCROLL)
         .control("Rotate", (MouseButtonText(ROTATE3D_BUTTON), "+", "drag"))
@@ -489,7 +489,7 @@ pub fn validate_view_coordinates(coordinates: &mut ViewCoordinates) -> Option<Vi
             severity: ViewerReportSeverity::Warning,
             summary: "Unsupported left-handed coordinates".to_owned(),
             details: Some(format!(
-                "Rerun does not yet support left-handed coordinate systems (found {}). \
+                "Dalaran does not yet support left-handed coordinate systems (found {}). \
                     See https://github.com/rerun-io/rerun/issues/5032.",
                 coordinates.describe()
             )),

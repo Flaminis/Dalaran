@@ -1,0 +1,57 @@
+namespace dalaran.archetypes;
+
+/// A depth image encoded with a codec (e.g. RVL or PNG).
+///
+/// Dalaran also supports uncompressed depth images with the [`archetypes.DepthImage`](https://dalaran.dev/docs/reference/types/archetypes/depth_image).
+///
+/// \example archetypes/encoded_depth_image title="Encoded depth image" image="https://static.rerun.io/encoded_depth_image/d8180f8167278f9601808c360ba52eafaab52839/1200w.png"
+table EncodedDepthImage(
+  "attr.dalaran.visualizer": "EncodedDepthImage",
+  "attr.docs.category": "Image & tensor",
+  "attr.docs.view_types": "Spatial2DView, Spatial3DView: if logged under a projection",
+  "attr.dalaran.state": "unstable",
+  "attr.rust.derive": "PartialEq"
+) {
+  // --- Required ---
+
+  /// The encoded depth payload.
+  ///
+  /// Supported are:
+  /// * single channel PNG
+  /// * RVL with ROS2 metadata (for details see <https://github.com/ros-perception/image_transport_plugins/tree/jazzy>)
+  blob: dalaran.components.Blob ("attr.dalaran.component_required", "attr.dalaran.component_no_ui_edit", order: 1000);
+
+  // --- Recommended ---
+
+  /// Media type of the blob, e.g.:
+  ///
+  ///  * `application/rvl` (RVL-compressed 16-bit)
+  ///  * `image/png`
+  media_type: dalaran.components.MediaType ("attr.dalaran.component_recommended", nullable, order: 2000);
+
+  /// Conversion from native units to meters (e.g. `0.001` for millimeters).
+  ///
+  /// If omitted, the Viewer defaults to `1.0` for floating-point depth formats and `1000.0` for integer formats (millimeters).
+  meter: dalaran.components.DepthMeter ("attr.dalaran.component_recommended", nullable, order: 2100);
+
+  // --- Optional ---
+
+  /// Optional colormap for visualization of decoded depth.
+  colormap: dalaran.components.Colormap ("attr.dalaran.component_optional", nullable, order: 3000);
+
+  /// Optional visualization range for depth values.
+  depth_range: dalaran.components.ValueRange ("attr.dalaran.component_optional", nullable, order: 3050);
+
+  /// Optional point fill ratio for point-cloud projection.
+  point_fill_ratio: dalaran.components.FillRatio ("attr.dalaran.component_optional", nullable, order: 3100);
+
+  /// Optional 2D draw order.
+  draw_order: dalaran.components.DrawOrder ("attr.dalaran.component_optional", nullable, order: 3200);
+
+  /// Optional filter used when a texel is magnified (displayed larger than a screen pixel) in 2D views.
+  ///
+  /// The filter is applied to the scalar values *before* they are mapped to color via the colormap.
+  ///
+  /// Has no effect in 3D views.
+  magnification_filter: dalaran.components.MagnificationFilter ("attr.dalaran.component_optional", nullable, order: 3300);
+}

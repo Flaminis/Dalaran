@@ -8,7 +8,7 @@ members = [
   "crates/viewer/*",
   "docs/snippets",
   "examples/rust/*",
-  "rerun_py",
+  "dalaran_py",
   "run_wasm",
   "tests/rust/log_benchmark",
   "tests/rust/plot_dashboard_stress",
@@ -18,27 +18,26 @@ members = [
 exclude = ["examples/rust/revy", "examples/rust/chess_robby_fischer"]
 
 [workspace.package]
-authors = ["rerun.io <opensource@rerun.io>"]
+authors = ["The Dalaran Project contributors <opensource@dalaran.dev>"]
 edition = "2024"
-homepage = "https://rerun.io"
+homepage = "https://dalaran.dev"
 include = [
-  "../../Cargo.lock", # So that users can pass `--locked` to `cargo install rerun-cli`
-  "../../LICENSE-APACHE",
-  "../../LICENSE-MIT",
+  "../../Cargo.lock", # So that users can pass `--locked` to `cargo install dalaran-cli`
+  "../../LICENSE",
   "**/*.rs",
   "Cargo.toml",
 ]
-license = "MIT OR Apache-2.0"
-repository = "https://github.com/rerun-io/rerun"
+license = "Apache-2.0"
+repository = "https://github.com/Flaminis/Dalaran"
 rust-version = "1.95"
 version = "0.36.0-alpha.1+dev"
 
 [workspace.metadata.cargo-shear]
 ignored = [
-  # rerun crates
-  "rerun_c",
+  # dalaran crates
+  "dalaran_c",
   "dl_dev_tools",
-  "rerun-cli",
+  "dalaran-cli",
   "dl_types_builder",
   "dl_protos_builder",
   "dl_renderer_examples",
@@ -55,7 +54,7 @@ ignored-paths = [
 [workspace.dependencies]
 # When using alpha-release, always use exact version, e.g. `version = "=0.x.y-alpha.z"
 # This is because we treat alpha-releases as incompatible, but semver doesn't.
-# In particular: if we compile rerun 0.3.0-alpha.0 we only want it to use
+# In particular: if we compile dalaran 0.3.0-alpha.0 we only want it to use
 # dl_log_types 0.3.0-alpha.0, NOT 0.3.0-alpha.4 even though it is newer and semver-compatible.
 
 # crates/build:
@@ -100,9 +99,9 @@ dl_uri = { path = "crates/store/dl_uri", version = "=0.36.0-alpha.1", default-fe
 
 # crates/top:
 dl_sdk = { path = "crates/top/dl_sdk", version = "=0.36.0-alpha.1", default-features = false }
-rerun = { path = "crates/top/rerun", version = "=0.36.0-alpha.1", default-features = false }
-rerun_c = { path = "crates/top/rerun_c", version = "=0.36.0-alpha.1", default-features = false }
-rerun-cli = { path = "crates/top/rerun-cli", version = "=0.36.0-alpha.1", default-features = false }
+dalaran = { path = "crates/top/dalaran", version = "=0.36.0-alpha.1", default-features = false }
+dalaran_c = { path = "crates/top/dalaran_c", version = "=0.36.0-alpha.1", default-features = false }
+dalaran-cli = { path = "crates/top/dalaran-cli", version = "=0.36.0-alpha.1", default-features = false }
 
 # crates/utils:
 dl_analytics = { path = "crates/utils/dl_analytics", version = "=0.36.0-alpha.1", default-features = false }
@@ -174,7 +173,7 @@ dl_viewport = { path = "crates/viewer/dl_viewport", version = "=0.36.0-alpha.1",
 dl_viewport_blueprint = { path = "crates/viewer/dl_viewport_blueprint", version = "=0.36.0-alpha.1", default-features = false }
 dl_web_viewer_server = { path = "crates/viewer/dl_web_viewer_server", version = "=0.36.0-alpha.1", default-features = false }
 
-# Rerun crates in other repos:
+# Dalaran crates in other repos:
 quiver = { version = "0.5.0", default-features = false }
 re_mp4 = "0.5.1"
 
@@ -463,11 +462,11 @@ uuid = { version = "1.24", features = ["serde", "v4", "js"] }
 vec1 = { version = "1.12", features = ["serde", "smallvec-v1"] }
 walkdir = "2.5"
 wildmatch = "2.6"
-# TODO(#8766): `rerun_js/web-viewer/build-wasm.mjs` is HIGHLY sensitive to changes in `wasm-bindgen`.
+# TODO(#8766): `dalaran_js/web-viewer/build-wasm.mjs` is HIGHLY sensitive to changes in `wasm-bindgen`.
 #     Whenever updating `wasm-bindgen`, update the exact version constraints in
 #     `crates/viewer/dl_redap_browser/Cargo.toml` and `crates/viewer/dl_viewer/Cargo.toml`, then make
 #     sure that notebooks still work:
-#         See `rerun_notebook/README.md` for how to run notebooks.
+#         See `dalaran_notebook/README.md` for how to run notebooks.
 #         Try running a cell which starts a viewer, and then running it again.
 #         There should be no errors in the browser console.
 #     Keep this workspace dependency non-exact so that published Rust libraries remain compatible
@@ -661,7 +660,7 @@ opt-level = 0
 debug = true
 
 [profile.debugging.package.egui]
-opt-level = 0 # we often debug egui via Rerun
+opt-level = 0 # we often debug egui via Dalaran
 
 [profile.debugging.build-override]
 debug = true # enable debug symbols for build scripts
@@ -672,7 +671,7 @@ debug = true # enable debug symbols for build scripts
 # A fast-compiling dev profile optimized for ultimate compile speed using the Cranelift backend.
 # Fast compile profile using the Cranelift codegen backend.
 # The codegen-backend settings are in .cargo/config.toml (requires nightly).
-# Usage: pixi run rerun-build-fast
+# Usage: pixi run dalaran-build-fast
 # Requires: rustup component add rustc-codegen-cranelift-preview --toolchain nightly
 [profile.dev-fast]
 inherits = "dev"

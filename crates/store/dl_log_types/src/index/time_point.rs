@@ -90,7 +90,7 @@ impl TimePoint {
                 if existing_typ != cell.typ() {
                     dl_log::warn_once!(
                         "Timeline {timeline_name:?} changed type from {existing_typ:?} to {:?}. \
-                         Rerun does not support using different types for the same timeline.",
+                         Dalaran does not support using different types for the same timeline.",
                         cell.typ()
                     );
                 }

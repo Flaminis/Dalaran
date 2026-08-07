@@ -444,7 +444,7 @@ mod tests {
             episodes: (0..3).map(EpisodeIndex).collect(),
         };
         let application_id = ApplicationId::from("lerobot_test");
-        let loader_name = "rerun.importers.LeRobotDataset";
+        let loader_name = "dalaran.importers.LeRobotDataset";
         // The loader and receiver run on this test thread, so the queue cannot grow independently.
         #[expect(
             clippy::disallowed_methods,

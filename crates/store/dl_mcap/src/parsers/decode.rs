@@ -1,4 +1,4 @@
-//! Utilities for decoding MCAP messages into Rerun chunks.
+//! Utilities for decoding MCAP messages into Dalaran chunks.
 
 use dl_chunk::external::nohash_hasher::{IntMap, IsEnabled};
 use dl_chunk::{
@@ -8,11 +8,11 @@ use dl_log_types::{TimeCell, TimeType};
 
 use crate::util::{TimestampCell, log_and_publish_timepoint_from_msg};
 
-/// Trait for parsing MCAP messages of a specific schema into Rerun chunks.
+/// Trait for parsing MCAP messages of a specific schema into Dalaran chunks.
 ///
-/// This trait defines the interface for converting MCAP messages into Rerun's internal
+/// This trait defines the interface for converting MCAP messages into Dalaran's internal
 /// chunk format. Implementations handle the incremental processing of messages and
-/// eventual conversion to structured data that can be visualized in Rerun.
+/// eventual conversion to structured data that can be visualized in Dalaran.
 ///
 /// ### Message Parsing
 ///
@@ -21,7 +21,7 @@ use crate::util::{TimestampCell, log_and_publish_timepoint_from_msg};
 /// 1. Process messages incrementally via [`append()`](`Self::append`),
 ///    where parsers can extract and accumulate data from each message.
 /// 2. All accumulated data is converted into [`Chunk`]s via
-///    [`finalize()`](`Self::finalize`), which consumes the parser and returns the final Rerun chunks.
+///    [`finalize()`](`Self::finalize`), which consumes the parser and returns the final Dalaran chunks.
 pub trait MessageParser {
     /// Process a single MCAP message and accumulate its data.
     ///
@@ -33,7 +33,7 @@ pub trait MessageParser {
     /// 1. Decode the message data according to the schema
     /// 2. Extract any _additional_ timestamp information and add it to the [`ParserContext`].
     ///    Note: `log_time` and `publish_time` are added automatically.
-    /// 3. Accumulate the decoded data for later conversion to Rerun [`Chunk`]s in [`finalize()`](`Self::finalize`).
+    /// 3. Accumulate the decoded data for later conversion to Dalaran [`Chunk`]s in [`finalize()`](`Self::finalize`).
     fn append(&mut self, ctx: &mut ParserContext, msg: &mcap::Message<'_>) -> anyhow::Result<()>;
 
     /// Returns the `TimePoint`s containing the log and publish times derived from the message.
@@ -50,7 +50,7 @@ pub trait MessageParser {
         Ok(vec![log_and_publish_timepoint_from_msg(msg, time_type)])
     }
 
-    /// Consume the parser and convert all accumulated data into Rerun chunks.
+    /// Consume the parser and convert all accumulated data into Dalaran chunks.
     ///
     /// This method is called after all messages have been processed via [`append()`](`Self::append`).
     /// It should convert the accumulated data into one or more [`Chunk`]s.

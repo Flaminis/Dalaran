@@ -13,7 +13,7 @@ use dl_log_types::{
     StoreSource,
 };
 use dl_protos::cloud::v1alpha1::ext;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_client::RerunCloudServiceClient;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_client::DalaranCloudServiceClient;
 use dl_types_core::SegmentId;
 use dl_uri::Origin;
 use tokio_stream::StreamExt as _;
@@ -41,7 +41,7 @@ pub async fn channel(origin: Origin) -> ApiResult<PoolChannel> {
 
     let http_url = origin.as_url();
 
-    let tls_config = if let Ok(cert_path) = std::env::var("RERUN_REDAP_LOCAL_CERT_PATH") {
+    let tls_config = if let Ok(cert_path) = std::env::var("DALARAN_REDAP_LOCAL_CERT_PATH") {
         use tonic::transport::{Certificate, ClientTlsConfig};
 
         dl_log::info!(cert_path, "starting client with local TLS cert");
@@ -61,7 +61,7 @@ pub async fn channel(origin: Origin) -> ApiResult<PoolChannel> {
             .domain_name("localhost") // must match the Common Name (CN) in the self-signed cert
             .assume_http2(true)
     } else {
-        // TODO(RR-3480): This will fail to connect to unencrypted IPv6 addresses (e.g. `rerun+http://[fd00:4b21:6f7a:2022::10]:51234`).
+        // TODO(RR-3480): This will fail to connect to unencrypted IPv6 addresses (e.g. `dalaran+http://[fd00:4b21:6f7a:2022::10]:51234`).
         tonic::transport::ClientTlsConfig::new()
             .with_enabled_roots()
             .assume_http2(true)
@@ -122,7 +122,7 @@ pub async fn channel(origin: Origin) -> ApiResult<PoolChannel> {
 
             if endpoint.connect().await.is_ok() {
                 Err(ApiError::connection(
-                    "the server is expecting an unencrypted connection (try `rerun+http://` if you are sure)",
+                    "the server is expecting an unencrypted connection (try `dalaran+http://` if you are sure)",
                 ))
             } else {
                 Err(original_err)
@@ -143,12 +143,12 @@ const DEFAULT_CONNECTION_POOL_SIZE: usize = 4;
 
 /// How many HTTP/2 connections to open per origin, for load-balancing concurrent requests.
 ///
-/// Defaults to [`DEFAULT_CONNECTION_POOL_SIZE`]. Override with `RERUN_REDAP_CONNECTION_POOL_SIZE`.
+/// Defaults to [`DEFAULT_CONNECTION_POOL_SIZE`]. Override with `DALARAN_REDAP_CONNECTION_POOL_SIZE`.
 ///
 /// Set it to `1` to disable pooling.
 #[cfg(not(target_arch = "wasm32"))]
 fn connection_pool_size() -> usize {
-    std::env::var("RERUN_REDAP_CONNECTION_POOL_SIZE")
+    std::env::var("DALARAN_REDAP_CONNECTION_POOL_SIZE")
         .ok()
         .and_then(|s| s.parse::<usize>().ok())
         .unwrap_or(DEFAULT_CONNECTION_POOL_SIZE)
@@ -306,7 +306,7 @@ impl tower::Service<tonic::codegen::http::Request<tonic::body::Body>> for PoolCh
 pub type RedapClientStack = dl_auth::client::AuthService<
     tonic::service::interceptor::InterceptedService<
         dl_protos::headers::PropagateHeaders<tonic_web_wasm_client::Client>,
-        dl_protos::headers::RerunVersionInterceptor,
+        dl_protos::headers::DalaranVersionInterceptor,
     >,
 >;
 
@@ -319,7 +319,7 @@ pub(crate) fn assemble_grpc_client(
 ) -> (RawRedapClient, RedapClientStack) {
     let middlewares = tower::ServiceBuilder::new()
         .layer(AuthDecorator::new(credentials))
-        .layer(dl_protos::headers::new_rerun_client_headers_layer());
+        .layer(dl_protos::headers::new_dalaran_client_headers_layer());
 
     let client_stack: RedapClientStack = tower::ServiceBuilder::new()
         .layer(middlewares.into_inner())
@@ -358,7 +358,7 @@ pub type RedapClientStack = dl_auth::client::AuthService<
                 dl_perf_telemetry::ClientOnResponse,
             >,
         >,
-        dl_protos::headers::RerunVersionInterceptor,
+        dl_protos::headers::DalaranVersionInterceptor,
     >,
 >;
 
@@ -366,19 +366,19 @@ pub type RedapClientStack = dl_auth::client::AuthService<
 pub type RedapClientStack = dl_auth::client::AuthService<
     tonic::service::interceptor::InterceptedService<
         dl_protos::headers::PropagateHeaders<PoolChannel>,
-        dl_protos::headers::RerunVersionInterceptor,
+        dl_protos::headers::DalaranVersionInterceptor,
     >,
 >;
 
-pub(crate) type RawRedapClient = RerunCloudServiceClient<RedapClientStack>;
+pub(crate) type RawRedapClient = DalaranCloudServiceClient<RedapClientStack>;
 
 fn redap_grpc_client(client_stack: RedapClientStack) -> RawRedapClient {
-    RerunCloudServiceClient::new(client_stack).max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
+    DalaranCloudServiceClient::new(client_stack).max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
 }
 
 pub(crate) fn boxed_redap_grpc_client(
     client_stack: RedapClientStack,
-) -> RerunCloudServiceClient<BoxedRedapClientStack> {
+) -> DalaranCloudServiceClient<BoxedRedapClientStack> {
     use tower::ServiceExt as _;
 
     // Map the layered stack's `Box<dyn Error + Send + Sync>` error to a concrete `tonic::Status`
@@ -391,7 +391,7 @@ pub(crate) fn boxed_redap_grpc_client(
             .map_err(tonic::Status::from_error),
     );
 
-    RerunCloudServiceClient::new(client_stack).max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
+    DalaranCloudServiceClient::new(client_stack).max_decoding_message_size(MAX_DECODING_MESSAGE_SIZE)
 }
 
 /// Apply the standard SDK-side layer stack on top of an already-built channel
@@ -403,7 +403,7 @@ pub(crate) fn assemble_grpc_client(
 ) -> (RawRedapClient, RedapClientStack) {
     let middlewares = tower::ServiceBuilder::new()
         .layer(AuthDecorator::new(credentials))
-        .layer(dl_protos::headers::new_rerun_client_headers_layer());
+        .layer(dl_protos::headers::new_dalaran_client_headers_layer());
 
     #[cfg(feature = "perf_telemetry")]
     let middlewares = middlewares.layer(dl_perf_telemetry::new_client_telemetry_layer());
@@ -1129,7 +1129,7 @@ async fn load_chunks(
     );
     if 25_000 < num_chunks {
         dl_log::debug_warn!(
-            "There are {} chunks in this recording. Consider running `rerun rrd optimize` on it!",
+            "There are {} chunks in this recording. Consider running `dalaran rrd optimize` on it!",
             dl_format::format_uint(num_chunks)
         );
     }

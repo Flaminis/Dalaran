@@ -26,28 +26,28 @@ fn drop_indicators(batch: RecordBatch) -> RecordBatch {
         .iter()
         .enumerate()
         .filter_map(|(i, field)| {
-            if let Some(val) = field.metadata().get("rerun:is_indicator") {
+            if let Some(val) = field.metadata().get("dalaran:is_indicator") {
                 if val == "true" {
                     dl_log::debug_once!(
-                        "Dropping column '{}' because 'rerun:is_indicator' is '{val}'.",
+                        "Dropping column '{}' because 'dalaran:is_indicator' is '{val}'.",
                         field.name()
                     );
                     None // Drop
                 } else {
                     dl_log::debug_once!(
-                        "Keeping column '{}' where 'rerun:is_indicator' is '{val}'.",
+                        "Keeping column '{}' where 'dalaran:is_indicator' is '{val}'.",
                         field.name()
                     );
                     Some(i) // Keep
                 }
-            } else if field.metadata().get("rerun:component").is_some_and(|val| {
-                val.starts_with("rerun.components.") && val.ends_with("Indicator")
+            } else if field.metadata().get("dalaran:component").is_some_and(|val| {
+                val.starts_with("dalaran.components.") && val.ends_with("Indicator")
             }) {
-                let Some(indicator) = field.metadata().get("rerun:component") else {
-                    debug_panic!("missing 'rerun:component' entry that should be present");
+                let Some(indicator) = field.metadata().get("dalaran:component") else {
+                    debug_panic!("missing 'dalaran:component' entry that should be present");
                     return Some(i);
                 };
-                dl_log::debug_once!("Dropping column because 'rerun:component' is '{indicator}'",);
+                dl_log::debug_once!("Dropping column because 'dalaran:component' is '{indicator}'",);
                 None // Drop
             } else {
                 Some(i) // Keep

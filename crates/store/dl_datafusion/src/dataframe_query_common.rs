@@ -29,7 +29,7 @@ use dl_protos::cloud::v1alpha1::{
     FetchChunksRequest, GetDatasetSchemaRequest, GetDatasetSchemaResponse, QueryDatasetResponse,
 };
 use dl_protos::common::v1alpha1::ext::ScanParameters;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_protos::{
     cloud::v1alpha1::ext::{Query, QueryDatasetRequest, QueryLatestAt, QueryRange},
     common::v1alpha1::ext::SegmentId,
@@ -54,12 +54,12 @@ use web_time::{Instant, SystemTime};
 /// Environment variable to force the client to go through the `FetchChunks` data fetching path.
 #[cfg(not(target_arch = "wasm32"))]
 static CHUNK_STRATEGY: LazyLock<String> = LazyLock::new(|| {
-    std::env::var("RERUN_CHUNK_STRATEGY")
+    std::env::var("DALARAN_CHUNK_STRATEGY")
         .unwrap_or_default()
         .to_ascii_lowercase()
 });
 
-/// True when `RERUN_CHUNK_STRATEGY=grpc` — the client should fetch all chunks via
+/// True when `DALARAN_CHUNK_STRATEGY=grpc` — the client should fetch all chunks via
 /// `FetchChunks` gRPC and the server should skip direct-URL generation.
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) fn force_grpc() -> bool {
@@ -102,7 +102,7 @@ fn query_dataset_fanout() -> usize {
 pub(crate) const DEFAULT_BATCH_BYTES: u64 = 200 * 1024 * 1024;
 pub(crate) const DEFAULT_BATCH_ROWS: usize = 2048;
 
-/// Mapping of `rerun_segment_id` to set of `IndexValues` to be used for querying
+/// Mapping of `dalaran_segment_id` to set of `IndexValues` to be used for querying
 /// a specific set of index values per segment. If the option is None, then
 /// `using_index_values` will not be applied to the dataset queries.
 pub(crate) type IndexValuesMap = Option<Arc<BTreeMap<SegmentId, BTreeSet<IndexValue>>>>;
@@ -351,7 +351,7 @@ impl<T: DataframeClientAPI> DataframeQueryTableProvider<T> {
 
         let schema = Arc::new(prepend_string_column_schema(
             &schema,
-            ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+            ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
         ));
 
         Ok(Self {
@@ -496,7 +496,7 @@ impl<T: DataframeClientAPI> TableProvider for DataframeQueryTableProvider<T> {
             // Now that filter pushdown has settled each query's `segment_ids`, bound each query's chunk fetch
             // to its sampled index values.
             // Done here rather than at construction so the per-segment value lists stay aligned with `segment_ids` after a
-            // `rerun_segment_id` predicate narrows or splits them.
+            // `dalaran_segment_id` predicate narrows or splits them.
             for query in &mut dataset_queries {
                 apply_per_segment_pushdown(
                     query,
@@ -727,7 +727,7 @@ impl<T: DataframeClientAPI> TableProvider for DataframeQueryTableProvider<T> {
             // the coalescer is mostly a pass-through, but it acts as a
             // physical-plan boundary that DataFusion's optimizer relies on
             // (removing it has been observed to confuse downstream sort /
-            // projection nodes that reference `rerun_segment_id`).
+            // projection nodes that reference `dalaran_segment_id`).
             SegmentStreamExec::try_new(
                 &self.schema,
                 self.sort_index,
@@ -861,8 +861,8 @@ fn extract_projected_entity_paths(
 
 /// Extract an [`EntityPath`] from an Arrow field's metadata, if present.
 ///
-/// Component columns carry `rerun:entity_path` metadata; time/index columns
-/// and the prepended `rerun_segment_id` column do not.
+/// Component columns carry `dalaran:entity_path` metadata; time/index columns
+/// and the prepended `dalaran_segment_id` column do not.
 fn entity_path_from_field(field: &Field) -> Option<EntityPath> {
     field
         .metadata()
@@ -874,10 +874,10 @@ fn entity_path_from_field(field: &Field) -> Option<EntityPath> {
 ///
 /// Only genuine component columns carry an entity path; gating on it (the
 /// same signal `extract_projected_entity_paths` uses) drops the prepended,
-/// unmarked `rerun_segment_id`, which would otherwise be misclassified as a
+/// unmarked `dalaran_segment_id`, which would otherwise be misclassified as a
 /// `Component` (`ColumnKind` defaults to `Component` for unmarked fields).
 /// Index/time columns also lack an entity path, so the same gate excludes
-/// them (and as a backstop they carry `rerun:kind=index`, which
+/// them (and as a backstop they carry `dalaran:kind=index`, which
 /// `try_from_arrow_field` maps to a non-`Component` descriptor).
 fn component_from_field(field: &Field) -> Option<String> {
     field
@@ -909,7 +909,7 @@ fn all_schema_components(schema: &SchemaRef) -> BTreeSet<String> {
 /// Counterpart to [`extract_projected_entity_paths`] at component granularity:
 /// it lets the scan narrow `fuzzy_descriptors` so the server skips chunks for
 /// unselected components (e.g. a heavy `VideoStream:sample` sitting next to a tiny `is_keyframe`).
-/// Time/index and `rerun_segment_id` columns are not components and are simply ignored.
+/// Time/index and `dalaran_segment_id` columns are not components and are simply ignored.
 fn extract_projected_components(
     schema: &SchemaRef,
     projection: &[usize],
@@ -1019,11 +1019,11 @@ pub(crate) fn segment_partition_hash(segment_id: &SegmentId) -> u64 {
 }
 
 /// We need to create `num_partitions` of DataFusion partition stream outputs, each of
-/// which will be fed from multiple `rerun_segment_id` sources. The partitioning
-/// output is a hash of the `rerun_segment_id`. We will reuse some of the
+/// which will be fed from multiple `dalaran_segment_id` sources. The partitioning
+/// output is a hash of the `dalaran_segment_id`. We will reuse some of the
 /// underlying execution code from `DataFusion`'s `RepartitionExec` to compute
 /// these DataFusion partition IDs, just to be certain they match partitioning generated
-/// from sources other than Rerun gRPC services.
+/// from sources other than Dalaran gRPC services.
 /// This function will do the relevant grouping of chunk infos by chunk's segment id,
 /// and we will eventually fire individual queries for each group. Segments must be ordered,
 /// see `SegmentStreamExec::try_new` for more details.
@@ -1144,7 +1144,7 @@ pub(crate) fn compute_chunk_info_aggregates(batch: &RecordBatch) -> ChunkInfoAgg
     let segment_ids = QueryDatasetDataframe::COLUMN_CHUNK_SEGMENT_ID
         .extract(batch)
         .ok();
-    let layer_names = QueryDatasetDataframe::COLUMN_RERUN_SEGMENT_LAYER
+    let layer_names = QueryDatasetDataframe::COLUMN_DALARAN_SEGMENT_LAYER
         .extract(batch)
         .ok();
     let byte_lens = QueryDatasetDataframe::COLUMN_CHUNK_BYTE_LEN
@@ -1374,7 +1374,7 @@ mod tests {
     }
 
     /// Per-segment pushdown stays aligned with `segment_ids` when a
-    /// `rerun_segment_id` predicate narrows them, and rewrites the survivor into
+    /// `dalaran_segment_id` predicate narrows them, and rewrites the survivor into
     /// the bounded encoding: sorted `per_segment_values`, `range` dropped, and `at`
     /// parked at STATIC against the query's index.
     #[test]
@@ -1413,25 +1413,25 @@ mod tests {
             ..Default::default()
         };
 
-        // 1. A `WHERE rerun_segment_id = 'b'` predicate is pushed down, narrowing
+        // 1. A `WHERE dalaran_segment_id = 'b'` predicate is pushed down, narrowing
         //    `segment_ids` exactly as `scan`'s filter loop does. (The index field's
-        //    `rerun:kind=index` metadata is irrelevant to a segment-id predicate,
+        //    `dalaran:kind=index` metadata is irrelevant to a segment-id predicate,
         //    but mirrors a real query schema.)
         let schema = {
             let mut index_meta = HashMap::new();
             index_meta.insert(
-                dl_sorbet::metadata::RERUN_KIND.to_owned(),
+                dl_sorbet::metadata::DALARAN_KIND.to_owned(),
                 "index".to_owned(),
             );
             Arc::new(Schema::new_with_metadata(
                 vec![
                     Field::new("my_index", DataType::Int64, false).with_metadata(index_meta),
-                    Field::new("rerun_segment_id", DataType::Utf8, false),
+                    Field::new("dalaran_segment_id", DataType::Utf8, false),
                 ],
                 HashMap::default(),
             ))
         };
-        let expr = col("rerun_segment_id").eq(lit("b"));
+        let expr = col("dalaran_segment_id").eq(lit("b"));
         let mut narrowed = apply_filter_expr_to_queries(vec![request], &expr, &schema, false)
             .unwrap()
             .expect("segment-id predicate is pushed down");
@@ -1620,15 +1620,15 @@ mod tests {
     // ==================== Entity path projection pushdown tests ====================
 
     /// Build a schema mimicking `DataframeQueryTableProvider`'s output schema:
-    /// - Index 0: `rerun_segment_id` (Utf8, no entity path metadata)
-    /// - Index 1: `log_time` (Int64, with `rerun:kind=index` metadata)
+    /// - Index 0: `dalaran_segment_id` (Utf8, no entity path metadata)
+    /// - Index 1: `log_time` (Int64, with `dalaran:kind=index` metadata)
     /// - Index 2: `/points:Position3D:positions` (component, `entity_path=/points`)
     /// - Index 3: `/points:Color:colors` (component, `entity_path=/points`)
     /// - Index 4: `/cameras:Transform3D:transform` (component, `entity_path=/cameras`)
     fn make_schema_with_entities() -> SchemaRef {
-        use dl_sorbet::metadata::{RERUN_KIND, SORBET_ENTITY_PATH};
+        use dl_sorbet::metadata::{DALARAN_KIND, SORBET_ENTITY_PATH};
 
-        let index_metadata = HashMap::from([(RERUN_KIND.to_owned(), "index".to_owned())]);
+        let index_metadata = HashMap::from([(DALARAN_KIND.to_owned(), "index".to_owned())]);
         let points_metadata =
             HashMap::from([(SORBET_ENTITY_PATH.to_owned(), "/points".to_owned())]);
         let cameras_metadata =
@@ -1636,7 +1636,7 @@ mod tests {
 
         Arc::new(Schema::new_with_metadata(
             vec![
-                Field::new("rerun_segment_id", DataType::Utf8, false),
+                Field::new("dalaran_segment_id", DataType::Utf8, false),
                 Field::new("log_time", DataType::Int64, false).with_metadata(index_metadata),
                 Field::new("/points:Position3D:positions", DataType::Utf8, true)
                     .with_metadata(points_metadata.clone()),
@@ -1649,16 +1649,16 @@ mod tests {
         ))
     }
 
-    /// Like [`make_schema_with_entities`] but with `rerun:component` metadata, so
+    /// Like [`make_schema_with_entities`] but with `dalaran:component` metadata, so
     /// component columns parse to their real identifiers (`positions`, `colors`,
     /// `transform`) instead of falling back to the full column name — matching
     /// the metadata that real dataset schemas carry.
     fn make_schema_with_components() -> SchemaRef {
-        use dl_sorbet::metadata::{RERUN_KIND, SORBET_ENTITY_PATH};
+        use dl_sorbet::metadata::{DALARAN_KIND, SORBET_ENTITY_PATH};
         // `dl_types_core::FIELD_METADATA_KEY_COMPONENT`.
-        const COMPONENT: &str = "rerun:component";
+        const COMPONENT: &str = "dalaran:component";
 
-        let index_metadata = HashMap::from([(RERUN_KIND.to_owned(), "index".to_owned())]);
+        let index_metadata = HashMap::from([(DALARAN_KIND.to_owned(), "index".to_owned())]);
         let component_metadata = |entity: &str, component: &str| {
             HashMap::from([
                 (SORBET_ENTITY_PATH.to_owned(), entity.to_owned()),
@@ -1668,7 +1668,7 @@ mod tests {
 
         Arc::new(Schema::new_with_metadata(
             vec![
-                Field::new("rerun_segment_id", DataType::Utf8, false),
+                Field::new("dalaran_segment_id", DataType::Utf8, false),
                 Field::new("log_time", DataType::Int64, false).with_metadata(index_metadata),
                 Field::new("/points:Position3D:positions", DataType::Utf8, true)
                     .with_metadata(component_metadata("/points", "positions")),
@@ -1735,7 +1735,7 @@ mod tests {
         let projection = vec![0, 2];
         // Filter references segment_id (no entity path) and time index (no entity path)
         let filters = vec![
-            col("rerun_segment_id").eq(lit("seg_a")),
+            col("dalaran_segment_id").eq(lit("seg_a")),
             col("log_time").gt(lit(100_i64)),
         ];
         let paths = extract_projected_entity_paths(&schema, &projection, &filters);
@@ -2043,7 +2043,7 @@ mod tests {
         let schema = Arc::new(Schema::new_with_metadata(
             vec![
                 Arc::new(ext::QueryDatasetDataframe::COLUMN_CHUNK_SEGMENT_ID.arrow_field()),
-                Arc::new(ext::QueryDatasetDataframe::COLUMN_RERUN_SEGMENT_LAYER.arrow_field()),
+                Arc::new(ext::QueryDatasetDataframe::COLUMN_DALARAN_SEGMENT_LAYER.arrow_field()),
                 Arc::new(ext::QueryDatasetDataframe::COLUMN_CHUNK_BYTE_LEN.arrow_field()),
             ],
             HashMap::default(),

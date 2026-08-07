@@ -25,7 +25,7 @@ pub fn voxel_grid(time_type: TimeType) -> Result<Lens, LensBuilderError> {
         .to_component(
             VoxelGridMap::descriptor_voxel_indices(),
             // Foxglove voxel grids are densely packed in Z-Y-X order. Convert
-            // each message to sparse Rerun voxel indices, then unwrap the
+            // each message to sparse Dalaran voxel indices, then unwrap the
             // per-message list level into the component column.
             Selector::parse(".")?
                 .pipe(extract_voxel_indices)

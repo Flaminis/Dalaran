@@ -1,6 +1,6 @@
 {
-  "name": "Rerun Viewer",
-  "short_name": "rerun-viewer-pwa",
+  "name": "Dalaran Viewer",
+  "short_name": "dalaran-viewer-pwa",
   "icons": [
     {
       "src": "./icon-256.png",

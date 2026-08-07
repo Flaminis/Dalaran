@@ -386,7 +386,7 @@ fn fields_from_message(descriptor: &MessageDescriptor) -> Fields {
                 Field::new(oneof.name(), DataType::Struct(inner), true).with_metadata(
                     std::iter::once((
                         "ARROW:extension:name".to_owned(),
-                        "rerun.datatypes.ProtobufOneOf".to_owned(),
+                        "dalaran.datatypes.ProtobufOneOf".to_owned(),
                     ))
                     .collect(),
                 )
@@ -483,7 +483,7 @@ fn arrow_field_from(descr: &FieldDescriptor) -> Field {
         field = field.with_metadata(
             std::iter::once((
                 "ARROW:extension:name".to_owned(),
-                "rerun.datatypes.ProtobufEnum".to_owned(),
+                "dalaran.datatypes.ProtobufEnum".to_owned(),
             ))
             .collect(),
         );
@@ -550,7 +550,7 @@ fn datatype_from(descr: &FieldDescriptor) -> DataType {
 ///
 /// Applying this decoder will result in a direct Arrow representation of the fields.
 /// This is useful for querying certain fields from an MCAP file, but wont result
-/// in semantic types that can be picked up by the Rerun viewer.
+/// in semantic types that can be picked up by the Dalaran viewer.
 #[derive(Debug, Default)]
 pub struct McapProtobufDecoder {
     descrs_per_topic: ahash::HashMap<String, MessageDescriptor>,
@@ -968,7 +968,7 @@ mod integration_tests {
                 .expect("failed to parse text format");
                 let mut tags = std::collections::HashMap::new();
                 tags.insert(MapKey::String("role".into()), Value::String("admin".into()));
-                tags.insert(MapKey::String("org".into()), Value::String("rerun".into()));
+                tags.insert(MapKey::String("org".into()), Value::String("dalaran".into()));
                 msg.set_field_by_name("tags", Value::Map(tags));
                 msg
             },

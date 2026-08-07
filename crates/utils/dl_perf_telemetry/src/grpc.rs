@@ -2,14 +2,14 @@
 //
 // See `dl_protos::headers`.
 
-const RERUN_HTTP_HEADER_ENTRY_ID: &str = "x-rerun-entry-id";
-const RERUN_HTTP_HEADER_CLIENT_VERSION: &str = "x-rerun-client-version";
-const RERUN_HTTP_HEADER_SERVER_VERSION: &str = "x-rerun-server-version";
+const DALARAN_HTTP_HEADER_ENTRY_ID: &str = "x-dalaran-entry-id";
+const DALARAN_HTTP_HEADER_CLIENT_VERSION: &str = "x-dalaran-client-version";
+const DALARAN_HTTP_HEADER_SERVER_VERSION: &str = "x-dalaran-server-version";
 
 // Server-injected trace id, returned to the client in response headers.
-// Mirrors `dl_protos::trace_id_layer::RERUN_HTTP_HEADER_REQUEST_TRACE_ID`
+// Mirrors `dl_protos::trace_id_layer::DALARAN_HTTP_HEADER_REQUEST_TRACE_ID`
 // (kept as a string here to avoid the dependency).
-const RERUN_HTTP_HEADER_REQUEST_TRACE_ID: &str = "x-request-trace-id";
+const DALARAN_HTTP_HEADER_REQUEST_TRACE_ID: &str = "x-request-trace-id";
 
 // --- Telemetry middlewares ---
 
@@ -62,21 +62,21 @@ impl<B> tower_http::trace::MakeSpan<B> for GrpcMakeSpan {
             prop.extract(&opentelemetry_http::HeaderExtractor(request.headers()))
         });
 
-        // Pull the rerun session id out of the inbound `tracestate` (if any) so we can
+        // Pull the dalaran session id out of the inbound `tracestate` (if any) so we can
         // record it directly as a span field at construction time, instead of relying on
         // a separate `tracing_subscriber::Layer` that records into a pre-declared field.
         //
         // Recording the value here means the field is populated before the span is exported,
         // and we sidestep the "silent no-op when the field wasn't pre-declared on the span"
         // pitfall of `Span::record`.
-        let rerun_session_id = {
+        let dalaran_session_id = {
             use opentelemetry::trace::TraceContextExt as _;
             parent_ctx
                 .span()
                 .span_context()
                 .trace_state()
-                .get(crate::RERUN_SESSION_TRACESTATE_KEY)
-                .and_then(crate::RerunTracingSessionId::parse)
+                .get(crate::DALARAN_SESSION_TRACESTATE_KEY)
+                .and_then(crate::DalaranTracingSessionId::parse)
                 .map(String::from)
         };
 
@@ -102,12 +102,12 @@ impl<B> tower_http::trace::MakeSpan<B> for GrpcMakeSpan {
 
         let client_version = request
             .headers()
-            .get(RERUN_HTTP_HEADER_CLIENT_VERSION)
+            .get(DALARAN_HTTP_HEADER_CLIENT_VERSION)
             .and_then(|v| v.to_str().ok().map(ToOwned::to_owned));
 
         let server_version = request
             .headers()
-            .get(RERUN_HTTP_HEADER_SERVER_VERSION)
+            .get(DALARAN_HTTP_HEADER_SERVER_VERSION)
             .and_then(|v| v.to_str().ok().map(ToOwned::to_owned));
 
         let email = request
@@ -132,7 +132,7 @@ impl<B> tower_http::trace::MakeSpan<B> for GrpcMakeSpan {
 
         let entry_id = request
             .headers()
-            .get(RERUN_HTTP_HEADER_ENTRY_ID)
+            .get(DALARAN_HTTP_HEADER_ENTRY_ID)
             .and_then(|v| v.to_str().ok().map(ToOwned::to_owned));
 
         // NOTE: Remember: the span we're creating here will propagate no matter what -- there is
@@ -151,11 +151,11 @@ impl<B> tower_http::trace::MakeSpan<B> for GrpcMakeSpan {
             rpc.service = %rpc_service,
             rpc.method = %rpc_method,
 
-            // The rerun session id, recorded as a top-level span field so it is queryable
-            // in Tempo as `{ .rerun_session_id = "…" }`. Extracted from the inbound
+            // The dalaran session id, recorded as a top-level span field so it is queryable
+            // in Tempo as `{ .dalaran_session_id = "…" }`. Extracted from the inbound
             // `tracestate` header above. Empty when no `tracing_session()` is active on
             // the client.
-            rerun_session_id = rerun_session_id.as_deref(),
+            dalaran_session_id = dalaran_session_id.as_deref(),
 
             // The gRPC status code (e.g. "Ok", "AlreadyExists", "DeadlineExceeded").
             // Filled in later by `GrpcOnResponse` or `GrpcOnEos`, depending on the endpoint type (unary vs streaming).
@@ -209,18 +209,18 @@ struct SpanMetadata {
 
     /// The identity and semantic version advertised by the gRPC client.
     ///
-    /// Extracted from h2 headers. See also `dl_protos::headers::RERUN_HTTP_HEADER_CLIENT_VERSION`.
+    /// Extracted from h2 headers. See also `dl_protos::headers::DALARAN_HTTP_HEADER_CLIENT_VERSION`.
     client_version: Option<String>,
 
     /// The identity and semantic version advertised by the gRPC server.
     ///
-    /// Extracted from h2 headers. See also `dl_protos::headers::RERUN_HTTP_HEADER_SERVER_VERSION`.
+    /// Extracted from h2 headers. See also `dl_protos::headers::DALARAN_HTTP_HEADER_SERVER_VERSION`.
     server_version: Option<String>,
 
     /// What email, if any? Extracted from h2 auth headers.
     email: Option<String>,
 
-    /// What entry ID, if any? Extracted from h2 Rerun extension headers.
+    /// What entry ID, if any? Extracted from h2 Dalaran extension headers.
     entry_id: Option<String>,
 
     /// Has the gRPC stream associated with this span streamed back its first chunk of data yet?
@@ -832,7 +832,7 @@ impl<B> tower_http::trace::OnResponse<B> for ClientOnResponse {
     ) {
         if let Some(trace_id) = response
             .headers()
-            .get(RERUN_HTTP_HEADER_REQUEST_TRACE_ID)
+            .get(DALARAN_HTTP_HEADER_REQUEST_TRACE_ID)
             .and_then(|v| v.to_str().ok())
         {
             span.record("server_trace_id", trace_id);

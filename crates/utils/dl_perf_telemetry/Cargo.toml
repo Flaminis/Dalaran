@@ -1,7 +1,7 @@
 [package]
 name = "dl_perf_telemetry"
 authors.workspace = true
-description = "In and out of process performance profiling utilities for Rerun & Redap"
+description = "In and out of process performance profiling utilities for Dalaran & Redap"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -41,7 +41,7 @@ tracy = ["dep:tracing-tracy"]
 
 ## Enable [`Telemetry::init_with_session_id_reader`].
 ##
-## SDK bindings (today: `rerun_py`) register a host-language-specific reader at
+## SDK bindings (today: `dalaran_py`) register a host-language-specific reader at
 ## init time so the per-RPC tracestate enricher can resolve the active session
 ## id without this crate ever needing to know about Python/JS/etc.
 ##
@@ -52,7 +52,7 @@ session_id_reader = []
 
 [dependencies]
 
-# Rerun
+# Dalaran
 dl_auth = { workspace = true, features = ["oauth"] }
 dl_grpc_headers.workspace = true
 

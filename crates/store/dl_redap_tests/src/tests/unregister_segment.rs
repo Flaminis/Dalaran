@@ -1,7 +1,7 @@
 #![expect(clippy::unwrap_used)]
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, entry_name,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
 };
 use crate::tests::common::concat_record_batches;
 use crate::{FieldsTestExt as _, RecordBatchTestExt as _, SchemaTestExt as _};
@@ -15,14 +15,14 @@ use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
 use dl_protos::cloud::v1alpha1::ext::{
     LayerRegistrationStatus, QueryDatasetDataframe, QueryDatasetRequest,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     GetDatasetManifestSchemaRequest, GetSegmentTableSchemaRequest, ReadDatasetEntryRequest,
     ScanDatasetManifestRequest, ScanSegmentTableRequest,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
-pub async fn unregister_simple(service: impl RerunCloudService) {
+pub async fn unregister_simple(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -98,7 +98,7 @@ pub async fn unregister_simple(service: impl RerunCloudService) {
     );
 }
 
-pub async fn unregister_products(service: impl RerunCloudService) {
+pub async fn unregister_products(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -169,7 +169,7 @@ pub async fn unregister_products(service: impl RerunCloudService) {
     }
 }
 
-pub async fn unregister_missing_dataset(service: impl RerunCloudService) {
+pub async fn unregister_missing_dataset(service: impl DalaranCloudService) {
     let dataset_name = "my_dataset_thats_not_there";
 
     let err = service
@@ -179,7 +179,7 @@ pub async fn unregister_missing_dataset(service: impl RerunCloudService) {
     assert_eq!(tonic::Code::NotFound, err.code());
 }
 
-pub async fn unregister_missing_segment(service: impl RerunCloudService) {
+pub async fn unregister_missing_segment(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [LayerDefinition::simple(
@@ -209,7 +209,7 @@ pub async fn unregister_missing_segment(service: impl RerunCloudService) {
     }
 }
 
-pub async fn unregister_invalid_args(service: impl RerunCloudService) {
+pub async fn unregister_invalid_args(service: impl DalaranCloudService) {
     {
         let dataset_name = "my_dataset_thats_not_there";
 
@@ -244,7 +244,7 @@ pub async fn unregister_invalid_args(service: impl RerunCloudService) {
 }
 
 // Make sure we cannot find any data when the `status=deleted`.
-pub async fn unregister_then_query(service: impl RerunCloudService) {
+pub async fn unregister_then_query(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -283,7 +283,7 @@ pub async fn unregister_then_query(service: impl RerunCloudService) {
 // ---
 
 async fn scan_segment_table_and_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     snapshot_name: &str,
 ) -> RecordBatch {
@@ -345,9 +345,9 @@ async fn scan_segment_table_and_snapshot(
     );
 
     let unstable_column_names = vec![
-        ScanSegmentTableDataframe::COLUMN_RERUN_STORAGE_URLS_NAME,
-        ScanSegmentTableDataframe::COLUMN_RERUN_SIZE_BYTES_NAME,
-        ScanSegmentTableDataframe::COLUMN_RERUN_LAST_UPDATED_AT_NAME,
+        ScanSegmentTableDataframe::COLUMN_DALARAN_STORAGE_URLS_NAME,
+        ScanSegmentTableDataframe::COLUMN_DALARAN_SIZE_BYTES_NAME,
+        ScanSegmentTableDataframe::COLUMN_DALARAN_LAST_UPDATED_AT_NAME,
     ];
     let filtered_batch = batch
         .remove_columns(&unstable_column_names)
@@ -369,7 +369,7 @@ async fn scan_segment_table_and_snapshot(
 }
 
 async fn scan_dataset_manifest_and_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     snapshot_name: &str,
 ) -> RecordBatch {
@@ -432,11 +432,11 @@ async fn scan_dataset_manifest_and_snapshot(
 
     let unstable_column_names = vec![
         // implementation-dependent
-        ScanDatasetManifestDataframe::COLUMN_RERUN_STORAGE_URL_NAME,
-        ScanDatasetManifestDataframe::COLUMN_RERUN_SIZE_BYTES_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_STORAGE_URL_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_SIZE_BYTES_NAME,
         // unstable
-        ScanDatasetManifestDataframe::COLUMN_RERUN_LAST_UPDATED_AT_NAME,
-        ScanDatasetManifestDataframe::COLUMN_RERUN_REGISTRATION_TIME_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_LAST_UPDATED_AT_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_REGISTRATION_TIME_NAME,
     ];
     let filtered_batch = batch
         .remove_columns(&unstable_column_names)
@@ -447,7 +447,7 @@ async fn scan_dataset_manifest_and_snapshot(
     // For the comparison to make sense across the OSS and enterprise servers, we need to filter
     // out rows where `status=deleted`, since OSS doesn't keep track of removed segments/layers.
     let filtered_batch = {
-        let col_status = ScanDatasetManifestDataframe::COLUMN_RERUN_REGISTRATION_STATUS
+        let col_status = ScanDatasetManifestDataframe::COLUMN_DALARAN_REGISTRATION_STATUS
             .extract(&filtered_batch)
             .unwrap();
 
@@ -472,7 +472,7 @@ async fn scan_dataset_manifest_and_snapshot(
 }
 
 async fn snapshot_response(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     snapshot_name: &str,
     batch: RecordBatch,
@@ -510,11 +510,11 @@ async fn snapshot_response(
 
     let unstable_column_names = vec![
         // implementation-dependent
-        ScanDatasetManifestDataframe::COLUMN_RERUN_STORAGE_URL_NAME,
-        ScanDatasetManifestDataframe::COLUMN_RERUN_SIZE_BYTES_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_STORAGE_URL_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_SIZE_BYTES_NAME,
         // unstable
-        ScanDatasetManifestDataframe::COLUMN_RERUN_LAST_UPDATED_AT_NAME,
-        ScanDatasetManifestDataframe::COLUMN_RERUN_REGISTRATION_TIME_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_LAST_UPDATED_AT_NAME,
+        ScanDatasetManifestDataframe::COLUMN_DALARAN_REGISTRATION_TIME_NAME,
     ];
     let filtered_batch = batch
         .remove_columns(&unstable_column_names)
@@ -525,7 +525,7 @@ async fn snapshot_response(
     // For the comparison to make sense across the OSS and enterprise servers, we need to filter
     // out rows where `status=deleted`, since OSS doesn't keep track of removed segments/layers.
     let filtered_batch = {
-        let col_status = ScanDatasetManifestDataframe::COLUMN_RERUN_REGISTRATION_STATUS
+        let col_status = ScanDatasetManifestDataframe::COLUMN_DALARAN_REGISTRATION_STATUS
             .extract(&filtered_batch)
             .unwrap();
 
@@ -548,7 +548,7 @@ async fn snapshot_response(
 }
 
 async fn query_dataset_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     query_dataset_request: QueryDatasetRequest,
     dataset_name: &str,
     snapshot_name: &str,
@@ -629,11 +629,11 @@ async fn query_dataset_snapshot(
 /// For now, we just accept it and move on.
 fn filter_out_index_ranges(batch: RecordBatch) -> RecordBatch {
     batch
-        .filter_columns_by(|f| f.metadata().get("rerun:index_marker").is_none())
+        .filter_columns_by(|f| f.metadata().get("dalaran:index_marker").is_none())
         .unwrap()
 }
 
-async fn get_dataset_updated_at_nanos(service: &impl RerunCloudService, dataset_name: &str) -> i64 {
+async fn get_dataset_updated_at_nanos(service: &impl DalaranCloudService, dataset_name: &str) -> i64 {
     service
         .read_dataset_entry(
             tonic::Request::new(ReadDatasetEntryRequest {})

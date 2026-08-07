@@ -1,7 +1,7 @@
 [package]
 name = "dl_types_builder"
 authors.workspace = true
-description = "Generates code for Rerun's SDKs from flatbuffers definitions."
+description = "Generates code for Dalaran's SDKs from flatbuffers definitions."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -60,7 +60,7 @@ insta.workspace = true
 
 [build-dependencies]
 
-# Rerun
+# Dalaran
 dl_build_tools.workspace = true
 
 # External

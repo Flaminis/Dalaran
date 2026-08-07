@@ -111,7 +111,7 @@ pub enum DataSourceUiCommand {
         on_done: futures::channel::mpsc::UnboundedSender<GetViewerStateResponse>,
     },
 
-    /// Open a URL in the viewer (a recording/blueprint file, a `rerun://` dataset URI, a redap
+    /// Open a URL in the viewer (a recording/blueprint file, a `dalaran://` dataset URI, a redap
     /// server/catalog URL, or an intra-recording link).
     ///
     /// Used by `dl_viewer_mcp`'s `OpenUrl` gRPC method.

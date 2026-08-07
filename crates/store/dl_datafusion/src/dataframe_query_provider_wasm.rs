@@ -88,7 +88,7 @@ pub struct DataframeSegmentStream<T: DataframeClientAPI> {
 }
 
 impl<T: DataframeClientAPI> DataframeSegmentStream<T> {
-    async fn get_chunk_store_for_single_rerun_segment(
+    async fn get_chunk_store_for_single_dalaran_segment(
         &mut self,
         segment_id: &str,
     ) -> ApiResult<ChunkStoreHandle> {
@@ -221,7 +221,7 @@ impl<T: DataframeClientAPI> Stream for DataframeSegmentStream<T> {
 
                 let runtime = Handle::current();
                 let store = runtime
-                    .block_on(this.get_chunk_store_for_single_rerun_segment(segment_id.as_str()))
+                    .block_on(this.get_chunk_store_for_single_dalaran_segment(segment_id.as_str()))
                     .map_err(|err| err.into_df_error())?;
 
                 let query_engine = QueryEngine::new(store.clone(), QueryCache::new_handle(store));
@@ -238,7 +238,7 @@ impl<T: DataframeClientAPI> Stream for DataframeSegmentStream<T> {
                 .as_mut()
                 .expect("current_query should be Some");
 
-            // If the following returns none, we have exhausted that rerun segment id
+            // If the following returns none, we have exhausted that dalaran segment id
             match create_next_row(query, segment_id, &this.projected_schema)
                 .map_err(|err| err.into_df_error())?
             {
@@ -283,7 +283,7 @@ impl<T: DataframeClientAPI> SegmentStreamExec<T> {
         };
 
         let partition_col = Arc::new(Column::new(
-            ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+            ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
             0,
         )) as Arc<dyn PhysicalExpr>;
         let order_col = sort_index
@@ -322,7 +322,7 @@ impl<T: DataframeClientAPI> SegmentStreamExec<T> {
         let output_partitioning = if partition_in_output_schema {
             Partitioning::Hash(
                 vec![Arc::new(Column::new(
-                    ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+                    ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
                     0,
                 ))],
                 num_partitions,
@@ -394,7 +394,7 @@ fn create_next_row(
 
     let batch_schema = Arc::new(prepend_string_column_schema(
         &query_schema,
-        ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+        ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
     ));
 
     let batch = RecordBatch::try_new_with_options(

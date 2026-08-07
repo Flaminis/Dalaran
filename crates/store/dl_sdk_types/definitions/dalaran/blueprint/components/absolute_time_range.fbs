@@ -1,0 +1,15 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// A reference to a range of time.
+struct AbsoluteTimeRange (
+  "attr.arrow.transparent",
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Copy, PartialEq, Eq, PartialOrd, Ord",
+  "attr.rust.repr": "transparent",
+  "attr.rust.tuple_struct"
+) {
+  range: dalaran.datatypes.AbsoluteTimeRange (order: 100);
+}
+

@@ -1,7 +1,7 @@
 [package]
 name = "dl_log_types"
 authors.workspace = true
-description = "The basic building blocks of the Rerun data types and tables."
+description = "The basic building blocks of the Dalaran data types and tables."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -30,7 +30,7 @@ default = []
 
 [dependencies]
 
-# Rerun
+# Dalaran
 dl_arrow_util.workspace = true
 dl_build_info.workspace = true
 dl_byte_size.workspace = true

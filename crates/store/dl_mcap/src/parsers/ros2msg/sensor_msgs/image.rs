@@ -178,7 +178,7 @@ impl ImageEncoding {
         )
     }
 
-    /// Converts this encoding into a Rerun [`ImageFormat`] for the given dimensions.
+    /// Converts this encoding into a Dalaran [`ImageFormat`] for the given dimensions.
     pub fn to_image_format(self, dimensions: [u32; 2]) -> ImageFormat {
         match self {
             Self::Rgb8 => ImageFormat::rgb8(dimensions),
@@ -232,7 +232,7 @@ pub fn decode_image_encoding(encoding: &str) -> anyhow::Result<ImageEncoding> {
     })
 }
 
-/// Decodes a raw image encoding string (shared by ROS and Foxglove) into a Rerun [`ImageFormat`].
+/// Decodes a raw image encoding string (shared by ROS and Foxglove) into a Dalaran [`ImageFormat`].
 ///
 /// Supports common encoding strings such as `rgb8`, `mono16`, `16UC1`, `yuyv`, `nv12`, etc.
 /// OpenCV-style single-channel encodings (`8UC1`, `16UC1`, etc.) are treated as depth formats.

@@ -1,4 +1,4 @@
-//! Text logging (nothing to do with rerun logging) for use in rerun libraries.
+//! Text logging (nothing to do with dalaran logging) for use in dalaran libraries.
 //!
 //! Provides helpers for adding multiple loggers,
 //! and for setting up logging on native and on web.
@@ -65,7 +65,7 @@ macro_rules! log_once {
 /// In debug builds, the message is prefixed with "DEBUG: " and logged at WARN level.
 /// In release builds, the message is logged at DEBUG level without any prefix.
 ///
-/// This macro never triggers panic-on-warn (`RERUN_PANIC_ON_WARN` or `PanicOnWarnScope`):
+/// This macro never triggers panic-on-warn (`DALARAN_PANIC_ON_WARN` or `PanicOnWarnScope`):
 /// that is meant to catch user-facing warnings, and this macro is never a warning
 /// in release builds.
 #[cfg(debug_assertions)]
@@ -99,7 +99,7 @@ macro_rules! debug_warn {
 /// In debug builds, the message is prefixed with "DEBUG: " and logged at WARN level.
 /// In release builds, the message is logged at DEBUG level without any prefix.
 ///
-/// This macro never triggers panic-on-warn (`RERUN_PANIC_ON_WARN` or `PanicOnWarnScope`):
+/// This macro never triggers panic-on-warn (`DALARAN_PANIC_ON_WARN` or `PanicOnWarnScope`):
 /// that is meant to catch user-facing warnings, and this macro is never a warning
 /// in release builds.
 #[cfg(debug_assertions)]
@@ -190,7 +190,7 @@ pub fn default_log_filter() -> String {
     } else {
         // Important to keep the default at (at least) "info",
         // as we print crucial information at INFO,
-        // e.g. the ip:port when hosting a server with `rerun-cli`.
+        // e.g. the ip:port when hosting a server with `dalaran-cli`.
         "info"
     };
     log_filter_from_env_or_default(base_log_filter)
@@ -334,21 +334,21 @@ pub fn env_var_is_truthy(var_name: &str) -> bool {
     env_var_flag(var_name).unwrap_or(false)
 }
 
-/// Is `RERUN_VERY_STRICT` set to a truthy value?
+/// Is `DALARAN_VERY_STRICT` set to a truthy value?
 ///
-/// In very strict mode, Rerun may panic anywhere, at any time, for any reason whenever it
+/// In very strict mode, Dalaran may panic anywhere, at any time, for any reason whenever it
 /// detects something it does not like — e.g. out-of-order chunks, unsorted timelines,
 /// or other invariant violations. Very strict mode is meant for development, testing and
 /// CI, never for production: enable it to catch silent corruption early.
 ///
 /// The result is cached on the first call, so subsequent calls are very cheap and
 /// changing the environment variable at runtime has no effect.
-pub fn is_rerun_very_strict() -> bool {
+pub fn is_dalaran_very_strict() -> bool {
     static VERY_STRICT: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
-    *VERY_STRICT.get_or_init(|| env_var_is_truthy("RERUN_VERY_STRICT"))
+    *VERY_STRICT.get_or_init(|| env_var_is_truthy("DALARAN_VERY_STRICT"))
 }
 
-/// Is `RERUN_PANIC_ON_WARN` set to a truthy value?
+/// Is `DALARAN_PANIC_ON_WARN` set to a truthy value?
 ///
 /// When enabled, any user-facing warning or error log message causes a panic
 /// (see `setup_logging`). This is meant for tests and CI, to catch warnings early.
@@ -357,7 +357,7 @@ pub fn is_rerun_very_strict() -> bool {
 /// changing the environment variable at runtime has no effect.
 pub fn is_panic_on_warn() -> bool {
     static PANIC_ON_WARN: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
-    *PANIC_ON_WARN.get_or_init(|| env_var_is_truthy("RERUN_PANIC_ON_WARN"))
+    *PANIC_ON_WARN.get_or_init(|| env_var_is_truthy("DALARAN_PANIC_ON_WARN"))
 }
 
 thread_local! {
@@ -367,7 +367,7 @@ thread_local! {
 /// Runs `f` with panic-on-warn suppressed on the current thread.
 ///
 /// Used by [`debug_warn!`] & co, which are warnings only in debug builds
-/// and thus shouldn't trip `RERUN_PANIC_ON_WARN` or `PanicOnWarnScope`.
+/// and thus shouldn't trip `DALARAN_PANIC_ON_WARN` or `PanicOnWarnScope`.
 ///
 /// This relies on `tracing` dispatching events synchronously on the emitting thread.
 #[doc(hidden)] // implementation detail of the `debug_warn!` family
@@ -395,12 +395,12 @@ pub(crate) fn is_panic_on_warn_suppressed() -> bool {
 ///
 /// Example input:
 /// * `/Users/emilk/.cargo/registry/src/github.com-1ecc6299db9ec823/tokio-1.24.1/src/runtime/runtime.rs`
-/// * `crates/rerun/src/main.rs`
+/// * `crates/dalaran/src/main.rs`
 /// * `/rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/ops/function.rs`
 ///
 /// Example output:
 /// * `tokio-1.24.1/src/runtime/runtime.rs`
-/// * `rerun/src/main.rs`
+/// * `dalaran/src/main.rs`
 /// * `core/src/ops/function.rs`
 #[allow(clippy::allow_attributes, dead_code)] // only used on web and in tests
 fn shorten_file_path(file_path: &str) -> &str {
@@ -422,7 +422,7 @@ fn test_shorten_file_path() {
             "/Users/emilk/.cargo/registry/src/github.com-1ecc6299db9ec823/tokio-1.24.1/src/runtime/runtime.rs",
             "tokio-1.24.1/src/runtime/runtime.rs",
         ),
-        ("crates/rerun/src/main.rs", "rerun/src/main.rs"),
+        ("crates/dalaran/src/main.rs", "dalaran/src/main.rs"),
         (
             "/rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/ops/function.rs",
             "core/src/ops/function.rs",

@@ -94,7 +94,7 @@ impl GetVideoSource for VideoStoreSource<'_> {
 /// Video stream from the store, ready for playback.
 ///
 /// This is compromised of:
-/// * raw video stream data (pointers into all live rerun-chunks holding video frame data)
+/// * raw video stream data (pointers into all live dalaran-chunks holding video frame data)
 /// * metadata with that we know about the stream (where are I-frames etc.)
 /// * active players for this stream and their state
 #[derive(dl_byte_size::SizeBytes)]

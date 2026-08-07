@@ -119,7 +119,7 @@ fn setup_scene(test_context: &mut TestContext, use_explicit_frames: bool) {
                 )
         });
     } else {
-        // Classic Rerun hierarchy with indirection at the origin.
+        // Classic Dalaran hierarchy with indirection at the origin.
         test_context.log_entity("origin", |builder| {
             builder.with_archetype_auto_row(TimePoint::STATIC, &origin_transform)
         });

@@ -1,7 +1,7 @@
 use crate::blueprint::components as bp_components;
 use crate::{AsComponents, SerializedComponentBatch};
 
-/// Configuration for a visualizer in Rerun.
+/// Configuration for a visualizer in Dalaran.
 #[derive(Clone, Debug)]
 pub struct Visualizer {
     /// Identifies this visualizer instance uniquely within its view.

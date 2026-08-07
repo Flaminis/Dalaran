@@ -513,10 +513,10 @@ impl App {
             ONCE.call_once(|| {
                 // Tell the user there is a faster native viewer they can use instead of the web viewer:
                 let notification = dl_ui::notifications::Notification::new(
-                    dl_ui::notifications::NotificationLevel::Tip, "For better performance, try the native Rerun Viewer!").with_link(
+                    dl_ui::notifications::NotificationLevel::Tip, "For better performance, try the native Dalaran Viewer!").with_link(
                     dl_ui::Link {
                         text: "Install…".into(),
-                        url: "https://rerun.io/docs/overview/installing-rerun/viewer#installing-the-viewer".into(),
+                        url: "https://dalaran.dev/docs/overview/installing-dalaran/viewer#installing-the-viewer".into(),
                     }
                 )
                     .no_toast()
@@ -879,7 +879,7 @@ impl App {
         }
     }
 
-    /// Makes the given store active and request user attention if Rerun in the background.
+    /// Makes the given store active and request user attention if Dalaran in the background.
     pub(super) fn make_store_active_and_highlight(
         &mut self,
         store_hub: &mut StoreHub,
@@ -888,7 +888,7 @@ impl App {
     ) {
         if store_id.is_blueprint() {
             dl_log::warn!(
-                "Can't make a blueprint active: {store_id:?}. This is likely a bug in Rerun."
+                "Can't make a blueprint active: {store_id:?}. This is likely a bug in Dalaran."
             );
             return;
         }
@@ -1176,7 +1176,7 @@ fn serve_inspect_request(
     };
 
     if egui_ctx.plugin_opt::<InspectionPlugin>().is_none() {
-        egui_ctx.add_plugin(InspectionPlugin::new(Some("rerun viewer".to_owned())));
+        egui_ctx.add_plugin(InspectionPlugin::new(Some("dalaran viewer".to_owned())));
     }
 
     egui_ctx.with_plugin::<InspectionPlugin, _>(|plugin| {

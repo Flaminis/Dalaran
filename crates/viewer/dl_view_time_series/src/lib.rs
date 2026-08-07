@@ -1,6 +1,6 @@
-//! Rerun time series View
+//! Dalaran time series View
 //!
-//! A View that shows plots over Rerun timelines.
+//! A View that shows plots over Dalaran timelines.
 
 mod aggregation;
 mod fallbacks;

@@ -82,7 +82,7 @@ fn settings_screen_ui_impl(ui: &mut egui::Ui, app_options: &mut AppOptions, keep
         show_metrics,
         show_notification_toasts,
         custom_window_decorations,
-        include_rerun_examples_button_in_recordings_panel,
+        include_dalaran_examples_button_in_recordings_panel,
         show_picking_debug_overlay: _, // not yet exposed
         inspect_blueprint_timeline: _, // not yet exposed
         blueprint_gc: _,               // not yet exposed
@@ -123,8 +123,8 @@ fn settings_screen_ui_impl(ui: &mut egui::Ui, app_options: &mut AppOptions, keep
     ui.add_space(8.0);
 
     ui.re_checkbox(
-        include_rerun_examples_button_in_recordings_panel,
-        "Show 'Rerun examples' button",
+        include_dalaran_examples_button_in_recordings_panel,
+        "Show 'Dalaran examples' button",
     );
 
     ui.re_checkbox(
@@ -148,7 +148,7 @@ fn settings_screen_ui_impl(ui: &mut egui::Ui, app_options: &mut AppOptions, keep
     if dl_ui::supports_custom_decorations(ui.os()) {
         ui.re_checkbox(custom_window_decorations, "Use custom window decorations")
             .on_hover_text(
-                "Hide the native title bar and draw Rerun's top bar as the window frame.\n\n\
+                "Hide the native title bar and draw Dalaran's top bar as the window frame.\n\n\
              Opt out of this if you experience any issues with the window's behavior.",
             );
     }
@@ -425,7 +425,7 @@ fn map_view_section_ui(ui: &mut Ui, mapbox_access_token: &mut String) {
             ui.markdown_ui(
                 "This token is used to enable Mapbox-based map view backgrounds.\n\n\
                 Note that the token will be saved in clear text in the configuration file. \
-                The token can also be set using the `RERUN_MAPBOX_ACCESS_TOKEN` environment \
+                The token can also be set using the `DALARAN_MAPBOX_ACCESS_TOKEN` environment \
                 variable.",
             );
         });

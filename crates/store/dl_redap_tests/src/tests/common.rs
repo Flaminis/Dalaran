@@ -7,20 +7,20 @@ use itertools::Itertools as _;
 use dl_log_types::{EntityPath, TimeType};
 use dl_protos::cloud::v1alpha1::ext as cloud_ext;
 use dl_protos::cloud::v1alpha1::ext::DatasetEntry;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     CreateDatasetEntryRequest, DataSource, QueryTasksOnCompletionRequest,
     RegisterWithDatasetRequest,
 };
 use dl_protos::common::v1alpha1::TaskId;
 use dl_protos::common::v1alpha1::ext::IfDuplicateBehavior;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_protos::{EntryName, common::v1alpha1::ext::SegmentId};
 use dl_types_core::{AsComponents, LayerName};
 use tonic::async_trait;
 use url::Url;
 
-use crate::utils::rerun::{
+use crate::utils::dalaran::{
     create_recording_with_static_components, multi_chunked_entities_recording,
 };
 use crate::{
@@ -36,7 +36,7 @@ pub fn entry_name(name: &str) -> EntryName {
 }
 
 pub async fn create_table_entry_with_name(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     table_name: &str,
     tmp_dir: &tempfile::TempDir,
 ) -> cloud_ext::TableEntry {
@@ -67,7 +67,7 @@ pub async fn create_table_entry_with_name(
 
 /// Extension trait for the most common test setup tasks.
 #[async_trait]
-pub trait RerunCloudServiceExt: RerunCloudService {
+pub trait DalaranCloudServiceExt: DalaranCloudService {
     async fn create_dataset_entry_with_name(&self, dataset_name: &str) -> DatasetEntry;
 
     async fn register_with_dataset_name_blocking(
@@ -94,7 +94,7 @@ pub trait RerunCloudServiceExt: RerunCloudService {
 }
 
 #[async_trait]
-impl<T: RerunCloudService> RerunCloudServiceExt for T {
+impl<T: DalaranCloudService> DalaranCloudServiceExt for T {
     async fn create_dataset_entry_with_name(&self, dataset_name: &str) -> DatasetEntry {
         self.create_dataset_entry(tonic::Request::new(CreateDatasetEntryRequest {
             name: Some(dataset_name.to_owned()),
@@ -255,7 +255,7 @@ impl<T: RerunCloudService> RerunCloudServiceExt for T {
 
 /// Register data sources and wait for task completion, returning the task result batches.
 pub async fn register_and_wait(
-    service: &impl dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService,
+    service: &impl dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService,
     request: tonic::Request<RegisterWithDatasetRequest>,
 ) -> Vec<RecordBatch> {
     let resp: RecordBatch = service
@@ -269,7 +269,7 @@ pub async fn register_and_wait(
         .expect("record batch expected");
 
     // extract task ids from the response
-    let task_ids: Vec<TaskId> = cloud_ext::RegisterWithDatasetDataframe::COLUMN_RERUN_TASK_ID
+    let task_ids: Vec<TaskId> = cloud_ext::RegisterWithDatasetDataframe::COLUMN_DALARAN_TASK_ID
         .extract(&resp)
         .expect("valid task id column")
         .into_iter_owned()
@@ -306,7 +306,7 @@ pub async fn register_and_wait(
 }
 
 async fn register_with_dataset_blocking(
-    service: &impl dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService,
+    service: &impl dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService,
     request: tonic::Request<RegisterWithDatasetRequest>,
 ) {
     let task_results = register_and_wait(service, request).await;
@@ -329,14 +329,14 @@ async fn register_with_dataset_blocking(
 // ---
 
 pub enum LayerType {
-    /// See [`crate::utils::rerun::create_simple_recording`]
+    /// See [`crate::utils::dalaran::create_simple_recording`]
     Simple {
         entities: &'static [&'static str],
         start_time: i64,
         time_type: TimeType,
     },
 
-    /// See [`crate::utils::rerun::create_simple_recording_one_chunk_per_frame`]
+    /// See [`crate::utils::dalaran::create_simple_recording_one_chunk_per_frame`]
     SimpleOneChunkPerFrame {
         entities: &'static [&'static str],
         start_time: i64,

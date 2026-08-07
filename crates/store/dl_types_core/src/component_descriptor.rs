@@ -23,7 +23,7 @@ pub struct ComponentDescriptor {
     ///
     /// `None` if the data wasn't logged through an archetype.
     ///
-    /// Example: `rerun.archetypes.Points3D`.
+    /// Example: `dalaran.archetypes.Points3D`.
     pub archetype: Option<ArchetypeName>,
 
     /// Uniquely identifies of the component associated with this data.
@@ -35,7 +35,7 @@ pub struct ComponentDescriptor {
     ///
     /// Can be used to inform applications on how to interpret the data.
     ///
-    /// Example: `rerun.components.Position3D`.
+    /// Example: `dalaran.components.Position3D`.
     pub component_type: Option<ComponentType>,
 }
 
@@ -153,13 +153,13 @@ impl ComponentDescriptor {
 // TODO(cmc): we really shouldn't be duplicating these.
 
 /// The key used to identify the [`crate::ArchetypeName`] in field-level metadata.
-pub const FIELD_METADATA_KEY_ARCHETYPE: &str = "rerun:archetype";
+pub const FIELD_METADATA_KEY_ARCHETYPE: &str = "dalaran:archetype";
 
 /// The key used to identify the [`crate::ComponentIdentifier`] in field-level metadata.
-pub const FIELD_METADATA_KEY_COMPONENT: &str = "rerun:component";
+pub const FIELD_METADATA_KEY_COMPONENT: &str = "dalaran:component";
 
 /// The key used to identify the [`crate::ComponentType`] in field-level metadata.
-pub const FIELD_METADATA_KEY_COMPONENT_TYPE: &str = "rerun:component_type";
+pub const FIELD_METADATA_KEY_COMPONENT_TYPE: &str = "dalaran:component_type";
 
 impl TryFrom<arrow::datatypes::Field> for ComponentDescriptor {
     type Error = crate::InvalidComponentIdentifierError;

@@ -1,11 +1,11 @@
-//! Viewer binary to avoid compiling the full rerun-cli, so we can achieve faster compile times.
+//! Viewer binary to avoid compiling the full dalaran-cli, so we can achieve faster compile times.
 
 #[global_allocator]
 static GLOBAL: dl_memory::AccountingAllocator<std::alloc::System> =
     dl_memory::AccountingAllocator::new(std::alloc::System);
 
 #[cfg(not(debug_assertions))]
-compile_error!("This binary is for development only. Use `rerun-cli` for production.");
+compile_error!("This binary is for development only. Use `dalaran-cli` for production.");
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result {

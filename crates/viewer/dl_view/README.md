@@ -1,6 +1,6 @@
 # dl_view
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_view.svg)](https://crates.io/crates/dl_view)
 [![Documentation](https://docs.rs/dl_view/badge.svg)](https://docs.rs/dl_view)

@@ -428,7 +428,7 @@ impl ApiError {
     /// Raised when `GET /version` against the requested origin returns a non-2xx response.
     ///
     /// The included status line and body snippet usually tell the user whether the path is
-    /// wrong (404 from a non-Rerun HTTP server), the server is down (5xx), or they hit a
+    /// wrong (404 from a non-Dalaran HTTP server), the server is down (5xx), or they hit a
     /// reverse proxy that redirected somewhere unexpected. Connection-refused (wrong port
     /// or server not running) hits a different error path above.
     #[expect(clippy::needless_pass_by_value)]
@@ -440,7 +440,7 @@ impl ApiError {
         hint: Option<&str>,
     ) -> Self {
         let mut msg = format!(
-            "{origin} is not a valid Rerun server (GET /version returned HTTP {status} {status_text})"
+            "{origin} is not a valid Dalaran server (GET /version returned HTTP {status} {status_text})"
         );
         if let Some(body) = body_snippet.filter(|s| !s.is_empty()) {
             msg.push_str(": ");

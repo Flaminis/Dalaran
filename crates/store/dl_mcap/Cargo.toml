@@ -1,6 +1,6 @@
 [package]
 name = "dl_mcap"
-description = "Convert MCAP into Rerun-compatible data"
+description = "Convert MCAP into Dalaran-compatible data"
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true

@@ -115,7 +115,7 @@ impl quote::ToTokens for ArrowFieldTokenizer<'_> {
             metadata,
         } = field;
 
-        // Unions in Rerun always has a `_null_markers` arm, so all unions are nullable,
+        // Unions in Dalaran always has a `_null_markers` arm, so all unions are nullable,
         // whether they are specified as such or not.
         let is_nullable =
             *is_nullable || matches!(field.data_type.to_logical_type(), DataType::Union { .. });
@@ -151,7 +151,7 @@ impl quote::ToTokens for StrStrMapTokenizer<'_> {
 }
 
 pub fn quote_fqname_as_type_path(fqname: impl AsRef<str>) -> TokenStream {
-    let fqname = fqname.as_ref().replace('.', "::").replace("rerun", "crate");
+    let fqname = fqname.as_ref().replace('.', "::").replace("dalaran", "crate");
     let expr: syn::TypePath = syn::parse_str(&fqname).unwrap();
     quote!(#expr)
 }

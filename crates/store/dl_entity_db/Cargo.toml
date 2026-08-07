@@ -1,7 +1,7 @@
 [package]
 name = "dl_entity_db"
 authors.workspace = true
-description = "In-memory storage of Rerun entities"
+description = "In-memory storage of Dalaran entities"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

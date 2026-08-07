@@ -1,7 +1,7 @@
 [package]
 name = "dl_viewer"
 authors.workspace = true
-description = "The Rerun viewer"
+description = "The Dalaran viewer"
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true
@@ -12,8 +12,7 @@ rust-version.workspace = true
 version.workspace = true
 include = [
   "../../Cargo.lock",
-  "../../LICENSE-APACHE",
-  "../../LICENSE-MIT",
+  "../../LICENSE",
   "**/*.rs",
   "Cargo.toml",
   "data/*",
@@ -177,11 +176,11 @@ dl_web.workspace = true
 js-sys.workspace = true
 poll-promise = { workspace = true, features = ["web"] }
 wasm-bindgen-futures.workspace = true
-# TODO(#8766): `rerun_js/web-viewer/build-wasm.mjs` is HIGHLY sensitive to changes in `wasm-bindgen`.
+# TODO(#8766): `dalaran_js/web-viewer/build-wasm.mjs` is HIGHLY sensitive to changes in `wasm-bindgen`.
 #     Whenever updating `wasm-bindgen`, update all three dependency specifications in
 #     `Cargo.toml`, `crates/viewer/dl_redap_browser/Cargo.toml`, and
 #     `crates/viewer/dl_viewer/Cargo.toml`, and make sure that notebooks still work:
-#         See `rerun_notebook/README.md` for how to run notebooks.
+#         See `dalaran_notebook/README.md` for how to run notebooks.
 #         Try running a cell which starts a viewer, and then running it again.
 #         There should be no errors in the browser console.
 #     For details see https://github.com/rerun-io/rerun/issues/8766

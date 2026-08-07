@@ -1,7 +1,7 @@
 [package]
 name = "dl_chunk"
 authors.workspace = true
-description = "A chunk of Rerun data, encoded using Arrow. Used for logging, transport, storage and compute."
+description = "A chunk of Dalaran data, encoded using Arrow. Used for logging, transport, storage and compute."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -25,7 +25,7 @@ default = []
 
 [dependencies]
 
-# Rerun
+# Dalaran
 dl_arrow_util.workspace = true
 dl_byte_size.workspace = true
 dl_error.workspace = true

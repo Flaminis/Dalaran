@@ -27,7 +27,7 @@ pub fn setup_logging_with_filter(log_filter: &str) {
             // This ensures sure we produce backtraces if our examples (etc) panics.
 
             // Our own crash handler (`dl_crash_handler`) always prints a backtraces
-            // (currently ignoring `RUST_BACKTRACE`) but we only use that for `rerun-cli`, our main binary.
+            // (currently ignoring `RUST_BACKTRACE`) but we only use that for `dalaran-cli`, our main binary.
 
             // `RUST_BACKTRACE` also turns on printing backtraces for `anyhow::Error`s that
             // are returned from `main` (i.e. if `main` returns `anyhow::Result`).
@@ -77,7 +77,7 @@ pub fn setup_logging_with_filter(log_filter: &str) {
         use std::str::FromStr as _;
 
         if cfg!(target_os = "macos") && cfg!(target_arch = "x86_64") {
-            crate::warn!("Rerun does not officially support Intel Macs (x86/x64)");
+            crate::warn!("Dalaran does not officially support Intel Macs (x86/x64)");
         }
 
         let primary_log_filter = log_filter.split(',').next().unwrap_or("info");
@@ -172,7 +172,7 @@ where
             let mut visitor = crate::event_visitor::EventVisitor::default();
             event.record(&mut visitor);
             panic!(
-                "{level} logged with RERUN_PANIC_ON_WARN: {}",
+                "{level} logged with DALARAN_PANIC_ON_WARN: {}",
                 visitor.format_as_string()
             );
         }
@@ -181,17 +181,17 @@ where
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests {
-    /// `RERUN_PANIC_ON_WARN` should catch user-facing warnings,
+    /// `DALARAN_PANIC_ON_WARN` should catch user-facing warnings,
     /// but not `debug_warn!`/`debug_warn_once!`, which are only warnings in debug builds.
     ///
-    /// See <https://linear.app/rerun/issue/RR-4672>.
+    /// See <https://linear.app/dalaran/issue/RR-4672>.
     #[test]
     fn test_debug_warn_does_not_panic_on_warn() {
         // SAFETY: tests run via `cargo nextest` get their own process,
         // and no other thread is reading the environment here.
         #[expect(unsafe_code)]
         unsafe {
-            std::env::set_var("RERUN_PANIC_ON_WARN", "1");
+            std::env::set_var("DALARAN_PANIC_ON_WARN", "1");
         }
         crate::setup_logging();
 
@@ -199,7 +199,7 @@ mod tests {
         crate::debug_warn_once!("this should not panic either");
     }
 
-    /// Same as above, but for [`crate::PanicOnWarnScope`] instead of `RERUN_PANIC_ON_WARN`.
+    /// Same as above, but for [`crate::PanicOnWarnScope`] instead of `DALARAN_PANIC_ON_WARN`.
     #[test]
     fn test_debug_warn_does_not_panic_in_panic_on_warn_scope() {
         crate::setup_logging();
@@ -211,11 +211,11 @@ mod tests {
 
     /// Sanity check for the two tests above: user-facing warnings should still panic.
     ///
-    /// Uses [`crate::PanicOnWarnScope`] rather than `RERUN_PANIC_ON_WARN`, so that it
+    /// Uses [`crate::PanicOnWarnScope`] rather than `DALARAN_PANIC_ON_WARN`, so that it
     /// doesn't depend on whether `setup_logging` ran before or after the environment
     /// variable was set.
     #[test]
-    #[should_panic(expected = "warning logged with RERUN_PANIC_ON_WARN")]
+    #[should_panic(expected = "warning logged with DALARAN_PANIC_ON_WARN")]
     fn test_warn_panics_in_panic_on_warn_scope() {
         crate::setup_logging();
         let _scope = crate::PanicOnWarnScope::new();

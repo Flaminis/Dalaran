@@ -222,7 +222,7 @@ pub trait MessageDecoder: Send + Sync {
 
 type Parser = (ParserContext, Box<dyn MessageParser>);
 
-/// Decodes batches of messages from an MCAP into Rerun chunks using previously registered parsers.
+/// Decodes batches of messages from an MCAP into Dalaran chunks using previously registered parsers.
 struct McapChunkDecoder {
     parsers: IntMap<ChannelId, Parser>,
     time_type: TimeType,

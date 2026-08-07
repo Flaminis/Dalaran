@@ -1,13 +1,13 @@
 # dl_perf_telemetry
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_perf_telemetry.svg)](https://crates.io/crates/dl_perf_telemetry)
 [![Documentation](https://docs.rs/dl_perf_telemetry/badge.svg)](https://docs.rs/dl_perf_telemetry)
 ![MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Apache](https://img.shields.io/badge/license-Apache-blue.svg)
 
-In and out of process telemetry and profiling utilities for Rerun & Redap.
+In and out of process telemetry and profiling utilities for Dalaran & Redap.
 
 Performance telemetry is always disabled by default. It is gated both by a feature flag (`perf_telemetry`) and runtime configuration in the form of environment variables:
 * `TELEMETRY_ENABLED`: is performance telemetry enabled at all (default: `false`)? When on, the OpenTelemetry SDK is initialized; individual exporters (logs/traces/metrics) only fire when their endpoint env var (or the umbrella `OTEL_EXPORTER_OTLP_ENDPOINT`) is set.
@@ -21,25 +21,25 @@ Note that despite the name, this crate also hands all log output to the telemetr
 * out-of-process IO-focused profilers such as the [OpenTelemetry](https://opentelemetry.io/) ecosystem (gRPC, trace propagation, distributed tracing, etc)
 * in-process compute-focused profilers such as [Tracy](https://github.com/wolfpld/tracy)
 
-What you can or cannot do with that depends on which project you're working on (Redap, Rerun SDK, Rerun Viewer). See below for more information.
+What you can or cannot do with that depends on which project you're working on (Redap, Dalaran SDK, Dalaran Viewer). See below for more information.
 
 
 ### Redap
 
-If you have source access to Rerun Hub check the Readme there.
+If you have source access to Dalaran Hub check the Readme there.
 
 
-### Rerun SDK
+### Dalaran SDK
 
-In the Rerun SDK, `dl_perf_telemetry` is always disabled by default (feature flagged), and only meant as a developer tool: it never ships with the final user builds.
+In the Dalaran SDK, `dl_perf_telemetry` is always disabled by default (feature flagged), and only meant as a developer tool: it never ships with the final user builds.
 
 The integration works pretty well for both out-of-process and in-process profiling.
 
 We'll use the following script as an example:
 ```py
-import rerun as rr
+import dalaran as rr
 
-client = rr.catalog.CatalogClient("rerun://sandbox.redap.rerun.io")
+client = rr.catalog.CatalogClient("dalaran://sandbox.redap.dalaran.dev")
 client.dataset_entries()
 
 dataset = client.get_dataset_entry(name="droid:raw")
@@ -55,12 +55,12 @@ print(df.count())
 
 * Example of out-of-process profiling using Jaeger (run `pixi run compose-dev` in the Redap repository to start a Jaeger instance, or `docker run --rm -p 16686:16686 -p 4317:4317 jaegertracing/jaeger:2.11.0` for a standalone instance):
   ```sh
-  # `perf_telemetry` is a default feature of `rerun_py`, so a plain build is enough for OTel/Jaeger:
+  # `perf_telemetry` is a default feature of `dalaran_py`, so a plain build is enough for OTel/Jaeger:
   $ pixi run py-build
 
-  # If you additionally want Python-side spans (e.g. via the `@with_tracing` decorator in `rerun._tracing`),
+  # If you additionally want Python-side spans (e.g. via the `@with_tracing` decorator in `dalaran._tracing`),
   # install the tracing extra so the OpenTelemetry Python packages are available:
-  $ pixi run uv pip install 'rerun-sdk[tracing]'
+  $ pixi run uv pip install 'dalaran-sdk[tracing]'
 
   # Run your script with telemetry enabled and traces pointed at the local Jaeger:
   $ TELEMETRY_ENABLED=true OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4317 <your_script>
@@ -97,16 +97,16 @@ print(df.count())
 * Integration with [datafusion-tracing](https://github.com/datafusion-contrib/datafusion-tracing)
 
 
-### Rerun Viewer
+### Dalaran Viewer
 
-In the Rerun Viewer, `dl_perf_telemetry` is always disabled by default (feature flagged), and only meant as a developer tool: it never ships with the final user builds.
+In the Dalaran Viewer, `dl_perf_telemetry` is always disabled by default (feature flagged), and only meant as a developer tool: it never ships with the final user builds.
 
 The integration only really works with in-process profiling, and even then with caveats (see `Limitations` and `Future work` below).
 
 * Example of in-process profiling using Tracy:
   ```sh
   # Start the viewer with both telemetry and the Tracy integration enabled:
-  $ TELEMETRY_ENABLED=true TRACY_ENABLED=true pixi run rerun-perf
+  $ TELEMETRY_ENABLED=true TRACY_ENABLED=true pixi run dalaran-perf
   ```
   <picture>
     <img src="https://static.rerun.io/re_perf_telemetry_viewer_tracy/d6dbfe38d753ff550646a52f17d71942a3b27d6d/full.png" alt="">
@@ -132,7 +132,7 @@ The integration only really works with in-process profiling, and even then with 
 
 #### Future work
 
-The Rerun Viewer would greatly benefit from a _native_ Tracy integration (i.e. using the Tracy client directly, instead of going through the `tracing` ecosystem).
+The Dalaran Viewer would greatly benefit from a _native_ Tracy integration (i.e. using the Tracy client directly, instead of going through the `tracing` ecosystem).
 
 This would not only alleviate the overhead of the `tracing` ecosystem, it would also make it possible to use all the more advanced features of Tracy in the viewer (e.g. GPU spans, framebuffer previews, allocation tracing, contention spans, plots, sub-frames, etc).
 Check out this [web demo](https://tracy.nereid.pl/) for a taste of what a native Tracy integration can do.

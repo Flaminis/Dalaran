@@ -13,16 +13,16 @@ use dl_log_types::{EntityPath, TimeInt, TimeType};
 use dl_protos::cloud::v1alpha1::ext;
 use dl_protos::cloud::v1alpha1::ext::DatasetEntry;
 use dl_protos::cloud::v1alpha1::ext::QueryDatasetDataframe;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_types_core::SegmentId;
 
 use crate::RecordBatchTestExt as _;
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, concat_record_batches, prop,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches, prop,
 };
 use crate::utils::client::TestClient;
 
-pub async fn query_dataset_index_values_by_time_type<T: RerunCloudService>(
+pub async fn query_dataset_index_values_by_time_type<T: DalaranCloudService>(
     service: Arc<T>,
     time_type: TimeType,
 ) {
@@ -102,7 +102,7 @@ pub async fn query_dataset_index_values_by_time_type<T: RerunCloudService>(
     }
 }
 
-pub async fn query_dataset_index_values(service: impl RerunCloudService) {
+pub async fn query_dataset_index_values(service: impl DalaranCloudService) {
     let service = Arc::new(service);
     query_dataset_index_values_by_time_type(service.clone(), TimeType::Sequence).await;
     query_dataset_index_values_by_time_type(service.clone(), TimeType::DurationNs).await;
@@ -115,13 +115,13 @@ pub async fn query_dataset_index_values(service: impl RerunCloudService) {
 /// (a strict subset of the baseline chunk-id set) instead of just
 /// counting rows, which can pass even when the server ignores the
 /// per-segment filter and returns the full baseline.
-async fn per_segment_chunk_id_set<T: RerunCloudService>(
+async fn per_segment_chunk_id_set<T: DalaranCloudService>(
     service: &T,
     dataset_name: &str,
     request: ext::QueryDatasetRequest,
 ) -> BTreeSet<dl_chunk::ChunkId> {
     use dl_protos::cloud::v1alpha1::QueryDatasetResponse;
-    use dl_protos::headers::RerunHeadersInjectorExt as _;
+    use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
     let stream = service
         .query_dataset(
@@ -152,12 +152,12 @@ async fn per_segment_chunk_id_set<T: RerunCloudService>(
 /// at `start_time + {10, 20, 30, 40}` plus 1 static chunk.
 ///
 /// Returns the [`DataSourcesDefinition`] so the caller can hold its temp
-/// files alive for the full duration of the test — some backends (the Rerun
-/// Rerun Hub manifest registry) re-read the RRD files lazily during
+/// files alive for the full duration of the test — some backends (the Dalaran
+/// Dalaran Hub manifest registry) re-read the RRD files lazily during
 /// `query_dataset`, so dropping the temp dir before that completes results
 /// in `NotFound` errors.
 async fn register_per_segment_dataset(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     tuid_prefix: u64,
     time_type: TimeType,
@@ -214,9 +214,9 @@ fn per_segment_segment_ids() -> Vec<dl_types_core::SegmentId> {
 ///    (proves the per-segment selection diverged from a plain latest-at).
 ///
 /// This is the regression-guard for the per-segment chunk filter on every
-/// backend: the OSS server's per-row filter and the Rerun Hub's
+/// backend: the OSS server's per-row filter and the Dalaran Hub's
 /// manifest-based virtual `ChunkStore` resolution both have to honor it.
-pub async fn query_dataset_per_segment_values_wire_level(service: impl RerunCloudService) {
+pub async fn query_dataset_per_segment_values_wire_level(service: impl DalaranCloudService) {
     let service = Arc::new(service);
     for time_type in [
         TimeType::Sequence,
@@ -227,7 +227,7 @@ pub async fn query_dataset_per_segment_values_wire_level(service: impl RerunClou
     }
 }
 
-async fn query_dataset_per_segment_values_wire_level_by_time_type<T: RerunCloudService>(
+async fn query_dataset_per_segment_values_wire_level_by_time_type<T: DalaranCloudService>(
     service: &T,
     time_type: TimeType,
 ) {
@@ -411,7 +411,7 @@ async fn query_dataset_per_segment_values_wire_level_by_time_type<T: RerunCloudS
 ///
 /// Runs for every [`TimeType`] (`Sequence`, `DurationNs`, `TimestampNs`) since
 /// the pushed-down index is timeline-typed.
-pub async fn query_dataset_emits_per_segment_pushdown(service: impl RerunCloudService) {
+pub async fn query_dataset_emits_per_segment_pushdown(service: impl DalaranCloudService) {
     let service = Arc::new(service);
     for time_type in [
         TimeType::Sequence,
@@ -422,7 +422,7 @@ pub async fn query_dataset_emits_per_segment_pushdown(service: impl RerunCloudSe
     }
 }
 
-async fn query_dataset_emits_per_segment_pushdown_by_time_type<T: RerunCloudService>(
+async fn query_dataset_emits_per_segment_pushdown_by_time_type<T: DalaranCloudService>(
     service: &Arc<T>,
     time_type: TimeType,
 ) {
@@ -490,7 +490,7 @@ async fn query_dataset_emits_per_segment_pushdown_by_time_type<T: RerunCloudServ
 
     // Run `scan` against a recording client and return every per-segment value
     // list it emitted, keyed by the segment it was aligned to.
-    async fn emitted_per_segment_values<T: RerunCloudService>(
+    async fn emitted_per_segment_values<T: DalaranCloudService>(
         service: &Arc<T>,
         dataset_id: dl_log_types::EntryId,
         query: &dl_chunk_store::QueryExpression,
@@ -570,7 +570,7 @@ async fn query_dataset_emits_per_segment_pushdown_by_time_type<T: RerunCloudServ
 /// seg1 and seg3, exactly one for seg2, and remain a strict subset of the
 /// full-range baseline.
 pub async fn query_dataset_per_segment_values_multi_value_wire_level(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     let service = Arc::new(service);
     for time_type in [
@@ -587,7 +587,7 @@ pub async fn query_dataset_per_segment_values_multi_value_wire_level(
 }
 
 async fn query_dataset_per_segment_values_multi_value_wire_level_by_time_type<
-    T: RerunCloudService,
+    T: DalaranCloudService,
 >(
     service: &T,
     time_type: TimeType,
@@ -709,12 +709,12 @@ async fn query_dataset_per_segment_values_multi_value_wire_level_by_time_type<
 /// Unit tests in [`dl_protos`] exercise that conversion directly. This test is
 /// the integration-level counterpart: it confirms that a wire request carrying
 /// the invalid combination is actually rejected by the server with
-/// `InvalidArgument`, on every `RerunCloudService` implementation that goes
+/// `InvalidArgument`, on every `DalaranCloudService` implementation that goes
 /// through the conversion layer. One violation is sufficient — the unit tests
 /// already cover the full rule matrix.
-pub async fn query_dataset_per_segment_values_validation_rejected(service: impl RerunCloudService) {
+pub async fn query_dataset_per_segment_values_validation_rejected(service: impl DalaranCloudService) {
     use dl_protos::cloud::v1alpha1::QueryDatasetRequest as WireQueryDatasetRequest;
-    use dl_protos::headers::RerunHeadersInjectorExt as _;
+    use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
     let dataset_name = "per_segment_validation_rejected";
     // Time-type-independent: the conflict is rejected by the wire `TryFrom`
@@ -792,18 +792,18 @@ pub async fn query_dataset_per_segment_values_validation_rejected(service: impl 
 /// one chunk — proving:
 ///
 /// * the OSS server's per-row filter (`requested_chunk_ids.contains(…)`)
-///   in `rerun_cloud.rs` honors the intersection, and
-/// * the Rerun Hub's set-intersection in `manifest_writer` does too.
+///   in `dalaran_cloud.rs` honors the intersection, and
+/// * the Dalaran Hub's set-intersection in `manifest_writer` does too.
 ///
 /// **Backend-conditional**: the OSS server currently returns
 /// `Unimplemented` whenever `chunk_ids` is non-empty (see
-/// `dl_server::rerun_cloud::query_dataset` early-return). This test treats
+/// `dl_server::dalaran_cloud::query_dataset` early-return). This test treats
 /// that response as "this backend doesn't support `chunk_ids` filtering
 /// yet" and exits cleanly without asserting; it'll automatically activate
 /// once OSS gains support. Backends that accept the filter must produce
 /// the strict-intersection result.
 pub async fn query_dataset_per_segment_values_with_chunk_ids_intersects(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     let service = Arc::new(service);
     for time_type in [
@@ -820,14 +820,14 @@ pub async fn query_dataset_per_segment_values_with_chunk_ids_intersects(
 }
 
 async fn query_dataset_per_segment_values_with_chunk_ids_intersects_by_time_type<
-    T: RerunCloudService,
+    T: DalaranCloudService,
 >(
     service: &T,
     time_type: TimeType,
 ) {
     use dl_protos::cloud::v1alpha1::QueryDatasetResponse;
     use dl_protos::cloud::v1alpha1::ext::QueryDatasetRequest;
-    use dl_protos::headers::RerunHeadersInjectorExt as _;
+    use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
     let dataset_name = &format!("per_segment_chunk_ids_intersect_{time_type}");
     let tuid_prefix = match time_type {
@@ -935,12 +935,12 @@ async fn query_dataset_per_segment_values_with_chunk_ids_intersects_by_time_type
 /// entity_paths=[])` truth-table case from `cloud.proto`.
 ///
 /// Per the proto: `(false, [])` is a valid query that yields no results
-/// regardless of the rest of the filter. Both the Rerun Hub and OSS
-/// `dl_server` honor this — the Rerun Hub via the per-segment
+/// regardless of the rest of the filter. Both the Dalaran Hub and OSS
+/// `dl_server` honor this — the Dalaran Hub via the per-segment
 /// short-circuit added in this PR, OSS via the entity-filter check in
 /// `get_chunks_for_query_results`.
 pub async fn query_dataset_per_segment_values_empty_entity_paths_short_circuits(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     let service = Arc::new(service);
     for time_type in [
@@ -957,7 +957,7 @@ pub async fn query_dataset_per_segment_values_empty_entity_paths_short_circuits(
 }
 
 async fn query_dataset_per_segment_values_empty_entity_paths_short_circuits_by_time_type<
-    T: RerunCloudService,
+    T: DalaranCloudService,
 >(
     service: &T,
     time_type: TimeType,
@@ -1006,7 +1006,7 @@ async fn query_dataset_per_segment_values_empty_entity_paths_short_circuits_by_t
 
 // ---
 
-async fn query_dataset_snapshot<T: RerunCloudService>(
+async fn query_dataset_snapshot<T: DalaranCloudService>(
     client: TestClient<T>,
     dataset_entry: &DatasetEntry,
     index_values: Vec<(&str, Vec<i64>)>,

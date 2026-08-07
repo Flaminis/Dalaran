@@ -1,6 +1,6 @@
-//! Rerun Data Ui
+//! Dalaran Data Ui
 //!
-//! This crate provides ui elements for Rerun component data for the Rerun Viewer.
+//! This crate provides ui elements for Dalaran component data for the Dalaran Viewer.
 
 // Increased recursion is needed for rustdoc to evaluate `Send` and `Sync` for wgpu's `RenderPipeline`.
 #![recursion_limit = "256"]

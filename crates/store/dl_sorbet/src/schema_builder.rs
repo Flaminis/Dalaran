@@ -112,7 +112,7 @@ impl SchemaBuilder {
                 }
 
                 let mut field = column_descriptor.to_arrow_field(BatchType::Dataframe);
-                field.metadata_mut().remove("rerun:is_sorted");
+                field.metadata_mut().remove("dalaran:is_sorted");
 
                 field
             })

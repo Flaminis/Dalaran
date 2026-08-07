@@ -180,13 +180,13 @@ fn default_manifest_url() -> String {
         // If this is versioned as a release or rc, always point to the versioned
         // example manifest. This applies even if doing a local source build.
         format!(
-            "https://app.rerun.io/version/{version}/examples_manifest.json",
+            "https://app.dalaran.dev/version/{version}/examples_manifest.json",
             version = build_info.version,
         )
     } else {
         // We don't build examples on each PR, so we don't have much to point to except for the nightly examples
         // We could point to the main branch, but it's not always finished building, and so doesn't always work.
-        "https://app.rerun.io/version/nightly/examples_manifest.json".into()
+        "https://app.dalaran.dev/version/nightly/examples_manifest.json".into()
     }
 }
 

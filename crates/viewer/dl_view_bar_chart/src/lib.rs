@@ -1,4 +1,4 @@
-//! Rerun bar chart View.
+//! Dalaran bar chart View.
 //!
 //! A View that shows a single bar chart.
 

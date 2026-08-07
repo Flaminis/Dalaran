@@ -143,7 +143,7 @@ pub enum Handedness {
 
     /// Left-handed coordinate system.
     ///
-    /// Rerun does not yet support this,
+    /// Dalaran does not yet support this,
     /// see <https://github.com/rerun-io/rerun/issues/5032>.
     Left, // TODO(#5032): Support left-handed coordinate systems.
 }

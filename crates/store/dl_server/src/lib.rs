@@ -1,20 +1,20 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! A Rerun server implementation backed by an in-memory store.
+//! A Dalaran server implementation backed by an in-memory store.
 
 #[cfg(not(target_arch = "wasm32"))]
 mod entrypoint;
 #[cfg(not(target_arch = "wasm32"))]
 mod layers;
 mod named_path;
-mod rerun_cloud;
+mod dalaran_cloud;
 #[cfg(not(target_arch = "wasm32"))]
 mod server;
 mod store;
 
 pub use self::named_path::{NamedPath, NamedPathCollection};
-pub use self::rerun_cloud::{
-    RerunCloudHandler, RerunCloudHandlerBuilder, RerunCloudHandlerSettings,
+pub use self::dalaran_cloud::{
+    DalaranCloudHandler, DalaranCloudHandlerBuilder, DalaranCloudHandlerSettings,
 };
 #[cfg(not(target_arch = "wasm32"))]
 pub use self::{

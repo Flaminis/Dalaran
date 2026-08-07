@@ -1,0 +1,19 @@
+namespace dalaran.blueprint.archetypes;
+
+/// A force between each pair of nodes that ressembles an electrical charge.
+///
+/// If `strength` is smaller than 0, it pushes nodes apart, if it is larger than 0 it pulls them together.
+struct ForceManyBody (
+    "attr.dalaran.scope": "blueprint"
+) {
+    /// Whether the many body force is enabled.
+    ///
+    /// The many body force is applied on each pair of nodes in a way that ressembles an electrical charge. If the
+    /// strength is smaller than 0, it pushes nodes apart; if it is larger than 0, it pulls them together.
+    enabled: dalaran.blueprint.components.Enabled ("attr.dalaran.component_optional", nullable, order: 100);
+
+    /// The strength of the force.
+    ///
+    /// If `strength` is smaller than 0, it pushes nodes apart, if it is larger than 0 it pulls them together.
+    strength: dalaran.blueprint.components.ForceStrength ("attr.dalaran.component_optional", nullable, order: 200);
+}

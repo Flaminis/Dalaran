@@ -7,7 +7,7 @@ use dl_sdk_types::archetypes::TextLog;
 
 use super::FOXGLOVE_TIMESTAMP;
 
-/// Creates a lens for converting [`foxglove.Log`] messages to Rerun's [`TextLog`] archetype.
+/// Creates a lens for converting [`foxglove.Log`] messages to Dalaran's [`TextLog`] archetype.
 ///
 /// [`foxglove.Log`]: https://docs.foxglove.dev/docs/sdk/schemas/log
 pub fn log(time_type: TimeType) -> Result<Lens, LensBuilderError> {
@@ -20,14 +20,14 @@ pub fn log(time_type: TimeType) -> Result<Lens, LensBuilderError> {
         .to_component(TextLog::descriptor_text(), Selector::parse(".message")?)
         .to_component(
             TextLog::descriptor_level(),
-            Selector::parse(".level.name")?.pipe(foxglove_to_rerun_log_level()),
+            Selector::parse(".level.name")?.pipe(foxglove_to_dalaran_log_level()),
         )
         .build()
 }
 
-/// Returns a pipe-compatible function that maps Foxglove log level strings to Rerun
+/// Returns a pipe-compatible function that maps Foxglove log level strings to Dalaran
 /// [`dl_sdk_types::components::TextLogLevel`] strings.
-fn foxglove_to_rerun_log_level() -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, Error> {
+fn foxglove_to_dalaran_log_level() -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, Error> {
     move |source: &ArrayRef| {
         let source = source
             .as_any()
@@ -35,7 +35,7 @@ fn foxglove_to_rerun_log_level() -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef
             .ok_or_else(|| Error::TypeMismatch {
                 expected: "StringArray".to_owned(),
                 actual: source.data_type().clone(),
-                context: "foxglove_to_rerun_log_level input".to_owned(),
+                context: "foxglove_to_dalaran_log_level input".to_owned(),
             })?;
 
         let result: StringArray = source
@@ -43,7 +43,7 @@ fn foxglove_to_rerun_log_level() -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef
             .map(|level| match level {
                 Some("WARNING") => Some("WARN"),
                 Some("FATAL") => Some("CRITICAL"),
-                // Rerun has no UNKNOWN level.
+                // Dalaran has no UNKNOWN level.
                 Some("UNKNOWN") | None => None,
                 // DEBUG, INFO, ERROR can be passed through as-is.
                 other => other,

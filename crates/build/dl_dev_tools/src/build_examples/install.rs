@@ -34,7 +34,7 @@ impl Install {
         cmd.arg("sync")
             .arg("--inexact")
             .arg("--no-install-package")
-            .arg("rerun-sdk");
+            .arg("dalaran-sdk");
 
         for example in &examples {
             cmd.arg("--package").arg(&example.name);

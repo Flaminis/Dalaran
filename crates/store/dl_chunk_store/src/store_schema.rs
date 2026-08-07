@@ -336,7 +336,7 @@ impl StoreSchema {
             {
                 dl_log::warn_once!(
                     "Timeline '{name}' changed type from {old_typ:?} to {new_typ:?}. \
-                        Rerun does not support using different types for the same timeline.",
+                        Dalaran does not support using different types for the same timeline.",
                 );
             }
         }

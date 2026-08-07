@@ -3,7 +3,7 @@ source: crates/store/dl_redap_tests/src/tests/register_segment.rs
 expression: filtered_batch.format_snapshot(false)
 ---
 ┌──────────────────┬───────────────────┬──────────────────┬──────────────┬────────────────┐
-│ rerun_segment_id ┆ rerun_layer_names ┆ rerun_num_chunks ┆ frame_nr:end ┆ frame_nr:start │
+│ dalaran_segment_id ┆ dalaran_layer_names ┆ dalaran_num_chunks ┆ frame_nr:end ┆ frame_nr:start │
 ╞══════════════════╪═══════════════════╪══════════════════╪══════════════╪════════════════╡
 │ segment1         ┆ [base, extra]     ┆ 8                ┆ 40           ┆ 10             │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤

@@ -19,7 +19,7 @@ use crate::{TableEntryTableProvider, TableQueryCaller};
 pub(crate) const DEFAULT_CATALOG_NAME: &str = "datafusion";
 const DEFAULT_SCHEMA_NAME: &str = "public";
 
-/// `DataFusion` catalog provider list for interacting with Rerun gRPC services.
+/// `DataFusion` catalog provider list for interacting with Dalaran gRPC services.
 ///
 /// Resolves catalog names lazily: no I/O on construction, no I/O in `catalog(name)`. SQL
 /// planning never triggers a wildcard `FindEntries` on the catalog path. The wildcard is only
@@ -118,7 +118,7 @@ impl CatalogProviderList for RedapCatalogProviderList {
     }
 }
 
-/// `DataFusion` catalog provider for interacting with Rerun gRPC services.
+/// `DataFusion` catalog provider for interacting with Dalaran gRPC services.
 ///
 /// Tables are stored on the server in a flat namespace with a string
 /// representation of the catalog, schema, and table delimited by a
@@ -234,7 +234,7 @@ impl CatalogProvider for RedapCatalogProvider {
     }
 }
 
-/// `DataFusion` schema provider for interacting with Rerun gRPC services.
+/// `DataFusion` schema provider for interacting with Dalaran gRPC services.
 ///
 /// For a detailed description of how tables are named on the server
 /// vs represented in the catalog and schema providers, see

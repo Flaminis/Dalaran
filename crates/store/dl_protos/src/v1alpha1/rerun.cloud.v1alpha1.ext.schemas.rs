@@ -19,27 +19,27 @@ use crate::common::v1alpha1::ext::SegmentId;
 pub struct QueryDatasetDataframe {
     /// The id of the chunk ([`dl_chunk::ChunkId`]).
     //
-    // NOTE: these `rerun:kind` values must match `dl_sorbet::metadata::RERUN_KIND` usage.
-    #[quiver(metadata("rerun:kind" = "control"))]
+    // NOTE: these `dalaran:kind` values must match `dl_sorbet::metadata::DALARAN_KIND` usage.
+    #[quiver(metadata("dalaran:kind" = "control"))]
     pub chunk_id: quiver::Column<dl_chunk::ChunkId>,
 
     /// The segment this chunk belongs to.
-    #[quiver(metadata("rerun:kind" = "control"))]
+    #[quiver(metadata("dalaran:kind" = "control"))]
     pub chunk_segment_id: quiver::Column<SegmentId>,
 
     /// The layer this chunk belongs to.
-    pub rerun_segment_layer: quiver::Column<LayerName>,
+    pub dalaran_segment_layer: quiver::Column<LayerName>,
 
     /// Opaque key encoding where to fetch the chunk
     /// (see [`RrdChunkLocation`](crate::cloud::v1alpha1::ext::RrdChunkLocation)).
     pub chunk_key: quiver::Column<quiver::Binary>,
 
     /// The entity path of the chunk.
-    #[quiver(metadata("rerun:kind" = "control"))]
+    #[quiver(metadata("dalaran:kind" = "control"))]
     pub chunk_entity_path: quiver::Column<EntityPath>,
 
     /// Does this chunk hold static data?
-    #[quiver(metadata("rerun:kind" = "control"))]
+    #[quiver(metadata("dalaran:kind" = "control"))]
     pub chunk_is_static: quiver::Column<bool>,
 
     /// Byte length of the chunk within the source object.
@@ -56,10 +56,10 @@ pub struct QueryDatasetDataframe {
 
     /// Direct (presigned) URL for fetching the source object, if the server wants
     /// the client to fetch this row via direct HTTP Range.
-    pub rerun_layer_direct_url: quiver::Column<Option<quiver::Dictionary<i32, quiver::Utf8>>>,
+    pub dalaran_layer_direct_url: quiver::Column<Option<quiver::Dictionary<i32, quiver::Utf8>>>,
 
     /// When the direct URL expires, if any.
-    pub rerun_layer_direct_url_expires_at: quiver::Column<Option<quiver::Dictionary<i32, i64>>>,
+    pub dalaran_layer_direct_url_expires_at: quiver::Column<Option<quiver::Dictionary<i32, i64>>>,
 
     /// Per-timeline `{timeline_name}:start` columns
     /// (see [`crate::cloud::v1alpha1::QueryDatasetResponse::field_timeline_start`]).
@@ -116,19 +116,19 @@ pub struct QueryTasksDataframe {
 #[derive(Default, quiver::Quiver)]
 pub struct RegisterWithDatasetDataframe {
     /// The id of the segment the data source was registered to.
-    pub rerun_segment_id: quiver::Column<SegmentId>,
+    pub dalaran_segment_id: quiver::Column<SegmentId>,
 
     /// The layer the data source was registered as.
-    pub rerun_segment_layer: quiver::Column<LayerName>,
+    pub dalaran_segment_layer: quiver::Column<LayerName>,
 
     /// The kind of data source, e.g. `rrd`.
-    pub rerun_segment_type: quiver::Column<quiver::Utf8>,
+    pub dalaran_segment_type: quiver::Column<quiver::Utf8>,
 
     /// Where the data source's data is stored.
-    pub rerun_storage_url: quiver::Column<quiver::Utf8>,
+    pub dalaran_storage_url: quiver::Column<quiver::Utf8>,
 
     /// The id of the registration task, or the sentinel for synchronous success.
-    pub rerun_task_id: quiver::Column<TaskId>,
+    pub dalaran_task_id: quiver::Column<TaskId>,
 }
 
 // --- ScanSegmentTableResponse ---
@@ -140,27 +140,27 @@ pub struct RegisterWithDatasetDataframe {
 #[derive(Default, quiver::Quiver)]
 pub struct ScanSegmentTableDataframe {
     /// The unique identifier of the segment.
-    pub rerun_segment_id: quiver::Column<SegmentId>,
+    pub dalaran_segment_id: quiver::Column<SegmentId>,
 
     /// Layer names for this segment, one per layer.
     ///
-    /// Same length as [`Self::rerun_storage_urls`].
-    pub rerun_layer_names: quiver::Column<quiver::List<LayerName>>,
+    /// Same length as [`Self::dalaran_storage_urls`].
+    pub dalaran_layer_names: quiver::Column<quiver::List<LayerName>>,
 
     /// Storage URLs for this segment, one per layer.
     ///
-    /// Same length as [`Self::rerun_layer_names`].
-    pub rerun_storage_urls: quiver::Column<quiver::List<quiver::Utf8>>,
+    /// Same length as [`Self::dalaran_layer_names`].
+    pub dalaran_storage_urls: quiver::Column<quiver::List<quiver::Utf8>>,
 
     /// Keeps track of the most recent time any layer belonging to this segment
     /// was updated in any way.
-    pub rerun_last_updated_at: quiver::Column<quiver::TimestampNanosecond>,
+    pub dalaran_last_updated_at: quiver::Column<quiver::TimestampNanosecond>,
 
     /// Total number of chunks for this segment.
-    pub rerun_num_chunks: quiver::Column<u64>,
+    pub dalaran_num_chunks: quiver::Column<u64>,
 
     /// Total size in bytes for this segment.
-    pub rerun_size_bytes: quiver::Column<u64>,
+    pub dalaran_size_bytes: quiver::Column<u64>,
 
     /// Any per-dataset property and index-range columns appended at runtime.
     #[quiver(extra_columns)]
@@ -177,42 +177,42 @@ pub struct ScanSegmentTableDataframe {
 #[derive(Default, quiver::Quiver)]
 pub struct ScanDatasetManifestDataframe {
     /// The name of the layer.
-    pub rerun_layer_name: quiver::Column<LayerName>,
+    pub dalaran_layer_name: quiver::Column<LayerName>,
 
     /// The segment this row belongs to.
-    pub rerun_segment_id: quiver::Column<SegmentId>,
+    pub dalaran_segment_id: quiver::Column<SegmentId>,
 
     /// Where the data of this row's source is stored.
-    pub rerun_storage_url: quiver::Column<quiver::Utf8>,
+    pub dalaran_storage_url: quiver::Column<quiver::Utf8>,
 
     /// The kind of data source backing this row, e.g. `rrd`
     /// (see [`DataSourceKind`](crate::cloud::v1alpha1::ext::DataSourceKind)).
-    pub rerun_layer_type: quiver::Column<quiver::Utf8>,
+    pub dalaran_layer_type: quiver::Column<quiver::Utf8>,
 
     /// Time at which this row's source was initially registered.
-    pub rerun_registration_time: quiver::Column<quiver::TimestampNanosecond>,
+    pub dalaran_registration_time: quiver::Column<quiver::TimestampNanosecond>,
 
     /// When was this row of the manifest modified last?
-    pub rerun_last_updated_at: quiver::Column<quiver::TimestampNanosecond>,
+    pub dalaran_last_updated_at: quiver::Column<quiver::TimestampNanosecond>,
 
     /// Total number of chunks in this row's source.
     ///
     /// Nullable: only set once the source has been processed. A segment that is
     /// still `pending` (or that `errored` during registration) carries a null
     /// here — the server must not choke on those rows when scanning the manifest.
-    pub rerun_num_chunks: quiver::Column<Option<u64>>,
+    pub dalaran_num_chunks: quiver::Column<Option<u64>>,
 
     /// Total size in bytes of this row's source. Nullable for the same reason as
-    /// [`Self::rerun_num_chunks`].
-    pub rerun_size_bytes: quiver::Column<Option<u64>>,
+    /// [`Self::dalaran_num_chunks`].
+    pub dalaran_size_bytes: quiver::Column<Option<u64>>,
 
     /// SHA-256 hash of the schema of this row's source. Nullable for the same
-    /// reason as [`Self::rerun_num_chunks`].
-    pub rerun_schema_sha256: quiver::Column<Option<quiver::FixedSizeBinary<32>>>,
+    /// reason as [`Self::dalaran_num_chunks`].
+    pub dalaran_schema_sha256: quiver::Column<Option<quiver::FixedSizeBinary<32>>>,
 
     /// The registration status of this row's source
     /// (see [`LayerRegistrationStatus`](crate::cloud::v1alpha1::ext::LayerRegistrationStatus)).
-    pub rerun_registration_status: quiver::Column<quiver::Utf8>,
+    pub dalaran_registration_status: quiver::Column<quiver::Utf8>,
 
     /// Any per-dataset property columns appended at runtime.
     #[quiver(extra_columns)]
@@ -242,20 +242,20 @@ impl ScanDatasetManifestDataframe {
         registration_statuses: Vec<String>,
     ) -> Self {
         Self {
-            rerun_layer_name: layer_names.into(),
-            rerun_segment_id: segment_ids.into(),
-            rerun_storage_url: storage_urls.into(),
-            rerun_layer_type: layer_types.into(),
-            rerun_registration_time: registration_times.into(),
-            rerun_last_updated_at: last_updated_at_times.into(),
-            rerun_num_chunks: num_chunks.into_iter().map(Some).collect::<Vec<_>>().into(),
-            rerun_size_bytes: size_bytes.into_iter().map(Some).collect::<Vec<_>>().into(),
-            rerun_schema_sha256: schema_sha256s
+            dalaran_layer_name: layer_names.into(),
+            dalaran_segment_id: segment_ids.into(),
+            dalaran_storage_url: storage_urls.into(),
+            dalaran_layer_type: layer_types.into(),
+            dalaran_registration_time: registration_times.into(),
+            dalaran_last_updated_at: last_updated_at_times.into(),
+            dalaran_num_chunks: num_chunks.into_iter().map(Some).collect::<Vec<_>>().into(),
+            dalaran_size_bytes: size_bytes.into_iter().map(Some).collect::<Vec<_>>().into(),
+            dalaran_schema_sha256: schema_sha256s
                 .into_iter()
                 .map(Some)
                 .collect::<Vec<_>>()
                 .into(),
-            rerun_registration_status: registration_statuses.into(),
+            dalaran_registration_status: registration_statuses.into(),
             extra_columns: vec![],
         }
     }

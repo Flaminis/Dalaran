@@ -16,8 +16,8 @@ use crate::{BatchType, SorbetSchema};
 mod make_list_arrays;
 
 // We introduce artificial versions here for consistency. `v0_0_1` corresponds to
-// Rerun versions pre-`v0.23` and `v0_0_2` corresponds to Rerun version
-// `v0.23`. Starting with Rerun `v0.24`, we will track the Sorbet version
+// Dalaran versions pre-`v0.23` and `v0_0_2` corresponds to Dalaran version
+// `v0.23`. Starting with Dalaran `v0.24`, we will track the Sorbet version
 // separately, starting at `v0.1.0`.
 
 mod v0_0_1__to__v0_0_2;
@@ -59,26 +59,26 @@ fn get_or_guess_version(batch: &RecordBatch) -> Result<semver::Version, Error> {
         })
     } else {
         // The record batch does not have a sorbet version metadata.
-        // Rerun Hub schemas currently come without metadata,
+        // Dalaran Hub schemas currently come without metadata,
         // so we need to run the full migration just in case.
         // TODO(RR-2175): Always include version metadata in redap
 
-        // This means earlier than Rerun `v0.24`.
+        // This means earlier than Dalaran `v0.24`.
         dl_log::debug_once!("Encountered batch without 'sorbet:version' metadata.");
 
         if batch
             .schema()
             .metadata()
             .keys()
-            .any(|key| key.starts_with("rerun."))
+            .any(|key| key.starts_with("dalaran."))
         {
             dl_log::debug_once!(
-                "Found 'rerun.' prefixed metadata. This means Rerun `v0.23` or earlier."
+                "Found 'dalaran.' prefixed metadata. This means Dalaran `v0.23` or earlier."
             );
             Ok(semver::Version::new(0, 0, 1))
-        } else if batch.schema().metadata().get("rerun:version").is_some() {
+        } else if batch.schema().metadata().get("dalaran:version").is_some() {
             dl_log::debug_once!(
-                "Found 'rerun:' prefixed metadata. This means 'nightly' between 'v0.23' and 'v0.24'."
+                "Found 'dalaran:' prefixed metadata. This means 'nightly' between 'v0.23' and 'v0.24'."
             );
             // The migration code from `v0.0.2` to `v0.1.0` should be able handle this.
             Ok(semver::Version::new(0, 0, 2))
@@ -144,7 +144,7 @@ fn migrate_record_batch_impl(mut batch: RecordBatch) -> RecordBatch {
             }
             Ordering::Greater => {
                 dl_log::warn_once!(
-                    "Found Sorbet version 'v{batch_version}' that is newer then current supported version 'v{}'. Consider updating Rerun!",
+                    "Found Sorbet version 'v{batch_version}' that is newer then current supported version 'v{}'. Consider updating Dalaran!",
                     SorbetSchema::METADATA_VERSION
                 );
                 batch

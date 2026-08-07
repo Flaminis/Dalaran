@@ -93,8 +93,8 @@ fn format_python_dir(dir: &Utf8PathBuf) -> anyhow::Result<()> {
 }
 
 fn python_project_path() -> Utf8PathBuf {
-    let path = crate::rerun_workspace_path()
-        .join("rerun_py")
+    let path = crate::dalaran_workspace_path()
+        .join("dalaran_py")
         .join("pyproject.toml");
     assert!(path.exists(), "Failed to find {path:?}");
     path

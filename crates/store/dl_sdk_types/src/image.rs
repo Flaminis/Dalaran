@@ -50,7 +50,7 @@ impl ImageKind {
 pub enum ImageConversionError {
     /// Unknown color type from the image crate.
     ///
-    /// This should only happen if you are using a newer `image` crate than the one Rerun was built for,
+    /// This should only happen if you are using a newer `image` crate than the one Dalaran was built for,
     /// because `image` can add new color types without it being a breaking change,
     /// so we cannot exhaustively match on all color types.
     #[error(
@@ -328,7 +328,7 @@ pub enum YuvMatrixCoefficients {
     ///
     /// Wiki: <https://en.wikipedia.org/wiki/YCbCr#ITU-R_BT.709_conversion/>
     ///
-    /// These are the same primaries we usually assume and use for all of Rerun's rendering
+    /// These are the same primaries we usually assume and use for all of Dalaran's rendering
     /// since they are the same primaries used by sRGB.
     /// <https://en.wikipedia.org/wiki/Rec._709#Relationship_to_sRGB/>
     /// The OETF/EOTF function (<https://en.wikipedia.org/wiki/Transfer_functions_in_imaging>) is different,

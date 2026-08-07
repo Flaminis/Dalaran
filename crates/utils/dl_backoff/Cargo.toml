@@ -23,7 +23,7 @@ ignored = ["getrandom"]
 
 
 [dependencies]
-# Rerun:
+# Dalaran:
 dl_async.workspace = true
 
 # External:

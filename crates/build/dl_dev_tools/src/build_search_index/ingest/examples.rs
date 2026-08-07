@@ -16,7 +16,7 @@ pub fn ingest(ctx: &Context) -> anyhow::Result<()> {
             hidden_tags: vec![],
             tags: vec![],
             content: category.prelude.clone(),
-            url: format!("https://rerun.io/examples/{category_name}"),
+            url: format!("https://dalaran.dev/examples/{category_name}"),
         });
 
         for example_name in &category.examples {
@@ -37,7 +37,7 @@ pub fn ingest(ctx: &Context) -> anyhow::Result<()> {
                     hidden_tags: vec![],
                     tags: example.tags,
                     content: example.readme_body,
-                    url: format!("https://rerun.io/examples/{category_name}/{example_name}"),
+                    url: format!("https://dalaran.dev/examples/{category_name}/{example_name}"),
                 });
 
                 break;

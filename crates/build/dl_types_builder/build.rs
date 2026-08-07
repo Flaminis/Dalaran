@@ -21,7 +21,7 @@ fn should_run() -> bool {
         Environment::PublishingCrates => false,
 
         // The code we're generating here is actual source code that gets committed into the repository.
-        Environment::RerunCI | Environment::CondaBuild => false,
+        Environment::DalaranCI | Environment::CondaBuild => false,
 
         Environment::DeveloperInWorkspace => {
             // This `build.rs` depends on having `flatc` installed,

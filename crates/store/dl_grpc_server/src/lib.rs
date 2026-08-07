@@ -70,7 +70,7 @@ pub struct ServerOptions {
 
     /// Additional origin patterns allowed to make cross-origin requests to the server.
     ///
-    /// By default, only `localhost`, `127.0.0.1`, and `rerun.io` are allowed.
+    /// By default, only `localhost`, `127.0.0.1`, and `dalaran.dev` are allowed.
     /// Patterns are matched against the full `Origin` header value (e.g. `https://example.com:8080`),
     /// using glob-style matching where `*` matches any sequence of characters.
     ///
@@ -157,8 +157,8 @@ const DEFAULT_CORS_PATTERNS: &[&str] = &[
     "*://localhost:*",
     "*://127.0.0.1",
     "*://127.0.0.1:*",
-    "*://rerun.io",
-    "*://rerun.io:*",
+    "*://dalaran.dev",
+    "*://dalaran.dev:*",
 ];
 
 /// Returns true if the given origin is allowed by the given patterns.
@@ -166,7 +166,7 @@ fn is_origin_allowed(origin: &str, patterns: &[wildmatch::WildMatch]) -> bool {
     patterns.iter().any(|pat| pat.matches(origin))
 }
 
-/// Build a CORS layer that allows only localhost, 127.0.0.1, rerun.io,
+/// Build a CORS layer that allows only localhost, 127.0.0.1, dalaran.dev,
 /// and any additional user-specified origin patterns.
 ///
 /// Patterns are matched against the full `Origin` header value,
@@ -245,9 +245,9 @@ impl LoopbackServices {
 
 // TODO(jan): Refactor `serve`/`spawn` variants into a builder?
 
-/// Start a Rerun server, listening on `addr`.
+/// Start a Dalaran server, listening on `addr`.
 ///
-/// A Rerun server is an in-memory implementation of a Storage Node.
+/// A Dalaran server is an in-memory implementation of a Storage Node.
 ///
 /// The returned future must be polled for the server to make progress.
 ///
@@ -307,10 +307,10 @@ async fn serve_impl(
         // Merge both streams into a single stream
         let merged = tokio_stream::StreamExt::merge(incoming_ipv6, incoming_ipv4);
 
-        let connect_addr = format!("rerun+http://127.0.0.1:{}/proxy", addr.port());
+        let connect_addr = format!("dalaran+http://127.0.0.1:{}/proxy", addr.port());
 
         dl_log::info!(
-            "Listening for gRPC connections on {ipv6_addr} and {ipv4_addr}. Connect by running `rerun --connect {connect_addr}`",
+            "Listening for gRPC connections on {ipv6_addr} and {ipv4_addr}. Connect by running `dalaran --connect {connect_addr}`",
         );
 
         Box::pin(merged)
@@ -319,13 +319,13 @@ async fn serve_impl(
         let incoming = TcpIncoming::from(tcp_listener).with_nodelay(Some(true));
 
         let connect_addr = if addr.ip().is_loopback() || addr.ip().is_unspecified() {
-            format!("rerun+http://127.0.0.1:{}/proxy", addr.port())
+            format!("dalaran+http://127.0.0.1:{}/proxy", addr.port())
         } else {
-            format!("rerun+http://{addr}/proxy")
+            format!("dalaran+http://{addr}/proxy")
         };
 
         dl_log::info!(
-            "Listening for gRPC connections on {addr}. Connect by running `rerun --connect {connect_addr}`",
+            "Listening for gRPC connections on {addr}. Connect by running `dalaran --connect {connect_addr}`",
         );
 
         Box::pin(incoming)
@@ -359,7 +359,7 @@ async fn serve_impl(
     Ok(())
 }
 
-/// Start a Rerun server, listening on `addr`.
+/// Start a Dalaran server, listening on `addr`.
 ///
 /// The returned future must be polled for the server to make progress.
 ///
@@ -368,7 +368,7 @@ async fn serve_impl(
 /// and sending messages through `WriteMessages`, but without the overhead
 /// of a localhost connection.
 ///
-/// See [`serve`] for more information about what a Rerun server is.
+/// See [`serve`] for more information about what a Dalaran server is.
 pub async fn serve_from_channel(
     addr: SocketAddr,
     options: ServerOptions,
@@ -444,14 +444,14 @@ pub async fn serve_from_channel(
     }
 }
 
-/// Start a Rerun server, listening on `addr`.
+/// Start a Dalaran server, listening on `addr`.
 ///
 /// This function additionally accepts a [`dl_log_channel::LogReceiverSet`], from which the
 /// server will read all messages. It is similar to creating a client
 /// and sending messages through `WriteMessages`, but without the overhead
 /// of a localhost connection.
 ///
-/// See [`serve`] for more information about what a Rerun server is.
+/// See [`serve`] for more information about what a Dalaran server is.
 pub fn spawn_from_rx_set(
     addr: SocketAddr,
     options: ServerOptions,
@@ -539,7 +539,7 @@ pub fn spawn_from_rx_set(
     handle
 }
 
-/// Start a Rerun server, listening on `addr`.
+/// Start a Dalaran server, listening on `addr`.
 ///
 /// This function additionally creates a smart channel, and returns its receiving end.
 /// Any messages received by the server are sent through the channel. This is similar
@@ -549,7 +549,7 @@ pub fn spawn_from_rx_set(
 /// The server is spawned as a task on a `tokio` runtime. This function panics if the
 /// runtime is not available.
 ///
-/// See [`serve`] for more information about what a Rerun server is.
+/// See [`serve`] for more information about what a Dalaran server is.
 pub fn spawn_with_recv(
     addr: SocketAddr,
     options: ServerOptions,
@@ -569,7 +569,7 @@ pub fn spawn_with_recv_and_services(
     mut loopback_services: LoopbackServices,
 ) -> (dl_log_channel::LogReceiver, MessageProxyHandle) {
     let uri = dl_uri::ProxyUri::new(dl_uri::Origin::from_scheme_and_socket_addr(
-        dl_uri::Scheme::RerunHttp,
+        dl_uri::Scheme::DalaranHttp,
         addr,
     ));
 
@@ -1917,8 +1917,8 @@ mod tests {
             assert!(check("http://localhost:8080", &[]));
             assert!(check("https://127.0.0.1", &[]));
             assert!(check("https://127.0.0.1:9090", &[]));
-            assert!(check("https://rerun.io", &[]));
-            assert!(check("https://rerun.io:443", &[]));
+            assert!(check("https://dalaran.dev", &[]));
+            assert!(check("https://dalaran.dev:443", &[]));
         }
 
         #[test]

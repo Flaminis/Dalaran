@@ -286,16 +286,16 @@ fn colormap_rviz_costmap_srgba(t: f32) -> vec4f {
     }
 }
 
-const RERUN_RED: vec3f = vec3f(215.0, 47.0, 33.0) / 255.0; // #D72F21
-const RERUN_BLUE: vec3f = vec3f(24.0, 106.0, 221.0) / 255.0; // #186ADD
-const RERUN_GREEN: vec3f = vec3f(134.0, 217.0, 166.0) / 255.0; // #86D9A6
-const RERUN_YELLOW: vec3f = vec3f(246.0, 218.0, 117.0) / 255.0; // #F6DA75
+const DALARAN_RED: vec3f = vec3f(215.0, 47.0, 33.0) / 255.0; // #D72F21
+const DALARAN_BLUE: vec3f = vec3f(24.0, 106.0, 221.0) / 255.0; // #186ADD
+const DALARAN_GREEN: vec3f = vec3f(134.0, 217.0, 166.0) / 255.0; // #86D9A6
+const DALARAN_YELLOW: vec3f = vec3f(246.0, 218.0, 117.0) / 255.0; // #F6DA75
 
 /// Semantically equivalent to the `RViz` cost map but with a more pleasing color palette.
 ///
 /// See `colormap_rviz_costmap_srgba` for the meaning of each value range.
 ///
-/// We use selected colors from the Rerun gradient palette here, see also: https://rerun.io/media
+/// We use selected colors from the Dalaran gradient palette here, see also: https://dalaran.dev/media
 fn colormap_costmap_srgba(t: f32) -> vec4f {
     let value = floor((saturate(t) * 255.0) + 0.5);
 
@@ -303,16 +303,16 @@ fn colormap_costmap_srgba(t: f32) -> vec4f {
     if value == 0.0 {
         return vec4f(0.0, 0.0, 0.0, 0.0); // free space (zero cost)
     } else if value < 99.0 {
-        return vec4f(mix(RERUN_GREEN, RERUN_YELLOW, value / 98.0), 1.0); // 1-98: cost ramp
+        return vec4f(mix(DALARAN_GREEN, DALARAN_YELLOW, value / 98.0), 1.0); // 1-98: cost ramp
     } else if value == 99.0 {
-        return vec4f(RERUN_RED, 1.0); // inscribed obstacle
+        return vec4f(DALARAN_RED, 1.0); // inscribed obstacle
     } else if value == 100.0 {
-        return vec4f(RERUN_BLUE, 1.0); // lethal obstacle
+        return vec4f(DALARAN_BLUE, 1.0); // lethal obstacle
     } else if value < 128.0 {
-        return vec4f(RERUN_GREEN, 1.0); // 101-127 (illegal positive)
+        return vec4f(DALARAN_GREEN, 1.0); // 101-127 (illegal positive)
     } else if value < 255.0 {
         // 128-254 (illegal negative): red -> ramp yellow
-        return vec4f(mix(RERUN_RED, RERUN_YELLOW, (value - 128.0) / (254.0 - 128.0)), 1.0);
+        return vec4f(mix(DALARAN_RED, DALARAN_YELLOW, (value - 128.0) / (254.0 - 128.0)), 1.0);
     } else {
         return vec4f(112.0 / 255.0, 137.0 / 255.0, 134.0 / 255.0, 1.0); // 255 == -1: teal-gray (unknown, matches RViz)
     }

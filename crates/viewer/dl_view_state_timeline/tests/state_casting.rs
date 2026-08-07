@@ -759,7 +759,7 @@ fn test_dynamic_archetype_multiple_different_types() {
         .unwrap();
 }
 
-/// `TextLog` is a real Rerun archetype with a `text` string field. Mapping that field as
+/// `TextLog` is a real Dalaran archetype with a `text` string field. Mapping that field as
 /// the state source should produce a string-kind lane carrying the logged messages.
 #[test]
 fn test_textlog_archetype_visualized_as_string() {

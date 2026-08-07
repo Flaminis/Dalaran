@@ -1,6 +1,6 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! # Rerun spatial transform processing
+//! # Dalaran spatial transform processing
 //!
 //! ## Concepts
 //!

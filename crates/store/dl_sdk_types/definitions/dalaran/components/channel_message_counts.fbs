@@ -1,0 +1,16 @@
+namespace dalaran.components;
+
+/// A mapping of channel IDs to their respective message counts.
+///
+/// Used in MCAP statistics to track how many messages were recorded per channel.
+table ChannelMessageCounts (
+  "attr.python.aliases": "dict[int, int]",
+  "attr.python.array_aliases": "dict[int, int] | Sequence[dict[int, int]]",
+
+  /// TODO(#11107): Stabilize
+  "attr.dalaran.state": "unstable",
+  "attr.rust.derive": "Default, PartialEq, Eq"
+) {
+  /// The channel ID to message count pairs.
+  counts: [dalaran.datatypes.ChannelCountPair] (order: 100);
+}

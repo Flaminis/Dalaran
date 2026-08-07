@@ -1,6 +1,6 @@
-# Rerun SDK
+# Dalaran SDK
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_sdk.svg)](https://crates.io/crates/dl_sdk)
 [![Documentation](https://docs.rs/dl_sdk/badge.svg)](https://docs.rs/dl_sdk)
@@ -9,4 +9,4 @@ Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
 
 This includes both the user-facing Rust SDK as well as core SDK features other languages build on top of.
 
-This is exported in the [`rerun`](https://crates.io/crates/rerun) crate, so look at the docs for that instead!
+This is exported in the [`dalaran`](https://crates.io/crates/dalaran) crate, so look at the docs for that instead!

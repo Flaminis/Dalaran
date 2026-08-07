@@ -21,8 +21,8 @@ use crate::codegen::rust::util::{is_tuple_struct_from_obj, quote_doc_line};
 use crate::codegen::{Target, autogen_warning};
 use crate::objects::ObjectClass;
 use crate::{
-    ATTR_DEFAULT, ATTR_RERUN_COMPONENT_OPTIONAL, ATTR_RERUN_COMPONENT_RECOMMENDED,
-    ATTR_RERUN_COMPONENT_REQUIRED, ATTR_RERUN_VIEW_IDENTIFIER, ATTR_RERUN_VISUALIZER,
+    ATTR_DEFAULT, ATTR_DALARAN_COMPONENT_OPTIONAL, ATTR_DALARAN_COMPONENT_RECOMMENDED,
+    ATTR_DALARAN_COMPONENT_REQUIRED, ATTR_DALARAN_VIEW_IDENTIFIER, ATTR_DALARAN_VISUALIZER,
     ATTR_RUST_CUSTOM_CLAUSE, ATTR_RUST_DERIVE, ATTR_RUST_DERIVE_ONLY, ATTR_RUST_NEW_PUB_CRATE,
     ATTR_RUST_REPR, CodeGenerator, ElementType, Object, ObjectField, ObjectKind, Objects, Reporter,
     Type, TypeRegistry, format_path,
@@ -1072,7 +1072,7 @@ fn quote_trait_impls_for_archetype(reporter: &Reporter, obj: &Object) -> TokenSt
         })
         .collect_vec();
 
-    let visualizer_trait_impl = attrs.get_string(ATTR_RERUN_VISUALIZER).map(|visualizer| {
+    let visualizer_trait_impl = attrs.get_string(ATTR_DALARAN_VISUALIZER).map(|visualizer| {
         quote! {
             impl crate::VisualizableArchetype for #name {
                 #[inline]
@@ -1084,11 +1084,11 @@ fn quote_trait_impls_for_archetype(reporter: &Reporter, obj: &Object) -> TokenSt
     });
 
     let (num_required_descriptors, required_descriptors) =
-        compute_component_descriptors(obj, ATTR_RERUN_COMPONENT_REQUIRED);
+        compute_component_descriptors(obj, ATTR_DALARAN_COMPONENT_REQUIRED);
     let (num_recommended_descriptors, recommended_descriptors) =
-        compute_component_descriptors(obj, ATTR_RERUN_COMPONENT_RECOMMENDED);
+        compute_component_descriptors(obj, ATTR_DALARAN_COMPONENT_RECOMMENDED);
     let (num_optional_descriptors, optional_descriptors) =
-        compute_component_descriptors(obj, ATTR_RERUN_COMPONENT_OPTIONAL);
+        compute_component_descriptors(obj, ATTR_DALARAN_COMPONENT_OPTIONAL);
 
     let num_components_docstring = quote_doc_line(&format!(
         "The total number of components in the archetype: {num_required_descriptors} required, {num_recommended_descriptors} recommended, {num_optional_descriptors} optional"
@@ -1233,11 +1233,11 @@ fn quote_trait_impls_for_view(reporter: &Reporter, obj: &Object) -> TokenStream 
 
     let name = format_ident!("{}", obj.name);
 
-    let Some(identifier): Option<String> = obj.try_get_attr(ATTR_RERUN_VIEW_IDENTIFIER) else {
+    let Some(identifier): Option<String> = obj.try_get_attr(ATTR_DALARAN_VIEW_IDENTIFIER) else {
         reporter.error(
             &obj.virtpath,
             &obj.fqname,
-            format!("Missing {ATTR_RERUN_VIEW_IDENTIFIER} attribute for view"),
+            format!("Missing {ATTR_DALARAN_VIEW_IDENTIFIER} attribute for view"),
         );
         return TokenStream::new();
     };
@@ -1550,7 +1550,7 @@ fn quote_builder_from_obj(reporter: &Reporter, objects: &Objects, obj: &Object) 
         Specifically, this transforms the existing [`SerializedComponentBatch`]es data into [`SerializedComponentColumn`]s
         instead, via [`SerializedComponentBatch::partitioned`].
 
-        This makes it possible to use `RecordingStream::send_columns` to send columnar data directly into Rerun.
+        This makes it possible to use `RecordingStream::send_columns` to send columnar data directly into Dalaran.
 
         The specified `lengths` must sum to the total length of the component batch.
 

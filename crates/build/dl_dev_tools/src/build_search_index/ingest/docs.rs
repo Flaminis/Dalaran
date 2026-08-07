@@ -15,7 +15,7 @@ pub fn ingest(ctx: &Context) -> anyhow::Result<()> {
             .display()
             .to_string();
         progress.set(path.clone(), ctx.is_tty());
-        let url = format!("https://rerun.io/docs/{path}");
+        let url = format!("https://dalaran.dev/docs/{path}");
         let (frontmatter, body) = parse_docs_frontmatter(&entry)?;
 
         ctx.push(DocumentData {

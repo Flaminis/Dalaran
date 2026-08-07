@@ -37,7 +37,7 @@ pub struct StartupOptions {
     /// A user has specifically requested the welcome screen be hidden.
     pub hide_welcome_screen: bool,
 
-    /// Detach Rerun Viewer process from the application process.
+    /// Detach Dalaran Viewer process from the application process.
     #[cfg(not(target_arch = "wasm32"))]
     pub detach_process: bool,
 
@@ -80,7 +80,7 @@ pub struct StartupOptions {
     ///
     /// It is disabled by default.
     ///
-    /// This should only be enabled when it is acceptable for `rerun`
+    /// This should only be enabled when it is acceptable for `dalaran`
     /// to push its own entries into browser history.
     ///
     /// That only makes sense if it has "taken over" a page, and is
@@ -103,7 +103,7 @@ pub struct StartupOptions {
     /// The base viewer url that's used when sharing a link in this viewer.
     ///
     /// If not set:
-    /// * notebooks & native: use rerun.io/viewer with the crate's last known stable version
+    /// * notebooks & native: use dalaran.dev/viewer with the crate's last known stable version
     /// * web viewers: use the url of the page it is embedded in
     pub viewer_base_url: Option<String>,
 }
@@ -148,7 +148,7 @@ impl StartupOptions {
             // there's no useful base url in the address bar to use.
             let version = dl_build_info::build_info!().version.latest_stable();
 
-            url::Url::parse(&format!("https://rerun.io/viewer/version/{version}")).ok()
+            url::Url::parse(&format!("https://dalaran.dev/viewer/version/{version}")).ok()
         } else {
             cfg_select! {
                 target_arch = "wasm32" => {

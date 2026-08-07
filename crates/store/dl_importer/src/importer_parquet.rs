@@ -6,7 +6,7 @@ use dl_quota_channel::send_crossbeam;
 
 use crate::{ImportedData, Importer, ImporterError, ImporterSettings};
 
-const PARQUET_IMPORTER_NAME: &str = "rerun.importers.Parquet";
+const PARQUET_IMPORTER_NAME: &str = "dalaran.importers.Parquet";
 
 /// An [`Importer`] for generic Parquet files.
 ///
@@ -147,7 +147,7 @@ mod tests {
     fn write_parquet_tmp(batch: &RecordBatch) -> std::path::PathBuf {
         use parquet::arrow::ArrowWriter;
 
-        let dir = std::env::temp_dir().join("rerun_parquet_tests");
+        let dir = std::env::temp_dir().join("dalaran_parquet_tests");
         std::fs::create_dir_all(&dir).unwrap();
 
         let path = dir.join(format!("{}.parquet", dl_chunk::ChunkId::new()));

@@ -1,6 +1,6 @@
 [package]
 authors.workspace = true
-description = "Rerun viewer state that is shared with the viewer's code components."
+description = "Dalaran viewer state that is shared with the viewer's code components."
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true

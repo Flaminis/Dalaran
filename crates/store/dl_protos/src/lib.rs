@@ -2,7 +2,7 @@
 //! Generation is done using the `dl_protos_builder` crate.
 //!
 //! We want clear separation between 'internal' types and gRPC types and don't want
-//! to use gRPC types in the rerun viewer codebase. That's why we implement all the
+//! to use gRPC types in the dalaran viewer codebase. That's why we implement all the
 //! necessary conversion code (in the form of `From` and `TryFrom` traits) in this crate.
 
 pub mod external {
@@ -15,7 +15,7 @@ pub mod trace_id_layer;
 pub use dl_log_types::{EntryName, InvalidEntryNameError};
 
 // This extra module is needed, because of how imports from different packages are resolved.
-// For example, `rerun.remote_store.v1alpha1.EncoderVersion` is resolved to `super::super::remote_store::v1alpha1::EncoderVersion`.
+// For example, `dalaran.remote_store.v1alpha1.EncoderVersion` is resolved to `super::super::remote_store::v1alpha1::EncoderVersion`.
 // We need an extra module in the path to `common` to make that work.
 // Additionally, the `common` module itself has to exist with a `v1alpha1` module inside of it,
 // which is the reason for the `common`, `log_msg`, `remote_store`, etc. modules below.
@@ -30,56 +30,56 @@ mod v1alpha1 {
         clippy::pedantic
     )]
 
-    #[path = "./rerun.common.v1alpha1.rs"]
-    pub mod rerun_common_v1alpha1;
+    #[path = "./dalaran.common.v1alpha1.rs"]
+    pub mod dalaran_common_v1alpha1;
 
-    #[path = "./rerun.common.v1alpha1.ext.rs"]
-    pub mod rerun_common_v1alpha1_ext;
+    #[path = "./dalaran.common.v1alpha1.ext.rs"]
+    pub mod dalaran_common_v1alpha1_ext;
 
-    #[path = "./rerun.log_msg.v1alpha1.rs"]
-    pub mod rerun_log_msg_v1alpha1;
+    #[path = "./dalaran.log_msg.v1alpha1.rs"]
+    pub mod dalaran_log_msg_v1alpha1;
 
-    #[path = "./rerun.log_msg.v1alpha1.ext.rs"]
-    pub mod rerun_log_msg_v1alpha1_ext;
+    #[path = "./dalaran.log_msg.v1alpha1.ext.rs"]
+    pub mod dalaran_log_msg_v1alpha1_ext;
 
-    #[path = "./rerun.sdk_comms.v1alpha1.rs"]
-    pub mod rerun_sdk_comms_v1alpha1;
+    #[path = "./dalaran.sdk_comms.v1alpha1.rs"]
+    pub mod dalaran_sdk_comms_v1alpha1;
 
-    #[path = "./rerun.cloud.v1alpha1.rs"]
-    pub mod rerun_cloud_v1alpha1;
+    #[path = "./dalaran.cloud.v1alpha1.rs"]
+    pub mod dalaran_cloud_v1alpha1;
 
-    #[path = "./rerun.cloud.v1alpha1.ext.rs"]
-    pub mod rerun_cloud_v1alpha1_ext;
+    #[path = "./dalaran.cloud.v1alpha1.ext.rs"]
+    pub mod dalaran_cloud_v1alpha1_ext;
 
-    #[path = "./rerun.cloud.v1alpha1.ext.chunk_key.rs"]
-    pub mod rerun_cloud_v1alpha1_ext_chunk_key;
+    #[path = "./dalaran.cloud.v1alpha1.ext.chunk_key.rs"]
+    pub mod dalaran_cloud_v1alpha1_ext_chunk_key;
 
-    #[path = "./rerun.cloud.v1alpha1.ext.schemas.rs"]
-    pub mod rerun_cloud_v1alpha1_ext_schemas;
+    #[path = "./dalaran.cloud.v1alpha1.ext.schemas.rs"]
+    pub mod dalaran_cloud_v1alpha1_ext_schemas;
 }
 
 pub mod common {
     pub mod v1alpha1 {
-        pub use crate::v1alpha1::rerun_common_v1alpha1::*;
+        pub use crate::v1alpha1::dalaran_common_v1alpha1::*;
         pub mod ext {
-            pub use crate::v1alpha1::rerun_common_v1alpha1_ext::*;
+            pub use crate::v1alpha1::dalaran_common_v1alpha1_ext::*;
         }
     }
 }
 
 pub mod log_msg {
     pub mod v1alpha1 {
-        pub use crate::v1alpha1::rerun_log_msg_v1alpha1::*;
+        pub use crate::v1alpha1::dalaran_log_msg_v1alpha1::*;
     }
 }
 
 pub mod cloud {
     pub mod v1alpha1 {
-        pub use crate::v1alpha1::rerun_cloud_v1alpha1::*;
+        pub use crate::v1alpha1::dalaran_cloud_v1alpha1::*;
         pub mod ext {
-            pub use crate::v1alpha1::rerun_cloud_v1alpha1_ext::*;
-            pub use crate::v1alpha1::rerun_cloud_v1alpha1_ext_chunk_key::*;
-            pub use crate::v1alpha1::rerun_cloud_v1alpha1_ext_schemas::*;
+            pub use crate::v1alpha1::dalaran_cloud_v1alpha1_ext::*;
+            pub use crate::v1alpha1::dalaran_cloud_v1alpha1_ext_chunk_key::*;
+            pub use crate::v1alpha1::dalaran_cloud_v1alpha1_ext_schemas::*;
         }
 
         /// Server-supported feature flags advertised via `VersionResponse.features`.
@@ -96,7 +96,7 @@ pub mod cloud {
 
             /// Returns the full list of features this build of the server
             /// natively supports. Used by both OSS `dl_server` and the
-            /// Rerun Hub frontend to populate `VersionResponse.features`.
+            /// Dalaran Hub frontend to populate `VersionResponse.features`.
             pub fn all_supported_features() -> Vec<String> {
                 vec![PER_SEGMENT_INDEX_VALUES.to_owned()]
             }
@@ -106,7 +106,7 @@ pub mod cloud {
 
 pub mod sdk_comms {
     pub mod v1alpha1 {
-        pub use crate::v1alpha1::rerun_sdk_comms_v1alpha1::*;
+        pub use crate::v1alpha1::dalaran_sdk_comms_v1alpha1::*;
     }
 }
 

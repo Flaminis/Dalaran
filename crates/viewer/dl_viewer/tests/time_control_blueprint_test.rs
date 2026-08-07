@@ -60,7 +60,7 @@ fn opening_url_with_temporal_anchor_pauses_playing_recording() {
     let dataset_id = dl_log_types::external::dl_tuid::Tuid::new();
     let segment_id = RecordingId::random();
     let url: ViewerOpenUrl = format!(
-        "rerun+http://localhost:51234/dataset/{dataset_id}?segment_id={segment_id}#when=stable_time@+3.990s"
+        "dalaran+http://localhost:51234/dataset/{dataset_id}?segment_id={segment_id}#when=stable_time@+3.990s"
     )
     .parse()
     .expect("test URL should parse");
@@ -101,7 +101,7 @@ fn opening_url_with_temporal_anchor_pauses_playing_recording() {
     );
 }
 
-/// Regression test for the cursor-drag-resumes-playback symptom of rerun#12773.
+/// Regression test for the cursor-drag-resumes-playback symptom of dalaran#12773.
 ///
 /// `TimeControl::default()` starts with `following: true`. When the blueprint pins
 /// `PlayState::Paused`, the resulting state must clear `following` — otherwise a

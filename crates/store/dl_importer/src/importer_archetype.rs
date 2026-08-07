@@ -14,7 +14,7 @@ pub struct ArchetypeImporter;
 impl Importer for ArchetypeImporter {
     #[inline]
     fn name(&self) -> String {
-        "rerun.importers.Archetype".into()
+        "dalaran.importers.Archetype".into()
     }
 
     #[cfg(not(target_arch = "wasm32"))]
@@ -33,7 +33,7 @@ impl Importer for ArchetypeImporter {
         // be an RRD stream by default, and therefore will be handled by the RRD importer.
         //
         // This is super important because, if that thing does turn out to be a fifo or something of
-        // that nature (e.g. `rerun <(curl …)`), and we end up reading from it, then the RRD importer
+        // that nature (e.g. `dalaran <(curl …)`), and we end up reading from it, then the RRD importer
         // will end up executing on top of a racy, partial RRD stream (because these virtual streams
         // have process-global state). The end result will be what looks like a bunch of corrupt data and
         // the decoder which will start spewing random confusing errors.

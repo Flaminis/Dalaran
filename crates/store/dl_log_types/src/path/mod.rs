@@ -1,4 +1,4 @@
-//! Every logged entity in Rerun is logged to an [`EntityPath`].
+//! Every logged entity in Dalaran is logged to an [`EntityPath`].
 //!
 //! The path is made up out of several [`EntityPathPart`]s,
 //! which are just non-empty strings.

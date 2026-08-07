@@ -1,9 +1,9 @@
 // This file is linked to in a number of places, do not move/rename it without updating all the links!
 
-//! All analytics events collected by the Rerun viewer are defined in this file.
+//! All analytics events collected by the Dalaran viewer are defined in this file.
 //!
-//! Analytics can be completely disabled with `rerun analytics disable`,
-//! or by compiling rerun without the `analytics` feature flag.
+//! Analytics can be completely disabled with `dalaran analytics disable`,
+//! or by compiling dalaran without the `analytics` feature flag.
 //!
 //! All collected analytics data is anonymized, stripping all personal identifiable information
 //! as well as information about user data.
@@ -94,9 +94,9 @@ pub struct Identify {
     pub llvm_version: Option<String>,
     pub python_version: Option<String>,
 
-    /// Opt-in meta-data you can set via `rerun analytics`.
+    /// Opt-in meta-data you can set via `dalaran analytics`.
     ///
-    /// For instance, Rerun employees are encouraged to set `rerun analytics email`.
+    /// For instance, Dalaran employees are encouraged to set `dalaran analytics email`.
     /// For real users, this is usually empty.
     pub opt_in_metadata: HashMap<String, Property>,
 }
@@ -221,7 +221,7 @@ pub struct StoreInfo {
     /// Where data is being logged.
     pub store_source: String,
 
-    /// The Rerun version that was used to encode the RRD data.
+    /// The Dalaran version that was used to encode the RRD data.
     pub store_version: String,
 
     // Various versions of the host environment.
@@ -229,8 +229,8 @@ pub struct StoreInfo {
     pub llvm_version: Option<String>,
     pub python_version: Option<String>,
 
-    // Whether or not the data is coming from one of the Rerun example applications.
-    pub app_id_starts_with_rerun_example: bool,
+    // Whether or not the data is coming from one of the Dalaran example applications.
+    pub app_id_starts_with_dalaran_example: bool,
 }
 
 #[derive(Clone)]
@@ -277,7 +277,7 @@ pub struct ViewerStarted {
     /// The URL on which the web viewer is running.
     ///
     /// This will be used to populate `hashed_root_domain` property for all urls.
-    /// This will also populate `rerun_url` property if the url root domain is `rerun.io`.
+    /// This will also populate `dalaran_url` property if the url root domain is `dalaran.dev`.
     pub url: Option<String>,
 
     /// The environment in which the viewer is running.
@@ -291,7 +291,7 @@ impl Event for ViewerStarted {
     const NAME: &'static str = "viewer_started";
 }
 
-const RERUN_DOMAINS: [&str; 1] = ["rerun.io"];
+const DALARAN_DOMAINS: [&str; 1] = ["dalaran.dev"];
 
 /// Given a URL, extract the root domain.
 fn extract_root_domain(url: &str) -> Option<String> {
@@ -310,8 +310,8 @@ fn add_sanitized_url_properties(event: &mut AnalyticsEvent, url: Option<String>)
         return;
     };
 
-    if RERUN_DOMAINS.contains(&root_domain.as_str()) {
-        event.insert_opt("rerun_url", url);
+    if DALARAN_DOMAINS.contains(&root_domain.as_str()) {
+        event.insert_opt("dalaran_url", url);
     }
 
     let hashed = Property::from(root_domain).hashed();
@@ -341,7 +341,7 @@ pub struct OpenRecording {
     /// The URL on which the web viewer is running.
     ///
     /// This will be used to populate `hashed_root_domain` property for all urls.
-    /// This will also populate `rerun_url` property if the url root domain is `rerun.io`.
+    /// This will also populate `dalaran_url` property if the url root domain is `dalaran.dev`.
     pub url: Option<String>,
 
     /// The environment in which the viewer is running.
@@ -380,7 +380,7 @@ impl Properties for OpenRecording {
                 llvm_version,
                 python_version,
 
-                app_id_starts_with_rerun_example,
+                app_id_starts_with_dalaran_example,
             } = store_info;
 
             event.insert("application_id", application_id);
@@ -391,8 +391,8 @@ impl Properties for OpenRecording {
             event.insert_opt("llvm_version", llvm_version);
             event.insert_opt("python_version", python_version);
             event.insert(
-                "app_id_starts_with_rerun_example",
-                app_id_starts_with_rerun_example,
+                "app_id_starts_with_dalaran_example",
+                app_id_starts_with_dalaran_example,
             );
         }
 
@@ -516,7 +516,7 @@ impl Properties for LoadDataSource {
 
 /// Tracks CLI command invocations.
 ///
-/// This is sent when a user runs the Rerun CLI with any command.
+/// This is sent when a user runs the Dalaran CLI with any command.
 #[derive(Default)]
 pub struct CliCommandInvoked {
     /// The main command (e.g., "rrd", "auth", "mcap").
@@ -627,7 +627,7 @@ impl Properties for WelcomeScreenNavigation {
         event.insert("cta_cloud", cta_cloud);
         event.insert("is_logged_in", is_logged_in);
         event.insert("has_server", has_server);
-        event.insert("rerun_version", CrateVersion::LOCAL.to_string());
+        event.insert("dalaran_version", CrateVersion::LOCAL.to_string());
     }
 }
 
@@ -641,37 +641,37 @@ mod tests {
     fn test_root_domain() {
         // Valid urls
         assert_eq!(
-            extract_root_domain("https://rerun.io"),
-            Some("rerun.io".to_owned())
+            extract_root_domain("https://dalaran.dev"),
+            Some("dalaran.dev".to_owned())
         );
         assert_eq!(
-            extract_root_domain("https://ReRun.io"),
-            Some("rerun.io".to_owned())
+            extract_root_domain("https://Dalaran.io"),
+            Some("dalaran.dev".to_owned())
         );
         assert_eq!(
-            extract_root_domain("http://app.rerun.io"),
-            Some("rerun.io".to_owned())
+            extract_root_domain("http://app.dalaran.dev"),
+            Some("dalaran.dev".to_owned())
         );
         assert_eq!(
             extract_root_domain(
-                "https://www.rerun.io/viewer?url=https://app.rerun.io/version/0.15.1/examples/detect_and_track_objects.rrd"
+                "https://www.dalaran.dev/viewer?url=https://app.dalaran.dev/version/0.15.1/examples/detect_and_track_objects.rrd"
             ),
-            Some("rerun.io".to_owned())
+            Some("dalaran.dev".to_owned())
         );
 
         // Local domains
         assert_eq!(
-            extract_root_domain("http://localhost:9090/?url=rerun%2Bhttp://localhost:9877"),
+            extract_root_domain("http://localhost:9090/?url=dalaran%2Bhttp://localhost:9877"),
             None
         );
         assert_eq!(
-            extract_root_domain("http://127.0.0.1:9090/?url=rerun%2Bhttp://localhost:9877"),
+            extract_root_domain("http://127.0.0.1:9090/?url=dalaran%2Bhttp://localhost:9877"),
             None
         );
 
         // Invalid urls
-        assert_eq!(extract_root_domain("rerun.io"), None);
-        assert_eq!(extract_root_domain("https:/rerun"), None);
-        assert_eq!(extract_root_domain("https://rerun"), None);
+        assert_eq!(extract_root_domain("dalaran.dev"), None);
+        assert_eq!(extract_root_domain("https:/dalaran"), None);
+        assert_eq!(extract_root_domain("https://dalaran"), None);
     }
 }

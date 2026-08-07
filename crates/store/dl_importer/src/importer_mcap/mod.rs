@@ -1,9 +1,9 @@
-//! Rerun importer for MCAP files.
+//! Dalaran importer for MCAP files.
 
 mod importer;
 mod robot_description;
 
-/// Lens implementations for transforming various third-party data formats into Rerun components.
+/// Lens implementations for transforming various third-party data formats into Dalaran components.
 pub mod lenses;
 
 #[cfg(test)]

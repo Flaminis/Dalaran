@@ -22,7 +22,7 @@ const STARTUP_FRAME_IDX: u64 = u64::MAX;
 pub enum RenderContextError {
     #[error(
         "The GPU/graphics driver is lacking some abilities: {0}. \
-        Check the troubleshooting guide at https://rerun.io/docs/overview/installing-rerun/troubleshooting and consider updating your graphics driver."
+        Check the troubleshooting guide at https://dalaran.dev/docs/overview/installing-dalaran/troubleshooting and consider updating your graphics driver."
     )]
     InsufficientDeviceCapabilities(#[from] crate::device_caps::InsufficientDeviceCapabilities),
 }
@@ -679,12 +679,12 @@ fn log_adapter_info(info: &wgpu::AdapterInfo) {
         dl_log::debug_once!("wgpu adapter {human_readable_summary}");
     } else if is_software_rasterizer_with_known_crashes {
         dl_log::warn_once!(
-            "Bad software rasterizer detected - expect poor performance and crashes. See: https://www.rerun.io/docs/overview/installing-rerun/troubleshooting#graphics-issues"
+            "Bad software rasterizer detected - expect poor performance and crashes. See: https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting#graphics-issues"
         );
         dl_log::info_once!("wgpu adapter {human_readable_summary}");
     } else if info.device_type == wgpu::DeviceType::Cpu {
         dl_log::warn_once!(
-            "Software rasterizer detected - expect poor performance. See: https://www.rerun.io/docs/overview/installing-rerun/troubleshooting#graphics-issues"
+            "Software rasterizer detected - expect poor performance. See: https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting#graphics-issues"
         );
         dl_log::info_once!("wgpu adapter {human_readable_summary}");
     } else {

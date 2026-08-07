@@ -39,7 +39,7 @@ macro_rules! define_redap_tests {
         $(
             pub async fn $test<T>(service: T)
             where
-                T: dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService,
+                T: dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService,
             {
                 $mod::$test(service).await;
             }
@@ -48,7 +48,7 @@ macro_rules! define_redap_tests {
         $(
             pub async fn $rtest<T>(service: T)
             where
-                T: dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService,
+                T: dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService,
             {
                 $rmod::$rtest(service).await.expect(stringify!($rtest));
             }
@@ -57,7 +57,7 @@ macro_rules! define_redap_tests {
         $(
             pub async fn $otest<T>(service: T)
             where
-                T: dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService,
+                T: dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService,
             {
                 $omod::$otest(service).await.expect(stringify!($otest));
             }

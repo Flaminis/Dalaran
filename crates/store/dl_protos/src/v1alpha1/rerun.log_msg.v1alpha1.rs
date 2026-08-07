@@ -36,12 +36,12 @@ pub mod log_msg {
 }
 impl ::prost::Name for LogMsg {
     const NAME: &'static str = "LogMsg";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.LogMsg".into()
+        "dalaran.log_msg.v1alpha1.LogMsg".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.LogMsg".into()
+        "/dalaran.log_msg.v1alpha1.LogMsg".into()
     }
 }
 /// Corresponds to `LogMsg::SetStoreInfo`. Used to identify a recording.
@@ -56,12 +56,12 @@ pub struct SetStoreInfo {
 }
 impl ::prost::Name for SetStoreInfo {
     const NAME: &'static str = "SetStoreInfo";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.SetStoreInfo".into()
+        "dalaran.log_msg.v1alpha1.SetStoreInfo".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.SetStoreInfo".into()
+        "/dalaran.log_msg.v1alpha1.SetStoreInfo".into()
     }
 }
 /// Corresponds to `LogMsg::ArrowMsg`. Used to transmit actual data.
@@ -90,12 +90,12 @@ pub struct ArrowMsg {
 }
 impl ::prost::Name for ArrowMsg {
     const NAME: &'static str = "ArrowMsg";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.ArrowMsg".into()
+        "dalaran.log_msg.v1alpha1.ArrowMsg".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.ArrowMsg".into()
+        "/dalaran.log_msg.v1alpha1.ArrowMsg".into()
     }
 }
 /// Corresponds to `LogMsg::BlueprintActivationCommand`.
@@ -117,12 +117,12 @@ pub struct BlueprintActivationCommand {
 }
 impl ::prost::Name for BlueprintActivationCommand {
     const NAME: &'static str = "BlueprintActivationCommand";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.BlueprintActivationCommand".into()
+        "dalaran.log_msg.v1alpha1.BlueprintActivationCommand".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.BlueprintActivationCommand".into()
+        "/dalaran.log_msg.v1alpha1.BlueprintActivationCommand".into()
     }
 }
 /// Information about a recording or blueprint.
@@ -147,12 +147,12 @@ pub struct StoreInfo {
 }
 impl ::prost::Name for StoreInfo {
     const NAME: &'static str = "StoreInfo";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.StoreInfo".into()
+        "dalaran.log_msg.v1alpha1.StoreInfo".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.StoreInfo".into()
+        "/dalaran.log_msg.v1alpha1.StoreInfo".into()
     }
 }
 /// The source of a recording or blueprint.
@@ -167,12 +167,12 @@ pub struct StoreSource {
 }
 impl ::prost::Name for StoreSource {
     const NAME: &'static str = "StoreSource";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.StoreSource".into()
+        "dalaran.log_msg.v1alpha1.StoreSource".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.StoreSource".into()
+        "/dalaran.log_msg.v1alpha1.StoreSource".into()
     }
 }
 /// A newtype for `StoreSource` payload.
@@ -185,12 +185,12 @@ pub struct StoreSourceExtra {
 }
 impl ::prost::Name for StoreSourceExtra {
     const NAME: &'static str = "StoreSourceExtra";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.StoreSourceExtra".into()
+        "dalaran.log_msg.v1alpha1.StoreSourceExtra".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.StoreSourceExtra".into()
+        "/dalaran.log_msg.v1alpha1.StoreSourceExtra".into()
     }
 }
 /// Version of the Python SDK that created the recording.
@@ -207,12 +207,12 @@ pub struct PythonVersion {
 }
 impl ::prost::Name for PythonVersion {
     const NAME: &'static str = "PythonVersion";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.PythonVersion".into()
+        "dalaran.log_msg.v1alpha1.PythonVersion".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.PythonVersion".into()
+        "/dalaran.log_msg.v1alpha1.PythonVersion".into()
     }
 }
 /// Information about the Rust SDK that created the recording.
@@ -227,12 +227,12 @@ pub struct CrateInfo {
 }
 impl ::prost::Name for CrateInfo {
     const NAME: &'static str = "CrateInfo";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.CrateInfo".into()
+        "dalaran.log_msg.v1alpha1.CrateInfo".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.CrateInfo".into()
+        "/dalaran.log_msg.v1alpha1.CrateInfo".into()
     }
 }
 /// A recording which came from a file.
@@ -243,12 +243,12 @@ pub struct FileSource {
 }
 impl ::prost::Name for FileSource {
     const NAME: &'static str = "FileSource";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.FileSource".into()
+        "dalaran.log_msg.v1alpha1.FileSource".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.FileSource".into()
+        "/dalaran.log_msg.v1alpha1.FileSource".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -261,12 +261,12 @@ pub struct StoreVersion {
 }
 impl ::prost::Name for StoreVersion {
     const NAME: &'static str = "StoreVersion";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.StoreVersion".into()
+        "dalaran.log_msg.v1alpha1.StoreVersion".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.StoreVersion".into()
+        "/dalaran.log_msg.v1alpha1.StoreVersion".into()
     }
 }
 /// This is the payload that is carried in messages of type `::End` in RRD streams.
@@ -277,7 +277,7 @@ impl ::prost::Name for StoreVersion {
 /// therefore a single `RrdFooter`.
 /// It is possible to break that invariant by concatenating streams using external tools,
 /// e.g. by doing something like `cat *.rrd > all_my_recordings.rrd`.
-/// Passing that stream back through Rerun tools, e.g. `cat *.rrd | rerun rrd merge > all_my_recordings.rrd`,
+/// Passing that stream back through Dalaran tools, e.g. `cat *.rrd | dalaran rrd merge > all_my_recordings.rrd`,
 /// would once again guarantee that only one `::End` message is present though.
 /// I.e. that invariant holds as long as one stays within our ecosystem of tools.
 ///
@@ -295,19 +295,19 @@ pub struct RrdFooter {
 }
 impl ::prost::Name for RrdFooter {
     const NAME: &'static str = "RrdFooter";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.RrdFooter".into()
+        "dalaran.log_msg.v1alpha1.RrdFooter".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.RrdFooter".into()
+        "/dalaran.log_msg.v1alpha1.RrdFooter".into()
     }
 }
 /// This is the payload found in `RrdFooter`s.
 ///
 /// Each `RrdManifest` corresponds to one, and exactly one, RRD stream (i.e. recording).
 /// This restriction exists to make working with multiple RRD streams much simpler: due to the way
-/// the Rerun data model works, filtering rows of data from a manifest can have hard-to-predict
+/// the Dalaran data model works, filtering rows of data from a manifest can have hard-to-predict
 /// second order effects on the schema of the stream as a whole.
 /// By keeping manifests for different recordings separate, we remove the need to filter per
 /// recording ID, greatly simplifying the process.
@@ -342,12 +342,12 @@ pub struct RrdManifest {
 }
 impl ::prost::Name for RrdManifest {
     const NAME: &'static str = "RrdManifest";
-    const PACKAGE: &'static str = "rerun.log_msg.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.log_msg.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.log_msg.v1alpha1.RrdManifest".into()
+        "dalaran.log_msg.v1alpha1.RrdManifest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.log_msg.v1alpha1.RrdManifest".into()
+        "/dalaran.log_msg.v1alpha1.RrdManifest".into()
     }
 }
 /// The encoding of the message payload.

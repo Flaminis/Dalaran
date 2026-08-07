@@ -9,7 +9,7 @@ use camino::{Utf8Path, Utf8PathBuf};
 use itertools::Itertools as _;
 
 use crate::{
-    ATTR_RERUN_OVERRIDE_TYPE, ATTR_RERUN_STATE, Docs, ElementType, FbsBaseType, FbsEnum,
+    ATTR_DALARAN_OVERRIDE_TYPE, ATTR_DALARAN_STATE, Docs, ElementType, FbsBaseType, FbsEnum,
     FbsEnumVal, FbsField, FbsKeyValue, FbsObject, FbsSchema, FbsType, Object, ObjectClass,
     ObjectField, ObjectKind, Objects, Reporter, Type, root_as_schema,
 };
@@ -18,7 +18,7 @@ use super::{Attributes, EnumIntegerType, State, is_testing_fqname};
 
 // ---
 
-const BUILTIN_UNIT_TYPE_FQNAME: &str = "rerun.builtins.UnitType";
+const BUILTIN_UNIT_TYPE_FQNAME: &str = "dalaran.builtins.UnitType";
 
 impl Objects {
     /// Runs the semantic pass on a serialized flatbuffers schema.
@@ -110,10 +110,10 @@ fn object_from_raw_object(
     let kind = ObjectKind::from_pkg_name(&pkg_name, &attrs);
 
     let scope = attrs
-        .get_string(crate::ATTR_RERUN_SCOPE)
+        .get_string(crate::ATTR_DALARAN_SCOPE)
         .or_else(|| (kind == ObjectKind::View).then(|| "blueprint".to_owned()));
 
-    let state = if attrs.has(ATTR_RERUN_STATE) {
+    let state = if attrs.has(ATTR_DALARAN_STATE) {
         State::from_attrs(&attrs).unwrap_or_else(|err| {
             reporter.error(&virtpath, &fqname, &err);
             State::Stable
@@ -126,11 +126,11 @@ fn object_from_raw_object(
         match kind {
             ObjectKind::Datatype | ObjectKind::Component => {
                 if false {
-                    // TODO(#9427): make ATTR_RERUN_STATE attribute mandatory
+                    // TODO(#9427): make ATTR_DALARAN_STATE attribute mandatory
                     reporter.warn(
                         &virtpath,
                         &fqname,
-                        format!("Missing attribute '{ATTR_RERUN_STATE}'"),
+                        format!("Missing attribute '{ATTR_DALARAN_STATE}'"),
                     );
                 }
                 State::Stable
@@ -139,7 +139,7 @@ fn object_from_raw_object(
                 reporter.error(
                     &virtpath,
                     &fqname,
-                    format!("Missing attribute '{ATTR_RERUN_STATE}'"),
+                    format!("Missing attribute '{ATTR_DALARAN_STATE}'"),
                 );
                 State::Stable
             }
@@ -234,12 +234,12 @@ fn object_from_raw_enum(
     let docs = docs_from_raw_docs(reporter, &virtpath, enm.name(), enm.documentation());
     let attrs = attributes_from_raw_attrs(enm.attributes());
     let kind = ObjectKind::from_pkg_name(&pkg_name, &attrs);
-    let state = if attrs.has(ATTR_RERUN_STATE) {
+    let state = if attrs.has(ATTR_DALARAN_STATE) {
         State::from_attrs(&attrs).unwrap_or_else(|err| {
             reporter.error(
                 &virtpath,
                 &fqname,
-                format!("Failed to parse `{ATTR_RERUN_STATE}`: {err}"),
+                format!("Failed to parse `{ATTR_DALARAN_STATE}`: {err}"),
             );
             State::Stable
         })
@@ -343,12 +343,12 @@ fn object_field_from_raw_object_field(
     let docs = docs_from_raw_docs(reporter, &virtpath, field.name(), field.documentation());
 
     let attrs = attributes_from_raw_attrs(field.attributes());
-    let state = if attrs.has(ATTR_RERUN_STATE) {
+    let state = if attrs.has(ATTR_DALARAN_STATE) {
         State::from_attrs(&attrs).unwrap_or_else(|err| {
             reporter.error(
                 &virtpath,
                 &fqname,
-                format!("Failed to parse `{ATTR_RERUN_STATE}`: {err}"),
+                format!("Failed to parse `{ATTR_DALARAN_STATE}`: {err}"),
             );
             State::Stable
         })
@@ -367,7 +367,7 @@ fn object_field_from_raw_object_field(
             &fqname,
             format!(
                 "Use {} attribute for deprecation instead",
-                crate::ATTR_RERUN_STATE
+                crate::ATTR_DALARAN_STATE
             ),
         );
     }
@@ -413,12 +413,12 @@ fn object_field_from_raw_enum_value(
     let docs = docs_from_raw_docs(reporter, &virtpath, val.name(), val.documentation());
 
     let attrs = attributes_from_raw_attrs(val.attributes());
-    let state = if attrs.has(ATTR_RERUN_STATE) {
+    let state = if attrs.has(ATTR_DALARAN_STATE) {
         State::from_attrs(&attrs).unwrap_or_else(|err| {
             reporter.error(
                 &virtpath,
                 &fqname,
-                format!("Failed to parse `{ATTR_RERUN_STATE}`: {err}"),
+                format!("Failed to parse `{ATTR_DALARAN_STATE}`: {err}"),
             );
             State::Stable
         })
@@ -472,7 +472,7 @@ fn type_from_raw_type(
 ) -> Type {
     let typ = field_type.base_type();
 
-    if let Some(type_override) = attrs.try_get::<String>(fqname, ATTR_RERUN_OVERRIDE_TYPE) {
+    if let Some(type_override) = attrs.try_get::<String>(fqname, ATTR_DALARAN_OVERRIDE_TYPE) {
         match type_override.as_str() {
             "binary" => {
                 if typ == FbsBaseType::Vector && field_type.element() == FbsBaseType::UByte {
@@ -493,7 +493,7 @@ fn type_from_raw_type(
                 }
             }
             _ => {
-                panic!("{fqname}: Unknown {ATTR_RERUN_OVERRIDE_TYPE:?}: {type_override:?}");
+                panic!("{fqname}: Unknown {ATTR_DALARAN_OVERRIDE_TYPE:?}: {type_override:?}");
             }
         }
     }
@@ -581,7 +581,7 @@ fn element_type_from_raw_base_type(
 
     // TODO(jleibs): Clean up fqname plumbing
     let fqname = "???";
-    if let Some(type_override) = attrs.try_get::<String>(fqname, ATTR_RERUN_OVERRIDE_TYPE) {
+    if let Some(type_override) = attrs.try_get::<String>(fqname, ATTR_DALARAN_OVERRIDE_TYPE) {
         match (inner_type, type_override.as_str()) {
             (FbsBaseType::UShort, "float16") => {
                 return ElementType::Float16;

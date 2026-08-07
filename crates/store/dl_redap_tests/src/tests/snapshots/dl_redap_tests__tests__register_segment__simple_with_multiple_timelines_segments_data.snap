@@ -3,7 +3,7 @@ source: crates/store/dl_redap_tests/src/tests/register_segment.rs
 expression: filtered_batch.format_snapshot(false)
 ---
 ┌──────────────────┬───────────────────┬──────────────────┬────────────────────────────────┬───────────────┬────────────────┬──────────────┬────────────────┬───────────────────────────────┬───────────────────────────────┐
-│ rerun_segment_id ┆ rerun_layer_names ┆ rerun_num_chunks ┆ property:text_log:TextLog:text ┆ duration:end  ┆ duration:start ┆ frame_nr:end ┆ frame_nr:start ┆ timestamp:end                 ┆ timestamp:start               │
+│ dalaran_segment_id ┆ dalaran_layer_names ┆ dalaran_num_chunks ┆ property:text_log:TextLog:text ┆ duration:end  ┆ duration:start ┆ frame_nr:end ┆ frame_nr:start ┆ timestamp:end                 ┆ timestamp:start               │
 ╞══════════════════╪═══════════════════╪══════════════════╪════════════════════════════════╪═══════════════╪════════════════╪══════════════╪════════════════╪═══════════════════════════════╪═══════════════════════════════╡
 │ my_segment_id1   ┆ [base, props]     ┆ 5                ┆ [i'm segment 1]                ┆ null          ┆ null           ┆ 40           ┆ 10             ┆ null                          ┆ null                          │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤

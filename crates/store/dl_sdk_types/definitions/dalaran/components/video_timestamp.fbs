@@ -1,0 +1,13 @@
+
+namespace dalaran.components;
+
+/// Timestamp inside a [archetypes.AssetVideo].
+struct VideoTimestamp (
+  "attr.arrow.transparent",
+  "attr.python.array_aliases": "npt.NDArray[np.int64]",
+  "attr.dalaran.state": "stable",
+  "attr.rust.derive": "Copy, PartialEq, Eq, Default",
+  "attr.rust.repr": "transparent"
+) {
+  timestamp: dalaran.datatypes.VideoTimestamp (order: 100);
+}

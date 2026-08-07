@@ -1,0 +1,16 @@
+namespace dalaran.blueprint.archetypes;
+
+
+/// Configuration of the map view zoom level.
+//TODO(ab): Turn this archetype into `MapArea` and include a `center: LatLon` component or similar
+table MapZoom (
+  "attr.dalaran.scope": "blueprint",
+  "attr.python.aliases": "datatypes.Float64Like"
+) {
+  // --- Optional ---
+
+  /// Zoom level for the map.
+  ///
+  /// Zoom level follow the [`OpenStreetMap` definition](https://wiki.openstreetmap.org/wiki/Zoom_levels).
+  zoom: dalaran.blueprint.components.ZoomLevel ("attr.dalaran.component_optional", order: 1000);
+}

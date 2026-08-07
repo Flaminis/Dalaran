@@ -19,8 +19,8 @@ pub use self::servers::{Command, RedapServers, Server};
 ///
 /// Not actually a valid origin.
 pub static LOCAL_ORIGIN: LazyLock<dl_uri::Origin> = LazyLock::new(|| dl_uri::Origin {
-    scheme: Scheme::RerunHttps,
-    host: url::Host::Domain(String::from("_local_recordings.rerun.io")),
+    scheme: Scheme::DalaranHttps,
+    host: url::Host::Domain(String::from("_local_recordings.dalaran.dev")),
     port: 443,
 });
 

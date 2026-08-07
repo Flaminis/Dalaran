@@ -10,7 +10,7 @@ use super::sink::PostHogSink;
 use crate::{AnalyticsEvent, Config, FlushError};
 
 // This is the environment variable that controls analytics collection.
-const ENV_FORCE_ANALYTICS: &str = "FORCE_RERUN_ANALYTICS";
+const ENV_FORCE_ANALYTICS: &str = "FORCE_DALARAN_ANALYTICS";
 
 pub enum PipelineEvent {
     Analytics(AnalyticsEvent),
@@ -87,7 +87,7 @@ impl Pipeline {
         //
         // The duplication part comes from the fact that we might successfully flush events down
         // the sink but still fail to remove and/or truncate the file.
-        // The eventual part comes from the fact that this only runs as part of the Rerun viewer,
+        // The eventual part comes from the fact that this only runs as part of the Dalaran viewer,
         // and as such there's no guarantee it will ever run again, even if there's pending data.
 
         if let Err(err) = std::thread::Builder::new()

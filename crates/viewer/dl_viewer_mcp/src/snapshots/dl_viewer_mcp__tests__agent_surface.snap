@@ -4,7 +4,7 @@ expression: surface
 ---
 # Server instructions
 
-This MCP drives a live Rerun viewer: it reads the viewer's accessibility tree and synthesizes real input events. Work in an observe → act → verify loop.
+This MCP drives a live Dalaran viewer: it reads the viewer's accessibility tree and synthesizes real input events. Work in an observe → act → verify loop.
 
 Getting oriented:
 - Call `connect` first (it dials the viewer's gRPC server); every other tool errors until then.
@@ -199,7 +199,7 @@ Conventions:
 
 {
   "name": "connect",
-  "description": "Connect to a running Rerun viewer over gRPC. The other tools will be available once the connection is established.\n`endpoint` defaults to `http://127.0.0.1:9876` (the viewer's default gRPC address).\nCall `disconnect` to drop the connection.",
+  "description": "Connect to a running Dalaran viewer over gRPC. The other tools will be available once the connection is established.\n`endpoint` defaults to `http://127.0.0.1:9876` (the viewer's default gRPC address).\nCall `disconnect` to drop the connection.",
   "inputSchema": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
@@ -560,12 +560,12 @@ Conventions:
 
 {
   "name": "open_url",
-  "description": "Open a URL in the Rerun viewer.\nThe URL can be a recording/blueprint file URL, a `rerun://` dataset URI, a redap server/catalog URL, or an intra-recording link.\nRequires `connect`.",
+  "description": "Open a URL in the Dalaran viewer.\nThe URL can be a recording/blueprint file URL, a `dalaran://` dataset URI, a redap server/catalog URL, or an intra-recording link.\nRequires `connect`.",
   "inputSchema": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "properties": {
       "url": {
-        "description": "The URL to open in the viewer: a recording/blueprint file URL, a `rerun://` dataset URI, a redap server/catalog URL, or an intra-recording link.",
+        "description": "The URL to open in the viewer: a recording/blueprint file URL, a `dalaran://` dataset URI, a redap server/catalog URL, or an intra-recording link.",
         "type": "string"
       }
     },
@@ -950,7 +950,7 @@ Conventions:
 
 {
   "name": "set_time",
-  "description": "Set the time cursor (timeline position) of a recording in the Rerun viewer.\n`time` is a sequence index for sequence timelines or nanoseconds for temporal timelines (call `viewer_state` first for each timeline's type and valid range).\n`store_id` and `timeline` default to the active recording / active timeline.\nIf `play` is unset or `false`, the recording will be paused. If `true`, the recording will play from the selected time.\nRequires `connect`.",
+  "description": "Set the time cursor (timeline position) of a recording in the Dalaran viewer.\n`time` is a sequence index for sequence timelines or nanoseconds for temporal timelines (call `viewer_state` first for each timeline's type and valid range).\n`store_id` and `timeline` default to the active recording / active timeline.\nIf `play` is unset or `false`, the recording will be paused. If `true`, the recording will play from the selected time.\nRequires `connect`.",
   "inputSchema": {
     "$defs": {
       "StoreIdArg": {
@@ -1076,7 +1076,7 @@ Conventions:
 
 {
   "name": "viewer_state",
-  "description": "Report the current Rerun viewer state as JSON: the active recording, the current page URL, and every open recording (recording id, application id) with its timelines, their time ranges, and its current time cursor.\nUse this to learn which recording/timeline to drive and what time values are valid before calling `set_time`.\nRequires `connect`.",
+  "description": "Report the current Dalaran viewer state as JSON: the active recording, the current page URL, and every open recording (recording id, application id) with its timelines, their time ranges, and its current time cursor.\nUse this to learn which recording/timeline to drive and what time values are valid before calling `set_time`.\nRequires `connect`.",
   "inputSchema": {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "type": "object"

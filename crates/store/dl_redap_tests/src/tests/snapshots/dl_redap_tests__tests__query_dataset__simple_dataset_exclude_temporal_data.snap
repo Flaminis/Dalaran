@@ -3,7 +3,7 @@ source: crates/store/dl_redap_tests/src/tests/query_dataset.rs
 expression: filtered_chunk_info.format_snapshot(false)
 ---
 ┌──────────────────────────────────┬──────────────────┬─────────────────────┬───────────────────┬─────────────────┬────────────────────────┬───────────────────────────────────┐
-│ chunk_id                         ┆ chunk_segment_id ┆ rerun_segment_layer ┆ chunk_entity_path ┆ chunk_is_static ┆ rerun_layer_direct_url ┆ rerun_layer_direct_url_expires_at │
+│ chunk_id                         ┆ chunk_segment_id ┆ dalaran_segment_layer ┆ chunk_entity_path ┆ chunk_is_static ┆ dalaran_layer_direct_url ┆ dalaran_layer_direct_url_expires_at │
 ╞══════════════════════════════════╪══════════════════╪═════════════════════╪═══════════════════╪═════════════════╪════════════════════════╪═══════════════════════════════════╡
 │ 00000000000000010000000000000002 ┆ my_segment_id1   ┆ base                ┆ /my/entity        ┆ true            ┆ null                   ┆ null                              │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤

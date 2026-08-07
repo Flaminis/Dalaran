@@ -182,7 +182,7 @@ pub fn help(os: egui::os::OperatingSystem) -> Help {
     let egui::InputOptions { zoom_modifier, .. } = egui::InputOptions::default(); // This is OK, since we don't allow the user to change this modifier.
 
     Help::new("2D view")
-        .docs_link("https://rerun.io/docs/reference/types/views/spatial2d_view")
+        .docs_link("https://dalaran.dev/docs/reference/types/views/spatial2d_view")
         .control("Pan", (MouseButtonText(DRAG_PAN2D_BUTTON), "+", "drag"))
         .control(
             "Zoom",

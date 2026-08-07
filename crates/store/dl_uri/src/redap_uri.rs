@@ -5,7 +5,7 @@ use crate::{
     FolderUri, Fragment, Origin, ProxyUri,
 };
 
-/// Parsed from `rerun://addr:port/recording/12345` or `rerun://addr:port/catalog`
+/// Parsed from `dalaran://addr:port/recording/12345` or `dalaran://addr:port/catalog`
 #[derive(Debug, PartialEq, Eq, Clone, Hash)]
 pub enum RedapUri {
     /// `/catalog` - also the default if there is no /endpoint
@@ -67,11 +67,11 @@ impl std::str::FromStr for RedapUri {
     type Err = Error;
 
     fn from_str(input: &str) -> Result<Self, Self::Err> {
-        // If someone manually visits `https://rerun.io/viewer?url=rerun+https://…` then
+        // If someone manually visits `https://dalaran.dev/viewer?url=dalaran+https://…` then
         // that `+` will be turned into a space. So let's gracefully handle that here:
         let input = &input
-            .replace("rerun http", "rerun+http")
-            .replace("rerun https", "rerun+https");
+            .replace("dalaran http", "dalaran+http")
+            .replace("dalaran https", "dalaran+https");
 
         // Hacky, but I don't want to have to memorize ports.
         let default_localhost_port = if input.contains("/proxy") {
@@ -158,28 +158,28 @@ mod tests {
 
     #[test]
     fn scheme_conversion() {
-        assert_eq!(Scheme::RerunHttps.as_http_scheme(), "https");
-        assert_eq!(Scheme::RerunHttp.as_http_scheme(), "http");
+        assert_eq!(Scheme::DalaranHttps.as_http_scheme(), "https");
+        assert_eq!(Scheme::DalaranHttp.as_http_scheme(), "http");
     }
 
     #[test]
     fn origin_conversion() {
         let origin = crate::Origin {
-            scheme: Scheme::RerunHttps,
+            scheme: Scheme::DalaranHttps,
             host: url::Host::Ipv4(Ipv4Addr::LOCALHOST),
             port: 1234,
         };
         assert_eq!(origin.as_url(), "https://127.0.0.1:1234");
 
         let origin = crate::Origin {
-            scheme: Scheme::RerunHttp,
+            scheme: Scheme::DalaranHttp,
             host: url::Host::Ipv4(Ipv4Addr::LOCALHOST),
             port: 1234,
         };
         assert_eq!(origin.as_url(), "http://127.0.0.1:1234");
 
         let origin = crate::Origin {
-            scheme: Scheme::RerunHttps,
+            scheme: Scheme::DalaranHttps,
             host: url::Host::Ipv4(Ipv4Addr::LOCALHOST),
             port: 1234,
         };
@@ -188,14 +188,14 @@ mod tests {
 
     #[test]
     fn test_entry_url_to_address() {
-        let url = "rerun://127.0.0.1:1234/entry/1830B33B45B963E7774455beb91701ae";
+        let url = "dalaran://127.0.0.1:1234/entry/1830B33B45B963E7774455beb91701ae";
         let address: RedapUri = url.parse().unwrap();
 
         let RedapUri::Entry(EntryUri { origin, entry_id }) = address else {
             panic!("Expected recording");
         };
 
-        assert_eq!(origin.scheme, Scheme::RerunHttps);
+        assert_eq!(origin.scheme, Scheme::DalaranHttps);
         assert_eq!(origin.host, url::Host::<String>::Ipv4(Ipv4Addr::LOCALHOST));
         assert_eq!(origin.port, 1234);
         assert_eq!(
@@ -207,7 +207,7 @@ mod tests {
     #[test]
     fn test_dataset_data_url_to_address() {
         let url =
-            "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid";
+            "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid";
         let address: RedapUri = url.parse().unwrap();
 
         let RedapUri::DatasetData(DatasetSegmentUri {
@@ -220,7 +220,7 @@ mod tests {
             panic!("Expected recording");
         };
 
-        assert_eq!(origin.scheme, Scheme::RerunHttps);
+        assert_eq!(origin.scheme, Scheme::DalaranHttps);
         assert_eq!(origin.host, url::Host::<String>::Ipv4(Ipv4Addr::LOCALHOST));
         assert_eq!(origin.port, 1234);
         assert_eq!(
@@ -235,7 +235,7 @@ mod tests {
     #[test]
     fn test_dataset_data_url_legacy_partition_id() {
         let url =
-            "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid";
+            "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid";
         let address: RedapUri = url.parse().unwrap();
 
         let RedapUri::DatasetData(DatasetSegmentUri { segment_id, .. }) = address else {
@@ -249,7 +249,7 @@ mod tests {
     /// Test that `segment_id` and `partition_id` together do not work.
     #[test]
     fn test_dataset_data_url_ambiguous_segment_id_partition_id() {
-        let url = "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid&segment_id=sid";
+        let url = "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid&segment_id=sid";
         let address: Result<RedapUri, _> = url.parse();
 
         assert_eq!(address, Err(Error::AmbiguousSegmentId));
@@ -257,7 +257,7 @@ mod tests {
 
     #[test]
     fn test_dataset_data_url_with_fragment() {
-        let url = "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid#selection=/some/entity[#42]";
+        let url = "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid#selection=/some/entity[#42]";
         let address: RedapUri = url.parse().unwrap();
 
         let RedapUri::DatasetData(DatasetSegmentUri {
@@ -270,7 +270,7 @@ mod tests {
             panic!("Expected recording");
         };
 
-        assert_eq!(origin.scheme, Scheme::RerunHttps);
+        assert_eq!(origin.scheme, Scheme::DalaranHttps);
         assert_eq!(origin.host, url::Host::<String>::Ipv4(Ipv4Addr::LOCALHOST));
         assert_eq!(origin.port, 1234);
         assert_eq!(
@@ -293,7 +293,7 @@ mod tests {
 
     #[test]
     fn test_dataset_data_url_with_broken_fragment() {
-        let url = "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid#focus=/some/entity[#42]";
+        let url = "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid#focus=/some/entity[#42]";
         let address: RedapUri = url.parse().unwrap();
 
         let RedapUri::DatasetData(DatasetSegmentUri {
@@ -306,7 +306,7 @@ mod tests {
             panic!("Expected recording");
         };
 
-        assert_eq!(origin.scheme, Scheme::RerunHttps);
+        assert_eq!(origin.scheme, Scheme::DalaranHttps);
         assert_eq!(origin.host, url::Host::<String>::Ipv4(Ipv4Addr::LOCALHOST));
         assert_eq!(origin.port, 1234);
         assert_eq!(
@@ -319,20 +319,20 @@ mod tests {
 
     #[test]
     fn test_dataset_data_url_missing_segment_id() {
-        let url = "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data";
+        let url = "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data";
 
         assert!(url.parse::<RedapUri>().is_err());
     }
 
     #[test]
     fn test_http_catalog_url_to_address() {
-        let url = "rerun+http://127.0.0.1:50051/catalog";
+        let url = "dalaran+http://127.0.0.1:50051/catalog";
         let address: RedapUri = url.parse().unwrap();
         assert!(matches!(
             address,
             RedapUri::Catalog(CatalogUri {
                 origin: Origin {
-                    scheme: Scheme::RerunHttp,
+                    scheme: Scheme::DalaranHttp,
                     host: url::Host::Ipv4(Ipv4Addr::LOCALHOST),
                     port: 50051
                 },
@@ -342,14 +342,14 @@ mod tests {
 
     #[test]
     fn test_https_catalog_url_to_address() {
-        let url = "rerun+https://127.0.0.1:50051/catalog";
+        let url = "dalaran+https://127.0.0.1:50051/catalog";
         let address: RedapUri = url.parse().unwrap();
 
         assert!(matches!(
             address,
             RedapUri::Catalog(CatalogUri {
                 origin: Origin {
-                    scheme: Scheme::RerunHttps,
+                    scheme: Scheme::DalaranHttps,
                     host: url::Host::Ipv4(Ipv4Addr::LOCALHOST),
                     port: 50051
                 }
@@ -359,14 +359,14 @@ mod tests {
 
     #[test]
     fn test_localhost_url() {
-        let url = "rerun+http://localhost:51234/catalog";
+        let url = "dalaran+http://localhost:51234/catalog";
         let address: RedapUri = url.parse().unwrap();
 
         assert_eq!(
             address,
             RedapUri::Catalog(CatalogUri {
                 origin: Origin {
-                    scheme: Scheme::RerunHttp,
+                    scheme: Scheme::DalaranHttp,
                     host: url::Host::<String>::Domain("localhost".to_owned()),
                     port: 51234
                 }
@@ -384,7 +384,7 @@ mod tests {
 
     #[test]
     fn test_invalid_path() {
-        let url = "rerun://0.0.0.0:51234/redap/recordings/12345";
+        let url = "dalaran://0.0.0.0:51234/redap/recordings/12345";
         let address: Result<RedapUri, _> = url.parse();
 
         assert!(matches!(
@@ -395,12 +395,12 @@ mod tests {
 
     #[test]
     fn test_proxy_endpoint() {
-        let url = "rerun://localhost:51234/proxy";
+        let url = "dalaran://localhost:51234/proxy";
         let address: Result<RedapUri, _> = url.parse();
 
         let expected = RedapUri::Proxy(ProxyUri {
             origin: Origin {
-                scheme: Scheme::RerunHttps,
+                scheme: Scheme::DalaranHttps,
                 host: url::Host::Domain("localhost".to_owned()),
                 port: 51234,
             },
@@ -408,7 +408,7 @@ mod tests {
 
         assert_eq!(address.unwrap(), expected);
 
-        let url = "rerun://localhost:51234/proxy/";
+        let url = "dalaran://localhost:51234/proxy/";
         let address: Result<RedapUri, _> = url.parse();
 
         assert_eq!(address.unwrap(), expected);
@@ -416,12 +416,12 @@ mod tests {
 
     #[test]
     fn test_proxy_endpoint_with_space() {
-        let url = "rerun http://127.0.0.1:9876/proxy";
+        let url = "dalaran http://127.0.0.1:9876/proxy";
         let address: Result<RedapUri, _> = url.parse();
 
         let expected = RedapUri::Proxy(ProxyUri {
             origin: Origin {
-                scheme: Scheme::RerunHttp,
+                scheme: Scheme::DalaranHttp,
                 host: url::Host::Ipv4(Ipv4Addr::LOCALHOST),
                 port: 9876,
             },
@@ -434,10 +434,10 @@ mod tests {
     fn test_parsing() {
         let test_cases = [
             (
-                "rerun://localhost/catalog",
+                "dalaran://localhost/catalog",
                 RedapUri::Catalog(CatalogUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttps,
+                        scheme: Scheme::DalaranHttps,
                         host: url::Host::Domain("localhost".to_owned()),
                         port: DEFAULT_REDAP_PORT,
                     },
@@ -447,7 +447,7 @@ mod tests {
                 "localhost",
                 RedapUri::Catalog(CatalogUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttp,
+                        scheme: Scheme::DalaranHttp,
                         host: url::Host::Domain("localhost".to_owned()),
                         port: DEFAULT_REDAP_PORT,
                     },
@@ -457,7 +457,7 @@ mod tests {
                 "localhost/proxy",
                 RedapUri::Proxy(ProxyUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttp,
+                        scheme: Scheme::DalaranHttp,
                         host: url::Host::Domain("localhost".to_owned()),
                         port: DEFAULT_PROXY_PORT,
                     },
@@ -467,47 +467,47 @@ mod tests {
                 "127.0.0.1/proxy",
                 RedapUri::Proxy(ProxyUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttp,
+                        scheme: Scheme::DalaranHttp,
                         host: url::Host::Ipv4(Ipv4Addr::LOCALHOST),
                         port: DEFAULT_PROXY_PORT,
                     },
                 }),
             ),
             (
-                "rerun+http://example.com",
+                "dalaran+http://example.com",
                 RedapUri::Catalog(CatalogUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttp,
+                        scheme: Scheme::DalaranHttp,
                         host: url::Host::Domain("example.com".to_owned()),
                         port: 80,
                     },
                 }),
             ),
             (
-                "rerun+https://example.com",
+                "dalaran+https://example.com",
                 RedapUri::Catalog(CatalogUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttps,
+                        scheme: Scheme::DalaranHttps,
                         host: url::Host::Domain("example.com".to_owned()),
                         port: 443,
                     },
                 }),
             ),
             (
-                "rerun://example.com",
+                "dalaran://example.com",
                 RedapUri::Catalog(CatalogUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttps,
+                        scheme: Scheme::DalaranHttps,
                         host: url::Host::Domain("example.com".to_owned()),
                         port: 443,
                     },
                 }),
             ),
             (
-                "rerun://example.com:420/catalog",
+                "dalaran://example.com:420/catalog",
                 RedapUri::Catalog(CatalogUri {
                     origin: Origin {
-                        scheme: Scheme::RerunHttps,
+                        scheme: Scheme::DalaranHttps,
                         host: url::Host::Domain("example.com".to_owned()),
                         port: 420,
                     },
@@ -527,12 +527,12 @@ mod tests {
 
     #[test]
     fn test_catalog_default() {
-        let url = "rerun://localhost:51234";
+        let url = "dalaran://localhost:51234";
         let address: Result<RedapUri, _> = url.parse();
 
         let expected = RedapUri::Catalog(CatalogUri {
             origin: Origin {
-                scheme: Scheme::RerunHttps,
+                scheme: Scheme::DalaranHttps,
                 host: url::Host::Domain("localhost".to_owned()),
                 port: 51234,
             },
@@ -540,7 +540,7 @@ mod tests {
 
         assert_eq!(address.unwrap(), expected);
 
-        let url = "rerun://localhost:51234/";
+        let url = "dalaran://localhost:51234/";
         let address: Result<RedapUri, _> = url.parse();
 
         assert_eq!(address.unwrap(), expected);
@@ -548,11 +548,11 @@ mod tests {
 
     #[test]
     fn test_custom_port() {
-        let url = "rerun://localhost:123";
+        let url = "dalaran://localhost:123";
 
         let expected = RedapUri::Catalog(CatalogUri {
             origin: Origin {
-                scheme: Scheme::RerunHttps,
+                scheme: Scheme::DalaranHttps,
                 host: url::Host::Domain("localhost".to_owned()),
                 port: 123,
             },
@@ -563,7 +563,7 @@ mod tests {
 
     #[test]
     fn test_folder_endpoint_roundtrip() {
-        let url = "rerun://localhost:51234/folder/perception.detection";
+        let url = "dalaran://localhost:51234/folder/perception.detection";
         let parsed: RedapUri = url.parse().unwrap();
 
         let RedapUri::Folder(folder_uri) = &parsed else {
@@ -582,7 +582,7 @@ mod tests {
     #[test]
     fn test_folder_endpoint_percent_encoded() {
         // Path containing a `/` must be percent-encoded as `%2F` to survive a roundtrip.
-        let url = "rerun://localhost:51234/folder/odd%2Fname";
+        let url = "dalaran://localhost:51234/folder/odd%2Fname";
         let parsed: RedapUri = url.parse().unwrap();
 
         let RedapUri::Folder(folder_uri) = &parsed else {
@@ -596,7 +596,7 @@ mod tests {
 
     #[test]
     fn test_folder_endpoint_empty_path_rejected() {
-        let url = "rerun://localhost:51234/folder/";
+        let url = "dalaran://localhost:51234/folder/";
         let address: Result<RedapUri, _> = url.parse();
         assert!(address.is_err());
     }

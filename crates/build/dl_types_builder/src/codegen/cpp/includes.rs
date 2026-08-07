@@ -34,10 +34,10 @@ impl Includes {
         self.local.insert(name.to_owned());
     }
 
-    /// Insert an include path that is in the `rerun` folder of the sdk.
-    pub fn insert_rerun(&mut self, name: &str) {
+    /// Insert an include path that is in the `dalaran` folder of the sdk.
+    pub fn insert_dalaran(&mut self, name: &str) {
         if is_testing_fqname(&self.fqname) {
-            self.insert_system(&format!("rerun/{name}"));
+            self.insert_system(&format!("dalaran/{name}"));
         } else if self.scope.is_some() {
             self.local.insert(format!("../../{name}"));
         } else {
@@ -46,7 +46,7 @@ impl Includes {
     }
 
     /// Insert an include path to another generated type.
-    pub fn insert_rerun_type(&mut self, included_fqname: &str) {
+    pub fn insert_dalaran_type(&mut self, included_fqname: &str) {
         let included_fqname_without_testing = included_fqname.replace(".testing", "");
 
         let components = included_fqname_without_testing
@@ -54,8 +54,8 @@ impl Includes {
             .collect::<Vec<_>>();
 
         let (path, typname) = match components[..] {
-            ["rerun", obj_kind, typname] => (obj_kind.to_owned(), typname),
-            ["rerun", scope, obj_kind, typname] => (format!("{scope}/{obj_kind}"), typname),
+            ["dalaran", obj_kind, typname] => (obj_kind.to_owned(), typname),
+            ["dalaran", scope, obj_kind, typname] => (format!("{scope}/{obj_kind}"), typname),
             _ => {
                 panic!(
                     "Can't figure out include for {included_fqname:?} when adding includes for {:?}",
@@ -80,12 +80,12 @@ impl Includes {
                 self.local.insert(format!("../{path}/{typname}.hpp"));
             }
         } else {
-            // Types are not in the same library, need to treat this like a rerun sdk header.
+            // Types are not in the same library, need to treat this like a dalaran sdk header.
             assert!(
                 is_testing_fqname(&self.fqname) || !is_testing_fqname(included_fqname),
                 "A non-testing type can't include a testing type."
             );
-            self.insert_rerun(&format!("{path}/{typname}.hpp"));
+            self.insert_dalaran(&format!("{path}/{typname}.hpp"));
         }
     }
 

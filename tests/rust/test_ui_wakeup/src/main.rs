@@ -1,9 +1,9 @@
-//! Test that the Rerun Viewer UI wakes up as new messages arrive,
+//! Test that the Dalaran Viewer UI wakes up as new messages arrive,
 //! even if the viewer is hidden.
 //!
 //! ## Test setup - build the viewer
-//! * `pixi run rerun-build`
-//! * `pixi run rerun-build-web`
+//! * `pixi run dalaran-build`
+//! * `pixi run dalaran-build-web`
 //!
 //! ## Test matrix
 //! * Run `cargo r -p test_ui_wakeup` and test:
@@ -13,7 +13,7 @@
 //!   * The viewer wakes up when browser is alt-tabbed away
 //!   * Switch to a different browser tab, send a few messages, switch back. The messages should be there
 //!     (this is not a conclusive test, as the messages might have been received on tab select)
-//! * Run `cargo r -p test_ui_wakeup -- --save stream.rrd` and in another terminal start the viewer with `pixi run rerun stream.rrd` and test:
+//! * Run `cargo r -p test_ui_wakeup -- --save stream.rrd` and in another terminal start the viewer with `pixi run dalaran stream.rrd` and test:
 //!  * The viewer is updated on every new message (every ENTER press)
 
 use std::io::Read as _;
@@ -22,7 +22,7 @@ use std::io::Read as _;
 #[clap(author, version, about)]
 struct Args {
     #[command(flatten)]
-    rerun: rerun::clap::RerunArgs,
+    dalaran: dalaran::clap::DalaranArgs,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -42,7 +42,7 @@ fn main() -> anyhow::Result<()> {
     };
 
     println!("Starting Viewer…");
-    let (rec, _serve_guard) = args.rerun.init("rerun_example_ui_wakeup")?;
+    let (rec, _serve_guard) = args.dalaran.init("dalaran_example_ui_wakeup")?;
 
     // Wait out some log spam from the viewer starting:
     std::thread::sleep(std::time::Duration::from_secs(1));
@@ -53,7 +53,7 @@ fn main() -> anyhow::Result<()> {
         println!("Sending message number {i}…");
         rec.log(
             "Text",
-            &rerun::TextDocument::new(format!("This is message number {i}")),
+            &dalaran::TextDocument::new(format!("This is message number {i}")),
         )?;
         println!("Press ENTER to send more data to the viewer");
 

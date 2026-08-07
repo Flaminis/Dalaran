@@ -934,17 +934,17 @@ impl App {
 
             UICommand::OpenWebsite => {
                 egui_ctx.open_url(egui::output::OpenUrl {
-                    url: "https://rerun.io/".to_owned(),
+                    url: "https://dalaran.dev/".to_owned(),
                     new_tab: true,
                 });
             }
             UICommand::OpenWebHelp => {
                 egui_ctx.open_url(egui::output::OpenUrl {
-                    url: "https://rerun.io/docs/getting-started/navigating-the-viewer".to_owned(),
+                    url: "https://dalaran.dev/docs/getting-started/navigating-the-viewer".to_owned(),
                     new_tab: true,
                 });
             }
-            UICommand::OpenRerunDiscord => {
+            UICommand::OpenDalaranDiscord => {
                 egui_ctx.open_url(egui::output::OpenUrl {
                     url: "https://discord.gg/PXtCgFBSmH".to_owned(),
                     new_tab: true,

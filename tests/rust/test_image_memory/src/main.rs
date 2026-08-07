@@ -1,26 +1,26 @@
-//! Logs a bunch of big images to test Rerun memory usage.
+//! Logs a bunch of big images to test Dalaran memory usage.
 
 // Allow unwrap() in tests (allow-unwrap-in-tests doesn't apply)
 #![expect(clippy::unwrap_used)]
 
 use mimalloc::MiMalloc;
 use dl_memory::AccountingAllocator;
-use rerun::archetypes::Image;
-use rerun::external::image;
+use dalaran::archetypes::Image;
+use dalaran::external::image;
 
 #[global_allocator]
 static GLOBAL: AccountingAllocator<MiMalloc> = AccountingAllocator::new(MiMalloc);
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    dl_memory::accounting_allocator::turn_on_tracking_if_env_var("RERUN_TRACK_ALLOCATIONS");
+    dl_memory::accounting_allocator::turn_on_tracking_if_env_var("DALARAN_TRACK_ALLOCATIONS");
 
-    let rec = rerun::RecordingStreamBuilder::new("rerun_example_image_memory").spawn()?;
+    let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_image_memory").spawn()?;
     log_images(&rec).unwrap();
 
     Ok(())
 }
 
-fn log_images(rec: &rerun::RecordingStream) -> Result<(), Box<dyn std::error::Error>> {
+fn log_images(rec: &dalaran::RecordingStream) -> Result<(), Box<dyn std::error::Error>> {
     let (w, h) = (2048, 1024);
     let n = 100;
 

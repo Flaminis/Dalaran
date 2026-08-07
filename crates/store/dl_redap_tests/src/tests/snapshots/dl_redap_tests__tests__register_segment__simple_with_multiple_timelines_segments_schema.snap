@@ -3,51 +3,51 @@ source: crates/store/dl_redap_tests/src/tests/register_segment.rs
 expression: batch.format_schema_snapshot()
 ---
 duration:end: Duration(ns) [
-    rerun:index: "duration"
-    rerun:index_kind: "duration"
-    rerun:index_marker: "end"
-    rerun:kind: "index"
+    dalaran:index: "duration"
+    dalaran:index_kind: "duration"
+    dalaran:index_marker: "end"
+    dalaran:kind: "index"
 ]
 duration:start: Duration(ns) [
-    rerun:index: "duration"
-    rerun:index_kind: "duration"
-    rerun:index_marker: "start"
-    rerun:kind: "index"
+    dalaran:index: "duration"
+    dalaran:index_kind: "duration"
+    dalaran:index_marker: "start"
+    dalaran:kind: "index"
 ]
 frame_nr:end: Int64 [
-    rerun:index: "frame_nr"
-    rerun:index_kind: "sequence"
-    rerun:index_marker: "end"
-    rerun:kind: "index"
+    dalaran:index: "frame_nr"
+    dalaran:index_kind: "sequence"
+    dalaran:index_marker: "end"
+    dalaran:kind: "index"
 ]
 frame_nr:start: Int64 [
-    rerun:index: "frame_nr"
-    rerun:index_kind: "sequence"
-    rerun:index_marker: "start"
-    rerun:kind: "index"
+    dalaran:index: "frame_nr"
+    dalaran:index_kind: "sequence"
+    dalaran:index_marker: "start"
+    dalaran:kind: "index"
 ]
 property:text_log:TextLog:text: List(Utf8) [
-    rerun:archetype: "rerun.archetypes.TextLog"
-    rerun:component: "TextLog:text"
-    rerun:component_type: "rerun.components.Text"
-    rerun:entity_path: "/__properties/text_log"
-    rerun:kind: "data"
+    dalaran:archetype: "dalaran.archetypes.TextLog"
+    dalaran:component: "TextLog:text"
+    dalaran:component_type: "dalaran.components.Text"
+    dalaran:entity_path: "/__properties/text_log"
+    dalaran:kind: "data"
 ]
-rerun_last_updated_at: non-null Timestamp(ns)
-rerun_layer_names: non-null List(non-null Utf8)
-rerun_num_chunks: non-null UInt64
-rerun_segment_id: non-null Utf8
-rerun_size_bytes: non-null UInt64
-rerun_storage_urls: non-null List(non-null Utf8)
+dalaran_last_updated_at: non-null Timestamp(ns)
+dalaran_layer_names: non-null List(non-null Utf8)
+dalaran_num_chunks: non-null UInt64
+dalaran_segment_id: non-null Utf8
+dalaran_size_bytes: non-null UInt64
+dalaran_storage_urls: non-null List(non-null Utf8)
 timestamp:end: Timestamp(ns) [
-    rerun:index: "timestamp"
-    rerun:index_kind: "timestamp"
-    rerun:index_marker: "end"
-    rerun:kind: "index"
+    dalaran:index: "timestamp"
+    dalaran:index_kind: "timestamp"
+    dalaran:index_marker: "end"
+    dalaran:kind: "index"
 ]
 timestamp:start: Timestamp(ns) [
-    rerun:index: "timestamp"
-    rerun:index_kind: "timestamp"
-    rerun:index_marker: "start"
-    rerun:kind: "index"
+    dalaran:index: "timestamp"
+    dalaran:index_kind: "timestamp"
+    dalaran:index_marker: "start"
+    dalaran:kind: "index"
 ]

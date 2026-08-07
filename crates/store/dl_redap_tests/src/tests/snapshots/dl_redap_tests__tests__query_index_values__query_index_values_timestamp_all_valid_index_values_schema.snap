@@ -6,29 +6,29 @@ top-level metadata: [
     sorbet:version: "0.1.3"
 ]
 /my/entity:example.MyPoints:colors: List(UInt32) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:entity_path: "/my/entity"
-    rerun:kind: "data"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:entity_path: "/my/entity"
+    dalaran:kind: "data"
 ]
 /my/entity:example.MyPoints:labels: List(Utf8) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:labels"
-    rerun:component_type: "example.MyLabel"
-    rerun:entity_path: "/my/entity"
-    rerun:is_static: "true"
-    rerun:kind: "data"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:labels"
+    dalaran:component_type: "example.MyLabel"
+    dalaran:entity_path: "/my/entity"
+    dalaran:is_static: "true"
+    dalaran:kind: "data"
 ]
 /my/entity:example.MyPoints:points: List(Struct("x": non-null Float32, "y": non-null Float32)) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:entity_path: "/my/entity"
-    rerun:kind: "data"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:entity_path: "/my/entity"
+    dalaran:kind: "data"
 ]
-rerun_segment_id: non-null Utf8
+dalaran_segment_id: non-null Utf8
 timestamp: Timestamp(ns) [
-    rerun:index_name: "timestamp"
-    rerun:kind: "index"
+    dalaran:index_name: "timestamp"
+    dalaran:kind: "index"
 ]

@@ -1,0 +1,12 @@
+namespace dalaran.blueprint.components;
+
+/// The class identifier of view, e.g. `"2D"`, `"TextLog"`, ….
+table ViewClass (
+  "attr.arrow.transparent",
+  "attr.dalaran.scope": "blueprint",
+  "attr.python.aliases": "str",
+  "attr.rust.derive": "PartialEq, Eq, PartialOrd, Ord",
+  "attr.rust.repr": "transparent"
+) {
+  value: dalaran.datatypes.Utf8 (order: 100);
+}

@@ -14,7 +14,7 @@ use crate::{CodecError, CodecResult, RawRrdManifest};
 
 // ---
 
-/// Helper to build an [`RawRrdManifest`] from Rerun chunks.
+/// Helper to build an [`RawRrdManifest`] from Dalaran chunks.
 #[derive(Default, Debug)]
 pub struct RrdManifestBuilder {
     /// The Sorbet schema of the recording.

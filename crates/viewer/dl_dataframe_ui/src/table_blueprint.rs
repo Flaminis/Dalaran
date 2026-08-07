@@ -138,8 +138,8 @@ pub struct TableBlueprint {
 
     /// The name of the column containing URLs to open when a card is clicked in grid view.
     ///
-    /// If unset, the first column whose values parse as a Rerun URI pointing to the same
-    /// Rerun server is used (resolved ad-hoc in the grid view). If no such column exists,
+    /// If unset, the first column whose values parse as a Dalaran URI pointing to the same
+    /// Dalaran server is used (resolved ad-hoc in the grid view). If no such column exists,
     /// clicking a card does not navigate anywhere.
     /// Populated from the registered `.fbs` `TableBlueprint` archetype.
     pub url_column: Option<String>,
@@ -369,8 +369,8 @@ fn test_default_column_display_name() {
                 store_datatype: arrow::datatypes::DataType::Binary, // ignored
                 entity_path: EntityPath::properties(),
                 component: "RecordingInfo:start_time".into(),
-                component_type: Some("rerun.components.Timestamp".into()),
-                archetype: Some("rerun.archetypes.RecordingInfo".into()),
+                component_type: Some("dalaran.components.Timestamp".into()),
+                archetype: Some("dalaran.archetypes.RecordingInfo".into()),
                 is_static: false,
                 is_tombstone: false,
                 is_semantically_empty: false

@@ -1,0 +1,19 @@
+namespace dalaran.blueprint.archetypes;
+
+/// Aims to achieve a target distance between two nodes that are connected by an edge.
+struct ForceLink (
+    "attr.dalaran.scope": "blueprint"
+) {
+    /// Whether the link force is enabled.
+    ///
+    /// The link force aims to achieve a target distance between two nodes that are connected by one ore more edges.
+    enabled: dalaran.blueprint.components.Enabled ("attr.dalaran.component_optional", nullable, order: 100);
+
+    /// The target distance between two nodes.
+    distance: dalaran.blueprint.components.ForceDistance ("attr.dalaran.component_optional", nullable, order: 200);
+
+    /// Specifies how often this force should be applied per iteration.
+    ///
+    /// Increasing this parameter can lead to better results at the cost of longer computation time.
+    iterations: dalaran.blueprint.components.ForceIterations ("attr.dalaran.component_optional", nullable, order: 300);
+}

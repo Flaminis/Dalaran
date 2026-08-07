@@ -1529,7 +1529,7 @@ mod tests {
     /// When the active blueprint for an app is auto-created empty and then a
     /// default blueprint is registered, the active should be replaced by a clone
     /// of the default. (Regression for the OSS server / `segment_table` flow,
-    /// rerun#12773.)
+    /// dalaran#12773.)
     #[test]
     fn registering_default_replaces_empty_active_blueprint() {
         let mut hub = StoreHub::test_hub();

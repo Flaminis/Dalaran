@@ -6,7 +6,7 @@ use dl_int::SaturatingCast as _;
 use dl_log_types::{AbsoluteTimeRange, TimeInt, TimelineName};
 use dl_protos::cloud::v1alpha1::ext::{Query, QueryDatasetRequest, QueryLatestAt, QueryRange};
 use dl_protos::cloud::v1alpha1::{SegmentIdFilter, SegmentIdList, segment_id_filter};
-use dl_sorbet::metadata::RERUN_KIND;
+use dl_sorbet::metadata::DALARAN_KIND;
 use dl_types_core::SegmentId;
 use std::collections::HashSet;
 use std::ops::Not as _;
@@ -252,7 +252,7 @@ pub(crate) fn filter_expr_is_supported(
 /// This function will return Ok(None) if we cannot push down this filter into our request.
 /// It will return an error if the expression pushes down to return no results. This can
 /// occur if you have two mutually exclusive expressions that cannot overlap, such as
-/// `rerun_segment_id == "aaaa" AND rerun_segment_id == "BBBB"`.
+/// `dalaran_segment_id == "aaaa" AND dalaran_segment_id == "BBBB"`.
 pub(crate) fn apply_filter_expr_to_queries(
     queries: Vec<QueryDatasetRequest>,
     expr: &Expr,
@@ -409,7 +409,7 @@ pub(crate) fn apply_filter_expr_to_queries(
 
 fn is_time_index(col_name: &str, schema: &SchemaRef) -> bool {
     if let Some((_, field)) = schema.fields().find(col_name)
-        && let Some(kind) = field.metadata().get(RERUN_KIND)
+        && let Some(kind) = field.metadata().get(DALARAN_KIND)
         && kind == "index"
     {
         true
@@ -427,7 +427,7 @@ fn expr_to_literal_scalar(expr: &Expr) -> Option<&ScalarValue> {
 }
 
 enum KnownFilterColumn {
-    /// Rerun segment ID
+    /// Dalaran segment ID
     SegmentId(SegmentId),
 
     /// Index name and value
@@ -445,7 +445,7 @@ fn known_filter_column(
     if let Expr::Column(col_expr) = column_expr
         && let Some(value) = expr_to_literal_scalar(value_expr)
     {
-        if col_expr.name == "rerun_segment_id" {
+        if col_expr.name == "dalaran_segment_id" {
             let value = match value {
                 ScalarValue::Utf8(Some(v))
                 | ScalarValue::Utf8View(Some(v))
@@ -678,7 +678,7 @@ mod tests {
     use std::collections::HashMap;
     use std::sync::Arc;
 
-    const SEGMENT_ID: &str = "rerun_segment_id";
+    const SEGMENT_ID: &str = "dalaran_segment_id";
 
     fn strategy(expr: Expr) -> segment_id_filter::Strategy {
         segment_id_filter_from_filters(&[expr], SEGMENT_ID)
@@ -747,7 +747,7 @@ mod tests {
     #[test]
     fn unsupported_segment_id_expressions_stay_client_side() {
         for expr in [
-            col("rerun_num_chunks").gt(lit(5i64)),
+            col("dalaran_num_chunks").gt(lit(5i64)),
             col(SEGMENT_ID).gt(lit("a")),
             datafusion::functions::expr_fn::lower(col(SEGMENT_ID)).eq(lit("a")),
             col(SEGMENT_ID).eq(Expr::Literal(ScalarValue::Utf8(None), None)),
@@ -759,7 +759,7 @@ mod tests {
     #[test]
     fn classify_segment_id_filters_as_inexact() {
         let pushable = col(SEGMENT_ID).eq(lit("a"));
-        let unsupported = col("rerun_num_chunks").gt(lit(5i64));
+        let unsupported = col("dalaran_num_chunks").gt(lit(5i64));
         assert_eq!(
             classify_segment_id_filters_for_pushdown(&[&pushable, &unsupported], SEGMENT_ID),
             vec![
@@ -771,13 +771,13 @@ mod tests {
 
     fn make_schema_with_index(index_name: &str) -> SchemaRef {
         let mut metadata = HashMap::new();
-        metadata.insert(RERUN_KIND.to_owned(), "index".to_owned());
+        metadata.insert(DALARAN_KIND.to_owned(), "index".to_owned());
 
         Arc::new(Schema::new_with_metadata(
             vec![
                 Field::new(index_name, arrow::datatypes::DataType::Int64, false)
                     .with_metadata(metadata),
-                Field::new("rerun_segment_id", arrow::datatypes::DataType::Utf8, false),
+                Field::new("dalaran_segment_id", arrow::datatypes::DataType::Utf8, false),
             ],
             HashMap::default(),
         ))
@@ -801,7 +801,7 @@ mod tests {
         let schema = make_schema_with_index("frame_nr");
         let query = make_empty_query();
 
-        let expr = col("rerun_segment_id").eq(lit("segment_a"));
+        let expr = col("dalaran_segment_id").eq(lit("segment_a"));
         let result = apply_filter_expr_to_queries(vec![query], &expr, &schema, true).unwrap();
 
         assert!(result.is_some());
@@ -817,7 +817,7 @@ mod tests {
         let query = make_empty_query();
 
         // Greater than on segment_id is not supported
-        let expr = col("rerun_segment_id").gt(lit("segment_a"));
+        let expr = col("dalaran_segment_id").gt(lit("segment_a"));
         let result = apply_filter_expr_to_queries(vec![query], &expr, &schema, true).unwrap();
 
         assert!(result.is_none());
@@ -828,9 +828,9 @@ mod tests {
         let schema = make_schema_with_index("frame_nr");
         let query = make_empty_query();
 
-        let expr = col("rerun_segment_id")
+        let expr = col("dalaran_segment_id")
             .eq(lit("segment_a"))
-            .or(col("rerun_segment_id").eq(lit("segment_b")));
+            .or(col("dalaran_segment_id").eq(lit("segment_b")));
         let result = apply_filter_expr_to_queries(vec![query], &expr, &schema, true).unwrap();
 
         assert!(result.is_some());
@@ -971,7 +971,7 @@ mod tests {
         let schema = make_schema_with_index("frame_nr");
         let query = make_empty_query();
 
-        let expr = col("rerun_segment_id")
+        let expr = col("dalaran_segment_id")
             .eq(lit("segment_a"))
             .and(col("frame_nr").gt(lit(100i64)));
         let result = apply_filter_expr_to_queries(vec![query], &expr, &schema, true).unwrap();
@@ -991,10 +991,10 @@ mod tests {
         let query = make_empty_query();
 
         // (segment_a AND frame_nr > 100) OR (segment_b AND frame_nr < 50)
-        let expr = col("rerun_segment_id")
+        let expr = col("dalaran_segment_id")
             .eq(lit("segment_a"))
             .and(col("frame_nr").gt(lit(100i64)))
-            .or(col("rerun_segment_id")
+            .or(col("dalaran_segment_id")
                 .eq(lit("segment_b"))
                 .and(col("frame_nr").lt(lit(50i64))));
 
@@ -1086,7 +1086,7 @@ mod tests {
         let query = make_empty_query();
 
         let expr = Expr::InList(InList {
-            expr: Box::new(col("rerun_segment_id")),
+            expr: Box::new(col("dalaran_segment_id")),
             list: vec![lit("segment_a"), lit("segment_b"), lit("segment_c")],
             negated: false,
         });
@@ -1161,7 +1161,7 @@ mod tests {
         let query = make_empty_query();
 
         let expr = Expr::InList(InList {
-            expr: Box::new(col("rerun_segment_id")),
+            expr: Box::new(col("dalaran_segment_id")),
             list: vec![],
             negated: false,
         });
@@ -1177,7 +1177,7 @@ mod tests {
         let query = make_empty_query();
 
         let expr = Expr::InList(InList {
-            expr: Box::new(col("rerun_segment_id")),
+            expr: Box::new(col("dalaran_segment_id")),
             list: vec![lit("only_segment")],
             negated: false,
         });
@@ -1230,7 +1230,7 @@ mod tests {
         let query = make_query_with_segment(&SegmentId::from("segment_a"));
 
         // Try to AND with a different segment
-        let expr = col("rerun_segment_id").eq(lit("segment_b"));
+        let expr = col("dalaran_segment_id").eq(lit("segment_b"));
         let result =
             apply_filter_expr_to_queries(vec![query.clone()], &expr, &schema, true).unwrap();
 

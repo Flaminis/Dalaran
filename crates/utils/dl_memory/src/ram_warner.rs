@@ -64,7 +64,7 @@ impl RamLimitWarner {
             {
                 self.has_warned = true;
                 dl_log::warn!(
-                    "RAM usage is {} (with a total of {} system RAM). You may want to start Rerun with the --memory-limit flag to limit RAM usage.",
+                    "RAM usage is {} (with a total of {} system RAM). You may want to start Dalaran with the --memory-limit flag to limit RAM usage.",
                     dl_format::format_bytes(used as _),
                     dl_format::format_bytes(self.total_ram_in_bytes as _),
                 );

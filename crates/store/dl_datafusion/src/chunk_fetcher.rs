@@ -211,7 +211,7 @@ impl std::error::Error for DirectFetchError {}
 /// Returns `true` if the batch contains at least one non-null direct URL.
 pub fn batch_has_any_direct_urls(batch: &RecordBatch) -> bool {
     batch
-        .column_by_name(QueryDatasetDataframe::COLUMN_RERUN_LAYER_DIRECT_URL_NAME)
+        .column_by_name(QueryDatasetDataframe::COLUMN_DALARAN_LAYER_DIRECT_URL_NAME)
         .is_some_and(|col| col.null_count() < col.len())
 }
 
@@ -225,7 +225,7 @@ pub fn split_batch_by_direct_url(
     use arrow::compute::{filter_record_batch, is_not_null, not};
 
     let Some(url_col) =
-        batch.column_by_name(QueryDatasetDataframe::COLUMN_RERUN_LAYER_DIRECT_URL_NAME)
+        batch.column_by_name(QueryDatasetDataframe::COLUMN_DALARAN_LAYER_DIRECT_URL_NAME)
     else {
         return (None, Some(batch.clone()));
     };
@@ -650,7 +650,7 @@ async fn fetch_batch_via_direct_urls(
         batch_column(batch, QueryDatasetDataframe::COLUMN_CHUNK_KEY_NAME)?;
     let direct_urls = batch_column::<DictionaryArray<Int32Type>>(
         batch,
-        QueryDatasetDataframe::COLUMN_RERUN_LAYER_DIRECT_URL_NAME,
+        QueryDatasetDataframe::COLUMN_DALARAN_LAYER_DIRECT_URL_NAME,
     )?
     .downcast_dict::<StringArray>()
     .ok_or_else(|| {

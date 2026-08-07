@@ -58,7 +58,7 @@ pub enum WebViewerDataError {
     },
 
     #[error(
-        "This build contains no built-in web viewer assets (RERUN_EXTERNAL_WEB_VIEWER=1). The assets must be loaded from a zip archive on disk, but no archive path was provided."
+        "This build contains no built-in web viewer assets (DALARAN_EXTERNAL_WEB_VIEWER=1). The assets must be loaded from a zip archive on disk, but no archive path was provided."
     )]
     NoBuiltinAssets,
 
@@ -66,7 +66,7 @@ pub enum WebViewerDataError {
     ReadTrailer(std::io::Error),
 
     #[error(
-        "Invalid magic marker in trailing data. Expected {expected:?}, got {actual:?}. This binary was built with RERUN_TRAILING_WEB_VIEWER=1 but the post-processing step (scripts/append_web_viewer.py) has not been completed."
+        "Invalid magic marker in trailing data. Expected {expected:?}, got {actual:?}. This binary was built with DALARAN_TRAILING_WEB_VIEWER=1 but the post-processing step (scripts/append_web_viewer.py) has not been completed."
     )]
     InvalidMagic {
         expected: &'static [u8],
@@ -162,7 +162,7 @@ impl WebViewerData {
     /// Load the web viewer assets from a zip archive on disk.
     ///
     /// The archive must contain the files produced by the web viewer build
-    /// (`pixi run rerun-build-web`) at the archive root.
+    /// (`pixi run dalaran-build-web`) at the archive root.
     pub fn from_archive(path: &Path) -> Result<Self, WebViewerDataError> {
         let file = std::fs::File::open(path).map_err(|source| WebViewerDataError::OpenArchive {
             path: path.to_owned(),
@@ -335,7 +335,7 @@ impl FromStr for WebViewerServerPort {
     }
 }
 
-/// HTTP host for the Rerun Web Viewer application
+/// HTTP host for the Dalaran Web Viewer application
 /// This serves the HTTP+Wasm+JS files that make up the web-viewer.
 #[must_use = "Dropping this means stopping the server"]
 pub struct WebViewerServer {
@@ -353,7 +353,7 @@ struct WebViewerServerInner {
 }
 
 impl WebViewerServer {
-    /// Create new [`WebViewerServer`] to host the Rerun Web Viewer on a specified port.
+    /// Create new [`WebViewerServer`] to host the Dalaran Web Viewer on a specified port.
     ///
     /// [`WebViewerServerPort::AUTO`] will tell the OS choose any free port.
     ///
@@ -507,7 +507,7 @@ impl WebViewerServerInner {
             self.on_serve_wasm(); // to silence warning about the function being unused
         }
         panic!(
-            "dl_web_viewer_server compiled without .wasm, because of '__disable_server' feature, `--all-features`, or 'RERUN_DISABLE_WEB_VIEWER_SERVER=1'. DON'T DO THAT! It's only meant for tests and docs!"
+            "dl_web_viewer_server compiled without .wasm, because of '__disable_server' feature, `--all-features`, or 'DALARAN_DISABLE_WEB_VIEWER_SERVER=1'. DON'T DO THAT! It's only meant for tests and docs!"
         );
     }
 
@@ -550,7 +550,7 @@ impl WebViewerServerInner {
         // Unfortunately `Transfer-Encoding: chunked` means that no size is transmitted.
         // We work around this by adding a custom header with the size that web_viewer/index.html understands.
         if let Ok(header) =
-            tiny_http::Header::from_str(&format!("rerun-final-length: {}", bytes.len()))
+            tiny_http::Header::from_str(&format!("dalaran-final-length: {}", bytes.len()))
         {
             response.add_header(header);
         }

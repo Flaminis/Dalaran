@@ -910,7 +910,7 @@ fn extract_recommended_source_options(
     mapping_ctx: &SourceMappingContext<'_>,
     options: &[VisualizerComponentSource],
 ) -> Vec<VisualizerComponentSource> {
-    // Folks with Rerun access check https://www.figma.com/design/eGATW7RubxdRrcEP9ITiVh/Any-scalars?node-id=791-7619&t=6SWixKV9yWMTFQba-0
+    // Folks with Dalaran access check https://www.figma.com/design/eGATW7RubxdRrcEP9ITiVh/Any-scalars?node-id=791-7619&t=6SWixKV9yWMTFQba-0
     // for the original design & rationale.
 
     let target_component = mapping_ctx.target_component();
@@ -1344,7 +1344,7 @@ fn pick_best_mappings(
             // with the semantics the visualizer natively works with:
             // e.g. `Points3D:positions` should map from `GaussianSplats3D:centers` (`Position3D`),
             // not from `GaussianSplats3D:scales` (`Scale3D`), despite both sharing the
-            // `rerun.datatypes.Vec3D` encoding.
+            // `dalaran.datatypes.Vec3D` encoding.
             let has_physical_only_source = visualizable_reason.is_some_and(|reason| {
                 recommended_mappings.mappings().values().any(|source| {
                     matches!(

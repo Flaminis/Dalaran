@@ -1,4 +1,4 @@
-//! Collada (.dae) scene loader for Rerun
+//! Collada (.dae) scene loader for Dalaran
 //!
 //! ⚠️ The Collada spec is extremely broad, and this implementation only supports a small subset of it:
 //!   - `<triangles>` primitives, all other primitives are ignored.
@@ -102,7 +102,7 @@ fn load_dae_from_buffer_inner(
     let document = Document::from_reader(buffer).map_err(DaeImportError::Parser)?;
     let maps = document.local_maps();
 
-    // Compute a correction matrix to rotate from the DAE file's coordinate system into Rerun's
+    // Compute a correction matrix to rotate from the DAE file's coordinate system into Dalaran's
     // default RFU (X=Right, Y=Forward, Z=Up) convention.
     let correction = up_axis_correction(document.asset.up_axis);
 
@@ -314,7 +314,7 @@ fn extract_material_color(
 }
 
 /// Compute the correction matrix that rotates from a given COLLADA `up_axis` coordinate system
-/// into Rerun's default RFU (X=Right, Y=Forward, Z=Up) convention.
+/// into Dalaran's default RFU (X=Right, Y=Forward, Z=Up) convention.
 fn up_axis_correction(up_axis: dae_parser::UpAxis) -> glam::Affine3A {
     match up_axis {
         dae_parser::UpAxis::ZUp => glam::Affine3A::IDENTITY,

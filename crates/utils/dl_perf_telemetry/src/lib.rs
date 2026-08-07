@@ -4,8 +4,8 @@
 //! including all log output.
 //!
 //! This sort of telemetry is always disabled on our OSS binaries, and is only used for
-//! * The Rerun Hub infrastructure
-//! * Profiling by Rerun developer
+//! * The Dalaran Hub infrastructure
+//! * Profiling by Dalaran developer
 //!
 //! Logging strategy
 //! ================
@@ -71,7 +71,7 @@ pub use self::telemetry::{Telemetry, TelemetryDropBehavior, is_telemetry_active}
 pub use self::utils::to_short_str;
 
 pub use self::tracing_session::{
-    RERUN_SESSION_TRACESTATE_KEY, RerunTracingSessionId, current_rerun_session_id,
+    DALARAN_SESSION_TRACESTATE_KEY, DalaranTracingSessionId, current_dalaran_session_id,
     dec_active_tracing_session_count, inc_active_tracing_session_count,
     with_current_tracing_session, with_tracing_session,
 };

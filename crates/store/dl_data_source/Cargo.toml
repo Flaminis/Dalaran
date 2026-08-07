@@ -1,7 +1,7 @@
 [package]
 name = "dl_data_source"
 authors.workspace = true
-description = "Handles loading of Rerun data"
+description = "Handles loading of Dalaran data"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

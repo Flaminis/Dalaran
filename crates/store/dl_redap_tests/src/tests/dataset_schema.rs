@@ -1,13 +1,13 @@
 use dl_protos::cloud::v1alpha1::GetDatasetSchemaRequest;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, entry_name,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
 };
 use crate::SchemaTestExt as _;
 
-pub async fn simple_dataset_schema(service: impl RerunCloudService) {
+pub async fn simple_dataset_schema(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -29,7 +29,7 @@ pub async fn simple_dataset_schema(service: impl RerunCloudService) {
     dataset_schema_snapshot(&service, dataset_name, "simple_dataset").await;
 }
 
-pub async fn empty_dataset_schema(service: impl RerunCloudService) {
+pub async fn empty_dataset_schema(service: impl DalaranCloudService) {
     let dataset_name = "empty_dataset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -39,7 +39,7 @@ pub async fn empty_dataset_schema(service: impl RerunCloudService) {
 // ---
 
 async fn dataset_schema_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
     snapshot_name: &str,
 ) {

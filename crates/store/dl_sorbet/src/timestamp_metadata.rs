@@ -64,9 +64,9 @@ impl TimestampLocation {
         match self {
             Self::Log => None,           // encoded in RowId
             Self::ChunkCreation => None, // encoded in ChunkId
-            Self::GrpcSink => Some("rerun:timestamp_sdk_grpc_sink"),
-            Self::IPCEncode => Some("rerun:timestamp_sdk_ipc_encoded"),
-            Self::IPCDecode => Some("rerun:timestamp_viewer_ipc_decoded"),
+            Self::GrpcSink => Some("dalaran:timestamp_sdk_grpc_sink"),
+            Self::IPCEncode => Some("dalaran:timestamp_sdk_ipc_encoded"),
+            Self::IPCDecode => Some("dalaran:timestamp_viewer_ipc_decoded"),
             Self::Ingest => None, // not recorded
         }
     }

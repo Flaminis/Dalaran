@@ -29,13 +29,13 @@ fn migrate_pose_components(batch: RecordBatch) -> RecordBatch {
     let needs_migration = schema.fields().iter().any(|field| {
         field
             .metadata()
-            .get("rerun:component_type")
+            .get("dalaran:component_type")
             .is_some_and(|component| {
-                component == "rerun.components.PoseTranslation3D"
-                    || component == "rerun.components.PoseRotationAxisAngle"
-                    || component == "rerun.components.PoseRotationQuat"
-                    || component == "rerun.components.PoseScale3D"
-                    || component == "rerun.components.PoseTransformMat3x3"
+                component == "dalaran.components.PoseTranslation3D"
+                    || component == "dalaran.components.PoseRotationAxisAngle"
+                    || component == "dalaran.components.PoseRotationQuat"
+                    || component == "dalaran.components.PoseScale3D"
+                    || component == "dalaran.components.PoseTransformMat3x3"
             })
     });
 
@@ -48,13 +48,13 @@ fn migrate_pose_components(batch: RecordBatch) -> RecordBatch {
     // Map old component names to new ones
     fn migrate_component_name(component: &str) -> String {
         match component {
-            "rerun.components.PoseTranslation3D" => "rerun.components.Translation3D".to_owned(),
-            "rerun.components.PoseRotationAxisAngle" => {
-                "rerun.components.RotationAxisAngle".to_owned()
+            "dalaran.components.PoseTranslation3D" => "dalaran.components.Translation3D".to_owned(),
+            "dalaran.components.PoseRotationAxisAngle" => {
+                "dalaran.components.RotationAxisAngle".to_owned()
             }
-            "rerun.components.PoseRotationQuat" => "rerun.components.RotationQuat".to_owned(),
-            "rerun.components.PoseScale3D" => "rerun.components.Scale3D".to_owned(),
-            "rerun.components.PoseTransformMat3x3" => "rerun.components.TransformMat3x3".to_owned(),
+            "dalaran.components.PoseRotationQuat" => "dalaran.components.RotationQuat".to_owned(),
+            "dalaran.components.PoseScale3D" => "dalaran.components.Scale3D".to_owned(),
+            "dalaran.components.PoseTransformMat3x3" => "dalaran.components.TransformMat3x3".to_owned(),
             _ => component.to_owned(),
         }
     }
@@ -68,10 +68,10 @@ fn migrate_pose_components(batch: RecordBatch) -> RecordBatch {
             let mut modified = false;
 
             // Migrate component type metadata
-            if let Some(component_type) = metadata.get("rerun:component_type") {
+            if let Some(component_type) = metadata.get("dalaran:component_type") {
                 let new_component_type = migrate_component_name(component_type);
                 if new_component_type != *component_type {
-                    metadata.insert("rerun:component_type".to_owned(), new_component_type);
+                    metadata.insert("dalaran:component_type".to_owned(), new_component_type);
                     modified = true;
                 }
             }
@@ -107,7 +107,7 @@ fn migrate_transform3d_axis_length(batch: RecordBatch) -> RecordBatch {
     let needs_migration = schema.fields().iter().any(|field| {
         field
             .metadata()
-            .get("rerun:component")
+            .get("dalaran:component")
             .is_some_and(|val| val == "Transform3D:axis_length")
     });
 
@@ -120,16 +120,16 @@ fn migrate_transform3d_axis_length(batch: RecordBatch) -> RecordBatch {
     let (schema, columns, row_count) = batch.into_parts();
 
     let new_fields = schema.fields().iter().map(|field| {
-        if let Some(val) = field.metadata().get("rerun:component")
+        if let Some(val) = field.metadata().get("dalaran:component")
             && val == "Transform3D:axis_length"
         {
             let mut new_metadata = field.metadata().clone();
             new_metadata.insert(
-                "rerun:archetype".into(),
-                "rerun.archetypes.TransformAxes3D".into(),
+                "dalaran:archetype".into(),
+                "dalaran.archetypes.TransformAxes3D".into(),
             );
             new_metadata.insert(
-                "rerun:component".into(),
+                "dalaran:component".into(),
                 "TransformAxes3D:axis_length".into(),
             );
             Field::new_list_field(field.data_type().clone(), field.is_nullable())
@@ -159,7 +159,7 @@ fn migrate_coordinate_frame(batch: RecordBatch) -> RecordBatch {
     let needs_migration = schema.fields().iter().any(|field| {
         field
             .metadata()
-            .get("rerun:component")
+            .get("dalaran:component")
             .is_some_and(|val| val == "CoordinateFrame:frame_id")
     });
 
@@ -172,11 +172,11 @@ fn migrate_coordinate_frame(batch: RecordBatch) -> RecordBatch {
     let (schema, columns, row_count) = batch.into_parts();
 
     let new_fields = schema.fields().iter().map(|field| {
-        if let Some(val) = field.metadata().get("rerun:component")
+        if let Some(val) = field.metadata().get("dalaran:component")
             && val == "CoordinateFrame:frame_id"
         {
             let mut new_metadata = field.metadata().clone();
-            new_metadata.insert("rerun:component".into(), "CoordinateFrame:frame".into());
+            new_metadata.insert("dalaran:component".into(), "CoordinateFrame:frame".into());
             Field::new_list_field(field.data_type().clone(), field.is_nullable())
                 .with_metadata(new_metadata)
         } else {

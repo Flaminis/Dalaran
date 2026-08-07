@@ -1,6 +1,6 @@
 [package]
 authors.workspace = true
-description = "Provides ui elements for Rerun component data for the Rerun Viewer."
+description = "Provides ui elements for Dalaran component data for the Dalaran Viewer."
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true

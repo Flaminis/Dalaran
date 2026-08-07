@@ -75,7 +75,7 @@ impl SeriesNamesContext {
             .iter()
             .map(|(id, series)| {
                 let name = if series.component_with_selector.is_empty() {
-                    // Builtin Rerun scalar components - use entity path
+                    // Builtin Dalaran scalar components - use entity path
                     short_entity_paths
                         .get(&series.entity_path)
                         .cloned()

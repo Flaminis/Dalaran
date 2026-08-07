@@ -1,6 +1,6 @@
 [package]
 authors.workspace = true
-description = "The time panel of the Rerun Viewer, allowing to control the displayed timeline & time."
+description = "The time panel of the Dalaran Viewer, allowing to control the displayed timeline & time."
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true

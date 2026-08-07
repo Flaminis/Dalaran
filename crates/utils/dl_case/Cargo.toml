@@ -1,7 +1,7 @@
 [package]
 name = "dl_case"
 authors.workspace = true
-description = "Case conversions, the way Rerun likes them"
+description = "Case conversions, the way Dalaran likes them"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

@@ -10,7 +10,7 @@ pub struct DirectoryImporter;
 impl crate::Importer for DirectoryImporter {
     #[inline]
     fn name(&self) -> String {
-        "rerun.importers.Directory".into()
+        "dalaran.importers.Directory".into()
     }
 
     #[cfg(not(target_arch = "wasm32"))]

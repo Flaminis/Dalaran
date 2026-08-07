@@ -116,11 +116,11 @@ macro_rules! icon_from_path {
     };
 }
 
-/// The monochrome `rerun` wordmark
-pub const RERUN_WORDMARK: Icon = icon_from_path!("../data/icons/rerun_wordmark.svg");
+/// The monochrome `dalaran` wordmark
+pub const DALARAN_WORDMARK: Icon = icon_from_path!("../data/icons/dalaran_wordmark.svg");
 
 /// The square and colorful `RE`
-pub const RERUN_LOGO: Icon = icon_from_path!("../data/icons/rerun_logo.png");
+pub const DALARAN_LOGO: Icon = icon_from_path!("../data/icons/dalaran_logo.png");
 
 pub const HELP: Icon = icon_from_path!("../data/icons/help.svg");
 

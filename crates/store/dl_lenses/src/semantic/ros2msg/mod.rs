@@ -1,4 +1,4 @@
-//! Lenses for converting ROS 2 messages to Rerun components and archetypes.
+//! Lenses for converting ROS 2 messages to Dalaran components and archetypes.
 
 use crate::{Lens, LensBuilderError};
 

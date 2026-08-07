@@ -29,7 +29,7 @@ pub async fn grid_view_flagging() {
     let schema = Arc::new(Schema::new_with_metadata(
         vec![
             Field::new("id", DataType::Int64, false)
-                .with_metadata([("rerun:is_table_index".to_owned(), "true".to_owned())].into()),
+                .with_metadata([("dalaran:is_table_index".to_owned(), "true".to_owned())].into()),
             Field::new("name", DataType::Utf8, false),
             Field::new("flagged", DataType::Boolean, true).with_metadata(
                 [(
@@ -73,7 +73,7 @@ pub async fn grid_view_flagging() {
     // Open the viewer directly at the table entry.
     let mut harness = viewer_test_utils::viewer_harness(&HarnessOptions {
         startup_url: Some(format!(
-            "rerun+http://localhost:{}/entry/{}",
+            "dalaran+http://localhost:{}/entry/{}",
             server.port(),
             table.details.id
         )),

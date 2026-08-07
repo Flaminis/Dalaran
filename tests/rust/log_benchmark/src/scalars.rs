@@ -3,8 +3,8 @@
 //! Similar to `plot_dashboard_stress`.
 
 use rand::prelude::*;
-use rerun::EntityPath;
-use rerun::external::dl_log;
+use dalaran::EntityPath;
+use dalaran::external::dl_log;
 
 #[derive(Debug, Clone, clap::Parser)]
 pub struct ScalarsCommand {
@@ -28,7 +28,7 @@ struct Input {
 }
 
 impl ScalarsCommand {
-    pub fn run(self, rec: &rerun::RecordingStream) -> anyhow::Result<()> {
+    pub fn run(self, rec: &dalaran::RecordingStream) -> anyhow::Result<()> {
         dl_tracing::profile_function!();
         let input = std::hint::black_box(self.prepare());
         self.execute(rec, input)
@@ -71,7 +71,7 @@ impl ScalarsCommand {
         Input { time_steps }
     }
 
-    fn execute(self, rec: &rerun::RecordingStream, input: Input) -> anyhow::Result<()> {
+    fn execute(self, rec: &dalaran::RecordingStream, input: Input) -> anyhow::Result<()> {
         dl_tracing::profile_function!();
 
         let Input { time_steps } = input;
@@ -87,7 +87,7 @@ impl ScalarsCommand {
 
                 #[expect(clippy::cast_possible_wrap)] // usize -> i64 is fine
                 rec.set_time_sequence("frame", time_index as i64);
-                rec.log(entity_path.clone(), &rerun::Scalars::new(scalars))?;
+                rec.log(entity_path.clone(), &dalaran::Scalars::new(scalars))?;
             }
         }
 

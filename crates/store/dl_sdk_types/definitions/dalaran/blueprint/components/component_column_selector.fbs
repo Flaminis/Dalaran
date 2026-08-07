@@ -1,0 +1,13 @@
+
+namespace dalaran.blueprint.components;
+
+/// Describe a component column to be selected in the dataframe view.
+//TODO(ab, jleibs): this probably needs reunification with whatever structure the data out API uses.
+table ComponentColumnSelector (
+  "attr.arrow.transparent",
+  "attr.rust.derive": "Default, PartialEq, Eq, Hash",
+  "attr.rust.repr": "transparent",
+  "attr.dalaran.scope": "blueprint"
+) {
+    selector: dalaran.blueprint.datatypes.ComponentColumnSelector (order: 100);
+}

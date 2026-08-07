@@ -1,4 +1,4 @@
-//! Discovers and runs Rerun web tests.
+//! Discovers and runs Dalaran web tests.
 
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -80,7 +80,7 @@ fn discover_packages(package_filter: Option<&str>) -> anyhow::Result<Vec<WebTest
                     .into_std_path_buf(),
                 redap_server: package
                     .metadata
-                    .pointer("/rerun/web-test/redap-server")
+                    .pointer("/dalaran/web-test/redap-server")
                     .and_then(serde_json::Value::as_bool)
                     .unwrap_or(false),
             })

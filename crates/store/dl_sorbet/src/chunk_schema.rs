@@ -10,10 +10,10 @@ use crate::{
     RowIdColumnDescriptor, SorbetColumnDescriptors, SorbetError, SorbetSchema,
 };
 
-/// The parsed schema of a Rerun chunk, i.e. multiple columns of data for a single entity.
+/// The parsed schema of a Dalaran chunk, i.e. multiple columns of data for a single entity.
 ///
 /// This does NOT preserve custom arrow metadata.
-/// It only contains the metadata used by Rerun.
+/// It only contains the metadata used by Dalaran.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ChunkSchema {
     sorbet: SorbetSchema,

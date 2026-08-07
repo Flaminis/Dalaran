@@ -3,7 +3,7 @@ source: crates/store/dl_redap_tests/src/tests/query_index_values.rs
 expression: filtered_results.format_snapshot(false)
 ---
 ┌────────────────────────────────────┬────────────────────────────────────┬────────────────────────────────────┬───────────────┬──────────────────┐
-│ /my/entity:example.MyPoints:colors ┆ /my/entity:example.MyPoints:labels ┆ /my/entity:example.MyPoints:points ┆ duration      ┆ rerun_segment_id │
+│ /my/entity:example.MyPoints:colors ┆ /my/entity:example.MyPoints:labels ┆ /my/entity:example.MyPoints:points ┆ duration      ┆ dalaran_segment_id │
 ╞════════════════════════════════════╪════════════════════════════════════╪════════════════════════════════════╪═══════════════╪══════════════════╡
 │ [1]                                ┆ [simple]                           ┆ [{x: 1.0, y: 1.0}]                 ┆ PT0.00000102S ┆ my_segment_id1   │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤

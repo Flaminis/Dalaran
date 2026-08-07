@@ -13,7 +13,7 @@ use crate::{
 /// The parsed schema of a `SorbetBatch`.
 ///
 /// This does NOT contain custom arrow metadata.
-/// It only contains the metadata used by Rerun.
+/// It only contains the metadata used by Dalaran.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SorbetSchema {
     pub columns: SorbetColumnDescriptors,
@@ -37,14 +37,14 @@ pub struct SorbetSchema {
 
 /// ## Metadata keys for the record batch metadata
 impl SorbetSchema {
-    /// The key used to identify the version of the Rerun schema.
+    /// The key used to identify the version of the Dalaran schema.
     pub(crate) const METADATA_KEY_VERSION: &'static str = "sorbet:version";
 
     /// The version of the Sorbet schema.
     ///
     /// This is bumped everytime we require a migration, but notable it is
-    /// decoupled from the Rerun version to avoid confusion as there will not
-    /// be a new Sorbet version for each Rerun version.
+    /// decoupled from the Dalaran version to avoid confusion as there will not
+    /// be a new Sorbet version for each Dalaran version.
     pub(crate) const METADATA_VERSION: semver::Version = semver::Version::new(0, 1, 3);
 }
 
@@ -52,7 +52,7 @@ impl SorbetSchema {
     pub fn arrow_batch_metadata(&self) -> ArrowBatchMetadata {
         fn chunk_id_metadata(chunk_id: &ChunkId) -> (String, String) {
             (
-                crate::metadata::RERUN_CHUNK_ID.to_owned(),
+                crate::metadata::DALARAN_CHUNK_ID.to_owned(),
                 chunk_id.to_string(),
             )
         }
@@ -66,7 +66,7 @@ impl SorbetSchema {
 
         fn segment_id_metadata(segment_id: impl AsRef<str>) -> (String, String) {
             (
-                "rerun:segment_id".to_owned(),
+                "dalaran:segment_id".to_owned(),
                 segment_id.as_ref().to_owned(),
             )
         }
@@ -123,7 +123,7 @@ impl SorbetSchema {
 }
 
 impl SorbetSchema {
-    /// Parse an arbitrary arrow schema by first migrating it to the Rerun schema.
+    /// Parse an arbitrary arrow schema by first migrating it to the Dalaran schema.
     pub fn try_from_raw_arrow_schema(arrow_schema: ArrowSchemaRef) -> Result<Self, SorbetError> {
         Self::try_from_migrated_arrow_schema(&migrate_schema_ref(arrow_schema))
     }
@@ -134,8 +134,8 @@ impl SorbetSchema {
         arrow_schema: &ArrowSchema,
     ) -> Result<Self, SorbetError> {
         dl_log::debug_assert!(
-            !arrow_schema.metadata.contains_key("rerun.id"),
-            "The schema should not contain the legacy 'rerun.id' key, because it should have already been migrated to 'rerun:id'."
+            !arrow_schema.metadata.contains_key("dalaran.id"),
+            "The schema should not contain the legacy 'dalaran.id' key, because it should have already been migrated to 'dalaran:id'."
         );
 
         let ArrowSchema { metadata, fields } = arrow_schema;
@@ -146,7 +146,7 @@ impl SorbetSchema {
 
         let columns = SorbetColumnDescriptors::try_from_arrow_fields(entity_path.as_ref(), fields)?;
 
-        let chunk_id = if let Some(chunk_id_str) = metadata.get(crate::metadata::RERUN_CHUNK_ID) {
+        let chunk_id = if let Some(chunk_id_str) = metadata.get(crate::metadata::DALARAN_CHUNK_ID) {
             Some(chunk_id_str.parse().map_err(|err| {
                 SorbetError::ChunkIdDeserializationError(format!(
                     "Failed to deserialize chunk id {chunk_id_str:?}: {err}"
@@ -156,10 +156,10 @@ impl SorbetSchema {
             None
         };
 
-        // Support both new "rerun:segment_id" and legacy "rerun:partition_id" keys
+        // Support both new "dalaran:segment_id" and legacy "dalaran:partition_id" keys
         let segment_id = metadata
-            .get("rerun:segment_id")
-            .or_else(|| metadata.get("rerun:partition_id"))
+            .get("dalaran:segment_id")
+            .or_else(|| metadata.get("dalaran:partition_id"))
             .map(|s| SegmentId::from(s.as_str()));
 
         // Verify version
@@ -191,18 +191,18 @@ mod tests {
     use super::*;
     use crate::RowIdColumnDescriptor;
 
-    /// Test that the legacy `rerun:partition_id` metadata key is correctly read as `segment_id`.
+    /// Test that the legacy `dalaran:partition_id` metadata key is correctly read as `segment_id`.
     #[test]
     fn test_legacy_partition_id_backward_compatibility() {
         let partition_id_value = "test-partition-123";
 
-        // Create an Arrow schema with the legacy "rerun:partition_id" metadata key
+        // Create an Arrow schema with the legacy "dalaran:partition_id" metadata key
         let row_id_field = RowIdColumnDescriptor::from_sorted(false).to_arrow_field();
         let fields = vec![Arc::new(row_id_field)];
         let arrow_schema = ArrowSchema::new_with_metadata(
             fields,
             std::iter::once((
-                "rerun:partition_id".to_owned(),
+                "dalaran:partition_id".to_owned(),
                 partition_id_value.to_owned(),
             ))
             .collect(),
@@ -215,11 +215,11 @@ mod tests {
         assert_eq!(
             sorbet_schema.segment_id,
             Some(partition_id_value.into()),
-            "Legacy rerun:partition_id should be read as segment_id"
+            "Legacy dalaran:partition_id should be read as segment_id"
         );
     }
 
-    /// Test that the new `rerun:segment_id` metadata key takes precedence over legacy `rerun:partition_id`.
+    /// Test that the new `dalaran:segment_id` metadata key takes precedence over legacy `dalaran:partition_id`.
     #[test]
     fn test_segment_id_takes_precedence_over_partition_id() {
         let segment_id_value = "new-segment-456";
@@ -231,9 +231,9 @@ mod tests {
         let arrow_schema = ArrowSchema::new_with_metadata(
             fields,
             [
-                ("rerun:segment_id".to_owned(), segment_id_value.to_owned()),
+                ("dalaran:segment_id".to_owned(), segment_id_value.to_owned()),
                 (
-                    "rerun:partition_id".to_owned(),
+                    "dalaran:partition_id".to_owned(),
                     partition_id_value.to_owned(),
                 ),
             ]
@@ -248,7 +248,7 @@ mod tests {
         assert_eq!(
             sorbet_schema.segment_id,
             Some(segment_id_value.into()),
-            "rerun:segment_id should take precedence over rerun:partition_id"
+            "dalaran:segment_id should take precedence over dalaran:partition_id"
         );
     }
 }

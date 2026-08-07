@@ -68,7 +68,7 @@ impl ViewClass for DataframeView {
 
     fn help(&self, _os: egui::os::OperatingSystem) -> Help {
         Help::new("Dataframe view")
-            .docs_link("https://rerun.io/docs/reference/types/views/dataframe_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/dataframe_view")
             .markdown(
                 "This view displays entity content in a tabular form.
 

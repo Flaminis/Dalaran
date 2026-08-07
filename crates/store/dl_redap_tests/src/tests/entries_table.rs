@@ -3,18 +3,18 @@ use itertools::Itertools as _;
 use dl_log_types::EntryId;
 use dl_protos::EntryName;
 use dl_protos::cloud::v1alpha1::ext::EntryDetails;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     DeleteEntryRequest, FindEntriesRequest, GetTableSchemaRequest, ReadDatasetEntryRequest,
     ReadTableEntryRequest, ScanTableRequest,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
-use crate::tests::common::{RerunCloudServiceExt as _, create_table_entry_with_name};
+use crate::tests::common::{DalaranCloudServiceExt as _, create_table_entry_with_name};
 use crate::{RecordBatchTestExt as _, SchemaTestExt as _};
 
 /// We want to make sure that the "__entries" table is present and has the expected schema and data.
-pub async fn list_entries_table(service: impl RerunCloudService) {
+pub async fn list_entries_table(service: impl DalaranCloudService) {
     let entries_table_id = entries_table_id(&service).await;
 
     let schema_request = GetTableSchemaRequest {
@@ -66,7 +66,7 @@ pub async fn list_entries_table(service: impl RerunCloudService) {
     insta::assert_snapshot!("entries_table_data", batch.format_snapshot(false));
 }
 
-pub async fn delete_table_deletes_attached_blueprint_dataset(service: impl RerunCloudService) {
+pub async fn delete_table_deletes_attached_blueprint_dataset(service: impl DalaranCloudService) {
     let table_dir = tempfile::tempdir().expect("create temp dir");
     let table_name = "table_with_attached_blueprint";
     let table = create_table_entry_with_name(&service, table_name, &table_dir).await;
@@ -108,7 +108,7 @@ pub async fn delete_table_deletes_attached_blueprint_dataset(service: impl Rerun
     );
 }
 
-pub async fn entries_table_with_empty_dataset(service: impl RerunCloudService) {
+pub async fn entries_table_with_empty_dataset(service: impl DalaranCloudService) {
     let dataset_name = "empty_dataset";
     let dataset_entry = service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -124,7 +124,7 @@ pub async fn entries_table_with_empty_dataset(service: impl RerunCloudService) {
     snapshot_entries_table(&service, "entries_table_with_empty_dataset_deleted").await;
 }
 
-async fn entries_table_id(service: &impl RerunCloudService) -> EntryId {
+async fn entries_table_id(service: &impl DalaranCloudService) -> EntryId {
     let find_entries_table = FindEntriesRequest {
         filter: Some(dl_protos::cloud::v1alpha1::EntryFilter {
             name: Some("__entries".to_owned()),
@@ -151,7 +151,7 @@ async fn entries_table_id(service: &impl RerunCloudService) -> EntryId {
     entries.id
 }
 
-async fn snapshot_entries_table(service: &impl RerunCloudService, snapshot_name: &str) {
+async fn snapshot_entries_table(service: &impl DalaranCloudService, snapshot_name: &str) {
     let entries_table_id = entries_table_id(service).await;
 
     let entries_resp: Vec<_> = service

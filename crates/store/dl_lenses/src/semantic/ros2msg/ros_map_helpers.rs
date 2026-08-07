@@ -11,10 +11,10 @@ use dl_sdk_types::datatypes::{ChannelDatatype, ColorModel};
 use crate::semantic::helpers::get_field_as;
 
 /// Returns a pipe-compatible function that converts ROS maps
-/// stored in i8 buffers to Rerun image buffers.
+/// stored in i8 buffers to Dalaran image buffers.
 ///
 /// ROS map buffers start at map cell `(0, 0)`, i.e. the bottom image row,
-/// while Rerun's image buffers are consumed top row first.
+/// while Dalaran's image buffers are consumed top row first.
 pub(crate) fn map_buffer_to_image_buffer(
     metadata_field: &'static str,
     width_field: &'static str,
@@ -52,7 +52,7 @@ pub(crate) fn map_buffer_to_image_buffer(
 }
 
 /// Returns a pipe-compatible function that converts a struct with `width` and `height`
-/// fields into a grayscale 8-bit Rerun [`ImageFormat`] struct array.
+/// fields into a grayscale 8-bit Dalaran [`ImageFormat`] struct array.
 pub(crate) fn map_dimensions_to_l8_image_format()
 -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, Error> + Send + Sync {
     move |source: &ArrayRef| {
@@ -84,7 +84,7 @@ pub(crate) fn map_dimensions_to_l8_image_format()
     }
 }
 
-/// Returns a pipe-compatible function that fills a Rerun [`Colormap`] array with a
+/// Returns a pipe-compatible function that fills a Dalaran [`Colormap`] array with a
 /// single repeated ROS map colormap value.
 pub(crate) fn default_ros_map_colormap(
     colormap: Colormap,

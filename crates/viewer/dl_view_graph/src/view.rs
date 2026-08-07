@@ -46,7 +46,7 @@ impl ViewClass for GraphView {
         let egui::InputOptions { zoom_modifier, .. } = egui::InputOptions::default(); // This is OK, since we don't allow the user to change this modifier.
 
         Help::new("Graph view")
-            .docs_link("https://rerun.io/docs/reference/types/views/graph_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/graph_view")
             .control("Pan", (MouseButtonText(DRAG_PAN2D_BUTTON), "+", "drag"))
             .control(
                 "Zoom",

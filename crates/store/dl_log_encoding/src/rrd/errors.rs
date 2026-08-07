@@ -16,9 +16,9 @@ pub enum CodecError {
     InvalidOptions(#[from] OptionsError),
 
     #[error(
-        "Data from Rerun version {file}, which is incompatible with the local Rerun version {local}"
+        "Data from Dalaran version {file}, which is incompatible with the local Dalaran version {local}"
     )]
-    IncompatibleRerunVersion {
+    IncompatibleDalaranVersion {
         file: Box<CrateVersion>,
         local: Box<CrateVersion>,
     },
@@ -26,7 +26,7 @@ pub enum CodecError {
     #[error("{0}")]
     NotAnRrd(NotAnRrdError),
 
-    #[error("Data was from an old, incompatible Rerun version")]
+    #[error("Data was from an old, incompatible Dalaran version")]
     OldRrdVersion,
 
     /// Something went wrong when attempting to decode any kind of RRD frame.
@@ -169,7 +169,7 @@ pub enum OptionsError {
 
     // TODO(jan): Remove this at some point, realistically 1-2 releases after 0.23
     #[error(
-        "You are trying to load an old .rrd file that's not supported by this version of Rerun."
+        "You are trying to load an old .rrd file that's not supported by this version of Dalaran."
     )]
     RemovedMsgPackSerializer,
 

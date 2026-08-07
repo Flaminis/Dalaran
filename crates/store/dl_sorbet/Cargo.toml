@@ -1,7 +1,7 @@
 [package]
 name = "dl_sorbet"
 authors.workspace = true
-description = "Rerun arrow metadata definitions"
+description = "Dalaran arrow metadata definitions"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

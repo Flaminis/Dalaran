@@ -54,7 +54,7 @@ pub enum Error {
     #[error("Failed to get iterator: {0}")]
     NoIterator(String),
 
-    #[error("No frame info received, this is a likely a bug in Rerun")]
+    #[error("No frame info received, this is a likely a bug in Dalaran")]
     NoFrameInfo,
 
     #[error("Failed to write data to FFmpeg: {0}")]

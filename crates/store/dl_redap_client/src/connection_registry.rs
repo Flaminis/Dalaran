@@ -17,11 +17,11 @@ use crate::{ApiError, ApiResult, TonicStatusError};
 
 /// Returns a suggested host if the user likely forgot the "api." prefix.
 ///
-/// This detects the common mistake of connecting to `xxx.cloud.rerun.io` instead of
-/// `api.xxx.cloud.rerun.io`.
+/// This detects the common mistake of connecting to `xxx.cloud.dalaran.dev` instead of
+/// `api.xxx.cloud.dalaran.dev`.
 fn suggest_api_prefix(origin: &Origin) -> Option<String> {
     let host = origin.format_host();
-    if !host.starts_with("api.") && host.ends_with(".cloud.rerun.io") {
+    if !host.starts_with("api.") && host.ends_with(".cloud.dalaran.dev") {
         Some(format!("api.{host}"))
     } else {
         None
@@ -302,7 +302,7 @@ impl ConnectionRegistryHandle {
     /// use the following token, in this order:
     /// - The fallback token, if set via [`Self::set_fallback_token`].
     /// - The `REDAP_TOKEN` environment variable is set.
-    /// - Local credentials for Rerun Hub
+    /// - Local credentials for Dalaran Hub
     ///
     /// Failing that, no token will be used.
     #[tracing::instrument(level = "info", skip_all)]
@@ -454,13 +454,13 @@ impl ConnectionRegistryHandle {
         }
     }
 
-    /// Probe `{origin}/version` to detect non-Rerun endpoints (e.g. user typed
-    /// `asdf.rerun.io` instead of `api.asdf.rerun.io`).
+    /// Probe `{origin}/version` to detect non-Dalaran endpoints (e.g. user typed
+    /// `asdf.dalaran.dev` instead of `api.asdf.dalaran.dev`).
     ///
     /// Returns `Ok(())` if the probe is inconclusive (server responded as expected),
-    /// `Err(_)` with a friendly diagnostic if the origin is clearly not a Rerun server.
+    /// `Err(_)` with a friendly diagnostic if the origin is clearly not a Dalaran server.
     #[tracing::instrument(level = "info", skip_all)]
-    async fn ensure_is_rerun_server(origin: &dl_uri::Origin) -> ApiResult<()> {
+    async fn ensure_is_dalaran_server(origin: &dl_uri::Origin) -> ApiResult<()> {
         let res = crate::with_retry("http_version_fetch", || async {
             ehttp::fetch_async(ehttp::Request::get(format!("{}/version", origin.as_url())))
                 .await
@@ -480,7 +480,7 @@ impl ConnectionRegistryHandle {
         }
 
         let hint = suggest_api_prefix(origin).map(|suggested| {
-            format!("Did you mean '{suggested}'? Rerun Hub endpoints require the 'api.' prefix")
+            format!("Did you mean '{suggested}'? Dalaran Hub endpoints require the 'api.' prefix")
         });
         // Truncate the body so we don't dump an entire HTML error page into the error.
         let body_snippet = std::str::from_utf8(&res.bytes)
@@ -549,10 +549,10 @@ impl ConnectionRegistryHandle {
             match crate::grpc::connect_grpc_client(origin.clone(), provider).await {
                 Ok(pair) => pair,
                 Err(grpc_err) => {
-                    // It's a common mistake to connect to `asdf.rerun.io` instead of `api.asdf.rerun.io`,
-                    // so if what we're trying to connect to is not a valid Rerun server, then cut out
+                    // It's a common mistake to connect to `asdf.dalaran.dev` instead of `api.asdf.dalaran.dev`,
+                    // so if what we're trying to connect to is not a valid Dalaran server, then cut out
                     // a layer of noise:
-                    Self::ensure_is_rerun_server(&origin).await?;
+                    Self::ensure_is_dalaran_server(&origin).await?;
 
                     return Err(grpc_err);
                 }

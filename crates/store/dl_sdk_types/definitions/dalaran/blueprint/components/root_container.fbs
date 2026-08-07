@@ -1,0 +1,14 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+
+/// The container that sits at the root of a viewport.
+table RootContainer (
+  "attr.dalaran.scope": "blueprint",
+  "attr.python.aliases": "npt.NDArray[np.uint8] | npt.ArrayLike | Sequence[int] | bytes",
+  "attr.rust.derive": "Default"
+) {
+    /// `ContainerId` for the root.
+    id: dalaran.datatypes.Uuid (order: 100);
+}

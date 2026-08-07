@@ -9,7 +9,7 @@ use crate::{ComponentIdentifier, DeserializationResult, SerializationResult};
 
 /// A [`Loggable`] represents a single instance in an array of loggable data.
 ///
-/// Internally, Arrow, and by extension Rerun, only deal with arrays of data.
+/// Internally, Arrow, and by extension Dalaran, only deal with arrays of data.
 /// We refer to individual entries in these arrays as instances.
 ///
 /// A [`Loggable`] has no semantics (such as a name, for example): it's just data.
@@ -30,7 +30,7 @@ pub trait Loggable: 'static + Send + Sync + Clone + Sized + SizeBytes {
     /// Given an iterator of owned or reference values to the current [`Loggable`], serializes
     /// them into an Arrow array.
     ///
-    /// When using Rerun's builtin components & datatypes, this can only fail if the data
+    /// When using Dalaran's builtin components & datatypes, this can only fail if the data
     /// exceeds the maximum number of entries in an Arrow array (2^31 for standard arrays,
     /// 2^63 for large arrays).
     #[inline]
@@ -46,7 +46,7 @@ pub trait Loggable: 'static + Send + Sync + Clone + Sized + SizeBytes {
     /// Given an iterator of options of owned or reference values to the current
     /// [`Loggable`], serializes them into an Arrow array.
     ///
-    /// When using Rerun's builtin components & datatypes, this can only fail if the data
+    /// When using Dalaran's builtin components & datatypes, this can only fail if the data
     /// exceeds the maximum number of entries in an Arrow array (2^31 for standard arrays,
     /// 2^63 for large arrays).
     fn to_arrow_opt<'a>(
@@ -85,7 +85,7 @@ pub trait Loggable: 'static + Send + Sync + Clone + Sized + SizeBytes {
 /// Implementing the [`Component`] trait automatically derives the [`ComponentBatch`] implementation,
 /// which makes it possible to work with lists' worth of data in a generic fashion.
 pub trait Component: Loggable {
-    /// The fully-qualified type of this component, e.g. `rerun.components.Position2D`.
+    /// The fully-qualified type of this component, e.g. `dalaran.components.Position2D`.
     fn name() -> ComponentType;
 }
 
@@ -96,7 +96,7 @@ pub type UnorderedComponentSet = IntSet<ComponentIdentifier>;
 pub type ComponentSet = std::collections::BTreeSet<ComponentIdentifier>;
 
 dl_string_interner::declare_new_type_nonempty!(
-    /// The fully-qualified name of a [`Component`], e.g. `rerun.components.Position2D`.
+    /// The fully-qualified name of a [`Component`], e.g. `dalaran.components.Position2D`.
     pub struct ComponentType;
 );
 
@@ -107,12 +107,12 @@ impl ComponentType {
     pub fn sanity_check(&self) {
         let full_type = self.0.as_str();
         dl_log::debug_assert!(
-            !full_type.starts_with("rerun.components.rerun.components."),
+            !full_type.starts_with("dalaran.components.dalaran.components."),
             "Found component with full type {full_type:?}. Maybe some bad round-tripping?"
         );
     }
 
-    /// Returns the fully-qualified name, e.g. `rerun.components.Position2D`.
+    /// Returns the fully-qualified name, e.g. `dalaran.components.Position2D`.
     ///
     /// This is the default `Display` implementation for [`ComponentType`].
     #[inline]
@@ -127,34 +127,34 @@ impl ComponentType {
     ///
     /// ```
     /// # use dl_types_core::ComponentType;
-    /// assert_eq!(ComponentType::from("rerun.components.Position2D").short_name(), "Position2D");
+    /// assert_eq!(ComponentType::from("dalaran.components.Position2D").short_name(), "Position2D");
     /// ```
     #[inline]
     pub fn short_name(&self) -> &'static str {
         self.sanity_check();
         let full_name = self.0.as_str();
-        if let Some(short_name) = full_name.strip_prefix("rerun.blueprint.components.") {
+        if let Some(short_name) = full_name.strip_prefix("dalaran.blueprint.components.") {
             short_name
-        } else if let Some(short_name) = full_name.strip_prefix("rerun.components.") {
+        } else if let Some(short_name) = full_name.strip_prefix("dalaran.components.") {
             short_name
-        } else if let Some(short_name) = full_name.strip_prefix("rerun.controls.") {
+        } else if let Some(short_name) = full_name.strip_prefix("dalaran.controls.") {
             short_name
-        } else if let Some(short_name) = full_name.strip_prefix("rerun.") {
+        } else if let Some(short_name) = full_name.strip_prefix("dalaran.") {
             short_name
         } else {
             full_name
         }
     }
 
-    /// Web URL to the Rerun documentation for this component.
+    /// Web URL to the Dalaran documentation for this component.
     pub fn doc_url(&self) -> Option<String> {
-        if let Some(component_type_pascal_case) = self.full_name().strip_prefix("rerun.components.")
+        if let Some(component_type_pascal_case) = self.full_name().strip_prefix("dalaran.components.")
         {
             // This code should be correct as long as this url passes our link checker:
-            // https://rerun.io/docs/reference/types/components/line_strip2d
+            // https://dalaran.dev/docs/reference/types/components/line_strip2d
 
             let component_type_snake_case = dl_case::to_snake_case(component_type_pascal_case);
-            let base_url = "https://rerun.io/docs/reference/types/components";
+            let base_url = "https://dalaran.dev/docs/reference/types/components";
             Some(format!("{base_url}/{component_type_snake_case}"))
         } else {
             None // A user component
@@ -170,7 +170,7 @@ impl ComponentType {
             || self.short_name().to_lowercase() == other.to_lowercase()
     }
 
-    /// Returns `true` if this is a known Rerun component type (e.g., `rerun.components.*`, `rerun.blueprint.components.*`).
+    /// Returns `true` if this is a known Dalaran component type (e.g., `dalaran.components.*`, `dalaran.blueprint.components.*`).
     ///
     /// Returns `false` for custom user-defined components.
     ///
@@ -178,12 +178,12 @@ impl ComponentType {
     ///
     /// ```
     /// # use dl_types_core::ComponentType;
-    /// assert!(ComponentType::from("rerun.components.Position2D").is_rerun_type());
-    /// assert!(ComponentType::from("rerun.blueprint.components.Active").is_rerun_type());
-    /// assert!(!ComponentType::from("my_custom.MyComponent").is_rerun_type());
+    /// assert!(ComponentType::from("dalaran.components.Position2D").is_dalaran_type());
+    /// assert!(ComponentType::from("dalaran.blueprint.components.Active").is_dalaran_type());
+    /// assert!(!ComponentType::from("my_custom.MyComponent").is_dalaran_type());
     /// ```
     #[inline]
-    pub fn is_rerun_type(&self) -> bool {
-        self.0.as_str().starts_with("rerun.")
+    pub fn is_dalaran_type(&self) -> bool {
+        self.0.as_str().starts_with("dalaran.")
     }
 }

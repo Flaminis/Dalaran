@@ -78,10 +78,10 @@ fn setup_store(test_context: &mut TestContext) {
         });
     }
 
-    // Scenario 4: Entity with multiple known Rerun component types (LinearSpeed) on custom archetype
+    // Scenario 4: Entity with multiple known Dalaran component types (LinearSpeed) on custom archetype
     // Expected: No visualizers (LinearSpeed is not recommended)
     for i in 0..10 {
-        test_context.log_entity("entity_multiple_rerun_types_temporal", |builder| {
+        test_context.log_entity("entity_multiple_dalaran_types_temporal", |builder| {
             builder.with_archetype_auto_row(
                 [(timeline, i)],
                 &DynamicArchetype::new("custom")
@@ -92,9 +92,9 @@ fn setup_store(test_context: &mut TestContext) {
         });
     }
 
-    // Scenario 5: Entity with both static and temporal known Rerun component type (LinearSpeed)
+    // Scenario 5: Entity with both static and temporal known Dalaran component type (LinearSpeed)
     // Expected: No visualizers (LinearSpeed is not recommended)
-    test_context.log_entity("entity_rerun_type_static_and_temporal", |builder| {
+    test_context.log_entity("entity_dalaran_type_static_and_temporal", |builder| {
         builder.with_archetype_auto_row(
             TimePoint::STATIC,
             &DynamicArchetype::new("custom")
@@ -102,7 +102,7 @@ fn setup_store(test_context: &mut TestContext) {
         )
     });
     for i in 0..10 {
-        test_context.log_entity("entity_rerun_type_static_and_temporal", |builder| {
+        test_context.log_entity("entity_dalaran_type_static_and_temporal", |builder| {
             builder.with_archetype_auto_row(
                 [(timeline, i)],
                 &DynamicArchetype::new("custom").with_component::<components::LinearSpeed>(
@@ -113,9 +113,9 @@ fn setup_store(test_context: &mut TestContext) {
         });
     }
 
-    // Scenario 6: Entity with only static known Rerun component type (LinearSpeed)
+    // Scenario 6: Entity with only static known Dalaran component type (LinearSpeed)
     // Expected: No visualizers (LinearSpeed is not recommended, and it's also static)
-    test_context.log_entity("entity_rerun_type_static_only", |builder| {
+    test_context.log_entity("entity_dalaran_type_static_only", |builder| {
         builder.with_archetype_auto_row(
             TimePoint::STATIC,
             &DynamicArchetype::new("custom")
@@ -123,7 +123,7 @@ fn setup_store(test_context: &mut TestContext) {
         )
     });
 
-    // Scenario 7: Entity with multiple fully custom components (no known Rerun types)
+    // Scenario 7: Entity with multiple fully custom components (no known Dalaran types)
     // Expected: Should only recommend Float64 (Int types are never recommended)
     for i in 0..10 {
         test_context.log_entity("entity_fully_custom_mixed_types", |builder| {
@@ -146,10 +146,10 @@ fn setup_store(test_context: &mut TestContext) {
         });
     }
 
-    // Scenario 8: Entity with fully custom Float64 vs known Rerun component type (LinearSpeed)
+    // Scenario 8: Entity with fully custom Float64 vs known Dalaran component type (LinearSpeed)
     // Expected: Only fully custom Float64 is recommended (LinearSpeed is not recommended)
     for i in 0..10 {
-        test_context.log_entity("entity_fully_custom_vs_rerun_type", |builder| {
+        test_context.log_entity("entity_fully_custom_vs_dalaran_type", |builder| {
             builder.with_archetype_auto_row(
                 [(timeline, i)],
                 &DynamicArchetype::new("custom")
@@ -179,7 +179,7 @@ fn setup_store(test_context: &mut TestContext) {
                         "aaa_custom",
                         Arc::new(Float64Array::from(vec![i as f64 * 10.0])),
                     )
-                    // Known Rerun Scalars component (NativeSemantics - the exact type we're expecting!)
+                    // Known Dalaran Scalars component (NativeSemantics - the exact type we're expecting!)
                     .with_component::<components::Scalar>("scalars", [i as f64 * 30.0]),
             )
         });
@@ -540,39 +540,39 @@ fn check_visualizer_instructions(test_context: &TestContext, view_id: ViewId) {
         );
     }
 
-    // Scenario 4: Entity with multiple known Rerun component types (LinearSpeed)
+    // Scenario 4: Entity with multiple known Dalaran component types (LinearSpeed)
     // Expected: Should not visualize (LinearSpeed is not recommended)
     {
         let instructions =
-            visualizers_for(data_result_tree, "entity_multiple_rerun_types_temporal");
+            visualizers_for(data_result_tree, "entity_multiple_dalaran_types_temporal");
         assert!(
             instructions.is_empty(),
-            "entity_multiple_rerun_types_temporal should have no visualizer instructions since LinearSpeed is not recommended, but got: {instructions:?}",
+            "entity_multiple_dalaran_types_temporal should have no visualizer instructions since LinearSpeed is not recommended, but got: {instructions:?}",
         );
     }
 
-    // Scenario 5: Entity with static and temporal known Rerun component type (LinearSpeed)
+    // Scenario 5: Entity with static and temporal known Dalaran component type (LinearSpeed)
     // Expected: Should not visualize (LinearSpeed is not recommended)
     {
         let instructions =
-            visualizers_for(data_result_tree, "entity_rerun_type_static_and_temporal");
+            visualizers_for(data_result_tree, "entity_dalaran_type_static_and_temporal");
         assert!(
             instructions.is_empty(),
-            "entity_rerun_type_static_and_temporal should have no visualizer instructions since LinearSpeed is not recommended, but got: {instructions:?}",
+            "entity_dalaran_type_static_and_temporal should have no visualizer instructions since LinearSpeed is not recommended, but got: {instructions:?}",
         );
     }
 
-    // Scenario 6: Entity with only static known Rerun component type (LinearSpeed)
+    // Scenario 6: Entity with only static known Dalaran component type (LinearSpeed)
     // Expected: Should not visualize (LinearSpeed is not recommended, and it's also static)
     {
         // We don't emit data result elements if there's no visualizer instructions in the first place,
         // so the lookup should come back empty.
         let result = data_result_tree
-            .lookup_result_by_path(EntityPath::from("entity_rerun_type_static_only").hash());
+            .lookup_result_by_path(EntityPath::from("entity_dalaran_type_static_only").hash());
 
         assert!(
             result.is_none(),
-            "entity_rerun_type_static_only should not have any data result since LinearSpeed is not recommended, but got: {result:?}",
+            "entity_dalaran_type_static_only should not have any data result since LinearSpeed is not recommended, but got: {result:?}",
         );
     }
 
@@ -593,10 +593,10 @@ fn check_visualizer_instructions(test_context: &TestContext, view_id: ViewId) {
         );
     }
 
-    // Scenario 8: Entity with fully custom Float64 vs known Rerun type (LinearSpeed)
+    // Scenario 8: Entity with fully custom Float64 vs known Dalaran type (LinearSpeed)
     // Expected: Only fully custom Float64 gets an instruction (LinearSpeed is not recommended)
     {
-        let instructions = visualizers_for(data_result_tree, "entity_fully_custom_vs_rerun_type");
+        let instructions = visualizers_for(data_result_tree, "entity_fully_custom_vs_dalaran_type");
         assert_eq!(instructions.len(), 1);
 
         let (component, selector) = source_component_for(&instructions[0]);

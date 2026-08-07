@@ -1,0 +1,11 @@
+namespace dalaran.blueprint.views;
+
+/// A view of a single text document, for use with [archetypes.TextDocument].
+///
+/// \example views/text_document title="Use a blueprint to show a text document." image="https://static.rerun.io/text_log/27f15235fe9639ff42b6ea0d2f0ce580685c021c/1200w.png"
+table TextDocumentView (
+    "attr.dalaran.view_identifier": "TextDocument"
+) {
+  /// Formatting options for the text document view.
+  format_options: dalaran.blueprint.archetypes.TextDocumentFormat (order: 1000);
+}

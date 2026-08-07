@@ -1,6 +1,6 @@
 [package]
 authors.workspace = true
-description = "Gamepad input handling for the Rerun viewer."
+description = "Gamepad input handling for the Dalaran viewer."
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true

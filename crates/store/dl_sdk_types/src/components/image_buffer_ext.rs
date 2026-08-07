@@ -56,13 +56,13 @@ impl ImageBuffer {
 
             image::DynamicImage::ImageLumaA8(image) => {
                 dl_log::warn!(
-                    "Rerun doesn't have native support for 8-bit Luma + Alpha. The image will be convert to RGBA."
+                    "Dalaran doesn't have native support for 8-bit Luma + Alpha. The image will be convert to RGBA."
                 );
                 Self::from_image(image::DynamicImage::ImageLumaA8(image).to_rgba8())
             }
             image::DynamicImage::ImageLumaA16(image) => {
                 dl_log::warn!(
-                    "Rerun doesn't have native support for 16-bit Luma + Alpha. The image will be convert to RGBA."
+                    "Dalaran doesn't have native support for 16-bit Luma + Alpha. The image will be convert to RGBA."
                 );
                 Self::from_image(image::DynamicImage::ImageLumaA16(image).to_rgba16())
             }

@@ -1,7 +1,7 @@
 [package]
 name = "dl_server"
 authors.workspace = true
-description = "A Rerun server implementation backed by an in-memory store"
+description = "A Dalaran server implementation backed by an in-memory store"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true
@@ -36,7 +36,7 @@ lance = ["dep:lance"]
 
 [dependencies]
 
-# Rerun
+# Dalaran
 dl_async.workspace = true
 dl_arrow_util.workspace = true
 dl_build_info.workspace = true

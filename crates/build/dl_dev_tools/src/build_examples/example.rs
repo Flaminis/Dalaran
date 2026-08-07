@@ -140,7 +140,7 @@ impl ExamplesManifest {
 
 #[derive(serde::Deserialize)]
 pub struct ExampleCategory {
-    /// Used to sort categories in the `rerun.io/examples` navbar.
+    /// Used to sort categories in the `dalaran.dev/examples` navbar.
     #[expect(unused)]
     pub order: u64,
 
@@ -152,7 +152,7 @@ pub struct ExampleCategory {
 
     /// List of example names.
     ///
-    /// `rerun.io/examples` attempts to search for these names under `examples/{language}`,
+    /// `dalaran.dev/examples` attempts to search for these names under `examples/{language}`,
     /// where `language` is any of the languages we currently support.
     pub examples: Vec<String>,
 }

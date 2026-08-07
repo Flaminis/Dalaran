@@ -128,7 +128,7 @@ impl Dataset {
     ///
     /// Unknown segment IDs are silently skipped rather than treated as errors:
     /// callers (notably `QueryDataset`) may receive segment IDs from a DataFusion
-    /// filter pushdown such as `WHERE rerun_segment_id = 'foo'`, where the value
+    /// filter pushdown such as `WHERE dalaran_segment_id = 'foo'`, where the value
     /// is data, not a referent. Erroring on a mismatch would turn ordinary SQL
     /// filters into hand-grenades. The same `segment_ids` field is also used by
     /// explicit API paths (e.g. `filter_segments`, `using_index_values`), which
@@ -293,10 +293,10 @@ impl Dataset {
                         .flat_map(|timeline| {
                             ["end", "start"].into_iter().map(|index_marker| {
                                 let metadata: HashMap<_, _> = [
-                                    ("rerun:index".to_owned(), timeline.name().to_string()),
-                                    ("rerun:index_kind".to_owned(), timeline.typ().to_string()),
-                                    ("rerun:index_marker".to_owned(), index_marker.to_owned()),
-                                    ("rerun:kind".to_owned(), "index".to_owned()),
+                                    ("dalaran:index".to_owned(), timeline.name().to_string()),
+                                    ("dalaran:index_kind".to_owned(), timeline.typ().to_string()),
+                                    ("dalaran:index_marker".to_owned(), index_marker.to_owned()),
+                                    ("dalaran:kind".to_owned(), "index".to_owned()),
                                 ]
                                 .into_iter()
                                 .collect();

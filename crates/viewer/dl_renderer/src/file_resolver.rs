@@ -16,7 +16,7 @@
 //!
 //! Import clauses follow the general form of `#import <x/y/z/my_file.wgsl>`.
 //! The path to be imported can be either absolute or relative to the path of the importer,
-//! or relative to any of the paths set in the search path (`RERUN_SHADER_PATH`).
+//! or relative to any of the paths set in the search path (`DALARAN_SHADER_PATH`).
 //!
 //! The actual parsing rules themselves are very barebones:
 //! - An import clause can only span one line.
@@ -202,9 +202,9 @@ pub struct SearchPath {
 
 impl SearchPath {
     pub fn from_env() -> Self {
-        const RERUN_SHADER_PATH: &str = "RERUN_SHADER_PATH";
+        const DALARAN_SHADER_PATH: &str = "DALARAN_SHADER_PATH";
 
-        std::env::var(RERUN_SHADER_PATH)
+        std::env::var(DALARAN_SHADER_PATH)
             .map_or_else(|_| Ok(Self::default()), |s| s.parse())
             .unwrap_or_else(|_| Self::default())
     }
@@ -637,7 +637,7 @@ impl<Fs: FileSystem> FileResolver<Fs> {
     }
 }
 
-// TODO(cmc): might want an actual test using `RERUN_SHADER_PATH`
+// TODO(cmc): might want an actual test using `DALARAN_SHADER_PATH`
 #[cfg(test)]
 mod tests_file_resolver {
     use unindent::unindent;

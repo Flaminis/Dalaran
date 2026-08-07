@@ -23,7 +23,7 @@ pub struct OauthLoginFlow {
 }
 
 impl OauthLoginFlow {
-    /// Login to Rerun using Authorization Code flow.
+    /// Login to Dalaran using Authorization Code flow.
     ///
     /// This first checks if valid credentials already exist locally,
     /// and doesn't perform the login flow if so, unless `force_login` is set to `true`.

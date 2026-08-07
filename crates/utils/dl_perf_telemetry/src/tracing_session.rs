@@ -1,23 +1,23 @@
 //! Customer-facing tracing-session correlation.
 //!
-//! See `rerun_py/rerun_sdk/rerun/_tracing_session.py` for the user-facing context
+//! See `dalaran_py/dalaran_sdk/dalaran/_tracing_session.py` for the user-facing context
 //! manager. The Rust side here owns the propagation pipeline:
 //!
 //! - The W3C `tracestate` key the session id rides under is
-//!   [`RERUN_SESSION_TRACESTATE_KEY`].
-//! - The `rs_<8-hex>` format is enforced by the [`RerunTracingSessionId`] newtype, whose
-//!   only constructor [`RerunTracingSessionId::parse`] returns `None` on malformed input.
-//!   Anything typed as `RerunTracingSessionId` past that boundary is by construction valid.
+//!   [`DALARAN_SESSION_TRACESTATE_KEY`].
+//! - The `rs_<8-hex>` format is enforced by the [`DalaranTracingSessionId`] newtype, whose
+//!   only constructor [`DalaranTracingSessionId::parse`] returns `None` on malformed input.
+//!   Anything typed as `DalaranTracingSessionId` past that boundary is by construction valid.
 //! - The atomic gate ([`inc_active_tracing_session_count`] /
 //!   [`dec_active_tracing_session_count`]) lets the per-RPC injection path skip
 //!   invoking the [`SessionIdReader`] callback when nobody is opted in. The
-//!   Python GIL is the motivating cost — under `rerun_py` the reader reaches
+//!   Python GIL is the motivating cost — under `dalaran_py` the reader reaches
 //!   into a Python `ContextVar` — but the gate is reader-agnostic.
 //! - [`with_current_tracing_session`] calls the registered [`SessionIdReader`]
 //!   once at the host-language→Rust boundary and stashes the value in a
 //!   `tokio::task_local!` slot so every fan-out RPC inside the wrapped scope
 //!   shares one reader call.
-//! - [`current_rerun_session_id`] is the lookup the propagator
+//! - [`current_dalaran_session_id`] is the lookup the propagator
 //!   (`TraceStateEnricher`) uses on every outbound gRPC injection.
 //! - The `SessionIdReader` callback is supplied by the SDK binding via
 //!   [`crate::Telemetry::init_with_session_id_reader`] (gated on the
@@ -25,24 +25,24 @@
 //!   where the active id lives — by design, so the crate doesn't need to pull
 //!   in a host-language runtime (e.g. pyo3) just to read one string.
 
-/// The W3C `tracestate` key under which the rerun session id propagates.
+/// The W3C `tracestate` key under which the dalaran session id propagates.
 ///
 /// Server-side, `GrpcMakeSpan::make_span` reads this key and records the value as
-/// the `rerun_session_id` span attribute, queryable in Tempo as
-/// `{ .rerun_session_id = "…" }`.
-pub const RERUN_SESSION_TRACESTATE_KEY: &str = "rerun_session_id";
+/// the `dalaran_session_id` span attribute, queryable in Tempo as
+/// `{ .dalaran_session_id = "…" }`.
+pub const DALARAN_SESSION_TRACESTATE_KEY: &str = "dalaran_session_id";
 
-/// A validated rerun session id.
+/// A validated dalaran session id.
 ///
-/// The only constructor is [`RerunTracingSessionId::parse`], which enforces the
+/// The only constructor is [`DalaranTracingSessionId::parse`], which enforces the
 /// `rs_<8-hex>` format (e.g. `rs_cafebabe`). Holding a value of this type is a
 /// compile-time guarantee that the contained string is well-formed: malformed
 /// user input never pollutes server-side span attributes or outbound
 /// `tracestate` headers.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
-pub struct RerunTracingSessionId(String);
+pub struct DalaranTracingSessionId(String);
 
-impl RerunTracingSessionId {
+impl DalaranTracingSessionId {
     /// Generate a fresh random session id of the form `rs_<8 lowercase hex>`.
     ///
     /// Module-private: the only public way to start a session is
@@ -52,7 +52,7 @@ impl RerunTracingSessionId {
         Self(format!("rs_{n:08x}"))
     }
 
-    /// Parse a string into a [`RerunTracingSessionId`].
+    /// Parse a string into a [`DalaranTracingSessionId`].
     ///
     /// Accepts exactly `rs_` followed by 8 lowercase hex digits. Returns `None`
     /// for any other input (wrong prefix, wrong length, uppercase, non-hex).
@@ -75,14 +75,14 @@ impl RerunTracingSessionId {
     }
 }
 
-impl std::fmt::Display for RerunTracingSessionId {
+impl std::fmt::Display for DalaranTracingSessionId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(&self.0)
     }
 }
 
-impl From<RerunTracingSessionId> for String {
-    fn from(id: RerunTracingSessionId) -> Self {
+impl From<DalaranTracingSessionId> for String {
+    fn from(id: DalaranTracingSessionId) -> Self {
         id.0
     }
 }
@@ -134,14 +134,14 @@ impl Drop for ActiveSessionGuard {
 }
 
 /// Callback signature for resolving the active session id from a
-/// host-language store (e.g. a Python `ContextVar` in `rerun_py`).
+/// host-language store (e.g. a Python `ContextVar` in `dalaran_py`).
 ///
 /// Registered once at telemetry init via
 /// [`crate::Telemetry::init_with_session_id_reader`]. Read on the slow path of
-/// [`current_rerun_session_id`] and on the read-once at
+/// [`current_dalaran_session_id`] and on the read-once at
 /// [`with_current_tracing_session`].
 #[cfg(feature = "session_id_reader")]
-pub type SessionIdReader = fn() -> Option<RerunTracingSessionId>;
+pub type SessionIdReader = fn() -> Option<DalaranTracingSessionId>;
 
 #[cfg(feature = "session_id_reader")]
 static SESSION_ID_READER: std::sync::OnceLock<SessionIdReader> = std::sync::OnceLock::new();
@@ -158,7 +158,7 @@ pub(crate) fn set_session_id_reader(reader: SessionIdReader) {
 
 /// Invoke the registered reader, if any. Returns `None` when no reader has
 /// been installed or when the feature is off.
-fn read_via_reader() -> Option<RerunTracingSessionId> {
+fn read_via_reader() -> Option<DalaranTracingSessionId> {
     cfg_select! {
         feature = "session_id_reader" => {
             let reader = SESSION_ID_READER.get()?;
@@ -170,29 +170,29 @@ fn read_via_reader() -> Option<RerunTracingSessionId> {
     }
 }
 
-// Per-tokio-task slot caching the rerun session id for the duration of a
+// Per-tokio-task slot caching the dalaran session id for the duration of a
 // wrapped scope.
 //
 // Set once by `with_current_tracing_session` at the host-language→Rust boundary
-// — typically a pyo3 catalog entry point in `rerun_py`, where calling the
+// — typically a pyo3 catalog entry point in `dalaran_py`, where calling the
 // `SessionIdReader` means acquiring the GIL — and read on every outbound gRPC
-// injection by `current_rerun_session_id` without re-invoking the reader.
+// injection by `current_dalaran_session_id` without re-invoking the reader.
 // Propagates across `.await` within the same tokio task so DataFusion fan-out
 // RPCs all share the value.
 tokio::task_local! {
-    static CURRENT_TRACING_SESSION_ID: Option<RerunTracingSessionId>;
+    static CURRENT_TRACING_SESSION_ID: Option<DalaranTracingSessionId>;
 }
 
-/// Wrap `f` so the active rerun session id is resolved once at entry (via the
+/// Wrap `f` so the active dalaran session id is resolved once at entry (via the
 /// registered [`SessionIdReader`]) and stays accessible to every outbound gRPC
 /// inside it without re-invoking the reader.
 ///
-/// Used at every pyo3 catalog entry point in `rerun_py` to amortize the GIL
+/// Used at every pyo3 catalog entry point in `dalaran_py` to amortize the GIL
 /// cost across the catalog method's fan-out.
 #[must_use]
 pub fn with_current_tracing_session<F>(
     f: F,
-) -> tokio::task::futures::TaskLocalFuture<Option<RerunTracingSessionId>, F>
+) -> tokio::task::futures::TaskLocalFuture<Option<DalaranTracingSessionId>, F>
 where
     F: std::future::Future,
 {
@@ -203,14 +203,14 @@ where
 /// One-shot reader-callback invocation used by [`with_current_tracing_session`].
 /// Gates on the atomic counter so the host-language store is never touched
 /// when no scope is active.
-fn read_current_tracing_session_id_at_boundary() -> Option<RerunTracingSessionId> {
+fn read_current_tracing_session_id_at_boundary() -> Option<DalaranTracingSessionId> {
     if ACTIVE_TRACING_SESSION_COUNT.load(std::sync::atomic::Ordering::Acquire) == 0 {
         return None;
     }
     read_via_reader()
 }
 
-/// Returns the active rerun session id, if any.
+/// Returns the active dalaran session id, if any.
 ///
 /// Source resolution, in order:
 ///
@@ -223,9 +223,9 @@ fn read_current_tracing_session_id_at_boundary() -> Option<RerunTracingSessionId
 ///    Only reached when the RPC fires outside any boundary helper (rare).
 ///
 /// Returns `None` when no scope is active, the value fails
-/// [`RerunTracingSessionId::parse`], or no reader has been registered (e.g.
+/// [`DalaranTracingSessionId::parse`], or no reader has been registered (e.g.
 /// the binary was built without the `session_id_reader` feature).
-pub fn current_rerun_session_id() -> Option<RerunTracingSessionId> {
+pub fn current_dalaran_session_id() -> Option<DalaranTracingSessionId> {
     if ACTIVE_TRACING_SESSION_COUNT.load(std::sync::atomic::Ordering::Acquire) == 0 {
         return None;
     }
@@ -237,36 +237,36 @@ pub fn current_rerun_session_id() -> Option<RerunTracingSessionId> {
     read_via_reader()
 }
 
-/// Test-only: scope `sid` into the task-local that [`current_rerun_session_id`]
+/// Test-only: scope `sid` into the task-local that [`current_dalaran_session_id`]
 /// reads, *and* bump the process-wide active-session counter so the atomic gate
 /// doesn't short-circuit to `None`. Used by sibling crate modules (e.g. the
-/// `RerunSessionRootSpanProcessor` tests in `tracestate.rs`) that need to
+/// `DalaranSessionRootSpanProcessor` tests in `tracestate.rs`) that need to
 /// simulate an active `tracing_session()` scope without a Python interpreter.
 #[cfg(test)]
 pub(crate) async fn scope_session_id_for_test<F: std::future::Future>(
-    sid: Option<RerunTracingSessionId>,
+    sid: Option<DalaranTracingSessionId>,
     f: F,
 ) -> F::Output {
     let _guard = ActiveSessionGuard::new();
     CURRENT_TRACING_SESSION_ID.scope(sid, f).await
 }
 
-/// Tag every Rerun Hub request inside `f` with a fresh session id, so the
+/// Tag every Dalaran Hub request inside `f` with a fresh session id, so the
 /// full set of requests can be correlated end-to-end for support.
 ///
 /// Two INFO log lines are emitted through the `tracing` stack — one on
 /// entry, one on exit:
 ///
 /// ```text
-/// INFO rerun tracing session started: rs_8f3a91e2
+/// INFO dalaran tracing session started: rs_8f3a91e2
 /// …
-/// INFO rerun tracing session finished rerun_session_id=rs_8f3a91e2 elapsed_s=12.345
+/// INFO dalaran tracing session finished dalaran_session_id=rs_8f3a91e2 elapsed_s=12.345
 /// ```
 ///
 /// The "started" log fires the moment the scope is entered, so the id
 /// stays visible even if the workflow crashes or hangs before completing.
-/// Send that id to Rerun support and they can query
-/// `{ .rerun_session_id = "rs_…" }` in our trace store to surface every
+/// Send that id to Dalaran support and they can query
+/// `{ .dalaran_session_id = "rs_…" }` in our trace store to surface every
 /// related request.
 ///
 /// The "finished" log fires on normal return from `f` (whether it resolves
@@ -276,7 +276,7 @@ pub(crate) async fn scope_session_id_for_test<F: std::future::Future>(
 ///
 /// Counterpart to Python's `tracing_session()` context manager. When you
 /// also opt into exporting client-side traces (by setting
-/// `RERUN_TELEMETRY_ENDPOINT`), those exported spans are tagged
+/// `DALARAN_TELEMETRY_ENDPOINT`), those exported spans are tagged
 /// with the same id, so the client→server trace tree stays correlated.
 ///
 /// # Example
@@ -301,13 +301,13 @@ pub(crate) async fn scope_session_id_for_test<F: std::future::Future>(
 /// Most callers don't need the id in code — the INFO log is the
 /// customer-facing way to retrieve it. If you do need it (e.g., to embed
 /// in a support ticket emitted by your own logger), call
-/// [`current_rerun_session_id`] from inside `f`:
+/// [`current_dalaran_session_id`] from inside `f`:
 ///
 /// ```ignore
-/// use dl_perf_telemetry::{current_rerun_session_id, with_tracing_session};
+/// use dl_perf_telemetry::{current_dalaran_session_id, with_tracing_session};
 ///
 /// with_tracing_session(async {
-///     let sid = current_rerun_session_id().expect("inside with_tracing_session");
+///     let sid = current_dalaran_session_id().expect("inside with_tracing_session");
 ///     my_logger::warn!("about to run a long workflow under session {sid}");
 ///     // …
 /// })
@@ -321,16 +321,16 @@ pub async fn with_tracing_session<F: std::future::Future>(f: F) -> F::Output {
     // no-op-with-warning branch.
     if !crate::is_telemetry_active() {
         tracing::warn!(
-            "with_tracing_session is a no-op: the rerun telemetry stack is not active. \
+            "with_tracing_session is a no-op: the dalaran telemetry stack is not active. \
              Call `Telemetry::init` first to enable session correlation."
         );
         return f.await;
     }
 
-    let sid = RerunTracingSessionId::fresh();
-    tracing::info!("rerun tracing session started: {sid}");
+    let sid = DalaranTracingSessionId::fresh();
+    tracing::info!("dalaran tracing session started: {sid}");
     // Participate in the process-wide active-scope counter (same as
-    // Python's `__enter__`/`__exit__`) so `current_rerun_session_id`'s
+    // Python's `__enter__`/`__exit__`) so `current_dalaran_session_id`'s
     // atomic short-circuit correctly reflects that a session is active.
     // RAII so an `f` panic still decrements — see [`ActiveSessionGuard`].
     let _guard = ActiveSessionGuard::new();
@@ -341,9 +341,9 @@ pub async fn with_tracing_session<F: std::future::Future>(f: F) -> F::Output {
     // and a misleading "finished" log on a crash would just add noise. The
     // counter, by contrast, is decremented unconditionally via `_guard`.
     tracing::info!(
-        rerun_session_id = %sid,
+        dalaran_session_id = %sid,
         elapsed_s = format!("{:.3}", t0.elapsed().as_secs_f64()),
-        "rerun tracing session finished",
+        "dalaran tracing session finished",
     );
     out
 }
@@ -354,27 +354,27 @@ mod tests {
 
     #[test]
     fn rejects_malformed_ids() {
-        assert!(RerunTracingSessionId::parse("").is_none());
-        assert!(RerunTracingSessionId::parse("rs_").is_none());
-        assert!(RerunTracingSessionId::parse("rs_cafebab").is_none()); // 7 hex chars
-        assert!(RerunTracingSessionId::parse("rs_cafebabe1").is_none()); // 9 hex chars
-        assert!(RerunTracingSessionId::parse("rs_CAFEBABE").is_none()); // uppercase rejected
-        assert!(RerunTracingSessionId::parse("rs_cafebabz").is_none()); // non-hex
-        assert!(RerunTracingSessionId::parse("xx_cafebabe").is_none()); // wrong prefix
-        assert!(RerunTracingSessionId::parse("cafebabe").is_none()); // missing prefix
+        assert!(DalaranTracingSessionId::parse("").is_none());
+        assert!(DalaranTracingSessionId::parse("rs_").is_none());
+        assert!(DalaranTracingSessionId::parse("rs_cafebab").is_none()); // 7 hex chars
+        assert!(DalaranTracingSessionId::parse("rs_cafebabe1").is_none()); // 9 hex chars
+        assert!(DalaranTracingSessionId::parse("rs_CAFEBABE").is_none()); // uppercase rejected
+        assert!(DalaranTracingSessionId::parse("rs_cafebabz").is_none()); // non-hex
+        assert!(DalaranTracingSessionId::parse("xx_cafebabe").is_none()); // wrong prefix
+        assert!(DalaranTracingSessionId::parse("cafebabe").is_none()); // missing prefix
     }
 
     #[test]
     fn accepts_well_formed_id() {
         assert_eq!(
-            RerunTracingSessionId::parse("rs_cafebabe")
+            DalaranTracingSessionId::parse("rs_cafebabe")
                 .unwrap()
                 .as_str(),
             "rs_cafebabe",
         );
-        assert!(RerunTracingSessionId::parse("rs_00000000").is_some());
-        assert!(RerunTracingSessionId::parse("rs_ffffffff").is_some());
-        assert!(RerunTracingSessionId::parse("rs_0123abcd").is_some());
+        assert!(DalaranTracingSessionId::parse("rs_00000000").is_some());
+        assert!(DalaranTracingSessionId::parse("rs_ffffffff").is_some());
+        assert!(DalaranTracingSessionId::parse("rs_0123abcd").is_some());
     }
 
     /// `fresh()` must produce ids that round-trip through `parse`.
@@ -384,9 +384,9 @@ mod tests {
     #[test]
     fn fresh_generates_valid_id() {
         for _ in 0..16 {
-            let sid = RerunTracingSessionId::fresh();
+            let sid = DalaranTracingSessionId::fresh();
             assert!(
-                RerunTracingSessionId::parse(&sid.to_string()).is_some(),
+                DalaranTracingSessionId::parse(&sid.to_string()).is_some(),
                 "fresh() produced unparsable id: {sid}"
             );
         }
@@ -412,23 +412,23 @@ mod tests {
             .build()
             .unwrap();
 
-        let captures: Arc<Mutex<[Option<RerunTracingSessionId>; 3]>> =
+        let captures: Arc<Mutex<[Option<DalaranTracingSessionId>; 3]>> =
             Arc::new(Mutex::new([None, None, None]));
         let captures_outer = Arc::clone(&captures);
 
         rt.block_on(super::with_tracing_session(async move {
             // 1: outer scope active
-            captures_outer.lock()[0] = current_rerun_session_id();
+            captures_outer.lock()[0] = current_dalaran_session_id();
 
             let captures_inner = Arc::clone(&captures_outer);
             super::with_tracing_session(async move {
                 // 2: inner scope shadows outer
-                captures_inner.lock()[1] = current_rerun_session_id();
+                captures_inner.lock()[1] = current_dalaran_session_id();
             })
             .await;
 
             // 3: outer restored after inner exits
-            captures_outer.lock()[2] = current_rerun_session_id();
+            captures_outer.lock()[2] = current_dalaran_session_id();
         }));
 
         let captures = captures.lock();
@@ -447,7 +447,7 @@ mod tests {
 
         // 4: session fully cleared after outermost exits
         assert!(
-            current_rerun_session_id().is_none(),
+            current_dalaran_session_id().is_none(),
             "session should be cleared after outermost exits"
         );
     }
@@ -467,7 +467,7 @@ mod tests {
 
     /// A panic inside `with_tracing_session`'s body must not leak the
     /// active-session counter. Without the RAII guard the atomic gate would
-    /// stay stuck "active" and every subsequent `current_rerun_session_id`
+    /// stay stuck "active" and every subsequent `current_dalaran_session_id`
     /// call in the process would skip the fast path forever.
     #[test]
     fn counter_balanced_on_panic_in_body() {

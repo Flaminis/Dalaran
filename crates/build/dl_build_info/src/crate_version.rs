@@ -8,7 +8,7 @@ mod meta {
     pub const DEV_ALPHA: u8 = 0b11000000;
 }
 
-/// The version of a Rerun crate.
+/// The version of a Dalaran crate.
 ///
 /// Sub-set of semver supporting `major.minor.patch-{alpha,rc}.N+dev`.
 ///

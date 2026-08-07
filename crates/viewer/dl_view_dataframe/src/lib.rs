@@ -1,4 +1,4 @@
-//! Rerun `Data` View
+//! Dalaran `Data` View
 //!
 //! A View that shows the data contained in entities in a table.
 

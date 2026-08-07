@@ -1,0 +1,17 @@
+namespace dalaran.blueprint.datatypes;
+
+/// A timeline column in a table.
+table TimelineColumn (
+  "attr.python.aliases": "datatypes.Utf8Like",
+  "attr.rust.derive": "PartialEq, Eq, Hash",
+  "attr.dalaran.scope": "blueprint"
+) {
+  /// Is this column visible?
+  ///
+  /// Defaults to true.
+  visible: dalaran.datatypes.Bool (order: 100);
+
+  /// Which timeline is this?
+  timeline: dalaran.datatypes.Utf8 (order: 200);
+}
+

@@ -21,7 +21,7 @@ use crate::{CodecError, CodecResult, Decodable as _, StreamFooterEntry, ToApplic
 ///
 /// Each `RrdManifest` corresponds to one, and exactly one, RRD stream (i.e. recording).
 /// This restriction exists to make working with multiple RRD streams much simpler: due to the way
-/// the Rerun data model works, filtering rows of data from a manifest can have hard-to-predict
+/// the Dalaran data model works, filtering rows of data from a manifest can have hard-to-predict
 /// second order effects on the schema of the stream as a whole.
 /// By keeping manifests for different recordings separate, we remove the need to filter per
 /// recording ID, greatly simplifying the process.
@@ -127,7 +127,7 @@ use crate::{CodecError, CodecResult, Decodable as _, StreamFooterEntry, ToApplic
 ///
 /// ## A note on filtering
 ///
-/// Always be on your toes when filtering rows out of an RRD manifest. Due to how the Rerun data
+/// Always be on your toes when filtering rows out of an RRD manifest. Due to how the Dalaran data
 /// model works, removing rows (and therefore chunks) from a recording can also affect the number
 /// of columns in that recording (because e.g. all the data for a specific entity path is gone),
 /// which in turn will affect the Sorbet schema of the recording too.
@@ -500,10 +500,10 @@ impl RawRrdManifest {
                     continue;
                 }
 
-                let Some(component) = f.metadata().get("rerun:component") else {
+                let Some(component) = f.metadata().get("dalaran:component") else {
                     return Err(CodecError::from(ChunkError::Malformed {
                         reason: format!(
-                            "column '{}' is missing rerun:component metadata",
+                            "column '{}' is missing dalaran:component metadata",
                             f.name()
                         ),
                     }));
@@ -540,8 +540,8 @@ impl RawRrdManifest {
             .iter()
             .filter_map(|f| {
                 f.metadata()
-                    .get("rerun:index")
-                    .and_then(|index| f.metadata().get("rerun:component").map(|c| (index, c, f)))
+                    .get("dalaran:index")
+                    .and_then(|index| f.metadata().get("dalaran:component").map(|c| (index, c, f)))
             })
             .filter(|(_index, _component, field)| field.name().ends_with(":start"))
             .collect_vec();
@@ -569,14 +569,14 @@ impl RawRrdManifest {
         let mut columns_per_index = HashMap::<String, IndexColumns<'_>>::new();
         for (index, component, field) in indexes {
             let index = index.as_str();
-            if index == "rerun:static" {
+            if index == "dalaran:static" {
                 continue;
             }
 
             let Some((_, col_start)) = itertools::izip!(fields, columns).find(|(f, _col)| {
                 Self::is_specific_index(f, index)
                     && f.name().ends_with(":start")
-                    && f.metadata().get("rerun:component") == Some(component)
+                    && f.metadata().get("dalaran:component") == Some(component)
             }) else {
                 return Err(CodecError::from(ChunkError::Malformed {
                     reason: format!("start index is missing for {component}"),
@@ -585,7 +585,7 @@ impl RawRrdManifest {
             let Some((_, col_end)) = itertools::izip!(fields, columns).find(|(f, _col)| {
                 Self::is_specific_index(f, index)
                     && f.name().ends_with(":end")
-                    && f.metadata().get("rerun:component") == Some(component)
+                    && f.metadata().get("dalaran:component") == Some(component)
             }) else {
                 return Err(CodecError::from(ChunkError::Malformed {
                     reason: format!("end index is missing for {component}"),
@@ -595,7 +595,7 @@ impl RawRrdManifest {
                 itertools::izip!(fields, columns).find(|(f, _col)| {
                     Self::is_specific_index(f, index)
                         && f.name().ends_with(":num_rows")
-                        && f.metadata().get("rerun:component") == Some(component)
+                        && f.metadata().get("dalaran:component") == Some(component)
                 })
             else {
                 return Err(CodecError::from(ChunkError::Malformed {
@@ -725,27 +725,27 @@ impl PartialEq for RawRrdManifest {
 
 // Index-column helpers.
 //
-// Rerun index columns are tagged with `rerun:*` metadata keys that describe what kind of index
+// Dalaran index columns are tagged with `dalaran:*` metadata keys that describe what kind of index
 // they represent (static vs temporal, sequence vs timestamp, start/end/len marker, etc). These
 // helpers centralize the key-name conventions so downstream code doesn't reach into the metadata
 // map directly.
 impl RawRrdManifest {
-    /// `true` if the field is a Rerun index column (temporal or static).
+    /// `true` if the field is a Dalaran index column (temporal or static).
     pub fn is_index(field: &Field) -> bool {
-        field.metadata().contains_key("rerun:index")
+        field.metadata().contains_key("dalaran:index")
     }
 
     /// The index name (e.g. `"frame_nr"`, `"log_time"`, `"static"`) for a field, if any.
     pub fn get_index_name(field: &Field) -> Option<&str> {
-        field.metadata().get("rerun:index").map(|s| s.as_str())
+        field.metadata().get("dalaran:index").map(|s| s.as_str())
     }
 
     /// The index kind (`"sequence"`, `"timestamp"`, `"duration"`) for a field, if any.
     pub fn get_index_kind(field: &Field) -> Option<&str> {
-        field.metadata().get("rerun:index_kind").map(|s| s.as_str())
+        field.metadata().get("dalaran:index_kind").map(|s| s.as_str())
     }
 
-    /// `true` if the field is a Rerun index column with the given name.
+    /// `true` if the field is a Dalaran index column with the given name.
     pub fn is_specific_index(field: &Field, index_name: &str) -> bool {
         Self::get_index_name(field) == Some(index_name)
     }
@@ -759,7 +759,7 @@ impl RawRrdManifest {
     pub fn is_index_start(field: &Field) -> bool {
         field
             .metadata()
-            .get("rerun:index_marker")
+            .get("dalaran:index_marker")
             .map(|s| s.as_str())
             == Some("start")
     }
@@ -768,7 +768,7 @@ impl RawRrdManifest {
     pub fn is_index_end(field: &Field) -> bool {
         field
             .metadata()
-            .get("rerun:index_marker")
+            .get("dalaran:index_marker")
             .map(|s| s.as_str())
             == Some("end")
     }
@@ -777,7 +777,7 @@ impl RawRrdManifest {
     pub fn is_index_length(field: &Field) -> bool {
         field
             .metadata()
-            .get("rerun:index_marker")
+            .get("dalaran:index_marker")
             .map(|s| s.as_str())
             == Some("len")
     }
@@ -786,7 +786,7 @@ impl RawRrdManifest {
     pub fn is_index_global_temporal(field: &Field) -> bool {
         Self::is_index(field)
             && !Self::is_index_static(field)
-            && !field.metadata().contains_key("rerun:component")
+            && !field.metadata().contains_key("dalaran:component")
     }
 }
 
@@ -821,7 +821,7 @@ impl RawRrdManifest {
 
     /// Computes the appropriate column name for the provided parts.
     ///
-    /// The name is guaranteed to be sanitized and safe to use in all environments where Rerun data
+    /// The name is guaranteed to be sanitized and safe to use in all environments where Dalaran data
     /// can generally be found (Lance, external dataframe libraries, etc).
     ///
     /// If caller doesn't provide any part (i.e. all are `None`), an empty string is returned.
@@ -870,7 +870,7 @@ impl RawRrdManifest {
     // which Arrow inflates because it allocates full-length buffers even for
     // mostly-null columns. The maps above already captured all indexing data from these
     // sparse columns; the RecordBatch is only used for `take_record_batch` → `FetchChunks`,
-    // which needs exactly: chunk_id, chunk_key, chunk_partition_id, rerun_partition_layer.
+    // which needs exactly: chunk_id, chunk_key, chunk_partition_id, dalaran_partition_layer.
     //
     // By dropping the sparse columns here, we reduce memory ~10-20x
     // and make `take_record_batch` 100x faster.
@@ -1115,8 +1115,8 @@ impl RawRrdManifest {
             .iter()
             .filter_map(|f| {
                 let md = f.metadata();
-                (md.get("rerun:kind").map(|s| s.as_str()) == Some("index"))
-                    .then(|| md.contains_key("rerun:index_name").then_some(f))
+                (md.get("dalaran:kind").map(|s| s.as_str()) == Some("index"))
+                    .then(|| md.contains_key("dalaran:index_name").then_some(f))
                     .flatten()
             })
             .unique()
@@ -1126,7 +1126,7 @@ impl RawRrdManifest {
             .sorbet_schema
             .fields()
             .iter()
-            .filter(|f| f.metadata().get("rerun:kind").map(|s| s.as_str()) == Some("data"))
+            .filter(|f| f.metadata().get("dalaran:kind").map(|s| s.as_str()) == Some("data"))
             .unique()
             .collect_vec();
 
@@ -1134,17 +1134,17 @@ impl RawRrdManifest {
             // If there are any static chunks, then all components must have :has_static_data indexes.
             for column in &sorbet_columns {
                 let md = column.metadata();
-                let Some(component) = md.get("rerun:component") else {
+                let Some(component) = md.get("dalaran:component") else {
                     return Err(CodecError::from(ChunkError::Malformed {
                         reason: format!(
-                            "column '{}' is missing rerun:component metadata",
+                            "column '{}' is missing dalaran:component metadata",
                             column.name()
                         ),
                     }));
                 };
                 let descr = ComponentDescriptor {
                     archetype: md
-                        .get("rerun:archetype")
+                        .get("dalaran:archetype")
                         .and_then(|s| ArchetypeName::try_new(s).ok()),
                     component: ComponentIdentifier::try_new(component).map_err(|err| {
                         CodecError::from(ChunkError::Malformed {
@@ -1152,7 +1152,7 @@ impl RawRrdManifest {
                         })
                     })?,
                     component_type: md
-                        .get("rerun:component_type")
+                        .get("dalaran:component_type")
                         .and_then(|s| ComponentType::try_new(s).ok()),
                 };
                 let column_name = Self::compute_column_name(
@@ -1216,17 +1216,17 @@ impl RawRrdManifest {
             for sorbet_column in &sorbet_columns {
                 let md = sorbet_column.metadata();
 
-                let Some(component) = md.get("rerun:component") else {
+                let Some(component) = md.get("dalaran:component") else {
                     return Err(CodecError::from(ChunkError::Malformed {
                         reason: format!(
-                            "column '{}' is missing rerun:component metadata",
+                            "column '{}' is missing dalaran:component metadata",
                             sorbet_column.name()
                         ),
                     }));
                 };
                 let descr = ComponentDescriptor {
                     archetype: md
-                        .get("rerun:archetype")
+                        .get("dalaran:archetype")
                         .and_then(|s| ArchetypeName::try_new(s).ok()),
                     component: ComponentIdentifier::try_new(component).map_err(|err| {
                         CodecError::from(ChunkError::Malformed {
@@ -1234,7 +1234,7 @@ impl RawRrdManifest {
                         })
                     })?,
                     component_type: md
-                        .get("rerun:component_type")
+                        .get("dalaran:component_type")
                         .and_then(|s| ComponentType::try_new(s).ok()),
                 };
 
@@ -1247,9 +1247,9 @@ impl RawRrdManifest {
                         Some(suffix),
                     );
 
-                    if md.get("rerun:is_static").map(|s| s.as_str()) == Some("true") {
+                    if md.get("dalaran:is_static").map(|s| s.as_str()) == Some("true") {
                         // Static columns don't have :start nor :end columns… unless they exist
-                        // both temporally and statically, something which is legal in Rerun, and
+                        // both temporally and statically, something which is legal in Dalaran, and
                         // will end up with a final Sorbet schema that declares those column as
                         // static (which is correct, since static overrides everything else), even
                         // though there are still traces of temporal data for that same column!
@@ -1324,19 +1324,19 @@ impl RawRrdManifest {
     pub const FIELD_CHUNK_BYTE_SIZE_UNCOMPRESSED: &str = "chunk_byte_size_uncompressed";
     pub const FIELD_CHUNK_KEY: &str = "chunk_key";
 
-    /// These fields might be returned by some implementations (such as Rerun Hub) that do not
+    /// These fields might be returned by some implementations (such as Dalaran Hub) that do not
     /// support fetching chunks with only a set of chunk-keys.
     /// We generally want to ignore them during tests and sanity checking, and just blindly forward
     /// them as-is otherwise.
     pub const COMMON_IMPL_SPECIFIC_FIELDS: &[&str] = &[
         "chunk_partition_id",
         "chunk_partition_layer",
-        "rerun_partition_id",
-        "rerun_partition_layer",
+        "dalaran_partition_id",
+        "dalaran_partition_layer",
         "chunk_segment_id",
         "chunk_segment_layer",
-        "rerun_segment_id",
-        "rerun_segment_layer",
+        "dalaran_segment_id",
+        "dalaran_segment_layer",
     ];
 
     pub fn field_chunk_id() -> Field {
@@ -1426,17 +1426,17 @@ impl RawRrdManifest {
         let mut metadata = std::collections::HashMap::default();
         metadata.extend(
             [
-                Some(("rerun:index".to_owned(), "rerun:static".to_owned())), //
+                Some(("dalaran:index".to_owned(), "dalaran:static".to_owned())), //
                 desc.component_type.map(|component_type| {
                     (
-                        "rerun:component_type".to_owned(),
+                        "dalaran:component_type".to_owned(),
                         component_type.full_name().to_owned(),
                     )
                 }),
                 desc.archetype
                     .as_ref()
-                    .map(|name| ("rerun:archetype".to_owned(), name.full_name().to_owned())),
-                Some(("rerun:component".to_owned(), desc.component.to_string())),
+                    .map(|name| ("dalaran:archetype".to_owned(), name.full_name().to_owned())),
+                Some(("dalaran:component".to_owned(), desc.component.to_string())),
             ]
             .into_iter()
             .flatten(),
@@ -1461,20 +1461,20 @@ impl RawRrdManifest {
             Self::compute_column_name(None, None, desc, Some(index_name), Some(marker));
 
         let mut metadata = std::collections::HashMap::default();
-        metadata.extend([("rerun:index".to_owned(), timeline.name().to_string())]);
+        metadata.extend([("dalaran:index".to_owned(), timeline.name().to_string())]);
         if let Some(desc) = desc {
             metadata.extend(
                 [
                     desc.component_type.map(|component_type| {
                         (
-                            "rerun:component_type".to_owned(),
+                            "dalaran:component_type".to_owned(),
                             component_type.full_name().to_owned(),
                         )
                     }),
                     desc.archetype
                         .as_ref()
-                        .map(|name| ("rerun:archetype".to_owned(), name.full_name().to_owned())),
-                    Some(("rerun:component".to_owned(), desc.component.to_string())),
+                        .map(|name| ("dalaran:archetype".to_owned(), name.full_name().to_owned())),
+                    Some(("dalaran:component".to_owned(), desc.component.to_string())),
                 ]
                 .into_iter()
                 .flatten(),

@@ -1,0 +1,14 @@
+namespace dalaran.blueprint.archetypes;
+
+/// Tries to move the center of mass of the graph to the origin.
+struct ForceCenter (
+  "attr.dalaran.scope": "blueprint"
+) {
+  /// Whether the center force is enabled.
+  ///
+  /// The center force tries to move the center of mass of the graph towards the origin.
+  enabled: dalaran.blueprint.components.Enabled ("attr.dalaran.component_optional", nullable, order: 100);
+
+  /// The strength of the force.
+  strength: dalaran.blueprint.components.ForceStrength ("attr.dalaran.component_optional", nullable, order: 200);
+}

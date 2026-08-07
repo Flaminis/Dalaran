@@ -41,7 +41,7 @@ stream_from_http = [
 
 [dependencies]
 
-# Rerun:
+# Dalaran:
 dl_arrow_util.workspace = true
 dl_async = { workspace = true, optional = true }
 dl_build_info.workspace = true

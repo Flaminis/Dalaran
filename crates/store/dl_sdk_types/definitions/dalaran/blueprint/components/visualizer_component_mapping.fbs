@@ -1,0 +1,10 @@
+namespace dalaran.blueprint.components;
+
+/// Associates components of an entity to components of a visualizer.
+table VisualizerComponentMapping (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "PartialEq, Eq"
+) {
+  /// The component mapping pairs.
+  mapping: dalaran.blueprint.datatypes.VisualizerComponentMapping (order: 100);
+}

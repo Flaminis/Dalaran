@@ -45,7 +45,7 @@ impl RowIdColumnDescriptor {
 
         let mut metadata = std::collections::HashMap::from([
             (
-                crate::metadata::RERUN_KIND.to_owned(),
+                crate::metadata::DALARAN_KIND.to_owned(),
                 crate::ColumnKind::RowId.to_string(),
             ),
             (
@@ -59,7 +59,7 @@ impl RowIdColumnDescriptor {
             ),
         ]);
         if *is_sorted {
-            metadata.insert("rerun:is_sorted".to_owned(), "true".to_owned());
+            metadata.insert("dalaran:is_sorted".to_owned(), "true".to_owned());
         }
 
         let nullable = false; // All rows has an id
@@ -79,7 +79,7 @@ impl TryFrom<&ArrowField> for RowIdColumnDescriptor {
     fn try_from(field: &ArrowField) -> Result<Self, Self::Error> {
         WrongDatatypeError::ensure_datatype(field, &RowId::arrow_datatype())?;
         Ok(Self {
-            is_sorted: field.metadata().get_bool("rerun:is_sorted"),
+            is_sorted: field.metadata().get_bool("dalaran:is_sorted"),
         })
     }
 }

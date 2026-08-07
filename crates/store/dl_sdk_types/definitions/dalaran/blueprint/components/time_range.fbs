@@ -1,0 +1,13 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// A time range on an unspecified timeline using either relative or absolute boundaries.
+table TimeRange (
+  "attr.arrow.transparent",
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Copy, PartialEq, Eq",
+  "attr.rust.repr": "transparent"
+) {
+  time_range: dalaran.datatypes.TimeRange (order: 100);
+}

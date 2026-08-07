@@ -25,8 +25,8 @@ pub use self::hashing::{
 };
 pub(crate) use self::rebuild_detector::Packages;
 pub use self::rebuild_detector::{
-    get_and_track_env_var, is_tracked_env_var_set, rebuild_if_crate_changed, rerun_if_changed,
-    rerun_if_changed_glob, rerun_if_changed_or_doesnt_exist, write_file_if_necessary,
+    get_and_track_env_var, is_tracked_env_var_set, rebuild_if_crate_changed, dalaran_if_changed,
+    dalaran_if_changed_glob, dalaran_if_changed_or_doesnt_exist, write_file_if_necessary,
 };
 pub use self::rustfmt::rustfmt_str;
 
@@ -34,7 +34,7 @@ pub use self::rustfmt::rustfmt_str;
 
 /// Should we export the current git hash/branch for developers in the workspace?
 ///
-/// It will be visible in analytics, in the viewer's about-menu, and with `rerun --version`.
+/// It will be visible in analytics, in the viewer's about-menu, and with `dalaran --version`.
 ///
 /// To do so accurately may incur unnecessary recompiles, so only turn this on if you really need it.
 const EXPORT_GIT_FOR_DEVELOPERS: bool = false;
@@ -62,8 +62,8 @@ pub enum Environment {
     /// We are running `cargo publish` (via `scripts/ci/crates.py`); _probably_ on CI.
     PublishingCrates,
 
-    /// We are running on CI for the Rerun workspace, but NOT publishing crates.
-    RerunCI,
+    /// We are running on CI for the Dalaran workspace, but NOT publishing crates.
+    DalaranCI,
 
     /// We are running in the conda build environment.
     ///
@@ -71,17 +71,17 @@ pub enum Environment {
     /// from the conda feed-stock and the build happens via source downloaded from the
     /// github-hosted tgz.
     ///
-    /// See <https://github.com/conda-forge/rerun-sdk-feedstock>.
+    /// See <https://github.com/conda-forge/dalaran-sdk-feedstock>.
     CondaBuild,
 
     /// Are we a developer running inside the workspace of <https://github.com/rerun-io/rerun> ?
     DeveloperInWorkspace,
 
-    /// We are not on Rerun's CI, and not in the Rerun workspace.
+    /// We are not on Dalaran's CI, and not in the Dalaran workspace.
     ///
-    /// This is _most likely_ a Rerun user who is compiling a `re_` crate
+    /// This is _most likely_ a Dalaran user who is compiling a `re_` crate
     /// because they depend on it either directly or indirectly in their `Cargo.toml`,
-    /// or they running `cargo install rerun-cli --locked` or other tool that depend on a `re_` crate.
+    /// or they running `cargo install dalaran-cli --locked` or other tool that depend on a `re_` crate.
     ///
     /// In these cases we should do as little shenanigans in the `build.rs` as possible.
     UsedAsDependency,
@@ -90,23 +90,23 @@ pub enum Environment {
 impl Environment {
     /// Detect what environment we are running in.
     pub fn detect() -> Self {
-        let is_in_rerun_workspace = is_tracked_env_var_set("IS_IN_RERUN_WORKSPACE");
+        let is_in_dalaran_workspace = is_tracked_env_var_set("IS_IN_DALARAN_WORKSPACE");
 
-        if is_tracked_env_var_set("RERUN_IS_PUBLISHING_CRATES") {
-            // "RERUN_IS_PUBLISHING_CRATES" is set by `scripts/ci/crates.py`
-            eprintln!("Environment: env-var RERUN_IS_PUBLISHING_CRATES is set");
+        if is_tracked_env_var_set("DALARAN_IS_PUBLISHING_CRATES") {
+            // "DALARAN_IS_PUBLISHING_CRATES" is set by `scripts/ci/crates.py`
+            eprintln!("Environment: env-var DALARAN_IS_PUBLISHING_CRATES is set");
             Self::PublishingCrates
-        } else if is_in_rerun_workspace && std::env::var("CI").is_ok() {
+        } else if is_in_dalaran_workspace && std::env::var("CI").is_ok() {
             // `CI` is an env-var set by GitHub actions.
-            eprintln!("Environment: env-var IS_IN_RERUN_WORKSPACE and CI are set");
-            Self::RerunCI
+            eprintln!("Environment: env-var IS_IN_DALARAN_WORKSPACE and CI are set");
+            Self::DalaranCI
         } else if std::env::var("CONDA_BUILD").is_ok() {
             // `CONDA_BUILD` is an env-var set by conda build
             eprintln!("Environment: env-var CONDA_BUILD is set");
             Self::CondaBuild
-        } else if is_in_rerun_workspace {
-            // IS_IN_RERUN_WORKSPACE is set by `.cargo/config.toml` and also in the Rust-analyzer settings in `.vscode/settings.json`
-            eprintln!("Environment: env-var IS_IN_RERUN_WORKSPACE is set");
+        } else if is_in_dalaran_workspace {
+            // IS_IN_DALARAN_WORKSPACE is set by `.cargo/config.toml` and also in the Rust-analyzer settings in `.vscode/settings.json`
+            eprintln!("Environment: env-var IS_IN_DALARAN_WORKSPACE is set");
             Self::DeveloperInWorkspace
         } else {
             eprintln!("Environment: Not on CI and not in workspace");
@@ -122,21 +122,21 @@ pub fn export_build_info_vars_for_crate(crate_name: &str) {
     let environment = Environment::detect();
 
     let export_datetime = match environment {
-        Environment::PublishingCrates | Environment::RerunCI | Environment::CondaBuild => true,
+        Environment::PublishingCrates | Environment::DalaranCI | Environment::CondaBuild => true,
 
         // Datetime won't always be accurate unless we rebuild as soon as a dependency changes,
         // and we don't want to add that burden to our users. Thus, it's off by default.
         Environment::DeveloperInWorkspace | Environment::UsedAsDependency => {
-            is_tracked_env_var_set("RERUN_ADD_BUILD_TIME_TO_BUILD_INFO")
+            is_tracked_env_var_set("DALARAN_ADD_BUILD_TIME_TO_BUILD_INFO")
         }
     };
 
     let export_git_info = match environment {
-        Environment::PublishingCrates | Environment::RerunCI => true,
+        Environment::PublishingCrates | Environment::DalaranCI => true,
 
         Environment::DeveloperInWorkspace => EXPORT_GIT_FOR_DEVELOPERS,
 
-        // We shouldn't show the users git hash/branch in the rerun viewer.
+        // We shouldn't show the users git hash/branch in the dalaran viewer.
         // TODO(jleibs): Conda builds run off a downloaded source tar-ball
         // the git environment is from conda itself.
         Environment::UsedAsDependency | Environment::CondaBuild => false,
@@ -197,16 +197,16 @@ pub fn export_build_info_vars_for_crate(crate_name: &str) {
         set_env("RE_BUILD_RUSTC_VERSION", &rustc);
         set_env("RE_BUILD_LLVM_VERSION", &llvm);
 
-        // We need to check `IS_IN_RERUN_WORKSPACE` in the build-script (here),
+        // We need to check `IS_IN_DALARAN_WORKSPACE` in the build-script (here),
         // because otherwise it won't show up when compiling through maturin.
         // We must also make an exception for when we build actual wheels (on CI) for release.
-        if environment == Environment::RerunCI {
+        if environment == Environment::DalaranCI {
             // e.g. building wheels on CI.
-            set_env("RE_BUILD_IS_IN_RERUN_WORKSPACE", "no");
+            set_env("RE_BUILD_IS_IN_DALARAN_WORKSPACE", "no");
         } else {
             set_env(
-                "RE_BUILD_IS_IN_RERUN_WORKSPACE",
-                &std::env::var("IS_IN_RERUN_WORKSPACE").unwrap_or_default(),
+                "RE_BUILD_IS_IN_DALARAN_WORKSPACE",
+                &std::env::var("IS_IN_DALARAN_WORKSPACE").unwrap_or_default(),
             );
         }
     }

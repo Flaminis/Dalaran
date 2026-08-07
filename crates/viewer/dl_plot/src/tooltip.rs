@@ -30,7 +30,7 @@ pub fn show_plot_tooltip(
     });
 }
 
-/// Creates a plot tooltip for the given response with Rerun's plot tooltip settings.
+/// Creates a plot tooltip for the given response with Dalaran's plot tooltip settings.
 ///
 /// Temporarily overrides the global egui style to use a shorter tooltip delay (150ms)
 /// and keeps the tooltip visible once shown. Restores the original style after creation.

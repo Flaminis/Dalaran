@@ -288,7 +288,7 @@ type EmptyArrowResult = Result<(), ArrowError>;
 ///
 /// This is implemented for all the different arrow array types.
 ///
-/// In addition to displaying the value as a rerun `list_item` it can also be formatted with syntax
+/// In addition to displaying the value as a dalaran `list_item` it can also be formatted with syntax
 /// highlighting via [`Self::write`].
 ///
 /// UI-equivalent of arrows `DisplayIndex` trait.
@@ -296,7 +296,7 @@ pub(crate) trait ShowIndex {
     /// Append the item at `idx` to the given [`SyntaxHighlightedBuilder`].
     fn write(&self, idx: usize, f: &mut SyntaxHighlightedBuilder) -> EmptyArrowResult;
 
-    /// Show the item at `idx` as a rerun `list_item`.
+    /// Show the item at `idx` as a dalaran `list_item`.
     fn show(&self, idx: usize, ui: &mut Ui, ui_layout: UiLayout) {
         let mut highlighted = SyntaxHighlightedBuilder::new();
         let result = self.write(idx, &mut highlighted);

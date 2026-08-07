@@ -167,16 +167,16 @@ pub fn colormap_rviz_costmap_srgba(t: f32) -> [u8; 4] {
     }
 }
 
-const RERUN_RED: [u8; 4] = [215, 47, 33, 255]; // #D72F21
-const RERUN_BLUE: [u8; 4] = [24, 106, 221, 255]; // #186ADD
-const RERUN_GREEN: [u8; 4] = [134, 217, 166, 255]; // #86D9A6
-const RERUN_YELLOW: [u8; 4] = [246, 218, 117, 255]; // #F6DA75
+const DALARAN_RED: [u8; 4] = [215, 47, 33, 255]; // #D72F21
+const DALARAN_BLUE: [u8; 4] = [24, 106, 221, 255]; // #186ADD
+const DALARAN_GREEN: [u8; 4] = [134, 217, 166, 255]; // #86D9A6
+const DALARAN_YELLOW: [u8; 4] = [246, 218, 117, 255]; // #F6DA75
 
 /// Semantically equivalent to the `RViz` cost map but with a more pleasing color palette.
 ///
 /// See [`colormap_rviz_costmap_srgba`] for the meaning of each value range.
 ///
-/// We use selected colors from the Rerun gradient palette here, see also: `<https://rerun.io/media>`
+/// We use selected colors from the Dalaran gradient palette here, see also: `<https://dalaran.dev/media>`
 pub fn colormap_costmap_srgba(t: f32) -> [u8; 4] {
     let value = ((t.clamp(0.0, 1.0) * 255.0) + 0.5) as u8;
 
@@ -184,18 +184,18 @@ pub fn colormap_costmap_srgba(t: f32) -> [u8; 4] {
     if value == 0 {
         [0, 0, 0, 0] // free space (zero cost)
     } else if value < 99 {
-        interpolate_srgba(RERUN_GREEN, RERUN_YELLOW, value as f32 / 98.0) // 1-98: cost ramp
+        interpolate_srgba(DALARAN_GREEN, DALARAN_YELLOW, value as f32 / 98.0) // 1-98: cost ramp
     } else if value == 99 {
-        RERUN_RED // inscribed obstacle
+        DALARAN_RED // inscribed obstacle
     } else if value == 100 {
-        RERUN_BLUE // lethal obstacle
+        DALARAN_BLUE // lethal obstacle
     } else if value < 128 {
-        RERUN_GREEN // 101-127 (illegal positive)
+        DALARAN_GREEN // 101-127 (illegal positive)
     } else if value < 255 {
         // 128-254 (illegal negative): red -> ramp yellow
         interpolate_srgba(
-            RERUN_RED,
-            RERUN_YELLOW,
+            DALARAN_RED,
+            DALARAN_YELLOW,
             (value as f32 - 128.0) / (254.0 - 128.0),
         )
     } else {

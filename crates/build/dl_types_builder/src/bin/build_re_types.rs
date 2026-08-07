@@ -16,9 +16,9 @@ const RE_TYPES_SOURCE_HASH_PATH: &str = "crates/store/dl_sdk_types/source_hash.t
 const DEFINITIONS_DIR_PATH: &str = "crates/store/dl_sdk_types/definitions";
 const ENTRYPOINT_PATH: &str = "crates/store/dl_sdk_types/definitions/entry_point.fbs";
 const SNIPPETS_DIR_PATH: &str = "docs/snippets/all";
-const CPP_OUTPUT_DIR_PATH: &str = "rerun_cpp";
-const PYTHON_OUTPUT_DIR_PATH: &str = "rerun_py/rerun_sdk/rerun";
-const PYTHON_TESTING_OUTPUT_DIR_PATH: &str = "rerun_py/tests/test_types";
+const CPP_OUTPUT_DIR_PATH: &str = "dalaran_cpp";
+const PYTHON_OUTPUT_DIR_PATH: &str = "dalaran_py/dalaran_sdk/dalaran";
+const PYTHON_TESTING_OUTPUT_DIR_PATH: &str = "dalaran_py/tests/test_types";
 const DOCS_CONTENT_DIR_PATH: &str = "docs/content/reference/types";
 const SNIPPETS_REF_DIR_PATH: &str = "docs/snippets/";
 

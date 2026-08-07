@@ -11,7 +11,7 @@ workspace = true
 
 [dependencies]
 dl_tracing = { path = "../../../crates/utils/dl_tracing", features = ["server"] }
-rerun = { path = "../../../crates/top/rerun" }
+dalaran = { path = "../../../crates/top/dalaran" }
 
 anyhow.workspace = true
 clap = { workspace = true, features = ["derive"] }

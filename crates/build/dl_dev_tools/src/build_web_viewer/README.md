@@ -1,6 +1,6 @@
 # `build_web_viewer`
 
-Binary and library for building the Rerun web viewer.
+Binary and library for building the Dalaran web viewer.
 
 This is also called by the `build.rs` of `dl_web_viewer_server`.
 

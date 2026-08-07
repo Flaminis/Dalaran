@@ -1,35 +1,35 @@
-//! Rerun uses its own URL scheme to access information across the network.
+//! Dalaran uses its own URL scheme to access information across the network.
 //!
-//! The following schemes are supported: `rerun+http://`, `rerun+https://` and
-//! `rerun://`, which is an alias for `rerun+https://`. These schemes are then
-//! converted on the fly to either `http://` or `https://`. Rerun uses gRPC-based
+//! The following schemes are supported: `dalaran+http://`, `dalaran+https://` and
+//! `dalaran://`, which is an alias for `dalaran+https://`. These schemes are then
+//! converted on the fly to either `http://` or `https://`. Dalaran uses gRPC-based
 //! protocols under the hood, which means that the paths (`/catalog`,
 //! `/recording/12345`, …) are mapped to gRPC services and methods on the fly.
 //!
 //! <div class="warning">
-//! In most cases locally running instances of Rerun will not have proper TLS
-//! configuration. In these cases, the `rerun+http://` scheme can be used. Naturally,
+//! In most cases locally running instances of Dalaran will not have proper TLS
+//! configuration. In these cases, the `dalaran+http://` scheme can be used. Naturally,
 //! this means that the underlying connection will not be encrypted.
 //! </div>
 //!
-//! The following are examples of valid Rerun URIs:
+//! The following are examples of valid Dalaran URIs:
 //!
 //! ```
 //! for uri in [
 //!     // Access the catalog server.
-//!     "rerun://rerun.io",
-//!     "rerun://rerun.io:51234/catalog",
-//!     "rerun+http://localhost:51234/catalog",
-//!     "rerun+https://localhost:51234/catalog",
+//!     "dalaran://dalaran.dev",
+//!     "dalaran://dalaran.dev:51234/catalog",
+//!     "dalaran+http://localhost:51234/catalog",
+//!     "dalaran+https://localhost:51234/catalog",
 //!
 //!     // Proxy to send messages to another viewer.
-//!     "rerun+http://localhost:51234/proxy",
+//!     "dalaran+http://localhost:51234/proxy",
 //!
 //!     // Links to a recording on the catalog server (optionally with timestamp).
-//!     "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid&time_range=timeline@1.23s..72s",
+//!     "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid&time_range=timeline@1.23s..72s",
 //!
 //!     // Links to a folder (dataset-name prefix) within the catalog.
-//!     "rerun://rerun.io/folder/perception.detection",
+//!     "dalaran://dalaran.dev/folder/perception.detection",
 //! ] {
 //!     assert!(uri.parse::<dl_uri::RedapUri>().is_ok());
 //! }
@@ -64,7 +64,7 @@ pub mod external {
     pub use url;
 }
 
-/// The default port of a Rerun gRPC proxy server.
+/// The default port of a Dalaran gRPC proxy server.
 pub const DEFAULT_PROXY_PORT: u16 = 9876;
 
 /// The default port of a redap server.

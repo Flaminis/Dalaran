@@ -2,17 +2,17 @@
 //
 // To use it, load any RRD file in the ImHex editor, and import this file as a pattern definition.
 //
-// Unfortunately this merely covers the very outer layers of the Rerun RRD file encoding.
+// Unfortunately this merely covers the very outer layers of the Dalaran RRD file encoding.
 // The RRD protocol relies on several layers of encodings that require code generation as well as third
-// party libraries. To provide a proper pattern definition for the RRD protocol, not only a full Rerun
+// party libraries. To provide a proper pattern definition for the RRD protocol, not only a full Dalaran
 // ImHex plugin would be required, but the existing codebase would also need custom Arrow and Protobuf
 // decoders to map byte spans to actual column names, etc.
 // Still, it's a start. May it serves as breadcrumbs for the next soul venturing into this.
 //
 // ImHex: https://imhex.werwolv.net/
 
-#pragma author Rerun Technologies AB <opensource@rerun.io>
-#pragma description Rerun's RRD encoding (.rrd, .rbl)
+#pragma author Dalaran Technologies AB <opensource@dalaran.dev>
+#pragma description Dalaran's RRD encoding (.rrd, .rbl)
 
 // Refer to the `dl_log_encoding` crate [1] for the ground truth.
 //
@@ -73,7 +73,7 @@ struct StreamHeader {
 
 namespace StreamHeader {
     fn fmt(StreamHeader fh) {
-        return std::format("Rerun RRD v{} [{}]", fh.version, fh.opts);
+        return std::format("Dalaran RRD v{} [{}]", fh.version, fh.opts);
     };
 }
 
@@ -110,8 +110,8 @@ struct Message {
         (MessageKind::BlueprintActivationCommand): {}
     }
 
-    // TODO(cmc): To properly see what's in there would require not only a full Rerun ImHex plugin, but also
-    // custom Protobuf and Arrow decoders in the Rerun codebase so that we could map spans of bytes to actual
+    // TODO(cmc): To properly see what's in there would require not only a full Dalaran ImHex plugin, but also
+    // custom Protobuf and Arrow decoders in the Dalaran codebase so that we could map spans of bytes to actual
     // Arrow columns etc.
     u8 data[header.len] [[color("4363D8"), comment("Protobuf encoded data which embeds Arrow IPC encoded blobs")]];
     // $ += header.len;

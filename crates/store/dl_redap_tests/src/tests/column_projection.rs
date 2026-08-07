@@ -2,19 +2,19 @@ use arrow::array::RecordBatch;
 use futures::TryStreamExt as _;
 use itertools::Itertools as _;
 use dl_protos::cloud::v1alpha1::ext::ScanSegmentTableDataframe;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{ScanDatasetManifestRequest, ScanSegmentTableRequest};
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, entry_name, prop,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name, prop,
 };
 
-pub async fn test_segment_table_column_projections(service: impl RerunCloudService) {
+pub async fn test_segment_table_column_projections(service: impl DalaranCloudService) {
     test_column_projections(service, &projected_segment_table_batch, "segment_table").await;
 }
 
-pub async fn test_dataset_manifest_column_projections(service: impl RerunCloudService) {
+pub async fn test_dataset_manifest_column_projections(service: impl DalaranCloudService) {
     test_column_projections(
         service,
         &projected_dataset_manifest_batch,
@@ -28,7 +28,7 @@ async fn test_column_projections<T>(
     project_fn: &impl AsyncFn(&T, Vec<String>, &str) -> Vec<String>,
     case_name: &'static str,
 ) where
-    T: RerunCloudService,
+    T: DalaranCloudService,
 {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
@@ -66,14 +66,14 @@ async fn test_column_projections<T>(
 
     let partition_id_columns = project_fn(
         &service,
-        vec![ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME.to_owned()],
+        vec![ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME.to_owned()],
         dataset_name,
     )
     .await;
 
     assert_eq!(
         partition_id_columns,
-        vec![ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME.to_owned()],
+        vec![ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME.to_owned()],
         "the projection should have been applied"
     );
 
@@ -99,7 +99,7 @@ async fn test_column_projections<T>(
         &service,
         vec![
             prop_col.clone(),
-            ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME.to_owned(),
+            ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME.to_owned(),
         ],
         dataset_name,
     )
@@ -109,7 +109,7 @@ async fn test_column_projections<T>(
         ordered_columns,
         vec![
             prop_col,
-            ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME.to_owned(),
+            ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME.to_owned(),
         ],
         "the column order should be preserved"
     );
@@ -141,8 +141,8 @@ async fn test_column_projections<T>(
     let result = service
         .scan_segment_table(
             tonic::Request::new(ScanSegmentTableRequest::with_columns([
-                ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
-                ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+                ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
+                ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
             ]))
             .with_entry_name(entry_name(dataset_name)),
         )
@@ -153,7 +153,7 @@ async fn test_column_projections<T>(
             assert_eq!(err.code(), tonic::Code::InvalidArgument);
             assert!(
                 err.message()
-                    .contains(ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME)
+                    .contains(ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME)
             );
             assert!(err.message().contains("twice") || err.message().contains("duplicate"));
         }
@@ -162,7 +162,7 @@ async fn test_column_projections<T>(
 }
 
 async fn projected_segment_table_batch(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     column_projection: Vec<String>,
     dataset_name: &str,
 ) -> Vec<String> {
@@ -201,7 +201,7 @@ async fn projected_segment_table_batch(
 }
 
 async fn projected_dataset_manifest_batch(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     column_projection: Vec<String>,
     dataset_name: &str,
 ) -> Vec<String> {

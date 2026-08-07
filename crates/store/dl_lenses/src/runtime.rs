@@ -1,4 +1,4 @@
-//! The Rerun selector runtime, carrying all built-in functions.
+//! The Dalaran selector runtime, carrying all built-in functions.
 
 use std::sync::{Arc, OnceLock};
 

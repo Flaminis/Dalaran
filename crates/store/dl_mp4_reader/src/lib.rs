@@ -1,4 +1,4 @@
-//! Core mp4-to-chunk loading logic for Rerun.
+//! Core mp4-to-chunk loading logic for Dalaran.
 //!
 //! Reads any `.mp4` file (or its in-memory bytes) and emits an iterator of
 //! [`dl_chunk::Chunk`]s ready to be sent to a recording or chunk store.

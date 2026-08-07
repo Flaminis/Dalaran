@@ -1,9 +1,9 @@
 use dl_ui::DesignTokens;
 
-pub(super) const DOCS_URL: &str = "https://www.rerun.io/docs";
+pub(super) const DOCS_URL: &str = "https://www.dalaran.dev/docs";
 pub(super) const WELCOME_SCREEN_TITLE: &str = "The data layer for physical AI";
 pub(super) const WELCOME_SCREEN_BULLET_TEXT: &[&str] = &[
-    "Log multi-rate, multimodal data with the Rerun SDK in C++, Python, or Rust",
+    "Log multi-rate, multimodal data with the Dalaran SDK in C++, Python, or Rust",
     "Visualize and explore live or recorded data across the pipeline",
     "Query with dataframes or SQL, and stream directly to training",
 ];

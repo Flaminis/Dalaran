@@ -27,7 +27,7 @@ codegen = []
 
 
 [dependencies]
-# Rerun dependencies:
+# Dalaran dependencies:
 dl_byte_size.workspace = true
 dl_chunk.workspace = true
 dl_chunk_store.workspace = true

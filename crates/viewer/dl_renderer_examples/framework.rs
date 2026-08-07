@@ -334,10 +334,10 @@ impl<E: Example + 'static> Application<E> {
 }
 
 #[allow(clippy::allow_attributes, dead_code)] // false positive
-pub fn load_rerun_mesh(
+pub fn load_dalaran_mesh(
     re_ctx: &RenderContext,
 ) -> anyhow::Result<Vec<dl_renderer::renderer::GpuMeshInstance>> {
-    let obj_data = include_bytes!("../../../tests/assets/rerun.obj");
+    let obj_data = include_bytes!("../../../tests/assets/dalaran.obj");
     Ok(
         dl_renderer::importer::obj::load_obj_from_buffer(obj_data, re_ctx)?
             .into_gpu_meshes(re_ctx)?,

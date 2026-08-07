@@ -1,0 +1,19 @@
+namespace dalaran.datatypes;
+
+// ---
+
+/// 3D rotation represented by a rotation around a given axis.
+table RotationAxisAngle (
+  "attr.rust.derive": "Copy, PartialEq"
+) {
+  /// Axis to rotate around.
+  ///
+  /// This is not required to be normalized.
+  /// However, if normalization of the rotation axis fails (typically due to a zero vector)
+  /// the rotation is treated as an invalid transform, unless the angle is zero in which case
+  /// it is treated as an identity.
+  axis: dalaran.datatypes.Vec3D (order: 100);
+
+  /// How much to rotate around the axis.
+  angle: dalaran.datatypes.Angle (order: 200);
+}

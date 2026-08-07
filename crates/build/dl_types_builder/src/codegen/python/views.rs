@@ -4,7 +4,7 @@ use super::ExtensionClass;
 use crate::codegen::Target;
 use crate::codegen::common::StringExt as _;
 use crate::codegen::python::{quote_doc_lines, quote_obj_docs};
-use crate::{ATTR_PYTHON_ALIASES, ATTR_RERUN_VIEW_IDENTIFIER, Object, Objects, Reporter};
+use crate::{ATTR_PYTHON_ALIASES, ATTR_DALARAN_VIEW_IDENTIFIER, Object, Objects, Reporter};
 
 pub fn code_for_view(
     reporter: &Reporter,
@@ -117,7 +117,7 @@ All other entities will be transformed to be displayed relative to this origin."
             "contents",
             "The contents of the view specified as a query expression.
 This is either a single expression, or a list of multiple expressions.
-See [rerun.blueprint.archetypes.ViewContents][]."
+See [dalaran.blueprint.archetypes.ViewContents][]."
                 .to_owned(),
         ),
         ("name", "The display name of the view.".to_owned()),
@@ -171,11 +171,11 @@ This will be addressed in <https://github.com/rerun-io/rerun/issues/6673>.
     }
     code.push_indented(1, quote_doc_lines(init_docs), 1);
 
-    let Some(identifier): Option<String> = obj.try_get_attr(ATTR_RERUN_VIEW_IDENTIFIER) else {
+    let Some(identifier): Option<String> = obj.try_get_attr(ATTR_DALARAN_VIEW_IDENTIFIER) else {
         reporter.error(
             &obj.virtpath,
             &obj.fqname,
-            format!("Missing {ATTR_RERUN_VIEW_IDENTIFIER} attribute for view"),
+            format!("Missing {ATTR_DALARAN_VIEW_IDENTIFIER} attribute for view"),
         );
         return code;
     };

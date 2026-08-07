@@ -1,4 +1,4 @@
-//! Shared logic for sizing CPU parallelism from the `RERUN_SDK_NUM_CPUS` environment variable.
+//! Shared logic for sizing CPU parallelism from the `DALARAN_SDK_NUM_CPUS` environment variable.
 
 use std::sync::LazyLock;
 
@@ -14,7 +14,7 @@ pub fn available_cpus() -> usize {
     *AVAILABLE_CPUS
 }
 
-/// The value of the `RERUN_SDK_NUM_CPUS` environment variable, clamped to `[1, available_cpus()]`.
+/// The value of the `DALARAN_SDK_NUM_CPUS` environment variable, clamped to `[1, available_cpus()]`.
 ///
 /// Returns `None` if the variable is unset, leaving the caller free to pick its own default.
 /// If the variable is set but unparsable, this `warn_once!`s and returns `None`, so a typo
@@ -25,13 +25,13 @@ pub fn available_cpus() -> usize {
 ///
 /// Read once and cached for the lifetime of the process (so changing the variable at
 /// runtime has no effect).
-pub fn rerun_sdk_num_cpus() -> Option<usize> {
+pub fn dalaran_sdk_num_cpus() -> Option<usize> {
     static NUM_CPUS: LazyLock<Option<usize>> = LazyLock::new(|| {
-        let raw = std::env::var("RERUN_SDK_NUM_CPUS").ok()?;
+        let raw = std::env::var("DALARAN_SDK_NUM_CPUS").ok()?;
         if let Ok(f) = raw.trim().parse::<f64>() {
             Some((f as usize).clamp(1, available_cpus()))
         } else {
-            dl_log::warn_once!("Ignoring unparsable RERUN_SDK_NUM_CPUS={raw:?}");
+            dl_log::warn_once!("Ignoring unparsable DALARAN_SDK_NUM_CPUS={raw:?}");
             None
         }
     });

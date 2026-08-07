@@ -1,0 +1,15 @@
+namespace dalaran.blueprint.archetypes;
+
+
+/// Configuration for the background map of the map view.
+table MapBackground (
+    "attr.dalaran.scope": "blueprint",
+    "attr.python.aliases": "blueprint_components.MapProviderLike"
+) {
+    // --- Optional ---
+
+    /// Map provider and style to use.
+    ///
+    /// **Note**: Requires a Mapbox API key in the `DALARAN_MAPBOX_ACCESS_TOKEN` environment variable.
+    provider: dalaran.blueprint.components.MapProvider ("attr.dalaran.component_optional", order: 1000);
+}

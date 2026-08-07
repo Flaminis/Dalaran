@@ -1,6 +1,6 @@
 //! Benchmark for logging `Transform3D`
 
-use rerun::external::dl_log;
+use dalaran::external::dl_log;
 
 use crate::lcg;
 
@@ -30,7 +30,7 @@ struct Input {
 }
 
 impl Transform3DCommand {
-    pub fn run(self, rec: &rerun::RecordingStream) -> anyhow::Result<()> {
+    pub fn run(self, rec: &dalaran::RecordingStream) -> anyhow::Result<()> {
         dl_tracing::profile_function!();
         let input = std::hint::black_box(self.prepare());
         self.execute(rec, input)
@@ -84,7 +84,7 @@ impl Transform3DCommand {
         Input { time_steps }
     }
 
-    fn execute(self, rec: &rerun::RecordingStream, input: Input) -> anyhow::Result<()> {
+    fn execute(self, rec: &dalaran::RecordingStream, input: Input) -> anyhow::Result<()> {
         dl_tracing::profile_function!();
 
         let Input { time_steps } = input;
@@ -100,7 +100,7 @@ impl Transform3DCommand {
 
                 let entity_path = format!("transform_{entity_index}");
 
-                let transform3d = rerun::Transform3D::default()
+                let transform3d = dalaran::Transform3D::default()
                     .with_translation(transform.translation)
                     .with_mat3x3(transform.mat3x3);
 

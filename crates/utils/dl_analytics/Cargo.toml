@@ -1,7 +1,7 @@
 [package]
 name = "dl_analytics"
 authors.workspace = true
-description = "Rerun's analytics SDK"
+description = "Dalaran's analytics SDK"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

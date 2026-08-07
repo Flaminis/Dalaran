@@ -6,7 +6,7 @@ use jsonwebtoken::{Algorithm, DecodingKey, EncodingKey, Header, Validation, deco
 
 use crate::{Claims, Error, Jwt, Permission, RedapClaims};
 
-/// Identifies who should be the consumer of a token. In our case, this is the Rerun storage node.
+/// Identifies who should be the consumer of a token. In our case, this is the Dalaran storage node.
 const AUDIENCE: &str = "redap";
 
 /// A secret key that is used to generate and verify tokens.
@@ -21,12 +21,12 @@ pub struct RedapProvider {
     secret_key: SecretKey,
 
     #[cfg(feature = "oauth")]
-    oauth: Option<RerunCloudProvider>,
+    oauth: Option<DalaranCloudProvider>,
 }
 
 #[cfg(feature = "oauth")]
 #[derive(Debug, Clone)]
-struct RerunCloudProvider {
+struct DalaranCloudProvider {
     /// Public keys
     keys: jsonwebtoken::jwk::JwkSet,
 
@@ -105,7 +105,7 @@ impl Default for VerificationOptions {
 #[derive(Clone, Copy)]
 enum KeyProvider {
     #[cfg(feature = "oauth")]
-    RerunCloud,
+    DalaranCloud,
     Redap,
 }
 
@@ -113,11 +113,11 @@ impl VerificationOptions {
     fn for_provider(self, provider: KeyProvider) -> Validation {
         match provider {
             #[cfg(feature = "oauth")]
-            KeyProvider::RerunCloud => {
+            KeyProvider::DalaranCloud => {
                 let mut validation = Validation::new(Algorithm::RS256);
                 validation.set_issuer(&[&*crate::oauth::OAUTH_ISSUER_URL]);
                 validation.required_spec_claims.extend(
-                    crate::oauth::RerunCloudClaims::REQUIRED
+                    crate::oauth::DalaranCloudClaims::REQUIRED
                         .iter()
                         .copied()
                         .map(String::from),
@@ -164,9 +164,9 @@ impl RedapProvider {
     }
 
     /// Allow users from the given organization to authenticate via
-    /// their Rerun Hub credentials.
+    /// their Dalaran Hub credentials.
     #[cfg(feature = "oauth")]
-    pub async fn with_rerun_cloud_provider(self, org_id: impl Into<String>) -> Result<Self, Error> {
+    pub async fn with_dalaran_cloud_provider(self, org_id: impl Into<String>) -> Result<Self, Error> {
         use crate::oauth::api;
 
         // TODO(jan): fetch these less often? cache somehow?
@@ -176,7 +176,7 @@ impl RedapProvider {
         })?;
         let org_id = org_id.into();
 
-        let provider = RerunCloudProvider { keys, org_id };
+        let provider = DalaranCloudProvider { keys, org_id };
 
         Ok(Self {
             secret_key: self.secret_key,
@@ -241,7 +241,7 @@ impl RedapProvider {
                 return Err(Error::InvalidToken);
             };
             let key = DecodingKey::from_jwk(key)?;
-            let validation = options.for_provider(KeyProvider::RerunCloud);
+            let validation = options.for_provider(KeyProvider::DalaranCloud);
             (key, validation)
         } else {
             let key = DecodingKey::from_secret(self.secret_key.reveal());
@@ -260,7 +260,7 @@ impl RedapProvider {
 
         match &token_data.claims {
             #[cfg(feature = "oauth")]
-            Claims::RerunCloud(claims) => {
+            Claims::DalaranCloud(claims) => {
                 let provider = self
                     .oauth
                     .as_ref()

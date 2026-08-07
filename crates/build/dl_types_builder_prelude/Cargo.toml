@@ -1,7 +1,7 @@
 [package]
 name = "dl_types_builder_prelude"
 authors.workspace = true
-description = "The vocabulary that Rerun's IDL definitions are written against."
+description = "The vocabulary that Dalaran's IDL definitions are written against."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

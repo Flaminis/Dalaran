@@ -33,9 +33,9 @@ use crate::sink::{LogSink, MemorySinkStorage, SinkFlushError};
 ///
 /// When set, all recording streams will write to disk at the path indicated by the env-var rather
 /// than doing what they were asked to do - `connect_grpc()`, `buffered()`, even `save()` will re-use the same sink.
-const ENV_FORCE_SAVE: &str = "_RERUN_TEST_FORCE_SAVE";
+const ENV_FORCE_SAVE: &str = "_DALARAN_TEST_FORCE_SAVE";
 
-/// Returns path for force sink if private environment variable `_RERUN_TEST_FORCE_SAVE` is set
+/// Returns path for force sink if private environment variable `_DALARAN_TEST_FORCE_SAVE` is set
 ///
 /// Newly created [`RecordingStream`]s should use a [`crate::sink::FileSink`] pointing to this path.
 /// Furthermore, [`RecordingStream::set_sink`] calls after this should not swap out to a new sink but re-use the existing one.
@@ -48,12 +48,12 @@ pub fn forced_sink_path() -> Option<String> {
 /// Environment variable controlling whether the `log_tick` timeline column is injected.
 ///
 /// Opt-in: disabled unless set to a truthy value.
-const ENV_LOG_TICK: &str = "RERUN_LOG_TICK";
+const ENV_LOG_TICK: &str = "DALARAN_LOG_TICK";
 
 /// Environment variable controlling whether the `log_time` timeline column is injected.
 ///
 /// Opt-out: enabled unless set to a falsy value.
-const ENV_LOG_TIME: &str = "RERUN_LOG_TIME";
+const ENV_LOG_TIME: &str = "DALARAN_LOG_TIME";
 
 /// Which of the default timelines (`log_tick` and `log_time`) are injected into logged data?
 ///
@@ -127,11 +127,11 @@ pub enum RecordingStreamError {
         err: std::io::Error,
     },
 
-    /// Error spawning a Rerun Viewer process.
+    /// Error spawning a Dalaran Viewer process.
     #[error(transparent)] // makes bubbling all the way up to main look nice
     SpawnViewer(#[from] crate::SpawnError),
 
-    /// Failure to host a web viewer and/or Rerun server.
+    /// Failure to host a web viewer and/or Dalaran server.
     #[cfg(feature = "web_viewer")]
     #[error(transparent)]
     WebSink(#[from] crate::web_viewer::WebViewerSinkError),
@@ -163,7 +163,7 @@ pub type RecordingStreamResult<T> = Result<T, RecordingStreamError>;
 ///
 /// ``` no_run
 /// # use dl_sdk::RecordingStreamBuilder;
-/// let rec = RecordingStreamBuilder::new("rerun_example_app").save("my_recording.rrd")?;
+/// let rec = RecordingStreamBuilder::new("dalaran_example_app").save("my_recording.rrd")?;
 /// # Ok::<(), Box<dyn std::error::Error>>(())
 /// ```
 ///
@@ -197,7 +197,7 @@ impl RecordingStreamBuilder {
     ///
     /// ```no_run
     /// # use dl_sdk::RecordingStreamBuilder;
-    /// let rec = RecordingStreamBuilder::new("rerun_example_app").save("my_recording.rrd")?;
+    /// let rec = RecordingStreamBuilder::new("dalaran_example_app").save("my_recording.rrd")?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     //
@@ -251,9 +251,9 @@ impl RecordingStreamBuilder {
         }
     }
 
-    /// Set whether or not Rerun is enabled by default.
+    /// Set whether or not Dalaran is enabled by default.
     ///
-    /// If the `RERUN` environment variable is set, it will override this.
+    /// If the `DALARAN` environment variable is set, it will override this.
     ///
     /// Set also: [`Self::enabled`].
     #[inline]
@@ -262,9 +262,9 @@ impl RecordingStreamBuilder {
         self
     }
 
-    /// Set whether or not Rerun is enabled.
+    /// Set whether or not Dalaran is enabled.
     ///
-    /// Setting this will ignore the `RERUN` environment variable.
+    /// Setting this will ignore the `DALARAN` environment variable.
     ///
     /// Set also: [`Self::default_enabled`].
     #[inline]
@@ -388,7 +388,7 @@ impl RecordingStreamBuilder {
     /// ## Example
     ///
     /// ```
-    /// let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_app").buffered()?;
+    /// let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app").buffered()?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     pub fn buffered(self) -> RecordingStreamResult<RecordingStream> {
@@ -405,7 +405,7 @@ impl RecordingStreamBuilder {
     /// ```
     /// # fn log_data(_: &dl_sdk::RecordingStream) { }
     ///
-    /// let (rec, storage) = dl_sdk::RecordingStreamBuilder::new("rerun_example_app").memory()?;
+    /// let (rec, storage) = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app").memory()?;
     ///
     /// log_data(&rec);
     ///
@@ -451,31 +451,31 @@ impl RecordingStreamBuilder {
     }
 
     /// Creates a new [`RecordingStream`] that is pre-configured to stream the data through to a
-    /// remote Rerun instance.
+    /// remote Dalaran instance.
     ///
     /// See also [`Self::connect_grpc_opts`] if you wish to configure the connection.
     ///
     /// ## Example
     ///
     /// ```no_run
-    /// let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_app").connect_grpc()?;
+    /// let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app").connect_grpc()?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     pub fn connect_grpc(self) -> RecordingStreamResult<RecordingStream> {
         self.connect_grpc_opts(format!(
-            "rerun+http://127.0.0.1:{}/proxy",
+            "dalaran+http://127.0.0.1:{}/proxy",
             crate::DEFAULT_SERVER_PORT
         ))
     }
 
     /// Creates a new [`RecordingStream`] that is pre-configured to stream the data through to a
-    /// remote Rerun instance.
+    /// remote Dalaran instance.
     ///
     /// ## Example
     ///
     /// ```no_run
-    /// let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_app")
-    ///     .connect_grpc_opts("rerun+http://127.0.0.1:9876/proxy")?;
+    /// let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app")
+    ///     .connect_grpc_opts("dalaran+http://127.0.0.1:9876/proxy")?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     pub fn connect_grpc_opts(
@@ -496,7 +496,7 @@ impl RecordingStreamBuilder {
     /// locally hosted gRPC server.
     ///
     /// The server is hosted on the default IP and port, and may be connected to by any SDK or Viewer
-    /// at `rerun+http://127.0.0.1:9876/proxy` or by just running `rerun --connect`.
+    /// at `dalaran+http://127.0.0.1:9876/proxy` or by just running `dalaran --connect`.
     ///
     /// To configure the gRPC server's IP and port, use [`Self::serve_grpc_opts`] instead.
     ///
@@ -524,7 +524,7 @@ impl RecordingStreamBuilder {
     /// locally hosted gRPC server.
     ///
     /// The server is hosted on the given `bind_ip` and `port`, may be connected to by any SDK or Viewer
-    /// at `rerun+http://{bind_ip}:{port}/proxy`.
+    /// at `dalaran+http://{bind_ip}:{port}/proxy`.
     ///
     /// `0.0.0.0` is a good default for `bind_ip`.
     ///
@@ -551,14 +551,14 @@ impl RecordingStreamBuilder {
     /// Creates a new [`RecordingStream`] that is pre-configured to stream the data through to an
     /// RRD file on disk.
     ///
-    /// The Rerun Viewer is able to read continuously from the resulting rrd file while it is being written.
+    /// The Dalaran Viewer is able to read continuously from the resulting rrd file while it is being written.
     /// However, depending on your OS and configuration, changes may not be immediately visible due to file caching.
     /// This is a common issue on Windows and (to a lesser extent) on `MacOS`.
     ///
     /// ## Example
     ///
     /// ```no_run
-    /// let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_app").save("my_recording.rrd")?;
+    /// let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app").save("my_recording.rrd")?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     #[cfg(not(target_arch = "wasm32"))]
@@ -577,7 +577,7 @@ impl RecordingStreamBuilder {
     /// ## Example
     ///
     /// ```no_run
-    /// let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_app").stdout()?;
+    /// let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app").stdout()?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     #[cfg(not(target_arch = "wasm32"))]
@@ -590,29 +590,29 @@ impl RecordingStreamBuilder {
         self.create_recording_stream("stdout", || Ok(Box::new(crate::sink::FileSink::stdout()?)))
     }
 
-    /// Spawns a new Rerun Viewer process from an executable available in PATH, then creates a new
+    /// Spawns a new Dalaran Viewer process from an executable available in PATH, then creates a new
     /// [`RecordingStream`] that is pre-configured to stream the data through to that viewer over gRPC.
     ///
-    /// If a Rerun Viewer is already listening on this port, the stream will be redirected to
+    /// If a Dalaran Viewer is already listening on this port, the stream will be redirected to
     /// that viewer instead of starting a new one.
     ///
-    /// See also [`Self::spawn_opts`] if you wish to configure the behavior of thew Rerun process
+    /// See also [`Self::spawn_opts`] if you wish to configure the behavior of thew Dalaran process
     /// as well as the underlying connection.
     ///
     /// ## Example
     ///
     /// ```no_run
-    /// let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_app").spawn()?;
+    /// let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app").spawn()?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     pub fn spawn(self) -> RecordingStreamResult<RecordingStream> {
         self.spawn_opts(&Default::default())
     }
 
-    /// Spawns a new Rerun Viewer process from an executable available in PATH, then creates a new
+    /// Spawns a new Dalaran Viewer process from an executable available in PATH, then creates a new
     /// [`RecordingStream`] that is pre-configured to stream the data through to that viewer over gRPC.
     ///
-    /// If a Rerun Viewer is already listening on this port, the stream will be redirected to
+    /// If a Dalaran Viewer is already listening on this port, the stream will be redirected to
     /// that viewer instead of starting a new one.
     ///
     /// The behavior of the spawned Viewer can be configured via `opts`.
@@ -625,20 +625,20 @@ impl RecordingStreamBuilder {
     /// ## Example
     ///
     /// ```no_run
-    /// let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_app")
+    /// let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_app")
     ///     .spawn_opts(&dl_sdk::SpawnOptions::default())?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
     pub fn spawn_opts(self, opts: &crate::SpawnOptions) -> RecordingStreamResult<RecordingStream> {
         if !self.is_enabled() {
-            dl_log::debug!("Rerun disabled - call to spawn() ignored");
+            dl_log::debug!("Dalaran disabled - call to spawn() ignored");
             return Ok(RecordingStream::disabled());
         }
 
-        // NOTE: If `_RERUN_TEST_FORCE_SAVE` is set, all recording streams will write to disk no matter
+        // NOTE: If `_DALARAN_TEST_FORCE_SAVE` is set, all recording streams will write to disk no matter
         // what, thus spawning a viewer is pointless (and probably not intended).
         if forced_sink_path().is_some() {
-            let url = format!("rerun+http://{}/proxy", opts.connect_addr());
+            let url = format!("dalaran+http://{}/proxy", opts.connect_addr());
             return self.connect_grpc_opts(url);
         }
 
@@ -649,7 +649,7 @@ impl RecordingStreamBuilder {
             std::net::IpAddr::V4(std::net::Ipv4Addr::LOCALHOST),
             actual_port,
         );
-        self.connect_grpc_opts(format!("rerun+http://{addr}/proxy"))
+        self.connect_grpc_opts(format!("dalaran+http://{addr}/proxy"))
     }
 
     /// Returns whether or not logging is enabled, a [`StoreInfo`], the associated batcher
@@ -725,7 +725,7 @@ impl RecordingStreamBuilder {
             }
             Ok(stream)
         } else {
-            dl_log::debug!("Rerun disabled - call to {function_name}() ignored");
+            dl_log::debug!("Dalaran disabled - call to {function_name}() ignored");
             Ok(RecordingStream::disabled())
         }
     }
@@ -739,14 +739,14 @@ impl RecordingStreamBuilder {
 
 // ----------------------------------------------------------------------------
 
-/// A [`RecordingStream`] handles everything related to logging data into Rerun.
+/// A [`RecordingStream`] handles everything related to logging data into Dalaran.
 ///
 /// You can construct a new [`RecordingStream`] using [`RecordingStreamBuilder`] or
 /// [`RecordingStream::new`].
 ///
 /// ## Sinks
 ///
-/// Data is logged into Rerun via [`LogSink`]s.
+/// Data is logged into Dalaran via [`LogSink`]s.
 ///
 /// The underlying [`LogSink`] of a [`RecordingStream`] can be changed at any point during its
 /// lifetime by calling [`RecordingStream::set_sink`] or one of the higher level helpers
@@ -937,9 +937,9 @@ fn warn_if_problematic_file_sink_config(config: &ChunkBatcherConfig, sink: &dyn 
 
     // Snippet-roundtrip tests intentionally pair this config with a file sink to exercise the
     // per-row serialization path. The warning is correct in principle but noisy (and fatal under
-    // `RERUN_PANIC_ON_WARN`) for that controlled setup, so suppress it when the test harness
+    // `DALARAN_PANIC_ON_WARN`) for that controlled setup, so suppress it when the test harness
     // signals strict-test mode.
-    if dl_log::env_var_is_truthy("RERUN_STRICT") {
+    if dl_log::env_var_is_truthy("DALARAN_STRICT") {
         return;
     }
 
@@ -1174,11 +1174,11 @@ impl RecordingStream {
 }
 
 impl RecordingStream {
-    /// Log data to Rerun.
+    /// Log data to Dalaran.
     ///
-    /// This is the main entry point for logging data to rerun. It can be used to log anything
-    /// that implements the [`AsComponents`], such as any [archetype](https://docs.rs/rerun/latest/rerun/archetypes/index.html)
-    /// or individual [component](https://docs.rs/rerun/latest/rerun/components/index.html).
+    /// This is the main entry point for logging data to dalaran. It can be used to log anything
+    /// that implements the [`AsComponents`], such as any [archetype](https://docs.rs/dalaran/latest/dalaran/archetypes/index.html)
+    /// or individual [component](https://docs.rs/dalaran/latest/dalaran/components/index.html).
     ///
     /// The data will be timestamped automatically based on the [`RecordingStream`]'s internal clock.
     /// See [`RecordingStream::set_time_sequence`] etc for more information.
@@ -1186,7 +1186,7 @@ impl RecordingStream {
     /// The entity path can either be a string
     /// (with special characters escaped, split on unescaped slashes)
     /// or an [`EntityPath`] constructed with [`crate::entity_path`].
-    /// See <https://www.rerun.io/docs/concepts/logging-and-ingestion/entity-path> for more on entity paths.
+    /// See <https://www.dalaran.dev/docs/concepts/logging-and-ingestion/entity-path> for more on entity paths.
     ///
     /// See also: [`Self::log_static`] for logging static data.
     ///
@@ -1196,11 +1196,11 @@ impl RecordingStream {
     ///
     /// # Example:
     /// ```ignore
-    /// # use rerun;
-    /// # let (rec, storage) = rerun::RecordingStreamBuilder::new("rerun_example_points3d_simple").memory()?;
+    /// # use dalaran;
+    /// # let (rec, storage) = dalaran::RecordingStreamBuilder::new("dalaran_example_points3d_simple").memory()?;
     /// rec.log(
     ///     "my/points",
-    ///     &rerun::Points3D::new([(0.0, 0.0, 0.0), (1.0, 1.0, 1.0)]),
+    ///     &dalaran::Points3D::new([(0.0, 0.0, 0.0), (1.0, 1.0, 1.0)]),
     /// )?;
     /// # Ok::<(), Box<dyn std::error::Error>>(())
     /// ```
@@ -1208,7 +1208,7 @@ impl RecordingStream {
     /// # Thread Safety
     ///
     /// While [`RecordingStream`] is `Send + Sync` and safe to use from multiple threads,
-    /// **avoid calling `log` while holding a [`std::sync::Mutex`]**. The rerun SDK uses
+    /// **avoid calling `log` while holding a [`std::sync::Mutex`]**. The dalaran SDK uses
     /// [rayon](https://docs.rs/rayon) internally for parallel processing, and rayon's
     /// work-stealing behavior can cause deadlocks when combined with held mutexes
     /// (see [rayon#592](https://github.com/rayon-rs/rayon/issues/592)).
@@ -1216,7 +1216,7 @@ impl RecordingStream {
     /// ```ignore
     /// // ❌ Don't do this - potential deadlock:
     /// let guard = mutex.lock().unwrap();
-    /// stream.log("data", &rerun::Points3D::new(points))?;
+    /// stream.log("data", &dalaran::Points3D::new(points))?;
     /// drop(guard);
     ///
     /// // ✅ Do this instead - extract data first:
@@ -1224,10 +1224,10 @@ impl RecordingStream {
     ///     let guard = mutex.lock().unwrap();
     ///     guard.points.clone()
     /// };
-    /// stream.log("data", &rerun::Points3D::new(points))?;
+    /// stream.log("data", &dalaran::Points3D::new(points))?;
     /// ```
     ///
-    /// [SDK Micro Batching]: https://www.rerun.io/docs/reference/sdk/micro-batching
+    /// [SDK Micro Batching]: https://www.dalaran.dev/docs/reference/sdk/micro-batching
     /// [component bundle]: [`AsComponents`]
     #[inline]
     pub fn log<AS: ?Sized + AsComponents>(
@@ -1273,18 +1273,18 @@ impl RecordingStream {
         Ok(())
     }
 
-    /// Log data to Rerun.
+    /// Log data to Dalaran.
     ///
     /// It can be used to log anything
-    /// that implements the [`AsComponents`], such as any [archetype](https://docs.rs/rerun/latest/rerun/archetypes/index.html)
-    /// or individual [component](https://docs.rs/rerun/latest/rerun/components/index.html).
+    /// that implements the [`AsComponents`], such as any [archetype](https://docs.rs/dalaran/latest/dalaran/archetypes/index.html)
+    /// or individual [component](https://docs.rs/dalaran/latest/dalaran/components/index.html).
     ///
     /// Static data has no time associated with it, exists on all timelines, and unconditionally shadows
     /// any temporal data of the same type.
-    /// All timestamp data associated with this message will be dropped right before sending it to Rerun.
+    /// All timestamp data associated with this message will be dropped right before sending it to Dalaran.
     ///
-    /// This is most often used for [`rerun::ViewCoordinates`](https://docs.rs/rerun/latest/rerun/archetypes/struct.ViewCoordinates.html) and
-    /// [`rerun::AnnotationContext`](https://docs.rs/rerun/latest/rerun/archetypes/struct.AnnotationContext.html).
+    /// This is most often used for [`dalaran::ViewCoordinates`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.ViewCoordinates.html) and
+    /// [`dalaran::AnnotationContext`](https://docs.rs/dalaran/latest/dalaran/archetypes/struct.AnnotationContext.html).
     ///
     /// Internally, the stream will automatically micro-batch multiple log calls to optimize
     /// transport.
@@ -1292,7 +1292,7 @@ impl RecordingStream {
     ///
     /// See also [`Self::log`].
     ///
-    /// [SDK Micro Batching]: https://www.rerun.io/docs/reference/sdk/micro-batching
+    /// [SDK Micro Batching]: https://www.dalaran.dev/docs/reference/sdk/micro-batching
     /// [component bundle]: [`AsComponents`]
     #[inline]
     pub fn log_static<AS: ?Sized + AsComponents>(
@@ -1303,10 +1303,10 @@ impl RecordingStream {
         self.log_with_static(ent_path, true, as_components)
     }
 
-    /// Logs the contents of a [component bundle] into Rerun.
+    /// Logs the contents of a [component bundle] into Dalaran.
     ///
     /// If `static_` is set to `true`, all timestamp data associated with this message will be
-    /// dropped right before sending it to Rerun.
+    /// dropped right before sending it to Dalaran.
     /// Static data has no time associated with it, exists on all timelines, and unconditionally shadows
     /// any temporal data of the same type.
     ///
@@ -1317,13 +1317,13 @@ impl RecordingStream {
     /// The entity path can either be a string
     /// (with special characters escaped, split on unescaped slashes)
     /// or an [`EntityPath`] constructed with [`crate::entity_path`].
-    /// See <https://www.rerun.io/docs/concepts/logging-and-ingestion/entity-path> for more on entity paths.
+    /// See <https://www.dalaran.dev/docs/concepts/logging-and-ingestion/entity-path> for more on entity paths.
     ///
     /// Internally, the stream will automatically micro-batch multiple log calls to optimize
     /// transport.
     /// See [SDK Micro Batching] for more information.
     ///
-    /// [SDK Micro Batching]: https://www.rerun.io/docs/reference/sdk/micro-batching
+    /// [SDK Micro Batching]: https://www.dalaran.dev/docs/reference/sdk/micro-batching
     /// [component bundle]: [`AsComponents`]
     #[inline]
     pub fn log_with_static<AS: ?Sized + AsComponents>(
@@ -1341,10 +1341,10 @@ impl RecordingStream {
         )
     }
 
-    /// Logs a set of [`SerializedComponentBatch`]es into Rerun.
+    /// Logs a set of [`SerializedComponentBatch`]es into Dalaran.
     ///
     /// If `static_` is set to `true`, all timestamp data associated with this message will be
-    /// dropped right before sending it to Rerun.
+    /// dropped right before sending it to Dalaran.
     /// Static data has no time associated with it, exists on all timelines, and unconditionally shadows
     /// any temporal data of the same type.
     ///
@@ -1357,13 +1357,13 @@ impl RecordingStream {
     /// The entity path can either be a string
     /// (with special characters escaped, split on unescaped slashes)
     /// or an [`EntityPath`] constructed with [`crate::entity_path`].
-    /// See <https://www.rerun.io/docs/concepts/logging-and-ingestion/entity-path> for more on entity paths.
+    /// See <https://www.dalaran.dev/docs/concepts/logging-and-ingestion/entity-path> for more on entity paths.
     ///
     /// Internally, the stream will automatically micro-batch multiple log calls to optimize
     /// transport.
     /// See [SDK Micro Batching] for more information.
     ///
-    /// [SDK Micro Batching]: https://www.rerun.io/docs/reference/sdk/micro-batching
+    /// [SDK Micro Batching]: https://www.dalaran.dev/docs/reference/sdk/micro-batching
     ///
     /// [`SerializedComponentBatch`]: [dl_types_core::SerializedComponentBatch]
     pub fn log_serialized_batches(
@@ -1448,7 +1448,7 @@ impl RecordingStream {
     /// This method blocks until either at least one [`dl_importer::Importer`] starts
     /// streaming data in or all of them fail.
     ///
-    /// See <https://www.rerun.io/docs/concepts/logging-and-ingestion/importers/overview> for more information.
+    /// See <https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview> for more information.
     #[cfg(feature = "importers")]
     pub fn log_file_from_path(
         &self,
@@ -1466,7 +1466,7 @@ impl RecordingStream {
     /// This method blocks until either at least one [`dl_importer::Importer`] starts
     /// streaming data in or all of them fail.
     ///
-    /// See <https://www.rerun.io/docs/concepts/logging-and-ingestion/importers/overview> for more information.
+    /// See <https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview> for more information.
     #[cfg(feature = "importers")]
     pub fn log_file_from_contents(
         &self,
@@ -1694,7 +1694,7 @@ fn forwarding_thread(
             let mut msg = match chunk.to_arrow_msg() {
                 Ok(chunk) => chunk,
                 Err(err) => {
-                    dl_log::error!(%err, "couldn't serialize chunk; data dropped (this is a bug in Rerun!)");
+                    dl_log::error!(%err, "couldn't serialize chunk; data dropped (this is a bug in Dalaran!)");
                     continue;
                 }
             };
@@ -1714,7 +1714,7 @@ fn forwarding_thread(
                 let msg = match chunk.to_arrow_msg() {
                     Ok(chunk) => chunk,
                     Err(err) => {
-                        dl_log::error!(%err, "couldn't serialize chunk; data dropped (this is a bug in Rerun!)");
+                        dl_log::error!(%err, "couldn't serialize chunk; data dropped (this is a bug in Dalaran!)");
                         continue;
                     }
                 };
@@ -1844,7 +1844,7 @@ impl RecordingStream {
 
                 if let Err(err) = chunk.add_timeline(time_column) {
                     dl_log::error!(
-                        "Couldn't inject '{}' timeline into chunk (this is a bug in Rerun!): {}",
+                        "Couldn't inject '{}' timeline into chunk (this is a bug in Dalaran!): {}",
                         time_timeline.name(),
                         err
                     );
@@ -1867,7 +1867,7 @@ impl RecordingStream {
 
                 if let Err(err) = chunk.add_timeline(tick_chunk) {
                     dl_log::error!(
-                        "Couldn't inject '{}' timeline into chunk (this is a bug in Rerun!): {}",
+                        "Couldn't inject '{}' timeline into chunk (this is a bug in Dalaran!): {}",
                         tick_timeline.name(),
                         err
                     );
@@ -2037,7 +2037,7 @@ impl RecordingStream {
     fn flush(&self, timeout: Option<Duration>) -> Result<(), SinkFlushError> {
         if self.is_forked_child() {
             return Err(SinkFlushError::failed(
-                "Fork detected during flush. cleanup_if_forked() should always be called after forking. This is likely a bug in the Rerun SDK.",
+                "Fork detected during flush. cleanup_if_forked() should always be called after forking. This is likely a bug in the Dalaran SDK.",
             ));
         }
 
@@ -2067,7 +2067,7 @@ impl RecordingStream {
                 .send(Command::PopPendingChunks)
                 .map_err(|_ignored| {
                     SinkFlushError::failed(
-                        "Sink shut down prematurely. This is likely a bug in the Rerun SDK.",
+                        "Sink shut down prematurely. This is likely a bug in the Dalaran SDK.",
                     )
                 })?;
 
@@ -2075,7 +2075,7 @@ impl RecordingStream {
             let (cmd, on_done) = Command::flush(Duration::MAX); // The background thread should block forever if necessary
             inner.cmds_tx.send(cmd).map_err(|_ignored| {
                 SinkFlushError::failed(
-                    "Sink shut down prematurely. This is likely a bug in the Rerun SDK.",
+                    "Sink shut down prematurely. This is likely a bug in the Dalaran SDK.",
                 )
             })?;
 
@@ -2083,7 +2083,7 @@ impl RecordingStream {
                 on_done.recv_timeout(timeout).map_err(|err| match err {
                     RecvTimeoutError::Timeout => SinkFlushError::Timeout,
                     RecvTimeoutError::Disconnected => SinkFlushError::failed(
-                        "Flush never finished. This is likely a bug in the Rerun SDK.",
+                        "Flush never finished. This is likely a bug in the Dalaran SDK.",
                     ),
                 })??;
             }
@@ -2153,7 +2153,7 @@ impl RecordingStream {
     /// See [`Self::set_sink`] for more information.
     pub fn connect_grpc(&self) -> RecordingStreamResult<()> {
         self.connect_grpc_opts(format!(
-            "rerun+http://127.0.0.1:{}/proxy",
+            "dalaran+http://127.0.0.1:{}/proxy",
             crate::DEFAULT_SERVER_PORT
         ))
     }
@@ -2187,11 +2187,11 @@ impl RecordingStream {
 
     #[cfg(feature = "server")]
     /// Swaps the underlying sink for a [`crate::grpc_server::GrpcServerSink`] pre-configured to listen on
-    /// `rerun+http://127.0.0.1:9876/proxy`.
+    /// `dalaran+http://127.0.0.1:9876/proxy`.
     ///
     /// To configure the gRPC server's IP and port, use [`Self::serve_grpc_opts`] instead.
     ///
-    /// You can connect a viewer to it with `rerun --connect`.
+    /// You can connect a viewer to it with `dalaran --connect`.
     ///
     /// The gRPC server will buffer all log data in memory so that late connecting viewers will get all the data.
     /// You can limit the amount of data buffered by the gRPC server with the `server_options` argument.
@@ -2205,7 +2205,7 @@ impl RecordingStream {
 
     #[cfg(feature = "server")]
     /// Swaps the underlying sink for a [`crate::grpc_server::GrpcServerSink`] pre-configured to listen on
-    /// `rerun+http://{bind_ip}:{port}/proxy`.
+    /// `dalaran+http://{bind_ip}:{port}/proxy`.
     ///
     /// `0.0.0.0` is a good default for `bind_ip`.
     ///
@@ -2229,14 +2229,14 @@ impl RecordingStream {
         Ok(())
     }
 
-    /// Spawns a new Rerun Viewer process from an executable available in PATH, then swaps the
+    /// Spawns a new Dalaran Viewer process from an executable available in PATH, then swaps the
     /// underlying sink for a [`crate::log_sink::GrpcSink`] sink pre-configured to send data to that
     /// new process.
     ///
-    /// If a Rerun Viewer is already listening on this port, the stream will be redirected to
+    /// If a Dalaran Viewer is already listening on this port, the stream will be redirected to
     /// that viewer instead of starting a new one.
     ///
-    /// See also [`Self::spawn_opts`] if you wish to configure the behavior of thew Rerun process
+    /// See also [`Self::spawn_opts`] if you wish to configure the behavior of thew Dalaran process
     /// as well as the underlying connection.
     ///
     /// This is a convenience wrapper for [`Self::set_sink`] that upholds the same guarantees in
@@ -2246,11 +2246,11 @@ impl RecordingStream {
         self.spawn_opts(&Default::default())
     }
 
-    /// Spawns a new Rerun Viewer process from an executable available in PATH, then swaps the
+    /// Spawns a new Dalaran Viewer process from an executable available in PATH, then swaps the
     /// underlying sink for a [`crate::log_sink::GrpcSink`] sink pre-configured to send data to that
     /// new process.
     ///
-    /// If a Rerun Viewer is already listening on this port, the stream will be redirected to
+    /// If a Dalaran Viewer is already listening on this port, the stream will be redirected to
     /// that viewer instead of starting a new one.
     ///
     /// The behavior of the spawned Viewer can be configured via `opts`.
@@ -2265,7 +2265,7 @@ impl RecordingStream {
     /// call to `flush` to block indefinitely if a connection cannot be established.
     pub fn spawn_opts(&self, opts: &crate::SpawnOptions) -> RecordingStreamResult<()> {
         if !self.is_enabled() {
-            dl_log::debug!("Rerun disabled - call to spawn() ignored");
+            dl_log::debug!("Dalaran disabled - call to spawn() ignored");
             return Ok(());
         }
         if forced_sink_path().is_some() {
@@ -2278,7 +2278,7 @@ impl RecordingStream {
             std::net::IpAddr::V4(std::net::Ipv4Addr::LOCALHOST),
             actual_port,
         );
-        self.connect_grpc_opts(format!("rerun+http://{addr}/proxy"))?;
+        self.connect_grpc_opts(format!("dalaran+http://{addr}/proxy"))?;
 
         Ok(())
     }
@@ -2661,9 +2661,9 @@ impl RecordingStream {
     ///
     /// Example:
     /// ```no_run
-    /// # mod rerun { pub use dl_sdk::*; }
-    /// # let rec: rerun::RecordingStream = unimplemented!();
-    /// rec.set_time("frame_nr", rerun::TimeCell::from_sequence(42));
+    /// # mod dalaran { pub use dl_sdk::*; }
+    /// # let rec: dalaran::RecordingStream = unimplemented!();
+    /// rec.set_time("frame_nr", dalaran::TimeCell::from_sequence(42));
     /// rec.set_time("duration", std::time::Duration::from_millis(123));
     /// rec.set_time("capture_time", std::time::SystemTime::now());
     /// ```
@@ -2693,7 +2693,7 @@ impl RecordingStream {
 
     /// Set the current time of the recording, for the current calling thread.
     ///
-    /// Short for `set_time(timeline, rerun::TimeCell::from_sequence(sequence))`.
+    /// Short for `set_time(timeline, dalaran::TimeCell::from_sequence(sequence))`.
     ///
     /// Used for all subsequent logging performed from this same thread, until the next call
     /// to one of the index/time setting methods.
@@ -2745,7 +2745,7 @@ impl RecordingStream {
 
     /// Set a timestamp as seconds since Unix epoch (1970-01-01 00:00:00 UTC).
     ///
-    /// Short for `self.set_time(timeline, rerun::TimeCell::from_timestamp_secs_since_epoch(secs))`.
+    /// Short for `self.set_time(timeline, dalaran::TimeCell::from_timestamp_secs_since_epoch(secs))`.
     ///
     /// Used for all subsequent logging performed from this same thread, until the next call
     /// to one of the index/time setting methods.
@@ -2776,7 +2776,7 @@ impl RecordingStream {
 
     /// Set a timestamp as nanoseconds since Unix epoch (1970-01-01 00:00:00 UTC).
     ///
-    /// Short for `self.set_time(timeline, rerun::TimeCell::set_timestamp_nanos_since_epoch(secs))`.
+    /// Short for `self.set_time(timeline, dalaran::TimeCell::set_timestamp_nanos_since_epoch(secs))`.
     ///
     /// Used for all subsequent logging performed from this same thread, until the next call
     /// to one of the index/time setting methods.
@@ -2848,7 +2848,7 @@ impl RecordingStream {
 
     /// Whether the `log_tick` timeline is automatically injected into logged data.
     ///
-    /// Defaults to `false` (opt-in), overridable via the `RERUN_LOG_TICK` env-var.
+    /// Defaults to `false` (opt-in), overridable via the `DALARAN_LOG_TICK` env-var.
     /// See also [`Self::set_log_tick_enabled`].
     pub fn log_tick_enabled(&self) -> bool {
         self.with(|inner| inner.default_timelines.log_tick())
@@ -2857,7 +2857,7 @@ impl RecordingStream {
 
     /// Whether the `log_time` timeline is automatically injected into logged data.
     ///
-    /// Defaults to `true` (opt-out), overridable via the `RERUN_LOG_TIME` env-var.
+    /// Defaults to `true` (opt-out), overridable via the `DALARAN_LOG_TIME` env-var.
     /// See also [`Self::set_log_time_enabled`].
     pub fn log_time_enabled(&self) -> bool {
         self.with(|inner| inner.default_timelines.log_time())
@@ -2868,7 +2868,7 @@ impl RecordingStream {
     ///
     /// `log_tick` is a per-recording counter that increments on every logging call.
     /// It is disabled by default; this lets you turn it on (or off) at runtime, overriding
-    /// the `RERUN_LOG_TICK` env-var.
+    /// the `DALARAN_LOG_TICK` env-var.
     ///
     /// See also [`Self::set_log_time_enabled`].
     pub fn set_log_tick_enabled(&self, enabled: bool) {
@@ -2885,7 +2885,7 @@ impl RecordingStream {
     ///
     /// `log_time` is the wall-clock time at which data was logged.
     /// It is enabled by default; this lets you turn it off (or on) at runtime, overriding
-    /// the `RERUN_LOG_TIME` env-var.
+    /// the `DALARAN_LOG_TIME` env-var.
     ///
     /// See also [`Self::set_log_tick_enabled`].
     pub fn set_log_time_enabled(&self, enabled: bool) {
@@ -2944,7 +2944,7 @@ mod tests {
             log_tick: bool,
             log_time: bool,
         ) -> std::collections::BTreeSet<String> {
-            let (rec, storage) = RecordingStreamBuilder::new("rerun_example_default_timelines")
+            let (rec, storage) = RecordingStreamBuilder::new("dalaran_example_default_timelines")
                 .enabled(true)
                 .batcher_config(ChunkBatcherConfig::NEVER)
                 .memory()
@@ -3001,7 +3001,7 @@ mod tests {
 
     #[test]
     fn never_flush() {
-        let rec = RecordingStreamBuilder::new("rerun_example_never_flush")
+        let rec = RecordingStreamBuilder::new("dalaran_example_never_flush")
             .enabled(true)
             .batcher_config(ChunkBatcherConfig::NEVER)
             .buffered()
@@ -3079,7 +3079,7 @@ mod tests {
 
     #[test]
     fn always_flush() {
-        let rec = RecordingStreamBuilder::new("rerun_example_always_flush")
+        let rec = RecordingStreamBuilder::new("dalaran_example_always_flush")
             .enabled(true)
             .batcher_config(ChunkBatcherConfig::ALWAYS_TEST_ONLY)
             .buffered()
@@ -3148,7 +3148,7 @@ mod tests {
 
     #[test]
     fn flush_hierarchy() {
-        let (rec, storage) = RecordingStreamBuilder::new("rerun_example_flush_hierarchy")
+        let (rec, storage) = RecordingStreamBuilder::new("dalaran_example_flush_hierarchy")
             .enabled(true)
             .batcher_config(ChunkBatcherConfig::NEVER)
             .memory()
@@ -3225,7 +3225,7 @@ mod tests {
 
     #[test]
     fn disabled() {
-        let (rec, storage) = RecordingStreamBuilder::new("rerun_example_disabled")
+        let (rec, storage) = RecordingStreamBuilder::new("dalaran_example_disabled")
             .enabled(false)
             .batcher_config(ChunkBatcherConfig::ALWAYS_TEST_ONLY)
             .memory()
@@ -3254,7 +3254,7 @@ mod tests {
         std::thread::Builder::new()
             .name("test_thead".to_owned())
             .spawn(|| {
-                let stream = RecordingStreamBuilder::new("rerun_example_test")
+                let stream = RecordingStreamBuilder::new("dalaran_example_test")
                     .buffered()
                     .unwrap();
                 RecordingStream::set_thread_local(StoreKind::Recording, Some(stream));
@@ -3392,7 +3392,7 @@ mod tests {
             MyLabel("c".into()),
         ];
 
-        let (rec, _mem) = RecordingStreamBuilder::new("rerun_example_test_componentbatch_unsized")
+        let (rec, _mem) = RecordingStreamBuilder::new("dalaran_example_test_componentbatch_unsized")
             .default_enabled(false)
             .enabled(false)
             .memory()
@@ -3456,11 +3456,11 @@ mod tests {
         // SAFETY: only used in tests.
         #[expect(unsafe_code)]
         unsafe {
-            std::env::remove_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED");
-            std::env::remove_var("RERUN_FLUSH_NUM_BYTES");
-            std::env::remove_var("RERUN_FLUSH_NUM_ROWS");
-            std::env::remove_var("RERUN_FLUSH_TICK_SECS");
-            std::env::remove_var("RERUN_MAX_CHUNK_ROWS_IF_UNSORTED");
+            std::env::remove_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED");
+            std::env::remove_var("DALARAN_FLUSH_NUM_BYTES");
+            std::env::remove_var("DALARAN_FLUSH_NUM_ROWS");
+            std::env::remove_var("DALARAN_FLUSH_TICK_SECS");
+            std::env::remove_var("DALARAN_MAX_CHUNK_ROWS_IF_UNSORTED");
         }
     }
 
@@ -3470,7 +3470,7 @@ mod tests {
 
         let (tx, rx) = crossbeam::channel::bounded(16);
 
-        let rec = RecordingStreamBuilder::new("rerun_example_test_batcher_config")
+        let rec = RecordingStreamBuilder::new("dalaran_example_test_batcher_config")
             .batcher_hooks(BatcherHooks {
                 on_config_change: Some(Arc::new(move |config: &ChunkBatcherConfig| {
                     dl_quota_channel::send_crossbeam(&tx, *config).unwrap();
@@ -3507,7 +3507,7 @@ mod tests {
 
         // Set flush num bytes through env var and set the sink again.
         // check that the env var is respected.
-        let _scoped_env_guard = ScopedEnvVarSet::new("RERUN_FLUSH_NUM_BYTES", "456");
+        let _scoped_env_guard = ScopedEnvVarSet::new("DALARAN_FLUSH_NUM_BYTES", "456");
         rec.set_sink(Box::new(BatcherConfigTestSink {
             config: injected_config,
         }));
@@ -3528,7 +3528,7 @@ mod tests {
         clear_environment();
 
         // This environment variable should *not* override the explicit config.
-        let _scoped_env_guard = ScopedEnvVarSet::new("RERUN_FLUSH_TICK_SECS", "456");
+        let _scoped_env_guard = ScopedEnvVarSet::new("DALARAN_FLUSH_TICK_SECS", "456");
         let explicit_config = ChunkBatcherConfig {
             flush_tick: std::time::Duration::from_secs(123),
             flush_num_bytes: 123,
@@ -3537,7 +3537,7 @@ mod tests {
         };
 
         let (tx, rx) = crossbeam::channel::bounded(16);
-        let rec = RecordingStreamBuilder::new("rerun_example_test_batcher_config")
+        let rec = RecordingStreamBuilder::new("dalaran_example_test_batcher_config")
             .batcher_config(explicit_config)
             .batcher_hooks(BatcherHooks {
                 on_config_change: Some(Arc::new(move |config: &ChunkBatcherConfig| {

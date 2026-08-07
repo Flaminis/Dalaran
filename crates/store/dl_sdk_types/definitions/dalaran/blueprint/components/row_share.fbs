@@ -1,0 +1,14 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// The layout share of a row in the container.
+table RowShare (
+  "attr.python.aliases": "float",
+  "attr.python.array_aliases": "npt.ArrayLike",
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Default"
+) {
+  /// The layout share of a row in the container.
+  share: dalaran.datatypes.Float32 (order: 100);
+}

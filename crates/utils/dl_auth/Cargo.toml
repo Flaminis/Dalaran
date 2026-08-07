@@ -1,13 +1,12 @@
 [package]
 name = "dl_auth"
-description = "Authentication helpers for Rerun"
+description = "Authentication helpers for Dalaran"
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true
 include = [
-  "../../Cargo.lock", # So that users can pass `--locked` to `cargo install rerun-cli`
-  "../../LICENSE-APACHE",
-  "../../LICENSE-MIT",
+  "../../Cargo.lock", # So that users can pass `--locked` to `cargo install dalaran-cli`
+  "../../LICENSE",
   "**/*.rs",
   "Cargo.toml",
   "src/status_page.html",

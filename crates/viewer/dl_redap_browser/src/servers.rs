@@ -368,7 +368,7 @@ impl Server {
             // strip prefix and remove underscores, _only_ for the base columns (aka not the
             // properties)
             name = name
-                .strip_prefix("rerun_")
+                .strip_prefix("dalaran_")
                 .map(|name| name.replace('_', " "))
                 .unwrap_or(name);
 
@@ -382,7 +382,7 @@ impl Server {
             };
 
             let column_sort_key = match desc.display_name().as_str() {
-                ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME => 0,
+                ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME => 0,
                 RECORDING_LINK_COLUMN_NAME => 1,
                 _ => 2,
             };
@@ -400,7 +400,7 @@ impl Server {
         })
         .generate_segment_links(
             RECORDING_LINK_COLUMN_NAME,
-            ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+            ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
             self.origin.clone(),
             dataset.id(),
         )
@@ -868,7 +868,7 @@ impl RedapServers {
 
     /// Snapshot of `(origin, entry_id) → name + icon` for all currently-loaded catalog entries.
     ///
-    /// Used to resolve built-in Rerun URLs to rich `LinkButtons` (see
+    /// Used to resolve built-in Dalaran URLs to rich `LinkButtons` (see
     /// [`dl_viewer_context::make_url_decorator`]). Entries that haven't finished loading yet are
     /// simply absent, so callers fall back to a placeholder.
     pub fn build_url_lookup(&self) -> dl_viewer_context::UrlNameLookup {
@@ -1009,7 +1009,7 @@ impl RedapServers {
                 }
                 if self.servers.contains_key(&origin) {
                     // Since we persist the server list on disk this happens quite often.
-                    // E.g. run `pixi run rerun "rerun+http://localhost"` more than once.
+                    // E.g. run `pixi run dalaran "dalaran+http://localhost"` more than once.
                     dl_log::debug!(
                         "Tried to add pre-existing server at {:?}",
                         origin.to_string()

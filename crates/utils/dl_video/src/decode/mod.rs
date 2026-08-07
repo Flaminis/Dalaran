@@ -129,11 +129,11 @@ pub enum DecodeError {
         dav1d::Error,
     ),
 
-    #[error("To enabled native AV1 decoding, compile Rerun with the `nasm` feature enabled.")]
+    #[error("To enabled native AV1 decoding, compile Dalaran with the `nasm` feature enabled.")]
     Dav1dWithoutNasm,
 
     #[error(
-        "Rerun does not yet support native AV1 decoding on Linux ARM64. See https://github.com/rerun-io/rerun/issues/7755"
+        "Dalaran does not yet support native AV1 decoding on Linux ARM64. See https://github.com/rerun-io/rerun/issues/7755"
     )]
     NoDav1dOnLinuxArm64,
 

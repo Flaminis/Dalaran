@@ -38,12 +38,12 @@ mod ui;
 
 // ----------------------------------------------------------------------------
 
-/// Storage key used to store the last run Rerun version.
+/// Storage key used to store the last run Dalaran version.
 ///
-/// This is then used to detect if the user has recently upgraded Rerun.
-const RERUN_VERSION_KEY: &str = "rerun.version";
+/// This is then used to detect if the user has recently upgraded Dalaran.
+const DALARAN_VERSION_KEY: &str = "dalaran.version";
 
-const REDAP_TOKEN_KEY: &str = "rerun.redap_token";
+const REDAP_TOKEN_KEY: &str = "dalaran.redap_token";
 
 /// The egui temp-data key under which the `on_begin_pass` hook stashes the timeline
 /// keyboard shortcut it consumed this frame.
@@ -52,7 +52,7 @@ const REDAP_TOKEN_KEY: &str = "rerun.redap_token";
 /// pairs the stashed command with the *live* active recording and dispatches it — so it can
 /// never target a stale recording.
 fn pending_timeline_shortcut_key() -> egui::Id {
-    egui::Id::new("rerun_pending_timeline_shortcut")
+    egui::Id::new("dalaran_pending_timeline_shortcut")
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -71,7 +71,7 @@ enum WindowDecorationsRequest {
     Custom,
 }
 
-/// The Rerun Viewer as an [`eframe`] application.
+/// The Dalaran Viewer as an [`eframe`] application.
 pub struct App {
     #[allow(clippy::allow_attributes, dead_code)] // Unused on wasm32
     main_thread_token: MainThreadToken,
@@ -260,7 +260,7 @@ impl App {
                     match ron::from_str(&value) {
                         Ok(value) => Some(value),
                         Err(err) => {
-                            dl_log::warn!("Failed to restore application state. This is expected if you have just upgraded Rerun versions.");
+                            dl_log::warn!("Failed to restore application state. This is expected if you have just upgraded Dalaran versions.");
                             dl_log::debug!("Failed to decode RON for app state: {err}");
                             None
                         }
@@ -272,11 +272,11 @@ impl App {
         };
 
         if startup_options.persist_state {
-            // Check if the user has recently upgraded Rerun.
+            // Check if the user has recently upgraded Dalaran.
             if let Some(storage) = creation_context.storage {
                 let current_version = build_info.version;
                 let previous_version: Option<CrateVersion> =
-                    storage.get_string(RERUN_VERSION_KEY).and_then(|version| {
+                    storage.get_string(DALARAN_VERSION_KEY).and_then(|version| {
                         // `CrateVersion::try_parse` is `const` (for good reasons), and needs a `&'static str`.
                         // In order to accomplish this, we need to leak the string here.
                         let version = Box::leak(version.into_boxed_str());
@@ -435,7 +435,7 @@ impl App {
             // TODO(emilk/egui#7899): allow consuming events before egui uses them to move keyboard focus.
             // TODO(emilk/egui#7659): allow disabling certain egui shortcuts.
             creation_context.egui_ctx.on_begin_pass(
-                "rerun-kb-shortcuts",
+                "dalaran-kb-shortcuts",
                 Arc::new(move |ctx| {
                     // egui has already listened for arrow keys before this point,
                     // so in order for the arrow keys to NOT move the focus, we need to
@@ -1200,7 +1200,7 @@ impl eframe::App for App {
 
         dl_tracing::profile_function!();
 
-        storage.set_string(RERUN_VERSION_KEY, self.build_info.version.to_string());
+        storage.set_string(DALARAN_VERSION_KEY, self.build_info.version.to_string());
 
         // Save the app state
         eframe::set_value(storage, eframe::APP_KEY, &self.state);
@@ -1683,7 +1683,7 @@ impl eframe::App for App {
 #[cfg(not(target_arch = "wasm32"))]
 fn save_profile_trace(view: &dl_tracing::reexports::puffin::FrameView) -> anyhow::Result<()> {
     let Some(path) = rfd::FileDialog::new()
-        .set_file_name("rerun.puffin")
+        .set_file_name("dalaran.puffin")
         .set_title("Save profile trace")
         .add_filter("Puffin profile", &["puffin"])
         .save_file()
@@ -1767,7 +1767,7 @@ fn blueprint_loader(component_reflection: Arc<ComponentReflectionMap>) -> Bluepr
                     && !crate::blueprint::is_valid_blueprint(store, component_reflection)
                 {
                     dl_log::warn_once!(
-                        "Blueprint for {app_id} at {blueprint_path:?} appears invalid - will ignore. This is expected if you have just upgraded Rerun versions."
+                        "Blueprint for {app_id} at {blueprint_path:?} appears invalid - will ignore. This is expected if you have just upgraded Dalaran versions."
                     );
                     return Ok(None);
                 }

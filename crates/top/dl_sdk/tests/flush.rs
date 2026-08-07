@@ -7,11 +7,11 @@ use dl_sdk::RecordingStreamBuilder;
 #[test]
 fn test_drop_grpc_sink() {
     dl_log::setup_logging();
-    let url_to_nowhere = "rerun+http://not.real:1234/proxy";
+    let url_to_nowhere = "dalaran+http://not.real:1234/proxy";
 
     dl_log::info!("Connecting…");
     // TODO(emilk): it would be nice to be able to configure `connect_timeout_on_flush` here to speed up this test.
-    let rec = RecordingStreamBuilder::new("rerun_example_grpc_drop_test")
+    let rec = RecordingStreamBuilder::new("dalaran_example_grpc_drop_test")
         .connect_grpc_opts(url_to_nowhere)
         .unwrap();
 

@@ -1,4 +1,4 @@
-//! HTTP Client for Rerun's Auth API.
+//! HTTP Client for Dalaran's Auth API.
 
 use std::sync::LazyLock;
 
@@ -10,7 +10,7 @@ use super::RefreshToken;
 use crate::{Permission, oauth::OAUTH_CLIENT_ID};
 
 static WORKOS_API: LazyLock<String> = LazyLock::new(|| {
-    std::env::var("RERUN_OAUTH_SERVER_URL")
+    std::env::var("DALARAN_OAUTH_SERVER_URL")
         .ok()
         .unwrap_or_else(|| "https://api.workos.com".into())
 });

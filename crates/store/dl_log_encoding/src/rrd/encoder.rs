@@ -335,9 +335,9 @@ impl<W: std::io::Write> Encoder<W> {
     ///
     /// This is extremely unsafe and only makes sense if you know exactly what you are doing.
     /// This is generally only useful when manipulating existing footers and manifests directly,
-    /// like e.g. `rerun rrd route` does.
+    /// like e.g. `dalaran rrd route` does.
     ///
-    /// You can verify that the footer you produced is still deserializable using `rerun rrd verify`.
+    /// You can verify that the footer you produced is still deserializable using `dalaran rrd verify`.
     ///
     /// [RRD footer]: crate::RrdFooter
     #[inline]
@@ -370,7 +370,7 @@ impl<W: std::io::Write> Encoder<W> {
     ///
     /// This end-of-stream marker is currently (seemingly?) relied on for:
     /// * Tail mode (where the Viewer continuously poll reads from a file on disk).
-    /// * Concatenated RRD file streams (e.g. `cat *.rrd | rerun -`).
+    /// * Concatenated RRD file streams (e.g. `cat *.rrd | dalaran -`).
     #[inline]
     pub fn finish(&mut self) -> Result<(), EncodeError> {
         if self.is_finished {

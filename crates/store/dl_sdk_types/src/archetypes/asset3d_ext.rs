@@ -7,7 +7,7 @@ impl Asset3D {
     /// The [`MediaType`] will first be guessed from the file extension, then from the file
     /// contents if needed.
     ///
-    /// If no [`MediaType`] can be guessed at the moment, the Rerun Viewer will try to guess one
+    /// If no [`MediaType`] can be guessed at the moment, the Dalaran Viewer will try to guess one
     /// from the data at render-time. If it can't, rendering will fail with an error.
     ///
     /// Returns an error if the file cannot be read.
@@ -26,7 +26,7 @@ impl Asset3D {
     ///
     /// The [`MediaType`] will be guessed from magic bytes in the data.
     ///
-    /// If no [`MediaType`] can be guessed at the moment, the Rerun Viewer will try to guess one
+    /// If no [`MediaType`] can be guessed at the moment, the Dalaran Viewer will try to guess one
     /// from the data at render-time. If it can't, rendering will fail with an error.
     #[inline]
     pub fn from_file_contents(contents: Vec<u8>, media_type: Option<impl Into<MediaType>>) -> Self {

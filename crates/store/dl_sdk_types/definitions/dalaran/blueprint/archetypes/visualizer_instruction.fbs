@@ -1,0 +1,13 @@
+namespace dalaran.blueprint.archetypes;
+
+/// A visualizer instruction for an entity.
+table VisualizerInstruction (
+    "attr.dalaran.scope": "blueprint",
+    "attr.python.aliases": "str | Sequence[str]"
+) {
+  /// The type of the visualizer.
+  visualizer_type: dalaran.blueprint.components.VisualizerType ("attr.dalaran.component_required", order: 100);
+
+  /// The component mapping pairs.
+  component_map: [dalaran.blueprint.components.VisualizerComponentMapping] ("attr.dalaran.component_optional", nullable, order: 200);
+}

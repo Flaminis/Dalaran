@@ -1,4 +1,4 @@
-//! Rerun Text Document View
+//! Dalaran Text Document View
 //!
 //! A simple Viewshows a single text document.
 

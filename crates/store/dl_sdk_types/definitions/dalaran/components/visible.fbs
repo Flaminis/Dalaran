@@ -1,0 +1,13 @@
+namespace dalaran.components;
+
+/// Whether the container, view, entity or instance is currently visible.
+struct Visible (
+  "attr.arrow.transparent",
+  "attr.python.aliases": "bool",
+  "attr.dalaran.state": "stable", // this component got moved, links changed.
+  "attr.rust.derive": "Copy, PartialEq, Eq, PartialOrd, Ord",
+  "attr.rust.repr": "transparent",
+  "attr.rust.tuple_struct"
+) {
+  visible: dalaran.datatypes.Bool (order: 100);
+}

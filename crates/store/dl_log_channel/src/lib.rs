@@ -1,4 +1,4 @@
-//! An in-memory channel of Rerun data messages
+//! An in-memory channel of Dalaran data messages
 
 use std::sync::Arc;
 
@@ -80,14 +80,14 @@ pub enum LogSource {
         channel_name: String,
     },
 
-    /// The sender is a Rerun SDK running from another thread in the same process.
+    /// The sender is a Dalaran SDK running from another thread in the same process.
     Sdk,
 
     /// The data is streaming in from standard input.
     Stdin,
 
     /// The data is streaming in directly from a catalog server,
-    /// over `rerun://` gRPC interface.
+    /// over `dalaran://` gRPC interface.
     RedapGrpcStream {
         uri: dl_uri::DatasetSegmentUri,
 

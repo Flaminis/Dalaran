@@ -1,6 +1,6 @@
 //! `re-viewer-mcp` — the standalone binary for the [`dl_viewer_mcp`] MCP server.
 //!
-//! Mostly useful for rerun developers. Usually it's recommended to use `rerun viewer-mcp` instead.
+//! Mostly useful for dalaran developers. Usually it's recommended to use `dalaran viewer-mcp` instead.
 
 fn main() -> anyhow::Result<()> {
     dl_log::setup_logging();

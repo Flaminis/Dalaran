@@ -425,7 +425,7 @@ impl Chunk {
             // Therefore, it's important that we first check that the number of components is the same.
             anyhow::ensure!(components.len() == rhs.components.len());
 
-            // Copied from `rerun.archetypes.RecordingInfo`.
+            // Copied from `dalaran.archetypes.RecordingInfo`.
             let recording_time_component: ComponentIdentifier = "RecordingInfo:start_time".into();
 
             // Filter out the recording time component from both lhs and rhs.
@@ -1759,7 +1759,7 @@ impl dl_byte_size::SizeBytes for Chunk {
 impl Chunk {
     /// Warn if we find out-of-order timelines.
     ///
-    /// If `RERUN_VERY_STRICT` is set, this will instead panic.
+    /// If `DALARAN_VERY_STRICT` is set, this will instead panic.
     ///
     /// This assumes the chunk is already sorted by `RowId`, like most chunks.
     ///
@@ -1770,7 +1770,7 @@ impl Chunk {
     pub fn warn_if_out_of_order(&self) {
         if !self.is_row_ids_sorted() {
             // Big problem!
-            if dl_log::is_rerun_very_strict() {
+            if dl_log::is_dalaran_very_strict() {
                 panic!("Found chunk that wasn't sorted by RowId. This is a bug");
             } else {
                 dl_log::debug_warn_once!("Found chunk that wasn't sorted by RowId. This is a bug");
@@ -1779,7 +1779,7 @@ impl Chunk {
 
         let unsorted_timelines: Vec<_> = self.unsorted_timelines().collect();
         if !unsorted_timelines.is_empty() {
-            if dl_log::is_rerun_very_strict() {
+            if dl_log::is_dalaran_very_strict() {
                 panic!(
                     "Found out-of-order timelines for entity '{}': {:?}. Out-of-order timelines are sometimes unavoidable, but they may cause performance problems",
                     self.entity_path, unsorted_timelines

@@ -18,7 +18,7 @@ fn test_help() {
 
                 ui.help_button(|ui| {
                     let mut help = Help::new("Help example")
-                        .docs_link("https://rerun.io/docs/reference/types/views/map_view")
+                        .docs_link("https://dalaran.dev/docs/reference/types/views/map_view")
                         .control("Pan", (icons::LEFT_MOUSE_CLICK, "+", "drag"))
                         .control(
                             "Zoom",

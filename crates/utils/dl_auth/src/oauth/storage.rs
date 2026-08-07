@@ -62,7 +62,7 @@ mod file {
     use super::{ClearError, Credentials, LoadError, StoreError};
 
     fn credentials_path() -> Option<PathBuf> {
-        directories::ProjectDirs::from("", "", "rerun")
+        directories::ProjectDirs::from("", "", "dalaran")
             .map(|dirs| dirs.config_dir().join("credentials.json"))
     }
 
@@ -103,7 +103,7 @@ mod file {
 mod web {
     use super::{ClearError, Credentials, LoadError, StoreError};
 
-    const STORAGE_KEY: &str = "rerun_auth";
+    const STORAGE_KEY: &str = "dalaran_auth";
 
     struct NoLocalStorage;
 

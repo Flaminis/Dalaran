@@ -407,7 +407,7 @@ mod tests {
     fn dataframe_batch(index: arrow::array::ArrayRef) -> ArrowRecordBatch {
         let frame = ArrowField::new("frame", index.data_type().clone(), true).with_metadata(
             [(
-                dl_sorbet::metadata::RERUN_KIND.to_owned(),
+                dl_sorbet::metadata::DALARAN_KIND.to_owned(),
                 dl_sorbet::ColumnKind::Index.to_string(),
             )]
             .into(),

@@ -1,6 +1,6 @@
-//! Core HDF5-to-chunk loading logic for Rerun.
+//! Core HDF5-to-chunk loading logic for Dalaran.
 //!
-//! Reads an HDF5 file into a lazy stream of Rerun chunks: each HDF5 group maps
+//! Reads an HDF5 file into a lazy stream of Dalaran chunks: each HDF5 group maps
 //! to an entity, each leaf dataset to a component, with a single file-wide
 //! timeline (a designated 1-D index dataset, or a synthesized `row_index`
 //! sequence). HDF5 attributes are emitted as static components under a

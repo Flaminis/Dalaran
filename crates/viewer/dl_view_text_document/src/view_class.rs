@@ -64,7 +64,7 @@ impl ViewClass for TextDocumentView {
 
     fn help(&self, _os: egui::os::OperatingSystem) -> Help {
         Help::new("Text document view")
-            .docs_link("https://rerun.io/docs/reference/types/views/text_document_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/text_document_view")
             .markdown("Supports raw text and markdown.")
     }
 

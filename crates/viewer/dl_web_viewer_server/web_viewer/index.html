@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- Rerun SDK-bundled web viewer. -->
+<!-- Dalaran SDK-bundled web viewer. -->
 <html>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -19,7 +19,7 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@100;500&display=swap"
       rel="stylesheet"
     />
-    <title>Rerun Viewer</title>
+    <title>Dalaran Viewer</title>
     <style>
       html {
         /* Remove touch delay: */
@@ -49,12 +49,12 @@
         height: 100%;
       }
 
-      /* Match the Rerun header bar. */
+      /* Match the Dalaran header bar. */
       .header {
         width: 100%;
         height: 44px;
         /* background: #111415; */
-        /* Actual value from Rerun Viewer */
+        /* Actual value from Dalaran Viewer */
         background: #141414;
       }
 
@@ -77,7 +77,7 @@
         text-align: center;
       }
 
-      /* Rerun styling for normal text. */
+      /* Dalaran styling for normal text. */
       p {
         /*Gray-775*/
         color: #cad8de;
@@ -86,19 +86,19 @@
         font-weight: 500;
       }
 
-      /* Rerun styling for strong text. Matches `TextStyle::Heading`. */
+      /* Dalaran styling for strong text. Matches `TextStyle::Heading`. */
       .strong {
         /*Gray-775*/
         color: #ffffff;
-        /* Match current rerun header value */
+        /* Match current dalaran header value */
         font-size: 16px;
       }
 
-      /* Rerun styling for subdued text.*/
+      /* Dalaran styling for subdued text.*/
       .subdued {
         /*Gray-550*/
         color: #7d8c92;
-        /* Larger subdued size to match current rerun font */
+        /* Larger subdued size to match current dalaran font */
         font-size: 12px;
         letter-spacing: -0.12px;
       }
@@ -161,9 +161,9 @@
     <script src="dl_viewer.js"></script>
 
     <script>
-      if (window.location.hostname == "app.rerun.io") {
+      if (window.location.hostname == "app.dalaran.dev") {
         const script = document.createElement("script");
-        script.src = "https://fifteen-thirtyeight.rerun.io/script.js";
+        script.src = "https://fifteen-thirtyeight.dalaran.dev/script.js";
         script.dataset.site = "QKMCQFTQ";
         script.defer = true;
         document.body.appendChild(script);
@@ -215,7 +215,7 @@
       function show_unsupported_browser() {
         show_center_html(`
           <p class="strong">
-              Your browser is too old to run the Rerun Viewer.
+              Your browser is too old to run the Dalaran Viewer.
           </p>
           <p>
               The Viewer requires WebAssembly SIMD support, available in:
@@ -237,7 +237,7 @@
       ) {
         show_center_html(`
           <p>
-              Rerun is not yet supported on mobile browsers.
+              Dalaran is not yet supported on mobile browsers.
           </p>
           <p>
               <a class="button" href="#" id="try_anyways">Try anyways</a>
@@ -309,7 +309,7 @@
           var content_length;
           var content_multiplier = 1;
           // If our custom size header is set, use that (see `dl_web_viewer_server` crate)
-          var custom_size_header = response.headers.get("rerun-final-length");
+          var custom_size_header = response.headers.get("dalaran-final-length");
           if (custom_size_header != null) {
             content_length = custom_size_header;
           } else if (response.headers.get("content-encoding") == "gzip") {
@@ -405,13 +405,13 @@
 
         function check_for_panic() {
           if (handle.has_panicked()) {
-            console.error("Rerun has crashed");
+            console.error("Dalaran has crashed");
 
             document.getElementById("the_canvas_id").remove();
 
             show_center_html(`
               <p class="strong">
-                  Rerun has crashed.
+                  Dalaran has crashed.
               </p>
               <pre align="left">${handle.panic_message()}</pre>
               <p>

@@ -1,0 +1,39 @@
+namespace dalaran.archetypes;
+
+/// Geospatial points with positions expressed in [EPSG:4326](https://epsg.io/4326) latitude and longitude (North/East-positive degrees), and optional colors and radii.
+///
+/// \example archetypes/geo_points_simple title="Log a geospatial point" image="https://static.rerun.io/geopoint_simple/b86ce83e5871837587bd33a0ad639358b96e9010/1200w.png"
+table GeoPoints (
+  "attr.docs.category": "Geospatial",
+  "attr.docs.view_types": "MapView",
+  "attr.dalaran.state": "stable",
+  "attr.dalaran.visualizer": "GeoPoints",
+  "attr.rust.derive": "PartialEq",
+  "attr.rust.new_pub_crate"
+) {
+  // --- Required ---
+
+  /// The [EPSG:4326](https://epsg.io/4326) coordinates for the points (North/East-positive degrees).
+  positions: [dalaran.components.LatLon] ("attr.dalaran.component_required", order: 1000);
+
+  // --- Recommended ---
+
+  /// Optional radii for the points, effectively turning them into circles.
+  ///
+  /// *Note*: scene units radiii are interpreted as meters.
+  radii: [dalaran.components.Radius] ("attr.dalaran.component_recommended", nullable, order: 2000);
+
+  /// Optional colors for the points.
+  ///
+  /// \py The colors are interpreted as RGB or RGBA in sRGB gamma-space,
+  /// \py As either 0-1 floats or 0-255 integers, with separate alpha.
+  colors: [dalaran.components.Color] ("attr.dalaran.component_recommended", nullable, order: 2100);
+
+  /// Optional class Ids for the points.
+  ///
+  /// The [components.ClassId] provides colors if not specified explicitly.
+  class_ids: [dalaran.components.ClassId] ("attr.dalaran.component_optional", nullable, order: 3200);
+
+  //TODO(ab): add `Label` and  `ShowLabels` components
+  //TODO(ab): add `Altitude` component
+}

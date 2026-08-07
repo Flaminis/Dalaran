@@ -25,7 +25,7 @@ pub struct Pipeline {
 
 impl Pipeline {
     // NOTE: different from the native URL, this one is _specifically_ for web.
-    const URL: &'static str = "https://tel.rerun.io/api/pog";
+    const URL: &'static str = "https://tel.dalaran.dev/api/pog";
 
     pub(crate) fn new(config: &Config, _tick: Duration) -> Result<Option<Self>, PipelineError> {
         Ok(Some(Self {

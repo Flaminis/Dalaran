@@ -3,12 +3,12 @@
 pub struct VersionRequest {}
 impl ::prost::Name for VersionRequest {
     const NAME: &'static str = "VersionRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.VersionRequest".into()
+        "dalaran.cloud.v1alpha1.VersionRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.VersionRequest".into()
+        "/dalaran.cloud.v1alpha1.VersionRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -43,24 +43,24 @@ pub struct VersionResponse {
 }
 impl ::prost::Name for VersionResponse {
     const NAME: &'static str = "VersionResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.VersionResponse".into()
+        "dalaran.cloud.v1alpha1.VersionResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.VersionResponse".into()
+        "/dalaran.cloud.v1alpha1.VersionResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WhoAmIRequest {}
 impl ::prost::Name for WhoAmIRequest {
     const NAME: &'static str = "WhoAmIRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WhoAmIRequest".into()
+        "dalaran.cloud.v1alpha1.WhoAmIRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WhoAmIRequest".into()
+        "/dalaran.cloud.v1alpha1.WhoAmIRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -77,12 +77,12 @@ pub struct WhoAmIResponse {
 }
 impl ::prost::Name for WhoAmIResponse {
     const NAME: &'static str = "WhoAmIResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WhoAmIResponse".into()
+        "dalaran.cloud.v1alpha1.WhoAmIResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WhoAmIResponse".into()
+        "/dalaran.cloud.v1alpha1.WhoAmIResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -94,12 +94,12 @@ pub struct DoBandwidthTestRequest {
 }
 impl ::prost::Name for DoBandwidthTestRequest {
     const NAME: &'static str = "DoBandwidthTestRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DoBandwidthTestRequest".into()
+        "dalaran.cloud.v1alpha1.DoBandwidthTestRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DoBandwidthTestRequest".into()
+        "/dalaran.cloud.v1alpha1.DoBandwidthTestRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -112,12 +112,12 @@ pub struct DoBandwidthTestResponse {
 }
 impl ::prost::Name for DoBandwidthTestResponse {
     const NAME: &'static str = "DoBandwidthTestResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DoBandwidthTestResponse".into()
+        "dalaran.cloud.v1alpha1.DoBandwidthTestResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DoBandwidthTestResponse".into()
+        "/dalaran.cloud.v1alpha1.DoBandwidthTestResponse".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -130,12 +130,12 @@ pub struct WatchEventsRequest {
 }
 impl ::prost::Name for WatchEventsRequest {
     const NAME: &'static str = "WatchEventsRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WatchEventsRequest".into()
+        "dalaran.cloud.v1alpha1.WatchEventsRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WatchEventsRequest".into()
+        "/dalaran.cloud.v1alpha1.WatchEventsRequest".into()
     }
 }
 /// Selects a category of events to subscribe to in `WatchEvents`.
@@ -155,12 +155,12 @@ pub mod event_kind {
 }
 impl ::prost::Name for EventKind {
     const NAME: &'static str = "EventKind";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.EventKind".into()
+        "dalaran.cloud.v1alpha1.EventKind".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.EventKind".into()
+        "/dalaran.cloud.v1alpha1.EventKind".into()
     }
 }
 /// Subscribe to all catalog entry lifecycle events.
@@ -168,12 +168,12 @@ impl ::prost::Name for EventKind {
 pub struct EntryEvents {}
 impl ::prost::Name for EntryEvents {
     const NAME: &'static str = "EntryEvents";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.EntryEvents".into()
+        "dalaran.cloud.v1alpha1.EntryEvents".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.EntryEvents".into()
+        "/dalaran.cloud.v1alpha1.EntryEvents".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -193,12 +193,12 @@ pub mod watch_events_response {
 }
 impl ::prost::Name for WatchEventsResponse {
     const NAME: &'static str = "WatchEventsResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WatchEventsResponse".into()
+        "dalaran.cloud.v1alpha1.WatchEventsResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WatchEventsResponse".into()
+        "/dalaran.cloud.v1alpha1.WatchEventsResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -208,12 +208,12 @@ pub struct EntryCreatedEvent {
 }
 impl ::prost::Name for EntryCreatedEvent {
     const NAME: &'static str = "EntryCreatedEvent";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.EntryCreatedEvent".into()
+        "dalaran.cloud.v1alpha1.EntryCreatedEvent".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.EntryCreatedEvent".into()
+        "/dalaran.cloud.v1alpha1.EntryCreatedEvent".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -223,12 +223,12 @@ pub struct EntryDeletedEvent {
 }
 impl ::prost::Name for EntryDeletedEvent {
     const NAME: &'static str = "EntryDeletedEvent";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.EntryDeletedEvent".into()
+        "dalaran.cloud.v1alpha1.EntryDeletedEvent".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.EntryDeletedEvent".into()
+        "/dalaran.cloud.v1alpha1.EntryDeletedEvent".into()
     }
 }
 /// Application level error - used as `details` in the `google.rpc.Status` message
@@ -246,12 +246,12 @@ pub struct Error {
 }
 impl ::prost::Name for Error {
     const NAME: &'static str = "Error";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.Error".into()
+        "dalaran.cloud.v1alpha1.Error".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.Error".into()
+        "/dalaran.cloud.v1alpha1.Error".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -275,12 +275,12 @@ pub struct DataSource {
 }
 impl ::prost::Name for DataSource {
     const NAME: &'static str = "DataSource";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DataSource".into()
+        "dalaran.cloud.v1alpha1.DataSource".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DataSource".into()
+        "/dalaran.cloud.v1alpha1.DataSource".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -295,12 +295,12 @@ pub struct RegisterWithDatasetRequest {
 }
 impl ::prost::Name for RegisterWithDatasetRequest {
     const NAME: &'static str = "RegisterWithDatasetRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.RegisterWithDatasetRequest".into()
+        "dalaran.cloud.v1alpha1.RegisterWithDatasetRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.RegisterWithDatasetRequest".into()
+        "/dalaran.cloud.v1alpha1.RegisterWithDatasetRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -310,12 +310,12 @@ pub struct RegisterWithDatasetResponse {
 }
 impl ::prost::Name for RegisterWithDatasetResponse {
     const NAME: &'static str = "RegisterWithDatasetResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.RegisterWithDatasetResponse".into()
+        "dalaran.cloud.v1alpha1.RegisterWithDatasetResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.RegisterWithDatasetResponse".into()
+        "/dalaran.cloud.v1alpha1.RegisterWithDatasetResponse".into()
     }
 }
 /// This request acts as a *product* filter:
@@ -346,12 +346,12 @@ pub struct UnregisterFromDatasetRequest {
 }
 impl ::prost::Name for UnregisterFromDatasetRequest {
     const NAME: &'static str = "UnregisterFromDatasetRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UnregisterFromDatasetRequest".into()
+        "dalaran.cloud.v1alpha1.UnregisterFromDatasetRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UnregisterFromDatasetRequest".into()
+        "/dalaran.cloud.v1alpha1.UnregisterFromDatasetRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -366,51 +366,51 @@ pub struct UnregisterFromDatasetResponse {
 }
 impl ::prost::Name for UnregisterFromDatasetResponse {
     const NAME: &'static str = "UnregisterFromDatasetResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UnregisterFromDatasetResponse".into()
+        "dalaran.cloud.v1alpha1.UnregisterFromDatasetResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UnregisterFromDatasetResponse".into()
+        "/dalaran.cloud.v1alpha1.UnregisterFromDatasetResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WriteChunksRequest {
     #[prost(message, optional, tag = "1")]
-    pub chunk: ::core::option::Option<super::super::common::v1alpha1::RerunChunk>,
+    pub chunk: ::core::option::Option<super::super::common::v1alpha1::DalaranChunk>,
 }
 impl ::prost::Name for WriteChunksRequest {
     const NAME: &'static str = "WriteChunksRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WriteChunksRequest".into()
+        "dalaran.cloud.v1alpha1.WriteChunksRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WriteChunksRequest".into()
+        "/dalaran.cloud.v1alpha1.WriteChunksRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WriteChunksResponse {}
 impl ::prost::Name for WriteChunksResponse {
     const NAME: &'static str = "WriteChunksResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WriteChunksResponse".into()
+        "dalaran.cloud.v1alpha1.WriteChunksResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WriteChunksResponse".into()
+        "/dalaran.cloud.v1alpha1.WriteChunksResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetSegmentTableSchemaRequest {}
 impl ::prost::Name for GetSegmentTableSchemaRequest {
     const NAME: &'static str = "GetSegmentTableSchemaRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetSegmentTableSchemaRequest".into()
+        "dalaran.cloud.v1alpha1.GetSegmentTableSchemaRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetSegmentTableSchemaRequest".into()
+        "/dalaran.cloud.v1alpha1.GetSegmentTableSchemaRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -420,12 +420,12 @@ pub struct GetSegmentTableSchemaResponse {
 }
 impl ::prost::Name for GetSegmentTableSchemaResponse {
     const NAME: &'static str = "GetSegmentTableSchemaResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetSegmentTableSchemaResponse".into()
+        "dalaran.cloud.v1alpha1.GetSegmentTableSchemaResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetSegmentTableSchemaResponse".into()
+        "/dalaran.cloud.v1alpha1.GetSegmentTableSchemaResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -435,12 +435,12 @@ pub struct SegmentIdList {
 }
 impl ::prost::Name for SegmentIdList {
     const NAME: &'static str = "SegmentIdList";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.SegmentIdList".into()
+        "dalaran.cloud.v1alpha1.SegmentIdList".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.SegmentIdList".into()
+        "/dalaran.cloud.v1alpha1.SegmentIdList".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -464,12 +464,12 @@ pub mod segment_id_filter {
 }
 impl ::prost::Name for SegmentIdFilter {
     const NAME: &'static str = "SegmentIdFilter";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.SegmentIdFilter".into()
+        "dalaran.cloud.v1alpha1.SegmentIdFilter".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.SegmentIdFilter".into()
+        "/dalaran.cloud.v1alpha1.SegmentIdFilter".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -494,12 +494,12 @@ pub struct ScanSegmentTableRequest {
 }
 impl ::prost::Name for ScanSegmentTableRequest {
     const NAME: &'static str = "ScanSegmentTableRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ScanSegmentTableRequest".into()
+        "dalaran.cloud.v1alpha1.ScanSegmentTableRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ScanSegmentTableRequest".into()
+        "/dalaran.cloud.v1alpha1.ScanSegmentTableRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -510,24 +510,24 @@ pub struct ScanSegmentTableResponse {
 }
 impl ::prost::Name for ScanSegmentTableResponse {
     const NAME: &'static str = "ScanSegmentTableResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ScanSegmentTableResponse".into()
+        "dalaran.cloud.v1alpha1.ScanSegmentTableResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ScanSegmentTableResponse".into()
+        "/dalaran.cloud.v1alpha1.ScanSegmentTableResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetDatasetManifestSchemaRequest {}
 impl ::prost::Name for GetDatasetManifestSchemaRequest {
     const NAME: &'static str = "GetDatasetManifestSchemaRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetDatasetManifestSchemaRequest".into()
+        "dalaran.cloud.v1alpha1.GetDatasetManifestSchemaRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetDatasetManifestSchemaRequest".into()
+        "/dalaran.cloud.v1alpha1.GetDatasetManifestSchemaRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -537,12 +537,12 @@ pub struct GetDatasetManifestSchemaResponse {
 }
 impl ::prost::Name for GetDatasetManifestSchemaResponse {
     const NAME: &'static str = "GetDatasetManifestSchemaResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetDatasetManifestSchemaResponse".into()
+        "dalaran.cloud.v1alpha1.GetDatasetManifestSchemaResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetDatasetManifestSchemaResponse".into()
+        "/dalaran.cloud.v1alpha1.GetDatasetManifestSchemaResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -567,12 +567,12 @@ pub struct ScanDatasetManifestRequest {
 }
 impl ::prost::Name for ScanDatasetManifestRequest {
     const NAME: &'static str = "ScanDatasetManifestRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ScanDatasetManifestRequest".into()
+        "dalaran.cloud.v1alpha1.ScanDatasetManifestRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ScanDatasetManifestRequest".into()
+        "/dalaran.cloud.v1alpha1.ScanDatasetManifestRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -583,24 +583,24 @@ pub struct ScanDatasetManifestResponse {
 }
 impl ::prost::Name for ScanDatasetManifestResponse {
     const NAME: &'static str = "ScanDatasetManifestResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ScanDatasetManifestResponse".into()
+        "dalaran.cloud.v1alpha1.ScanDatasetManifestResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ScanDatasetManifestResponse".into()
+        "/dalaran.cloud.v1alpha1.ScanDatasetManifestResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetDatasetSchemaRequest {}
 impl ::prost::Name for GetDatasetSchemaRequest {
     const NAME: &'static str = "GetDatasetSchemaRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetDatasetSchemaRequest".into()
+        "dalaran.cloud.v1alpha1.GetDatasetSchemaRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetDatasetSchemaRequest".into()
+        "/dalaran.cloud.v1alpha1.GetDatasetSchemaRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -610,12 +610,12 @@ pub struct GetDatasetSchemaResponse {
 }
 impl ::prost::Name for GetDatasetSchemaResponse {
     const NAME: &'static str = "GetDatasetSchemaResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetDatasetSchemaResponse".into()
+        "dalaran.cloud.v1alpha1.GetDatasetSchemaResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetDatasetSchemaResponse".into()
+        "/dalaran.cloud.v1alpha1.GetDatasetSchemaResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -623,7 +623,7 @@ pub struct GetRrdManifestRequest {
     #[prost(message, optional, tag = "1")]
     pub segment_id: ::core::option::Option<super::super::common::v1alpha1::SegmentId>,
     /// Asks the server to return direct URLs pointing at encoded
-    /// `rerun.log_msg.v1alpha1.RrdFooter` payloads instead of inlining manifests.
+    /// `dalaran.log_msg.v1alpha1.RrdFooter` payloads instead of inlining manifests.
     ///
     /// It is not guaranteed that the server will honor this.
     #[prost(bool, tag = "2")]
@@ -631,12 +631,12 @@ pub struct GetRrdManifestRequest {
 }
 impl ::prost::Name for GetRrdManifestRequest {
     const NAME: &'static str = "GetRrdManifestRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetRrdManifestRequest".into()
+        "dalaran.cloud.v1alpha1.GetRrdManifestRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetRrdManifestRequest".into()
+        "/dalaran.cloud.v1alpha1.GetRrdManifestRequest".into()
     }
 }
 /// Exactly one of `rrd_manifest` and `manifest_key` is set per response.
@@ -645,30 +645,30 @@ pub struct GetRrdManifestResponse {
     /// The manifest, inlined.
     #[prost(message, optional, tag = "1")]
     pub rrd_manifest: ::core::option::Option<super::super::log_msg::v1alpha1::RrdManifest>,
-    /// Points at an encoded `rerun.log_msg.v1alpha1.RrdFooter` payload for the client to fetch and decode.
+    /// Points at an encoded `dalaran.log_msg.v1alpha1.RrdFooter` payload for the client to fetch and decode.
     #[prost(message, optional, tag = "2")]
     pub manifest_key: ::core::option::Option<RrdManifestKey>,
 }
 impl ::prost::Name for GetRrdManifestResponse {
     const NAME: &'static str = "GetRrdManifestResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetRrdManifestResponse".into()
+        "dalaran.cloud.v1alpha1.GetRrdManifestResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetRrdManifestResponse".into()
+        "/dalaran.cloud.v1alpha1.GetRrdManifestResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetAssetsForSegmentRequest {}
 impl ::prost::Name for GetAssetsForSegmentRequest {
     const NAME: &'static str = "GetAssetsForSegmentRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetAssetsForSegmentRequest".into()
+        "dalaran.cloud.v1alpha1.GetAssetsForSegmentRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetAssetsForSegmentRequest".into()
+        "/dalaran.cloud.v1alpha1.GetAssetsForSegmentRequest".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -682,12 +682,12 @@ pub struct GetAssetsForSegmentResponse {
 }
 impl ::prost::Name for GetAssetsForSegmentResponse {
     const NAME: &'static str = "GetAssetsForSegmentResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetAssetsForSegmentResponse".into()
+        "dalaran.cloud.v1alpha1.GetAssetsForSegmentResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetAssetsForSegmentResponse".into()
+        "/dalaran.cloud.v1alpha1.GetAssetsForSegmentResponse".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -747,12 +747,12 @@ pub struct QueryDatasetRequest {
 }
 impl ::prost::Name for QueryDatasetRequest {
     const NAME: &'static str = "QueryDatasetRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryDatasetRequest".into()
+        "dalaran.cloud.v1alpha1.QueryDatasetRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryDatasetRequest".into()
+        "/dalaran.cloud.v1alpha1.QueryDatasetRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -762,12 +762,12 @@ pub struct QueryDatasetResponse {
 }
 impl ::prost::Name for QueryDatasetResponse {
     const NAME: &'static str = "QueryDatasetResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryDatasetResponse".into()
+        "dalaran.cloud.v1alpha1.QueryDatasetResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryDatasetResponse".into()
+        "/dalaran.cloud.v1alpha1.QueryDatasetResponse".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -805,12 +805,12 @@ pub struct Query {
 }
 impl ::prost::Name for Query {
     const NAME: &'static str = "Query";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.Query".into()
+        "dalaran.cloud.v1alpha1.Query".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.Query".into()
+        "/dalaran.cloud.v1alpha1.Query".into()
     }
 }
 /// A chunk-level latest-at query, aka `LatestAtRelevantChunks`.
@@ -856,12 +856,12 @@ pub struct QueryLatestAt {
 }
 impl ::prost::Name for QueryLatestAt {
     const NAME: &'static str = "QueryLatestAt";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryLatestAt".into()
+        "dalaran.cloud.v1alpha1.QueryLatestAt".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryLatestAt".into()
+        "/dalaran.cloud.v1alpha1.QueryLatestAt".into()
     }
 }
 /// A list of index values for a single segment.
@@ -873,12 +873,12 @@ pub struct IndexValueList {
 }
 impl ::prost::Name for IndexValueList {
     const NAME: &'static str = "IndexValueList";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.IndexValueList".into()
+        "dalaran.cloud.v1alpha1.IndexValueList".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.IndexValueList".into()
+        "/dalaran.cloud.v1alpha1.IndexValueList".into()
     }
 }
 /// A chunk-level range query, aka `RangeRelevantChunks`.
@@ -895,12 +895,12 @@ pub struct QueryRange {
 }
 impl ::prost::Name for QueryRange {
     const NAME: &'static str = "QueryRange";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryRange".into()
+        "dalaran.cloud.v1alpha1.QueryRange".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryRange".into()
+        "/dalaran.cloud.v1alpha1.QueryRange".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -915,12 +915,12 @@ pub struct FetchChunksRequest {
 }
 impl ::prost::Name for FetchChunksRequest {
     const NAME: &'static str = "FetchChunksRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.FetchChunksRequest".into()
+        "dalaran.cloud.v1alpha1.FetchChunksRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.FetchChunksRequest".into()
+        "/dalaran.cloud.v1alpha1.FetchChunksRequest".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -932,17 +932,17 @@ pub struct FetchChunksResponse {
 }
 impl ::prost::Name for FetchChunksResponse {
     const NAME: &'static str = "FetchChunksResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.FetchChunksResponse".into()
+        "dalaran.cloud.v1alpha1.FetchChunksResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.FetchChunksResponse".into()
+        "/dalaran.cloud.v1alpha1.FetchChunksResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetTableSchemaRequest {
-    /// Deprecated: use x-rerun-entry-id header instead.
+    /// Deprecated: use x-dalaran-entry-id header instead.
     /// This field should be dropped once all servers are updated
     /// to 0.14.x or later.
     #[prost(message, optional, tag = "1")]
@@ -950,12 +950,12 @@ pub struct GetTableSchemaRequest {
 }
 impl ::prost::Name for GetTableSchemaRequest {
     const NAME: &'static str = "GetTableSchemaRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetTableSchemaRequest".into()
+        "dalaran.cloud.v1alpha1.GetTableSchemaRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetTableSchemaRequest".into()
+        "/dalaran.cloud.v1alpha1.GetTableSchemaRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -965,34 +965,34 @@ pub struct GetTableSchemaResponse {
 }
 impl ::prost::Name for GetTableSchemaResponse {
     const NAME: &'static str = "GetTableSchemaResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.GetTableSchemaResponse".into()
+        "dalaran.cloud.v1alpha1.GetTableSchemaResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.GetTableSchemaResponse".into()
+        "/dalaran.cloud.v1alpha1.GetTableSchemaResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ScanTableRequest {
-    /// Deprecated: use x-rerun-entry-id header instead.
+    /// Deprecated: use x-dalaran-entry-id header instead.
     /// This field should be dropped once all servers are updated
     /// to 0.14.x or later.
     ///
     /// TODO(jleibs): support ScanParameters iff we can plumb them into Datafusion TableProvider
     /// Otherwise, just wait for Arrow Flight
-    /// rerun.common.v1alpha1.ScanParameters scan_parameters = 2;
+    /// dalaran.common.v1alpha1.ScanParameters scan_parameters = 2;
     #[prost(message, optional, tag = "1")]
     pub table_id: ::core::option::Option<super::super::common::v1alpha1::EntryId>,
 }
 impl ::prost::Name for ScanTableRequest {
     const NAME: &'static str = "ScanTableRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ScanTableRequest".into()
+        "dalaran.cloud.v1alpha1.ScanTableRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ScanTableRequest".into()
+        "/dalaran.cloud.v1alpha1.ScanTableRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1002,12 +1002,12 @@ pub struct ScanTableResponse {
 }
 impl ::prost::Name for ScanTableResponse {
     const NAME: &'static str = "ScanTableResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ScanTableResponse".into()
+        "dalaran.cloud.v1alpha1.ScanTableResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ScanTableResponse".into()
+        "/dalaran.cloud.v1alpha1.ScanTableResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1019,24 +1019,24 @@ pub struct WriteTableRequest {
 }
 impl ::prost::Name for WriteTableRequest {
     const NAME: &'static str = "WriteTableRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WriteTableRequest".into()
+        "dalaran.cloud.v1alpha1.WriteTableRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WriteTableRequest".into()
+        "/dalaran.cloud.v1alpha1.WriteTableRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WriteTableResponse {}
 impl ::prost::Name for WriteTableResponse {
     const NAME: &'static str = "WriteTableResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.WriteTableResponse".into()
+        "dalaran.cloud.v1alpha1.WriteTableResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.WriteTableResponse".into()
+        "/dalaran.cloud.v1alpha1.WriteTableResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1055,12 +1055,12 @@ pub struct DoMaintenanceRequest {
     /// This implies `optimize_indexes`.
     #[prost(bool, tag = "6")]
     pub retrain_indexes: bool,
-    /// Compact the underlying Lance fragments, for all Rerun Manifests.
+    /// Compact the underlying Lance fragments, for all Dalaran Manifests.
     ///
     /// Hardcoded to the default (optimal) settings.
     #[prost(bool, tag = "3")]
     pub compact_fragments: bool,
-    /// If set, all Lance fragments older than this date will be removed, for all Rerun Manifests.
+    /// If set, all Lance fragments older than this date will be removed, for all Dalaran Manifests.
     ///
     /// In case requested date is more recent than 1 hour, it will be ignored and 1 hour ago
     /// timestamp will be used. This is to prevent still used files (like recent transaction files)
@@ -1085,12 +1085,12 @@ pub struct DoMaintenanceRequest {
 }
 impl ::prost::Name for DoMaintenanceRequest {
     const NAME: &'static str = "DoMaintenanceRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DoMaintenanceRequest".into()
+        "dalaran.cloud.v1alpha1.DoMaintenanceRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DoMaintenanceRequest".into()
+        "/dalaran.cloud.v1alpha1.DoMaintenanceRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1100,12 +1100,12 @@ pub struct DoMaintenanceResponse {
 }
 impl ::prost::Name for DoMaintenanceResponse {
     const NAME: &'static str = "DoMaintenanceResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DoMaintenanceResponse".into()
+        "dalaran.cloud.v1alpha1.DoMaintenanceResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DoMaintenanceResponse".into()
+        "/dalaran.cloud.v1alpha1.DoMaintenanceResponse".into()
     }
 }
 /// Request all maintenance operations to run on all datasets
@@ -1113,24 +1113,24 @@ impl ::prost::Name for DoMaintenanceResponse {
 pub struct DoGlobalMaintenanceRequest {}
 impl ::prost::Name for DoGlobalMaintenanceRequest {
     const NAME: &'static str = "DoGlobalMaintenanceRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DoGlobalMaintenanceRequest".into()
+        "dalaran.cloud.v1alpha1.DoGlobalMaintenanceRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DoGlobalMaintenanceRequest".into()
+        "/dalaran.cloud.v1alpha1.DoGlobalMaintenanceRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DoGlobalMaintenanceResponse {}
 impl ::prost::Name for DoGlobalMaintenanceResponse {
     const NAME: &'static str = "DoGlobalMaintenanceResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DoGlobalMaintenanceResponse".into()
+        "dalaran.cloud.v1alpha1.DoGlobalMaintenanceResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DoGlobalMaintenanceResponse".into()
+        "/dalaran.cloud.v1alpha1.DoGlobalMaintenanceResponse".into()
     }
 }
 /// `QueryTasksRequest` is the request message for querying tasks status
@@ -1142,12 +1142,12 @@ pub struct QueryTasksRequest {
 }
 impl ::prost::Name for QueryTasksRequest {
     const NAME: &'static str = "QueryTasksRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryTasksRequest".into()
+        "dalaran.cloud.v1alpha1.QueryTasksRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryTasksRequest".into()
+        "/dalaran.cloud.v1alpha1.QueryTasksRequest".into()
     }
 }
 /// `QueryTasksResponse` is the response message for querying tasks status
@@ -1159,12 +1159,12 @@ pub struct QueryTasksResponse {
 }
 impl ::prost::Name for QueryTasksResponse {
     const NAME: &'static str = "QueryTasksResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryTasksResponse".into()
+        "dalaran.cloud.v1alpha1.QueryTasksResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryTasksResponse".into()
+        "/dalaran.cloud.v1alpha1.QueryTasksResponse".into()
     }
 }
 /// `QueryTasksOnCompletionRequest` is the request message for querying tasks status.
@@ -1181,12 +1181,12 @@ pub struct QueryTasksOnCompletionRequest {
 }
 impl ::prost::Name for QueryTasksOnCompletionRequest {
     const NAME: &'static str = "QueryTasksOnCompletionRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryTasksOnCompletionRequest".into()
+        "dalaran.cloud.v1alpha1.QueryTasksOnCompletionRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryTasksOnCompletionRequest".into()
+        "/dalaran.cloud.v1alpha1.QueryTasksOnCompletionRequest".into()
     }
 }
 /// `QueryTaskOnCompletionResponse` is the response message for querying tasks status
@@ -1198,12 +1198,12 @@ pub struct QueryTasksOnCompletionResponse {
 }
 impl ::prost::Name for QueryTasksOnCompletionResponse {
     const NAME: &'static str = "QueryTasksOnCompletionResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.QueryTasksOnCompletionResponse".into()
+        "dalaran.cloud.v1alpha1.QueryTasksOnCompletionResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.QueryTasksOnCompletionResponse".into()
+        "/dalaran.cloud.v1alpha1.QueryTasksOnCompletionResponse".into()
     }
 }
 /// `CancelTasksRequest` is the request message for cancelling a number of tasks
@@ -1215,12 +1215,12 @@ pub struct CancelTasksRequest {
 }
 impl ::prost::Name for CancelTasksRequest {
     const NAME: &'static str = "CancelTasksRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.CancelTasksRequest".into()
+        "dalaran.cloud.v1alpha1.CancelTasksRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.CancelTasksRequest".into()
+        "/dalaran.cloud.v1alpha1.CancelTasksRequest".into()
     }
 }
 /// `CancelTasksResponse` is the response message for cancelling a number of tasks
@@ -1228,12 +1228,12 @@ impl ::prost::Name for CancelTasksRequest {
 pub struct CancelTasksResponse {}
 impl ::prost::Name for CancelTasksResponse {
     const NAME: &'static str = "CancelTasksResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.CancelTasksResponse".into()
+        "dalaran.cloud.v1alpha1.CancelTasksResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.CancelTasksResponse".into()
+        "/dalaran.cloud.v1alpha1.CancelTasksResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1243,12 +1243,12 @@ pub struct FindEntriesRequest {
 }
 impl ::prost::Name for FindEntriesRequest {
     const NAME: &'static str = "FindEntriesRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.FindEntriesRequest".into()
+        "dalaran.cloud.v1alpha1.FindEntriesRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.FindEntriesRequest".into()
+        "/dalaran.cloud.v1alpha1.FindEntriesRequest".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -1258,12 +1258,12 @@ pub struct FindEntriesResponse {
 }
 impl ::prost::Name for FindEntriesResponse {
     const NAME: &'static str = "FindEntriesResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.FindEntriesResponse".into()
+        "dalaran.cloud.v1alpha1.FindEntriesResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.FindEntriesResponse".into()
+        "/dalaran.cloud.v1alpha1.FindEntriesResponse".into()
     }
 }
 /// DeleteDatasetEntry
@@ -1271,7 +1271,7 @@ impl ::prost::Name for FindEntriesResponse {
 /// This endpoint requires the standard dataset headers.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteEntryRequest {
-    /// Deprecated: use x-rerun-entry-id header instead.
+    /// Deprecated: use x-dalaran-entry-id header instead.
     /// This field should be dropped once all servers are updated
     /// to 0.14.x or later.
     #[prost(message, optional, tag = "1")]
@@ -1279,24 +1279,24 @@ pub struct DeleteEntryRequest {
 }
 impl ::prost::Name for DeleteEntryRequest {
     const NAME: &'static str = "DeleteEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DeleteEntryRequest".into()
+        "dalaran.cloud.v1alpha1.DeleteEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DeleteEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.DeleteEntryRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteEntryResponse {}
 impl ::prost::Name for DeleteEntryResponse {
     const NAME: &'static str = "DeleteEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DeleteEntryResponse".into()
+        "dalaran.cloud.v1alpha1.DeleteEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DeleteEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.DeleteEntryResponse".into()
     }
 }
 /// UpdateEntry
@@ -1306,7 +1306,7 @@ impl ::prost::Name for DeleteEntryResponse {
 pub struct UpdateEntryRequest {
     /// The entry to modify.
     ///
-    /// Deprecated: use x-rerun-entry-id header instead.
+    /// Deprecated: use x-dalaran-entry-id header instead.
     /// This field should be dropped once all servers are updated
     /// to 0.14.x or later.
     #[prost(message, optional, tag = "1")]
@@ -1317,12 +1317,12 @@ pub struct UpdateEntryRequest {
 }
 impl ::prost::Name for UpdateEntryRequest {
     const NAME: &'static str = "UpdateEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UpdateEntryRequest".into()
+        "dalaran.cloud.v1alpha1.UpdateEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UpdateEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.UpdateEntryRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1333,12 +1333,12 @@ pub struct UpdateEntryResponse {
 }
 impl ::prost::Name for UpdateEntryResponse {
     const NAME: &'static str = "UpdateEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UpdateEntryResponse".into()
+        "dalaran.cloud.v1alpha1.UpdateEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UpdateEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.UpdateEntryResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1355,12 +1355,12 @@ pub struct CreateDatasetEntryRequest {
 }
 impl ::prost::Name for CreateDatasetEntryRequest {
     const NAME: &'static str = "CreateDatasetEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.CreateDatasetEntryRequest".into()
+        "dalaran.cloud.v1alpha1.CreateDatasetEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.CreateDatasetEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.CreateDatasetEntryRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1370,12 +1370,12 @@ pub struct CreateDatasetEntryResponse {
 }
 impl ::prost::Name for CreateDatasetEntryResponse {
     const NAME: &'static str = "CreateDatasetEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.CreateDatasetEntryResponse".into()
+        "dalaran.cloud.v1alpha1.CreateDatasetEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.CreateDatasetEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.CreateDatasetEntryResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1401,12 +1401,12 @@ pub struct CreateTableEntryRequest {
 }
 impl ::prost::Name for CreateTableEntryRequest {
     const NAME: &'static str = "CreateTableEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.CreateTableEntryRequest".into()
+        "dalaran.cloud.v1alpha1.CreateTableEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.CreateTableEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.CreateTableEntryRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1416,24 +1416,24 @@ pub struct CreateTableEntryResponse {
 }
 impl ::prost::Name for CreateTableEntryResponse {
     const NAME: &'static str = "CreateTableEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.CreateTableEntryResponse".into()
+        "dalaran.cloud.v1alpha1.CreateTableEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.CreateTableEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.CreateTableEntryResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReadDatasetEntryRequest {}
 impl ::prost::Name for ReadDatasetEntryRequest {
     const NAME: &'static str = "ReadDatasetEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ReadDatasetEntryRequest".into()
+        "dalaran.cloud.v1alpha1.ReadDatasetEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ReadDatasetEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.ReadDatasetEntryRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1443,12 +1443,12 @@ pub struct ReadDatasetEntryResponse {
 }
 impl ::prost::Name for ReadDatasetEntryResponse {
     const NAME: &'static str = "ReadDatasetEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ReadDatasetEntryResponse".into()
+        "dalaran.cloud.v1alpha1.ReadDatasetEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ReadDatasetEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.ReadDatasetEntryResponse".into()
     }
 }
 /// UpdateDatasetEntry
@@ -1458,7 +1458,7 @@ impl ::prost::Name for ReadDatasetEntryResponse {
 pub struct UpdateDatasetEntryRequest {
     /// The dataset to modify.
     ///
-    /// Deprecated: use x-rerun-entry-id header instead.
+    /// Deprecated: use x-dalaran-entry-id header instead.
     /// This field should be dropped once all servers are updated
     /// to 0.14.x or later.
     #[prost(message, optional, tag = "1")]
@@ -1469,12 +1469,12 @@ pub struct UpdateDatasetEntryRequest {
 }
 impl ::prost::Name for UpdateDatasetEntryRequest {
     const NAME: &'static str = "UpdateDatasetEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UpdateDatasetEntryRequest".into()
+        "dalaran.cloud.v1alpha1.UpdateDatasetEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UpdateDatasetEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.UpdateDatasetEntryRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1485,12 +1485,12 @@ pub struct UpdateDatasetEntryResponse {
 }
 impl ::prost::Name for UpdateDatasetEntryResponse {
     const NAME: &'static str = "UpdateDatasetEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UpdateDatasetEntryResponse".into()
+        "dalaran.cloud.v1alpha1.UpdateDatasetEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UpdateDatasetEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.UpdateDatasetEntryResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1510,12 +1510,12 @@ pub struct RegisterTableRequest {
 }
 impl ::prost::Name for RegisterTableRequest {
     const NAME: &'static str = "RegisterTableRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.RegisterTableRequest".into()
+        "dalaran.cloud.v1alpha1.RegisterTableRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.RegisterTableRequest".into()
+        "/dalaran.cloud.v1alpha1.RegisterTableRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1526,12 +1526,12 @@ pub struct RegisterTableResponse {
 }
 impl ::prost::Name for RegisterTableResponse {
     const NAME: &'static str = "RegisterTableResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.RegisterTableResponse".into()
+        "dalaran.cloud.v1alpha1.RegisterTableResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.RegisterTableResponse".into()
+        "/dalaran.cloud.v1alpha1.RegisterTableResponse".into()
     }
 }
 /// ReadTableEntry
@@ -1539,7 +1539,7 @@ impl ::prost::Name for RegisterTableResponse {
 /// This endpoint requires the standard dataset headers.
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReadTableEntryRequest {
-    /// Deprecated: use x-rerun-entry-id header instead.
+    /// Deprecated: use x-dalaran-entry-id header instead.
     /// This field should be dropped once all servers are updated
     /// to 0.14.x or later.
     #[prost(message, optional, tag = "1")]
@@ -1547,12 +1547,12 @@ pub struct ReadTableEntryRequest {
 }
 impl ::prost::Name for ReadTableEntryRequest {
     const NAME: &'static str = "ReadTableEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ReadTableEntryRequest".into()
+        "dalaran.cloud.v1alpha1.ReadTableEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ReadTableEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.ReadTableEntryRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1562,12 +1562,12 @@ pub struct ReadTableEntryResponse {
 }
 impl ::prost::Name for ReadTableEntryResponse {
     const NAME: &'static str = "ReadTableEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ReadTableEntryResponse".into()
+        "dalaran.cloud.v1alpha1.ReadTableEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ReadTableEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.ReadTableEntryResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1581,12 +1581,12 @@ pub struct UpdateTableEntryRequest {
 }
 impl ::prost::Name for UpdateTableEntryRequest {
     const NAME: &'static str = "UpdateTableEntryRequest";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UpdateTableEntryRequest".into()
+        "dalaran.cloud.v1alpha1.UpdateTableEntryRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UpdateTableEntryRequest".into()
+        "/dalaran.cloud.v1alpha1.UpdateTableEntryRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1597,12 +1597,12 @@ pub struct UpdateTableEntryResponse {
 }
 impl ::prost::Name for UpdateTableEntryResponse {
     const NAME: &'static str = "UpdateTableEntryResponse";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.UpdateTableEntryResponse".into()
+        "dalaran.cloud.v1alpha1.UpdateTableEntryResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.UpdateTableEntryResponse".into()
+        "/dalaran.cloud.v1alpha1.UpdateTableEntryResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1620,18 +1620,18 @@ pub struct EntryFilter {
     /// It is recommended to always explicitly ask for a set of entry kinds.
     /// When unset the server returns a default set of kinds to ensure backwards compatibility with
     /// old clients that did not set this. This behavior may be dropped in future releases.
-    /// (condition: after rerun-sdk 0.34 is out of its support cycle)
+    /// (condition: after dalaran-sdk 0.34 is out of its support cycle)
     #[prost(enumeration = "EntryKind", repeated, tag = "4")]
     pub entry_kinds: ::prost::alloc::vec::Vec<i32>,
 }
 impl ::prost::Name for EntryFilter {
     const NAME: &'static str = "EntryFilter";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.EntryFilter".into()
+        "dalaran.cloud.v1alpha1.EntryFilter".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.EntryFilter".into()
+        "/dalaran.cloud.v1alpha1.EntryFilter".into()
     }
 }
 /// Minimal info about an Entry for high-level catalog summary
@@ -1653,12 +1653,12 @@ pub struct EntryDetails {
 }
 impl ::prost::Name for EntryDetails {
     const NAME: &'static str = "EntryDetails";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.EntryDetails".into()
+        "dalaran.cloud.v1alpha1.EntryDetails".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.EntryDetails".into()
+        "/dalaran.cloud.v1alpha1.EntryDetails".into()
     }
 }
 /// Updatable fields of an Entry
@@ -1670,12 +1670,12 @@ pub struct EntryDetailsUpdate {
 }
 impl ::prost::Name for EntryDetailsUpdate {
     const NAME: &'static str = "EntryDetailsUpdate";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.EntryDetailsUpdate".into()
+        "dalaran.cloud.v1alpha1.EntryDetailsUpdate".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.EntryDetailsUpdate".into()
+        "/dalaran.cloud.v1alpha1.EntryDetailsUpdate".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1700,12 +1700,12 @@ pub struct DatasetDetails {
 }
 impl ::prost::Name for DatasetDetails {
     const NAME: &'static str = "DatasetDetails";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DatasetDetails".into()
+        "dalaran.cloud.v1alpha1.DatasetDetails".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DatasetDetails".into()
+        "/dalaran.cloud.v1alpha1.DatasetDetails".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1721,12 +1721,12 @@ pub struct DatasetEntry {
 }
 impl ::prost::Name for DatasetEntry {
     const NAME: &'static str = "DatasetEntry";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DatasetEntry".into()
+        "dalaran.cloud.v1alpha1.DatasetEntry".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DatasetEntry".into()
+        "/dalaran.cloud.v1alpha1.DatasetEntry".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1744,12 +1744,12 @@ pub struct TableDetails {
 }
 impl ::prost::Name for TableDetails {
     const NAME: &'static str = "TableDetails";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.TableDetails".into()
+        "dalaran.cloud.v1alpha1.TableDetails".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.TableDetails".into()
+        "/dalaran.cloud.v1alpha1.TableDetails".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1765,12 +1765,12 @@ pub struct TableEntry {
 }
 impl ::prost::Name for TableEntry {
     const NAME: &'static str = "TableEntry";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.TableEntry".into()
+        "dalaran.cloud.v1alpha1.TableEntry".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.TableEntry".into()
+        "/dalaran.cloud.v1alpha1.TableEntry".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
@@ -1780,12 +1780,12 @@ pub struct SystemTable {
 }
 impl ::prost::Name for SystemTable {
     const NAME: &'static str = "SystemTable";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.SystemTable".into()
+        "dalaran.cloud.v1alpha1.SystemTable".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.SystemTable".into()
+        "/dalaran.cloud.v1alpha1.SystemTable".into()
     }
 }
 /// A foreign table stored as a Lance table.
@@ -1797,12 +1797,12 @@ pub struct LanceTable {
 }
 impl ::prost::Name for LanceTable {
     const NAME: &'static str = "LanceTable";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.LanceTable".into()
+        "dalaran.cloud.v1alpha1.LanceTable".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.LanceTable".into()
+        "/dalaran.cloud.v1alpha1.LanceTable".into()
     }
 }
 /// Optional debug info
@@ -1814,12 +1814,12 @@ pub struct DebugInfo {
 }
 impl ::prost::Name for DebugInfo {
     const NAME: &'static str = "DebugInfo";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.DebugInfo".into()
+        "dalaran.cloud.v1alpha1.DebugInfo".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.DebugInfo".into()
+        "/dalaran.cloud.v1alpha1.DebugInfo".into()
     }
 }
 /// `ChunkKey` provides chunk location details in the data store.
@@ -1858,12 +1858,12 @@ pub struct ChunkKey {
 }
 impl ::prost::Name for ChunkKey {
     const NAME: &'static str = "ChunkKey";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.ChunkKey".into()
+        "dalaran.cloud.v1alpha1.ChunkKey".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.ChunkKey".into()
+        "/dalaran.cloud.v1alpha1.ChunkKey".into()
     }
 }
 /// RRD-specific decoding of `ChunkKey.location`.
@@ -1881,15 +1881,15 @@ pub struct RrdChunkLocation {
 }
 impl ::prost::Name for RrdChunkLocation {
     const NAME: &'static str = "RrdChunkLocation";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.RrdChunkLocation".into()
+        "dalaran.cloud.v1alpha1.RrdChunkLocation".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.RrdChunkLocation".into()
+        "/dalaran.cloud.v1alpha1.RrdChunkLocation".into()
     }
 }
-/// `RrdManifestKey` points at an encoded `rerun.log_msg.v1alpha1.RrdFooter` payload in the object store.
+/// `RrdManifestKey` points at an encoded `dalaran.log_msg.v1alpha1.RrdFooter` payload in the object store.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct RrdManifestKey {
     /// The canonical location of the footer payload (e.g. s3://bucket/file).
@@ -1913,12 +1913,12 @@ pub struct RrdManifestKey {
 }
 impl ::prost::Name for RrdManifestKey {
     const NAME: &'static str = "RrdManifestKey";
-    const PACKAGE: &'static str = "rerun.cloud.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.cloud.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.cloud.v1alpha1.RrdManifestKey".into()
+        "dalaran.cloud.v1alpha1.RrdManifestKey".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.cloud.v1alpha1.RrdManifestKey".into()
+        "/dalaran.cloud.v1alpha1.RrdManifestKey".into()
     }
 }
 /// Error codes for application level errors
@@ -1993,9 +1993,9 @@ pub enum TableInsertMode {
     Append = 1,
     /// Overwrites all existing rows in the table with the new rows.
     Overwrite = 2,
-    /// Overwrite rows based on the rerun_table_index fields.
+    /// Overwrite rows based on the dalaran_table_index fields.
     Replace = 3,
-    /// Update existing rows matched by rerun_table_index fields. Source rows that
+    /// Update existing rows matched by dalaran_table_index fields. Source rows that
     /// do not match any existing row are dropped. The source schema may be a
     /// subset of the table schema (only the key columns plus the columns to
     /// update). Maps to SQL `UPDATE`.
@@ -2104,7 +2104,7 @@ impl SystemTableKind {
     }
 }
 /// Generated client implementations.
-pub mod rerun_cloud_service_client {
+pub mod dalaran_cloud_service_client {
     #![allow(
         unused_variables,
         dead_code,
@@ -2121,16 +2121,16 @@ pub mod rerun_cloud_service_client {
     /// Most endpoints in the catalog server service require specific gRPC headers to be set.
     ///
     /// The so-called "standard dataset headers" correspond to at least one of the following headers:
-    /// * x-rerun-entry-id: ID of the entry of interest, e.g. `1860390B087BC65F602d68eb646c385c`.
-    /// * x-rerun-entry-name-bin: Name of the entry of interest, e.g. `droid:sample2k`.
+    /// * x-dalaran-entry-id: ID of the entry of interest, e.g. `1860390B087BC65F602d68eb646c385c`.
+    /// * x-dalaran-entry-name-bin: Name of the entry of interest, e.g. `droid:sample2k`.
     ///
     /// Headers with a -bin suffix must be base64-encoded (HTTP only supports ASCII values, UTF8 strings must
     /// binary encoded).
     #[derive(Debug, Clone)]
-    pub struct RerunCloudServiceClient<T> {
+    pub struct DalaranCloudServiceClient<T> {
         inner: tonic::client::Grpc<T>,
     }
-    impl<T> RerunCloudServiceClient<T>
+    impl<T> DalaranCloudServiceClient<T>
     where
         T: tonic::client::GrpcService<tonic::body::Body>,
         T::Error: Into<StdError>,
@@ -2148,7 +2148,7 @@ pub mod rerun_cloud_service_client {
         pub fn with_interceptor<F>(
             inner: T,
             interceptor: F,
-        ) -> RerunCloudServiceClient<InterceptedService<T, F>>
+        ) -> DalaranCloudServiceClient<InterceptedService<T, F>>
         where
             F: tonic::service::Interceptor,
             T::ResponseBody: Default,
@@ -2161,7 +2161,7 @@ pub mod rerun_cloud_service_client {
             <T as tonic::codegen::Service<http::Request<tonic::body::Body>>>::Error:
                 Into<StdError> + std::marker::Send + std::marker::Sync,
         {
-            RerunCloudServiceClient::new(InterceptedService::new(inner, interceptor))
+            DalaranCloudServiceClient::new(InterceptedService::new(inner, interceptor))
         }
         /// Compress requests with the given encoding.
         ///
@@ -2203,11 +2203,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/Version",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/Version",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "Version",
             ));
             self.inner.unary(req, path, codec).await
@@ -2225,11 +2225,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/WhoAmI",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WhoAmI",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "WhoAmI",
             ));
             self.inner.unary(req, path, codec).await
@@ -2255,11 +2255,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/DoBandwidthTest",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DoBandwidthTest",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "DoBandwidthTest",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2276,11 +2276,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/WatchEvents",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WatchEvents",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "WatchEvents",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2295,11 +2295,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/FindEntries",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/FindEntries",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "FindEntries",
             ));
             self.inner.unary(req, path, codec).await
@@ -2314,11 +2314,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/DeleteEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DeleteEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "DeleteEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2333,11 +2333,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/UpdateEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UpdateEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "UpdateEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2352,11 +2352,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/CreateDatasetEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/CreateDatasetEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "CreateDatasetEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2371,11 +2371,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/CreateTableEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/CreateTableEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "CreateTableEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2393,11 +2393,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/ReadDatasetEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ReadDatasetEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "ReadDatasetEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2412,11 +2412,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/UpdateDatasetEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UpdateDatasetEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "UpdateDatasetEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2431,11 +2431,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/ReadTableEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ReadTableEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "ReadTableEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2450,11 +2450,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/UpdateTableEntry",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UpdateTableEntry",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "UpdateTableEntry",
             ));
             self.inner.unary(req, path, codec).await
@@ -2472,11 +2472,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/RegisterWithDataset",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/RegisterWithDataset",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "RegisterWithDataset",
             ));
             self.inner.unary(req, path, codec).await
@@ -2499,18 +2499,18 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/UnregisterFromDataset",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UnregisterFromDataset",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "UnregisterFromDataset",
             ));
             self.inner.server_streaming(req, path, codec).await
         }
         /// Write chunks to one or more segments.
         ///
-        /// The segment ID for each individual chunk is extracted from their metadata (`rerun:segment_id`).
+        /// The segment ID for each individual chunk is extracted from their metadata (`dalaran:segment_id`).
         ///
         /// This endpoint requires the standard dataset headers.
         pub async fn write_chunks(
@@ -2523,11 +2523,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/WriteChunks",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WriteChunks",
             );
             let mut req = request.into_streaming_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "WriteChunks",
             ));
             self.inner.client_streaming(req, path, codec).await
@@ -2550,11 +2550,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetSegmentTableSchema",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetSegmentTableSchema",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "GetSegmentTableSchema",
             ));
             self.inner.unary(req, path, codec).await
@@ -2576,11 +2576,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/ScanSegmentTable",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ScanSegmentTable",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "ScanSegmentTable",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2603,11 +2603,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetDatasetManifestSchema",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetDatasetManifestSchema",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "GetDatasetManifestSchema",
             ));
             self.inner.unary(req, path, codec).await
@@ -2629,11 +2629,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/ScanDatasetManifest",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ScanDatasetManifest",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "ScanDatasetManifest",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2654,11 +2654,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetDatasetSchema",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetDatasetSchema",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "GetDatasetSchema",
             ));
             self.inner.unary(req, path, codec).await
@@ -2673,7 +2673,7 @@ pub mod rerun_cloud_service_client {
         /// That means it is always semantically valid to concatenate the data from these RRD manifests.
         ///
         /// If the client sets `generate_direct_urls`, the server may instead return keys pointing at
-        /// encoded `rerun.log_msg.v1alpha1.RrdFooter` payloads for the client to fetch and decode.
+        /// encoded `dalaran.log_msg.v1alpha1.RrdFooter` payloads for the client to fetch and decode.
         /// This is best-effort: the response may still inline the manifests: clients must handle both forms.
         /// However, all the items in a stream will either send inline manifest or urls, uniformly.
         pub async fn get_rrd_manifest(
@@ -2688,11 +2688,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetRrdManifest",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetRrdManifest",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "GetRrdManifest",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2715,22 +2715,22 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetAssetsForSegment",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetAssetsForSegment",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "GetAssetsForSegment",
             ));
             self.inner.server_streaming(req, path, codec).await
         }
-        /// Perform Rerun-native queries on a dataset, returning the matching chunk IDs, as well
+        /// Perform Dalaran-native queries on a dataset, returning the matching chunk IDs, as well
         /// as information that can be sent back to the catalog server to fetch the actual chunks as part
         /// of `FetchChunks` request. In this 2-step query process, 1st step is getting information
         /// from the server about the chunks that contain relevant information. 2nd step is fetching
         /// those chunks (the actual data).
         ///
-        /// These Rerun-native queries include:
+        /// These Dalaran-native queries include:
         /// * Filtering by specific segment and chunk IDs.
         /// * Latest-at, range and dataframe queries.
         /// * Arbitrary Lance filters.
@@ -2759,11 +2759,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/QueryDataset",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/QueryDataset",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "QueryDataset",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2785,11 +2785,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/FetchChunks",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/FetchChunks",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "FetchChunks",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2805,11 +2805,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/RegisterTable",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/RegisterTable",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "RegisterTable",
             ));
             self.inner.unary(req, path, codec).await
@@ -2824,11 +2824,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetTableSchema",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetTableSchema",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "GetTableSchema",
             ));
             self.inner.unary(req, path, codec).await
@@ -2845,11 +2845,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/ScanTable",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ScanTable",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "ScanTable",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2870,11 +2870,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/WriteTable",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WriteTable",
             );
             let mut req = request.into_streaming_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "WriteTable",
             ));
             self.inner.client_streaming(req, path, codec).await
@@ -2890,11 +2890,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/QueryTasks",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/QueryTasks",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "QueryTasks",
             ));
             self.inner.unary(req, path, codec).await
@@ -2912,11 +2912,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/QueryTasksOnCompletion",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/QueryTasksOnCompletion",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "QueryTasksOnCompletion",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -2932,16 +2932,16 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/CancelTasks",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/CancelTasks",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "CancelTasks",
             ));
             self.inner.unary(req, path, codec).await
         }
-        /// Rerun Manifests maintenance operations: scalar index creation, compaction, etc.
+        /// Dalaran Manifests maintenance operations: scalar index creation, compaction, etc.
         ///
         /// This endpoint requires the standard dataset headers.
         pub async fn do_maintenance(
@@ -2954,11 +2954,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/DoMaintenance",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DoMaintenance",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "DoMaintenance",
             ));
             self.inner.unary(req, path, codec).await
@@ -2975,11 +2975,11 @@ pub mod rerun_cloud_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.cloud.v1alpha1.RerunCloudService/DoGlobalMaintenance",
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DoGlobalMaintenance",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.cloud.v1alpha1.RerunCloudService",
+                "dalaran.cloud.v1alpha1.DalaranCloudService",
                 "DoGlobalMaintenance",
             ));
             self.inner.unary(req, path, codec).await
@@ -2987,7 +2987,7 @@ pub mod rerun_cloud_service_client {
     }
 }
 /// Generated server implementations.
-pub mod rerun_cloud_service_server {
+pub mod dalaran_cloud_service_server {
     #![allow(
         unused_variables,
         dead_code,
@@ -2996,9 +2996,9 @@ pub mod rerun_cloud_service_server {
         clippy::let_unit_value
     )]
     use tonic::codegen::*;
-    /// Generated trait containing gRPC methods that should be implemented for use with RerunCloudServiceServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with DalaranCloudServiceServer.
     #[async_trait]
-    pub trait RerunCloudService: std::marker::Send + std::marker::Sync + 'static {
+    pub trait DalaranCloudService: std::marker::Send + std::marker::Sync + 'static {
         async fn version(
             &self,
             request: tonic::Request<super::VersionRequest>,
@@ -3101,7 +3101,7 @@ pub mod rerun_cloud_service_server {
         ) -> std::result::Result<tonic::Response<Self::UnregisterFromDatasetStream>, tonic::Status>;
         /// Write chunks to one or more segments.
         ///
-        /// The segment ID for each individual chunk is extracted from their metadata (`rerun:segment_id`).
+        /// The segment ID for each individual chunk is extracted from their metadata (`dalaran:segment_id`).
         ///
         /// This endpoint requires the standard dataset headers.
         async fn write_chunks(
@@ -3186,7 +3186,7 @@ pub mod rerun_cloud_service_server {
         /// That means it is always semantically valid to concatenate the data from these RRD manifests.
         ///
         /// If the client sets `generate_direct_urls`, the server may instead return keys pointing at
-        /// encoded `rerun.log_msg.v1alpha1.RrdFooter` payloads for the client to fetch and decode.
+        /// encoded `dalaran.log_msg.v1alpha1.RrdFooter` payloads for the client to fetch and decode.
         /// This is best-effort: the response may still inline the manifests: clients must handle both forms.
         /// However, all the items in a stream will either send inline manifest or urls, uniformly.
         async fn get_rrd_manifest(
@@ -3213,13 +3213,13 @@ pub mod rerun_cloud_service_server {
                 Item = std::result::Result<super::QueryDatasetResponse, tonic::Status>,
             > + std::marker::Send
             + 'static;
-        /// Perform Rerun-native queries on a dataset, returning the matching chunk IDs, as well
+        /// Perform Dalaran-native queries on a dataset, returning the matching chunk IDs, as well
         /// as information that can be sent back to the catalog server to fetch the actual chunks as part
         /// of `FetchChunks` request. In this 2-step query process, 1st step is getting information
         /// from the server about the chunks that contain relevant information. 2nd step is fetching
         /// those chunks (the actual data).
         ///
-        /// These Rerun-native queries include:
+        /// These Dalaran-native queries include:
         /// * Filtering by specific segment and chunk IDs.
         /// * Latest-at, range and dataframe queries.
         /// * Arbitrary Lance filters.
@@ -3302,7 +3302,7 @@ pub mod rerun_cloud_service_server {
             &self,
             request: tonic::Request<super::CancelTasksRequest>,
         ) -> std::result::Result<tonic::Response<super::CancelTasksResponse>, tonic::Status>;
-        /// Rerun Manifests maintenance operations: scalar index creation, compaction, etc.
+        /// Dalaran Manifests maintenance operations: scalar index creation, compaction, etc.
         ///
         /// This endpoint requires the standard dataset headers.
         async fn do_maintenance(
@@ -3323,20 +3323,20 @@ pub mod rerun_cloud_service_server {
     /// Most endpoints in the catalog server service require specific gRPC headers to be set.
     ///
     /// The so-called "standard dataset headers" correspond to at least one of the following headers:
-    /// * x-rerun-entry-id: ID of the entry of interest, e.g. `1860390B087BC65F602d68eb646c385c`.
-    /// * x-rerun-entry-name-bin: Name of the entry of interest, e.g. `droid:sample2k`.
+    /// * x-dalaran-entry-id: ID of the entry of interest, e.g. `1860390B087BC65F602d68eb646c385c`.
+    /// * x-dalaran-entry-name-bin: Name of the entry of interest, e.g. `droid:sample2k`.
     ///
     /// Headers with a -bin suffix must be base64-encoded (HTTP only supports ASCII values, UTF8 strings must
     /// binary encoded).
     #[derive(Debug)]
-    pub struct RerunCloudServiceServer<T> {
+    pub struct DalaranCloudServiceServer<T> {
         inner: Arc<T>,
         accept_compression_encodings: EnabledCompressionEncodings,
         send_compression_encodings: EnabledCompressionEncodings,
         max_decoding_message_size: Option<usize>,
         max_encoding_message_size: Option<usize>,
     }
-    impl<T> RerunCloudServiceServer<T> {
+    impl<T> DalaranCloudServiceServer<T> {
         pub fn new(inner: T) -> Self {
             Self::from_arc(Arc::new(inner))
         }
@@ -3384,9 +3384,9 @@ pub mod rerun_cloud_service_server {
             self
         }
     }
-    impl<T, B> tonic::codegen::Service<http::Request<B>> for RerunCloudServiceServer<T>
+    impl<T, B> tonic::codegen::Service<http::Request<B>> for DalaranCloudServiceServer<T>
     where
-        T: RerunCloudService,
+        T: DalaranCloudService,
         B: Body + std::marker::Send + 'static,
         B::Error: Into<StdError> + std::marker::Send + 'static,
     {
@@ -3401,10 +3401,10 @@ pub mod rerun_cloud_service_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/rerun.cloud.v1alpha1.RerunCloudService/Version" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/Version" => {
                     #[allow(non_camel_case_types)]
-                    struct VersionSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService> tonic::server::UnaryService<super::VersionRequest> for VersionSvc<T> {
+                    struct VersionSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService> tonic::server::UnaryService<super::VersionRequest> for VersionSvc<T> {
                         type Response = super::VersionResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
@@ -3413,7 +3413,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::version(&inner, request).await
+                                <T as DalaranCloudService>::version(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3440,10 +3440,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/WhoAmI" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WhoAmI" => {
                     #[allow(non_camel_case_types)]
-                    struct WhoAmISvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService> tonic::server::UnaryService<super::WhoAmIRequest> for WhoAmISvc<T> {
+                    struct WhoAmISvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService> tonic::server::UnaryService<super::WhoAmIRequest> for WhoAmISvc<T> {
                         type Response = super::WhoAmIResponse;
                         type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
                         fn call(
@@ -3452,7 +3452,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::who_am_i(&inner, request).await
+                                <T as DalaranCloudService>::who_am_i(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3479,10 +3479,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/DoBandwidthTest" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DoBandwidthTest" => {
                     #[allow(non_camel_case_types)]
-                    struct DoBandwidthTestSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct DoBandwidthTestSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::DoBandwidthTestRequest>
                         for DoBandwidthTestSvc<T>
                     {
@@ -3496,7 +3496,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::do_bandwidth_test(&inner, request).await
+                                <T as DalaranCloudService>::do_bandwidth_test(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3523,10 +3523,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/WatchEvents" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WatchEvents" => {
                     #[allow(non_camel_case_types)]
-                    struct WatchEventsSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct WatchEventsSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::WatchEventsRequest>
                         for WatchEventsSvc<T>
                     {
@@ -3540,7 +3540,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::watch_events(&inner, request).await
+                                <T as DalaranCloudService>::watch_events(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3567,10 +3567,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/FindEntries" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/FindEntries" => {
                     #[allow(non_camel_case_types)]
-                    struct FindEntriesSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct FindEntriesSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::FindEntriesRequest>
                         for FindEntriesSvc<T>
                     {
@@ -3582,7 +3582,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::find_entries(&inner, request).await
+                                <T as DalaranCloudService>::find_entries(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3609,10 +3609,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/DeleteEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DeleteEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct DeleteEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct DeleteEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::DeleteEntryRequest>
                         for DeleteEntrySvc<T>
                     {
@@ -3624,7 +3624,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::delete_entry(&inner, request).await
+                                <T as DalaranCloudService>::delete_entry(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3651,10 +3651,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/UpdateEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UpdateEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct UpdateEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct UpdateEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::UpdateEntryRequest>
                         for UpdateEntrySvc<T>
                     {
@@ -3666,7 +3666,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::update_entry(&inner, request).await
+                                <T as DalaranCloudService>::update_entry(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3693,10 +3693,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/CreateDatasetEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/CreateDatasetEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct CreateDatasetEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct CreateDatasetEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::CreateDatasetEntryRequest>
                         for CreateDatasetEntrySvc<T>
                     {
@@ -3708,7 +3708,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::create_dataset_entry(&inner, request)
+                                <T as DalaranCloudService>::create_dataset_entry(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -3736,10 +3736,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/CreateTableEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/CreateTableEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct CreateTableEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct CreateTableEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::CreateTableEntryRequest>
                         for CreateTableEntrySvc<T>
                     {
@@ -3751,7 +3751,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::create_table_entry(&inner, request).await
+                                <T as DalaranCloudService>::create_table_entry(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3778,10 +3778,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/ReadDatasetEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ReadDatasetEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct ReadDatasetEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct ReadDatasetEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::ReadDatasetEntryRequest>
                         for ReadDatasetEntrySvc<T>
                     {
@@ -3793,7 +3793,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::read_dataset_entry(&inner, request).await
+                                <T as DalaranCloudService>::read_dataset_entry(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3820,10 +3820,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/UpdateDatasetEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UpdateDatasetEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct UpdateDatasetEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct UpdateDatasetEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::UpdateDatasetEntryRequest>
                         for UpdateDatasetEntrySvc<T>
                     {
@@ -3835,7 +3835,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::update_dataset_entry(&inner, request)
+                                <T as DalaranCloudService>::update_dataset_entry(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -3863,10 +3863,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/ReadTableEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ReadTableEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct ReadTableEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct ReadTableEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::ReadTableEntryRequest>
                         for ReadTableEntrySvc<T>
                     {
@@ -3878,7 +3878,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::read_table_entry(&inner, request).await
+                                <T as DalaranCloudService>::read_table_entry(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3905,10 +3905,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/UpdateTableEntry" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UpdateTableEntry" => {
                     #[allow(non_camel_case_types)]
-                    struct UpdateTableEntrySvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct UpdateTableEntrySvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::UpdateTableEntryRequest>
                         for UpdateTableEntrySvc<T>
                     {
@@ -3920,7 +3920,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::update_table_entry(&inner, request).await
+                                <T as DalaranCloudService>::update_table_entry(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -3947,10 +3947,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/RegisterWithDataset" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/RegisterWithDataset" => {
                     #[allow(non_camel_case_types)]
-                    struct RegisterWithDatasetSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct RegisterWithDatasetSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::RegisterWithDatasetRequest>
                         for RegisterWithDatasetSvc<T>
                     {
@@ -3962,7 +3962,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::register_with_dataset(&inner, request)
+                                <T as DalaranCloudService>::register_with_dataset(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -3990,10 +3990,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/UnregisterFromDataset" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/UnregisterFromDataset" => {
                     #[allow(non_camel_case_types)]
-                    struct UnregisterFromDatasetSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct UnregisterFromDatasetSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::UnregisterFromDatasetRequest>
                         for UnregisterFromDatasetSvc<T>
                     {
@@ -4007,7 +4007,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::unregister_from_dataset(&inner, request)
+                                <T as DalaranCloudService>::unregister_from_dataset(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -4035,10 +4035,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/WriteChunks" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WriteChunks" => {
                     #[allow(non_camel_case_types)]
-                    struct WriteChunksSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct WriteChunksSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ClientStreamingService<super::WriteChunksRequest>
                         for WriteChunksSvc<T>
                     {
@@ -4050,7 +4050,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::write_chunks(&inner, request).await
+                                <T as DalaranCloudService>::write_chunks(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4077,10 +4077,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetSegmentTableSchema" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetSegmentTableSchema" => {
                     #[allow(non_camel_case_types)]
-                    struct GetSegmentTableSchemaSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct GetSegmentTableSchemaSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::GetSegmentTableSchemaRequest>
                         for GetSegmentTableSchemaSvc<T>
                     {
@@ -4092,7 +4092,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::get_segment_table_schema(&inner, request)
+                                <T as DalaranCloudService>::get_segment_table_schema(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -4120,10 +4120,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/ScanSegmentTable" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ScanSegmentTable" => {
                     #[allow(non_camel_case_types)]
-                    struct ScanSegmentTableSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct ScanSegmentTableSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::ScanSegmentTableRequest>
                         for ScanSegmentTableSvc<T>
                     {
@@ -4137,7 +4137,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::scan_segment_table(&inner, request).await
+                                <T as DalaranCloudService>::scan_segment_table(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4164,10 +4164,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetDatasetManifestSchema" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetDatasetManifestSchema" => {
                     #[allow(non_camel_case_types)]
-                    struct GetDatasetManifestSchemaSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct GetDatasetManifestSchemaSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::GetDatasetManifestSchemaRequest>
                         for GetDatasetManifestSchemaSvc<T>
                     {
@@ -4179,7 +4179,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::get_dataset_manifest_schema(
+                                <T as DalaranCloudService>::get_dataset_manifest_schema(
                                     &inner, request,
                                 )
                                 .await
@@ -4209,10 +4209,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/ScanDatasetManifest" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ScanDatasetManifest" => {
                     #[allow(non_camel_case_types)]
-                    struct ScanDatasetManifestSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct ScanDatasetManifestSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::ScanDatasetManifestRequest>
                         for ScanDatasetManifestSvc<T>
                     {
@@ -4226,7 +4226,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::scan_dataset_manifest(&inner, request)
+                                <T as DalaranCloudService>::scan_dataset_manifest(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -4254,10 +4254,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetDatasetSchema" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetDatasetSchema" => {
                     #[allow(non_camel_case_types)]
-                    struct GetDatasetSchemaSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct GetDatasetSchemaSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::GetDatasetSchemaRequest>
                         for GetDatasetSchemaSvc<T>
                     {
@@ -4269,7 +4269,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::get_dataset_schema(&inner, request).await
+                                <T as DalaranCloudService>::get_dataset_schema(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4296,10 +4296,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetRrdManifest" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetRrdManifest" => {
                     #[allow(non_camel_case_types)]
-                    struct GetRrdManifestSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct GetRrdManifestSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::GetRrdManifestRequest>
                         for GetRrdManifestSvc<T>
                     {
@@ -4313,7 +4313,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::get_rrd_manifest(&inner, request).await
+                                <T as DalaranCloudService>::get_rrd_manifest(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4340,10 +4340,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetAssetsForSegment" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetAssetsForSegment" => {
                     #[allow(non_camel_case_types)]
-                    struct GetAssetsForSegmentSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct GetAssetsForSegmentSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::GetAssetsForSegmentRequest>
                         for GetAssetsForSegmentSvc<T>
                     {
@@ -4357,7 +4357,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::get_assets_for_segment(&inner, request)
+                                <T as DalaranCloudService>::get_assets_for_segment(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -4385,10 +4385,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/QueryDataset" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/QueryDataset" => {
                     #[allow(non_camel_case_types)]
-                    struct QueryDatasetSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct QueryDatasetSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::QueryDatasetRequest>
                         for QueryDatasetSvc<T>
                     {
@@ -4402,7 +4402,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::query_dataset(&inner, request).await
+                                <T as DalaranCloudService>::query_dataset(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4429,10 +4429,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/FetchChunks" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/FetchChunks" => {
                     #[allow(non_camel_case_types)]
-                    struct FetchChunksSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct FetchChunksSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::FetchChunksRequest>
                         for FetchChunksSvc<T>
                     {
@@ -4446,7 +4446,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::fetch_chunks(&inner, request).await
+                                <T as DalaranCloudService>::fetch_chunks(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4473,10 +4473,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/RegisterTable" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/RegisterTable" => {
                     #[allow(non_camel_case_types)]
-                    struct RegisterTableSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct RegisterTableSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::RegisterTableRequest>
                         for RegisterTableSvc<T>
                     {
@@ -4488,7 +4488,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::register_table(&inner, request).await
+                                <T as DalaranCloudService>::register_table(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4515,10 +4515,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/GetTableSchema" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/GetTableSchema" => {
                     #[allow(non_camel_case_types)]
-                    struct GetTableSchemaSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct GetTableSchemaSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::GetTableSchemaRequest>
                         for GetTableSchemaSvc<T>
                     {
@@ -4530,7 +4530,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::get_table_schema(&inner, request).await
+                                <T as DalaranCloudService>::get_table_schema(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4557,10 +4557,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/ScanTable" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/ScanTable" => {
                     #[allow(non_camel_case_types)]
-                    struct ScanTableSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct ScanTableSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::ScanTableRequest>
                         for ScanTableSvc<T>
                     {
@@ -4574,7 +4574,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::scan_table(&inner, request).await
+                                <T as DalaranCloudService>::scan_table(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4601,10 +4601,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/WriteTable" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/WriteTable" => {
                     #[allow(non_camel_case_types)]
-                    struct WriteTableSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct WriteTableSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ClientStreamingService<super::WriteTableRequest>
                         for WriteTableSvc<T>
                     {
@@ -4616,7 +4616,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::write_table(&inner, request).await
+                                <T as DalaranCloudService>::write_table(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4643,10 +4643,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/QueryTasks" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/QueryTasks" => {
                     #[allow(non_camel_case_types)]
-                    struct QueryTasksSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService> tonic::server::UnaryService<super::QueryTasksRequest>
+                    struct QueryTasksSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService> tonic::server::UnaryService<super::QueryTasksRequest>
                         for QueryTasksSvc<T>
                     {
                         type Response = super::QueryTasksResponse;
@@ -4657,7 +4657,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::query_tasks(&inner, request).await
+                                <T as DalaranCloudService>::query_tasks(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4684,10 +4684,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/QueryTasksOnCompletion" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/QueryTasksOnCompletion" => {
                     #[allow(non_camel_case_types)]
-                    struct QueryTasksOnCompletionSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct QueryTasksOnCompletionSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::ServerStreamingService<super::QueryTasksOnCompletionRequest>
                         for QueryTasksOnCompletionSvc<T>
                     {
@@ -4701,7 +4701,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::query_tasks_on_completion(&inner, request)
+                                <T as DalaranCloudService>::query_tasks_on_completion(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -4729,10 +4729,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/CancelTasks" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/CancelTasks" => {
                     #[allow(non_camel_case_types)]
-                    struct CancelTasksSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct CancelTasksSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::CancelTasksRequest>
                         for CancelTasksSvc<T>
                     {
@@ -4744,7 +4744,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::cancel_tasks(&inner, request).await
+                                <T as DalaranCloudService>::cancel_tasks(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4771,10 +4771,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/DoMaintenance" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DoMaintenance" => {
                     #[allow(non_camel_case_types)]
-                    struct DoMaintenanceSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct DoMaintenanceSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::DoMaintenanceRequest>
                         for DoMaintenanceSvc<T>
                     {
@@ -4786,7 +4786,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::do_maintenance(&inner, request).await
+                                <T as DalaranCloudService>::do_maintenance(&inner, request).await
                             };
                             Box::pin(fut)
                         }
@@ -4813,10 +4813,10 @@ pub mod rerun_cloud_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.cloud.v1alpha1.RerunCloudService/DoGlobalMaintenance" => {
+                "/dalaran.cloud.v1alpha1.DalaranCloudService/DoGlobalMaintenance" => {
                     #[allow(non_camel_case_types)]
-                    struct DoGlobalMaintenanceSvc<T: RerunCloudService>(pub Arc<T>);
-                    impl<T: RerunCloudService>
+                    struct DoGlobalMaintenanceSvc<T: DalaranCloudService>(pub Arc<T>);
+                    impl<T: DalaranCloudService>
                         tonic::server::UnaryService<super::DoGlobalMaintenanceRequest>
                         for DoGlobalMaintenanceSvc<T>
                     {
@@ -4828,7 +4828,7 @@ pub mod rerun_cloud_service_server {
                         ) -> Self::Future {
                             let inner = Arc::clone(&self.0);
                             let fut = async move {
-                                <T as RerunCloudService>::do_global_maintenance(&inner, request)
+                                <T as DalaranCloudService>::do_global_maintenance(&inner, request)
                                     .await
                             };
                             Box::pin(fut)
@@ -4872,7 +4872,7 @@ pub mod rerun_cloud_service_server {
             }
         }
     }
-    impl<T> Clone for RerunCloudServiceServer<T> {
+    impl<T> Clone for DalaranCloudServiceServer<T> {
         fn clone(&self) -> Self {
             let inner = self.inner.clone();
             Self {
@@ -4885,8 +4885,8 @@ pub mod rerun_cloud_service_server {
         }
     }
     /// Generated gRPC service name
-    pub const SERVICE_NAME: &str = "rerun.cloud.v1alpha1.RerunCloudService";
-    impl<T> tonic::server::NamedService for RerunCloudServiceServer<T> {
+    pub const SERVICE_NAME: &str = "dalaran.cloud.v1alpha1.DalaranCloudService";
+    impl<T> tonic::server::NamedService for DalaranCloudServiceServer<T> {
         const NAME: &'static str = SERVICE_NAME;
     }
 }

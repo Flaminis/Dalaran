@@ -9,7 +9,7 @@ use dl_log_types::StoreId;
 use super::RawRrdManifest;
 use crate::{CodecError, CodecResult};
 
-/// A [`RawRrdManifest`] extended with the columns Rerun Hub attaches when it serves a manifest.
+/// A [`RawRrdManifest`] extended with the columns Dalaran Hub attaches when it serves a manifest.
 #[derive(Clone, Debug, dl_byte_size::SizeBytes)]
 pub struct HubRrdManifest {
     pub store_id: StoreId,
@@ -17,13 +17,13 @@ pub struct HubRrdManifest {
     pub sorbet_schema_sha256: [u8; 32],
 
     /// The raw manifest's columns plus the three hub columns appended in this order:
-    /// `chunk_partition_id`, `rerun_partition_layer`, `chunk_key`.
+    /// `chunk_partition_id`, `dalaran_partition_layer`, `chunk_key`.
     data: RecordBatch,
 }
 
 impl HubRrdManifest {
     pub const FIELD_CHUNK_PARTITION_ID: &str = "chunk_partition_id";
-    pub const FIELD_RERUN_PARTITION_LAYER: &str = "rerun_partition_layer";
+    pub const FIELD_DALARAN_PARTITION_LAYER: &str = "dalaran_partition_layer";
     pub const FIELD_CHUNK_KEY: &str = RawRrdManifest::FIELD_CHUNK_KEY;
 
     /// The number of trailing hub columns in [`Self::data`].
@@ -39,17 +39,17 @@ impl HubRrdManifest {
         )
         .with_metadata(
             [
-                ("rerun:kind".to_owned(), "control".to_owned()), //
+                ("dalaran:kind".to_owned(), "control".to_owned()), //
             ]
             .into_iter()
             .collect(),
         )
     }
 
-    pub fn field_rerun_partition_layer() -> Field {
+    pub fn field_dalaran_partition_layer() -> Field {
         let nullable = false;
         Field::new(
-            Self::FIELD_RERUN_PARTITION_LAYER,
+            Self::FIELD_DALARAN_PARTITION_LAYER,
             arrow::datatypes::DataType::Utf8,
             nullable,
         )
@@ -72,7 +72,7 @@ impl HubRrdManifest {
     ) -> CodecResult<Self> {
         for name in [
             Self::FIELD_CHUNK_PARTITION_ID,
-            Self::FIELD_RERUN_PARTITION_LAYER,
+            Self::FIELD_DALARAN_PARTITION_LAYER,
             Self::FIELD_CHUNK_KEY,
         ] {
             if raw.data.schema_ref().column_with_name(name).is_some() {
@@ -97,7 +97,7 @@ impl HubRrdManifest {
         fields.push(Arc::new(Self::field_chunk_partition_id()));
         columns.push(Arc::new(partition_ids) as ArrayRef);
 
-        fields.push(Arc::new(Self::field_rerun_partition_layer()));
+        fields.push(Arc::new(Self::field_dalaran_partition_layer()));
         columns.push(Arc::new(layers) as ArrayRef);
 
         fields.push(Arc::new(Self::field_chunk_key()));
@@ -138,8 +138,8 @@ impl HubRrdManifest {
         self.data.column(self.num_raw_columns())
     }
 
-    /// The `rerun_partition_layer` column: the layer name, repeated on every row.
-    pub fn col_rerun_partition_layer(&self) -> &ArrayRef {
+    /// The `dalaran_partition_layer` column: the layer name, repeated on every row.
+    pub fn col_dalaran_partition_layer(&self) -> &ArrayRef {
         self.data.column(self.num_raw_columns() + 1)
     }
 
@@ -326,10 +326,10 @@ mod tests {
 
         let layers = hub
             .data()
-            .column_by_name(HubRrdManifest::FIELD_RERUN_PARTITION_LAYER)
-            .expect("hub batch has a rerun_partition_layer column")
+            .column_by_name(HubRrdManifest::FIELD_DALARAN_PARTITION_LAYER)
+            .expect("hub batch has a dalaran_partition_layer column")
             .downcast_array_ref::<arrow::array::StringArray>()
-            .expect("rerun_partition_layer is a StringArray");
+            .expect("dalaran_partition_layer is a StringArray");
         for value in layers.iter().flatten() {
             assert_eq!(value, layer.as_str());
         }
@@ -376,8 +376,8 @@ mod tests {
                 HubRrdManifest::FIELD_CHUNK_PARTITION_ID,
             ),
             (
-                hub.col_rerun_partition_layer(),
-                HubRrdManifest::FIELD_RERUN_PARTITION_LAYER,
+                hub.col_dalaran_partition_layer(),
+                HubRrdManifest::FIELD_DALARAN_PARTITION_LAYER,
             ),
             (hub.col_chunk_key(), HubRrdManifest::FIELD_CHUNK_KEY),
         ] {

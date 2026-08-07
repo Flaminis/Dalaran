@@ -1,0 +1,15 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// Frames per second for a sequence timeline.
+table Fps (
+  "attr.python.aliases": "float",
+  "attr.python.array_aliases": "npt.ArrayLike",
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Copy, PartialEq, PartialOrd",
+  "attr.rust.repr": "transparent",
+  "attr.rust.tuple_struct"
+) {
+  fps: dalaran.datatypes.Float64 (order: 100);
+}

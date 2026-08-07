@@ -544,16 +544,16 @@ impl<T: DataframeClientAPI> SegmentStreamExec<T> {
             query_expression.selection = Some(selection);
         }
 
-        // The output ordering of this table provider should always be rerun
-        // segment ID and then time index. If the output does not have rerun
+        // The output ordering of this table provider should always be dalaran
+        // segment ID and then time index. If the output does not have dalaran
         // segment ID included, we cannot specify any output ordering.
 
         let orderings =
             if projected_schema.fields().iter().any(|f| {
-                f.name().as_str() == ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME
+                f.name().as_str() == ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME
             }) {
                 let segment_col = Arc::new(Column::new(
-                    ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+                    ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
                     0,
                 )) as Arc<dyn PhysicalExpr>;
                 let order_col = sort_index
@@ -594,7 +594,7 @@ impl<T: DataframeClientAPI> SegmentStreamExec<T> {
         let output_partitioning = if partition_in_output_schema {
             Partitioning::Hash(
                 vec![Arc::new(Column::new(
-                    ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+                    ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
                     0,
                 ))],
                 num_partitions,
@@ -731,7 +731,7 @@ impl<T: DataframeClientAPI> ExecutionPlan for SegmentStreamExec<T> {
                         .as_ref()
                         .is_none_or(|iv| iv.contains_key(*segment_id))
                 })
-                // we end up with 1 batch per (rerun) segment. Order is important and must be preserved.
+                // we end up with 1 batch per (dalaran) segment. Order is important and must be preserved.
                 // See SegmentStreamExec::try_new for details on ordering.
                 .map(|(_, batches)| dl_arrow_util::concat_polymorphic_batches(batches))
                 .try_collect()
@@ -906,12 +906,12 @@ impl<T: DataframeClientAPI> DisplayAs for SegmentStreamExec<T> {
 /// Number of worker threads for the shared CPU runtime ([`CpuRuntime::try_get`]).
 ///
 /// Sized to the machine's available parallelism, overridable via the
-/// `RERUN_SDK_NUM_CPUS` environment variable. This is a process-level resource
+/// `DALARAN_SDK_NUM_CPUS` environment variable. This is a process-level resource
 /// decision, deliberately decoupled from any single query's `target_partitions` —
 /// that governs how many `cpu_worker` tasks are spawned, and they simply queue
 /// onto this fixed-size pool.
 fn shared_cpu_runtime_threads() -> usize {
-    crate::rerun_sdk_num_cpus().unwrap_or_else(crate::available_cpus)
+    crate::dalaran_sdk_num_cpus().unwrap_or_else(crate::available_cpus)
 }
 
 /// A multi-threaded Tokio runtime dedicated to CPU-bound tasks.

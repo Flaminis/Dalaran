@@ -1,0 +1,20 @@
+namespace dalaran.blueprint.archetypes;
+
+/// Configuration for the legend of a plot.
+table PlotLegend (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Default",
+  "attr.python.aliases": "blueprint_components.Corner2D"
+) {
+  // --- Optional ---
+
+  /// To what corner the legend is aligned.
+  ///
+  /// Defaults to the right bottom corner.
+  corner: dalaran.blueprint.components.Corner2D ("attr.dalaran.component_optional", nullable, order: 2100);
+
+  /// Whether the legend is shown at all.
+  ///
+  /// True by default.
+  visible: dalaran.components.Visible ("attr.dalaran.component_optional", nullable, order: 2200);
+}

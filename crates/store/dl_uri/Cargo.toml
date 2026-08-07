@@ -1,6 +1,6 @@
 [package]
 name = "dl_uri"
-description = "Parsing and constructing Rerun URIs"
+description = "Parsing and constructing Dalaran URIs"
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true

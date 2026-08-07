@@ -166,7 +166,7 @@ impl SnippetsRefCodeGenerator {
             };
 
             let link_docs =
-                format!("https://rerun.io/docs/reference/types/{obj_kind}/{obj_name_snake}");
+                format!("https://dalaran.dev/docs/reference/types/{obj_kind}/{obj_name_snake}");
             let link_docs = make_speculative_if_needed(obj_name, &link_docs)?;
             let obj_name_rendered =
                 if obj.kind != ObjectKind::View && obj.scope().as_deref() == Some("blueprint") {
@@ -326,7 +326,7 @@ impl SnippetsRefCodeGenerator {
 
 This file acts as an index reference for all of our [snippets](./README.md).
 
-Use it to quickly find copy-pastable snippets of code for any Rerun feature you're interested in (APIs, Archetypes, Blueprint, etc).
+Use it to quickly find copy-pastable snippets of code for any Dalaran feature you're interested in (APIs, Archetypes, Blueprint, etc).
 
 ---
 
@@ -350,7 +350,7 @@ Use it to quickly find copy-pastable snippets of code for any Rerun feature you'
 
 ### Archetypes
 
-_All snippets, organized by the [`Archetype`](https://rerun.io/docs/reference/types/archetypes)(s) they use._
+_All snippets, organized by the [`Archetype`](https://dalaran.dev/docs/reference/types/archetypes)(s) they use._
 
 | Archetype | Snippet | Description | Python | Rust | C+⁠+ |
 | --------- | ------- | ----------- | :----: | :--: | :-------: |
@@ -359,7 +359,7 @@ _All snippets, organized by the [`Archetype`](https://rerun.io/docs/reference/ty
 
 ### Views (blueprint)
 
-_All snippets, organized by the [`View`](https://rerun.io/docs/reference/types/views)(s) they use._
+_All snippets, organized by the [`View`](https://dalaran.dev/docs/reference/types/views)(s) they use._
 
 | Component | Snippet | Description | Python | Rust | C+⁠+ |
 | --------- | ------- | ----------- | :----: | :--: | :-------: |
@@ -368,7 +368,7 @@ _All snippets, organized by the [`View`](https://rerun.io/docs/reference/types/v
 
 ### Archetypes (blueprint)
 
-_All snippets, organized by the blueprint-related [`Archetype`](https://rerun.io/docs/reference/types/archetypes)(s) they use._
+_All snippets, organized by the blueprint-related [`Archetype`](https://dalaran.dev/docs/reference/types/archetypes)(s) they use._
 
 | Archetype | Snippet | Description | Python | Rust | C+⁠+ |
 | --------- | ------- | ----------- | :----: | :--: | :-------: |

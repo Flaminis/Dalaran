@@ -1,0 +1,16 @@
+
+namespace dalaran.components;
+
+// ---
+
+/// A string of text, e.g. for labels and text documents.
+table Text (
+  "attr.arrow.transparent",
+  "attr.python.aliases": "str",
+  "attr.python.array_aliases": "str | Sequence[str]",
+  "attr.dalaran.state": "stable",
+  "attr.rust.derive": "Default, PartialEq, Eq, PartialOrd, Ord",
+  "attr.rust.repr": "transparent"
+) {
+  value: dalaran.datatypes.Utf8 (order: 100);
+}

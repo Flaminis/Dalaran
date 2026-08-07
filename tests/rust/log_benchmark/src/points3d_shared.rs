@@ -1,7 +1,7 @@
 use crate::lcg;
 
 /// Batch that should be logged.
-/// Intentionally not using `rerun::Points3D` here already.
+/// Intentionally not using `dalaran::Points3D` here already.
 pub struct Point3DInput {
     pub positions: Vec<glam::Vec3>,
     pub colors: Vec<u32>,

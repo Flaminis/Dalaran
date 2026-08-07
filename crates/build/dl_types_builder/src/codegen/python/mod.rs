@@ -232,7 +232,7 @@ impl ExtensionClass {
             };
 
             let mandatory_docstring = format!(
-                r#""""Extension for [{name}][rerun.{scope}{kind}.{name}].""""#,
+                r#""""Extension for [{name}][dalaran.{scope}{kind}.{name}].""""#,
                 name = obj.name,
                 kind = obj.kind.plural_snake_case()
             );
@@ -337,7 +337,7 @@ fn check_ext_consistency(
             // and we want to use the component names directly, not look inside the components
             expected_fields.insert(&field.name);
         } else {
-            // For components and datatypes, check if this field references another rerun datatype
+            // For components and datatypes, check if this field references another dalaran datatype
             if let Type::Object { fqname } = &field.typ {
                 if let Some(referenced_obj) = objects.get(fqname) {
                     // Only apply field indirection if referencing another datatype, not component
@@ -559,8 +559,8 @@ impl PythonCodeGenerator {
                 .is_some_and(|aliases| aliases.contains(&format!("{}Like", obj.name)));
             let type_alias_import = if needs_type_alias { ", TypeAlias" } else { "" };
 
-            let rerun_path = if obj.is_testing() {
-                "rerun."
+            let dalaran_path = if obj.is_testing() {
+                "dalaran."
             } else if obj.scope().is_some() {
                 "..." // NOLINT
             } else {
@@ -582,9 +582,9 @@ impl PythonCodeGenerator {
             import pyarrow as pa
             import uuid
 
-            from {rerun_path}_numpy_compatibility import asarray
-            from {rerun_path}error_utils import catch_and_log_exceptions
-            from {rerun_path}_baseclasses import (
+            from {dalaran_path}_numpy_compatibility import asarray
+            from {dalaran_path}error_utils import catch_and_log_exceptions
+            from {dalaran_path}_baseclasses import (
                 Archetype,
                 BaseBatch,
                 ComponentBatchMixin,
@@ -594,7 +594,7 @@ impl PythonCodeGenerator {
                 ComponentMixin,
                 DescribedComponentBatch,
             )
-            from {rerun_path}_converters import (
+            from {dalaran_path}_converters import (
                 int_or_none,
                 float_or_none,
                 bool_or_none,
@@ -625,16 +625,16 @@ impl PythonCodeGenerator {
             }
 
             if obj
-                .try_get_attr::<String>(crate::ATTR_RERUN_VISUALIZER)
+                .try_get_attr::<String>(crate::ATTR_DALARAN_VISUALIZER)
                 .is_some()
             {
                 code.push_unindented(
-                    format!("from {rerun_path}blueprint import VisualizableArchetype, Visualizer"),
+                    format!("from {dalaran_path}blueprint import VisualizableArchetype, Visualizer"),
                     1,
                 );
                 code.push_unindented(
                     format!(
-                        "from {rerun_path}blueprint.datatypes import VisualizerComponentMappingLike"
+                        "from {dalaran_path}blueprint.datatypes import VisualizerComponentMappingLike"
                     ),
                     1,
                 );
@@ -700,7 +700,7 @@ impl PythonCodeGenerator {
             files_to_write.insert(filepath.clone(), code);
         }
 
-        // rerun/[{scope}]/{datatypes|components|archetypes|views}/__init__.py
+        // dalaran/[{scope}]/{datatypes|components|archetypes|views}/__init__.py
         write_init_file(&kind_path, &mods, files_to_write);
         write_init_file(&test_kind_path, &test_mods, files_to_write);
         for (scope, mods) in scoped_mods {
@@ -825,7 +825,7 @@ fn code_for_struct(
         superclasses.push("Archetype".to_owned());
     }
 
-    let visualizer_name = obj.try_get_attr::<String>(crate::ATTR_RERUN_VISUALIZER);
+    let visualizer_name = obj.try_get_attr::<String>(crate::ATTR_DALARAN_VISUALIZER);
     if visualizer_name.is_some() {
         superclasses.push("VisualizableArchetype".to_owned());
     }
@@ -1830,14 +1830,14 @@ fn quote_import_clauses_from_field(
         _ => None,
     };
 
-    // NOTE: The distinction between `from .` vs. `from rerun.datatypes` has been shown to fix some
+    // NOTE: The distinction between `from .` vs. `from dalaran.datatypes` has been shown to fix some
     // nasty lazy circular dependencies in weird edge cases…
     // In any case it will be normalized by `ruff` if it turns out to be unnecessary.
     fqname.map(|fqname| quote_import_clauses_from_fqname(obj_scope, fqname))
 }
 
 fn quote_import_clauses_from_fqname(obj_scope: Option<&String>, fqname: &str) -> String {
-    // NOTE: The distinction between `from .` vs. `from rerun.datatypes` has been shown to fix some
+    // NOTE: The distinction between `from .` vs. `from dalaran.datatypes` has been shown to fix some
     // nasty lazy circular dependencies in weird edge cases…
     // In any case it will be normalized by `ruff` if it turns out to be unnecessary.
 
@@ -1845,30 +1845,30 @@ fn quote_import_clauses_from_fqname(obj_scope: Option<&String>, fqname: &str) ->
     let (from, class) = fqname.rsplit_once('.').unwrap_or(("", fqname.as_str()));
 
     if let Some(scope) = obj_scope {
-        if from.starts_with("rerun.datatypes") {
+        if from.starts_with("dalaran.datatypes") {
             "from ... import datatypes".to_owned() // NOLINT
-        } else if from.starts_with(format!("rerun.{scope}.datatypes").as_str()) {
+        } else if from.starts_with(format!("dalaran.{scope}.datatypes").as_str()) {
             format!("from ...{scope} import datatypes as {scope}_datatypes") // NOLINT
-        } else if from.starts_with("rerun.components") {
+        } else if from.starts_with("dalaran.components") {
             "from ... import components".to_owned() // NOLINT
-        } else if from.starts_with(format!("rerun.{scope}.components").as_str()) {
+        } else if from.starts_with(format!("dalaran.{scope}.components").as_str()) {
             format!("from ...{scope} import components as {scope}_components") // NOLINT
-        } else if from.starts_with("rerun.archetypes") {
+        } else if from.starts_with("dalaran.archetypes") {
             // NOTE: This is assuming importing other archetypes is legal… which whether it is or
             // isn't for this code generator to say.
             "from ... import archetypes".to_owned() // NOLINT
-        } else if from.starts_with(format!("rerun.{scope}.archetypes").as_str()) {
+        } else if from.starts_with(format!("dalaran.{scope}.archetypes").as_str()) {
             format!("from ...{scope} import archetypes as {scope}_archetypes") // NOLINT
         } else if from.is_empty() {
             format!("from . import {class}")
         } else {
             format!("from {from} import {class}")
         }
-    } else if from.starts_with("rerun.datatypes") {
+    } else if from.starts_with("dalaran.datatypes") {
         "from .. import datatypes".to_owned()
-    } else if from.starts_with("rerun.components") {
+    } else if from.starts_with("dalaran.components") {
         "from .. import components".to_owned()
-    } else if from.starts_with("rerun.archetypes") {
+    } else if from.starts_with("dalaran.archetypes") {
         // NOTE: This is assuming importing other archetypes is legal… which whether it is or
         // isn't for this code generator to say.
         "from .. import archetypes".to_owned()
@@ -2143,7 +2143,7 @@ fn quote_enum_array_field_converter(
     let enum_name = &enum_obj.name;
     // E.g. `datatypes.EnumTest`. This relies on the module (e.g. `datatypes`) being importable
     // relative to the generated file, which also works for the test types (where the absolute
-    // `rerun.testing.datatypes` path does not exist).
+    // `dalaran.testing.datatypes` path does not exist).
     let enum_type = fqname_to_type(&enum_obj.fqname);
     let enum_module = enum_type.rsplit_once('.').map_or_else(
         || panic!("Missing '.' separator in type: {enum_type:?}"),
@@ -2206,12 +2206,12 @@ fn fqname_to_type(fqname: &str) -> String {
     let parts = fqname.split('.').collect::<Vec<_>>();
 
     match parts[..] {
-        ["rerun", "datatypes", name] => format!("datatypes.{name}"),
-        ["rerun", "components", name] => format!("components.{name}"),
-        ["rerun", "archetypes", name] => format!("archetypes.{name}"),
-        ["rerun", scope, "datatypes", name] => format!("{scope}_datatypes.{name}"),
-        ["rerun", scope, "components", name] => format!("{scope}_components.{name}"),
-        ["rerun", scope, "archetypes", name] => format!("{scope}_archetypes.{name}"),
+        ["dalaran", "datatypes", name] => format!("datatypes.{name}"),
+        ["dalaran", "components", name] => format!("components.{name}"),
+        ["dalaran", "archetypes", name] => format!("archetypes.{name}"),
+        ["dalaran", scope, "datatypes", name] => format!("{scope}_datatypes.{name}"),
+        ["dalaran", scope, "components", name] => format!("{scope}_components.{name}"),
+        ["dalaran", scope, "archetypes", name] => format!("{scope}_archetypes.{name}"),
         _ => {
             panic!("Unexpected fqname: {fqname}");
         }
@@ -2833,9 +2833,9 @@ fn quote_local_batch_type_imports(fields: &[ObjectField], current_obj_is_testing
             let is_field_testing = crate::objects::is_testing_fqname(field_fqname);
             let import_path = if current_obj_is_testing && is_field_testing {
                 // Extract the relative path within the testing namespace
-                if let Some(testing_prefix) = mod_path.strip_prefix("rerun.testing.datatypes") {
+                if let Some(testing_prefix) = mod_path.strip_prefix("dalaran.testing.datatypes") {
                     format!(".{testing_prefix}")
-                } else if mod_path == "rerun.testing" {
+                } else if mod_path == "dalaran.testing" {
                     ".".to_owned()
                 } else {
                     mod_path.to_owned()
@@ -3230,7 +3230,7 @@ fn quote_columnar_methods(reporter: &Reporter, obj: &Object, objects: &Objects) 
         "\
         Construct a new column-oriented component bundle.
 
-        This makes it possible to use `rr.send_columns` to send columnar data directly into Rerun.
+        This makes it possible to use `rr.send_columns` to send columnar data directly into Dalaran.
 
         The returned columns will be partitioned into unit-length sub-batches by default.
         Use `ComponentColumnList.partition` to repartition the data as needed.
@@ -3377,7 +3377,7 @@ fn quote_arrow_field(field: &Field) -> String {
     } = field;
 
     let datatype = quote_arrow_datatype(data_type);
-    let is_nullable = *is_nullable || matches!(data_type.to_logical_type(), DataType::Union { .. }); // Rerun unions always has a `_null_marker: null` variant, so they are always nullable
+    let is_nullable = *is_nullable || matches!(data_type.to_logical_type(), DataType::Union { .. }); // Dalaran unions always has a `_null_marker: null` variant, so they are always nullable
     let is_nullable = if is_nullable { "True" } else { "False" };
     let metadata = quote_metadata_map(metadata);
 

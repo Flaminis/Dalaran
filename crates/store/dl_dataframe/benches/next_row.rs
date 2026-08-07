@@ -12,9 +12,9 @@
 //! `MutableArrayData` buffers and finalizes once per call.
 //!
 //! Two schemas are benched:
-//! * **list-of-list-f64** — mirrors `rerun-synthetic-long-10k`
+//! * **list-of-list-f64** — mirrors `dalaran-synthetic-long-10k`
 //!   (`list<list<f64>>` of length-1 outer × `VECTOR_WIDTH` inner).
-//! * **list-of-struct** — mirrors `rerun-synthetic-structs-10k`
+//! * **list-of-struct** — mirrors `dalaran-synthetic-structs-10k`
 //!   (`list<struct{joint_positions: list<f64>}>`); this is the hot
 //!   production schema and the primary perf target for `next_n_rows`.
 //!
@@ -85,7 +85,7 @@ const CHUNKED_BENCH_ROWS: usize = 30_720;
 const CHUNKED_BENCH_BATCH: usize = 2048;
 
 // ---------------------------------------------------------------------------
-// list-of-list-f64 (rerun-synthetic-long-10k shape)
+// list-of-list-f64 (dalaran-synthetic-long-10k shape)
 
 fn build_list_of_list_f64(num_rows: usize) -> ArrayRef {
     let total_floats = num_rows * VECTOR_WIDTH;
@@ -103,7 +103,7 @@ fn build_list_of_list_f64(num_rows: usize) -> ArrayRef {
 }
 
 // ---------------------------------------------------------------------------
-// list-of-struct (rerun-synthetic-structs-10k shape)
+// list-of-struct (dalaran-synthetic-structs-10k shape)
 
 fn build_list_of_struct(num_rows: usize) -> ArrayRef {
     let total_floats = num_rows * VECTOR_WIDTH;

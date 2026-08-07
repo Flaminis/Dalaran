@@ -1,4 +1,4 @@
-use rerun::external::dl_log;
+use dalaran::external::dl_log;
 
 const W: usize = 200;
 const H: usize = 200;
@@ -29,23 +29,23 @@ fn prepare() -> Input {
     Input { centers }
 }
 
-fn execute(rec: &rerun::RecordingStream, input: Input) -> anyhow::Result<()> {
+fn execute(rec: &dalaran::RecordingStream, input: Input) -> anyhow::Result<()> {
     dl_tracing::profile_function!();
 
     let Input { centers } = input;
 
     rec.log(
         "large_batch",
-        &rerun::Boxes3D::update_fields()
-            .with_half_sizes([rerun::HalfSize3D::new(0.5, 0.5, 0.5)])
+        &dalaran::Boxes3D::update_fields()
+            .with_half_sizes([dalaran::HalfSize3D::new(0.5, 0.5, 0.5)])
             .with_centers(centers)
-            .with_fill_mode(rerun::FillMode::Solid),
+            .with_fill_mode(dalaran::FillMode::Solid),
     )?;
     Ok(())
 }
 
 /// Emulate a voxel occupancy grid
-pub fn run(rec: &rerun::RecordingStream) -> anyhow::Result<()> {
+pub fn run(rec: &dalaran::RecordingStream) -> anyhow::Result<()> {
     dl_tracing::profile_function!();
     let input = std::hint::black_box(prepare());
     execute(rec, input)

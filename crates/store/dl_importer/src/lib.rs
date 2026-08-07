@@ -1,6 +1,6 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! Handles importing of Rerun data from file using importer plugins.
+//! Handles importing of Dalaran data from file using importer plugins.
 
 use std::collections::BTreeSet;
 use std::sync::{Arc, LazyLock};
@@ -261,20 +261,20 @@ pub type ImporterName = String;
 /// An [`Importer`] imports data from a file path and/or a file's contents.
 ///
 /// Files can be imported in 3 different ways:
-/// - via the Rerun CLI (`rerun myfile.jpeg`),
+/// - via the Dalaran CLI (`dalaran myfile.jpeg`),
 /// - using drag-and-drop,
-/// - using the open dialog in the Rerun Viewer.
+/// - using the open dialog in the Dalaran Viewer.
 ///
 /// All these file importing methods support importing a single file, many files at once, or even
 /// folders.
-/// ⚠ Drag-and-drop of folders does not yet work on the web version of Rerun Viewer ⚠
+/// ⚠ Drag-and-drop of folders does not yet work on the web version of Dalaran Viewer ⚠
 ///
 /// We only support importing files from the local filesystem at the moment, and consequently only
 /// accept filepaths as input.
 /// [There are plans to make this generic over any URI](https://github.com/rerun-io/rerun/issues/4525).
 ///
-/// Rerun comes with a few [`Importer`]s by default:
-/// - [`RrdImporter`] for [Rerun files].
+/// Dalaran comes with a few [`Importer`]s by default:
+/// - [`RrdImporter`] for [Dalaran files].
 /// - [`ArchetypeImporter`] for:
 ///     - [3D models]
 ///     - [Images]
@@ -285,7 +285,7 @@ pub type ImporterName = String;
 ///
 /// ## Registering custom importers
 ///
-/// Checkout our [guide](https://www.rerun.io/docs/concepts/logging-and-ingestion/importers/overview).
+/// Checkout our [guide](https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview).
 ///
 /// ## Execution
 ///
@@ -302,7 +302,7 @@ pub type ImporterName = String;
 ///
 /// On native, [`Importer`]s are executed in parallel.
 ///
-/// [Rerun files]: crate::SUPPORTED_RERUN_EXTENSIONS
+/// [Dalaran files]: crate::SUPPORTED_DALARAN_EXTENSIONS
 /// [3D models]: crate::SUPPORTED_MESH_EXTENSIONS
 /// [Images]: crate::SUPPORTED_IMAGE_EXTENSIONS
 /// [Point clouds]: crate::SUPPORTED_POINT_CLOUD_EXTENSIONS
@@ -318,8 +318,8 @@ pub trait Importer: Send + Sync {
 
     /// Imports data from a file on the local filesystem and sends it to `tx`.
     ///
-    /// This is generally called when opening files with the Rerun CLI or via the open menu in the
-    /// Rerun Viewer on native platforms.
+    /// This is generally called when opening files with the Dalaran CLI or via the open menu in the
+    /// Dalaran Viewer on native platforms.
     ///
     /// The passed-in `store_id` is a shared recording created by the file importing machinery:
     /// implementers can decide to use it or not (e.g. it might make sense to log all images with a
@@ -536,7 +536,7 @@ static CUSTOM_IMPORTERS: LazyLock<parking_lot::RwLock<Vec<Arc<dyn Importer>>>> =
 
 /// Register a custom [`Importer`].
 ///
-/// Any time the Rerun Viewer opens a file or directory, this custom importer will be notified.
+/// Any time the Dalaran Viewer opens a file or directory, this custom importer will be notified.
 /// Refer to [`Importer`]'s documentation for more information.
 #[inline]
 pub fn register_custom_importer(importer: impl Importer + 'static) {
@@ -572,7 +572,7 @@ pub const SUPPORTED_MESH_EXTENSIONS: &[&str] = &["glb", "gltf", "obj", "stl", "d
 // TODO(#4532): `.ply` importer should support 2D point cloud & meshes
 pub const SUPPORTED_POINT_CLOUD_EXTENSIONS: &[&str] = &["ply"];
 
-pub const SUPPORTED_RERUN_EXTENSIONS: &[&str] = &["rbl", "rrd"];
+pub const SUPPORTED_DALARAN_EXTENSIONS: &[&str] = &["rbl", "rrd"];
 
 /// 3rd party formats with built-in support.
 pub const SUPPORTED_THIRD_PARTY_FORMATS: &[&str] = &["mcap", "urdf"];
@@ -585,7 +585,7 @@ pub const SUPPORTED_TEXT_EXTENSIONS: &[&str] = &["txt", "md"];
 /// All file extension supported by our builtin [`Importer`]s.
 pub fn supported_extensions() -> impl Iterator<Item = &'static str> {
     chain!(
-        SUPPORTED_RERUN_EXTENSIONS,
+        SUPPORTED_DALARAN_EXTENSIONS,
         SUPPORTED_THIRD_PARTY_FORMATS,
         SUPPORTED_IMAGE_EXTENSIONS,
         SUPPORTED_DEPTH_IMAGE_EXTENSIONS,
@@ -724,7 +724,7 @@ fn test_content_type_to_extension() {
         Some("glb")
     );
     assert_eq!(
-        content_type_to_extension("application/x-rerun").as_deref(),
+        content_type_to_extension("application/x-dalaran").as_deref(),
         Some("rrd")
     );
     assert_eq!(

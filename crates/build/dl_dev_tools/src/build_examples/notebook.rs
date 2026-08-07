@@ -89,8 +89,8 @@ impl Example {
                 cmd.env("PYTHONWARNINGS", "error");
             }
 
-            cmd.env("RERUN_PANIC_ON_WARN", "1"); // any logged warnings/errors should cause a failure
-            cmd.env("RERUN_STRICT", "1"); // any misuse of the API should cause a failure
+            cmd.env("DALARAN_PANIC_ON_WARN", "1"); // any logged warnings/errors should cause a failure
+            cmd.env("DALARAN_STRICT", "1"); // any misuse of the API should cause a failure
             // Don't crash on Jupyter deprecation warning.
             cmd.env("JUPYTER_PLATFORM_DIRS", "1"); // use platform dirs for jupyter config/cache
 

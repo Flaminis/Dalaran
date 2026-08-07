@@ -20,9 +20,9 @@ use dl_protos::cloud::v1alpha1::ext::{
     UpdateDatasetEntryRequest, UpdateDatasetEntryResponse, UpdateEntryRequest, UpdateEntryResponse,
     UpdateTableEntryRequest, UpdateTableEntryResponse, VersionResponse,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_client::RerunCloudServiceClient;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::{
-    RerunCloudService, RerunCloudServiceServer,
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_client::DalaranCloudServiceClient;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::{
+    DalaranCloudService, DalaranCloudServiceServer,
 };
 use dl_protos::cloud::v1alpha1::{
     CancelTasksRequest, CreateDatasetEntryRequest, DeleteEntryRequest, EntryFilter, EntryKind,
@@ -36,7 +36,7 @@ use dl_protos::cloud::v1alpha1::{
 use dl_protos::common::v1alpha1::ext::{IfDuplicateBehavior, ScanParameters, SegmentId};
 use dl_protos::common::v1alpha1::{DataframePart, TaskId};
 use dl_protos::external::prost::bytes::Bytes;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_protos::{TypeConversionError, missing_field};
 use dl_types_core::LayerName;
 use std::sync::Arc;
@@ -263,7 +263,7 @@ async fn fetch_rrd_manifest_via_key(
         ));
     };
 
-    // `FetchChunks` needs the same `chunk_partition_id`/`rerun_partition_layer`/`chunk_key`
+    // `FetchChunks` needs the same `chunk_partition_id`/`dalaran_partition_layer`/`chunk_key`
     // columns the inline `GetRrdManifest` path serves; the raw manifest alone doesn't carry them.
     // [`dl_log_encoding::HubRrdManifest::try_from_raw`] handles this.
     let hub = dl_log_encoding::HubRrdManifest::try_from_raw(
@@ -306,7 +306,7 @@ pub struct SegmentQueryParams {
 //long. However we have a bunch of places that needs to be fixed before we can do that.
 #[derive(Clone)]
 pub struct RedapClient<T> {
-    inner: RerunCloudServiceClient<T>,
+    inner: DalaranCloudServiceClient<T>,
 
     /// Cached `VersionResponse.features` list. Populated lazily on the first
     /// `supports_feature` call and reused for the lifetime of this client
@@ -323,7 +323,7 @@ impl<T> RedapClient<T> {
     ///
     /// This should not be used in the viewer, use [`crate::ConnectionRegistryHandle::client`]
     /// instead.
-    pub fn new(client: RerunCloudServiceClient<T>) -> Self {
+    pub fn new(client: DalaranCloudServiceClient<T>) -> Self {
         Self {
             inner: client,
             features: Arc::new(OnceCell::new()),
@@ -333,12 +333,12 @@ impl<T> RedapClient<T> {
     /// Get a mutable reference to the underlying generated gRPC client.
     //TODO(#10188): this should disappear once we have wrapper for all endpoints and the client code
     //is using them.
-    pub fn inner(&mut self) -> &mut RerunCloudServiceClient<T> {
+    pub fn inner(&mut self) -> &mut DalaranCloudServiceClient<T> {
         &mut self.inner
     }
 }
 
-// `RerunCloudServiceClient<T>`'s derived `Debug` requires `T: Debug`, which doesn't hold for the
+// `DalaranCloudServiceClient<T>`'s derived `Debug` requires `T: Debug`, which doesn't hold for the
 // type-erased `BoxedRedapClientStack`. Print only the cached features instead.
 impl<T> std::fmt::Debug for RedapClient<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -363,17 +363,17 @@ pub struct Connection {
 }
 
 impl Connection {
-    /// Create a connection backed by an in-process Rerun catalog implementation.
+    /// Create a connection backed by an in-process Dalaran catalog implementation.
     pub fn from_service<T>(handler: Arc<T>) -> Self
     where
-        T: RerunCloudService,
+        T: DalaranCloudService,
     {
-        let service = <RerunCloudServiceServer<T> as tower::ServiceExt<RedapHttpRequest>>::map_err(
-            RerunCloudServiceServer::from_arc(handler)
+        let service = <DalaranCloudServiceServer<T> as tower::ServiceExt<RedapHttpRequest>>::map_err(
+            DalaranCloudServiceServer::from_arc(handler)
                 .max_decoding_message_size(crate::MAX_DECODING_MESSAGE_SIZE),
             |err: std::convert::Infallible| match err {},
         );
-        let client = RerunCloudServiceClient::new(tower::util::BoxCloneSyncService::new(service))
+        let client = DalaranCloudServiceClient::new(tower::util::BoxCloneSyncService::new(service))
             .max_decoding_message_size(crate::MAX_DECODING_MESSAGE_SIZE);
 
         Self {
@@ -835,7 +835,7 @@ where
     where
         T: Clone,
     {
-        const COLUMN_NAME: &str = ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME;
+        const COLUMN_NAME: &str = ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME;
 
         // Retry only the *open*: the server rejects `ScanSegmentTable` with `ResourceExhausted`
         // fail-fast at admission control, before the stream exists, so re-opening is idempotent.
@@ -880,7 +880,7 @@ where
                     )
                 })?;
 
-            let segment_id_column = ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID
+            let segment_id_column = ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID
                 .extract(&record_batch)
                 .map_err(|err| {
                     ApiError::deserialization_quiver_from(trace_id, err, "/ScanSegmentTable stream")
@@ -1292,16 +1292,16 @@ where
 
         // Validates the columns (existence, datatype, no nulls):
         let RegisterWithDatasetDataframe {
-            rerun_segment_id,
-            rerun_segment_layer,
-            rerun_segment_type,
-            rerun_storage_url,
-            rerun_task_id,
+            dalaran_segment_id,
+            dalaran_segment_layer,
+            dalaran_segment_type,
+            dalaran_storage_url,
+            dalaran_task_id,
         } = RegisterWithDatasetDataframe::try_from(response).map_err(|err| {
             ApiError::deserialization_quiver_from(trace_id, err, "/RegisterWithDataset response")
         })?;
 
-        let segment_types = DataSourceKind::many_from_arrow(rerun_segment_type.as_arrow().as_ref())
+        let segment_types = DataSourceKind::many_from_arrow(dalaran_segment_type.as_arrow().as_ref())
             .map_err(|err| {
                 ApiError::deserialization_with_source(
                     trace_id,
@@ -1311,11 +1311,11 @@ where
             })?;
 
         let descriptors = itertools::izip!(
-            rerun_segment_layer.into_iter_owned(),
-            rerun_segment_id.into_iter_owned(),
+            dalaran_segment_layer.into_iter_owned(),
+            dalaran_segment_id.into_iter_owned(),
             segment_types,
-            rerun_storage_url.into_iter_owned(),
-            rerun_task_id.into_iter_owned()
+            dalaran_storage_url.into_iter_owned(),
+            dalaran_task_id.into_iter_owned()
         )
         .map(
             |(layer_name, segment_id, segment_type, storage_url, task_id)| {
@@ -1477,7 +1477,7 @@ where
                 // Pass both `entry_kind` (deprecated) and `entry_kinds`
                 // to be compatible with old Hub versions.
                 // Drop `entry_kind` when no customer has a 0.14 deployment
-                // or older of Rerun Hub.
+                // or older of Dalaran Hub.
                 entry_kind: Some(EntryKind::Table.into()),
                 entry_kinds: vec![EntryKind::Table.into()],
                 ..Default::default()
@@ -1551,7 +1551,7 @@ where
                         // Pass both `entry_kind` (deprecated) and `entry_kinds`
                         // to be compatible with old Hub versions.
                         // Drop `entry_kind` when no customer has a 0.14 deployment
-                        // or older of Rerun Hub.
+                        // or older of Dalaran Hub.
                         entry_kind: entry_kind.map(|kind| kind.into()),
                         entry_kinds: entry_kind.into_iter().map(|k| k as i32).collect(),
                     }),
@@ -1641,7 +1641,7 @@ where
                 // Pass both `entry_kind` (deprecated) and `entry_kinds`
                 // to be compatible with old Hub versions.
                 // Drop `entry_kind` when no customer has a 0.14 deployment
-                // or older of Rerun Hub.
+                // or older of Dalaran Hub.
                 entry_kind: Some(EntryKind::Dataset.into()),
                 entry_kinds: vec![EntryKind::Dataset.into()],
                 ..Default::default()
@@ -1829,7 +1829,7 @@ mod tests {
         assert_eq!(fetched.data, expected.data);
         for hub_column in [
             dl_log_encoding::HubRrdManifest::FIELD_CHUNK_PARTITION_ID,
-            dl_log_encoding::HubRrdManifest::FIELD_RERUN_PARTITION_LAYER,
+            dl_log_encoding::HubRrdManifest::FIELD_DALARAN_PARTITION_LAYER,
             dl_log_encoding::HubRrdManifest::FIELD_CHUNK_KEY,
         ] {
             assert!(
@@ -1898,7 +1898,7 @@ mod tests {
         // `connect_lazy` succeeds without doing any I/O; the failure
         // would only surface when an RPC actually flows through.
         let channel = tonic::transport::Channel::from_static("http://127.0.0.1:1").connect_lazy();
-        let mut client = RedapClient::new(RerunCloudServiceClient::new(channel));
+        let mut client = RedapClient::new(DalaranCloudServiceClient::new(channel));
 
         // Prime the cache exactly as a successful first-call would.
         client
@@ -1926,7 +1926,7 @@ mod tests {
     #[tokio::test]
     async fn features_cache_is_shared_across_clones() {
         let channel = tonic::transport::Channel::from_static("http://127.0.0.1:1").connect_lazy();
-        let client_a = RedapClient::new(RerunCloudServiceClient::new(channel));
+        let client_a = RedapClient::new(DalaranCloudServiceClient::new(channel));
         let mut client_b = client_a.clone();
 
         client_a
@@ -1951,7 +1951,7 @@ mod tests {
     #[tokio::test]
     async fn supports_feature_returns_false_for_empty_features_list() {
         let channel = tonic::transport::Channel::from_static("http://127.0.0.1:1").connect_lazy();
-        let mut client = RedapClient::new(RerunCloudServiceClient::new(channel));
+        let mut client = RedapClient::new(DalaranCloudServiceClient::new(channel));
 
         client
             .features

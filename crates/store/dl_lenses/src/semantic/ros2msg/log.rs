@@ -72,7 +72,7 @@ fn ros2_log_text() -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, Error> + Se
     }
 }
 
-/// Maps ROS 2 numeric log levels to Rerun `TextLogLevel` strings.
+/// Maps ROS 2 numeric log levels to Dalaran `TextLogLevel` strings.
 fn ros2_log_level() -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, Error> + Send + Sync {
     move |source: &ArrayRef| {
         let levels = source

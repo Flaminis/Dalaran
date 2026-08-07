@@ -337,7 +337,7 @@ impl Nav2VoxelGridRow<'_> {
                 for z in 0..self.size_z {
                     let state = Nav2VoxelState::from_packed_column(column, z);
                     if state == Nav2VoxelState::Unknown {
-                        // Rerun's `VoxelGridMap` is sparse, so we can omit unknown cells.
+                        // Dalaran's `VoxelGridMap` is sparse, so we can omit unknown cells.
                         continue;
                     }
 

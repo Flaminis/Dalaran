@@ -42,17 +42,17 @@ impl IntroItem {
         let mut items = vec![
             Self::DocItem {
                 title: "Send data in",
-                url: "https://rerun.io/docs/getting-started/data-in",
+                url: "https://dalaran.dev/docs/getting-started/data-in",
                 body: "Ingest multi-rate, multimodal data from robot logs, sensors, simulation, or video.",
             },
             Self::DocItem {
                 title: "Explore data",
-                url: "https://rerun.io/docs/getting-started/configure-the-viewer",
+                url: "https://dalaran.dev/docs/getting-started/configure-the-viewer",
                 body: "Visualize and explore multi-rate, multimodal data across every stage of the pipeline.",
             },
             Self::DocItem {
                 title: "Query data out",
-                url: "https://rerun.io/docs/getting-started/data-out",
+                url: "https://dalaran.dev/docs/getting-started/data-out",
                 body: "Query raw, intermediate, and derived data with dataframes or SQL, and stream to training.",
             },
         ];
@@ -120,7 +120,7 @@ impl IntroItem {
                 };
                 ui.set_style(ui.style_of(opposite_theme));
 
-                ui.heading(RichText::new("Rerun Hub").strong());
+                ui.heading(RichText::new("Dalaran Hub").strong());
 
                 ui.horizontal_wrapped(|ui| {
                     ui.spacing_mut().item_spacing.x = 0.0;
@@ -141,11 +141,11 @@ impl IntroItem {
 
                     ui.style_mut().text_styles.get_mut(&TextStyle::Body).expect("Should always have body text style").size = label_size;
                     ui.label(
-                        "The production backend for the Rerun data layer — turn your object stores into a queryable, streamable foundation. "
+                        "The production backend for the Dalaran data layer — turn your object stores into a queryable, streamable foundation. "
                     );
-                    link(ui, "Learn more", "https://rerun.io/#rerun-data-platform");
+                    link(ui, "Learn more", "https://dalaran.dev/#dalaran-data-platform");
                     ui.label(" or ");
-                    link(ui, "book a demo", "https://calendly.com/d/ctht-4kp-qnt/rerun-demo-meeting");
+                    link(ui, "book a demo", "https://calendly.com/d/ctht-4kp-qnt/dalaran-demo-meeting");
                     ui.label(".");
                 });
 

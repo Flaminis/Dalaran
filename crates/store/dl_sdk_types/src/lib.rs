@@ -1,6 +1,6 @@
-//! The standard Rerun data types, component types, and archetypes.
+//! The standard Dalaran data types, component types, and archetypes.
 //!
-//! This crate contains both the IDL definitions for Rerun types (flatbuffers) as well as the code
+//! This crate contains both the IDL definitions for Dalaran types (flatbuffers) as well as the code
 //! generated from those using `dl_types_builder`.
 //!
 //! All builtin archetypes, components, datatypes and view definitions can be found in their
@@ -10,9 +10,9 @@
 //!
 //! ### Organization
 //!
-//! - `definitions/` contains IDL definitions for all Rerun types (data, components, archetypes).
+//! - `definitions/` contains IDL definitions for all Dalaran types (data, components, archetypes).
 //! - `src/` contains the code generated for Rust.
-//! - `rerun_py/rerun/rerun2/` (at the root of this workspace) contains the code generated for Python.
+//! - `dalaran_py/dalaran/dalaran2/` (at the root of this workspace) contains the code generated for Python.
 //!
 //! While most of the code in this crate is auto-generated, some manual extensions are littered
 //! throughout: look for files ending in `_ext.rs`, `_ext.py`, or `_ext.cpp` (also see the "Extensions"
@@ -81,7 +81,7 @@
 //! Generated C++ code can be manually extended by adding a sibling file with the `_ext.cpp` suffix.
 //! E.g. to extend `vec2d.cpp`, create a `vec2d_ext.cpp`.
 //!
-//! The sibling file is compiled as-is as part of the `rerun_cpp` crate.
+//! The sibling file is compiled as-is as part of the `dalaran_cpp` crate.
 //!
 //! Any include directive used in the extension is automatically added to the generated header,
 //! except to the generated header itself.
@@ -107,7 +107,7 @@
 //! The `\example` tag supports the following arguments:
 //! - `title`: a short description of the example which will be shown before the source code
 //! - `image`: a link to an image, with special handling for images uploaded
-//!            using `scripts/upload_image.py` to `static.rerun.io`
+//!            using `scripts/upload_image.py` to `static.dalaran.dev`
 //! - `!api`: if present, the example will *not* be included in comments embedded in the generated code
 //!
 //! ```text,ignore
@@ -120,7 +120,7 @@
 //! <img src="https://link.to/any_image.png">
 //! ```
 //!
-//! Otherwise the URL is treated as a rerun screenshot, which expects the following link format:
+//! Otherwise the URL is treated as a dalaran screenshot, which expects the following link format:
 //! ```text,ignore
 //! https://static.rerun.io/{name}/{hash}/{max_width}.{ext}
 //! ```

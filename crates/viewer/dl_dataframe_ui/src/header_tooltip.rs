@@ -77,13 +77,13 @@ fn column_arrow_metadata_ui(ui: &mut egui::Ui, column_field: &Field, show_extras
     let user_metadata = column_field
         .metadata()
         .iter()
-        .filter(|&(key, _)| !key.starts_with("rerun:"))
+        .filter(|&(key, _)| !key.starts_with("dalaran:"))
         .collect::<BTreeMap<_, _>>();
 
     let sorbet_metadata = column_field
         .metadata()
         .iter()
-        .filter(|&(key, _)| key.starts_with("rerun:"))
+        .filter(|&(key, _)| key.starts_with("dalaran:"))
         .collect::<BTreeMap<_, _>>();
 
     // user metadata

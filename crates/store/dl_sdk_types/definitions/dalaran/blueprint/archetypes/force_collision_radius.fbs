@@ -1,0 +1,19 @@
+namespace dalaran.blueprint.archetypes;
+
+/// Resolves collisions between the bounding circles, according to the radius of the nodes.
+struct ForceCollisionRadius (
+    "attr.dalaran.scope": "blueprint"
+) {
+    /// Whether the collision force is enabled.
+    ///
+    /// The collision force resolves collisions between nodes based on the bounding circle defined by their radius.
+    enabled: dalaran.blueprint.components.Enabled ("attr.dalaran.component_optional", nullable, order: 100);
+
+    /// The strength of the force.
+    strength: dalaran.blueprint.components.ForceStrength ("attr.dalaran.component_optional", nullable, order: 200);
+
+    /// Specifies how often this force should be applied per iteration.
+    ///
+    /// Increasing this parameter can lead to better results at the cost of longer computation time.
+    iterations: dalaran.blueprint.components.ForceIterations ("attr.dalaran.component_optional", nullable, order: 300);
+}

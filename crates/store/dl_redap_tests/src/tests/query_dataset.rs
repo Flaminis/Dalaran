@@ -4,17 +4,17 @@ use dl_log_types::{AbsoluteTimeRange, TimeInt, TimeType};
 use dl_protos::cloud::v1alpha1::ext::{
     DataSource, Query, QueryDatasetDataframe, QueryDatasetRequest, QueryLatestAt, QueryRange,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_types_core::ChunkId;
 
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, concat_record_batches,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches,
     entry_name,
 };
 use crate::{FieldsTestExt as _, RecordBatchTestExt as _, TempPath};
 
-pub async fn query_empty_dataset(service: impl RerunCloudService) {
+pub async fn query_empty_dataset(service: impl DalaranCloudService) {
     let dataset_name = "dataset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -28,7 +28,7 @@ pub async fn query_empty_dataset(service: impl RerunCloudService) {
     .await;
 }
 
-pub async fn query_simple_dataset(service: impl RerunCloudService) {
+pub async fn query_simple_dataset(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -95,7 +95,7 @@ pub async fn query_simple_dataset(service: impl RerunCloudService) {
     }
 }
 
-pub async fn query_simple_dataset_with_layers(service: impl RerunCloudService) {
+pub async fn query_simple_dataset_with_layers(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -128,13 +128,13 @@ pub async fn query_simple_dataset_with_layers(service: impl RerunCloudService) {
 /// one unknown) must succeed and return rows only for the real segment.
 ///
 /// Rationale: `segment_ids` is also what DataFusion filter pushdown produces
-/// for `WHERE rerun_segment_id = 'foo'`. The value is data, not a referent.
+/// for `WHERE dalaran_segment_id = 'foo'`. The value is data, not a referent.
 /// Erroring would turn ordinary SQL filters that happen not to match into
 /// hand-grenades. Explicit-API callers (`filter_segments`,
 /// `using_index_values`) accept the same silent-ignore semantics — the
 /// alternative is a roundtrip to validate IDs, which is exactly the
 /// expensive call we're trying to avoid.
-pub async fn query_dataset_unknown_segment_id_returns_empty(service: impl RerunCloudService) {
+pub async fn query_dataset_unknown_segment_id_returns_empty(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [LayerDefinition::simple("real_segment", &["my/entity"])],
@@ -195,7 +195,7 @@ pub async fn query_dataset_unknown_segment_id_returns_empty(service: impl RerunC
 }
 
 /// Test that failure cases return the correct error code.
-pub async fn query_dataset_should_fail(service: impl RerunCloudService) {
+pub async fn query_dataset_should_fail(service: impl DalaranCloudService) {
     let dataset_name = "dataset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -239,7 +239,7 @@ fn create_recording_for_query_testing() -> anyhow::Result<TempPath> {
     use dl_log_types::{EntityPath, TimeInt, build_frame_nr};
     use dl_sdk::RecordingStreamBuilder;
 
-    use crate::utils::rerun::{next_chunk_id_generator, next_row_id_generator};
+    use crate::utils::dalaran::{next_chunk_id_generator, next_row_id_generator};
 
     let segment_id = "static_test_segment";
     let tuid_prefix: u64 = 100;
@@ -248,7 +248,7 @@ fn create_recording_for_query_testing() -> anyhow::Result<TempPath> {
     let tmp_path = tmp_dir.path().join(format!("{segment_id}.rrd"));
 
     let rec = RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     .send_properties(false)
@@ -307,7 +307,7 @@ fn create_recording_for_query_testing() -> anyhow::Result<TempPath> {
     Ok(crate::TempPath::new(tmp_dir, tmp_path))
 }
 
-pub async fn query_dataset_with_various_queries(service: impl RerunCloudService) {
+pub async fn query_dataset_with_various_queries(service: impl DalaranCloudService) {
     let recording_path = create_recording_for_query_testing().unwrap();
 
     let dataset_name = "dataset_with_layers";
@@ -383,7 +383,7 @@ pub async fn query_dataset_with_various_queries(service: impl RerunCloudService)
 
 /// Verify that `chunk_byte_size_uncompressed` is present and populated with
 /// non-zero values for every chunk in the query response.
-pub async fn query_dataset_has_uncompressed_sizes(service: impl RerunCloudService) {
+pub async fn query_dataset_has_uncompressed_sizes(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [LayerDefinition::simple("segment", &["my/entity"])],
@@ -428,7 +428,7 @@ pub async fn query_dataset_has_uncompressed_sizes(service: impl RerunCloudServic
 /// different segments use different timelines. Regression test for a server bug where each
 /// (segment, layer) response only emitted `:start` columns for timelines present in its own
 /// chunks, producing mismatched schemas that broke client-side concatenation.
-pub async fn query_dataset_consistent_schema_across_timelines(service: impl RerunCloudService) {
+pub async fn query_dataset_consistent_schema_across_timelines(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -507,7 +507,7 @@ pub async fn query_dataset_consistent_schema_across_timelines(service: impl Reru
 
 // TODO(rerun-io/dataplatform#2228) remove the `chunk_ids_to_remove` parameter
 async fn query_dataset_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     query_dataset_request: QueryDatasetRequest,
     chunk_ids_to_remove: &[ChunkId],
     dataset_name: &str,

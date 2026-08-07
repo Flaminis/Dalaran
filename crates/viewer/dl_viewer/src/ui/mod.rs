@@ -1,6 +1,6 @@
 mod mobile_warning_ui;
 mod open_url_modal;
-mod rerun_menu;
+mod dalaran_menu;
 mod share_modal;
 mod top_panel;
 mod welcome_screen;
@@ -10,7 +10,7 @@ mod settings_screen;
 
 // ----
 
-pub use rerun_menu::about_rerun_ui;
+pub use dalaran_menu::about_dalaran_ui;
 
 pub(crate) use open_url_modal::OpenUrlModal;
 pub(crate) use settings_screen::settings_screen_ui;

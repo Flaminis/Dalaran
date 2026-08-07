@@ -8,7 +8,7 @@
 use camino::Utf8Path;
 
 const PROTOS_DIR: &str = "crates/store/dl_protos/proto";
-const INPUT_V1ALPHA1_DIR: &str = "rerun/v1alpha1";
+const INPUT_V1ALPHA1_DIR: &str = "dalaran/v1alpha1";
 const OUTPUT_V1ALPHA1_RUST_DIR: &str = "crates/store/dl_protos/src/v1alpha1";
 
 fn main() {

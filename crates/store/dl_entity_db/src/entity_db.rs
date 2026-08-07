@@ -49,7 +49,7 @@ pub enum EntityDbClass<'a> {
     /// This is a regular local recording (e.g. loaded from a `.rrd` file or logged to the viewer).
     LocalRecording,
 
-    /// This is an official rerun example recording.
+    /// This is an official dalaran example recording.
     ExampleRecording,
 
     /// This is a recording loaded from a remote dataset segment.
@@ -456,7 +456,7 @@ impl EntityDb {
 
             StoreKind::Recording => match &self.data_source {
                 Some(LogSource::HttpStream { url, .. })
-                    if url.starts_with("https://app.rerun.io") =>
+                    if url.starts_with("https://app.dalaran.dev") =>
                 {
                     EntityDbClass::ExampleRecording
                 }
@@ -499,7 +499,7 @@ impl EntityDb {
         debug_assert!(entity_path.starts_with(&EntityPath::properties()));
         debug_assert!(
             (entity_path == EntityPath::properties())
-                == (component_descr.archetype == Some("rerun.archetypes.RecordingInfo".into())),
+                == (component_descr.archetype == Some("dalaran.archetypes.RecordingInfo".into())),
             "RecordingInfo should be logged at {}. Custom properties should be under a child entity",
             EntityPath::properties()
         );

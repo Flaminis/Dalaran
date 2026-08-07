@@ -1,7 +1,7 @@
 [package]
 name = "dl_web_viewer_server"
 authors.workspace = true
-description = "Serves the Rerun web viewer (Wasm and HTML) over HTTP"
+description = "Serves the Dalaran web viewer (Wasm and HTML) over HTTP"
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true
@@ -12,8 +12,7 @@ rust-version.workspace = true
 version.workspace = true
 include = [
   "../../Cargo.lock",
-  "../../LICENSE-APACHE",
-  "../../LICENSE-MIT",
+  "../../LICENSE",
   "**/*.rs",
   "Cargo.toml",
 
@@ -36,22 +35,22 @@ all-features = true # Will also enable the `__disable_server` feature, meaning t
 
 
 [features]
-## This crate embeds the web viewer `.wasm`, and so before building this crate you must build the `.wasm` using `pixi run rerun-build-web-release`.
+## This crate embeds the web viewer `.wasm`, and so before building this crate you must build the `.wasm` using `pixi run dalaran-build-web-release`.
 ##
 ## If for some reason you need to build this crate _without_ the `.wasm` being built, then you can do so in one of two ways:
 ## * Use `--features __disable_server` when building this crate (or `--all-features`).
-## * Compile with the env-var `RERUN_DISABLE_WEB_VIEWER_SERVER=1`
+## * Compile with the env-var `DALARAN_DISABLE_WEB_VIEWER_SERVER=1`
 ##
 ## This will cause this crate to build despite the `.wasm` being missing, BUT it will panic at runtime!
 ## For instance: when rustdoc builds the docs for this crates, it uses `--all-features`, which means
 ## it can build the docs for this crate without having to build the web-viewer first.
-## Similarly, our CI will enable `RERUN_DISABLE_WEB_VIEWER_SERVER=1` before building unit tests,
+## Similarly, our CI will enable `DALARAN_DISABLE_WEB_VIEWER_SERVER=1` before building unit tests,
 ## because none of the unit tests actually rely on us serving the `.wasm` file.
 __disable_server = []
 
 ## Build the binary to expect web viewer assets in trailing data.
 ## This can be enabled in two ways:
-## * Compile with the env-var `RERUN_TRAILING_WEB_VIEWER=1`
+## * Compile with the env-var `DALARAN_TRAILING_WEB_VIEWER=1`
 ## * Use `--features __trailing_web_viewer` when building this crate
 ##
 ## When enabled, the binary will NOT include the web viewer assets at compile time.
@@ -65,13 +64,13 @@ __trailing_web_viewer = []
 
 ## Build without any built-in web viewer assets.
 ## This can be enabled in two ways:
-## * Compile with the env-var `RERUN_EXTERNAL_WEB_VIEWER=1`
+## * Compile with the env-var `DALARAN_EXTERNAL_WEB_VIEWER=1`
 ## * Use `--features __external_web_viewer` when building this crate
 ##
 ## When enabled, the binary will NOT include the web viewer assets at compile time.
 ## Instead, they must be loaded at runtime from a zip archive on disk
 ## (see `WebViewerServer::with_archive`).
-## This is used by Python wheels that ship the assets as `rerun_sdk/web_viewer.zip`
+## This is used by Python wheels that ship the assets as `dalaran_sdk/web_viewer.zip`
 ## instead of embedding them in the extension module.
 ##
 ## WARNING: Creating a `WebViewerServer` without an assets archive path will fail in such builds.

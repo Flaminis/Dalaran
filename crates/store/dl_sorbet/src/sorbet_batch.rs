@@ -13,7 +13,7 @@ use crate::{
     IndexColumnDescriptor, SorbetError, SorbetSchema,
 };
 
-/// Any rerun-compatible [`ArrowRecordBatch`].
+/// Any dalaran-compatible [`ArrowRecordBatch`].
 ///
 /// This is a wrapper around a [`SorbetSchema`] and a [`ArrowRecordBatch`].
 #[derive(Debug, Clone)]
@@ -23,7 +23,7 @@ pub struct SorbetBatch {
     /// This record batch contains has all the meta-data
     /// required by a [`SorbetBatch`].
     ///
-    /// It also has all non-Rerun metadata intact from wherever it was created from.
+    /// It also has all non-Dalaran metadata intact from wherever it was created from.
     batch: ArrowRecordBatch,
 }
 
@@ -85,7 +85,7 @@ impl SorbetBatch {
 }
 
 impl SorbetBatch {
-    /// The parsed rerun schema of this batch.
+    /// The parsed dalaran schema of this batch.
     #[inline]
     pub fn sorbet_schema(&self) -> &SorbetSchema {
         &self.schema
@@ -187,8 +187,8 @@ impl SorbetBatch {
     /// * Will automatically wrap data columns in `ListArrays` if they are not already
     /// * Will migrate legacy data to more modern form
     ///
-    /// Non-Rerun metadata will be preserved (both at batch-level and column-level).
-    /// Rerun metadata will be updated and added to the batch if needed.
+    /// Non-Dalaran metadata will be preserved (both at batch-level and column-level).
+    /// Dalaran metadata will be updated and added to the batch if needed.
     pub fn try_from_record_batch(
         batch: &ArrowRecordBatch,
         batch_type: crate::BatchType,
@@ -247,7 +247,7 @@ mod tests {
 
     /// Test that user-provided metadata is preserved when converting to and from a [`SorbetBatch`].
     ///
-    /// Also test that we add the proper Rerun metadata, and remove old Rerun metadata that is not relevant anymore.
+    /// Also test that we add the proper Dalaran metadata, and remove old Dalaran metadata that is not relevant anymore.
     #[test]
     fn test_sorbet_batch_metadata() {
         let original: ArrowRecordBatch = {
@@ -264,7 +264,7 @@ mod tests {
                 fields,
                 [
                     (
-                        "rerun.id".to_owned(),
+                        "dalaran.id".to_owned(),
                         dl_types_core::ChunkId::new().to_string(),
                     ),
                     (
@@ -280,7 +280,7 @@ mod tests {
 
         {
             // Check original has what we expect:
-            assert!(original.schema().metadata().contains_key("rerun.id"));
+            assert!(original.schema().metadata().contains_key("dalaran.id"));
             assert!(
                 original
                     .schema()
@@ -303,11 +303,11 @@ mod tests {
         let ret = ArrowRecordBatch::from(sorbet_batch);
 
         assert!(
-            !ret.schema().metadata().contains_key("rerun.id"),
+            !ret.schema().metadata().contains_key("dalaran.id"),
             "This should have been removed/renamed"
         );
         assert!(
-            ret.schema().metadata().contains_key("rerun:id"),
+            ret.schema().metadata().contains_key("dalaran:id"),
             "This should have been added/renamed"
         );
         assert!(

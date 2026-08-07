@@ -1,23 +1,23 @@
 // The entry point for re_type_builder's codegen.
 
 include "./attributes.fbs";
-include "./rerun/attributes.fbs";
+include "./dalaran/attributes.fbs";
 
-include "./rerun/unit_type.fbs";
+include "./dalaran/unit_type.fbs";
 
-include "./rerun/datatypes.fbs";
-include "./rerun/blueprint/datatypes.fbs";
+include "./dalaran/datatypes.fbs";
+include "./dalaran/blueprint/datatypes.fbs";
 
-include "./rerun/components.fbs";
-include "./rerun/blueprint/components.fbs";
+include "./dalaran/components.fbs";
+include "./dalaran/blueprint/components.fbs";
 
-include "./rerun/archetypes.fbs";
-include "./rerun/blueprint/archetypes.fbs";
+include "./dalaran/archetypes.fbs";
+include "./dalaran/blueprint/archetypes.fbs";
 
-include "./rerun/blueprint/views.fbs";
+include "./dalaran/blueprint/views.fbs";
 
-include "./rerun/testing/datatypes/type_zoo.fbs";
-include "./rerun/testing/components/enum_test.fbs";
-include "./rerun/testing/components/type_zoo_deps.fbs";
-include "./rerun/testing/components/type_zoo.fbs";
-include "./rerun/testing/archetypes/type_zoo.fbs";
+include "./dalaran/testing/datatypes/type_zoo.fbs";
+include "./dalaran/testing/components/enum_test.fbs";
+include "./dalaran/testing/components/type_zoo_deps.fbs";
+include "./dalaran/testing/components/type_zoo.fbs";
+include "./dalaran/testing/archetypes/type_zoo.fbs";

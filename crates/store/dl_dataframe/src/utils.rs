@@ -180,7 +180,7 @@ fn type_differs_error(path: &str, target: &Field, actual: &DataType) -> ArrowErr
 
 #[inline]
 fn schema_mismatch(path: &str, detail: &str) -> ArrowError {
-    ArrowError::SchemaError(format!("rerun schema mismatch at `{path}`: {detail}"))
+    ArrowError::SchemaError(format!("dalaran schema mismatch at `{path}`: {detail}"))
 }
 
 #[cfg(test)]
@@ -310,7 +310,7 @@ mod tests {
 
         let err = align_record_batch_to_schema(&batch, &target).unwrap_err();
         let msg = err.to_string();
-        assert!(msg.contains("rerun schema mismatch at `a`"), "msg: {msg}");
+        assert!(msg.contains("dalaran schema mismatch at `a`"), "msg: {msg}");
         assert!(msg.contains("type differs"), "msg: {msg}");
         assert!(msg.contains("Int64"), "msg: {msg}");
         assert!(msg.contains("Int32"), "msg: {msg}");

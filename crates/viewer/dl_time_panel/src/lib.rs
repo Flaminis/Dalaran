@@ -1,4 +1,4 @@
-//! Rerun Time Panel
+//! Dalaran Time Panel
 //!
 //! This crate provides a panel that shows all entities in the store and allows control of time and
 //! timelines, as well as all necessary ui elements that make it up.

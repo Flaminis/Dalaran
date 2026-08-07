@@ -53,7 +53,7 @@ fn grpc_server_sink_streams_recording_data_and_shuts_down() -> Result<(), Box<dy
     let uri = sink.uri();
 
     let rec =
-        RecordingStreamBuilder::new("rerun_example_grpc_server_sink_test").set_sinks((sink,))?;
+        RecordingStreamBuilder::new("dalaran_example_grpc_server_sink_test").set_sinks((sink,))?;
 
     wait_for_server(addr);
 

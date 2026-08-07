@@ -21,7 +21,7 @@ pub struct ComponentColumnDescriptor {
     ///
     /// This is fully implied by the `component`, but included for semantic convenience.
     ///
-    /// Example: `rerun.components.Position3D`.
+    /// Example: `dalaran.components.Position3D`.
     pub component_type: Option<ComponentType>,
 
     /// The path of the entity.
@@ -38,7 +38,7 @@ pub struct ComponentColumnDescriptor {
     ///
     /// `None` if the data wasn't logged through an archetype.
     ///
-    /// Example: `rerun.archetypes.Points3D`.
+    /// Example: `dalaran.archetypes.Points3D`.
     pub archetype: Option<ArchetypeName>,
 
     /// Identifier of the field associated with this data.
@@ -203,7 +203,7 @@ impl ComponentColumnDescriptor {
 
         let mut metadata = std::collections::HashMap::from([
             (
-                crate::metadata::RERUN_KIND.to_owned(),
+                crate::metadata::DALARAN_KIND.to_owned(),
                 ColumnKind::Component.to_string(),
             ),
             (
@@ -240,13 +240,13 @@ impl ComponentColumnDescriptor {
         }
 
         if *is_static {
-            metadata.insert("rerun:is_static".to_owned(), "true".to_owned());
+            metadata.insert("dalaran:is_static".to_owned(), "true".to_owned());
         }
         if *is_tombstone {
-            metadata.insert("rerun:is_tombstone".to_owned(), "true".to_owned());
+            metadata.insert("dalaran:is_tombstone".to_owned(), "true".to_owned());
         }
         if *is_semantically_empty {
-            metadata.insert("rerun:is_semantically_empty".to_owned(), "true".to_owned());
+            metadata.insert("dalaran:is_semantically_empty".to_owned(), "true".to_owned());
         }
 
         metadata
@@ -336,8 +336,8 @@ impl ComponentColumnDescriptor {
                 EntityPath::root() // NOTE: should be optional for general sorbet batches
             };
 
-        // Prefer the `rerun:component` metadata, falling back to the field name.
-        // An empty `rerun:component` is treated as missing.
+        // Prefer the `dalaran:component` metadata, falling back to the field name.
+        // An empty `dalaran:component` is treated as missing.
         let component = field
             .get_opt(dl_types_core::FIELD_METADATA_KEY_COMPONENT)
             .filter(|component| !component.is_empty())
@@ -354,9 +354,9 @@ impl ComponentColumnDescriptor {
             component_type: field
                 .get_opt(dl_types_core::FIELD_METADATA_KEY_COMPONENT_TYPE)
                 .and_then(|s| ComponentType::try_new(s).ok()),
-            is_static: field.get_bool("rerun:is_static"),
-            is_tombstone: field.get_bool("rerun:is_tombstone"),
-            is_semantically_empty: field.get_bool("rerun:is_semantically_empty"),
+            is_static: field.get_bool("dalaran:is_static"),
+            is_tombstone: field.get_bool("dalaran:is_tombstone"),
+            is_semantically_empty: field.get_bool("dalaran:is_semantically_empty"),
         };
 
         schema.sanity_check();

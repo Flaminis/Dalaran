@@ -1,10 +1,10 @@
 """Connect to the viewer and log some data."""
 
 import numpy as np
-import rerun as rr
+import dalaran as rr
 
 # Initialize the SDK and give our recording a unique name
-rr.init("rerun_example_quick_start_connect")
+rr.init("dalaran_example_quick_start_connect")
 
 # Connect to a local viewer using the default port
 rr.connect_grpc()

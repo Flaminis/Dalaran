@@ -1,0 +1,10 @@
+namespace dalaran.blueprint.components;
+
+/// Whether a view is maximized.
+table ViewMaximized (
+  "attr.dalaran.scope": "blueprint",
+  "attr.python.aliases": "npt.NDArray[np.uint8] | npt.ArrayLike | Sequence[int] | bytes",
+  "attr.rust.derive": "Default"
+) {
+    view_id: dalaran.datatypes.Uuid (order: 100);
+}

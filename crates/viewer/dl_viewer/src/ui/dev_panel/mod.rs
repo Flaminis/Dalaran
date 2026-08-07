@@ -20,7 +20,7 @@ use dl_ui::UiExt as _;
 use dl_viewer_context::store_hub::StoreHubStats;
 use dl_viewer_context::{ActiveStoreContext, StorageContext, TimeControl};
 
-use crate::env_vars::RERUN_TRACK_ALLOCATIONS;
+use crate::env_vars::DALARAN_TRACK_ALLOCATIONS;
 use memory_history::MemoryHistory;
 use streaming_history::StreamingHistory;
 
@@ -147,7 +147,7 @@ impl DevPanel {
                 );
             }
             DevPanelTab::TimeGraph => {
-                ui.label("🗠 Rerun Viewer memory use over time");
+                ui.label("🗠 Dalaran Viewer memory use over time");
                 self.plot(ui, limit);
             }
             DevPanelTab::Stores => {
@@ -281,7 +281,7 @@ impl DevPanel {
             Self::tracking_stats(ui, tracking_stats);
         } else if !cfg!(target_arch = "wasm32") {
             ui.label(format!(
-                "Set {RERUN_TRACK_ALLOCATIONS}=1 for detailed allocation tracking from startup."
+                "Set {DALARAN_TRACK_ALLOCATIONS}=1 for detailed allocation tracking from startup."
             ));
         }
     }

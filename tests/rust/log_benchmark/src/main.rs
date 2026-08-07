@@ -88,7 +88,7 @@ struct Args {
     #[clap(long, default_value = "false")]
     profile: bool,
 
-    /// If true, connect to a running Rerun viewer instead of writing to a memory buffer.
+    /// If true, connect to a running Dalaran viewer instead of writing to a memory buffer.
     #[clap(long, default_value = "false")]
     connect: bool,
 
@@ -98,7 +98,7 @@ struct Args {
 }
 
 fn main() -> anyhow::Result<()> {
-    rerun::external::dl_log::setup_logging();
+    dalaran::external::dl_log::setup_logging();
 
     #[cfg(debug_assertions)]
     println!("WARNING: Debug build, timings will be inaccurate!");
@@ -117,11 +117,11 @@ fn main() -> anyhow::Result<()> {
     }
 
     let (rec, storage) = if connect {
-        let rec = rerun::RecordingStreamBuilder::new("rerun_example_benchmark").connect_grpc()?;
+        let rec = dalaran::RecordingStreamBuilder::new("dalaran_example_benchmark").connect_grpc()?;
         (rec, None)
     } else {
         let (rec, storage) =
-            rerun::RecordingStreamBuilder::new("rerun_example_benchmark").memory()?;
+            dalaran::RecordingStreamBuilder::new("dalaran_example_benchmark").memory()?;
         (rec, Some(storage))
     };
 
@@ -143,15 +143,15 @@ fn main() -> anyhow::Result<()> {
     // other end, so make sure we can encode/decode everything that was logged.
     if check && let Some(storage) = storage {
         use itertools::Itertools as _;
-        use rerun::external::dl_log_encoding;
-        use rerun::external::dl_log_encoding::ToTransport as _;
+        use dalaran::external::dl_log_encoding;
+        use dalaran::external::dl_log_encoding::ToTransport as _;
         let msgs: Vec<_> = storage
             .take()
             .into_iter()
             .map(|msg| anyhow::Ok(msg.to_transport(dl_log_encoding::rrd::Compression::LZ4)?))
             .try_collect()?;
 
-        use rerun::external::dl_log_encoding::ToApplication as _;
+        use dalaran::external::dl_log_encoding::ToApplication as _;
         let mut app_id_injector = dl_log_encoding::DummyApplicationIdInjector::new("dummy");
         let msgs: Vec<_> = msgs
             .into_iter()

@@ -50,7 +50,7 @@ pub async fn preview_table() {
         .iter()
         .map(|segment_id| dl_uri::DatasetSegmentUri {
             origin: dl_uri::Origin {
-                scheme: dl_uri::Scheme::RerunHttp,
+                scheme: dl_uri::Scheme::DalaranHttp,
                 host: dl_uri::external::url::Host::Domain("localhost".to_owned()),
                 port: server.port(),
             },
@@ -66,7 +66,7 @@ pub async fn preview_table() {
     let schema = Arc::new(Schema::new_with_metadata(
         vec![
             Field::new("id", DataType::Int64, false)
-                .with_metadata([("rerun:is_table_index".to_owned(), "true".to_owned())].into()),
+                .with_metadata([("dalaran:is_table_index".to_owned(), "true".to_owned())].into()),
             Field::new(TITLE_COLUMN, DataType::Utf8, false),
             Field::new(PREVIEW_COLUMN, DataType::Utf8, false),
         ],
@@ -121,7 +121,7 @@ pub async fn preview_table() {
     let mut harness = viewer_test_utils::viewer_harness(&HarnessOptions {
         window_size: Some(egui::vec2(1024.0, 1000.0)),
         startup_url: Some(format!(
-            "rerun+http://localhost:{}/entry/{}",
+            "dalaran+http://localhost:{}/entry/{}",
             server.port(),
             table.details.id
         )),
@@ -236,7 +236,7 @@ fn blueprint_rbl_file(preview_column: &str, title_column: &str) -> tempfile::Nam
         .tempfile()
         .expect("Failed to create blueprint temp file");
 
-    let stream = RecordingStreamBuilder::new("rerun_example_table_blueprint")
+    let stream = RecordingStreamBuilder::new("dalaran_example_table_blueprint")
         .blueprint()
         .save(file.path())
         .expect("Failed to create blueprint memory stream");

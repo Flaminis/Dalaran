@@ -1,0 +1,16 @@
+
+namespace dalaran.blueprint.components;
+
+// ---
+
+
+/// The active tab in a tabbed container.
+table ActiveTab (
+    "attr.dalaran.scope": "blueprint",
+    "attr.rust.derive": "Default"
+) {
+    /// Which tab is currently active.
+    ///
+    /// This should always correspond to a tab in the container.
+    tab: dalaran.datatypes.EntityPath (order: 100);
+}

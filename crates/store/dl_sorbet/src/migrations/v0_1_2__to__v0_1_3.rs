@@ -27,8 +27,8 @@ fn migrate_series_visible(batch: RecordBatch) -> RecordBatch {
     let needs_migration = schema.fields().iter().any(|field| {
         field
             .metadata()
-            .get("rerun:component_type")
-            .is_some_and(|component| component == "rerun.components.SeriesVisible")
+            .get("dalaran:component_type")
+            .is_some_and(|component| component == "dalaran.components.SeriesVisible")
     });
 
     if !needs_migration {
@@ -42,13 +42,13 @@ fn migrate_series_visible(batch: RecordBatch) -> RecordBatch {
         .iter()
         .map(|field| {
             let metadata = field.metadata();
-            if let Some(component_type) = metadata.get("rerun:component_type")
-                && component_type == "rerun.components.SeriesVisible"
+            if let Some(component_type) = metadata.get("dalaran:component_type")
+                && component_type == "dalaran.components.SeriesVisible"
             {
                 let mut metadata = metadata.clone();
                 metadata.insert(
-                    "rerun:component_type".to_owned(),
-                    "rerun.components.Visible".to_owned(),
+                    "dalaran:component_type".to_owned(),
+                    "dalaran.components.Visible".to_owned(),
                 );
                 Arc::new(field.as_ref().clone().with_metadata(metadata))
             } else {

@@ -1,7 +1,7 @@
 [package]
 name = "dl_importer"
 authors.workspace = true
-description = "Handles importing of Rerun data from file using importer plugins"
+description = "Handles importing of Dalaran data from file using importer plugins"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

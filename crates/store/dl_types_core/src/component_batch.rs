@@ -37,7 +37,7 @@ pub trait ComponentBatch {
 
     /// Serializes the contents of this [`ComponentBatch`].
     ///
-    /// Once serialized, the data is ready to be logged into Rerun via the [`AsComponents`] trait.
+    /// Once serialized, the data is ready to be logged into Dalaran via the [`AsComponents`] trait.
     ///
     /// # Fallibility
     ///
@@ -79,7 +79,7 @@ pub trait ComponentBatch {
 
     /// Serializes the contents of this [`ComponentBatch`].
     ///
-    /// Once serialized, the data is ready to be logged into Rerun via the [`AsComponents`] trait.
+    /// Once serialized, the data is ready to be logged into Dalaran via the [`AsComponents`] trait.
     ///
     /// # Fallibility
     ///
@@ -111,7 +111,7 @@ fn assert_component_batch_object_safe() {
 
 /// The serialized contents of a [`ComponentBatch`] with associated [`ComponentDescriptor`].
 ///
-/// This is what gets logged into Rerun:
+/// This is what gets logged into Dalaran:
 /// * See [`ComponentBatch`] to easily serialize component data.
 /// * See [`AsComponents`] for logging serialized data.
 ///
@@ -263,7 +263,7 @@ impl SerializedComponentBatch {
     ///
     /// Specifically, this transforms the existing [`SerializedComponentBatch`] data into a [`SerializedComponentColumn`].
     ///
-    /// This makes it possible to use `RecordingStream::send_columns` to send columnar data directly into Rerun.
+    /// This makes it possible to use `RecordingStream::send_columns` to send columnar data directly into Dalaran.
     ///
     /// The specified `lengths` must sum to the total length of the component batch.
     #[inline]

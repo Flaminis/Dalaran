@@ -1,7 +1,7 @@
 [package]
 name = "dl_log_channel"
 authors.workspace = true
-description = "An in-memory channel of Rerun data messages."
+description = "An in-memory channel of Dalaran data messages."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

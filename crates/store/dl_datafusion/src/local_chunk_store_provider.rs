@@ -4,7 +4,7 @@
 //! [`crate::DataframeQueryTableProvider`]: it constructs a [`QueryEngine`] over
 //! the caller's store and drives a [`dl_dataframe::QueryHandle`] from a single-partition
 //! `ExecutionPlan`. There is no IO source, no segment fan-out, no
-//! `rerun_segment_id` prepend, no pipeline budget, and no analytics.
+//! `dalaran_segment_id` prepend, no pipeline budget, and no analytics.
 
 use std::sync::Arc;
 

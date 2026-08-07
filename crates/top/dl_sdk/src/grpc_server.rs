@@ -5,7 +5,7 @@ use dl_log_types::LogMsg;
 
 use crate::sink::SinkFlushError;
 
-/// A [`crate::sink::LogSink`] that hosts a Rerun gRPC server.
+/// A [`crate::sink::LogSink`] that hosts a Dalaran gRPC server.
 ///
 /// This is a gRPC server: SDKs and Viewers connect to it.
 /// To connect as a client to an existing server, use [`crate::sink::GrpcSink`] instead.
@@ -24,7 +24,7 @@ pub struct GrpcServerSink {
     /// The gRPC server thread.
     _server_handle: std::thread::JoinHandle<()>,
 
-    /// Rerun websocket server.
+    /// Dalaran websocket server.
     server_shutdown_signal: dl_grpc_server::shutdown::Signal,
 }
 
@@ -40,7 +40,7 @@ impl GrpcServerSink {
         let grpc_server_addr = format!("{bind_ip}:{grpc_port}").parse()?;
 
         let uri = dl_uri::ProxyUri::new(dl_uri::Origin::from_scheme_and_socket_addr(
-            dl_uri::Scheme::RerunHttp,
+            dl_uri::Scheme::DalaranHttp,
             grpc_server_addr,
         ));
         let (channel_tx, channel_rx) = dl_log_channel::log_channel(dl_log_channel::LogSource::Sdk);

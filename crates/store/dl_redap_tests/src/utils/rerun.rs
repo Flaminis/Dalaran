@@ -85,7 +85,7 @@ pub fn create_simple_recording_in(
     let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
 
     let rec = RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     .send_properties(false)
@@ -218,7 +218,7 @@ pub fn create_simple_recording_one_chunk_per_frame_in(
     let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
 
     let rec = RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     .send_properties(false)
@@ -285,7 +285,7 @@ pub fn create_simple_blueprint(
     };
 
     let rec = RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .blueprint()
     .recording_id(segment_id)
@@ -330,7 +330,7 @@ pub fn create_nasty_recording(
     };
 
     let rec = RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     // NOTE: Don't send builtin properties (e.g. recording start time): these are non
@@ -608,7 +608,7 @@ pub fn create_divergent_component_ranges_recording(
     };
 
     let rec = RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     .send_properties(false)
@@ -716,7 +716,7 @@ pub fn create_recording_with_embeddings(
     };
 
     let rec = dl_sdk::RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     // NOTE: Don't send builtin properties (e.g. recording start time): these are non
@@ -843,7 +843,7 @@ pub fn create_recording_with_scalars(
     };
 
     let rec = dl_sdk::RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     // NOTE: Don't send builtin properties (e.g. recording start time): these are non
@@ -892,7 +892,7 @@ pub fn create_recording_with_text(
     };
 
     let rec = dl_sdk::RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     // NOTE: Don't send builtin properties (e.g. recording start time): these are non
@@ -960,7 +960,7 @@ pub fn create_recording_with_properties(
         TempPath::new(dir, path)
     };
 
-    let rec = dl_sdk::RecordingStreamBuilder::new("rerun_example_properties")
+    let rec = dl_sdk::RecordingStreamBuilder::new("dalaran_example_properties")
         .recording_id(segment_id)
         // NOTE: Don't send builtin properties (e.g. recording start time): these are non
         // deterministic (neither their values nor their Chunk/Row IDs) and are not what we're
@@ -1036,7 +1036,7 @@ fn create_store_with_static_components(
         TempPath::new(dir, path)
     };
 
-    let mut builder = dl_sdk::RecordingStreamBuilder::new("rerun_example_properties");
+    let mut builder = dl_sdk::RecordingStreamBuilder::new("dalaran_example_properties");
     if store_kind == dl_log_types::StoreKind::Blueprint {
         builder = builder.blueprint();
     }
@@ -1080,7 +1080,7 @@ pub fn create_minimal_static_recording(
     )
 }
 
-/// Create a minimal rerun recording with one entity and one component.
+/// Create a minimal dalaran recording with one entity and one component.
 ///
 /// Depending on the `is_binary` argument, the component will have underlying
 /// arrow type of either `List[u8]` or `Binary`.
@@ -1102,7 +1102,7 @@ pub fn create_minimal_binary_recording_in(
     let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
 
     let rec = dl_sdk::RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     .send_properties(false)
@@ -1111,7 +1111,7 @@ pub fn create_minimal_binary_recording_in(
     let mut next_chunk_id = next_chunk_id_generator(tuid_prefix);
     let mut next_row_id = next_row_id_generator(tuid_prefix);
 
-    let data: Vec<&[u8]> = vec![b"hello", b"rerun"];
+    let data: Vec<&[u8]> = vec![b"hello", b"dalaran"];
 
     let array: ArrayRef = if is_binary {
         Arc::new(arrow::array::BinaryArray::from(data))
@@ -1145,7 +1145,7 @@ pub fn create_minimal_binary_recording_in(
 ///
 /// This function creates an intentionally unsorted RRD. Each entity will have 9
 /// rows of unsorted data. When combined with the environment variable
-/// `RERUN_CHUNK_MAX_ROWS_IF_UNSORTED=3` it will produce 3 chunks of 3 rows each.
+/// `DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED=3` it will produce 3 chunks of 3 rows each.
 /// The middle chunk will have nulls in some of the data.
 pub fn multi_chunked_entities_recording(
     tuid_prefix: TuidPrefix,
@@ -1166,7 +1166,7 @@ pub fn multi_chunked_entities_recording(
     let tmp_path = in_dir.join(format!("{segment_id}.rrd"));
 
     let rec = RecordingStreamBuilder::new(
-        dl_log_types::ApplicationId::try_new(format!("rerun_example_{segment_id}")).unwrap(),
+        dl_log_types::ApplicationId::try_new(format!("dalaran_example_{segment_id}")).unwrap(),
     )
     .recording_id(segment_id)
     .send_properties(false)

@@ -1,0 +1,32 @@
+namespace dalaran.blueprint.archetypes;
+
+/// The description of a single view.
+table ViewBlueprint (
+    "attr.dalaran.scope": "blueprint"
+) {
+    // --- Required ---
+
+    /// The class of the view.
+    class_identifier: dalaran.blueprint.components.ViewClass ("attr.dalaran.component_required", order: 100);
+
+    // --- Optional ---
+
+    /// The name of the view.
+    display_name: dalaran.components.Name ("attr.dalaran.component_optional", nullable, order: 200);
+
+    /// The "anchor point" of this view.
+    ///
+    /// In other words, the coordinate frame at this entity becomes the reference frame of the view.
+    ///
+    /// Defaults to the root path '/' if not specified.
+    ///
+    /// The transform at this path forms the reference point for all scene->world transforms in this view.
+    /// I.e. the position of this entity path in space forms the origin of the coordinate system in this view.
+    /// Furthermore, this is the primary indicator for heuristics on what entities we show in this view.
+    space_origin: dalaran.blueprint.components.ViewOrigin ("attr.dalaran.component_optional", nullable, order: 300);
+
+    /// Whether this view is visible.
+    ///
+    /// Defaults to true if not specified.
+    visible: dalaran.components.Visible ("attr.dalaran.component_optional", nullable, order: 600);
+}

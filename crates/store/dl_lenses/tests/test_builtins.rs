@@ -29,7 +29,7 @@ impl<T: Array + Clone + 'static> std::fmt::Display for DisplayRB<T> {
 fn selector_string_prefix_builtin() -> Result<(), SelectorError> {
     let array = ListArray::from_nested_iter::<StringBuilder, _, _, _>([
         Some([Some("world")]),
-        Some([Some("rerun")]),
+        Some([Some("dalaran")]),
     ]);
 
     let selector = r#"string_prefix("hello_")"#.parse::<Selector>()?;
@@ -45,7 +45,7 @@ fn selector_string_prefix_builtin() -> Result<(), SelectorError> {
     ╞══════════════════╡
     │ [hello_world]    │
     ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
-    │ [hello_rerun]    │
+    │ [hello_dalaran]    │
     └──────────────────┘
     ");
 

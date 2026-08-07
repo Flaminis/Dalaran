@@ -1,4 +1,4 @@
-//! Utilities to generate an arbitrary archetype to log Rerun.
+//! Utilities to generate an arbitrary archetype to log Dalaran.
 
 use nohash_hasher::IntMap;
 
@@ -8,9 +8,9 @@ use crate::{
     ComponentType, Loggable, SerializedComponentBatch, try_serialize_field,
 };
 
-/// A helper for logging a dynamically defined archetype to Rerun.
+/// A helper for logging a dynamically defined archetype to Dalaran.
 ///
-/// component names will be modified in a way similar to Rerun
+/// component names will be modified in a way similar to Dalaran
 /// internal types to avoid name collisions.
 pub struct DynamicArchetype {
     archetype_name: Option<ArchetypeName>,
@@ -38,7 +38,7 @@ impl DynamicArchetype {
 
     /// Adds a field of arbitrary data to this archetype.
     ///
-    /// In many cases, it might be more convenient to use [`Self::with_component`] to log an existing Rerun component instead.
+    /// In many cases, it might be more convenient to use [`Self::with_component`] to log an existing Dalaran component instead.
     #[inline]
     pub fn with_component_from_data(
         mut self,
@@ -63,7 +63,7 @@ impl DynamicArchetype {
         self
     }
 
-    /// Adds an existing Rerun [`Component`] to this archetype.
+    /// Adds an existing Dalaran [`Component`] to this archetype.
     #[inline]
     pub fn with_component<C: Component>(
         self,
@@ -73,7 +73,7 @@ impl DynamicArchetype {
         self.with_component_override(field, C::name(), loggable)
     }
 
-    /// Adds an existing Rerun [`Component`] to this archetype.
+    /// Adds an existing Dalaran [`Component`] to this archetype.
     ///
     /// This method can be used to override the component type.
     #[inline]

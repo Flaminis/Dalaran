@@ -1,0 +1,23 @@
+namespace dalaran.blueprint.archetypes;
+
+// ---
+
+/// Configuration for the time (X) axis of a plot.
+table TimeAxis (
+    "attr.dalaran.scope": "blueprint",
+    "attr.rust.derive": "Default"
+) {
+    // --- Optional ---
+
+    /// How should the horizontal/X/time axis be linked across multiple plots?
+    ///
+    /// Linking with global will ignore `view_range`.
+    link: dalaran.blueprint.components.LinkAxis ("attr.dalaran.component_optional", nullable, order: 2300);
+
+    /// The view range of the horizontal/X/time axis.
+    view_range: dalaran.blueprint.components.TimeRange ("attr.dalaran.component_optional", nullable, order: 2400);
+
+
+    /// If enabled, the X axis range will remain locked to the specified range when zooming.
+    zoom_lock: dalaran.blueprint.components.LockRangeDuringZoom ("attr.dalaran.component_optional", nullable, order: 2500);
+}

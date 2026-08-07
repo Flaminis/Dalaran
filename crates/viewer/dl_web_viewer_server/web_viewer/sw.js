@@ -1,4 +1,4 @@
-var cacheName = "rerun-viewer-pwa";
+var cacheName = "dalaran-viewer-pwa";
 var filesToCache = [
   "./",
   "./index.html",

@@ -170,7 +170,7 @@ impl dl_byte_size::MemUsageTreeCapture for PathRecursiveChunksPerTimelineStoreSu
 impl PerStoreChunkSubscriber for PathRecursiveChunksPerTimelineStoreSubscriber {
     #[inline]
     fn name() -> String {
-        "rerun.store_subscriber.PathRecursiveChunksPerTimeline".into()
+        "dalaran.store_subscriber.PathRecursiveChunksPerTimeline".into()
     }
 
     #[inline]

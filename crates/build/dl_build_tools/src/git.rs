@@ -22,17 +22,17 @@
 
 use std::path::PathBuf;
 
-use crate::{rerun_if_changed, run_command};
+use crate::{dalaran_if_changed, run_command};
 
 pub fn rebuild_if_branch_or_commit_changes() {
     if let Ok(head_path) = git_path("HEAD") {
-        rerun_if_changed(&head_path); // Track changes to branch
+        dalaran_if_changed(&head_path); // Track changes to branch
         if let Ok(head) = std::fs::read_to_string(&head_path)
             && let Some(git_file) = head.strip_prefix("ref: ")
             && let Ok(path) = git_path(git_file)
         {
             if path.exists() {
-                rerun_if_changed(path); // Track changes to commit hash
+                dalaran_if_changed(path); // Track changes to commit hash
             } else {
                 // Weird that it doesn't exist. Maybe we will miss a git hash change,
                 // but that is better that tracking a non-existing files (which leads to constant rebuilds).

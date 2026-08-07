@@ -15,7 +15,7 @@ pub fn test_transform_hierarchy() {
 
     test_context.set_active_timeline(*timeline_step.name());
 
-    // The Rerun logo obj's convention is y up.
+    // The Dalaran logo obj's convention is y up.
     test_context.log_entity("/", |builder| {
         builder
             .with_archetype(
@@ -164,7 +164,7 @@ pub fn test_transform_hierarchy() {
                 )
         });
 
-        // Add the Rerun asset at the end of the hierarchy.
+        // Add the Dalaran asset at the end of the hierarchy.
         // (We're using a 3D model because it's easier to see the effect of arbitrary transforms here!)
         {
             let workspace_dir = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"));
@@ -173,7 +173,7 @@ pub fn test_transform_hierarchy() {
                 .and_then(|p| p.parent())
                 .and_then(|p| p.parent())
                 .unwrap();
-            let obj_path = workspace_dir.join("tests/assets/rerun.obj");
+            let obj_path = workspace_dir.join("tests/assets/dalaran.obj");
 
             path = path / "asset";
             test_context.log_entity(path.clone(), |builder| {
@@ -238,7 +238,7 @@ fn run_view_ui_and_save_snapshot(
         // This test adds more and more transforms in a hierarchy on each step on the `steps` timeline.
         //
         // What you should see on each step on the `steps` timeline:
-        // * 0: There's a Rerun logo is at the origin, the `e` sits roughly above the origin.
+        // * 0: There's a Dalaran logo is at the origin, the `e` sits roughly above the origin.
         // * 1: The logo is translated a few units diagonally positively on x/y/z.
         // * 2: The logo is back to normal (frame 0) again.
         // * 3: The logo is squished along its height

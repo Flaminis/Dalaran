@@ -170,7 +170,7 @@ impl CppCodeGenerator {
         } else {
             object_kind.plural_snake_case().to_owned()
         };
-        let folder_path_sdk = self.output_path.join("src/rerun").join(&folder_name);
+        let folder_path_sdk = self.output_path.join("src/dalaran").join(&folder_name);
         let folder_path_testing = self.output_path.join("tests/generated").join(&folder_name);
 
         let mut files_to_write = GeneratedFiles::default();
@@ -240,8 +240,8 @@ fn generate_object_files(
     let mut hpp_includes = Includes::new(obj.fqname.clone(), obj.scope());
     hpp_includes.insert_system("cstdint");
     // we use `uint32_t` etc everywhere.
-    hpp_includes.insert_rerun("result.hpp");
-    // rerun result is used for serialization methods
+    hpp_includes.insert_dalaran("result.hpp");
+    // dalaran result is used for serialization methods
 
     let (hpp_type_extensions, hpp_extension_string) =
         hpp_type_extensions(folder_path_sdk, &filename_stem, &mut hpp_includes);
@@ -458,7 +458,7 @@ impl QuotedObject {
         let quoted_docs = quote_obj_docs(reporter, objects, obj);
 
         let mut cpp_includes = Includes::new(obj.fqname.clone(), obj.scope());
-        cpp_includes.insert_rerun("collection_adapter_builtins.hpp");
+        cpp_includes.insert_dalaran("collection_adapter_builtins.hpp");
         hpp_includes.insert_system("utility"); // std::move
 
         let field_declarations = obj
@@ -657,7 +657,7 @@ impl QuotedObject {
         }
 
         // columns method that allows partitioning into columns
-        hpp_includes.insert_rerun("component_column.hpp");
+        hpp_includes.insert_dalaran("component_column.hpp");
         methods.push(Method {
             docs: unindent::unindent("\
         Partitions the component data into multiple sub-batches.
@@ -665,7 +665,7 @@ impl QuotedObject {
         Specifically, this transforms the existing `ComponentBatch` data into `ComponentColumn`s
         instead, via `ComponentBatch::partitioned`.
 
-        This makes it possible to use `RecordingStream::send_columns` to send columnar data directly into Rerun.
+        This makes it possible to use `RecordingStream::send_columns` to send columnar data directly into Dalaran.
 
         The specified `lengths` must sum to the total length of the component batch.
         ").into(),
@@ -782,7 +782,7 @@ impl QuotedObject {
 
             #deprecation_ignore_start
 
-            namespace rerun::#quoted_namespace {
+            namespace dalaran::#quoted_namespace {
                 #quoted_docs
                 struct #deprecated_notice #archetype_type_ident {
                     #(#field_declarations;)*
@@ -812,7 +812,7 @@ impl QuotedObject {
                 #NEWLINE_TOKEN
             }
 
-            namespace rerun {
+            namespace dalaran {
                 // Instead of including as_components.hpp, simply re-declare the template since it's trivial
                 #doc_hide_comment
                 template<typename T>
@@ -833,11 +833,11 @@ impl QuotedObject {
 
             #deprecation_ignore_start
 
-            namespace rerun::#quoted_namespace {
+            namespace dalaran::#quoted_namespace {
                 #(#methods_cpp)*
             }
 
-            namespace rerun {
+            namespace dalaran {
                 #NEWLINE_TOKEN
                 #NEWLINE_TOKEN
                 #serialize_cpp
@@ -945,7 +945,7 @@ impl QuotedObject {
 
             #hpp_declarations
 
-            namespace rerun::#quoted_namespace {
+            namespace dalaran::#quoted_namespace {
                 #quoted_docs
                 struct #deprecated_notice #type_ident {
                     #(#field_declarations;)*
@@ -971,7 +971,7 @@ impl QuotedObject {
             Some(quote! {
                 #cpp_includes
 
-                namespace rerun::#quoted_namespace {
+                namespace dalaran::#quoted_namespace {
                     #(#methods_cpp)*
                 }
 
@@ -1322,7 +1322,7 @@ impl QuotedObject {
 
             #hpp_declarations
 
-            namespace rerun::#quoted_namespace {
+            namespace dalaran::#quoted_namespace {
                 namespace detail {
                     #hide_from_docs_comment
                     enum class #tag_typename : uint8_t {
@@ -1414,7 +1414,7 @@ impl QuotedObject {
         let cpp = quote! {
             #cpp_includes
 
-            namespace rerun::#quoted_namespace {
+            namespace dalaran::#quoted_namespace {
                 #(#cpp_methods)*
             }
 
@@ -1500,7 +1500,7 @@ impl QuotedObject {
 
             #hpp_declarations
 
-            namespace rerun::#quoted_namespace {
+            namespace dalaran::#quoted_namespace {
                 #quoted_docs
                 enum class #deprecated_notice #type_ident : #enum_integer_type {
                     #(#field_declarations,)*
@@ -1628,7 +1628,7 @@ fn add_copy_assignment_and_constructor(
     methods
 }
 
-/// If the type forwards to another rerun defined type, returns the fully qualified name of that type.
+/// If the type forwards to another dalaran defined type, returns the fully qualified name of that type.
 fn transparent_forwarded_fqname(obj: &Object) -> Option<&str> {
     if obj.is_arrow_transparent()
         && obj.fields.len() == 1
@@ -1718,7 +1718,7 @@ fn fill_arrow_array_builder_method(
         docs: "Fills an arrow array builder with an array of this type.".into(),
         declaration: MethodDeclaration {
             is_static: true,
-            return_type: quote! { rerun::Error },
+            return_type: quote! { dalaran::Error },
             // TODO(andreas): Pass in validity map.
             name_and_parameters: quote! {
                 fill_arrow_array_builder(arrow::#arrow_builder_type* #builder, const #quoted_namespace::#type_ident* elements, size_t num_elements)
@@ -1764,14 +1764,14 @@ fn to_arrow_method(
                 if (num_instances == 0) {
                     return Loggable<#forwarded_type>::to_arrow(nullptr, 0);
                 } else if (instances == nullptr) {
-                    return rerun::Error(ErrorCode::UnexpectedNullArgument, "Passed array instances is null when num_elements > 0.");
+                    return dalaran::Error(ErrorCode::UnexpectedNullArgument, "Passed array instances is null when num_elements > 0.");
                 } else {
                     return Loggable<#forwarded_type>::to_arrow(&instances->#field_name, num_instances);
                 }
             },
         )
     } else {
-        hpp_includes.insert_rerun("result.hpp");
+        hpp_includes.insert_dalaran("result.hpp");
         declarations.insert("arrow", ForwardDecl::Class(format_ident!("Array")));
 
         let todo_pool = quote_comment("TODO(andreas): Allow configuring the memory pool.");
@@ -1806,7 +1806,7 @@ fn to_arrow_method(
 
     Method {
         docs: format!(
-            "Serializes an array of `rerun::{quoted_namespace}::{type_ident}` into an arrow array."
+            "Serializes an array of `dalaran::{quoted_namespace}::{type_ident}` into an arrow array."
         )
         .into(),
         declaration: MethodDeclaration {
@@ -1822,8 +1822,8 @@ fn to_arrow_method(
 }
 
 fn archetype_serialize(type_ident: &Ident, obj: &Object, hpp_includes: &mut Includes) -> Method {
-    hpp_includes.insert_rerun("component_batch.hpp");
-    hpp_includes.insert_rerun("collection.hpp");
+    hpp_includes.insert_dalaran("component_batch.hpp");
+    hpp_includes.insert_dalaran("collection.hpp");
     hpp_includes.insert_system("vector"); // std::vector
 
     let quoted_scoped_archetypes = if let Some(scope) = obj.scope() {
@@ -1861,7 +1861,7 @@ fn archetype_serialize(type_ident: &Ident, obj: &Object, hpp_includes: &mut Incl
             #(#push_batches)*
             #NEWLINE_TOKEN
             #NEWLINE_TOKEN
-            return rerun::take_ownership(std::move(cells));
+            return dalaran::take_ownership(std::move(cells));
         },
         inline: false,
     }
@@ -1884,10 +1884,10 @@ fn quote_fill_arrow_array_builder(
 
     let parameter_check = quote! {
         if (builder == nullptr) {
-            return rerun::Error(ErrorCode::UnexpectedNullArgument, "Passed array builder is null.");
+            return dalaran::Error(ErrorCode::UnexpectedNullArgument, "Passed array builder is null.");
         }
         if (elements == nullptr) {
-            return rerun::Error(ErrorCode::UnexpectedNullArgument, "Cannot serialize null pointer to arrow array.");
+            return dalaran::Error(ErrorCode::UnexpectedNullArgument, "Cannot serialize null pointer to arrow array.");
         }
         #NEWLINE_TOKEN
         #NEWLINE_TOKEN
@@ -1902,7 +1902,7 @@ fn quote_fill_arrow_array_builder(
                     (void)elements;
                     (void)num_elements;
                     if (true) { // Works around unreachability compiler warning.
-                        return rerun::Error(ErrorCode::NotImplemented, "TODO(andreas) Handle nullable extensions");
+                        return dalaran::Error(ErrorCode::NotImplemented, "TODO(andreas) Handle nullable extensions");
                     }
                 }
             } else {
@@ -1977,7 +1977,7 @@ fn quote_fill_arrow_array_builder(
                             let error = format!("Failed to serialize {}::{}: nullable list types in unions not yet implemented", obj.name, variant.name);
                             quote! {
                                 (void)#variant_builder;
-                                return rerun::Error(ErrorCode::NotImplemented, #error);
+                                return dalaran::Error(ErrorCode::NotImplemented, #error);
                             }
                         } else if arrow_builder_type == "ListBuilder" {
                             let field_name = format_ident!("{}", variant.snake_case_name());
@@ -1988,7 +1988,7 @@ fn quote_fill_arrow_array_builder(
                                     ARROW_RETURN_NOT_OK(variant_builder->Append());
                                     auto value_builder =
                                         static_cast<arrow::HalfFloatBuilder *>(variant_builder->value_builder());
-                                    const rerun::half* values = union_instance.get_union_data().#field_name.data();
+                                    const dalaran::half* values = union_instance.get_union_data().#field_name.data();
                                     ARROW_RETURN_NOT_OK(value_builder->AppendValues(
                                         reinterpret_cast<const uint16_t*>(values),
                                         static_cast<int64_t>(union_instance.get_union_data().#field_name.size())
@@ -2030,7 +2030,7 @@ fn quote_fill_arrow_array_builder(
                                     let error = format!("Failed to serialize {}::{}: objects ({:?}) in unions not yet implemented", obj.name, variant.name, element_type);
                                     quote! {
                                         (void)#variant_builder;
-                                        return rerun::Error(ErrorCode::NotImplemented, #error);
+                                        return dalaran::Error(ErrorCode::NotImplemented, #error);
                                     }
                                 }
                             }
@@ -2038,7 +2038,7 @@ fn quote_fill_arrow_array_builder(
                             let error = format!("Failed to serialize {}::{}: {} in unions not yet implemented", obj.name, variant.name, arrow_builder_type);
                             quote! {
                                 (void)#variant_builder;
-                                return rerun::Error(ErrorCode::NotImplemented, #error);
+                                return dalaran::Error(ErrorCode::NotImplemented, #error);
                             }
                         }
                     } else {
@@ -2144,7 +2144,7 @@ fn quote_append_field_to_builder(
                     #append_contents
                 }
             } else {
-                // `rerun::half` needs a cast because arrow takes it as `uint16_t`.
+                // `dalaran::half` needs a cast because arrow takes it as `uint16_t`.
                 let value_ptr_accessor = if *elem_type == ElementType::Float16 {
                     quote!(reinterpret_cast<const uint16_t*>(#field_accessor.data()))
                 } else {
@@ -2312,7 +2312,7 @@ fn quote_append_single_value_to_builder(
             )
         }
         Type::Float16 => {
-            // Cast `rerun::half` to a `uint16_t``
+            // Cast `dalaran::half` to a `uint16_t``
             quote! {
                 ARROW_RETURN_NOT_OK(#value_builder->Append(
                     *reinterpret_cast<const uint16_t*>(&(#value_access))
@@ -2340,7 +2340,7 @@ fn quote_append_single_value_to_builder(
                     }
                 }
                 ElementType::Float16 => {
-                    // We need to convert `rerun::half` to `uint16_t`:
+                    // We need to convert `dalaran::half` to `uint16_t`:
                     let field_ptr_accessor = quote_field_ptr_access(typ, value_access);
                     quote! {
                         ARROW_RETURN_NOT_OK(#value_builder->AppendValues(
@@ -2436,7 +2436,7 @@ fn quote_append_nested_array_contents(
     }
 
     // The innermost data pointer needs a cast: `data_ptr` points at `std::array`s,
-    // and `rerun::half`/`bool` are taken as `uint16_t`/`uint8_t` by arrow.
+    // and `dalaran::half`/`bool` are taken as `uint16_t`/`uint8_t` by arrow.
     let cast_type = match elem_type {
         ElementType::Float16 => quote!(uint16_t),
         ElementType::Bool => quote!(uint8_t),
@@ -2540,7 +2540,7 @@ fn quote_archetype_unserialized_type(
 ) -> TokenStream {
     match &obj_field.typ {
         Type::Vector { elem_type } => {
-            hpp_includes.insert_rerun("collection.hpp");
+            hpp_includes.insert_dalaran("collection.hpp");
             let elem_type = quote_element_type(hpp_includes, elem_type);
             quote! { Collection<#elem_type> }
         }
@@ -2582,14 +2582,14 @@ fn quote_field_type(includes: &mut Includes, obj_field: &ObjectField) -> TokenSt
         Type::Int64 => quote! { int64_t  },
         Type::Bool => quote! { bool  },
         Type::Float16 => {
-            includes.insert_rerun("half.hpp");
-            quote! { rerun::half  }
+            includes.insert_dalaran("half.hpp");
+            quote! { dalaran::half  }
         }
         Type::Float32 => quote! { float  },
         Type::Float64 => quote! { double  },
         Type::Binary => {
-            includes.insert_rerun("collection.hpp");
-            quote! { rerun::Collection<uint8_t>  }
+            includes.insert_dalaran("collection.hpp");
+            quote! { dalaran::Collection<uint8_t>  }
         }
         Type::String => {
             includes.insert_system("string");
@@ -2603,8 +2603,8 @@ fn quote_field_type(includes: &mut Includes, obj_field: &ObjectField) -> TokenSt
         }
         Type::Vector { elem_type } => {
             let elem_type = quote_element_type(includes, elem_type);
-            includes.insert_rerun("collection.hpp");
-            quote! { rerun::Collection<#elem_type>  }
+            includes.insert_dalaran("collection.hpp");
+            quote! { dalaran::Collection<#elem_type>  }
         }
         Type::Object { fqname } => {
             let type_name = quote_fqname_as_type_path(includes, fqname);
@@ -2645,14 +2645,14 @@ fn quote_element_type(includes: &mut Includes, typ: &ElementType) -> TokenStream
         ElementType::Int64 => quote! { int64_t },
         ElementType::Bool => quote! { bool },
         ElementType::Float16 => {
-            includes.insert_rerun("half.hpp");
-            quote! { rerun::half }
+            includes.insert_dalaran("half.hpp");
+            quote! { dalaran::half }
         }
         ElementType::Float32 => quote! { float },
         ElementType::Float64 => quote! { double },
         ElementType::Binary => {
-            includes.insert_rerun("collection.hpp");
-            quote! { rerun::Collection<uint8_t>  }
+            includes.insert_dalaran("collection.hpp");
+            quote! { dalaran::Collection<uint8_t>  }
         }
         ElementType::String => {
             includes.insert_system("string");
@@ -2678,7 +2678,7 @@ fn quote_enum_type(typ: &EnumIntegerType) -> TokenStream {
 }
 
 fn quote_fqname_as_type_path(includes: &mut Includes, fqname: &str) -> TokenStream {
-    includes.insert_rerun_type(fqname);
+    includes.insert_dalaran_type(fqname);
 
     let fqname = fqname.replace(".testing", "").replace('.', "::");
 
@@ -2748,7 +2748,7 @@ fn lines_from_docs(reporter: &Reporter, objects: &Objects, docs: &Docs) -> Vec<S
 
             if let Some(image) = image {
                 match image {
-                    super::common::ImageUrl::Rerun(image) => lines.push(image.markdown_tag()),
+                    super::common::ImageUrl::Dalaran(image) => lines.push(image.markdown_tag()),
                     super::common::ImageUrl::Other(url) => {
                         lines.push(format!("![example image]({url})"));
                     }
@@ -2818,7 +2818,7 @@ fn quote_arrow_datatype(
 
         Type::Object { fqname } => {
             // TODO(andreas): We're no`t emitting the actual extension types here yet which is why we're skipping the extension type at top level.
-            // Currently, we wrap only Components in extension types but this is done in `rerun_c`.
+            // Currently, we wrap only Components in extension types but this is done in `dalaran_c`.
             // In the future we'll add the extension type here to the schema.
             let obj = &objects[fqname];
             if !is_top_level_type {
@@ -2863,7 +2863,7 @@ fn quote_arrow_field_type(
     let name = &field.name;
     let datatype = quote_arrow_datatype(&field.typ, objects, includes, false);
     let is_nullable = field.is_nullable || field.typ == Type::Unit; // null type is always nullable
-    let is_nullable = is_nullable || field.typ.is_union(objects); // Rerun unions always has a `_null_marker: null` variant, so they are always nullable
+    let is_nullable = is_nullable || field.typ.is_union(objects); // Dalaran unions always has a `_null_marker: null` variant, so they are always nullable
 
     quote! {
         arrow::field(#name, #datatype, #is_nullable)
@@ -2878,7 +2878,7 @@ fn quote_arrow_elem_type(
     let typ: Type = elem_type.clone().into();
     let datatype = quote_arrow_datatype(&typ, objects, includes, false);
     let is_nullable = typ == Type::Unit; // null type must be nullable
-    let is_nullable = is_nullable || elem_type.is_union(objects); // Rerun unions always has a `_null_marker: null` variant, so they are always nullable
+    let is_nullable = is_nullable || elem_type.is_union(objects); // Dalaran unions always has a `_null_marker: null` variant, so they are always nullable
     quote! {
         arrow::field("item", #datatype, #is_nullable)
     }
@@ -2948,7 +2948,7 @@ fn quote_loggable_hpp_and_cpp(
     let hpp = quote! {
         #deprecation_ignore_start
 
-        namespace rerun {
+        namespace dalaran {
             #predeclarations_and_static_assertions
 
             #hide_from_docs_comment
@@ -2966,7 +2966,7 @@ fn quote_loggable_hpp_and_cpp(
 
     let cpp = if methods.iter().any(|m| !m.inline) {
         Some(quote! {
-            namespace rerun {
+            namespace dalaran {
                 #(#methods_cpp)*
             }
         })
@@ -2993,7 +2993,7 @@ fn quote_deprecation_ignore_start_and_end(
     should_deprecate: bool,
 ) -> (TokenStream, TokenStream) {
     if should_deprecate {
-        includes.insert_rerun("compiler_utils.hpp");
+        includes.insert_dalaran("compiler_utils.hpp");
         (
             quote! {
                 RR_PUSH_WARNINGS #NEWLINE_TOKEN

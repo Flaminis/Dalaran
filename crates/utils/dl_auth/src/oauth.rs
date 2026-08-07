@@ -15,14 +15,14 @@ pub mod login_flow;
 const SOFT_EXPIRE_SECS: i64 = 60;
 
 pub(crate) static OAUTH_CLIENT_ID: std::sync::LazyLock<String> = std::sync::LazyLock::new(|| {
-    std::env::var("RERUN_OAUTH_CLIENT_ID")
+    std::env::var("DALARAN_OAUTH_CLIENT_ID")
         .ok()
         .unwrap_or_else(|| "client_01JZ3JVR1PEVQMS73V86MC4CE2".into())
 });
 
 #[cfg(not(target_arch = "wasm32"))]
 pub(crate) static OAUTH_ISSUER_URL: std::sync::LazyLock<String> = std::sync::LazyLock::new(|| {
-    std::env::var("RERUN_OAUTH_ISSUER_URL")
+    std::env::var("DALARAN_OAUTH_ISSUER_URL")
         .ok()
         .unwrap_or_else(|| {
             format!(
@@ -203,7 +203,7 @@ pub enum FetchJwksError {
 
 #[allow(clippy::allow_attributes, dead_code)] // fields may become used at some point in the near future
 #[derive(Debug, Serialize, Deserialize)]
-pub struct RerunCloudClaims {
+pub struct DalaranCloudClaims {
     /// Issuer
     pub iss: String,
 
@@ -241,7 +241,7 @@ pub struct RerunCloudClaims {
     pub org_name: Option<String>,
 }
 
-impl RerunCloudClaims {
+impl DalaranCloudClaims {
     pub const REQUIRED: &'static [&'static str] =
         &["iss", "sub", "org_id", "permissions", "exp", "iat"];
 
@@ -279,7 +279,7 @@ pub struct Credentials {
     refresh_token: Option<RefreshToken>,
 
     access_token: AccessToken,
-    claims: RerunCloudClaims,
+    claims: DalaranCloudClaims,
 }
 
 pub struct InMemoryCredentials(Credentials);
@@ -299,10 +299,10 @@ impl InMemoryCredentials {
         // Normally if dl_analytics discovers this is a brand-new configuration,
         // we show an analytics diclaimer. But, during SDK usage with the Catalog
         // it's possible to hit this code-path during a first run in a new
-        // environment. Given the user already has a Rerun identity (or else there
+        // environment. Given the user already has a Dalaran identity (or else there
         // would be no credentials to store!), we assume they are already aware of
-        // rerun analytics and do not need a disclaimer. They can still use the shell
-        // to run `rerun analytics disable` if they wish to opt out.
+        // dalaran analytics and do not need a disclaimer. They can still use the shell
+        // to run `dalaran analytics disable` if they wish to opt out.
         //
         // By manually forcing the creation of the analytics config we bypass the first_run check.
         if let Ok(config) = dl_analytics::Config::load_or_default()
@@ -328,7 +328,7 @@ impl Credentials {
         res: api::RefreshResponse,
     ) -> Result<InMemoryCredentials, JwtDecodeError> {
         let jwt = Jwt(res.access_token);
-        let claims = RerunCloudClaims::try_from_unverified_jwt(&jwt)?;
+        let claims = DalaranCloudClaims::try_from_unverified_jwt(&jwt)?;
         let access_token = AccessToken::try_from_unverified_jwt(jwt)?;
         let mut user: User = res.user;
         user.org_name = claims.org_name.clone();
@@ -348,7 +348,7 @@ impl Credentials {
         refresh_token: Option<String>,
         email: String,
     ) -> Result<InMemoryCredentials, JwtDecodeError> {
-        let claims = RerunCloudClaims::try_from_unverified_jwt(&Jwt(access_token.clone()))?;
+        let claims = DalaranCloudClaims::try_from_unverified_jwt(&Jwt(access_token.clone()))?;
 
         let user = User {
             id: claims.sub.clone(),
@@ -432,9 +432,9 @@ impl AccessToken {
 
     /// Construct an [`AccessToken`] without verifying it.
     ///
-    /// The token should come from a trusted source, like the Rerun auth API.
+    /// The token should come from a trusted source, like the Dalaran auth API.
     pub(crate) fn try_from_unverified_jwt(jwt: Jwt) -> Result<Self, JwtDecodeError> {
-        let claims = RerunCloudClaims::try_from_unverified_jwt(&jwt)?;
+        let claims = DalaranCloudClaims::try_from_unverified_jwt(&jwt)?;
         Ok(Self {
             token: jwt.0,
             expires_at: claims.exp,

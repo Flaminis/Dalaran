@@ -7,8 +7,8 @@ use dl_log::{ResultExt as _, debug_assert};
 
 fn trim_archetype_prefix(name: &str) -> &str {
     name.trim()
-        .trim_start_matches("rerun.archetypes.")
-        .trim_start_matches("rerun.blueprint.archetypes.")
+        .trim_start_matches("dalaran.archetypes.")
+        .trim_start_matches("dalaran.blueprint.archetypes.")
 }
 
 pub struct Migration;
@@ -33,12 +33,12 @@ fn rewire_tagged_components(batch: &RecordBatch) -> RecordBatch {
         .schema()
         .metadata()
         .keys()
-        .any(|key| key.starts_with("rerun."))
+        .any(|key| key.starts_with("dalaran."))
         || batch
             .schema()
             .fields()
             .iter()
-            .any(|field| field.metadata().keys().any(|key| key.starts_with("rerun.")));
+            .any(|field| field.metadata().keys().any(|key| key.starts_with("dalaran.")));
 
     if !needs_rewiring {
         return batch.clone();
@@ -52,7 +52,7 @@ fn rewire_tagged_components(batch: &RecordBatch) -> RecordBatch {
             let mut field = field.as_ref().clone();
             let mut metadata = field.metadata().clone();
 
-            // Not `colonize` - we are friendly folks at Rerun.
+            // Not `colonize` - we are friendly folks at Dalaran.
             fn rename_key(metadata: &mut HashMap<String, String>, legacy_key: &str, new_key: &str) {
                 if let Some(value) = metadata.remove(legacy_key) {
                     metadata.insert(new_key.to_owned(), value);
@@ -60,14 +60,14 @@ fn rewire_tagged_components(batch: &RecordBatch) -> RecordBatch {
             }
 
             // These metadata fields don't require value changes.
-            rename_key(&mut metadata, "rerun.index_name", crate::metadata::SORBET_INDEX_NAME);
-            rename_key(&mut metadata, "rerun.entity_path", crate::metadata::SORBET_ENTITY_PATH);
-            rename_key(&mut metadata, "rerun.kind", crate::metadata::RERUN_KIND);
-            rename_key(&mut metadata, "rerun.is_static", "rerun:is_static");
-            rename_key(&mut metadata, "rerun.is_indicator", "rerun:is_indicator");
-            rename_key(&mut metadata, "rerun.is_tombstone", "rerun:is_tombstone");
-            rename_key(&mut metadata, "rerun.is_semantically_empty", "rerun:is_semantically_empty");
-            rename_key(&mut metadata, "rerun.is_sorted", "rerun:is_sorted");
+            rename_key(&mut metadata, "dalaran.index_name", crate::metadata::SORBET_INDEX_NAME);
+            rename_key(&mut metadata, "dalaran.entity_path", crate::metadata::SORBET_ENTITY_PATH);
+            rename_key(&mut metadata, "dalaran.kind", crate::metadata::DALARAN_KIND);
+            rename_key(&mut metadata, "dalaran.is_static", "dalaran:is_static");
+            rename_key(&mut metadata, "dalaran.is_indicator", "dalaran:is_indicator");
+            rename_key(&mut metadata, "dalaran.is_tombstone", "dalaran:is_tombstone");
+            rename_key(&mut metadata, "dalaran.is_semantically_empty", "dalaran:is_semantically_empty");
+            rename_key(&mut metadata, "dalaran.is_sorted", "dalaran:is_sorted");
 
             if field.name().ends_with("Indicator") {
                 let field_name = field.name();
@@ -77,29 +77,29 @@ fn rewire_tagged_components(batch: &RecordBatch) -> RecordBatch {
 
                 // A lot of defensive code to handle different legacy formats of the indicator component,
                 // including blueprint indicators:
-                if let Some(component) = metadata.remove("rerun.component") {
+                if let Some(component) = metadata.remove("dalaran.component") {
                     debug_assert!(
                         component.ends_with("Indicator"),
                         "Expected component to end with 'Indicator', got: {component:?}"
                     );
-                    metadata.insert("rerun:component".to_owned(), component);
-                } else if field_name.starts_with("rerun.") {
+                    metadata.insert("dalaran:component".to_owned(), component);
+                } else if field_name.starts_with("dalaran.") {
                     // Long name
-                    metadata.insert("rerun:component".to_owned(), field_name.clone());
+                    metadata.insert("dalaran:component".to_owned(), field_name.clone());
                 } else {
                     // Short name: expand it to be long
-                    metadata.insert("rerun:component".to_owned(), format!("rerun.components.{field_name}"));
+                    metadata.insert("dalaran:component".to_owned(), format!("dalaran.components.{field_name}"));
                 }
 
                 // Remove everything else.
-                metadata.remove("rerun.archetype");
-                metadata.remove("rerun.archetype_field");
-                metadata.remove("rerun.component");
-            } else if let Some(component) = metadata.remove("rerun.component") {
+                metadata.remove("dalaran.archetype");
+                metadata.remove("dalaran.archetype_field");
+                metadata.remove("dalaran.component");
+            } else if let Some(component) = metadata.remove("dalaran.component") {
                 // If component is present, we are encountering a legacy component descriptor.
                 let (archetype, component, component_type) = match (
-                    metadata.remove("rerun.archetype"),
-                    metadata.remove("rerun.archetype_field"),
+                    metadata.remove("dalaran.archetype"),
+                    metadata.remove("dalaran.archetype_field"),
                 ) {
                     (None, None) => {
                         // We likely encountered data that was logged via `AnyValues` and do our best effort to convert it.
@@ -136,17 +136,17 @@ fn rewire_tagged_components(batch: &RecordBatch) -> RecordBatch {
                 };
 
                 if let Some(archetype) = archetype {
-                    metadata.insert("rerun:archetype".to_owned(), archetype);
+                    metadata.insert("dalaran:archetype".to_owned(), archetype);
                 }
-                metadata.insert("rerun:component".to_owned(), component);
+                metadata.insert("dalaran:component".to_owned(), component);
                 if let Some(component_type) = component_type {
-                    metadata.insert("rerun:component_type".to_owned(), component_type);
+                    metadata.insert("dalaran:component_type".to_owned(), component_type);
                 }
             }
 
             #[expect(clippy::iter_over_hash_type)] // Metadata migration validation is order-independent.
             for (key, value) in &metadata {
-                debug_assert!(!key.starts_with("rerun."), "Metadata `{key}` (with value `{value}`) was not migrated to colon syntax.");
+                debug_assert!(!key.starts_with("dalaran."), "Metadata `{key}` (with value `{value}`) was not migrated to colon syntax.");
             }
 
             field.set_metadata(metadata);
@@ -159,16 +159,16 @@ fn rewire_tagged_components(batch: &RecordBatch) -> RecordBatch {
         .metadata()
         .iter()
         .filter_map(|(key, value)| {
-            if key.as_str() == "rerun.version" {
+            if key.as_str() == "dalaran.version" {
                 // Note that the `Migration` trait takes care of setting the sorbet version.
-                dl_log::debug_once!("Dropping 'rerun.version' from metadata.");
+                dl_log::debug_once!("Dropping 'dalaran.version' from metadata.");
                 return None;
             }
 
-            if key.starts_with("rerun.") {
+            if key.starts_with("dalaran.") {
                 dl_log::debug_once!("Migrating batch metadata key '{key}'");
             }
-            Some((key.replace("rerun.", "rerun:"), value.clone()))
+            Some((key.replace("dalaran.", "dalaran:"), value.clone()))
         })
         .collect();
 

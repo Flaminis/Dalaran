@@ -1,4 +1,4 @@
-//! Handles different ways of loading Rerun data, e.g.:
+//! Handles different ways of loading Dalaran data, e.g.:
 //!
 //! - Over HTTPS
 //! - Over gRPC

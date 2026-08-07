@@ -12,6 +12,6 @@ workspace = true
 [dependencies]
 dl_format.workspace = true
 dl_memory.workspace = true
-rerun = { workspace = true, features = ["sdk", "image"] }
+dalaran = { workspace = true, features = ["sdk", "image"] }
 
 mimalloc.workspace = true

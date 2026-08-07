@@ -1,11 +1,11 @@
 #![cfg(feature = "lance")]
 
-use dl_server::{RerunCloudHandler, RerunCloudHandlerBuilder};
+use dl_server::{DalaranCloudHandler, DalaranCloudHandlerBuilder};
 
 // The lint fires locally but not on CI, so we use `allow` instead of `expect`:
 #[allow(clippy::unused_async, clippy::allow_attributes)] // needed by the macro
-async fn build() -> RerunCloudHandler {
-    RerunCloudHandlerBuilder::new().build()
+async fn build() -> DalaranCloudHandler {
+    DalaranCloudHandlerBuilder::new().build()
 }
 
 dl_redap_tests::generate_redap_tests!(build);

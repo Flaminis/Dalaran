@@ -96,7 +96,7 @@ impl BlueprintTree {
 
                         if let Some(title_response) = title_response {
                             title_response.on_hover_text(
-                                "The blueprint is where you can configure the Rerun Viewer",
+                                "The blueprint is where you can configure the Dalaran Viewer",
                             );
                         }
                     })
@@ -1277,7 +1277,7 @@ fn set_blueprint_to_auto_menu_button(ctx: &ViewerContext<'_>, ui: &mut egui::Ui)
     // anything is actually quite hard. There's a wide variety of things to consider that aren't
     // easily caught:
     // * does running view-generation/layout-generation change anything?
-    //    * these heuristics run incrementally, does rerunning them in bulk change anything?
+    //    * these heuristics run incrementally, does dalaranning them in bulk change anything?
     // * any changes in overrides/defaults/view-property means that a reset would change something
     let recording_id = ctx.store_context.recording_store_id();
     dl_ui::RecordingCommandKind::ClearActiveBlueprintAndEnableHeuristics.menu_button_ui(

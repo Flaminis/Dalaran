@@ -1,6 +1,6 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! A chunk of Rerun data, encoded using Arrow. Used for logging, transport, storage and compute.
+//! A chunk of Dalaran data, encoded using Arrow. Used for logging, transport, storage and compute.
 //!
 //! ## Feature flags
 #![doc = document_features::document_features!()]

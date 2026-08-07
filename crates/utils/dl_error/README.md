@@ -1,6 +1,6 @@
 # dl_error
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_error.svg)](https://crates.io/crates/dl_error)
 [![Documentation](https://docs.rs/dl_error/badge.svg)](https://docs.rs/dl_error)

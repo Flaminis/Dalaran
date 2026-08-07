@@ -34,9 +34,9 @@ pub struct Config {
     #[serde(skip, default = "::uuid::Uuid::new_v4")]
     pub session_id: Uuid,
 
-    /// Opt-in meta-data you can set via `rerun analytics`.
+    /// Opt-in meta-data you can set via `dalaran analytics`.
     ///
-    /// For instance Rerun employees are encouraged to set `rerun analytics email`.
+    /// For instance Dalaran employees are encouraged to set `dalaran analytics email`.
     /// For real users, this is always empty.
     #[serde(rename = "metadata", default)]
     pub opt_in_metadata: HashMap<String, Property>,
@@ -122,6 +122,6 @@ impl Config {
     }
 
     fn project_dirs() -> Result<ProjectDirs, ConfigError> {
-        ProjectDirs::from("", "", "rerun").ok_or(ConfigError::UnknownLocation)
+        ProjectDirs::from("", "", "dalaran").ok_or(ConfigError::UnknownLocation)
     }
 }

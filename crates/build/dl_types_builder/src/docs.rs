@@ -68,7 +68,7 @@ impl Docs {
     ///
     /// For instance, pass [`Target::Python`] to get all lines that are untagged or starts with `"\py"`.
     ///
-    /// The tagged lines (`\py`) are left as is, but untagged lines will have Rerun doclinks translated to the target language.
+    /// The tagged lines (`\py`) are left as is, but untagged lines will have Dalaran doclinks translated to the target language.
     pub(super) fn lines_for(
         &self,
         reporter: &Reporter,
@@ -166,10 +166,10 @@ fn find_and_recommend_doclinks(
                 && content.chars().all(|c| c.is_ascii_alphanumeric())
                 && content.chars().next().unwrap().is_ascii_uppercase()
 
-                // TODO(emilk): support references to things outside the default `rerun.scope`.
+                // TODO(emilk): support references to things outside the default `dalaran.scope`.
                 && !matches!(content, "ViewContents" | "VisibleTimeRanges" | "QueryExpression")
 
-                // In some blueprint code we refer to stuff in Rerun.
+                // In some blueprint code we refer to stuff in Dalaran.
                 && !matches!(content, "ChunkStore" | "ContainerId" | "EntityPathFilter" | "Spatial2DView" | "ViewId" | "View" | "ArchetypeName")
 
                 // Doc links to OpenStreetMap may show up
@@ -202,7 +202,7 @@ mod doclink_translation {
     use super::Target;
     use crate::{ObjectKind, Objects, Reporter};
 
-    /// Convert Rerun-style doclinks to the target language.
+    /// Convert Dalaran-style doclinks to the target language.
     pub fn translate_doc_line(
         reporter: &Reporter,
         objects: &Objects,
@@ -226,7 +226,7 @@ mod doclink_translation {
             }
 
             if token == "[" {
-                // Potential start of a Rerun doclink
+                // Potential start of a Dalaran doclink
                 let mut doclink_tokens = vec![token];
                 for token in &mut tokens {
                     doclink_tokens.push(token);
@@ -239,8 +239,8 @@ mod doclink_translation {
                     .peek()
                     .is_some_and(|next_token| next_token.starts_with('('))
                 {
-                    // We are at the `)[` boundary of a markdown link, e.g. "[Rerun](https://rerun.io)",
-                    // so this is not a rerun doclink after all.
+                    // We are at the `)[` boundary of a markdown link, e.g. "[Dalaran](https://dalaran.dev)",
+                    // so this is not a dalaran doclink after all.
                     out_tokens.extend(doclink_tokens.iter().map(|&s| s.to_owned()));
                     continue;
                 }
@@ -271,12 +271,12 @@ mod doclink_translation {
             let original_doclink: String = doclink_tokens.join("");
 
             // The worlds simplest heuristic, but at least it doesn't warn about things like [x, y, z, w].
-            let looks_like_rerun_doclink =
+            let looks_like_dalaran_doclink =
                 !original_doclink.contains(' ') && original_doclink.len() > 6;
 
-            if looks_like_rerun_doclink {
+            if looks_like_dalaran_doclink {
                 reporter.warn_no_context(format!(
-                    "Looks like a Rerun doclink, but fails to parse: {original_doclink} - {err}"
+                    "Looks like a Dalaran doclink, but fails to parse: {original_doclink} - {err}"
                 ));
             }
 
@@ -395,9 +395,9 @@ mod doclink_translation {
             Target::Python => {
                 let kind_and_type = format!("{kind}.{type_name}");
                 let object_path = if scope.is_empty() {
-                    format!("rerun.{kind_and_type}")
+                    format!("dalaran.{kind_and_type}")
                 } else {
-                    format!("rerun.{scope}.{kind_and_type}")
+                    format!("dalaran.{scope}.{kind_and_type}")
                 };
                 if let Some(field_or_enum_name) = field_or_enum_name {
                     format!(
@@ -415,7 +415,7 @@ mod doclink_translation {
                     return Ok(kind_and_type);
                 }
 
-                // For instance, https://rerun.io/docs/reference/types/views/spatial2d_view
+                // For instance, https://dalaran.dev/docs/reference/types/views/spatial2d_view
                 // TODO(emilk): relative links would be nicer for the local markdown files
                 let type_name_snake_case = dl_case::to_snake_case(type_name);
                 let query = if is_unreleased {
@@ -425,7 +425,7 @@ mod doclink_translation {
                 };
 
                 let url = format!(
-                    "https://rerun.io/docs/reference/types/{kind}/{type_name_snake_case}{query}"
+                    "https://dalaran.dev/docs/reference/types/{kind}/{type_name_snake_case}{query}"
                 );
                 if let Some(field_or_enum_name) = field_or_enum_name {
                     format!("[`{kind_and_type}#{field_or_enum_name}`]({url})")
@@ -468,11 +468,11 @@ mod tests {
     fn test_objects() -> Objects {
         Objects {
             objects: std::iter::once((
-                "rerun.views.Spatial2DView".to_owned(),
+                "dalaran.views.Spatial2DView".to_owned(),
                 Object {
                     virtpath: "path".to_owned(),
                     filepath: "path".into(),
-                    fqname: "rerun.views.Spatial2DView".to_owned(),
+                    fqname: "dalaran.views.Spatial2DView".to_owned(),
                     pkg_name: "test".to_owned(),
                     name: "Spatial2DView".to_owned(),
                     docs: Docs::default(),
@@ -517,26 +517,26 @@ mod tests {
         let (_report, reporter) = crate::report::init();
 
         let input =
-            "A vector `[1, 2, 3]` and a doclink [views.Spatial2DView] and a [url](www.rerun.io).";
+            "A vector `[1, 2, 3]` and a doclink [views.Spatial2DView] and a [url](www.dalaran.dev).";
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::Cpp),
-            "A vector `[1, 2, 3]` and a doclink `views::Spatial2DView` and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink `views::Spatial2DView` and a [url](www.dalaran.dev)."
         );
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::Python),
-            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView`][rerun.blueprint.views.Spatial2DView] and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView`][dalaran.blueprint.views.Spatial2DView] and a [url](www.dalaran.dev)."
         );
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::Rust),
-            "A vector `[1, 2, 3]` and a doclink [`views::Spatial2DView`][crate::blueprint::views::Spatial2DView] and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink [`views::Spatial2DView`][crate::blueprint::views::Spatial2DView] and a [url](www.dalaran.dev)."
         );
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::WebDocsMarkdown),
-            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView`](https://rerun.io/docs/reference/types/views/spatial2d_view) and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView`](https://dalaran.dev/docs/reference/types/views/spatial2d_view) and a [url](www.dalaran.dev)."
         );
     }
 
@@ -545,26 +545,26 @@ mod tests {
         let objects = test_objects();
         let (_report, reporter) = crate::report::init();
 
-        let input = "A vector `[1, 2, 3]` and a doclink [views.Spatial2DView.position] and a [url](www.rerun.io).";
+        let input = "A vector `[1, 2, 3]` and a doclink [views.Spatial2DView.position] and a [url](www.dalaran.dev).";
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::Cpp),
-            "A vector `[1, 2, 3]` and a doclink `views::Spatial2DView::position` and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink `views::Spatial2DView::position` and a [url](www.dalaran.dev)."
         );
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::Python),
-            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView.position`][rerun.blueprint.views.Spatial2DView.position] and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView.position`][dalaran.blueprint.views.Spatial2DView.position] and a [url](www.dalaran.dev)."
         );
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::Rust),
-            "A vector `[1, 2, 3]` and a doclink [`views::Spatial2DView::position`][crate::blueprint::views::Spatial2DView::position] and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink [`views::Spatial2DView::position`][crate::blueprint::views::Spatial2DView::position] and a [url](www.dalaran.dev)."
         );
 
         assert_eq!(
             translate_doc_line(&reporter, &objects, input, Target::WebDocsMarkdown),
-            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView#position`](https://rerun.io/docs/reference/types/views/spatial2d_view) and a [url](www.rerun.io)."
+            "A vector `[1, 2, 3]` and a doclink [`views.Spatial2DView#position`](https://dalaran.dev/docs/reference/types/views/spatial2d_view) and a [url](www.dalaran.dev)."
         );
     }
 
@@ -598,7 +598,7 @@ mod tests {
         assert_eq!(
             docs.lines_for(&reporter, &objects, Target::Python),
             vec![
-                "Doclink to [`views.Spatial2DView`][rerun.blueprint.views.Spatial2DView].",
+                "Doclink to [`views.Spatial2DView`][dalaran.blueprint.views.Spatial2DView].",
                 "",
                 "The second line.",
                 "",

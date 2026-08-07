@@ -1,4 +1,4 @@
-//! Rerun's usage of the history API on web lives here.
+//! Dalaran's usage of the history API on web lives here.
 //!
 //! A history entry is stored in two places:
 //! - State object
@@ -36,7 +36,7 @@ pub struct HistoryEntry {
 
 // Builder methods
 impl HistoryEntry {
-    const KEY: &'static str = "__rerun";
+    const KEY: &'static str = "__dalaran";
 
     pub fn new(url: String) -> Self {
         if url == dl_redap_browser::EXAMPLES_ORIGIN.as_url()

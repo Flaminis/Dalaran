@@ -98,7 +98,7 @@ pub fn singleline_edit_or_view_view_coordinates(
 
 /// The most common right-handed coordinate systems, each annotated with the software that uses it.
 ///
-/// Left-handed systems are omitted entirely (Rerun doesn't support them yet), but any coordinate
+/// Left-handed systems are omitted entirely (Dalaran doesn't support them yet), but any coordinate
 /// system that is already set — common or not — is still detected and shown by name, see
 /// [`singleline_edit_or_view_view_coordinates`].
 fn common_coordinate_systems() -> impl Iterator<Item = (ViewCoordinates, &'static str)> {
@@ -115,7 +115,7 @@ fn common_coordinate_systems() -> impl Iterator<Item = (ViewCoordinates, &'stati
 
 /// All right-handed named coordinate systems.
 ///
-/// Left-handed systems are intentionally omitted (Rerun doesn't support them yet), but are still
+/// Left-handed systems are intentionally omitted (Dalaran doesn't support them yet), but are still
 /// detected and shown by name when already set, see [`singleline_edit_or_view_view_coordinates`].
 fn all_right_handed_coordinate_systems() -> impl Iterator<Item = ViewCoordinates> {
     use ViewDir::{Back, Down, Forward, Left, Right, Up};

@@ -115,7 +115,7 @@ impl FFmpegVersion {
         })
     }
 
-    /// Returns true if this version is compatible with Rerun's minimum requirements.
+    /// Returns true if this version is compatible with Dalaran's minimum requirements.
     pub fn is_compatible(&self) -> bool {
         self.major > FFMPEG_MINIMUM_VERSION_MAJOR
             || (self.major == FFMPEG_MINIMUM_VERSION_MAJOR

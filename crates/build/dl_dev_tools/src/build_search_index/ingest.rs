@@ -76,18 +76,18 @@ impl Context {
         &self.metadata.workspace_root
     }
 
-    fn rerun_pkg(&self) -> &Package {
+    fn dalaran_pkg(&self) -> &Package {
         self.metadata
             .packages
             .iter()
-            .find(|pkg| pkg.name.as_str() == "rerun")
+            .find(|pkg| pkg.name.as_str() == "dalaran")
             .unwrap()
     }
 
     fn release_version(&self) -> &Version {
         self.release_version
             .as_ref()
-            .unwrap_or_else(|| &self.rerun_pkg().version)
+            .unwrap_or_else(|| &self.dalaran_pkg().version)
     }
 
     fn push(&self, data: DocumentData) {

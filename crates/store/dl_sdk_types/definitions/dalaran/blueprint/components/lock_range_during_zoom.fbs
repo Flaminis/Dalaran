@@ -1,0 +1,15 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// Indicate whether the range should be locked when zooming in on the data.
+///
+/// Default is `false`, i.e. zoom will change the visualized range.
+struct LockRangeDuringZoom (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Copy, Default, PartialEq, Eq, PartialOrd, Ord",
+  "attr.rust.repr": "transparent",
+  "attr.rust.tuple_struct"
+) {
+  lock_range: dalaran.datatypes.Bool (order: 100);
+}

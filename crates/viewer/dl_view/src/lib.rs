@@ -1,4 +1,4 @@
-//! Rerun View utilities
+//! Dalaran View utilities
 //!
 //! Types & utilities for defining View classes and communicating with the Viewport.
 

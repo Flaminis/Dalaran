@@ -23,7 +23,7 @@ use dl_protos::cloud::v1alpha1::ext::{
     QueryDatasetDataframe, QueryTasksDataframe, RegisterWithDatasetDataframe,
     ScanDatasetManifestDataframe, ScanSegmentTableDataframe,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     CancelTasksRequest, CancelTasksResponse, DeleteEntryResponse, DoBandwidthTestResponse,
     EntryCreatedEvent, EntryDeletedEvent, EntryDetails, EntryKind, EventKind, FetchChunksRequest,
@@ -35,7 +35,7 @@ use dl_protos::cloud::v1alpha1::{
     WatchEventsResponse, segment_id_filter, watch_events_response,
 };
 use dl_protos::common::v1alpha1::ext::{DatasetKind, IfDuplicateBehavior, SegmentId};
-use dl_protos::headers::RerunHeadersExtractorExt as _;
+use dl_protos::headers::DalaranHeadersExtractorExt as _;
 use dl_protos::missing_field;
 use dl_protos::{
     EntryName,
@@ -65,13 +65,13 @@ use crate::store::{LayerInfo, TASK_ID_SUCCESS};
 
 #[derive(Debug)]
 #[cfg_attr(target_arch = "wasm32", derive(Clone, Copy, Default))]
-pub struct RerunCloudHandlerSettings {
+pub struct DalaranCloudHandlerSettings {
     #[cfg(not(target_arch = "wasm32"))]
     storage_dir: tempfile::TempDir,
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-impl Default for RerunCloudHandlerSettings {
+impl Default for DalaranCloudHandlerSettings {
     fn default() -> Self {
         Self {
             #[cfg(not(target_arch = "wasm32"))]
@@ -82,7 +82,7 @@ impl Default for RerunCloudHandlerSettings {
 
 #[cfg(not(target_arch = "wasm32"))]
 fn create_data_dir() -> Result<tempfile::TempDir, crate::store::Error> {
-    Ok(tempfile::Builder::new().prefix("rerun-data-").tempdir()?)
+    Ok(tempfile::Builder::new().prefix("dalaran-data-").tempdir()?)
 }
 
 fn apply_segment_id_filter(
@@ -102,7 +102,7 @@ fn apply_segment_id_filter(
     let ids = ids.iter().map(String::as_str).collect::<HashSet<_>>();
 
     let segment_ids = batch
-        .column_by_name(ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME)
+        .column_by_name(ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME)
         .ok_or_else(|| Status::internal("segment ID column is missing"))?
         .as_any()
         .downcast_ref::<StringArray>()
@@ -117,12 +117,12 @@ fn apply_segment_id_filter(
 }
 
 #[derive(Default)]
-pub struct RerunCloudHandlerBuilder {
-    settings: RerunCloudHandlerSettings,
+pub struct DalaranCloudHandlerBuilder {
+    settings: DalaranCloudHandlerSettings,
     store: InMemoryStore,
 }
 
-impl RerunCloudHandlerBuilder {
+impl DalaranCloudHandlerBuilder {
     pub fn new() -> Self {
         Self::default()
     }
@@ -199,23 +199,23 @@ impl RerunCloudHandlerBuilder {
         self
     }
 
-    pub fn build(self) -> RerunCloudHandler {
-        RerunCloudHandler::new(self.settings, self.store)
+    pub fn build(self) -> DalaranCloudHandler {
+        DalaranCloudHandler::new(self.settings, self.store)
     }
 }
 
 // ---
 
-pub struct RerunCloudHandler {
+pub struct DalaranCloudHandler {
     #[cfg(not(target_arch = "wasm32"))]
-    settings: RerunCloudHandlerSettings,
+    settings: DalaranCloudHandlerSettings,
     eager_chunk_store_config: dl_chunk_store::ChunkStoreConfig,
     store: tokio::sync::RwLock<InMemoryStore>,
     events_tx: tokio::sync::broadcast::Sender<WatchEventsResponse>,
 }
 
-impl RerunCloudHandler {
-    pub fn new(settings: RerunCloudHandlerSettings, store: InMemoryStore) -> Self {
+impl DalaranCloudHandler {
+    pub fn new(settings: DalaranCloudHandlerSettings, store: InMemoryStore) -> Self {
         #[cfg(target_arch = "wasm32")]
         let _ = settings;
         let eager_chunk_store_config = store.eager_chunk_store_config();
@@ -367,9 +367,9 @@ impl RerunCloudHandler {
     }
 }
 
-impl std::fmt::Debug for RerunCloudHandler {
+impl std::fmt::Debug for DalaranCloudHandler {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("RerunCloudHandler").finish()
+        f.debug_struct("DalaranCloudHandler").finish()
     }
 }
 
@@ -382,7 +382,7 @@ macro_rules! decl_stream {
         >;
     };
 
-    ($stream:ident<rerun_cloud:$resp:ident>) => {
+    ($stream:ident<dalaran_cloud:$resp:ident>) => {
         pub type $stream = std::pin::Pin<
             Box<
                 dyn futures::Stream<Item = tonic::Result<dl_protos::cloud::v1alpha1::$resp>> + Send,
@@ -399,19 +399,19 @@ macro_rules! decl_stream {
     };
 }
 
-decl_stream!(DoBandwidthTestResponseStream<rerun_cloud:DoBandwidthTestResponse>);
-decl_stream!(WatchEventsResponseStream<rerun_cloud:WatchEventsResponse>);
+decl_stream!(DoBandwidthTestResponseStream<dalaran_cloud:DoBandwidthTestResponse>);
+decl_stream!(WatchEventsResponseStream<dalaran_cloud:WatchEventsResponse>);
 decl_stream!(FetchChunksResponseStream<manifest:FetchChunksResponse>);
-decl_stream!(GetAssetsForSegmentResponseStream<rerun_cloud:GetAssetsForSegmentResponse>);
+decl_stream!(GetAssetsForSegmentResponseStream<dalaran_cloud:GetAssetsForSegmentResponse>);
 decl_stream!(GetRrdManifestResponseStream<manifest:GetRrdManifestResponse>);
 decl_stream!(QueryDatasetResponseStream<manifest:QueryDatasetResponse>);
 decl_stream!(QueryTasksOnCompletionResponseStream<tasks:QueryTasksOnCompletionResponse>);
 decl_stream!(ScanDatasetManifestResponseStream<manifest:ScanDatasetManifestResponse>);
 decl_stream!(ScanSegmentTableResponseStream<manifest:ScanSegmentTableResponse>);
-decl_stream!(ScanTableResponseStream<rerun_cloud:ScanTableResponse>);
+decl_stream!(ScanTableResponseStream<dalaran_cloud:ScanTableResponse>);
 decl_stream!(UnregisterFromDatasetResponseStream<manifest:UnregisterFromDatasetResponse>);
 
-impl RerunCloudHandler {
+impl DalaranCloudHandler {
     async fn find_datasets(
         &self,
         entry_id: Option<EntryId>,
@@ -561,7 +561,7 @@ fn validate_asset_dataset(
 }
 
 #[tonic::async_trait]
-impl RerunCloudService for RerunCloudHandler {
+impl DalaranCloudService for DalaranCloudHandler {
     async fn version(
         &self,
         request: tonic::Request<dl_protos::cloud::v1alpha1::VersionRequest>,
@@ -669,7 +669,7 @@ impl RerunCloudService for RerunCloudHandler {
         // both are set. `ENTRY_KIND_UNSPECIFIED` is rejected outright; unknown *positive* values
         // (kinds newer than this server knows about) are intentionally allowed through and
         // simply match no entry, so a client requesting them degrades gracefully instead of
-        // erroring out (forward compat, mirrors Rerun Hub).
+        // erroring out (forward compat, mirrors Dalaran Hub).
         if filter
             .entry_kinds
             .contains(&(EntryKind::Unspecified as i32))
@@ -988,11 +988,11 @@ impl RerunCloudService for RerunCloudHandler {
         } = do_register_with_dataset(&mut store, dataset_id, data_sources, on_duplicate).await?;
 
         let record_batch = RegisterWithDatasetDataframe {
-            rerun_segment_id: segment_ids.into(),
-            rerun_segment_layer: segment_layers.into(),
-            rerun_segment_type: segment_types.into(),
-            rerun_storage_url: storage_urls.into(),
-            rerun_task_id: task_ids.into(),
+            dalaran_segment_id: segment_ids.into(),
+            dalaran_segment_layer: segment_layers.into(),
+            dalaran_segment_type: segment_types.into(),
+            dalaran_storage_url: storage_urls.into(),
+            dalaran_task_id: task_ids.into(),
         }
         .into_record_batch()
         .map_err(|err| tonic::Status::internal(format!("Failed to create dataframe: {err:#}")))?;
@@ -1073,15 +1073,15 @@ impl RerunCloudService for RerunCloudHandler {
                     tonic::Status::internal(format!("Could not decode chunk: {err:#}"))
                 })?;
 
-            // Support both new "rerun:segment_id" and legacy "rerun:partition_id" keys
+            // Support both new "dalaran:segment_id" and legacy "dalaran:partition_id" keys
             let schema = chunk_batch.schema();
             let metadata = schema.metadata();
             let segment_id: SegmentId = metadata
-                .get("rerun:segment_id")
-                .or_else(|| metadata.get("rerun:partition_id"))
+                .get("dalaran:segment_id")
+                .or_else(|| metadata.get("dalaran:partition_id"))
                 .ok_or_else(|| {
                     tonic::Status::invalid_argument(
-                        "Received chunk without 'rerun:segment_id' metadata",
+                        "Received chunk without 'dalaran:segment_id' metadata",
                     )
                 })?
                 .clone()
@@ -1759,7 +1759,7 @@ impl RerunCloudService for RerunCloudHandler {
     type FetchChunksStream = FetchChunksResponseStream;
 
     // NOTE: OSS server does not detect source drift (a registered rrd file
-    // being mutated after registration) which Rerun Hub implements.
+    // being mutated after registration) which Dalaran Hub implements.
     // Consider if worth having parity (RR-4577).
     async fn fetch_chunks(
         &self,
@@ -2169,8 +2169,8 @@ fn get_entry_id_from_headers<T>(
         Ok(store.dataset_by_name(&dataset_name)?.id())
     } else {
         const HEADERS: &[&str] = &[
-            dl_protos::headers::RERUN_HTTP_HEADER_ENTRY_ID,
-            dl_protos::headers::RERUN_HTTP_HEADER_ENTRY_NAME,
+            dl_protos::headers::DALARAN_HTTP_HEADER_ENTRY_ID,
+            dl_protos::headers::DALARAN_HTTP_HEADER_ENTRY_NAME,
         ];
         Err(tonic::Status::invalid_argument(format!(
             "missing mandatory {HEADERS:?} HTTP headers"
@@ -2337,13 +2337,13 @@ mod tests {
 
     use futures::TryStreamExt as _;
     use dl_protos::cloud::v1alpha1::GetAssetsForSegmentRequest;
-    use dl_protos::headers::RerunHeadersInjectorExt as _;
+    use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
     /// Datasets created before asset datasets were introduced don't have one. Querying assets on
     /// such a dataset returns no assets, and updating its entry creates the missing asset dataset.
     #[tokio::test]
     async fn legacy_dataset_without_asset_dataset() {
-        let handler = RerunCloudHandlerBuilder::new().build();
+        let handler = DalaranCloudHandlerBuilder::new().build();
 
         let dataset_id = EntryId::new();
         handler

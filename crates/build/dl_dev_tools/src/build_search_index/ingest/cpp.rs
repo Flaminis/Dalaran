@@ -26,10 +26,10 @@ pub fn ingest(ctx: &Context) -> anyhow::Result<()> {
 
     Command::new("doxygen")
         .with_arg("docs/Doxyfile")
-        .with_cwd(ctx.workspace_root().join("rerun_cpp"))
+        .with_cwd(ctx.workspace_root().join("dalaran_cpp"))
         .output()?;
 
-    let base_path = ctx.workspace_root().join("rerun_cpp/docs/xml");
+    let base_path = ctx.workspace_root().join("dalaran_cpp/docs/xml");
     let mut visitor = Visitor {
         ctx,
         base_path,
@@ -63,12 +63,12 @@ impl Visitor<'_> {
             hidden_tags: vec!["c++".into(), "cpp".into()],
             tags: vec![],
             content: description,
-            url: format!("https://ref.rerun.io/docs/cpp/stable/{uri}"),
+            url: format!("https://ref.dalaran.dev/docs/cpp/stable/{uri}"),
         });
     }
 
     fn visit_root(&mut self) -> anyhow::Result<()> {
-        const ROOT_NAMESPACE_REFID: &str = "namespacererun";
+        const ROOT_NAMESPACE_REFID: &str = "namespacedalaran";
         document!(
             root,
             self.base_path.join(format!("{ROOT_NAMESPACE_REFID}.xml"))

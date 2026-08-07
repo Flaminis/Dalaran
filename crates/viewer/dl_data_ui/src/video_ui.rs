@@ -115,7 +115,7 @@ fn video_data_ui(
                         // TODO(#7594): HDR videos
                         ui.warning_label("HDR").on_hover_ui(|ui| {
                             ui.label(format!(
-                                "High-dynamic-range {stream_kind}s not yet supported by Rerun"
+                                "High-dynamic-range {stream_kind}s not yet supported by Dalaran"
                             ));
                             ui.hyperlink("https://github.com/rerun-io/rerun/issues/7594");
                         });
@@ -528,7 +528,7 @@ fn decoded_frame_ui(
                 | dl_video::FFmpegError::FailedToDetermineFFmpegVersion(_)
                 | dl_video::FFmpegError::FFmpegNotInstalled => {
                     if let Some(download_url) = dl_video::ffmpeg_download_url() {
-                        ui.markdown_ui(&format!("You can download a build of `FFmpeg` [here]({download_url}). For Rerun to be able to use it, its binaries need to be reachable from `PATH`."));
+                        ui.markdown_ui(&format!("You can download a build of `FFmpeg` [here]({download_url}). For Dalaran to be able to use it, its binaries need to be reachable from `PATH`."));
                     }
                 }
 
@@ -629,7 +629,7 @@ fn frame_info_ui(
     .on_hover_text(format!("Raw presentation timestamp prior to applying the timescale.\n\
                     This specifies the time at which the {} should be shown relative to the start of a {stream_kind} stream.", stream_kind.frame_word()));
 
-    // Judging the following to be a bit too obscure to be of relevance outside of debugging Rerun itself.
+    // Judging the following to be a bit too obscure to be of relevance outside of debugging Dalaran itself.
     #[cfg(debug_assertions)]
     {
         if let Some(has_sample_highest_pts_so_far) = video_descr

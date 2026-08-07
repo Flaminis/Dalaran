@@ -16,7 +16,7 @@ impl VariantAvailableProvider<MapProvider> for MapProviderVariantAvailable {
         } else {
             VariantAvailable::No {
                 reason_markdown: "A Mapbox access token is not available. You can set it in the \
-                settings or using the `RERUN_MAPBOX_ACCESS_TOKEN` environment variable."
+                settings or using the `DALARAN_MAPBOX_ACCESS_TOKEN` environment variable."
                     .to_owned(),
             }
         };

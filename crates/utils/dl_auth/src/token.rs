@@ -9,10 +9,10 @@ pub enum TokenError {
 }
 
 /// Default `allowed_hosts` pattern for tokens that have no `allowed_hosts` claim.
-pub const DEFAULT_ALLOWED_HOSTS: &str = ".cloud.rerun.io";
+pub const DEFAULT_ALLOWED_HOSTS: &str = ".cloud.dalaran.dev";
 
 /// Environment variable to bypass the host check entirely.
-pub const INSECURE_SKIP_HOST_CHECK_ENV: &str = "RERUN_INSECURE_SKIP_HOST_CHECK";
+pub const INSECURE_SKIP_HOST_CHECK_ENV: &str = "DALARAN_INSECURE_SKIP_HOST_CHECK";
 
 #[derive(Debug, thiserror::Error)]
 #[error(
@@ -101,13 +101,13 @@ impl std::fmt::Display for Jwt {
 ///
 /// Uses RFC 6265 (cookie) domain matching semantics:
 /// - A leading `.` means "this domain and all subdomains":
-///   `.cloud.rerun.io` matches `api.acme.cloud.rerun.io` and
-///   `acme.cloud.rerun.io`, but not `cloud.rerun.io` itself
-///   or `mycloud.rerun.io`.
+///   `.cloud.dalaran.dev` matches `api.acme.cloud.dalaran.dev` and
+///   `acme.cloud.dalaran.dev`, but not `cloud.dalaran.dev` itself
+///   or `mycloud.dalaran.dev`.
 /// - Without a leading `.`, an exact match is required.
 ///
 /// Both sides are normalized via [`url::Host::parse`] (IDNA / lowercase / punycode)
-/// before comparison, so `API.Acme.Cloud.Rerun.IO` matches `.cloud.rerun.io`.
+/// before comparison, so `API.Acme.Cloud.Dalaran.IO` matches `.cloud.dalaran.dev`.
 pub fn host_matches_pattern(pattern: &str, host: &str) -> bool {
     // Normalize the host through url::Host::parse (IDNA lowercasing + punycode).
     // If parsing fails (e.g. empty string), fall back to the raw input.
@@ -162,11 +162,11 @@ fn extract_allowed_hosts_from_jwt(jwt: &Jwt) -> Result<Vec<String>, JwtDecodeErr
 
 /// Check if a token's `allowed_hosts` claim permits the given host.
 ///
-/// Works for both Rerun Hub tokens (RS256, from `WorkOS`) and Redap
+/// Works for both Dalaran Hub tokens (RS256, from `WorkOS`) and Redap
 /// machine tokens (HS256, from `generate-token`).
 ///
 /// Returns `true` if:
-/// - The `RERUN_INSECURE_SKIP_HOST_CHECK` env var is set to `"1"`
+/// - The `DALARAN_INSECURE_SKIP_HOST_CHECK` env var is set to `"1"`
 /// - Any of the token's `allowed_hosts` values matches the host
 ///   (or [`DEFAULT_ALLOWED_HOSTS`] if no `allowed_hosts` claim is present)
 ///
@@ -204,56 +204,56 @@ mod tests {
     fn test_host_pattern_domain_match() {
         // Typical customer deployments
         assert!(host_matches_pattern(
-            ".cloud.rerun.io",
-            "api.acme.cloud.rerun.io"
+            ".cloud.dalaran.dev",
+            "api.acme.cloud.dalaran.dev"
         ));
         assert!(host_matches_pattern(
-            ".cloud.rerun.io",
-            "api.bigcorp.cloud.rerun.io"
+            ".cloud.dalaran.dev",
+            "api.bigcorp.cloud.dalaran.dev"
         ));
         // Dev environments
         assert!(host_matches_pattern(
-            ".dev.rerun.io",
-            "api.jleibs.dev.rerun.io"
+            ".dev.dalaran.dev",
+            "api.jleibs.dev.dalaran.dev"
         ));
     }
 
     #[test]
     fn test_host_pattern_domain_no_match() {
         // The domain itself should not match (need at least one subdomain)
-        assert!(!host_matches_pattern(".cloud.rerun.io", "cloud.rerun.io"));
+        assert!(!host_matches_pattern(".cloud.dalaran.dev", "cloud.dalaran.dev"));
         // Partial label overlap must not match
-        assert!(!host_matches_pattern(".cloud.rerun.io", "mycloud.rerun.io"));
+        assert!(!host_matches_pattern(".cloud.dalaran.dev", "mycloud.dalaran.dev"));
         // Completely different host
-        assert!(!host_matches_pattern(".cloud.rerun.io", "evil.com"));
-        assert!(!host_matches_pattern(".cloud.rerun.io", "localhost"));
+        assert!(!host_matches_pattern(".cloud.dalaran.dev", "evil.com"));
+        assert!(!host_matches_pattern(".cloud.dalaran.dev", "localhost"));
     }
 
     #[test]
     fn test_host_pattern_exact_match() {
         assert!(host_matches_pattern(
-            "api.acme.cloud.rerun.io",
-            "api.acme.cloud.rerun.io"
+            "api.acme.cloud.dalaran.dev",
+            "api.acme.cloud.dalaran.dev"
         ));
         assert!(!host_matches_pattern(
-            "api.acme.cloud.rerun.io",
-            "api.bigcorp.cloud.rerun.io"
+            "api.acme.cloud.dalaran.dev",
+            "api.bigcorp.cloud.dalaran.dev"
         ));
     }
 
     #[test]
     fn test_host_pattern_case_insensitive() {
         assert!(host_matches_pattern(
-            ".cloud.rerun.io",
-            "API.Acme.Cloud.Rerun.IO"
+            ".cloud.dalaran.dev",
+            "API.Acme.Cloud.Dalaran.IO"
         ));
         assert!(host_matches_pattern(
-            ".CLOUD.RERUN.IO",
-            "api.acme.cloud.rerun.io"
+            ".CLOUD.DALARAN.IO",
+            "api.acme.cloud.dalaran.dev"
         ));
         assert!(host_matches_pattern(
-            "API.ACME.CLOUD.RERUN.IO",
-            "api.acme.cloud.rerun.io"
+            "API.ACME.CLOUD.DALARAN.IO",
+            "api.acme.cloud.dalaran.dev"
         ));
     }
 }

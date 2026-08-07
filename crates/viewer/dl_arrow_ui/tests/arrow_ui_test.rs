@@ -56,12 +56,12 @@ fn arrow_list_ui(ui: &mut egui::Ui) {
             "Two long strings",
             [Utf8::from("This is a long nested string that should be truncated because it is inside a list and over 100 characters long. Truncate me please!"), Utf8::from("Short string.")].to_arrow(),
         ),
-        ("String with URL", Utf8::from("https://rerun.io").to_arrow()),
+        ("String with URL", Utf8::from("https://dalaran.dev").to_arrow()),
         (
             "Two URLs in strings",
             [
-                Utf8::from("https://rerun.io"),
-                Utf8::from("https://rerun.rs"),
+                Utf8::from("https://dalaran.dev"),
+                Utf8::from("https://dalaran.rs"),
             ]
             .to_arrow(),
         ),

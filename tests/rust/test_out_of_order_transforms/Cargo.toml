@@ -11,7 +11,7 @@ workspace = true
 
 [dependencies]
 dl_log = { workspace = true, features = ["setup"] }
-rerun = { path = "../../../crates/top/rerun", features = ["clap", "web_viewer"] }
+dalaran = { path = "../../../crates/top/dalaran", features = ["clap", "web_viewer"] }
 
 anyhow.workspace = true
 clap = { workspace = true, features = ["derive"] }

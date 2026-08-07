@@ -229,7 +229,7 @@ pub mod tests {
                     ui.add(ComboItemHeader::new("Other values:"));
                     ui.add(ComboItem::new("vertex_positions"));
                     ui.add(
-                        ComboItem::new("Rerun default").value(code.into_widget_text(ui.style())),
+                        ComboItem::new("Dalaran default").value(code.into_widget_text(ui.style())),
                     );
                 });
         });

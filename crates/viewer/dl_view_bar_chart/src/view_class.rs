@@ -51,7 +51,7 @@ impl ViewClass for BarChartView {
         } = egui::InputOptions::default(); // This is OK, since we don't allow the user to change these modifiers.
 
         Help::new("Bar chart view")
-            .docs_link("https://rerun.io/docs/reference/types/views/bar_chart_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/bar_chart_view")
             .control("Pan", (icons::LEFT_MOUSE_CLICK, "+", "drag"))
             .control(
                 "Horizontal pan",

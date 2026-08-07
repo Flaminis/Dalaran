@@ -7,12 +7,12 @@ use dl_protos::cloud::v1alpha1::GetTableSchemaRequest;
 use dl_protos::cloud::v1alpha1::ext::{
     CreateTableEntryRequest, EntryDetails, LanceTable, ProviderDetails,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 
 use super::common::entry_name;
 use crate::SchemaTestExt as _;
 
-pub async fn create_table_entry(service: impl RerunCloudService) {
+pub async fn create_table_entry(service: impl DalaranCloudService) {
     let tmp_dir = tempfile::tempdir().expect("create temp dir");
 
     let table_name = "created_table";
@@ -80,7 +80,7 @@ pub async fn create_table_entry(service: impl RerunCloudService) {
     insta::assert_snapshot!("create_table_data", returned_schema.format_snapshot());
 }
 
-pub async fn create_table_entry_duplicate_url(service: impl RerunCloudService) {
+pub async fn create_table_entry_duplicate_url(service: impl DalaranCloudService) {
     let tmp_dir = tempfile::tempdir().expect("create temp dir");
 
     let schema = Schema::new(vec![Field::new("column_a", DataType::Utf8, false)]);
@@ -122,8 +122,8 @@ pub async fn create_table_entry_duplicate_url(service: impl RerunCloudService) {
     assert!(err.message().contains(&table_url.to_string()));
 }
 
-pub async fn create_table_entry_failed_does_not_leak_name(service: impl RerunCloudService) {
-    // Regression test for https://linear.app/rerun/issue/RR-3644/create-table-failure-leads-to-unlisted-existing-table
+pub async fn create_table_entry_failed_does_not_leak_name(service: impl DalaranCloudService) {
+    // Regression test for https://linear.app/dalaran/issue/RR-3644/create-table-failure-leads-to-unlisted-existing-table
     let schema = Schema::new(vec![Field::new("column_a", DataType::Utf8, false)]);
 
     let table_name = "should_not_leak";

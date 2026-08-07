@@ -1,6 +1,6 @@
 # dl_recording_panel
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_recording_panel.svg)](https://crates.io/crates/dl_recording_panel)
 [![Documentation](https://docs.rs/dl_recording_panel/badge.svg)](https://docs.rs/dl_recording_panel)

@@ -1,0 +1,34 @@
+namespace dalaran.blueprint.archetypes;
+
+/// Configuration for the 3D line grid.
+table LineGrid3D (
+    "attr.python.aliases": "datatypes.BoolLike", // Make it easy to turn it off passing in `False`
+    "attr.dalaran.scope": "blueprint"
+) {
+    /// Whether the grid is visible.
+    ///
+    /// Defaults to true.
+    visible: dalaran.components.Visible ("attr.dalaran.component_optional", nullable, order: 1000);
+
+    /// Space between grid lines spacing of one line to the next in scene units.
+    ///
+    /// As you zoom out, successively only every tenth line is shown.
+    /// This controls the closest zoom level.
+    spacing: dalaran.blueprint.components.GridSpacing ("attr.dalaran.component_optional", nullable, order: 2000);
+
+    /// In what plane the grid is drawn.
+    ///
+    /// Defaults to the plane at zero units along the up/down axis defined by [archetypes.SpatialInformation]'s axes property.
+    plane: dalaran.components.Plane3D ("attr.dalaran.component_optional", nullable, order: 3000);
+
+    /// How thick the lines should be in ui units.
+    ///
+    /// Default is 1.0 ui unit.
+    stroke_width: dalaran.components.StrokeWidth ("attr.dalaran.component_optional", nullable, order: 5000);
+
+    /// Color used for the grid.
+    ///
+    /// Transparency via alpha channel is supported.
+    /// Defaults to a slightly transparent light gray.
+    color: dalaran.components.Color ("attr.dalaran.component_optional", nullable, order: 6000);
+}

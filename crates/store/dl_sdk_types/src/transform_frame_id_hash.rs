@@ -10,7 +10,7 @@ use crate::components::TransformFrameId;
 /// Almost always, instead of using [`TransformFrameId`] directly, `dl_tf` uses this hash.
 /// It is assumed to be collision free.
 ///
-/// For fast handling or Rerun's built-in entity path based transform hierarchy,
+/// For fast handling or Dalaran's built-in entity path based transform hierarchy,
 /// the [`TransformFrameIdHash`] of an entity path derived frame is guaranteed to be exactly the same as [`EntityPathHash`].
 /// Therefore, whenever possible, you should create [`TransformFrameIdHash`] directly from [`EntityPath`],
 /// without going via [`TransformFrameId`].

@@ -1,4 +1,4 @@
-//! Rerun Graph View.
+//! Dalaran Graph View.
 //!
 //! A View that shows a graph (node-link diagram).
 

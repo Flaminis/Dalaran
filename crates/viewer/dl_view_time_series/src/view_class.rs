@@ -141,7 +141,7 @@ impl ViewClass for TimeSeriesView {
         } = egui::InputOptions::default(); // This is OK, since we don't allow the user to change these modifiers.
 
         Help::new("Time series view")
-            .docs_link("https://rerun.io/docs/reference/types/views/time_series_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/time_series_view")
             .control("Pan", (icons::LEFT_MOUSE_CLICK, "+", "drag"))
             .control(
                 "Horizontal pan",
@@ -1192,14 +1192,14 @@ fn all_scalar_mappings(
     // Flatten all (component, selector) pairs into a single comparable list
     // to find the globally best match across all components.
     let candidates = matches.iter().flat_map(|(source_component, match_info)| {
-        let is_rerun_native_type = match_info.component_type() == target.component_type.as_ref();
+        let is_dalaran_native_type = match_info.component_type() == target.component_type.as_ref();
 
         // If it's not the exact semantic type that we're looking for,
-        // but it is a Rerun-builtin semantic type then we don't consider it at all.
-        if !is_rerun_native_type
+        // but it is a Dalaran-builtin semantic type then we don't consider it at all.
+        if !is_dalaran_native_type
             && match_info
                 .component_type()
-                .is_some_and(|t| t.is_rerun_type())
+                .is_some_and(|t| t.is_dalaran_type())
         {
             return Either::Left(Either::Right(std::iter::empty()));
         }
@@ -1221,7 +1221,7 @@ fn all_scalar_mappings(
             DatatypeMatch::NativeSemantics { arrow_datatype, .. } => {
                 Either::Left(Either::Left(std::iter::once((
                     primary_match_order,
-                    is_rerun_native_type,
+                    is_dalaran_native_type,
                     scalar_datatype_priority(arrow_datatype),
                     *source_component,
                     0usize,
@@ -1234,12 +1234,12 @@ fn all_scalar_mappings(
                 ..
             } => {
                 if selectors.is_empty() {
-                    if is_rerun_native_type
+                    if is_dalaran_native_type
                         || RECOMMENDED_DATATYPES.contains(match_info.arrow_datatype())
                     {
                         Either::Left(Either::Left(std::iter::once((
                             primary_match_order,
-                            is_rerun_native_type,
+                            is_dalaran_native_type,
                             scalar_datatype_priority(arrow_datatype),
                             *source_component,
                             0usize,
@@ -1252,10 +1252,10 @@ fn all_scalar_mappings(
                     // Nested field access: selector_index preserves field definition order.
                     Either::Right(selectors.iter().enumerate().filter_map(
                         move |(selector_index, (selector, datatype))| {
-                            (is_rerun_native_type || RECOMMENDED_DATATYPES.contains(datatype))
+                            (is_dalaran_native_type || RECOMMENDED_DATATYPES.contains(datatype))
                                 .then_some((
                                     primary_match_order,
-                                    is_rerun_native_type,
+                                    is_dalaran_native_type,
                                     scalar_datatype_priority(datatype),
                                     *source_component,
                                     selector_index,
@@ -1270,7 +1270,7 @@ fn all_scalar_mappings(
 
     // Priority key (lower = better):
     // 1. primary_match_order (0=exact match, 1=semantic match, 2=physical only)
-    // 2. is_rerun_native_type (false < true, prefer custom types)
+    // 2. is_dalaran_native_type (false < true, prefer custom types)
     // 3. scalar_datatype_priority (Float64=0, Float32=1, etc.)
     // 4. source_component (deterministic component selection)
     // 5. selector_index (field definition order within component)
@@ -1278,10 +1278,10 @@ fn all_scalar_mappings(
         candidates
             .into_iter()
             .sorted_by_key(
-                |(match_order, is_rerun, dt_priority, component, field_order, _)| {
+                |(match_order, is_dalaran, dt_priority, component, field_order, _)| {
                     (
                         *match_order,
-                        *is_rerun,
+                        *is_dalaran,
                         *dt_priority,
                         *component,
                         *field_order,

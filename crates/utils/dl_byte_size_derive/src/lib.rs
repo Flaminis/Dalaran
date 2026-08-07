@@ -33,7 +33,7 @@ thread_local! {
 /// The path the generated code uses to name the `SizeBytes` trait.
 ///
 /// Internal crates depend on `dl_byte_size` directly, so `::dl_byte_size::SizeBytes` works.
-/// External users only depend on `rerun`, which re-exports the trait as `rerun::SizeBytes`.
+/// External users only depend on `dalaran`, which re-exports the trait as `dalaran::SizeBytes`.
 /// Errors at `span` when the consuming crate depends on neither.
 fn size_bytes_path(span: Span) -> syn::Result<TokenStream2> {
     let path = SIZE_BYTES_PATH.with(|cell| cell.get_or_init(resolve_size_bytes_path).clone());
@@ -43,7 +43,7 @@ fn size_bytes_path(span: Span) -> syn::Result<TokenStream2> {
             .expect("resolved trait path should be valid tokens")),
         None => Err(syn::Error::new(
             span,
-            "`SizeBytes` trait not found in default locations, either manually set location with `#[size_bytes(crate_root = some::path)]`, or depend on `rerun` or `dl_byte_size`",
+            "`SizeBytes` trait not found in default locations, either manually set location with `#[size_bytes(crate_root = some::path)]`, or depend on `dalaran` or `dl_byte_size`",
         )),
     }
 }
@@ -51,7 +51,7 @@ fn size_bytes_path(span: Span) -> syn::Result<TokenStream2> {
 fn resolve_size_bytes_path() -> Option<String> {
     let found = crate_name("dl_byte_size")
         .ok()
-        .or_else(|| crate_name("rerun").ok())?;
+        .or_else(|| crate_name("dalaran").ok())?;
     let krate = match found {
         FoundCrate::Itself => "crate".to_owned(),
         FoundCrate::Name(name) => format!("::{name}"),

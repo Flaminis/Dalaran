@@ -1,10 +1,10 @@
-//! The core types and traits that power Rerun's data model.
+//! The core types and traits that power Dalaran's data model.
 //!
 //! The [`Archetype`] trait is the core of this crate and is a good starting point to get familiar
 //! with the code.
 //! An archetype is a logical collection of batches of [`Component`]s that play well with each other.
 //!
-//! Rerun (and the underlying Arrow data framework) is designed to work with large arrays of
+//! Dalaran (and the underlying Arrow data framework) is designed to work with large arrays of
 //! [`Component`]s, as opposed to single instances.
 //! When multiple instances of a [`Component`] are put together in an array, they yield a
 //! [`ComponentBatch`]: the atomic unit of (de)serialization.

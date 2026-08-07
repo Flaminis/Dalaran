@@ -18,7 +18,7 @@ const SPACE_BEFORE_BADGE: &str = "  ";
 
 /// Explains what the "debug only" marker means.
 pub const DEBUG_ONLY_TOOLTIP: &str =
-    "This is only shown in debug builds of the Rerun viewer, and is not part of release builds.";
+    "This is only shown in debug builds of the Dalaran viewer, and is not part of release builds.";
 
 /// The small orange "debug only" badge, as text that can be put anywhere.
 pub fn debug_only_rich_text(style: &egui::Style) -> RichText {

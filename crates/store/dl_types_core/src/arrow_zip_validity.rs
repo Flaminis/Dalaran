@@ -4,7 +4,7 @@
 //! Originally written by [Jorge Leitao](https://github.com/jorgecarleitao),
 //! under Apache License 2.0 (see `LICENSE-APACHE` file).
 //!
-//! Adapted by Rerun to work with `arrow` crate.
+//! Adapted by Dalaran to work with `arrow` crate.
 
 use arrow::buffer::NullBuffer;
 use arrow::util::bit_iterator::BitIterator;

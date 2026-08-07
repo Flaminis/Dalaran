@@ -53,7 +53,7 @@ impl eframe::App for DemoApp {
 }
 
 /// Create a demo memory tree for testing.
-/// This simulates a realistic Rerun viewer session with various loaded data.
+/// This simulates a realistic Dalaran viewer session with various loaded data.
 fn create_demo_tree() -> MemUsageTree {
     let mut root = MemUsageNode::new();
 

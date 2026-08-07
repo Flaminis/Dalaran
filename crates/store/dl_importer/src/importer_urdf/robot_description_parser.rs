@@ -3,7 +3,7 @@
 use dl_chunk::EntityPath;
 use dl_log_types::TimePoint;
 
-/// Parses URDF XML and returns the chunks emitted by Rerun's built-in URDF importer.
+/// Parses URDF XML and returns the chunks emitted by Dalaran's built-in URDF importer.
 ///
 /// `include_joint_transforms` controls whether static joint transforms from the URDF
 /// are emitted in addition to the robot geometry.

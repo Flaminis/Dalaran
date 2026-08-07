@@ -61,8 +61,8 @@ impl From<dl_log::Level> for NotificationLevel {
 }
 
 fn is_relevant(target: &str, level: dl_log::Level) -> bool {
-    let is_rerun_crate = target.starts_with("rerun") || target.starts_with("re_");
-    if !is_rerun_crate {
+    let is_dalaran_crate = target.starts_with("dalaran") || target.starts_with("re_");
+    if !is_dalaran_crate {
         return false;
     }
 

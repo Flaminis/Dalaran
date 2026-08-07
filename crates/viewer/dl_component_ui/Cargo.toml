@@ -1,5 +1,5 @@
 [package]
-description = "Provides ui editors for Rerun component data for registration with the Rerun Viewer component ui registry."
+description = "Provides ui editors for Dalaran component data for registration with the Dalaran Viewer component ui registry."
 authors.workspace = true
 edition.workspace = true
 homepage.workspace = true

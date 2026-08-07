@@ -179,18 +179,18 @@ impl ChunkStoreConfig {
     };
 
     /// Environment variable to configure [`Self::enable_changelog`].
-    pub const ENV_STORE_ENABLE_CHANGELOG: &'static str = "RERUN_STORE_ENABLE_CHANGELOG";
+    pub const ENV_STORE_ENABLE_CHANGELOG: &'static str = "DALARAN_STORE_ENABLE_CHANGELOG";
 
     /// Environment variable to configure [`Self::chunk_max_bytes`].
-    pub const ENV_CHUNK_MAX_BYTES: &'static str = "RERUN_CHUNK_MAX_BYTES";
+    pub const ENV_CHUNK_MAX_BYTES: &'static str = "DALARAN_CHUNK_MAX_BYTES";
 
     /// Environment variable to configure [`Self::chunk_max_rows`].
-    pub const ENV_CHUNK_MAX_ROWS: &'static str = "RERUN_CHUNK_MAX_ROWS";
+    pub const ENV_CHUNK_MAX_ROWS: &'static str = "DALARAN_CHUNK_MAX_ROWS";
 
     /// Environment variable to configure [`Self::chunk_max_rows_if_unsorted`].
     //
     // NOTE: Shared with the same env-var on the batcher side, for consistency.
-    pub const ENV_CHUNK_MAX_ROWS_IF_UNSORTED: &'static str = "RERUN_CHUNK_MAX_ROWS_IF_UNSORTED";
+    pub const ENV_CHUNK_MAX_ROWS_IF_UNSORTED: &'static str = "DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED";
 
     /// Creates a new `ChunkStoreConfig` using the default values, optionally overridden
     /// through the environment.
@@ -253,10 +253,10 @@ fn chunk_store_config() {
     // SAFETY: it's a test
     #[expect(unsafe_code)]
     unsafe {
-        std::env::set_var("RERUN_STORE_ENABLE_CHANGELOG", "false");
-        std::env::set_var("RERUN_CHUNK_MAX_BYTES", "42");
-        std::env::set_var("RERUN_CHUNK_MAX_ROWS", "666");
-        std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", "999");
+        std::env::set_var("DALARAN_STORE_ENABLE_CHANGELOG", "false");
+        std::env::set_var("DALARAN_CHUNK_MAX_BYTES", "42");
+        std::env::set_var("DALARAN_CHUNK_MAX_ROWS", "666");
+        std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", "999");
     };
 
     let config = ChunkStoreConfig::from_env().unwrap();

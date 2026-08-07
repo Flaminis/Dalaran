@@ -1,5 +1,5 @@
 pub mod client;
 pub mod path;
-pub mod rerun;
+pub mod dalaran;
 pub mod streaming;
 pub mod tables;

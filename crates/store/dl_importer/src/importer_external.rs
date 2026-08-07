@@ -12,19 +12,19 @@ use crate::{ImportedData, Importer as _};
 
 /// To register a new external importer, simply add an executable in your $PATH whose name
 /// starts with this prefix.
-// NOTE: this constant is duplicated in `rerun` to avoid an extra dependency there.
-pub const EXTERNAL_IMPORTER_PREFIX: &str = "rerun-importer-";
+// NOTE: this constant is duplicated in `dalaran` to avoid an extra dependency there.
+pub const EXTERNAL_IMPORTER_PREFIX: &str = "dalaran-importer-";
 
 /// Legacy prefix for external importers (deprecated since 0.32.0).
 ///
 /// Executables with this prefix are still discovered for backwards compatibility,
 /// but a deprecation warning is logged.
-const EXTERNAL_IMPORTER_PREFIX_DEPRECATED: &str = "rerun-loader-";
+const EXTERNAL_IMPORTER_PREFIX_DEPRECATED: &str = "dalaran-loader-";
 
 /// When an external [`crate::Importer`] is asked to load some data that it doesn't know
 /// how to load, it should exit with this exit code.
 // NOTE: Always keep in sync with other languages.
-// NOTE: this constant is duplicated in `rerun` to avoid an extra dependency there.
+// NOTE: this constant is duplicated in `dalaran` to avoid an extra dependency there.
 pub const EXTERNAL_IMPORTER_INCOMPATIBLE_EXIT_CODE: i32 = 66;
 
 /// Keeps track of the paths all external executable [`crate::Importer`]s.
@@ -77,9 +77,9 @@ pub static EXTERNAL_IMPORTER_PATHS: LazyLock<Vec<PathBuf>> = LazyLock::new(|| {
             if is_executable(&filepath) && (is_new_prefix || is_legacy_prefix) {
                 if is_legacy_prefix {
                     dl_log::warn_once!(
-                        "Found external loader with deprecated `rerun-loader-` prefix: {filename_str}. \
-                         Please rename it to use the `rerun-importer-` prefix instead. \
-                         Support for the `rerun-loader-` prefix will be removed in a future release."
+                        "Found external loader with deprecated `dalaran-loader-` prefix: {filename_str}. \
+                         Please rename it to use the `dalaran-importer-` prefix instead. \
+                         Support for the `dalaran-loader-` prefix will be removed in a future release."
                     );
                 }
                 Some(filepath)
@@ -122,20 +122,20 @@ pub fn iter_external_importers() -> impl ExactSizeIterator<Item = PathBuf> {
 
 /// An [`crate::Importer`] that forwards the path to load to all executables present in
 /// the user's `PATH` with a name that starts with [`EXTERNAL_IMPORTER_PREFIX`]
-/// (or the legacy `rerun-loader-` prefix).
+/// (or the legacy `dalaran-loader-` prefix).
 ///
 /// The external importers are expected to log rrd data to their standard output.
 ///
 /// Refer to our `external_importer` example for more information.
 ///
-/// Checkout our [guide](https://www.rerun.io/docs/concepts/logging-and-ingestion/importers/overview) on
+/// Checkout our [guide](https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview) on
 /// how to implement external importers.
 pub struct ExternalImporter;
 
 impl crate::Importer for ExternalImporter {
     #[inline]
     fn name(&self) -> String {
-        "rerun.importers.External".into()
+        "dalaran.importers.External".into()
     }
 
     fn import_from_path(
@@ -170,9 +170,9 @@ impl crate::Importer for ExternalImporter {
                 dl_tracing::profile_function!(exe.to_string_lossy());
 
                 let child = Command::new(exe)
-                    // Make sure the child importer doesn't think it's a Rerun Viewer, otherwise
+                    // Make sure the child importer doesn't think it's a Dalaran Viewer, otherwise
                     // it's never gonna be able to log anything.
-                    .env_remove("RERUN_APP_ONLY")
+                    .env_remove("DALARAN_APP_ONLY")
                     .arg(filepath.clone())
                     .args(args)
                     .stdout(Stdio::piped())

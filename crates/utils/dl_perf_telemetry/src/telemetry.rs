@@ -25,24 +25,24 @@ const OTLP_EXPORTER_ENV_VAR: &str = "OTEL_EXPORTER_OTLP_ENDPOINT";
 /// set only one env var.
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct ResolvedTraceEndpoints {
-    /// Rerun-authed exporter routing through the Hub frontend. Set when
-    /// the SDK-side `RERUN_TELEMETRY_ENDPOINT` env var is non-empty.
+    /// Dalaran-authed exporter routing through the Hub frontend. Set when
+    /// the SDK-side `DALARAN_TELEMETRY_ENDPOINT` env var is non-empty.
     ///
     /// The value is the `http(s)://` transport URL the exporter dials —
-    /// the input rewritten to its underlying transport (`rerun://` and
-    /// `rerun+https://` → `https://`, `rerun+http://` → `http://`) or
+    /// the input rewritten to its underlying transport (`dalaran://` and
+    /// `dalaran+https://` → `https://`, `dalaran+http://` → `http://`) or
     /// passed through verbatim for plain `http(s)://` schemes. Any other
     /// scheme is a config error returned as `Err` by `resolve`.
     ///
     /// Never mirrored into `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` — keeping
     /// values set via the SDK-side knob out of the standard env var is
     /// the entire point of having a dedicated knob.
-    rerun_authed: Option<String>,
+    dalaran_authed: Option<String>,
 
     /// Plain OTLP gRPC exporter driven by the standard
     /// `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` (or its
     /// `OTEL_EXPORTER_OTLP_ENDPOINT` umbrella fallback). The URL is
-    /// passed through verbatim — we never inspect it for `rerun://`
+    /// passed through verbatim — we never inspect it for `dalaran://`
     /// schemes; that's the SDK-side knob's job.
     ///
     /// `Telemetry::init` mirrors this URL back into
@@ -55,41 +55,41 @@ impl ResolvedTraceEndpoints {
     /// Resolve which exporters (if any) to build from the two trace-endpoint
     /// inputs.
     ///
-    /// * `rerun_telemetry_endpoint`: raw value of the SDK-side
-    ///   `RERUN_TELEMETRY_ENDPOINT` env var (empty when unset).
+    /// * `dalaran_telemetry_endpoint`: raw value of the SDK-side
+    ///   `DALARAN_TELEMETRY_ENDPOINT` env var (empty when unset).
     /// * `standard_otel_endpoint`: value of
     ///   `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` already merged with the
     ///   `OTEL_EXPORTER_OTLP_ENDPOINT` umbrella fallback.
     ///
     /// The two inputs are independent — both, either, or neither may
     /// produce a destination. The standard endpoint is *never* parsed for
-    /// `rerun://` schemes; server-side configurations point at plain
+    /// `dalaran://` schemes; server-side configurations point at plain
     /// Alloy / Jaeger / Tempo collectors through this knob.
     ///
-    /// Accepted schemes for `RERUN_TELEMETRY_ENDPOINT`: `rerun`,
-    /// `rerun+http`, `rerun+https`, `http`, `https`. Anything else is a
+    /// Accepted schemes for `DALARAN_TELEMETRY_ENDPOINT`: `dalaran`,
+    /// `dalaran+http`, `dalaran+https`, `http`, `https`. Anything else is a
     /// config error returned as `Err` even when `standard_otel_endpoint`
     /// is valid — a typo in the dedicated knob surfaces at init time
     /// instead of silently dropping the Hub destination.
     fn resolve(
-        rerun_telemetry_endpoint: &str,
+        dalaran_telemetry_endpoint: &str,
         standard_otel_endpoint: &str,
     ) -> anyhow::Result<Self> {
-        let rerun_authed = if rerun_telemetry_endpoint.is_empty() {
+        let dalaran_authed = if dalaran_telemetry_endpoint.is_empty() {
             None
         } else {
             let reject = || {
                 anyhow::anyhow!(
-                    "RERUN_TELEMETRY_ENDPOINT={rerun_telemetry_endpoint:?} is not a supported endpoint URL — \
-                     accepted schemes are rerun://, rerun+http://, rerun+https://, http://, https://"
+                    "DALARAN_TELEMETRY_ENDPOINT={dalaran_telemetry_endpoint:?} is not a supported endpoint URL — \
+                     accepted schemes are dalaran://, dalaran+http://, dalaran+https://, http://, https://"
                 )
             };
-            let (scheme, rest) = rerun_telemetry_endpoint
+            let (scheme, rest) = dalaran_telemetry_endpoint
                 .split_once("://")
                 .ok_or_else(reject)?;
             let transport_scheme = match scheme {
-                "rerun" | "rerun+https" | "https" => "https",
-                "rerun+http" | "http" => "http",
+                "dalaran" | "dalaran+https" | "https" => "https",
+                "dalaran+http" | "http" => "http",
                 _ => return Err(reject()),
             };
             Some(format!("{transport_scheme}://{rest}"))
@@ -99,40 +99,40 @@ impl ResolvedTraceEndpoints {
             (!standard_otel_endpoint.is_empty()).then(|| standard_otel_endpoint.to_owned());
 
         Ok(Self {
-            rerun_authed,
+            dalaran_authed,
             standard,
         })
     }
 
     fn any(&self) -> bool {
-        self.rerun_authed.is_some() || self.standard.is_some()
+        self.dalaran_authed.is_some() || self.standard.is_some()
     }
 
     /// Short tag used in the `Telemetry initialized` log line and the
     /// init-failure stderr fallback. Keep the strings stable — operators
     /// grep these out of logs.
     fn trace_mode(&self) -> &'static str {
-        match (self.rerun_authed.is_some(), self.standard.is_some()) {
-            (true, true) => "rerun-authed+otlp",
-            (true, false) => "rerun-authed",
+        match (self.dalaran_authed.is_some(), self.standard.is_some()) {
+            (true, true) => "dalaran-authed+otlp",
+            (true, false) => "dalaran-authed",
             (false, true) => "otlp",
             (false, false) => "off",
         }
     }
 
     /// Human-readable destination(s) for the same log lines. Renders the
-    /// dual-publish case as `"<rerun_url> + <std_url>"` so both URLs are
+    /// dual-publish case as `"<dalaran_url> + <std_url>"` so both URLs are
     /// visible in one grep.
     fn summary(&self) -> String {
-        match (&self.rerun_authed, &self.standard) {
-            (Some(rerun), Some(std)) => format!("{rerun} + {std}"),
+        match (&self.dalaran_authed, &self.standard) {
+            (Some(dalaran), Some(std)) => format!("{dalaran} + {std}"),
             (Some(url), None) | (None, Some(url)) => url.clone(),
             (None, None) => "off".to_owned(),
         }
     }
 }
 
-/// `SpanExporter` decorator that refreshes the Rerun SDK auth token just-in-time
+/// `SpanExporter` decorator that refreshes the Dalaran SDK auth token just-in-time
 /// before each export, delegating the actual gRPC send to the inner OTLP
 /// exporter.
 ///
@@ -207,29 +207,29 @@ where
 }
 
 /// Build an OTLP `SpanExporter` that pushes through a tonic Channel whose
-/// outbound requests carry a Rerun SDK Bearer token in the `authorization`
+/// outbound requests carry a Dalaran SDK Bearer token in the `authorization`
 /// metadata. The token comes from
 /// [`dl_auth::credentials::CliCredentialsProvider`] — same global credentials
-/// store the rest of the SDK uses (populated by `rerun auth login`) — and is
+/// store the rest of the SDK uses (populated by `dalaran auth login`) — and is
 /// refreshed just before each export by [`AuthRefreshingSpanExporter`].
 ///
 /// The actual TCP/TLS handshake is deferred to first use via
 /// `Endpoint::connect_lazy()` so init stays sync.
-fn build_rerun_authed_span_exporter(
+fn build_dalaran_authed_span_exporter(
     transport_url: &str,
 ) -> anyhow::Result<AuthRefreshingSpanExporter<dl_auth::credentials::CliCredentialsProvider>> {
     use dl_auth::credentials::CliCredentialsProvider;
 
-    build_rerun_authed_span_exporter_with_provider(
+    build_dalaran_authed_span_exporter_with_provider(
         transport_url,
         Arc::new(CliCredentialsProvider::new()),
     )
 }
 
 /// Inner constructor parameterized on the [`dl_auth::credentials::CredentialsProvider`].
-/// The public [`build_rerun_authed_span_exporter`] wires up `CliCredentialsProvider`;
+/// The public [`build_dalaran_authed_span_exporter`] wires up `CliCredentialsProvider`;
 /// tests inject [`dl_auth::credentials::StaticCredentialsProvider`] with a known JWT.
-fn build_rerun_authed_span_exporter_with_provider<P>(
+fn build_dalaran_authed_span_exporter_with_provider<P>(
     transport_url: &str,
     provider: Arc<P>,
 ) -> anyhow::Result<AuthRefreshingSpanExporter<P>>
@@ -253,14 +253,14 @@ where
     let channel = endpoint.connect_lazy();
 
     // Single combined interceptor that both injects the Bearer token AND
-    // delegates to `RerunVersionInterceptor` to set `x-rerun-client-version`.
+    // delegates to `DalaranVersionInterceptor` to set `x-dalaran-client-version`.
     // Each call to `TonicExporterBuilder::with_interceptor` only accepts one
     // interceptor, so we compose them here. The standard SDK setup uses
-    // `new_rerun_client_headers_layer()` but that's a tower::Layer and we'd
+    // `new_dalaran_client_headers_layer()` but that's a tower::Layer and we'd
     // need to pass a layered service via `with_channel`, which the OTLP
     // builder doesn't allow.
     let token_for_interceptor: Arc<parking_lot::RwLock<String>> = Arc::clone(&token_cache);
-    let mut version_interceptor = dl_grpc_headers::RerunVersionInterceptor::new_client(None, None);
+    let mut version_interceptor = dl_grpc_headers::DalaranVersionInterceptor::new_client(None, None);
     // Rising-edge gate so a malformed cached token warns once per failure run,
     // not on every export. Mirrors `refresh_failing` on the wrapping struct.
     // Arc because the interceptor closure has to be `Clone` for `with_interceptor`.
@@ -372,7 +372,7 @@ pub fn is_telemetry_active() -> bool {
 /// **Concurrency:** mutates a process-global atomic. Tests that call this
 /// (or assert on `TELEMETRY_ACTIVE` / `ACTIVE_TRACING_SESSION_COUNT`) are
 /// race-free only when each test runs in its own process. Use `cargo
-/// nextest` (the project's standard, per `rerun/CLAUDE.md`) — it spawns
+/// nextest` (the project's standard, per `dalaran/CLAUDE.md`) — it spawns
 /// a subprocess per test. Plain `cargo test` runs tests as threads inside
 /// one process and will be flaky against these tests.
 #[cfg(test)]
@@ -455,11 +455,11 @@ impl Drop for Telemetry {
 
 impl Telemetry {
     /// Same as [`Self::init`], plus registers `reader` as the host-language
-    /// callback that [`crate::current_rerun_session_id`] consults on its slow
+    /// callback that [`crate::current_dalaran_session_id`] consults on its slow
     /// path (and that [`crate::with_current_tracing_session`] invokes once at
     /// the boundary).
     ///
-    /// Intended for SDK bindings (today: `rerun_py`) that hold the active
+    /// Intended for SDK bindings (today: `dalaran_py`) that hold the active
     /// session id in a host-language-specific store this crate has no way to
     /// reach. First-call-wins: the registration happens once, atomically,
     /// before `init` returns, and any subsequent registration attempt is a
@@ -521,8 +521,8 @@ impl Telemetry {
         // other OTel-aware libraries (e.g. Python's
         // `opentelemetry-exporter-otlp-proto-grpc`) sharing the same process.
         // Env-only; no clap arg, no CLI flag.
-        let rerun_telemetry_endpoint =
-            std::env::var("RERUN_TELEMETRY_ENDPOINT").unwrap_or_default();
+        let dalaran_telemetry_endpoint =
+            std::env::var("DALARAN_TELEMETRY_ENDPOINT").unwrap_or_default();
 
         // Decide which OTLP exporters the SDK should build. See
         // [`ResolvedTraceEndpoints`] for the rules — the two endpoints are
@@ -530,13 +530,13 @@ impl Telemetry {
         // (dual-publish to Hub and a local collector). When neither is set,
         // spans still flow through the in-process pipeline but nothing
         // leaves the process. Gated on `enabled` so a malformed
-        // `RERUN_TELEMETRY_ENDPOINT` doesn't break a `TELEMETRY_ENABLED=false`
+        // `DALARAN_TELEMETRY_ENDPOINT` doesn't break a `TELEMETRY_ENABLED=false`
         // process (nor a `TRACY_ENABLED=true`-only one).
         let trace_endpoints = if enabled {
-            ResolvedTraceEndpoints::resolve(&rerun_telemetry_endpoint, &trace_endpoint)?
+            ResolvedTraceEndpoints::resolve(&dalaran_telemetry_endpoint, &trace_endpoint)?
         } else {
             ResolvedTraceEndpoints {
-                rerun_authed: None,
+                dalaran_authed: None,
                 standard: None,
             }
         };
@@ -608,8 +608,8 @@ impl Telemetry {
                 }
                 // Mirror the `OTEL_*`-sourced trace endpoint back into its
                 // env var so the OTel SDK's exporter builder reads it from
-                // there — origin/main behavior. `RERUN_TELEMETRY_ENDPOINT`
-                // values live in `trace_endpoints.rerun_authed` and are
+                // there — origin/main behavior. `DALARAN_TELEMETRY_ENDPOINT`
+                // values live in `trace_endpoints.dalaran_authed` and are
                 // never mirrored here regardless of their URL scheme;
                 // keeping them out of `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT`
                 // is the entire point of having a dedicated knob.
@@ -775,23 +775,23 @@ impl Telemetry {
                             .build()
                     };
 
-                    // Tag root spans with `rerun_session_id` whenever any
+                    // Tag root spans with `dalaran_session_id` whenever any
                     // exporter is active, so Tempo can find client-side
-                    // traces by `{ .rerun_session_id = "rs_…" }`. When a
+                    // traces by `{ .dalaran_session_id = "rs_…" }`. When a
                     // vanilla OTLP destination is configured alongside Hub,
                     // it also receives the attribute on root spans —
                     // downstream tools that don't know about it ignore it.
                     builder = builder
-                        .with_span_processor(crate::tracestate::RerunSessionRootSpanProcessor);
+                        .with_span_processor(crate::tracestate::DalaranSessionRootSpanProcessor);
 
-                    if let Some(transport_url) = &trace_endpoints.rerun_authed {
-                        // `RERUN_TELEMETRY_ENDPOINT` exporter, already
+                    if let Some(transport_url) = &trace_endpoints.dalaran_authed {
+                        // `DALARAN_TELEMETRY_ENDPOINT` exporter, already
                         // normalized to its `http(s)://` transport form by
                         // `ResolvedTraceEndpoints::resolve`. Injects the
                         // SDK's auth token on every export — the dedicated
-                        // knob always opts into the Rerun auth path
+                        // knob always opts into the Dalaran auth path
                         // regardless of scheme.
-                        let exporter = build_rerun_authed_span_exporter(transport_url)?;
+                        let exporter = build_dalaran_authed_span_exporter(transport_url)?;
                         builder = builder.with_span_processor(
                             BatchSpanProcessor::builder(exporter)
                                 .with_batch_config(make_batch_config())
@@ -819,7 +819,7 @@ impl Telemetry {
 
                 // Used by `TracingInjectorInterceptor` to encode the trace information into the
                 // outbound request headers. `TraceStateEnricher` runs after the W3C propagator
-                // and merges `rerun_session_id=<id>` into `tracestate` whenever a tracing
+                // and merges `dalaran_session_id=<id>` into `tracestate` whenever a tracing
                 // session is active (Rust `with_tracing_session` or Python `tracing_session()`).
                 // With no active scope it is a no-op.
                 let propagators: Vec<
@@ -1126,45 +1126,45 @@ mod tests {
     #[derive(Debug)]
     enum Want {
         Endpoints {
-            rerun_authed: Option<&'static str>,
+            dalaran_authed: Option<&'static str>,
             standard: Option<&'static str>,
         },
         Err,
     }
 
     /// Shorthand constructors for the `Want::Endpoints` rows.
-    const fn rerun_only(url: &'static str) -> Want {
+    const fn dalaran_only(url: &'static str) -> Want {
         Want::Endpoints {
-            rerun_authed: Some(url),
+            dalaran_authed: Some(url),
             standard: None,
         }
     }
     const fn standard_only(url: &'static str) -> Want {
         Want::Endpoints {
-            rerun_authed: None,
+            dalaran_authed: None,
             standard: Some(url),
         }
     }
-    const fn both(rerun_authed: &'static str, standard: &'static str) -> Want {
+    const fn both(dalaran_authed: &'static str, standard: &'static str) -> Want {
         Want::Endpoints {
-            rerun_authed: Some(rerun_authed),
+            dalaran_authed: Some(dalaran_authed),
             standard: Some(standard),
         }
     }
     const NONE: Want = Want::Endpoints {
-        rerun_authed: None,
+        dalaran_authed: None,
         standard: None,
     };
 
     /// `ResolvedTraceEndpoints::resolve` behavior, table-driven.
     ///
-    /// Each row: `(rerun_telemetry_endpoint, standard_otel_endpoint, expected)`.
+    /// Each row: `(dalaran_telemetry_endpoint, standard_otel_endpoint, expected)`.
     #[test]
     fn resolve_behavior() {
         let cases: &[(&str, &str, Want)] = &[
             // -- No exporter ---------------------------------------------
             ("", "", NONE),
-            // -- Only OTEL_*: standard, verbatim (never parsed for `rerun://`) -
+            // -- Only OTEL_*: standard, verbatim (never parsed for `dalaran://`) -
             (
                 "",
                 "https://collector:4317",
@@ -1178,55 +1178,55 @@ mod tests {
             ("", "grpc://collector", standard_only("grpc://collector")),
             (
                 "",
-                "rerun://api.example.com",
-                standard_only("rerun://api.example.com"),
+                "dalaran://api.example.com",
+                standard_only("dalaran://api.example.com"),
             ),
-            // -- Only RERUN_*, `rerun*` schemes: authed (normalized) -----
+            // -- Only DALARAN_*, `dalaran*` schemes: authed (normalized) -----
             (
-                "rerun://api.example.com",
+                "dalaran://api.example.com",
                 "",
-                rerun_only("https://api.example.com"),
-            ),
-            (
-                "rerun+https://api.example.com:4317",
-                "",
-                rerun_only("https://api.example.com:4317"),
+                dalaran_only("https://api.example.com"),
             ),
             (
-                "rerun+http://localhost:4317",
+                "dalaran+https://api.example.com:4317",
                 "",
-                rerun_only("http://localhost:4317"),
+                dalaran_only("https://api.example.com:4317"),
             ),
             (
-                "rerun://host/foo/bar?x=1",
+                "dalaran+http://localhost:4317",
                 "",
-                rerun_only("https://host/foo/bar?x=1"),
+                dalaran_only("http://localhost:4317"),
             ),
-            // -- Only RERUN_*, plain `http(s)://`: still authed, URL unchanged ---
+            (
+                "dalaran://host/foo/bar?x=1",
+                "",
+                dalaran_only("https://host/foo/bar?x=1"),
+            ),
+            // -- Only DALARAN_*, plain `http(s)://`: still authed, URL unchanged ---
             (
                 "https://api.example.com:4317",
                 "",
-                rerun_only("https://api.example.com:4317"),
+                dalaran_only("https://api.example.com:4317"),
             ),
             (
                 "http://localhost:4317",
                 "",
-                rerun_only("http://localhost:4317"),
+                dalaran_only("http://localhost:4317"),
             ),
-            // -- Invalid RERUN_*: Err (no silent fallback to OTEL_*) -----
+            // -- Invalid DALARAN_*: Err (no silent fallback to OTEL_*) -----
             ("ftp://collector", "", Want::Err),
             ("grpc://collector", "", Want::Err),
             ("garbage", "", Want::Err),
             ("api.example.com", "", Want::Err),
-            ("RERUN://host", "", Want::Err), // Case-sensitive: `dl_uri::Scheme` convention.
-            ("Rerun+Https://host", "", Want::Err),
+            ("DALARAN://host", "", Want::Err), // Case-sensitive: `dl_uri::Scheme` convention.
+            ("Dalaran+Https://host", "", Want::Err),
             ("HTTPS://host", "", Want::Err),
-            ("rerun:/host", "", Want::Err),
-            ("rerun", "", Want::Err),
-            ("ftp://bad", "https://otel:4317", Want::Err), // Malformed RERUN_* does NOT fall back to OTEL_*.
+            ("dalaran:/host", "", Want::Err),
+            ("dalaran", "", Want::Err),
+            ("ftp://bad", "https://otel:4317", Want::Err), // Malformed DALARAN_* does NOT fall back to OTEL_*.
             // -- Both set: dual-publish (both exporters active) ----------
             (
-                "rerun://hub",
+                "dalaran://hub",
                 "https://collector",
                 both("https://hub", "https://collector"),
             ),
@@ -1236,31 +1236,31 @@ mod tests {
                 both("http://hub", "https://collector"),
             ),
             (
-                "rerun+http://hub:4317",
+                "dalaran+http://hub:4317",
                 "https://collector:4317",
                 both("http://hub:4317", "https://collector:4317"),
             ),
         ];
 
-        for (rerun, otel, want) in cases {
-            let got = ResolvedTraceEndpoints::resolve(rerun, otel);
+        for (dalaran, otel, want) in cases {
+            let got = ResolvedTraceEndpoints::resolve(dalaran, otel);
             let matches = match (&got, want) {
                 (Err(_), Want::Err) => true,
                 (
                     Ok(endpoints),
                     Want::Endpoints {
-                        rerun_authed,
+                        dalaran_authed,
                         standard,
                     },
                 ) => {
-                    endpoints.rerun_authed.as_deref() == *rerun_authed
+                    endpoints.dalaran_authed.as_deref() == *dalaran_authed
                         && endpoints.standard.as_deref() == *standard
                 }
                 _ => false,
             };
             assert!(
                 matches,
-                "resolve({rerun:?}, {otel:?})\n  got:      {got:?}\n  expected: {want:?}",
+                "resolve({dalaran:?}, {otel:?})\n  got:      {got:?}\n  expected: {want:?}",
             );
         }
     }
@@ -1277,7 +1277,7 @@ mod tests {
         let jwt = dl_auth::Jwt::try_from(TEST_JWT.to_owned()).unwrap();
         let provider = super::Arc::new(StaticCredentialsProvider::new(jwt));
         let result =
-            super::build_rerun_authed_span_exporter_with_provider("not a url at all", provider);
+            super::build_dalaran_authed_span_exporter_with_provider("not a url at all", provider);
         assert!(result.is_err(), "expected Err for malformed URL");
     }
 
@@ -1299,7 +1299,7 @@ mod tests {
         let provider = super::Arc::new(StaticCredentialsProvider::new(jwt));
 
         let exporter =
-            super::build_rerun_authed_span_exporter_with_provider(&collector.endpoint(), provider)
+            super::build_dalaran_authed_span_exporter_with_provider(&collector.endpoint(), provider)
                 .unwrap();
 
         let tracer_provider = SdkTracerProvider::builder()

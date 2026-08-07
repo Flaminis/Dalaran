@@ -134,7 +134,7 @@ impl<'a> RecordingPanelData<'a> {
 
         let show_example_section = ctx
             .app_options
-            .include_rerun_examples_button_in_recordings_panel
+            .include_dalaran_examples_button_in_recordings_panel
             && !hide_examples
             || !example_apps.is_empty();
 

@@ -1,4 +1,4 @@
-//! Rerun Viewport Blueprint
+//! Dalaran Viewport Blueprint
 //!
 //! This crate provides blueprint (i.e. description) for how to render the viewport.
 

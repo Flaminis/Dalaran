@@ -3,21 +3,21 @@ use std::sync::Arc;
 use arrow::array::{Float32Array, RecordBatch};
 use itertools::Itertools as _;
 use dl_arrow_util::{RecordBatchExt as _, RecordBatchTestExt as _, SchemaTestExt as _};
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     FetchChunksRequest, GetRrdManifestRequest, ScanSegmentTableRequest,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_sdk::AsComponents;
 use dl_sdk::external::dl_log_encoding::{RawRrdManifest, ToApplication as _};
 use dl_sdk_types::AnyValues;
 use dl_types_core::SegmentId;
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, entry_name,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
 };
 
-pub async fn simple_dataset_rrd_manifest(service: impl RerunCloudService) {
+pub async fn simple_dataset_rrd_manifest(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -61,7 +61,7 @@ pub async fn simple_dataset_rrd_manifest(service: impl RerunCloudService) {
     insta::assert_snapshot!("fetch_chunks_from_rrd_manifest", printed);
 }
 
-pub async fn layered_segment(service: impl RerunCloudService) {
+pub async fn layered_segment(service: impl DalaranCloudService) {
     let dataset_name = "my_dataset";
     let segment_name = "my_segment";
 
@@ -130,7 +130,7 @@ pub async fn layered_segment(service: impl RerunCloudService) {
     assert_eq!(tonic::Code::NotFound, res.err().unwrap().code());
 }
 
-pub async fn layered_segment_stress(service: impl RerunCloudService) {
+pub async fn layered_segment_stress(service: impl DalaranCloudService) {
     let dataset_name = "my_dataset";
     let segment_name = "my_segment";
 
@@ -245,7 +245,7 @@ pub async fn layered_segment_stress(service: impl RerunCloudService) {
     }
 }
 
-pub async fn unregistered_segment(service: impl RerunCloudService) {
+pub async fn unregistered_segment(service: impl DalaranCloudService) {
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
         [
@@ -276,7 +276,7 @@ pub async fn unregistered_segment(service: impl RerunCloudService) {
     assert_eq!(tonic::Code::NotFound, res.err().unwrap().code());
 }
 
-pub async fn segment_id_not_found(service: impl RerunCloudService) {
+pub async fn segment_id_not_found(service: impl DalaranCloudService) {
     let dataset_name = "my_dataset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -297,7 +297,7 @@ pub async fn segment_id_not_found(service: impl RerunCloudService) {
 // ---
 
 async fn dataset_rrd_manifest_snapshot(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     segment_id: SegmentId,
     dataset_name: &str,
     snapshot_name: &str,

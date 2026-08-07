@@ -1,4 +1,4 @@
-//! Official gRPC client for the Rerun Data Protocol.
+//! Official gRPC client for the Dalaran Data Protocol.
 
 mod analytics_exporter;
 mod api_error;

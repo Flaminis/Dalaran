@@ -190,7 +190,7 @@ mod design_token_access {
     ) -> Result<(), DesignTokensAlreadyInitializedError> {
         // Mirrors the OnceLock-based variant: only succeed if the static is not yet initialized.
         // In hot-reload mode the file watcher may overwrite this later — that's intentional, as
-        // this build flavor is only enabled inside the rerun workspace, where the file watcher
+        // this build flavor is only enabled inside the dalaran workspace, where the file watcher
         // already leaks on every reload.
         let leaked: &'static DesignTokensPerTheme =
             Box::leak(Box::new(DesignTokensPerTheme { dark, light }));

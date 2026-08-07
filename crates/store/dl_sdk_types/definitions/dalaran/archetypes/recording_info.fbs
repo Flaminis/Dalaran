@@ -1,0 +1,20 @@
+
+namespace dalaran.archetypes;
+
+// ---
+
+/// A list of properties associated with a recording.
+///
+/// \example concepts/recording_properties !api title="Setting recording properties"
+table RecordingInfo (
+  "attr.dalaran.state": "stable",
+  "attr.dalaran.visualizer_none"
+) {
+  /// When the recording started.
+  ///
+  /// Should be an absolute time, i.e. relative to Unix Epoch.
+  start_time: dalaran.components.Timestamp ("attr.dalaran.component_optional", nullable, order: 1000);
+
+  /// A user-chosen name for the recording.
+  name: dalaran.components.Name ("attr.dalaran.component_optional", nullable, order: 2000);
+}

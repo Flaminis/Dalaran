@@ -9,13 +9,13 @@ use tower::layer::Layer;
 
 /// The HTTP header key for the request trace ID, used to correlate responses with
 /// distributed traces for debugging and support.
-pub const RERUN_HTTP_HEADER_REQUEST_TRACE_ID: &str = "x-request-trace-id";
+pub const DALARAN_HTTP_HEADER_REQUEST_TRACE_ID: &str = "x-request-trace-id";
 
 /// A function that returns the current trace ID, if any.
 pub type TraceIdProvider = Arc<dyn Fn() -> Option<TraceId> + Send + Sync>;
 
 /// A [`tower::Layer`] that injects a trace ID into all responses
-/// via the [`RERUN_HTTP_HEADER_REQUEST_TRACE_ID`] header.
+/// via the [`DALARAN_HTTP_HEADER_REQUEST_TRACE_ID`] header.
 ///
 /// The trace ID is obtained by calling the provided [`TraceIdProvider`].
 ///
@@ -43,7 +43,7 @@ impl<S> Layer<S> for TraceIdLayer {
 }
 
 /// A [`tower::Service`] that injects a trace ID into all responses
-/// via the [`RERUN_HTTP_HEADER_REQUEST_TRACE_ID`] header.
+/// via the [`DALARAN_HTTP_HEADER_REQUEST_TRACE_ID`] header.
 ///
 /// See [`TraceIdLayer`].
 #[derive(Clone)]
@@ -83,7 +83,7 @@ where
                     Ok(header_value) => {
                         response
                             .headers_mut()
-                            .insert(RERUN_HTTP_HEADER_REQUEST_TRACE_ID, header_value);
+                            .insert(DALARAN_HTTP_HEADER_REQUEST_TRACE_ID, header_value);
                     }
                     Err(err) => {
                         tracing::warn!(

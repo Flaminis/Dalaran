@@ -259,7 +259,7 @@ mod reject_unsupported_widenings_tests {
         Schema::try_merge([lhs, rhs])
             .expect("try_merge accepts: Union identical, only sibling widens");
 
-        // The Rerun gate rejects, even though `try_merge` would not widen the Union.
+        // The Dalaran gate rejects, even though `try_merge` would not widen the Union.
         let err = reject_unsupported_widenings(&wide_struct).unwrap_err();
         assert!(err.to_string().contains("union-typed"), "msg: {err}");
     }

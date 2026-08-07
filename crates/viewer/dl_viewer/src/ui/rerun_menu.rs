@@ -1,4 +1,4 @@
-//! The main Rerun drop-down menu found in the top panel.
+//! The main Dalaran drop-down menu found in the top panel.
 
 use std::fmt::Write as _;
 
@@ -17,14 +17,14 @@ use crate::App;
 const SPACING: f32 = 12.0;
 
 impl App {
-    pub fn rerun_menu_button_ui(
+    pub fn dalaran_menu_button_ui(
         &mut self,
         render_state: Option<&egui_wgpu::RenderState>,
         _store_context: Option<&ActiveStoreContext<'_>>,
         ui: &mut egui::Ui,
     ) {
         let icon_tint = ui.tokens().strong_fg_color;
-        let image = dl_ui::icons::RERUN_WORDMARK
+        let image = dl_ui::icons::DALARAN_WORDMARK
             .as_image()
             .max_height(12.0)
             .tint(icon_tint)
@@ -37,7 +37,7 @@ impl App {
                 ScrollArea::vertical()
                     .max_height(ui.content_rect().height() - 16.0)
                     .show(ui, |ui| {
-                        self.rerun_menu_ui(ui, render_state, _store_context);
+                        self.dalaran_menu_ui(ui, render_state, _store_context);
                     });
             });
     }
@@ -69,7 +69,7 @@ impl App {
         }
     }
 
-    fn rerun_menu_ui(
+    fn dalaran_menu_ui(
         &mut self,
         ui: &mut egui::Ui,
         render_state: Option<&egui_wgpu::RenderState>,
@@ -80,7 +80,7 @@ impl App {
 
         let build_info = self.build_info();
         ui.menu_button("About", |ui| {
-            about_rerun_ui(ui, build_info, render_state);
+            about_dalaran_ui(ui, build_info, render_state);
         });
 
         ui.add_space(SPACING);
@@ -176,7 +176,7 @@ impl App {
 
         UICommand::OpenWebsite.menu_button_ui(ui, &self.command_sender);
         UICommand::OpenWebHelp.menu_button_ui(ui, &self.command_sender);
-        UICommand::OpenRerunDiscord.menu_button_ui(ui, &self.command_sender);
+        UICommand::OpenDalaranDiscord.menu_button_ui(ui, &self.command_sender);
 
         #[cfg(not(target_arch = "wasm32"))]
         {
@@ -211,7 +211,7 @@ impl App {
             ui.add_enabled_ui(recording_id.is_some(), |ui| {
                 if ui
                     .add(save_recording_button)
-                    .on_hover_text("Save all data to a Rerun data file (.rrd)")
+                    .on_hover_text("Save all data to a Dalaran data file (.rrd)")
                     .clicked()
                     && let Some(recording_id) = recording_id
                 {
@@ -232,7 +232,7 @@ impl App {
                 if ui
                     .add_enabled(loop_selection.is_some(), save_selection_button)
                     .on_hover_text(
-                        "Save data for the current loop selection to a Rerun data file (.rrd)",
+                        "Save data for the current loop selection to a Dalaran data file (.rrd)",
                     )
                     .clicked()
                     && let Some(recording_id) = recording_id
@@ -251,9 +251,9 @@ impl App {
 
 /// The about-menu serves two purposes:
 ///
-/// A) Tell users about what Rerun is, in case they just stumbled upon it online.
+/// A) Tell users about what Dalaran is, in case they just stumbled upon it online.
 /// B) Show detailed build information, that can be used when reporting bugs.
-pub fn about_rerun_ui(
+pub fn about_dalaran_ui(
     ui: &mut egui::Ui,
     build_info: &dl_build_info::BuildInfo,
     render_state: Option<&egui_wgpu::RenderState>,
@@ -266,7 +266,7 @@ pub fn about_rerun_ui(
         llvm_version,
         git_hash,
         git_branch: _,
-        is_in_rerun_workspace: _,
+        is_in_dalaran_workspace: _,
         target_triple,
         datetime,
         is_debug_build,
@@ -278,17 +278,17 @@ pub fn about_rerun_ui(
 
     ui.horizontal(|ui|{
         ui.add(
-            dl_ui::icons::RERUN_LOGO
+            dl_ui::icons::DALARAN_LOGO
                 .as_image()
                 .fit_to_exact_size(egui::Vec2::splat(logo_size))
                 .corner_radius(4.0)
-                .alt_text("Rerun"),
+                .alt_text("Dalaran"),
         );
 
         ui.vertical(|ui|{
             ui.style_mut().wrap_mode = Some(egui::TextWrapMode::Wrap);
             ui.label(
-                "Rerun is a toolchain for robotics and physical AI that makes it easy to log, query, visualize, and train on multi-rate, multimodal data.",
+                "Dalaran is a toolchain for robotics and physical AI that makes it easy to log, query, visualize, and train on multi-rate, multimodal data.",
             );
 
             ui.add_space(4.0);
@@ -296,7 +296,7 @@ pub fn about_rerun_ui(
             ui.horizontal(|ui| {
                 ui.spacing_mut().item_spacing.x = 0.0;
                 ui.label("Learn more at ");
-                ui.hyperlink_to("rerun.io", "https://rerun.io/");
+                ui.hyperlink_to("dalaran.dev", "https://dalaran.dev/");
                 ui.label(".");
             });
         });
@@ -334,9 +334,9 @@ pub fn about_rerun_ui(
             ui.end_row();
         }
 
-        // It is really the features of `rerun-cli` (the `rerun` binary) that are interesting.
+        // It is really the features of `dalaran-cli` (the `dalaran` binary) that are interesting.
         // For the web-viewer (`crate_name: "dl_viewer"`) it is much less interesting.
-        if crate_name == "rerun-cli" && !features.is_empty() {
+        if crate_name == "dalaran-cli" && !features.is_empty() {
             ui.label("Features");
             ui.label(features.as_ref());
             ui.end_row();

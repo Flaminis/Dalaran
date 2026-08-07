@@ -336,9 +336,9 @@ fn grid_content_ui(ctx: &AppContext<'_>, db: &EntityDb, ui: &mut egui::Ui, ui_la
                     * {ENV_CHUNK_MAX_ROWS_IF_UNSORTED}
                     * {ENV_CHUNK_MAX_BYTES}
 
-                    This compaction process is an ephemeral, in-memory optimization of the Rerun viewer.\
+                    This compaction process is an ephemeral, in-memory optimization of the Dalaran viewer.\
                     It will not modify the recording itself: use the `Save` command of the viewer, or the \
-                    `rerun rrd optimize` CLI tool if you wish to persist the compacted results, which will \
+                    `dalaran rrd optimize` CLI tool if you wish to persist the compacted results, which will \
                     make future runs cheaper.
                     ",
                         chunk_max_rows = dl_format::format_uint(chunk_max_rows),

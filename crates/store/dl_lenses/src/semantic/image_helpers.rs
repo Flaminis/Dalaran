@@ -1,4 +1,4 @@
-//! Helper functions for converting raw image data to Rerun image components.
+//! Helper functions for converting raw image data to Dalaran image components.
 
 use std::sync::Arc;
 
@@ -15,7 +15,7 @@ use dl_sdk_types::datatypes::ImageFormat;
 use crate::semantic::helpers::get_field_as;
 
 /// Returns a pipe-compatible function that converts a struct with `width`, `height`, and
-/// `encoding` fields into a Rerun [`ImageFormat`] struct array.
+/// `encoding` fields into a Dalaran [`ImageFormat`] struct array.
 pub(crate) fn encoding_to_image_format()
 -> impl Fn(&ArrayRef) -> Result<Option<ArrayRef>, Error> + Send + Sync {
     move |source: &ArrayRef| {
@@ -88,7 +88,7 @@ pub(crate) fn extract_image_buffer()
             let height = height_array.value(i) as usize;
             let blob = data_array.value(i);
 
-            // How many bytes Rerun expects for this encoding (e.g. 8x8 16UC1 -> 128).
+            // How many bytes Dalaran expects for this encoding (e.g. 8x8 16UC1 -> 128).
             let encoding = parse_encoding(encoding_array.value(i))?;
             let total_num_bytes = encoding
                 .to_image_format([width_array.value(i), height_array.value(i)])

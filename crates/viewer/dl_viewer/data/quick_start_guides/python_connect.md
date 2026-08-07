@@ -1,13 +1,13 @@
 # Python quick start
 
-## Installing the Rerun SDK
+## Installing the Dalaran SDK
 
-The Rerun SDK is available on [PyPI](https://pypi.org/) under the
-[`rerun-sdk`](https://pypi.org/project/rerun-sdk/) name. It can be installed like any other
+The Dalaran SDK is available on [PyPI](https://pypi.org/) under the
+[`dalaran-sdk`](https://pypi.org/project/dalaran-sdk/) name. It can be installed like any other
 Python package:
 
 ```sh
-pip install rerun-sdk
+pip install dalaran-sdk
 ```
 
 ## Logging your own data

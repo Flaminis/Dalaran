@@ -402,10 +402,10 @@ impl LeRobotDatasetV3 {
         self.metadata.subtasks.as_ref()?.subtasks.get(&subtask)
     }
 
-    /// Loads a single episode from a `LeRobot` dataset and converts it into a collection of Rerun chunks.
+    /// Loads a single episode from a `LeRobot` dataset and converts it into a collection of Dalaran chunks.
     ///
     /// This function processes an episode from the dataset by extracting the relevant data columns and
-    /// converting them into appropriate Rerun data structures. It handles different types of data
+    /// converting them into appropriate Dalaran data structures. It handles different types of data
     /// (videos, images, scalar values, etc.) based on their data type specifications in the dataset metadata.
     fn load_episode(&self, episode: EpisodeIndex) -> Result<Vec<Chunk>, ImporterError> {
         let data = self
@@ -493,7 +493,7 @@ impl LeRobotDatasetV3 {
                 }
                 DType::Int16 | DType::Int64 | DType::Bool | DType::String => {
                     dl_log::warn_once!(
-                        "Loading LeRobot feature ({feature_key}) of dtype `{:?}` into Rerun is not yet implemented",
+                        "Loading LeRobot feature ({feature_key}) of dtype `{:?}` into Dalaran is not yet implemented",
                         feature.dtype
                     );
                 }

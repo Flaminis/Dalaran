@@ -5,7 +5,7 @@ use std::{fs, io};
 use anyhow::Context as _;
 use sha2::{Digest as _, Sha256};
 
-use crate::{rerun_if_changed, rerun_if_changed_or_doesnt_exist};
+use crate::{dalaran_if_changed, dalaran_if_changed_or_doesnt_exist};
 
 // ---
 
@@ -59,7 +59,7 @@ pub fn iter_dir_filtered<'a>(
 /// Given a file path, computes the sha256 hash of its contents and returns an hexadecimal string
 /// for it.
 ///
-/// This will automatically emit a `rerun-if-changed` clause for the specified file.
+/// This will automatically emit a `dalaran-if-changed` clause for the specified file.
 ///
 /// Panics if the file doesn't exist.
 pub fn compute_file_hash(path: impl AsRef<Path>) -> String {
@@ -73,7 +73,7 @@ pub fn compute_file_hash(path: impl AsRef<Path>) -> String {
         .with_context(|| format!("couldn't copy from {path:?}"))
         .unwrap();
 
-    rerun_if_changed(path);
+    dalaran_if_changed(path);
 
     encode_hex(hasher.finalize().as_slice())
 }
@@ -83,7 +83,7 @@ pub fn compute_file_hash(path: impl AsRef<Path>) -> String {
 ///
 /// This includes files in sub-directories (i.e. it's recursive).
 ///
-/// This will automatically emit a `rerun-if-changed` clause for all the files that were hashed.
+/// This will automatically emit a `dalaran-if-changed` clause for all the files that were hashed.
 ///
 /// If `extensions` is specified, only files with the right extensions will be iterated.
 /// Specified extensions should _not_ include the leading dot, e.g. `fbs` rather than `.fbs`.
@@ -99,7 +99,7 @@ pub fn compute_dir_hash<'a>(path: impl AsRef<Path>, extensions: Option<&'a [&'a 
             .with_context(|| format!("couldn't copy from {filepath:?}"))
             .unwrap();
 
-        rerun_if_changed(filepath);
+        dalaran_if_changed(filepath);
     }
 
     encode_hex(hasher.finalize().as_slice())
@@ -110,7 +110,7 @@ pub fn compute_dir_hash<'a>(path: impl AsRef<Path>, extensions: Option<&'a [&'a 
 ///
 /// This includes files in sub-directories (i.e. it's recursive).
 ///
-/// This will automatically emit a `rerun-if-changed` clause for all the files that were hashed.
+/// This will automatically emit a `dalaran-if-changed` clause for all the files that were hashed.
 pub fn compute_dir_filtered_hash<'a>(
     path: impl AsRef<Path>,
     custom_filter: impl Fn(&Path) -> bool + 'a,
@@ -126,7 +126,7 @@ pub fn compute_dir_filtered_hash<'a>(
             .with_context(|| format!("couldn't copy from {filepath:?}"))
             .unwrap();
 
-        rerun_if_changed(filepath);
+        dalaran_if_changed(filepath);
     }
 
     encode_hex(hasher.finalize().as_slice())
@@ -137,7 +137,7 @@ pub fn compute_dir_filtered_hash<'a>(
 ///
 /// This includes the source code of all its direct and indirect dependencies.
 ///
-/// This will automatically emit a `rerun-if-changed` clause for all the files that were hashed.
+/// This will automatically emit a `dalaran-if-changed` clause for all the files that were hashed.
 pub fn compute_crate_hash(pkg_name: impl AsRef<str>) -> String {
     use cargo_metadata::{CargoOpt, MetadataCommand};
     let metadata = MetadataCommand::new()
@@ -199,7 +199,7 @@ pub fn write_versioning_hash(path: impl AsRef<Path>, hash: impl AsRef<str>) {
 
 /// Reads back a versioning hash that was written with [`write_versioning_hash`].
 ///
-/// This will automatically emit a `rerun-if-changed` clause for the specified filepath.
+/// This will automatically emit a `dalaran-if-changed` clause for the specified filepath.
 ///
 /// Returns `None` on error.
 pub fn read_versioning_hash(path: impl AsRef<Path>) -> Option<String> {
@@ -207,7 +207,7 @@ pub fn read_versioning_hash(path: impl AsRef<Path>) -> Option<String> {
 
     // NOTE: It's important we trigger if the file doesn't exist, as this means the user explicitly
     // deleted the versioning file, i.e. they're trying to force a rebuild.
-    rerun_if_changed_or_doesnt_exist(path);
+    dalaran_if_changed_or_doesnt_exist(path);
 
     let contents = std::fs::read_to_string(path).ok()?;
     contents

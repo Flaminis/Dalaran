@@ -1,6 +1,6 @@
 # dl_byte_size_derive
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_byte_size_derive.svg)](https://crates.io/crates/dl_byte_size_derive)
 [![Documentation](https://docs.rs/dl_byte_size_derive/badge.svg)](https://docs.rs/dl_byte_size_derive)

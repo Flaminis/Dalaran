@@ -1,0 +1,11 @@
+namespace dalaran.blueprint.archetypes;
+
+/// Configures how a selected tensor slice is shown on screen.
+table TensorViewFit (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Default",
+  "attr.python.aliases": "blueprint_components.ViewFitLike"
+) {
+  /// How the image is scaled to fit the view.
+  scaling: dalaran.blueprint.components.ViewFit ("attr.dalaran.component_optional", nullable, order: 1000);
+}

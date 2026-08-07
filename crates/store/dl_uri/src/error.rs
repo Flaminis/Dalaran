@@ -6,7 +6,7 @@ pub enum Error {
     Parse(#[from] url::ParseError),
 
     #[error(
-        "Invalid or missing scheme (expected one of: `rerun://`, `rerun+http://`, `rerun+https://`)"
+        "Invalid or missing scheme (expected one of: `dalaran://`, `dalaran+http://`, `dalaran+https://`)"
     )]
     InvalidScheme,
 

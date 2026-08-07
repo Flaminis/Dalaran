@@ -7,12 +7,12 @@ use crate::{DesignTokens, TopBarStyle};
 struct TestMarker;
 
 fn test_marker_id() -> egui::Id {
-    egui::Id::new("__rerun_test_marker")
+    egui::Id::new("__dalaran_test_marker")
 }
 
 /// Extension trait for [`egui::Context`].
 ///
-/// This trait provides Rerun-specific helpers and utilities that require access to the egui
+/// This trait provides Dalaran-specific helpers and utilities that require access to the egui
 /// context.
 pub trait ContextExt {
     fn ctx(&self) -> &egui::Context;
@@ -61,7 +61,7 @@ pub trait ContextExt {
         style
     }
 
-    fn rerun_logo_uri(&self) -> &'static str {
+    fn dalaran_logo_uri(&self) -> &'static str {
         if self.ctx().global_style().visuals.dark_mode {
             "bytes://logo_dark_mode"
         } else {
@@ -185,7 +185,7 @@ pub trait ContextExt {
     /// Paint a watermark
     fn paint_watermark(&self) {
         if let Ok(egui::load::TexturePoll::Ready { texture }) = self.ctx().try_load_texture(
-            self.rerun_logo_uri(),
+            self.dalaran_logo_uri(),
             egui::TextureOptions::default(),
             egui::SizeHint::Scale(1.0.ord()),
         ) {

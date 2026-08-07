@@ -465,7 +465,7 @@ impl MemorySinkStorage {
         std::mem::take(&mut (self.write()))
     }
 
-    /// Convert the stored messages into an in-memory Rerun log file.
+    /// Convert the stored messages into an in-memory Dalaran log file.
     ///
     /// This automatically takes care of flushing the underlying [`crate::RecordingStream`].
     #[inline]
@@ -550,7 +550,7 @@ impl LogSink for CallbackSink {
 
 // ----------------------------------------------------------------------------
 
-/// Stream log messages to an existing remote Rerun gRPC server.
+/// Stream log messages to an existing remote Dalaran gRPC server.
 ///
 /// This is a gRPC client: it connects to a server but does not host one.
 /// To host a server that viewers can connect to, use
@@ -575,7 +575,7 @@ impl GrpcSink {
     /// ### Example
     ///
     /// ```ignore
-    /// GrpcSink::new("rerun+http://127.0.0.1:9434/proxy");
+    /// GrpcSink::new("dalaran+http://127.0.0.1:9434/proxy");
     /// ```
     #[inline]
     pub fn new(uri: dl_uri::ProxyUri) -> Self {

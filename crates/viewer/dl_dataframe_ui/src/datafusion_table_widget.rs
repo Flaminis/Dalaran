@@ -349,7 +349,7 @@ impl<'a> DataFusionTableWidget<'a> {
 
         if remote_table.is_some() && table_index_column_index(original_schema).is_none() {
             dl_log::warn_once!(
-                "Flagging is disabled because remote table has no rerun:is_table_index column for upserts"
+                "Flagging is disabled because remote table has no dalaran:is_table_index column for upserts"
             );
             return None;
         }
@@ -1042,7 +1042,7 @@ fn upsert_flag_changes(
     // Find the table index column (needed as merge-key for upsert).
     let Some(index_col_idx) = table_index_column_index(&results.original_schema) else {
         dl_log::warn_once!(
-            "Failed to upsert flag changes: table has no column marked with rerun:is_table_index"
+            "Failed to upsert flag changes: table has no column marked with dalaran:is_table_index"
         );
         return;
     };

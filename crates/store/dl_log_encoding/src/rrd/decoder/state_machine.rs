@@ -32,16 +32,16 @@ pub type DecoderApp = Decoder<dl_log_types::LogMsg>;
 /// back via [`DecoderApp::try_read`].
 ///
 /// The unorthodox push-based model is what allows us to run this in all the weird environments
-/// that Rerun support (web, async, HTTP fetches, etc):
+/// that Dalaran support (web, async, HTTP fetches, etc):
 /// * [`DecoderIterator`] implements a poll-based synchronous iterator on top of it.
 /// * [`DecoderStream`] implements a poll-based asynchronous stream on top of it.
 ///
 /// [`DecoderIterator`]: [`crate::DecoderIterator`]
 /// [`DecoderStream`]: [`crate::DecoderStream`]
 pub struct Decoder<T> {
-    /// The Rerun version used to encode the RRD data.
+    /// The Dalaran version used to encode the RRD data.
     ///
-    /// `None` until a Rerun header has been processed.
+    /// `None` until a Dalaran header has been processed.
     pub(crate) version: Option<CrateVersion>,
 
     pub(crate) options: EncodingOptions,
@@ -83,7 +83,7 @@ pub enum DecoderState {
     /// encoding options.
     ///
     /// We can come back to this state at any point because multiple RRD streams might have been
-    /// concatenated together (e.g. `cat *.rrd | rerun`).
+    /// concatenated together (e.g. `cat *.rrd | dalaran`).
     WaitingForStreamHeader,
 
     /// Stream in progress.

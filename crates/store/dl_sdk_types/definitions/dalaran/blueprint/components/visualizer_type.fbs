@@ -1,0 +1,10 @@
+namespace dalaran.blueprint.components;
+
+/// The type of the visualizer.
+table VisualizerType (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "PartialEq, Eq, PartialOrd, Ord, Default"
+) {
+  /// The type of the visualizer.
+  visualizer_type: dalaran.datatypes.Utf8 (order: 100);
+}

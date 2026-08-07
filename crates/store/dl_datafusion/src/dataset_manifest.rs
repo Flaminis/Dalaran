@@ -10,7 +10,7 @@ use datafusion::prelude::Expr;
 use dl_log_types::EntryId;
 use dl_protos::cloud::v1alpha1::ext::ScanDatasetManifestDataframe;
 use dl_protos::cloud::v1alpha1::{ScanDatasetManifestRequest, ScanDatasetManifestResponse};
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_redap_client::{ApiError, ApiResult, ConnectionClient};
 use tracing::instrument;
 
@@ -78,7 +78,7 @@ impl GrpcStreamToTable for DatasetManifestProvider {
     ) -> ApiResult<dl_redap_client::ApiResponseStream<Self::GrpcStreamData>> {
         let segment_id_filter = segment_id_filter_from_filters(
             &params.filters,
-            ScanDatasetManifestDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+            ScanDatasetManifestDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
         );
 
         let request = tonic::Request::new(ScanDatasetManifestRequest {
@@ -114,7 +114,7 @@ impl GrpcStreamToTable for DatasetManifestProvider {
     ) -> DataFusionResult<Vec<TableProviderFilterPushDown>> {
         Ok(classify_segment_id_filters_for_pushdown(
             filters,
-            ScanDatasetManifestDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+            ScanDatasetManifestDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
         ))
     }
 

@@ -43,7 +43,7 @@ const REDACT_STRING: &str = "[**REDACTED**]";
 
 /// Metadata fields that are non-deterministic.
 const NON_DETERMINISTIC_METADATA: &[&str] =
-    &["rerun:id", "rerun:heap_size_bytes", "sorbet:version"];
+    &["dalaran:id", "dalaran:heap_size_bytes", "sorbet:version"];
 
 fn custom_array_formatter<'a>(
     field: &Field,
@@ -144,22 +144,22 @@ impl std::fmt::Display for DisplayMetadata {
 
 fn trim_key(name: &str) -> &str {
     name.trim()
-        .trim_start_matches("rerun:")
+        .trim_start_matches("dalaran:")
         .trim_start_matches("sorbet:")
 }
 
 fn trim_name(name: &str) -> &str {
     name.trim()
-        .trim_start_matches("rerun.archetypes.")
-        .trim_start_matches("rerun.components.")
-        .trim_start_matches("rerun.datatypes.")
-        .trim_start_matches("rerun.controls.")
-        .trim_start_matches("rerun.blueprint.archetypes.")
-        .trim_start_matches("rerun.blueprint.components.")
-        .trim_start_matches("rerun.blueprint.datatypes.")
-        .trim_start_matches("rerun.field.")
-        .trim_start_matches("rerun.chunk.")
-        .trim_start_matches("rerun.")
+        .trim_start_matches("dalaran.archetypes.")
+        .trim_start_matches("dalaran.components.")
+        .trim_start_matches("dalaran.datatypes.")
+        .trim_start_matches("dalaran.controls.")
+        .trim_start_matches("dalaran.blueprint.archetypes.")
+        .trim_start_matches("dalaran.blueprint.components.")
+        .trim_start_matches("dalaran.blueprint.datatypes.")
+        .trim_start_matches("dalaran.field.")
+        .trim_start_matches("dalaran.chunk.")
+        .trim_start_matches("dalaran.")
 }
 
 #[derive(Clone, Debug)]
@@ -190,13 +190,13 @@ pub struct RecordBatchFormatOpts {
     /// If `true`, displays the individual columns' metadata too.
     pub include_column_metadata: bool,
 
-    /// If `true`, trims the Rerun prefixes from field names.
+    /// If `true`, trims the Dalaran prefixes from field names.
     pub trim_field_names: bool,
 
-    /// If `true`, trims the `rerun:` prefix from metadata values.
+    /// If `true`, trims the `dalaran:` prefix from metadata values.
     pub trim_metadata_keys: bool,
 
-    /// If `true`, trims known Rerun prefixes from metadata values.
+    /// If `true`, trims known Dalaran prefixes from metadata values.
     pub trim_metadata_values: bool,
 
     /// If `true`, redacts known non-deterministic values.

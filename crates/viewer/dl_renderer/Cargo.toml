@@ -12,8 +12,7 @@ rust-version.workspace = true
 version.workspace = true
 include = [
   "../../Cargo.lock",
-  "../../LICENSE-APACHE",
-  "../../LICENSE-MIT",
+  "../../LICENSE",
   "**/*.rs",
   "Cargo.toml",
   "shader/*",
@@ -124,7 +123,7 @@ harness = false
 
 # For build.rs:
 [build-dependencies]
-# Rerun
+# Dalaran
 dl_build_tools.workspace = true
 
 # External

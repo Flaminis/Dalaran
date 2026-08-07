@@ -19,7 +19,7 @@ pub struct Manifest {
 
     #[argh(
         option,
-        description = "where examples are uploaded, e.g. `https://app.rerun.io/version/main`"
+        description = "where examples are uploaded, e.g. `https://app.dalaran.dev/version/main`"
     )]
     base_url: Option<String>,
 
@@ -32,7 +32,7 @@ impl Manifest {
         let build_env = Environment::detect();
 
         let base_url = if matches!(self.channel, Channel::Nightly) {
-            "https://app.rerun.io/version/nightly".to_owned()
+            "https://app.dalaran.dev/version/nightly".to_owned()
         } else {
             match &self.base_url {
                 Some(base_url) => base_url.clone(),
@@ -103,15 +103,15 @@ struct Thumbnail {
 
 fn get_base_url(build_env: Environment) -> anyhow::Result<String> {
     // In the CondaBuild environment we can't trust the git_branch name -- if it exists
-    // at all it's going to be the feedstock branch-name, not our Rerun branch. However
+    // at all it's going to be the feedstock branch-name, not our Dalaran branch. However
     // conda should ONLY be building released versions, so we want to version the manifest.
     let versioned_manifest = build_env == Environment::CondaBuild || {
         let branch = dl_build_tools::git_branch()?;
-        if branch == "main" || build_env != Environment::RerunCI {
+        if branch == "main" || build_env != Environment::DalaranCI {
             // on `main` and local builds, use `version/main`
             // this will point to data uploaded by `.github/workflows/reusable_upload_examples.yml`
             // on every commit to the `main` branch
-            return Ok("https://app.rerun.io/version/main".into());
+            return Ok("https://app.dalaran.dev/version/main".into());
         }
         parse_release_version(&branch).is_some()
     };
@@ -125,7 +125,7 @@ fn get_base_url(build_env: Environment) -> anyhow::Result<String> {
         // on `release-x.y.z` builds, use `version/{crate_version}`
         // this will point to data uploaded by `.github/workflows/reusable_build_and_publish_web.yml`
         return Ok(format!(
-            "https://app.rerun.io/version/{}",
+            "https://app.dalaran.dev/version/{}",
             workspace_root.version
         ));
     }
@@ -133,7 +133,7 @@ fn get_base_url(build_env: Environment) -> anyhow::Result<String> {
     // any other branch that is not `main`, use `commit/{sha}`
     // this will point to data uploaded by `.github/workflows/reusable_upload_examples.yml`
     let sha = dl_build_tools::git_commit_short_hash()?;
-    Ok(format!("https://app.rerun.io/commit/{sha}"))
+    Ok(format!("https://app.dalaran.dev/commit/{sha}"))
 }
 
 fn get_base_source_url(build_env: Environment) -> anyhow::Result<String> {

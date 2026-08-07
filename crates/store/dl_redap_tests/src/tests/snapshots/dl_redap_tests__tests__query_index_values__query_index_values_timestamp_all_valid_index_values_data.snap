@@ -3,7 +3,7 @@ source: crates/store/dl_redap_tests/src/tests/query_index_values.rs
 expression: filtered_results.format_snapshot(false)
 ---
 ┌────────────────────────────────────┬────────────────────────────────────┬────────────────────────────────────┬──────────────────┬───────────────────────────────┐
-│ /my/entity:example.MyPoints:colors ┆ /my/entity:example.MyPoints:labels ┆ /my/entity:example.MyPoints:points ┆ rerun_segment_id ┆ timestamp                     │
+│ /my/entity:example.MyPoints:colors ┆ /my/entity:example.MyPoints:labels ┆ /my/entity:example.MyPoints:points ┆ dalaran_segment_id ┆ timestamp                     │
 ╞════════════════════════════════════╪════════════════════════════════════╪════════════════════════════════════╪══════════════════╪═══════════════════════════════╡
 │ [0]                                ┆ [simple]                           ┆ [{x: 0.0, y: 0.0}]                 ┆ my_segment_id2   ┆ 1970-01-01T00:00:00.000002010 │
 ├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤

@@ -1,6 +1,6 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! This crate implements Rerun's code generation tools.
+//! This crate implements Dalaran's code generation tools.
 //!
 //! These tools translate language-agnostic IDL definitions (flatbuffers) into code.
 //!
@@ -37,7 +37,7 @@
 //! We currently have two different codegen passes implemented at the moment: Python & Rust.
 //!
 //! Codegen passes use the semantic objects from phase two and the registry from phase three
-//! in order to generate user-facing code for Rerun's SDKs.
+//! in order to generate user-facing code for Dalaran's SDKs.
 //!
 //! These passes are intentionally implemented using a very low-tech no-frills approach (stitch
 //! strings together, make liberal use of `unimplemented`, etc) that keep them flexible in the
@@ -67,10 +67,10 @@
 //!
 //! ### Understanding the subtleties of affixes
 //!
-//! So-called "affixes" are effects applied to objects defined with the Rerun IDL and that affect
+//! So-called "affixes" are effects applied to objects defined with the Dalaran IDL and that affect
 //! the way these objects behave and interoperate with each other (so, yes, monads. shhh.).
 //!
-//! There are 3 distinct and very common affixes used when working with Rerun's IDL: transparency,
+//! There are 3 distinct and very common affixes used when working with Dalaran's IDL: transparency,
 //! nullability and plurality.
 //!
 //! Broadly, we can describe these affixes as follows:
@@ -83,7 +83,7 @@
 //! actually depend on the kind of object that they are applied to, of which there are 3: archetypes,
 //! components and datatypes.
 //!
-//! Not only that, but objects defined in Rerun's IDL are materialized into 3 distinct environments:
+//! Not only that, but objects defined in Dalaran's IDL are materialized into 3 distinct environments:
 //! IDL definitions, Arrow datatypes and native code (e.g. Rust & Python).
 //!
 //! These environment have vastly different characteristics, quirks, pitfalls and limitations,
@@ -96,7 +96,7 @@
 //! combinatorial explosion of edge cases that can be very confusing when it comes to (de)serialization
 //! code, and even API design.
 //!
-//! When in doubt, check out the `rerun.testing.archetypes.AffixFuzzer` IDL definitions, generated code and
+//! When in doubt, check out the `dalaran.testing.archetypes.AffixFuzzer` IDL definitions, generated code and
 //! test suites for definitive answers.
 
 // TODO(#2365): support for external IDL definitions
@@ -177,18 +177,18 @@ pub const ATTR_TRANSPARENT: &str = "transparent";
 pub const ATTR_ARROW_TRANSPARENT: &str = "attr.arrow.transparent";
 pub const ATTR_ARROW_SPARSE_UNION: &str = "attr.arrow.sparse_union";
 
-pub const ATTR_RERUN_COMPONENT_OPTIONAL: &str = "attr.rerun.component_optional";
-pub const ATTR_RERUN_COMPONENT_RECOMMENDED: &str = "attr.rerun.component_recommended";
-pub const ATTR_RERUN_COMPONENT_REQUIRED: &str = "attr.rerun.component_required";
-pub const ATTR_RERUN_COMPONENT_NO_UI_EDIT: &str = "attr.rerun.component_no_ui_edit";
-pub const ATTR_RERUN_OVERRIDE_TYPE: &str = "attr.rerun.override_type";
-pub const ATTR_RERUN_SCOPE: &str = "attr.rerun.scope";
-pub const ATTR_RERUN_VIEW_IDENTIFIER: &str = "attr.rerun.view_identifier";
-pub const ATTR_RERUN_VISUALIZER: &str = "attr.rerun.visualizer";
-pub const ATTR_RERUN_VISUALIZER_NONE: &str = "attr.rerun.visualizer_none";
-pub const ATTR_RERUN_STATE: &str = "attr.rerun.state";
-pub const ATTR_RERUN_DEPRECATED_SINCE: &str = "attr.rerun.deprecated_since";
-pub const ATTR_RERUN_DEPRECATED_NOTICE: &str = "attr.rerun.deprecated_notice";
+pub const ATTR_DALARAN_COMPONENT_OPTIONAL: &str = "attr.dalaran.component_optional";
+pub const ATTR_DALARAN_COMPONENT_RECOMMENDED: &str = "attr.dalaran.component_recommended";
+pub const ATTR_DALARAN_COMPONENT_REQUIRED: &str = "attr.dalaran.component_required";
+pub const ATTR_DALARAN_COMPONENT_NO_UI_EDIT: &str = "attr.dalaran.component_no_ui_edit";
+pub const ATTR_DALARAN_OVERRIDE_TYPE: &str = "attr.dalaran.override_type";
+pub const ATTR_DALARAN_SCOPE: &str = "attr.dalaran.scope";
+pub const ATTR_DALARAN_VIEW_IDENTIFIER: &str = "attr.dalaran.view_identifier";
+pub const ATTR_DALARAN_VISUALIZER: &str = "attr.dalaran.visualizer";
+pub const ATTR_DALARAN_VISUALIZER_NONE: &str = "attr.dalaran.visualizer_none";
+pub const ATTR_DALARAN_STATE: &str = "attr.dalaran.state";
+pub const ATTR_DALARAN_DEPRECATED_SINCE: &str = "attr.dalaran.deprecated_since";
+pub const ATTR_DALARAN_DEPRECATED_NOTICE: &str = "attr.dalaran.deprecated_notice";
 
 pub const ATTR_PYTHON_ALIASES: &str = "attr.python.aliases";
 pub const ATTR_PYTHON_ARRAY_ALIASES: &str = "attr.python.array_aliases";
@@ -343,7 +343,7 @@ fn generate_gitattributes_for_generated_files(files_to_write: &mut GeneratedFile
     }
 }
 
-/// This will automatically emit a `rerun-if-changed` clause for all the files that were hashed.
+/// This will automatically emit a `dalaran-if-changed` clause for all the files that were hashed.
 pub fn compute_re_types_builder_hash() -> String {
     dl_tracing::profile_function!();
 
@@ -481,10 +481,10 @@ pub fn generate_cpp_code(
     let mut generator = CppCodeGenerator::new(output_path.as_ref());
     let mut formatter = CppCodeFormatter;
 
-    // NOTE: In rerun_cpp we have a directory where we share generated code with handwritten code.
+    // NOTE: In dalaran_cpp we have a directory where we share generated code with handwritten code.
     // Make sure to filter out that directory, or else we will end up removing those handwritten
     // files.
-    let orphan_path_opt_out = output_path.as_ref().join("src/rerun");
+    let orphan_path_opt_out = output_path.as_ref().join("src/dalaran");
 
     generate_code(
         reporter,
@@ -547,7 +547,7 @@ pub fn generate_python_code(
     let mut formatter =
         PythonCodeFormatter::new(output_pkg_path.as_ref(), testing_output_pkg_path.as_ref());
 
-    // NOTE: In rerun_py we have a directory where we share generated code with handwritten code.
+    // NOTE: In dalaran_py we have a directory where we share generated code with handwritten code.
     // Make sure to filter out that directory, or else we will end up removing those handwritten
     // files.
     let orphan_path_opt_out = output_pkg_path
@@ -649,7 +649,7 @@ pub fn generate_fbs(reporter: &Reporter, definition_dir: impl AsRef<Utf8Path>, c
 
     let orphan_path_opt_outs = [
         definition_dir.as_ref().to_path_buf(),
-        definition_dir.as_ref().join("rerun"),
+        definition_dir.as_ref().join("dalaran"),
     ]
     .into_iter()
     .collect::<BTreeSet<_>>();
@@ -665,7 +665,7 @@ pub fn generate_fbs(reporter: &Reporter, definition_dir: impl AsRef<Utf8Path>, c
     );
 }
 
-pub(crate) fn rerun_workspace_path() -> camino::Utf8PathBuf {
+pub(crate) fn dalaran_workspace_path() -> camino::Utf8PathBuf {
     let workspace_root = if let Ok(manifest_dir) = std::env::var("CARGO_MANIFEST_DIR") {
         let manifest_dir = camino::Utf8PathBuf::from(manifest_dir)
             .canonicalize_utf8()

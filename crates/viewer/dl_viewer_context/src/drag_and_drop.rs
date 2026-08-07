@@ -220,7 +220,7 @@ impl DragAndDropManager {
 
             let mut ui = egui::Ui::new(
                 ctx.clone(),
-                egui::Id::new("rerun_drag_and_drop_payload_ui"),
+                egui::Id::new("dalaran_drag_and_drop_payload_ui"),
                 egui::UiBuilder::new().layer_id(layer_id),
             );
 

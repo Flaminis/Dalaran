@@ -1,6 +1,6 @@
 #![expect(clippy::unwrap_used)]
 
-//! Build the Rerun web-viewer .wasm and generate the .js bindings for it.
+//! Build the Dalaran web-viewer .wasm and generate the .js bindings for it.
 
 use std::time::Instant;
 
@@ -55,7 +55,7 @@ pub enum Target {
     Browser,
     Module,
 
-    /// Custom target meant for post-processing inside `rerun_js`.
+    /// Custom target meant for post-processing inside `dalaran_js`.
     NoModulesBase,
 }
 

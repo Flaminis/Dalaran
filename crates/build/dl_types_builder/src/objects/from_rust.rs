@@ -6,19 +6,19 @@
 //! error at `path:line:column`.
 //!
 //! Allowed: `struct`, tuple `struct`, and `enum` items, carrying doc comments, `#[repr(…)]`, and
-//! Rerun's own `#[rerun(…)]` / `#[rust(…)]` / `#[python(…)]` / `#[cpp(…)]` / `#[docs(…)]` /
+//! Dalaran's own `#[dalaran(…)]` / `#[rust(…)]` / `#[python(…)]` / `#[cpp(…)]` / `#[docs(…)]` /
 //! `#[arrow(…)]` annotations. Rejected: generics, lifetimes, references, `impl`, `fn`, `trait`,
 //! `const`, `static`, `use`, and anything else.
 //!
 //! # Names
 //!
-//! A definition's package comes from its path: `definitions/rerun/components/position3d.rs`
-//! declares types in `rerun.components`. Definitions refer to each other by fully-qualified name
-//! with `::` for `.` — `rerun::components::Position3D` — and never contain a `use` statement.
+//! A definition's package comes from its path: `definitions/dalaran/components/position3d.rs`
+//! declares types in `dalaran.components`. Definitions refer to each other by fully-qualified name
+//! with `::` for `.` — `dalaran::components::Position3D` — and never contain a `use` statement.
 //! See `dl_types_builder_prelude` for how that resolves for rustc.
 //!
 //! Every definition file must also open with [`BANNER`], because a definition is otherwise hard to
-//! tell apart from ordinary Rust: the `#[rerun_type]` on each item is the only other hint, and it
+//! tell apart from ordinary Rust: the `#[dalaran_type]` on each item is the only other hint, and it
 //! looks like any other derive-ish attribute.
 //!
 //! # Annotations
@@ -42,7 +42,7 @@ use camino::{Utf8Path, Utf8PathBuf};
 use syn::spanned::Spanned;
 
 use crate::{
-    ATTR_RERUN_STATE, Docs, ElementType, Object, ObjectClass, ObjectField, ObjectKind, Objects,
+    ATTR_DALARAN_STATE, Docs, ElementType, Object, ObjectClass, ObjectField, ObjectKind, Objects,
     Reporter, Type,
 };
 
@@ -69,7 +69,7 @@ impl Objects {
     /// Runs the semantic pass on a tree of Rust type definitions.
     ///
     /// `definitions_dir` is the root of the definition tree; a type's package name is its path
-    /// relative to that root, so `rerun/components/position3d.rs` declares `rerun.components`.
+    /// relative to that root, so `dalaran/components/position3d.rs` declares `dalaran.components`.
     pub fn from_rust_definitions(
         reporter: &Reporter,
         definitions_dir: impl AsRef<Utf8Path>,
@@ -180,7 +180,7 @@ fn check_module_tree_file(reporter: &Reporter, filepath: &Utf8Path, contents: &s
     ));
 }
 
-/// `…/definitions` + `…/definitions/rerun/components/position3d.rs` -> `rerun.components`.
+/// `…/definitions` + `…/definitions/dalaran/components/position3d.rs` -> `dalaran.components`.
 fn package_name_of(definitions_dir: &Utf8Path, filepath: &Utf8Path) -> Option<String> {
     let relative = filepath.strip_prefix(definitions_dir).ok()?;
     let dir = relative.parent()?;
@@ -198,7 +198,7 @@ fn package_name_of(definitions_dir: &Utf8Path, filepath: &Utf8Path) -> Option<St
 ///
 /// Plain `//`, not `//!`, so that neither rustdoc nor [`Docs`] mistakes it for a docstring.
 const BANNER: &[&str] = &[
-    "// This is a Rerun type definition, not normal Rust.",
+    "// This is a Dalaran type definition, not normal Rust.",
     "// It is parsed by `dl_types_builder` to generate the Rust, Python and C++ SDKs.",
     "// Only a subset of Rust is allowed here, and this crate is never linked into anything.",
     "// Run `pixi run codegen` after editing.",
@@ -243,7 +243,7 @@ fn parse_file(
 }
 
 /// The path we show in diagnostics from the rest of the pipeline, e.g.
-/// `//rerun/components/position3d.rs`.
+/// `//dalaran/components/position3d.rs`.
 fn virtpath_of(filepath: &Utf8Path) -> String {
     match filepath.as_str().split_once("/definitions/") {
         Some((_, relative)) => format!("//{relative}"),
@@ -408,7 +408,7 @@ impl Parser<'_> {
     /// How far along the type is: experimental, stable or deprecated.
     ///
     /// It reaches the SDKs as doc-comment banners and `#[deprecated]` attributes. Written as
-    /// `#[rerun(state = "…")]`; without it, the default depends on the kind and the scope.
+    /// `#[dalaran(state = "…")]`; without it, the default depends on the kind and the scope.
     fn parse_state(
         &self,
         attrs: &Attributes,
@@ -416,7 +416,7 @@ impl Parser<'_> {
         kind: ObjectKind,
         span: proc_macro2::Span,
     ) -> State {
-        if attrs.has(ATTR_RERUN_STATE) {
+        if attrs.has(ATTR_DALARAN_STATE) {
             return State::from_attrs(attrs).unwrap_or_else(|err| {
                 self.error(span, err);
                 State::Stable
@@ -424,7 +424,7 @@ impl Parser<'_> {
         }
 
         let scope = attrs
-            .get_string(crate::ATTR_RERUN_SCOPE)
+            .get_string(crate::ATTR_DALARAN_SCOPE)
             .or_else(|| (kind == ObjectKind::View).then(|| "blueprint".to_owned()));
 
         if super::is_testing_fqname(fqname) {
@@ -434,10 +434,10 @@ impl Parser<'_> {
             State::Unstable
         } else {
             match kind {
-                // TODO(#9427): make the `attr.rerun.state` attribute mandatory
+                // TODO(#9427): make the `attr.dalaran.state` attribute mandatory
                 ObjectKind::Datatype | ObjectKind::Component => State::Stable,
                 ObjectKind::Archetype => {
-                    self.error(span, format!("Missing attribute '{ATTR_RERUN_STATE}'"));
+                    self.error(span, format!("Missing attribute '{ATTR_DALARAN_STATE}'"));
                     State::Stable
                 }
                 ObjectKind::View => State::Unstable,
@@ -634,7 +634,7 @@ impl Parser<'_> {
                 self.error(
                     Spanned::span(other),
                     "Unsupported type; expected a primitive, `String`, `Vec<T>`, `[T; N]`, or a \
-                     `rerun::`-rooted path",
+                     `dalaran::`-rooted path",
                 );
                 Err(Fail)
             }
@@ -669,7 +669,7 @@ impl Parser<'_> {
         Err(Fail)
     }
 
-    /// A primitive, `String`, or a `rerun::`-rooted path to another definition.
+    /// A primitive, `String`, or a `dalaran::`-rooted path to another definition.
     fn parse_named_type(&self, path: &syn::TypePath) -> Result<Type> {
         if path.qself.is_some() {
             self.error(Spanned::span(path), "Qualified paths are not allowed");
@@ -716,7 +716,7 @@ impl Parser<'_> {
                         Spanned::span(path),
                         format!(
                             "Unknown type `{other}`. Refer to other definitions by their full \
-                             path, e.g. `rerun::datatypes::Vec3D`"
+                             path, e.g. `dalaran::datatypes::Vec3D`"
                         ),
                     );
                     Err(Fail)
@@ -724,11 +724,11 @@ impl Parser<'_> {
             };
         }
 
-        if segments[0] != "rerun" {
+        if segments[0] != "dalaran" {
             self.error(
                 Spanned::span(path),
                 format!(
-                    "Paths must be rooted at `rerun::`, got `{}`",
+                    "Paths must be rooted at `dalaran::`, got `{}`",
                     segments.join("::")
                 ),
             );
@@ -736,7 +736,7 @@ impl Parser<'_> {
         }
 
         // The two types with no spelling in plain Rust, re-exported at the definitions crate root
-        // so that the `rerun::`-rooted rule holds without exceptions.
+        // so that the `dalaran::`-rooted rule holds without exceptions.
         // See `dl_types_builder_prelude`.
         if segments.len() == 2 {
             match segments[1].as_str() {
@@ -768,9 +768,9 @@ impl Parser<'_> {
                 // - `doc` is handled by `parse_docs`.
                 // - `repr` is real Rust, kept so that rustc validates it. `#[repr(uN)]`
                 //   additionally tells us an enum's integer type; see `parse_repr`.
-                // - `rerun_type` is the attribute macro that lets rustc accept everything else.
+                // - `dalaran_type` is the attribute macro that lets rustc accept everything else.
                 //   It says nothing about the type. See `dl_types_builder_macros`.
-                "doc" | "repr" | "rerun_type" => {}
+                "doc" | "repr" | "dalaran_type" => {}
 
                 // Which variant of an enum is the default. It applies to the type itself rather
                 // than to any one language, so it has no namespace.
@@ -786,7 +786,7 @@ impl Parser<'_> {
                     );
                 }
 
-                "arrow" | "cpp" | "docs" | "python" | "rerun" | "rust" => {
+                "arrow" | "cpp" | "docs" | "python" | "dalaran" | "rust" => {
                     self.parse_namespaced_attribute(attr, &namespace, owner, &mut parsed);
                 }
 
@@ -1026,8 +1026,8 @@ struct MaybeNullable {
 
 /// The name an attribute is addressed by.
 ///
-/// Definitions contain no `use` statements, so `#[rerun_type]` is written `#[rerun::rerun_type]`
-/// — the same `rerun::`-rooted form as everything else. Both spellings resolve to `rerun_type`.
+/// Definitions contain no `use` statements, so `#[dalaran_type]` is written `#[dalaran::dalaran_type]`
+/// — the same `dalaran::`-rooted form as everything else. Both spellings resolve to `dalaran_type`.
 fn attribute_name(attr: &syn::Attribute) -> Option<String> {
     let segments: Vec<String> = attr
         .path()
@@ -1038,7 +1038,7 @@ fn attribute_name(attr: &syn::Attribute) -> Option<String> {
 
     match segments.as_slice() {
         [name] => Some(name.clone()),
-        [root, name] if root == "rerun" => Some(name.clone()),
+        [root, name] if root == "dalaran" => Some(name.clone()),
         _ => None,
     }
 }
@@ -1122,21 +1122,21 @@ mod tests {
     #[test]
     fn struct_with_named_fields() {
         let objects = parse_ok(
-            "rerun.datatypes",
+            "dalaran.datatypes",
             r#"
-            #[rerun_type]
+            #[dalaran_type]
             pub struct AnnotationInfo {
                 pub id: u16,
                 pub label: Option<String>,
-                pub color: Option<rerun::datatypes::Rgba32>,
+                pub color: Option<dalaran::datatypes::Rgba32>,
             }
             "#,
         );
 
         assert_eq!(objects.len(), 1);
         let object = &objects[0];
-        assert_eq!(object.fqname, "rerun.datatypes.AnnotationInfo");
-        assert_eq!(object.pkg_name, "rerun.datatypes");
+        assert_eq!(object.fqname, "dalaran.datatypes.AnnotationInfo");
+        assert_eq!(object.pkg_name, "dalaran.datatypes");
         assert_eq!(object.name, "AnnotationInfo");
         assert_eq!(object.kind, ObjectKind::Datatype);
         assert_eq!(object.class, ObjectClass::Struct);
@@ -1149,7 +1149,7 @@ mod tests {
                 (
                     "color",
                     &Type::Object {
-                        fqname: "rerun.datatypes.Rgba32".to_owned()
+                        fqname: "dalaran.datatypes.Rgba32".to_owned()
                     },
                     true
                 ),
@@ -1161,15 +1161,15 @@ mod tests {
             object.fields.iter().map(|f| f.order).collect::<Vec<_>>(),
             vec![0, 1, 2]
         );
-        assert_eq!(object.fields[0].fqname, "rerun.datatypes.AnnotationInfo#id");
+        assert_eq!(object.fields[0].fqname, "dalaran.datatypes.AnnotationInfo#id");
     }
 
     #[test]
     fn unnamed_tuple_struct_field_is_named_value() {
         let objects = parse_ok(
-            "rerun.components",
+            "dalaran.components",
             r#"
-            #[rerun_type]
+            #[dalaran_type]
             pub struct Radius(pub f32);
             "#,
         );
@@ -1183,22 +1183,22 @@ mod tests {
     #[test]
     fn every_supported_data_type() {
         let objects = parse_ok(
-            "rerun.datatypes",
+            "dalaran.datatypes",
             r#"
-            #[rerun_type]
+            #[dalaran_type]
             pub struct TypeZoo {
                 pub boolean: bool,
                 pub unsigned: u64,
                 pub signed: i8,
-                pub half: rerun::f16,
+                pub half: dalaran::f16,
                 pub single: f32,
                 pub double: f64,
                 pub text: String,
-                pub bytes: rerun::Binary,
+                pub bytes: dalaran::Binary,
                 pub fixed: [f32; 3],
                 pub list: Vec<u8>,
                 pub nested: [[f32; 4]; 4],
-                pub objects: Vec<rerun::datatypes::Vec3D>,
+                pub objects: Vec<dalaran::datatypes::Vec3D>,
             }
             "#,
         );
@@ -1244,7 +1244,7 @@ mod tests {
                     "objects",
                     &Type::Vector {
                         elem_type: ElementType::Object {
-                            fqname: "rerun.datatypes.Vec3D".to_owned()
+                            fqname: "dalaran.datatypes.Vec3D".to_owned()
                         }
                     },
                     false
@@ -1256,9 +1256,9 @@ mod tests {
     #[test]
     fn c_style_enum() {
         let objects = parse_ok(
-            "rerun.components",
+            "dalaran.components",
             r#"
-            #[rerun_type]
+            #[dalaran_type]
             #[repr(u8)]
             pub enum FillMode {
                 /// Lines are drawn around the parts of the shape.
@@ -1306,12 +1306,12 @@ mod tests {
     #[test]
     fn union_with_payloads_and_a_unit_variant() {
         let objects = parse_ok(
-            "rerun.datatypes",
+            "dalaran.datatypes",
             r#"
-            #[rerun_type]
+            #[dalaran_type]
             pub enum TimeRangeBoundary {
-                CursorRelative(rerun::datatypes::TimeInt) = 1,
-                Absolute(rerun::datatypes::TimeInt) = 2,
+                CursorRelative(dalaran::datatypes::TimeInt) = 1,
+                Absolute(dalaran::datatypes::TimeInt) = 2,
 
                 /// The boundary extends to infinity.
                 Infinite = 3,
@@ -1329,14 +1329,14 @@ mod tests {
                 (
                     "CursorRelative",
                     &Type::Object {
-                        fqname: "rerun.datatypes.TimeInt".to_owned()
+                        fqname: "dalaran.datatypes.TimeInt".to_owned()
                     },
                     false
                 ),
                 (
                     "Absolute",
                     &Type::Object {
-                        fqname: "rerun.datatypes.TimeInt".to_owned()
+                        fqname: "dalaran.datatypes.TimeInt".to_owned()
                     },
                     false
                 ),
@@ -1349,17 +1349,17 @@ mod tests {
     #[test]
     fn attributes_map_mechanically() {
         let objects = parse_ok(
-            "rerun.archetypes",
+            "dalaran.archetypes",
             r#"
-            #[rerun_type]
-            #[rerun(state = "stable")]
+            #[dalaran_type]
+            #[dalaran(state = "stable")]
             #[docs(category = "Spatial 3D", view_types = "Spatial3DView")]
             #[rust(derive = "Default, Copy", tuple_struct)]
             #[arrow(transparent)]
             pub struct Points3D {
-                #[rerun(component_required)]
+                #[dalaran(component_required)]
                 #[cpp(rename_field = "positions_")]
-                pub positions: Vec<rerun::components::Position3D>,
+                pub positions: Vec<dalaran::components::Position3D>,
             }
             "#,
         );
@@ -1367,7 +1367,7 @@ mod tests {
         let object = &objects[0];
         assert_eq!(
             object
-                .try_get_attr::<String>(crate::ATTR_RERUN_STATE)
+                .try_get_attr::<String>(crate::ATTR_DALARAN_STATE)
                 .as_deref(),
             Some("stable")
         );
@@ -1388,7 +1388,7 @@ mod tests {
         assert!(object.is_attr_set(crate::ATTR_ARROW_TRANSPARENT));
 
         let field = &object.fields[0];
-        assert!(field.has_attr(crate::ATTR_RERUN_COMPONENT_REQUIRED));
+        assert!(field.has_attr(crate::ATTR_DALARAN_COMPONENT_REQUIRED));
         assert_eq!(field.kind(), Some(crate::objects::FieldKind::Required));
         assert_eq!(
             field
@@ -1401,13 +1401,13 @@ mod tests {
     #[test]
     fn doc_comments_keep_their_tags() {
         let objects = parse_ok(
-            "rerun.datatypes",
+            "dalaran.datatypes",
             r#"
             /// A position in 3D space.
             ///
             /// More detail.
             /// \py Python-only detail.
-            #[rerun_type]
+            #[dalaran_type]
             pub struct Vec3D {
                 /// The coordinates.
                 pub xyz: [f32; 3],
@@ -1432,20 +1432,20 @@ mod tests {
 
     #[test]
     fn state_defaults_by_kind_and_scope() {
-        let datatype = parse_ok("rerun.datatypes", "#[rerun_type] pub struct A(pub f32);");
+        let datatype = parse_ok("dalaran.datatypes", "#[dalaran_type] pub struct A(pub f32);");
         assert_eq!(datatype[0].state, State::Stable);
 
         let blueprint = parse_ok(
-            "rerun.blueprint.datatypes",
-            r#"#[rerun_type] #[rerun(scope = "blueprint")] pub struct A(pub f32);"#,
+            "dalaran.blueprint.datatypes",
+            r#"#[dalaran_type] #[dalaran(scope = "blueprint")] pub struct A(pub f32);"#,
         );
         assert_eq!(blueprint[0].state, State::Unstable);
 
         let deprecated = parse_ok(
-            "rerun.datatypes",
+            "dalaran.datatypes",
             r#"
-            #[rerun_type]
-            #[rerun(state = "deprecated", deprecated_since = "0.30", deprecated_notice = "Use B")]
+            #[dalaran_type]
+            #[dalaran(state = "deprecated", deprecated_since = "0.30", deprecated_notice = "Use B")]
             pub struct A(pub f32);
             "#,
         );
@@ -1461,20 +1461,20 @@ mod tests {
     #[test]
     fn archetypes_must_declare_their_state() {
         let error = parse_err(
-            "rerun.archetypes",
-            "#[rerun_type] pub struct Points3D { pub positions: Vec<rerun::components::Position3D> }",
+            "dalaran.archetypes",
+            "#[dalaran_type] pub struct Points3D { pub positions: Vec<dalaran::components::Position3D> }",
         );
-        assert!(error.contains("attr.rerun.state"), "{error}");
+        assert!(error.contains("attr.dalaran.state"), "{error}");
     }
 
     #[test]
     fn errors_point_at_the_offending_line() {
         let error = parse_err(
-            "rerun.datatypes",
-            "#[rerun_type]\npub struct A {\n    pub bad: HashMap<u8, u8>,\n}",
+            "dalaran.datatypes",
+            "#[dalaran_type]\npub struct A {\n    pub bad: HashMap<u8, u8>,\n}",
         );
         assert!(
-            error.starts_with("/definitions/rerun/datatypes/test.rs:3:14:"),
+            error.starts_with("/definitions/dalaran/datatypes/test.rs:3:14:"),
             "{error}"
         );
     }
@@ -1485,7 +1485,7 @@ mod tests {
             // (definition, expected substring of the error)
             ("pub fn foo() {}", "Only `struct` and `enum`"),
             ("impl Foo {}", "Only `struct` and `enum`"),
-            ("use rerun::datatypes::Vec3D;", "Only `struct` and `enum`"),
+            ("use dalaran::datatypes::Vec3D;", "Only `struct` and `enum`"),
             ("pub const N: u8 = 1;", "Only `struct` and `enum`"),
             ("pub struct A<T> { pub a: T }", "Generic parameters"),
             ("pub struct A<'a> { pub a: &'a u8 }", "Generic parameters"),
@@ -1495,7 +1495,7 @@ mod tests {
             ("pub struct A { pub a: Vec3D }", "Unknown type `Vec3D`"),
             (
                 "pub struct A { pub a: std::string::String }",
-                "rooted at `rerun::`",
+                "rooted at `dalaran::`",
             ),
             (
                 "pub struct A { pub a: Option<Option<u8>> }",
@@ -1551,7 +1551,7 @@ mod tests {
         ];
 
         for (definition, expected) in cases {
-            let error = parse_err("rerun.datatypes", definition);
+            let error = parse_err("dalaran.datatypes", definition);
             assert!(
                 error.contains(expected),
                 "Expected {expected:?} in error for {definition:?}, got: {error}"
@@ -1560,34 +1560,34 @@ mod tests {
     }
 
     #[test]
-    fn rerun_type_can_be_written_as_a_path() {
+    fn dalaran_type_can_be_written_as_a_path() {
         // Definitions contain no `use` statements, so this is the spelling they actually use.
         let objects = parse_ok(
-            "rerun.components",
+            "dalaran.components",
             r#"
-            #[rerun::rerun_type]
-            #[rerun(state = "stable")]
+            #[dalaran::dalaran_type]
+            #[dalaran(state = "stable")]
             pub struct Radius(pub f32);
             "#,
         );
-        assert_eq!(objects[0].fqname, "rerun.components.Radius");
-        assert!(!objects[0].is_attr_set("attr.rerun.rerun_type"));
+        assert_eq!(objects[0].fqname, "dalaran.components.Radius");
+        assert!(!objects[0].is_attr_set("attr.dalaran.dalaran_type"));
     }
 
     #[test]
     fn package_name_comes_from_the_path() {
         let root = Utf8Path::new("/x/definitions");
         assert_eq!(
-            package_name_of(root, Utf8Path::new("/x/definitions/rerun/components/a.rs")).as_deref(),
-            Some("rerun.components")
+            package_name_of(root, Utf8Path::new("/x/definitions/dalaran/components/a.rs")).as_deref(),
+            Some("dalaran.components")
         );
         assert_eq!(
             package_name_of(
                 root,
-                Utf8Path::new("/x/definitions/rerun/blueprint/views/a.rs")
+                Utf8Path::new("/x/definitions/dalaran/blueprint/views/a.rs")
             )
             .as_deref(),
-            Some("rerun.blueprint.views")
+            Some("dalaran.blueprint.views")
         );
         // A file directly in the root belongs to no package.
         assert_eq!(
@@ -1600,7 +1600,7 @@ mod tests {
     fn hand_written_module_tree_files_warn() {
         fn warning(contents: &str) -> Option<String> {
             let (report, reporter) = crate::report::init();
-            let filepath = Utf8Path::new("/definitions/rerun/components.rs");
+            let filepath = Utf8Path::new("/definitions/dalaran/components.rs");
             check_module_tree_file(&reporter, filepath, contents);
             report.drain_warnings().into_iter().next()
         }
@@ -1609,7 +1609,7 @@ mod tests {
             warning("// DO NOT EDIT! This file was auto-generated by …\n\npub mod components;\n"),
             None
         );
-        assert!(warning("#[rerun_type]\npub struct A(pub u8);\n").is_some());
+        assert!(warning("#[dalaran_type]\npub struct A(pub u8);\n").is_some());
         assert!(warning("").is_some());
     }
 
@@ -1617,7 +1617,7 @@ mod tests {
     fn definitions_must_open_with_the_banner() {
         fn warning(contents: &str) -> Option<String> {
             let (report, reporter) = crate::report::init();
-            let filepath = Utf8Path::new("/definitions/rerun/components/test.rs");
+            let filepath = Utf8Path::new("/definitions/dalaran/components/test.rs");
             check_banner(&reporter, filepath, contents);
             report.drain_warnings().into_iter().next()
         }
@@ -1627,14 +1627,14 @@ mod tests {
         assert_eq!(warning(&banner), None);
         assert_eq!(
             warning(&format!(
-                "{banner}\n\n#[rerun_type]\npub struct Position3D;\n"
+                "{banner}\n\n#[dalaran_type]\npub struct Position3D;\n"
             )),
             None
         );
 
         let bad = [
             String::new(),                                      // empty
-            "#[rerun_type]\npub struct Position3D;".to_owned(), // no banner at all
+            "#[dalaran_type]\npub struct Position3D;".to_owned(), // no banner at all
             BANNER[..BANNER.len() - 1].join("\n"),              // truncated
             banner.replace("normal Rust", "normal rust"),       // reworded
             format!("\n{banner}"),                              // not at the very top

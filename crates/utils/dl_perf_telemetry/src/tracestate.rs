@@ -5,12 +5,12 @@ use opentelemetry::propagation::{Extractor, Injector, TextMapPropagator};
 use opentelemetry::trace::TraceContextExt as _;
 
 /// Propagator that enriches the outbound `tracestate` header with the active
-/// `rerun_session_id`, if any.
+/// `dalaran_session_id`, if any.
 ///
 /// The id source is resolved on every injection by
-/// [`crate::current_rerun_session_id`] (the active Rust `with_tracing_session`
+/// [`crate::current_dalaran_session_id`] (the active Rust `with_tracing_session`
 /// scope, or whatever the registered `SessionIdReader` returns — e.g. the
-/// Python `tracing_session()` `ContextVar` when `rerun_py` is in use). When no
+/// Python `tracing_session()` `ContextVar` when `dalaran_py` is in use). When no
 /// scope is active, this propagator is a no-op.
 ///
 /// Registered alongside `TraceContextPropagator` in the global propagator stack;
@@ -20,7 +20,7 @@ pub struct TraceStateEnricher;
 
 impl TextMapPropagator for TraceStateEnricher {
     fn inject_context(&self, cx: &Context, injector: &mut dyn Injector) {
-        let Some(session_id) = crate::current_rerun_session_id() else {
+        let Some(session_id) = crate::current_dalaran_session_id() else {
             return;
         };
 
@@ -32,7 +32,7 @@ impl TextMapPropagator for TraceStateEnricher {
 
         let trace_state = span_context.trace_state().clone();
         let trace_state = trace_state
-            .insert(crate::RERUN_SESSION_TRACESTATE_KEY.to_owned(), session_id)
+            .insert(crate::DALARAN_SESSION_TRACESTATE_KEY.to_owned(), session_id)
             .unwrap_or(trace_state);
 
         let header = trace_state.header();
@@ -53,22 +53,22 @@ impl TextMapPropagator for TraceStateEnricher {
 }
 
 /// `SpanProcessor` that decorates **root spans** (those with no parent in the
-/// `OTel` `Context`) with the active `rerun_session_id`, when one is set via
+/// `OTel` `Context`) with the active `dalaran_session_id`, when one is set via
 /// `tracing_session()`.
 ///
 /// Complement to [`TraceStateEnricher`]:
 ///
 /// - [`TraceStateEnricher`] writes the id into the outbound W3C `tracestate`
 ///   header, so the *server side* can extract it.
-/// - [`RerunSessionRootSpanProcessor`] writes the id as a span attribute on
+/// - [`DalaranSessionRootSpanProcessor`] writes the id as a span attribute on
 ///   the local span at creation, so Tempo queries like
-///   `{ .rerun_session_id = "rs_…" }` can find *client-side* spans.
+///   `{ .dalaran_session_id = "rs_…" }` can find *client-side* spans.
 ///
-/// Both read from [`crate::current_rerun_session_id`] and use the same
-/// [`crate::RERUN_SESSION_TRACESTATE_KEY`].
+/// Both read from [`crate::current_dalaran_session_id`] and use the same
+/// [`crate::DALARAN_SESSION_TRACESTATE_KEY`].
 ///
-/// **Only registered on the Rerun-frontend OTLP path** (the `rerun://` /
-/// `rerun+http(s)://` schemes — see `Telemetry::init`). Vanilla OTLP
+/// **Only registered on the Dalaran-frontend OTLP path** (the `dalaran://` /
+/// `dalaran+http(s)://` schemes — see `Telemetry::init`). Vanilla OTLP
 /// destinations (Jaeger, generic collectors) get untagged spans.
 ///
 /// **Why only root spans:** child spans share their root's `trace_id`, so
@@ -77,9 +77,9 @@ impl TextMapPropagator for TraceStateEnricher {
 /// and bloat attribute storage. Matches how the server side tags its
 /// `<request>` span only (see `GrpcMakeSpan` in `grpc.rs`).
 #[derive(Debug)]
-pub(crate) struct RerunSessionRootSpanProcessor;
+pub(crate) struct DalaranSessionRootSpanProcessor;
 
-impl opentelemetry_sdk::trace::SpanProcessor for RerunSessionRootSpanProcessor {
+impl opentelemetry_sdk::trace::SpanProcessor for DalaranSessionRootSpanProcessor {
     fn on_start(&self, span: &mut opentelemetry_sdk::trace::Span, cx: &opentelemetry::Context) {
         use opentelemetry::trace::{Span as _, TraceContextExt as _};
 
@@ -89,9 +89,9 @@ impl opentelemetry_sdk::trace::SpanProcessor for RerunSessionRootSpanProcessor {
             return;
         }
 
-        if let Some(id) = crate::current_rerun_session_id() {
+        if let Some(id) = crate::current_dalaran_session_id() {
             span.set_attribute(opentelemetry::KeyValue::new(
-                crate::RERUN_SESSION_TRACESTATE_KEY,
+                crate::DALARAN_SESSION_TRACESTATE_KEY,
                 id.to_string(),
             ));
         }
@@ -185,7 +185,7 @@ mod tests {
         let cx = ctx_with_state(TraceState::default());
         let mut injector = MapInjector::default();
 
-        // No active tracing session in this test → `current_rerun_session_id` returns None.
+        // No active tracing session in this test → `current_dalaran_session_id` returns None.
         TraceStateEnricher.inject_context(&cx, &mut injector);
 
         assert!(
@@ -206,7 +206,7 @@ mod tests {
         assert!(injector.entries.is_empty());
     }
 
-    /// Build a tracer wired up with `RerunSessionRootSpanProcessor` and an
+    /// Build a tracer wired up with `DalaranSessionRootSpanProcessor` and an
     /// in-memory exporter behind a `SimpleSpanProcessor`. The two processors
     /// fire in order (registration order), so `on_start` has run before the
     /// span is exported and its attributes are visible on `SpanData`.
@@ -218,7 +218,7 @@ mod tests {
         use opentelemetry::trace::TracerProvider as _;
         let exporter = opentelemetry_sdk::trace::InMemorySpanExporter::default();
         let provider = opentelemetry_sdk::trace::SdkTracerProvider::builder()
-            .with_span_processor(RerunSessionRootSpanProcessor)
+            .with_span_processor(DalaranSessionRootSpanProcessor)
             .with_span_processor(opentelemetry_sdk::trace::SimpleSpanProcessor::new(
                 exporter.clone(),
             ))
@@ -227,10 +227,10 @@ mod tests {
         (tracer, exporter, provider)
     }
 
-    fn rerun_session_attr(span: &opentelemetry_sdk::trace::SpanData) -> Option<String> {
+    fn dalaran_session_attr(span: &opentelemetry_sdk::trace::SpanData) -> Option<String> {
         span.attributes
             .iter()
-            .find(|kv| kv.key.as_str() == crate::RERUN_SESSION_TRACESTATE_KEY)
+            .find(|kv| kv.key.as_str() == crate::DALARAN_SESSION_TRACESTATE_KEY)
             .map(|kv| kv.value.to_string())
     }
 
@@ -240,7 +240,7 @@ mod tests {
         let (tracer, exporter, provider) = build_tracer_with_processor();
 
         // No `tracing_session()` scope active in this test build → the processor
-        // sees `current_rerun_session_id() == None` and skips the attribute.
+        // sees `current_dalaran_session_id() == None` and skips the attribute.
         let span = tracer.start("root");
         drop(span);
         provider.force_flush().ok();
@@ -248,8 +248,8 @@ mod tests {
         let spans = exporter.get_finished_spans().unwrap();
         assert_eq!(spans.len(), 1);
         assert!(
-            rerun_session_attr(&spans[0]).is_none(),
-            "expected no rerun_session_id on root: got {:?}",
+            dalaran_session_attr(&spans[0]).is_none(),
+            "expected no dalaran_session_id on root: got {:?}",
             spans[0].attributes,
         );
     }
@@ -273,8 +273,8 @@ mod tests {
         let spans = exporter.get_finished_spans().unwrap();
         assert_eq!(spans.len(), 1);
         assert!(
-            rerun_session_attr(&spans[0]).is_none(),
-            "expected no rerun_session_id on child: got {:?}",
+            dalaran_session_attr(&spans[0]).is_none(),
+            "expected no dalaran_session_id on child: got {:?}",
             spans[0].attributes,
         );
     }
@@ -287,7 +287,7 @@ mod tests {
             .build()
             .unwrap();
 
-        let sid = crate::tracing_session::RerunTracingSessionId::parse("rs_cafebabe").unwrap();
+        let sid = crate::tracing_session::DalaranTracingSessionId::parse("rs_cafebabe").unwrap();
         let expected = sid.to_string();
         let (tracer, exporter, provider) = build_tracer_with_processor();
 
@@ -302,9 +302,9 @@ mod tests {
 
         let spans = exporter.get_finished_spans().unwrap();
         assert_eq!(spans.len(), 1);
-        let attr = rerun_session_attr(&spans[0]).unwrap_or_else(|| {
+        let attr = dalaran_session_attr(&spans[0]).unwrap_or_else(|| {
             panic!(
-                "expected rerun_session_id on root span: got {:?}",
+                "expected dalaran_session_id on root span: got {:?}",
                 spans[0].attributes,
             )
         });

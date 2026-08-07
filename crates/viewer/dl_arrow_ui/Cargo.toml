@@ -1,6 +1,6 @@
 [package]
 authors.workspace = true
-description = "Show arrow data in a tree of rerun list_items and format arrow with syntax highlighting."
+description = "Show arrow data in a tree of dalaran list_items and format arrow with syntax highlighting."
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true

@@ -4,15 +4,15 @@ use dl_protos::cloud::v1alpha1::ext::{
     CreateDatasetEntryRequest, CreateTableEntryRequest, DatasetDetails, DatasetEntry, EntryDetails,
     LanceTable, ProviderDetails,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     EntryFilter, EntryKind, FindEntriesRequest, ReadDatasetEntryRequest,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
 use super::common::entry_name;
 
-pub async fn create_dataset_tests(service: impl RerunCloudService) {
+pub async fn create_dataset_tests(service: impl DalaranCloudService) {
     //
     // Create a dataset with just a name
     //
@@ -180,7 +180,7 @@ pub async fn create_dataset_tests(service: impl RerunCloudService) {
 // ---
 
 async fn create_dataset_entry(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     request: CreateDatasetEntryRequest,
 ) -> tonic::Result<DatasetEntry> {
     service
@@ -191,7 +191,7 @@ async fn create_dataset_entry(
 
 /// Get the entry details or return the endpoint error (all other errors panic)
 async fn entry_details_from_name(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     name: &str,
     entry_kind: EntryKind,
 ) -> tonic::Result<EntryDetails> {
@@ -219,7 +219,7 @@ async fn entry_details_from_name(
 
 /// Get the entry details or return the endpoint error (all other errors panic)
 async fn entry_details_from_id(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     entry_id: EntryId,
     entry_kind: EntryKind,
 ) -> tonic::Result<EntryDetails> {
@@ -247,7 +247,7 @@ async fn entry_details_from_id(
 
 /// Get the dataset details or return the endpoint error (all other errors panic)
 async fn dataset_details_from_id(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     entry_id: EntryId,
 ) -> tonic::Result<DatasetDetails> {
     service

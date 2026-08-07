@@ -1,0 +1,12 @@
+namespace dalaran.blueprint.components;
+
+/// The origin of a view.
+table ViewOrigin (
+  "attr.arrow.transparent",
+  "attr.dalaran.scope": "blueprint",
+  "attr.python.aliases": "str",
+  "attr.rust.derive": "PartialEq, Eq, PartialOrd, Ord",
+  "attr.rust.repr": "transparent"
+) {
+  value: dalaran.datatypes.EntityPath (order: 100);
+}

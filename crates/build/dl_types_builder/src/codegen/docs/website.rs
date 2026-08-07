@@ -1,4 +1,4 @@
-//! Generate the markdown files shown at <https://rerun.io/docs/reference/types>.
+//! Generate the markdown files shown at <https://dalaran.dev/docs/reference/types>.
 
 use std::collections::{BTreeMap, HashMap};
 use std::fmt::Write as _;
@@ -13,7 +13,7 @@ use crate::{
     CodeGenerator, GeneratedFiles, Object, ObjectField, ObjectKind, Objects, Reporter, Type,
 };
 
-pub const DATAFRAME_VIEW_FQNAME: &str = "rerun.blueprint.views.DataframeView";
+pub const DATAFRAME_VIEW_FQNAME: &str = "dalaran.blueprint.views.DataframeView";
 
 /// Like [`writeln!`], but without a [`Result`].
 macro_rules! putln {
@@ -89,7 +89,7 @@ impl CodeGenerator for DocsCodeGenerator {
             (
                 ObjectKind::Archetype,
                 1,
-                r"Archetypes are bundles of components for which the Rerun viewer has first-class
+                r"Archetypes are bundles of components for which the Dalaran viewer has first-class
 built-in support. See [Entities and Components](../../concepts/logging-and-ingestion/entity-component.md) and
 [Visualizers and Overrides](../../concepts/visualization/customize-views.md) for more information.
 
@@ -99,7 +99,7 @@ This page lists all built-in archetypes.",
             (
                 ObjectKind::Component,
                 2,
-                r"Components are the fundamental unit of logging in Rerun. This page lists all built-in components.
+                r"Components are the fundamental unit of logging in Dalaran. This page lists all built-in components.
 
 An entity can only ever contain a single array of any given component type.
 If you log the same component several times on an entity, the last value (or array of values) will overwrite the previous.
@@ -328,7 +328,7 @@ fn list_links(page: &mut String, object: &Object) {
         // More complicated link due to scope
         putln!(
             page,
-            " * 🐍 [Python API docs for `{}`](https://ref.rerun.io/docs/python/stable/common/{}_{}{}#rerun.{}.{}.{})",
+            " * 🐍 [Python API docs for `{}`](https://ref.dalaran.dev/docs/python/stable/common/{}_{}{}#dalaran.{}.{}.{})",
             object.name,
             object.scope().unwrap_or_default(),
             object.kind.plural_snake_case(),
@@ -341,14 +341,14 @@ fn list_links(page: &mut String, object: &Object) {
         let cpp_link = if object.is_enum() {
             // Can't link to enums directly 🤷
             format!(
-                "https://ref.rerun.io/docs/cpp/stable/namespacererun_1_1{}.html",
+                "https://ref.dalaran.dev/docs/cpp/stable/namespacedalaran_1_1{}.html",
                 object.kind.plural_snake_case()
             )
         } else {
             // `_1` is doxygen's replacement for ':'
             // https://github.com/doxygen/doxygen/blob/Release_1_9_8/src/util.cpp#L3532
             format!(
-                "https://ref.rerun.io/docs/cpp/stable/structrerun_1_1{}_1_1{}.html",
+                "https://ref.dalaran.dev/docs/cpp/stable/structdalaran_1_1{}_1_1{}.html",
                 object.kind.plural_snake_case(),
                 object.name
             )
@@ -363,7 +363,7 @@ fn list_links(page: &mut String, object: &Object) {
 
         putln!(
             page,
-            " * 🐍 [Python API docs for `{}`](https://ref.rerun.io/docs/python/stable/common/{}{}#rerun.{}.{})",
+            " * 🐍 [Python API docs for `{}`](https://ref.dalaran.dev/docs/python/stable/common/{}{}#dalaran.{}.{})",
             object.name,
             object.module_name().replace('/', "_"), // E.g. `blueprint_archetypes`
             speculative_marker,
@@ -373,7 +373,7 @@ fn list_links(page: &mut String, object: &Object) {
 
         putln!(
             page,
-            " * 🦀 [Rust API docs for `{}`](https://docs.rs/rerun/latest/rerun/{}/{}.{}.html{speculative_marker})",
+            " * 🦀 [Rust API docs for `{}`](https://docs.rs/dalaran/latest/dalaran/{}/{}.{}.html{speculative_marker})",
             object.name,
             object.kind.plural_snake_case(),
             if object.is_struct() { "struct" } else { "enum" },
@@ -386,11 +386,11 @@ fn write_frontmatter(o: &mut String, title: &str, order: Option<u64>, sort_child
     putln!(o, "---");
     putln!(o, "title: {title:?}");
     if let Some(order) = order {
-        // The order is used to sort `rerun.io/docs` side navigation
+        // The order is used to sort `dalaran.dev/docs` side navigation
         putln!(o, "order: {order}");
     }
     if let Some(sort_children) = sort_children {
-        // Sorts this page's children in the `rerun.io/docs` side navigation,
+        // Sorts this page's children in the `dalaran.dev/docs` side navigation,
         // overriding their individual `order`. Used here to keep the long,
         // generated type lists alphabetical without stamping an `order` on
         // every single page.
@@ -459,7 +459,7 @@ fn write_fields(reporter: &Reporter, objects: &Objects, o: &mut String, object: 
         assert_eq!(object.fields.len(), 1);
         let field_type = &object.fields[0].typ;
         if object.kind == ObjectKind::Component && matches!(field_type, Type::Object { .. }) {
-            putln!(o, "## Rerun datatype");
+            putln!(o, "## Dalaran datatype");
             putln!(o, "{}", type_info(objects, field_type));
             putln!(o);
         } else {
@@ -557,7 +557,7 @@ fn write_used_by(o: &mut String, reporter: &Reporter, objects: &Objects, object:
     if used_by.is_empty() {
         // NOTE: there are some false positives here, because unions can only
         // reference other tables, but they are unwrapped in the codegen.
-        // So for instance: `union Angle` uses `rerun.datatypes.Float32` in
+        // So for instance: `union Angle` uses `dalaran.datatypes.Float32` in
         // `angle.fbs`, but in the generated code that datatype is unused.
         if false {
             reporter.warn(&object.virtpath, &object.fqname, "Unused object");

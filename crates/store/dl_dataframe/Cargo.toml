@@ -24,7 +24,7 @@ all-features = true
 default = []
 
 [dependencies]
-# Rerun dependencies:
+# Dalaran dependencies:
 dl_arrow_util.workspace = true
 dl_chunk_store.workspace = true
 dl_chunk.workspace = true

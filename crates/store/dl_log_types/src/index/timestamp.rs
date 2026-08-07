@@ -48,7 +48,7 @@ impl Timestamp {
 }
 
 // ------------------------------------------
-// Rerun types converters
+// Dalaran types converters
 
 impl From<dl_types_core::datatypes::TimeInt> for Timestamp {
     fn from(time_int: dl_types_core::datatypes::TimeInt) -> Self {

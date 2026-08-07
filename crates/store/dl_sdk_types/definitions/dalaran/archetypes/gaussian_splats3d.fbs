@@ -1,0 +1,53 @@
+namespace dalaran.archetypes;
+
+// ---
+
+/// 3D gaussian splats, e.g. from a 3D Gaussian Splatting (3DGS) reconstruction.
+///
+/// Each gaussian is an anisotropic 3D gaussian distribution:
+/// a unit isotropic gaussian scaled per-axis, rotated, and translated.
+/// The scales are the standard deviations along the principal axes, in scene units.
+///
+/// Note that unlike 3DGS training checkpoints (e.g. PLY files), all values are stored
+/// in their natural form: linear scales, and base colors with opacity as RGBA.
+///
+/// \example archetypes/gaussian_splats3d_simple title="Log a few gaussian splats"
+/// \example archetypes/gaussian_splats3d_ply title="Log a 3D gaussian splatting (3DGS) PLY file"
+table GaussianSplats3D (
+  "attr.docs.category": "Spatial 3D",
+  "attr.docs.unreleased",
+  "attr.docs.view_types": "Spatial3DView",
+  "attr.dalaran.state": "unstable",
+  "attr.dalaran.visualizer": "GaussianSplats3D",
+  "attr.rust.derive": "PartialEq"
+) {
+  // --- Required ---
+
+  /// The centers (means) of the gaussians.
+  centers: [dalaran.components.Position3D] ("attr.dalaran.component_required", order: 1000);
+
+  // --- Recommended ---
+
+  /// Per-axis standard deviations of the gaussians, in scene units.
+  scales: [dalaran.components.Scale3D] ("attr.dalaran.component_recommended", nullable, order: 2000);
+
+  /// The orientations of the gaussians.
+  quaternions: [dalaran.components.RotationQuat] ("attr.dalaran.component_recommended", nullable, order: 2100);
+
+  /// The base colors and opacities of the gaussians.
+  ///
+  /// The RGB part is the view-independent base color, i.e. the degree-0 (DC) term of the spherical harmonics.
+  /// The alpha part is the peak opacity of the gaussian; the gaussian falloff further modulates it spatially.
+  colors: [dalaran.components.Color] ("attr.dalaran.component_recommended", nullable, order: 2200);
+
+  // --- Optional ---
+
+  /// Higher-order spherical harmonics coefficients for view-dependent color.
+  sh_coefficients: [dalaran.components.SphericalHarmonics3Rgb] ("attr.dalaran.component_optional", nullable, order: 3000);
+
+  /// The highest spherical harmonics degree to evaluate when rendering, 0-3.
+  ///
+  /// Lower values render faster; `0` disables view-dependent color entirely.
+  /// If not set, defaults to 3, i.e. all coefficients present in the data are used.
+  spherical_harmonics_degree: dalaran.components.SphericalHarmonicsDegree ("attr.dalaran.component_optional", nullable, order: 3100);
+}

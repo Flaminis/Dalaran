@@ -1,9 +1,9 @@
 [package]
 authors.workspace = true
-description = "Rerun GUI theme and helpers, built around egui"
+description = "Dalaran GUI theme and helpers, built around egui"
 edition.workspace = true
 homepage.workspace = true
-license = "(MIT OR Apache-2.0) AND OFL-1.1"
+license = "(Apache-2.0) AND OFL-1.1"
 name = "dl_ui"
 publish = true
 readme = "README.md"
@@ -12,8 +12,7 @@ rust-version.workspace = true
 version.workspace = true
 include = [
   "../../Cargo.lock",
-  "../../LICENSE-APACHE",
-  "../../LICENSE-MIT",
+  "../../LICENSE",
   "**/*.rs",
   "Cargo.toml",
   "data/*",

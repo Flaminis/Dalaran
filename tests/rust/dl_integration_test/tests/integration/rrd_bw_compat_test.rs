@@ -38,7 +38,7 @@ fn previous_minor_version() -> (u32, u32) {
     (major, minor - 1)
 }
 
-/// Probe `app.rerun.io` to find the latest patch for a given `major.minor`.
+/// Probe `app.dalaran.dev` to find the latest patch for a given `major.minor`.
 ///
 /// Tries `major.minor.0`, `major.minor.1`, … until a HEAD request returns 404.
 async fn resolve_latest_patch(client: &reqwest::Client, major: u32, minor: u32) -> String {
@@ -46,7 +46,7 @@ async fn resolve_latest_patch(client: &reqwest::Client, major: u32, minor: u32) 
     loop {
         let next = patch + 1;
         let version = format!("{major}.{minor}.{next}");
-        let url = format!("https://app.rerun.io/version/{version}/examples/plots.rrd");
+        let url = format!("https://app.dalaran.dev/version/{version}/examples/plots.rrd");
         match client.head(&url).send().await {
             Ok(resp) if resp.status().is_success() => patch = next,
             _ => break,
@@ -106,18 +106,18 @@ const WINDOW_SIZE: egui::Vec2 = egui::vec2(1024.0, 768.0);
 /// marker, which pokes slightly above the track.
 const TIME_BAR_MASK_HEIGHT: f32 = 40.0;
 
-/// An entry from the examples manifest hosted at `app.rerun.io`.
+/// An entry from the examples manifest hosted at `app.dalaran.dev`.
 #[derive(serde::Deserialize)]
 struct ManifestEntry {
     name: String,
     rrd_url: String,
 }
 
-/// Fetch the example manifest for a given version from `app.rerun.io`.
+/// Fetch the example manifest for a given version from `app.dalaran.dev`.
 ///
-/// This returns only the stable examples shown on `rerun.io/viewer`.
+/// This returns only the stable examples shown on `dalaran.dev/viewer`.
 async fn fetch_example_manifest(client: &reqwest::Client, version: &str) -> Vec<ManifestEntry> {
-    let url = format!("https://app.rerun.io/version/{version}/examples_manifest.json");
+    let url = format!("https://app.dalaran.dev/version/{version}/examples_manifest.json");
     let resp = client
         .get(&url)
         .send()
@@ -201,7 +201,7 @@ async fn test_old_rrds_in_current_viewer() {
     let version = resolve_latest_patch(&client, major, prev_minor).await;
     eprintln!("Testing backward compatibility with version {version}");
 
-    let cache_dir = directories::ProjectDirs::from("io", "rerun", "rerun-integration-tests")
+    let cache_dir = directories::ProjectDirs::from("io", "dalaran", "dalaran-integration-tests")
         .expect("could not resolve the OS user cache directory (HOME unset?)")
         .cache_dir()
         .join("rrd_bw_compat")

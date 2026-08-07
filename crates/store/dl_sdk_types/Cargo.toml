@@ -1,7 +1,7 @@
 [package]
 name = "dl_sdk_types"
 authors.workspace = true
-description = "The built-in Rerun data types, component types, and archetypes."
+description = "The built-in Dalaran data types, component types, and archetypes."
 edition = "2024"
 homepage.workspace = true
 include.workspace = true
@@ -48,7 +48,7 @@ testing = []
 
 
 [dependencies]
-# Rerun
+# Dalaran
 dl_byte_size.workspace = true
 dl_error.workspace = true
 dl_rvl.workspace = true

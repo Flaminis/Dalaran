@@ -12,7 +12,7 @@ pub struct RedapClaims {
 
     /// The `aud` claim, identifying the intended consumer of the token.
     ///
-    /// Typically set to `"redap"` for Rerun storage-node tokens.
+    /// Typically set to `"redap"` for Dalaran storage-node tokens.
     /// Per RFC 7519, this can be either a single string or an array of strings.
     #[serde(
         deserialize_with = "deser_string_or_vec",
@@ -40,7 +40,7 @@ pub struct RedapClaims {
 #[serde(untagged)]
 pub enum Claims {
     #[cfg(feature = "oauth")]
-    RerunCloud(crate::oauth::RerunCloudClaims),
+    DalaranCloud(crate::oauth::DalaranCloudClaims),
 
     Redap(RedapClaims),
 }
@@ -50,7 +50,7 @@ impl Claims {
     pub fn sub(&self) -> &str {
         match self {
             #[cfg(feature = "oauth")]
-            Self::RerunCloud(claims) => claims.email.as_deref().unwrap_or(claims.sub.as_str()),
+            Self::DalaranCloud(claims) => claims.email.as_deref().unwrap_or(claims.sub.as_str()),
             Self::Redap(claims) => claims.sub.as_str(),
         }
     }
@@ -59,7 +59,7 @@ impl Claims {
     pub fn iss(&self) -> &str {
         match self {
             #[cfg(feature = "oauth")]
-            Self::RerunCloud(claims) => claims.iss.as_str(),
+            Self::DalaranCloud(claims) => claims.iss.as_str(),
             Self::Redap(claims) => claims.iss.as_str(),
         }
     }
@@ -67,7 +67,7 @@ impl Claims {
     pub fn permissions(&self) -> &[Permission] {
         match self {
             #[cfg(feature = "oauth")]
-            Self::RerunCloud(claims) => &claims.permissions[..],
+            Self::DalaranCloud(claims) => &claims.permissions[..],
             Self::Redap(claims) => &claims.permissions[..],
         }
     }
@@ -172,12 +172,12 @@ mod tests {
             "aud": "redap",
             "exp": 1234567890,
             "iat": 1234567890,
-            "allowed_hosts": ["api.acme.cloud.rerun.io"]
+            "allowed_hosts": ["api.acme.cloud.dalaran.dev"]
         }"#;
 
         let claims: RedapClaims = serde_json::from_str(json).unwrap();
         assert_eq!(claims.aud, vec!["redap"]);
-        assert_eq!(claims.allowed_hosts, vec!["api.acme.cloud.rerun.io"]);
+        assert_eq!(claims.allowed_hosts, vec!["api.acme.cloud.dalaran.dev"]);
     }
 
     #[test]
@@ -225,13 +225,13 @@ mod tests {
             exp: 1234567890,
             iat: 1234567890,
             permissions: vec![],
-            allowed_hosts: vec!["api.acme.cloud.rerun.io".to_owned()],
+            allowed_hosts: vec!["api.acme.cloud.dalaran.dev".to_owned()],
         };
 
         let json = serde_json::to_value(&claims).unwrap();
         assert_eq!(
             json["allowed_hosts"],
-            serde_json::json!(["api.acme.cloud.rerun.io"])
+            serde_json::json!(["api.acme.cloud.dalaran.dev"])
         );
     }
 }

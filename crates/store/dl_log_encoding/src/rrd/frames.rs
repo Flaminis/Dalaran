@@ -94,7 +94,7 @@ impl Decodable for EncodingOptions {
 /// During normal operations, there can only be a single [`StreamHeader`] per RRD stream.
 /// It is possible to break that invariant by concatenating streams using external tools,
 /// e.g. by doing something like `cat *.rrd > all_my_recordings.rrd`.
-/// Passing that stream back through Rerun tools, e.g. `cat *.rrd | rerun rrd merge > all_my_recordings.rrd`,
+/// Passing that stream back through Dalaran tools, e.g. `cat *.rrd | dalaran rrd merge > all_my_recordings.rrd`,
 /// would once again guarantee that only one stream header is present though.
 /// I.e. that invariant holds as long as one stays within our ecosystem of tools.
 #[derive(Debug, Clone, Copy)]
@@ -122,7 +122,7 @@ impl StreamHeader {
 
             if encoded_version.major == 0 && encoded_version.minor < 23 {
                 // We broke compatibility for 0.23 for (hopefully) the last time.
-                return Err(crate::rrd::CodecError::IncompatibleRerunVersion {
+                return Err(crate::rrd::CodecError::IncompatibleDalaranVersion {
                     file: Box::new(encoded_version),
                     local: Box::new(CrateVersion::LOCAL),
                 });
@@ -130,7 +130,7 @@ impl StreamHeader {
                 // Loading old files should be fine, and if it is not, the chunk migration in dl_sorbet should already log a warning.
             } else {
                 dl_log::warn_once!(
-                    "Found data stream with Rerun version {encoded_version} which is newer than the local Rerun version ({}). This file may contain data that is not compatible with this version of Rerun. Consider updating Rerun.",
+                    "Found data stream with Dalaran version {encoded_version} which is newer than the local Dalaran version ({}). This file may contain data that is not compatible with this version of Dalaran. Consider updating Dalaran.",
                     CrateVersion::LOCAL
                 );
             }
@@ -211,7 +211,7 @@ impl Decodable for StreamHeader {
 /// During normal operations, there can only be a single [`StreamFooter`] per RRD stream.
 /// It is possible to break that invariant by concatenating streams using external tools,
 /// e.g. by doing something like `cat *.rrd > all_my_recordings.rrd`.
-/// Passing that stream back through Rerun tools, e.g. `cat *.rrd | rerun rrd merge > all_my_recordings.rrd`,
+/// Passing that stream back through Dalaran tools, e.g. `cat *.rrd | dalaran rrd merge > all_my_recordings.rrd`,
 /// would once again guarantee that only one stream footer is present though.
 /// I.e. that invariant holds as long as one stays within our ecosystem of tools.
 ///
@@ -294,7 +294,7 @@ impl StreamFooter {
     const ENCODED_SIZE_BYTES_IGNORING_ENTRIES: usize = 12;
     const ENCODED_SIZE_BYTES_SINGLE_ENTRY: usize = 20;
 
-    pub const CRC_SEED: u32 = 7850921; // "RERUN" in base 26 (A=0, Z=25)
+    pub const CRC_SEED: u32 = 7850921; // "DALARAN" in base 26 (A=0, Z=25)
     pub const RRD_IDENTIFIER: [u8; 4] = *b"FOOT";
 
     pub fn new(

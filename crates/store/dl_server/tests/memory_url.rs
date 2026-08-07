@@ -13,16 +13,16 @@ use dl_protos::cloud::v1alpha1::DeleteEntryRequest;
 use dl_protos::cloud::v1alpha1::ScanDatasetManifestRequest;
 use dl_protos::cloud::v1alpha1::ext;
 use dl_protos::cloud::v1alpha1::ext::ScanDatasetManifestDataframe;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService as _;
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_redap_tests::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, entry_name,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
     register_and_wait,
 };
-use dl_server::{RerunCloudHandler, RerunCloudHandlerBuilder};
+use dl_server::{DalaranCloudHandler, DalaranCloudHandlerBuilder};
 
-fn build() -> RerunCloudHandler {
-    RerunCloudHandlerBuilder::new().build()
+fn build() -> DalaranCloudHandler {
+    DalaranCloudHandlerBuilder::new().build()
 }
 
 /// Test the cross-dataset memory:// re-registration flow:
@@ -49,7 +49,7 @@ async fn register_memory_url_cross_dataset() {
 
     // Extract the memory:// URL from the manifest
     let manifest_a = scan_manifest(&service, "dataset_a").await;
-    let urls = ScanDatasetManifestDataframe::COLUMN_RERUN_STORAGE_URL
+    let urls = ScanDatasetManifestDataframe::COLUMN_DALARAN_STORAGE_URL
         .extract(&manifest_a)
         .unwrap();
     let memory_url = urls.value_owned(0);
@@ -162,7 +162,7 @@ async fn register_memory_url_not_found() {
 // --- helpers ---
 
 async fn scan_manifest(
-    service: &impl dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService,
+    service: &impl dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService,
     dataset_name: &str,
 ) -> arrow::array::RecordBatch {
     let responses: Vec<_> = service

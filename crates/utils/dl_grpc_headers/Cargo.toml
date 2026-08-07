@@ -1,7 +1,7 @@
 [package]
 name = "dl_grpc_headers"
 authors.workspace = true
-description = "Rerun gRPC header conventions: well-known header names, the `RerunVersionInterceptor`, and the tower `Layer` machinery that propagates them across requests and responses."
+description = "Dalaran gRPC header conventions: well-known header names, the `DalaranVersionInterceptor`, and the tower `Layer` machinery that propagates them across requests and responses."
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

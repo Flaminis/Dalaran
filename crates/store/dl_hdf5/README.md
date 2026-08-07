@@ -1,14 +1,14 @@
 # dl_hdf5
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_hdf5.svg)](https://crates.io/crates/dl_hdf5)
 [![Documentation](https://docs.rs/dl_hdf5/badge.svg)](https://docs.rs/dl_hdf5)
 ![MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Apache](https://img.shields.io/badge/license-Apache-blue.svg)
 
-Core HDF5-to-chunk loading logic for Rerun.
+Core HDF5-to-chunk loading logic for Dalaran.
 
-Reads an HDF5 file into a lazy stream of Rerun chunks:
+Reads an HDF5 file into a lazy stream of Dalaran chunks:
 each HDF5 group maps to an entity, each leaf dataset to a component, with a single file-wide timeline.
 The backend is the pure-Rust `hdf5-pure` crate — no native libhdf5 dependency.

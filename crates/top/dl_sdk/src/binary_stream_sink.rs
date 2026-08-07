@@ -72,7 +72,7 @@ impl Drop for BinaryStreamStorage {
 
 /// Stream log messages to an in-memory binary stream.
 ///
-/// The contents of this stream are encoded in the Rerun Record Data format (rrd).
+/// The contents of this stream are encoded in the Dalaran Record Data format (rrd).
 ///
 /// This stream has no mechanism of limiting memory or creating back-pressure. If you do not
 /// read from it, it will buffer all messages that you have logged.

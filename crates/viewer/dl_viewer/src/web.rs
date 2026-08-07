@@ -624,7 +624,7 @@ fn store_id_from_recording_id(
 
 // TODO(jprochazk): figure out a way to auto-generate these types on JS side
 
-// Keep in sync with the `Panel` typedef in `rerun_js/web-viewer/index.js`
+// Keep in sync with the `Panel` typedef in `dalaran_js/web-viewer/index.js`
 #[derive(Clone, Deserialize, strum_macros::EnumString)]
 #[strum(serialize_all = "snake_case")]
 enum Panel {
@@ -634,7 +634,7 @@ enum Panel {
     Time,
 }
 
-// Keep in sync with the `PanelState` typedef in `rerun_js/web-viewer/index.js`
+// Keep in sync with the `PanelState` typedef in `dalaran_js/web-viewer/index.js`
 #[derive(Clone, Deserialize, strum_macros::EnumString)]
 #[strum(serialize_all = "snake_case")]
 enum PanelState {
@@ -653,7 +653,7 @@ impl From<PanelState> for dl_sdk_types::blueprint::components::PanelState {
     }
 }
 
-// Keep in sync with the `AppOptions` interface in `rerun_js/web-viewer/index.ts`.
+// Keep in sync with the `AppOptions` interface in `dalaran_js/web-viewer/index.ts`.
 #[derive(Clone, Default, Deserialize)]
 pub struct AppOptions {
     manifest_url: Option<String>,
@@ -678,7 +678,7 @@ pub struct AppOptions {
     fullscreen: Option<FullscreenOptions>,
 }
 
-// Keep in sync with the `FullscreenOptions` interface in `rerun_js/web-viewer/index.ts`
+// Keep in sync with the `FullscreenOptions` interface in `dalaran_js/web-viewer/index.ts`
 #[derive(Clone, Deserialize)]
 pub struct FullscreenOptions {
     /// This returns the current fullscreen state, which is a boolean representing on/off.
@@ -845,12 +845,12 @@ fn create_app(
 }
 
 /// Used to set the "email" property in the analytics config,
-/// in the same way as `rerun analytics email YOURNAME@rerun.io`.
+/// in the same way as `dalaran analytics email YOURNAME@dalaran.dev`.
 ///
 /// This one just panics when it fails, as it's only ever really run
-/// by rerun employees manually in `app.rerun.io`.
+/// by dalaran employees manually in `app.dalaran.dev`.
 #[cfg(feature = "analytics")]
-#[allow(clippy::allow_attributes, clippy::unwrap_used)] // This is only run by rerun employees, so it's fine to panic
+#[allow(clippy::allow_attributes, clippy::unwrap_used)] // This is only run by dalaran employees, so it's fine to panic
 #[wasm_bindgen]
 pub fn set_email(email: String) {
     let mut config = dl_analytics::Config::load().unwrap().unwrap_or_default();
@@ -928,7 +928,7 @@ mod tests {
                 "Bob",
                 "Charlie",
                 "Dave",
-                "http://www.rerun.io",
+                "http://www.dalaran.dev",
             ]);
 
             // Convert arrays to ArrayRef (trait objects)

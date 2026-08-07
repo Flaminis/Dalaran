@@ -351,7 +351,7 @@ impl eframe::App for ExampleApp {
 
         // RIGHT PANEL
         //
-        // This is the "idiomatic" panel structure for Rerun:
+        // This is the "idiomatic" panel structure for Dalaran:
         // - A top-level `SidePanel` without inner margins and which sets the clip rectangle.
         // - Every piece of content (title bar, lists, etc.) are wrapped in a `Frame` with inner
         //   margins set to `ReUi::panel_margins()`. That can be done with `ReUi::panel_content()`.
@@ -531,7 +531,7 @@ impl egui_tiles::Behavior<Tab> for MyTileTreeBehavior {
 
             ui.label("Help").on_hover_ui(|ui| {
                 Help::new("Help example")
-                    .docs_link("https://rerun.io/docs/reference/types/views/map_view")
+                    .docs_link("https://dalaran.dev/docs/reference/types/views/map_view")
                     .control("Pan", (icons::LEFT_MOUSE_CLICK, "+", "drag"))
                     .control(
                         "Zoom",
@@ -580,7 +580,7 @@ impl egui_tiles::Behavior<Tab> for MyTileTreeBehavior {
 
                     ui.add(ComboItemHeader::new("Other values:"));
                     ComboItem::new("vertex_positions").ui(ui);
-                    ComboItem::new("Rerun default")
+                    ComboItem::new("Dalaran default")
                         .value(code.into_widget_text(ui.style()))
                         .ui(ui);
                 });

@@ -18,7 +18,7 @@ pub trait WrapperComponent:
     /// The underlying [`Loggable`] datatype for this component.
     type Datatype: Loggable + Sized;
 
-    /// The fully-qualified type of this component, e.g. `rerun.components.Position2D`.
+    /// The fully-qualified type of this component, e.g. `dalaran.components.Position2D`.
     fn name() -> ComponentType;
 
     /// Unwraps the component into its underlying datatype.

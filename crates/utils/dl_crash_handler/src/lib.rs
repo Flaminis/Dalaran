@@ -64,7 +64,7 @@ fn install_panic_hook(_build_info: BuildInfo) {
 
             eprintln!(
                 "\n\
-            Troubleshooting Rerun: https://www.rerun.io/docs/overview/installing-rerun/troubleshooting \n\
+            Troubleshooting Dalaran: https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting \n\
             Report bugs: https://github.com/rerun-io/rerun/issues"
             );
 
@@ -122,11 +122,11 @@ pub fn install_signal_handler(build_info: BuildInfo) {
 
     unsafe extern "C" fn signal_handler(signal_number: libc::c_int) {
         fn print_problem_and_links(signal_name: &str) {
-            write_to_stderr("Rerun caught a signal: ");
+            write_to_stderr("Dalaran caught a signal: ");
             write_to_stderr(signal_name);
             write_to_stderr("\n");
             write_to_stderr(
-                "Troubleshooting Rerun: https://www.rerun.io/docs/overview/installing-rerun/troubleshooting \n",
+                "Troubleshooting Dalaran: https://www.dalaran.dev/docs/overview/installing-dalaran/troubleshooting \n",
             );
             write_to_stderr("Report bugs: https://github.com/rerun-io/rerun/issues \n");
             write_to_stderr("\n");
@@ -229,9 +229,9 @@ pub fn callstack_from(start_patterns: &[&str]) -> String {
     // Trim the bottom to cut out code that sets up the callstack:
     let end_patterns = [
         "std::sys_common::backtrace::__rust_begin_short_backtrace",
-        // Trim the bottom even more to exclude any user code that potentially used `rerun`
+        // Trim the bottom even more to exclude any user code that potentially used `dalaran`
         // as a library to show a viewer. In these cases there may be sensitive user code
-        // that called `rerun::run`, and we do not want to include it:
+        // that called `dalaran::run`, and we do not want to include it:
         "run_native_app",
     ];
 
@@ -291,7 +291,7 @@ fn format_backtrace(
 ///
 /// Example input:
 /// * `/Users/emilk/.cargo/registry/src/github.com-1ecc6299db9ec823/tokio-1.24.1/src/runtime/runtime.rs`
-/// * `crates/rerun/src/main.rs`
+/// * `crates/dalaran/src/main.rs`
 /// * `/rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/ops/function.rs`
 fn anonymize_source_file_path(path: &std::path::Path) -> String {
     // We must make sure we strip everything sensitive (especially user name).
@@ -323,7 +323,7 @@ fn test_anonymize_path() {
             "/Users/emilk/.cargo/registry/src/github.com-1ecc6299db9ec823/tokio-1.24.1/src/runtime/runtime.rs",
             "tokio-1.24.1/src/runtime/runtime.rs",
         ),
-        ("crates/rerun/src/main.rs", "rerun/src/main.rs"),
+        ("crates/dalaran/src/main.rs", "dalaran/src/main.rs"),
         (
             "/rustc/d5a82bbd26e1ad8b7401f6a718a9c57c96905483/library/core/src/ops/function.rs",
             "core/src/ops/function.rs",

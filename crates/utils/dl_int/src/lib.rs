@@ -1,4 +1,4 @@
-//! Small numeric helper traits shared across the Rerun crates.
+//! Small numeric helper traits shared across the Dalaran crates.
 //!
 //! * [`SaturatingCast`] — cast between integer types, clamping to the target's range.
 //! * [`UnsignedAbs`] — absolute value of a signed integer without wrapping or panicking.

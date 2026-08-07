@@ -5,7 +5,7 @@ use crate::Loggable as _;
 
 /// A unique ID for a `Chunk`.
 ///
-/// `Chunk`s are the atomic unit of ingestion, transport, storage, events and GC in Rerun.
+/// `Chunk`s are the atomic unit of ingestion, transport, storage, events and GC in Dalaran.
 ///
 /// Internally, a `Chunk` is made up of rows, which are themselves uniquely identified by
 /// their [`RowId`](crate::RowId).
@@ -182,4 +182,4 @@ impl std::ops::DerefMut for ChunkId {
     }
 }
 
-crate::delegate_arrow_tuid!(ChunkId as "rerun.controls.ChunkId"); // Used in the catalog server
+crate::delegate_arrow_tuid!(ChunkId as "dalaran.controls.ChunkId"); // Used in the catalog server

@@ -1,6 +1,6 @@
 [package]
 authors.workspace = true
-description = "The central viewport panel of the Rerun viewer."
+description = "The central viewport panel of the Dalaran viewer."
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true

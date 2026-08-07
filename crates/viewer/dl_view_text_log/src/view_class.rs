@@ -76,7 +76,7 @@ impl ViewClass for TextView {
 
     fn help(&self, _os: egui::os::OperatingSystem) -> Help {
         Help::new("Text log view")
-            .docs_link("https://rerun.io/docs/reference/types/views/text_log_view")
+            .docs_link("https://dalaran.dev/docs/reference/types/views/text_log_view")
             .markdown(
                 "TextLog entries over time.
 

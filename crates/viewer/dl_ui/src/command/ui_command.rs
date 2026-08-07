@@ -34,7 +34,7 @@ pub enum UICommand {
 
     OpenWebsite,
     OpenWebHelp,
-    OpenRerunDiscord,
+    OpenDalaranDiscord,
 
     ResetViewer,
 
@@ -129,16 +129,16 @@ impl UICommand {
             Self::NavigateForward => ("Forward in history", "Go forward in history"),
 
             #[cfg(not(target_arch = "wasm32"))]
-            Self::Quit => ("Quit", "Close the Rerun Viewer"),
+            Self::Quit => ("Quit", "Close the Dalaran Viewer"),
 
-            Self::OpenWebsite => ("rerun.io", "Visit our homepage"),
+            Self::OpenWebsite => ("dalaran.dev", "Visit our homepage"),
             Self::OpenWebHelp => (
                 "Docs",
                 "Visit the docs on our website, with troubleshooting tips and more",
             ),
-            Self::OpenRerunDiscord => (
-                "Rerun Discord",
-                "Visit the Rerun Discord server, where you can ask questions and get help",
+            Self::OpenDalaranDiscord => (
+                "Dalaran Discord",
+                "Visit the Dalaran Discord server, where you can ask questions and get help",
             ),
 
             Self::ResetViewer => (
@@ -160,7 +160,7 @@ impl UICommand {
 
             Self::ToggleDevPanel => (
                 "Toggle dev panel",
-                "View developer stats like RAM usage inside Rerun Viewer",
+                "View developer stats like RAM usage inside Dalaran Viewer",
             ),
 
             Self::TogglePanelStateOverrides => (
@@ -300,7 +300,7 @@ impl UICommand {
 
             Self::OpenWebHelp => smallvec![],
             Self::OpenWebsite => smallvec![],
-            Self::OpenRerunDiscord => smallvec![],
+            Self::OpenDalaranDiscord => smallvec![],
 
             Self::ResetViewer => smallvec![ctrl_shift(Key::R)],
 
@@ -376,13 +376,13 @@ impl UICommand {
     pub fn icon(self) -> Option<&'static crate::Icon> {
         match self {
             Self::OpenWebsite | Self::OpenWebHelp => Some(&crate::icons::EXTERNAL_LINK),
-            Self::OpenRerunDiscord => Some(&crate::icons::DISCORD),
+            Self::OpenDalaranDiscord => Some(&crate::icons::DISCORD),
             _ => None,
         }
     }
 
     pub fn is_link(self) -> bool {
-        matches!(self, Self::OpenWebHelp | Self::OpenRerunDiscord)
+        matches!(self, Self::OpenWebHelp | Self::OpenDalaranDiscord)
     }
 
     /// Does this command only exist in debug builds?

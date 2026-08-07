@@ -1,0 +1,11 @@
+namespace dalaran.components;
+
+// ---
+
+/// An edge in a graph connecting two nodes.
+table GraphEdge (
+  "attr.rust.derive": "Default, PartialEq, Eq, PartialOrd, Ord",
+  "attr.rust.repr": "transparent"
+) {
+  edge: dalaran.datatypes.Utf8Pair (order: 100);
+}

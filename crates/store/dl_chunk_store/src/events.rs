@@ -78,7 +78,7 @@ impl ChunkMeta {
     }
 }
 
-/// The atomic unit of change in the Rerun [`ChunkStore`].
+/// The atomic unit of change in the Dalaran [`ChunkStore`].
 ///
 /// A [`ChunkStoreEvent`] describes the changes caused by the addition or deletion of a
 /// [`Chunk`] in the store.
@@ -121,7 +121,7 @@ impl std::ops::Deref for ChunkStoreEvent {
     }
 }
 
-/// Describes an atomic change in the Rerun [`ChunkStore`]:
+/// Describes an atomic change in the Dalaran [`ChunkStore`]:
 /// * a physical chunk has been added or deleted.
 /// * a virtual manifest has been added.
 ///

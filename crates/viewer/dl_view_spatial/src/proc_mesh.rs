@@ -597,7 +597,7 @@ fn generate_solid(key: &ProcMeshKey, render_ctx: &RenderContext) -> Result<Solid
                 mg_subdivisions,
                 mg_subdivisions,
                 // rotate from the Y axis (baked into MeshGen) onto the Z axis (our choice of
-                // default orientation, aligned with Rerun’s default of Z-up).
+                // default orientation, aligned with Dalaran’s default of Z-up).
                 macaw::IsoTransform::from_quat(glam::Quat::from_rotation_x(
                     std::f32::consts::FRAC_PI_2,
                 )),

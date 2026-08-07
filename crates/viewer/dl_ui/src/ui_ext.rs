@@ -9,13 +9,13 @@ use crate::button::ReButton;
 use crate::list_item::{self, LabelContent};
 use crate::{ContextExt as _, DesignTokens, Icon, LabelStyle, Size, Variant, icons};
 
-static FULL_SPAN_TAG: &str = "rerun_full_span";
+static FULL_SPAN_TAG: &str = "dalaran_full_span";
 
 fn error_label_bg_color(fg_color: Color32) -> Color32 {
     fg_color.gamma_multiply(0.35)
 }
 
-/// Rerun custom extensions to [`egui::Ui`].
+/// Dalaran custom extensions to [`egui::Ui`].
 pub trait UiExt {
     fn ui(&self) -> &egui::Ui;
     fn ui_mut(&mut self) -> &mut egui::Ui;
@@ -468,7 +468,7 @@ pub trait UiExt {
 
     /// Replacement for [`egui::CollapsingHeader`] that respect our style.
     ///
-    /// The layout is fine-tuned to fit well in inspector panels (such as Rerun's Selection Panel)
+    /// The layout is fine-tuned to fit well in inspector panels (such as Dalaran's Selection Panel)
     /// where the collapsing header should align nicely with checkboxes and other controls.
     fn collapsing_header<R>(
         &mut self,
@@ -956,7 +956,7 @@ pub trait UiExt {
     ///
     /// NOTE: for most kinds of URL, the `always_new_tab` is indirectly overridden to `true` by
     /// `dl_viewer::app_state::check_for_clicked_hyperlinks()`, unless the URL is special-cased by
-    /// that function (e.g. `rerun://` URLs).
+    /// that function (e.g. `dalaran://` URLs).
     fn re_hyperlink(
         &mut self,
         text: impl Into<egui::WidgetText>,

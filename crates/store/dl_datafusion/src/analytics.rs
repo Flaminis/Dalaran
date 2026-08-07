@@ -1,6 +1,6 @@
 //! Per-connection analytics for dataset queries.
 //!
-//! Each connection to a Rerun Hub instance gets its own analytics sender
+//! Each connection to a Dalaran Hub instance gets its own analytics sender
 //! that forwards OTLP trace events to that instance's OTEL ingest endpoint.
 //! This ensures analytics go to the correct cloud when the viewer is connected
 //! to multiple clouds simultaneously.
@@ -45,7 +45,7 @@ use web_time::{Duration, Instant, SystemTime};
 use crate::metrics_capture::{QueryMetrics, QuerySnapshot, build_query_snapshot};
 
 /// A per-connection analytics client that sends OTLP traces to a specific
-/// Rerun Hub's OTEL ingest endpoint.
+/// Dalaran Hub's OTEL ingest endpoint.
 ///
 /// Cheap to clone (wraps an `Arc`).
 ///
@@ -132,7 +132,7 @@ impl ConnectionAnalytics {
         let fut = async move {
             if let Err(err) = this.send_span_impl(span, trace_id).await {
                 dl_log::debug_once!(
-                    "Failed to send analytics to Rerun Hub: {} ({})",
+                    "Failed to send analytics to Dalaran Hub: {} ({})",
                     err.code(),
                     err.message()
                 );
@@ -156,17 +156,17 @@ impl ConnectionAnalytics {
 
         // `service.name` is the OTel resource attribute that identifies the
         // sending service in the trace store (Grafana/Tempo etc.). We
-        // hard-code it to `"rerun-viewer"` here because this piggy-back is
+        // hard-code it to `"dalaran-viewer"` here because this piggy-back is
         // viewer-specific by construction — it ships `cloud_query_dataset`
         // / `cloud_scan_table` spans from the viewer's query path,
         // regardless of whatever `OTEL_SERVICE_NAME` the caller's process
         // might have set for its own general tracing.
         //
         // The SDK-trace path in `dl_perf_telemetry` (driven by
-        // `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=rerun://`) instead follows
+        // `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=dalaran://`) instead follows
         // the OTel convention and uses whatever `OTEL_SERVICE_NAME` was
-        // set at init time (e.g. `rerun-py`, application-specific).
-        let mut resource_attributes = vec![kv_string("service.name", "rerun-viewer")];
+        // set at init time (e.g. `dalaran-py`, application-specific).
+        let mut resource_attributes = vec![kv_string("service.name", "dalaran-viewer")];
         if let Some(analytics) = dl_analytics::Analytics::global_get() {
             resource_attributes.push(kv_string("analytics_id", &analytics.config().analytics_id));
         }
@@ -366,7 +366,7 @@ pub struct QueryInfo {
     pub filters_total: u32,
 
     /// Semicolon-delimited SQL representations of every offered filter
-    /// (e.g. `"(log_time > 0);rerun_segment_id IN ('a', 'b')"`).
+    /// (e.g. `"(log_time > 0);dalaran_segment_id IN ('a', 'b')"`).
     pub filters_signatures: String,
 
     /// Semicolon-delimited SQL signatures of filters classified as
@@ -2317,7 +2317,7 @@ mod table_query_tests {
     // These tests pin that contract; subsequent calls must not overwrite.
 
     fn make_pending() -> PendingTableQueryAnalytics {
-        let origin: Origin = "rerun+http://localhost:51234".parse().unwrap();
+        let origin: Origin = "dalaran+http://localhost:51234".parse().unwrap();
         let analytics = ConnectionAnalytics::disabled_for_test(origin);
         analytics.begin_table_query(dummy_table_query_info(), Instant::now())
     }
@@ -2604,10 +2604,10 @@ mod expr_filter_signature_tests {
 
     #[test]
     fn binary_expr_equality() {
-        let expr = col("rerun_segment_id").eq(lit("some-segment"));
+        let expr = col("dalaran_segment_id").eq(lit("some-segment"));
         assert_eq!(
             expr_filter_signature(&expr),
-            "(rerun_segment_id = 'some-segment')"
+            "(dalaran_segment_id = 'some-segment')"
         );
     }
 
@@ -2628,13 +2628,13 @@ mod expr_filter_signature_tests {
     #[test]
     fn in_list_expr() {
         let expr = Expr::InList(InList {
-            expr: Box::new(col("rerun_segment_id")),
+            expr: Box::new(col("dalaran_segment_id")),
             list: vec![lit("a"), lit("b")],
             negated: false,
         });
         assert_eq!(
             expr_filter_signature(&expr),
-            "rerun_segment_id IN ('a', 'b')"
+            "dalaran_segment_id IN ('a', 'b')"
         );
     }
 
@@ -2740,7 +2740,7 @@ mod filter_capture_span_tests {
 
     #[test]
     fn filters_emitted_when_present() {
-        let sigs = "(frame_nr > 100);rerun_segment_id IN ('a', 'b')";
+        let sigs = "(frame_nr > 100);dalaran_segment_id IN ('a', 'b')";
         let info = dummy_info_with_filters(2, sigs);
         let span = build_table_query_span(
             &info,

@@ -9,14 +9,14 @@ use dl_log_types::EntityPath;
 use dl_protos::cloud::v1alpha1::ext::{
     DataSource as DataSourceExt, DatasetDetails, QueryTasksDataframe,
 };
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     DataSource, DeleteEntryRequest, EntryKind, GetAssetsForSegmentRequest, ReadDatasetEntryRequest,
     RegisterWithDatasetRequest,
 };
 use dl_protos::common::v1alpha1::ext::DatasetKind;
 use dl_protos::common::v1alpha1::{IfDuplicateBehavior, SegmentId};
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 use dl_sdk_types::AnyValues;
 use dl_types_core::AsComponents;
 use url::Url;
@@ -27,12 +27,12 @@ use crate::{
 };
 
 use super::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, entry_name,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, entry_name,
     register_and_wait,
 };
 
 async fn asset_dataset_id(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     dataset_name: &str,
 ) -> dl_log_types::EntryId {
     let dataset_details: DatasetDetails = service
@@ -58,7 +58,7 @@ async fn asset_dataset_id(
 /// Resolve a dataset entry's name from its id. Registration and manifest scans are addressed by
 /// entry name, so tests targeting an asset or blueprint dataset resolve its name first.
 async fn dataset_entry_name(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     entry_id: dl_log_types::EntryId,
 ) -> String {
     service
@@ -74,13 +74,13 @@ async fn dataset_entry_name(
         .unwrap()
 }
 
-async fn asset_dataset_name(service: &impl RerunCloudService, dataset_name: &str) -> String {
+async fn asset_dataset_name(service: &impl DalaranCloudService, dataset_name: &str) -> String {
     let asset_dataset_id = asset_dataset_id(service, dataset_name).await;
     dataset_entry_name(service, asset_dataset_id).await
 }
 
 /// `GetAssetsForSegment` returns the dataset's asset dataset and the assets registered into it.
-pub async fn get_assets_for_segment_returns_registered_assets(service: impl RerunCloudService) {
+pub async fn get_assets_for_segment_returns_registered_assets(service: impl DalaranCloudService) {
     let dataset_name = "dataset_with_asset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -144,7 +144,7 @@ pub async fn get_assets_for_segment_returns_registered_assets(service: impl Reru
 
 /// Assets can only be queried on recording datasets, so asking a blueprint or asset dataset for
 /// assets is rejected.
-pub async fn get_assets_for_segment_rejects_non_recording_dataset(service: impl RerunCloudService) {
+pub async fn get_assets_for_segment_rejects_non_recording_dataset(service: impl DalaranCloudService) {
     let dataset_name = "dataset_with_asset";
     let dataset = service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -176,7 +176,7 @@ pub async fn get_assets_for_segment_rejects_non_recording_dataset(service: impl 
 
 /// Creating a dataset also creates an asset dataset of the right kind, and deleting the dataset
 /// deletes the asset dataset along with it, since their lifecycle is tied.
-pub async fn deleting_dataset_deletes_asset_dataset(service: impl RerunCloudService) {
+pub async fn deleting_dataset_deletes_asset_dataset(service: impl DalaranCloudService) {
     let dataset_name = "dataset_with_asset";
     let dataset = service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -221,7 +221,7 @@ pub async fn deleting_dataset_deletes_asset_dataset(service: impl RerunCloudServ
 
 /// Register an RRD into the asset dataset, returning the gRPC result without waiting for tasks.
 async fn try_register_into_asset_dataset(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     asset_dataset_name: &str,
     data_sources: Vec<DataSource>,
 ) -> tonic::Result<()> {
@@ -271,7 +271,7 @@ fn assert_task_failed(task_results: &[RecordBatch], expected_substring: &str) {
 ///
 /// Both servers handle this the same way: the registration request is accepted, then its task
 /// fails because the data is temporal.
-pub async fn asset_dataset_rejects_temporal_recording(service: impl RerunCloudService) {
+pub async fn asset_dataset_rejects_temporal_recording(service: impl DalaranCloudService) {
     let dataset_name = "dataset_with_asset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -295,7 +295,7 @@ pub async fn asset_dataset_rejects_temporal_recording(service: impl RerunCloudSe
 /// An asset dataset rejects registration once it already holds the maximum number of segments.
 ///
 /// Both servers enforce this synchronously, returning `FailedPrecondition`.
-pub async fn asset_dataset_enforces_segment_limit(service: impl RerunCloudService) {
+pub async fn asset_dataset_enforces_segment_limit(service: impl DalaranCloudService) {
     let dataset_name = "dataset_with_asset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -395,7 +395,7 @@ fn create_blueprint_of_size(
 /// An asset dataset accepts a segment just under the per-segment byte limit and rejects one just
 /// over it. Both servers measure the same compressed on-disk size and reject the oversized one in
 /// the registration task.
-pub async fn asset_dataset_enforces_segment_size_limit(service: impl RerunCloudService) {
+pub async fn asset_dataset_enforces_segment_size_limit(service: impl DalaranCloudService) {
     let dataset_name = "dataset_with_asset";
     service.create_dataset_entry_with_name(dataset_name).await;
 
@@ -443,7 +443,7 @@ pub async fn asset_dataset_enforces_segment_size_limit(service: impl RerunCloudS
 
 /// A blueprint dataset accepts a blueprint under the per-segment byte limit and rejects one over
 /// it, and the rejection names blueprint datasets rather than assets or plain segments.
-pub async fn blueprint_dataset_enforces_segment_size_limit(service: impl RerunCloudService) {
+pub async fn blueprint_dataset_enforces_segment_size_limit(service: impl DalaranCloudService) {
     let dataset_name = "dataset_with_blueprint";
     let dataset = service.create_dataset_entry_with_name(dataset_name).await;
 

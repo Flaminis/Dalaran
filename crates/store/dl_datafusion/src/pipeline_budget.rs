@@ -36,7 +36,7 @@
 //! below the largest decoded segment's working set deadlocks: chunks
 //! pin the budget at full before the segment-finalization `release`
 //! fires, with no path to forward progress. Reproduced on PR #1736
-//! against `rerun-synthetic-structs-10k` at 50 segments — adaptive
+//! against `dalaran-synthetic-structs-10k` at 50 segments — adaptive
 //! sizing produced a 283 MB total budget that pinned at 282/283 with
 //! 72 IO tasks parked at wait #1 and zero `release` calls.
 //!
@@ -64,12 +64,12 @@
 //!
 //! | Variable                             | Type  | Accepted range | Default |
 //! |--------------------------------------|-------|----------------|---------|
-//! | `RERUN_PIPELINE_BUDGET_MIN`          | size  | `> 0`          | `4GiB`  |
-//! | `RERUN_PIPELINE_BUDGET_MAX`          | size  | `> 0`          | `1TiB`  |
-//! | `RERUN_PIPELINE_BUDGET_FRACTION`     | float | `(0.0, 1.0]`   | 1.0     |
-//! | `RERUN_DIRECT_FETCH_MAX_CONCURRENCY` | int   | `>= 1`         | 128     |
-//! | `RERUN_SEGMENT_ADMISSION_CAP`        | int   | `3..=1024`     | unset   |
-//! | `RERUN_ADAPTIVE_SEGMENT_ADMISSION`   | bool  | `true`/`false` | true    |
+//! | `DALARAN_PIPELINE_BUDGET_MIN`          | size  | `> 0`          | `4GiB`  |
+//! | `DALARAN_PIPELINE_BUDGET_MAX`          | size  | `> 0`          | `1TiB`  |
+//! | `DALARAN_PIPELINE_BUDGET_FRACTION`     | float | `(0.0, 1.0]`   | 1.0     |
+//! | `DALARAN_DIRECT_FETCH_MAX_CONCURRENCY` | int   | `>= 1`         | 128     |
+//! | `DALARAN_SEGMENT_ADMISSION_CAP`        | int   | `3..=1024`     | unset   |
+//! | `DALARAN_ADAPTIVE_SEGMENT_ADMISSION`   | bool  | `true`/`false` | true    |
 //!
 //! Sizes accept either a SI/IEC suffix (`64MB`, `1GiB`, `512KiB`) or a
 //! bare positive integer interpreted as bytes. Values are trimmed of
@@ -82,8 +82,8 @@
 //! Segment admission is resolved once per query and controls transport batching,
 //! wave formation, gRPC grouping, and CPU-state admission together.
 //! By default the adaptive policy applies its 3-or-16 candidate.
-//! `RERUN_ADAPTIVE_SEGMENT_ADMISSION=false` keeps the effective cap at 3 while preserving
-//! candidate telemetry, and a valid `RERUN_SEGMENT_ADMISSION_CAP` always takes precedence.
+//! `DALARAN_ADAPTIVE_SEGMENT_ADMISSION=false` keeps the effective cap at 3 while preserving
+//! candidate telemetry, and a valid `DALARAN_SEGMENT_ADMISSION_CAP` always takes precedence.
 //! Invalid exact overrides fail closed to 3 even when adaptive admission is enabled.
 //!
 //! # Adaptive estimation
@@ -246,7 +246,7 @@ use crate::metrics_capture::{
 // per-partition cap below the largest decoded segment's working set risks
 // deadlock: a segment's chunks pin the budget at full before that segment's
 // release fires at finalization, with no way to make forward progress.
-// Empirically reproduced on PR #1736 against `rerun-synthetic-structs-10k`
+// Empirically reproduced on PR #1736 against `dalaran-synthetic-structs-10k`
 // at 50 segments — adaptive sizing produced a 283 MB total budget that
 // pinned at 282/283 with 72 IO tasks parked at wait #1, no `release` ever
 // fired (zero `remote materialize` lines after 22 min stall).
@@ -283,19 +283,19 @@ pub(crate) const MAX_BUDGET_PER_PARTITION: usize = 1024 * 1024 * 1024 * 1024; //
 /// Value accepts a SI/IEC suffix (`64MB`, `1GiB`, `512KiB`) or a bare
 /// positive integer interpreted as bytes; must be `> 0`. Invalid values
 /// are logged and the compile-time default is used.
-const ENV_BUDGET_MIN: &str = "RERUN_PIPELINE_BUDGET_MIN";
+const ENV_BUDGET_MIN: &str = "DALARAN_PIPELINE_BUDGET_MIN";
 
 /// Environment variable to override the maximum per-partition budget.
 /// Value accepts a SI/IEC suffix (`64MB`, `1GiB`, `512KiB`) or a bare
 /// positive integer interpreted as bytes; must be `> 0`. Invalid values
 /// are logged and the compile-time default is used. If MIN ends up
 /// greater than MAX after override, both fall back to defaults.
-const ENV_BUDGET_MAX: &str = "RERUN_PIPELINE_BUDGET_MAX";
+const ENV_BUDGET_MAX: &str = "DALARAN_PIPELINE_BUDGET_MAX";
 
 /// Environment variable to override the in-flight fraction. Value is
 /// a float in `(0.0, 1.0]`. Invalid values are logged and the
 /// compile-time default is used.
-const ENV_BUDGET_FRACTION: &str = "RERUN_PIPELINE_BUDGET_FRACTION";
+const ENV_BUDGET_FRACTION: &str = "DALARAN_PIPELINE_BUDGET_FRACTION";
 
 /// Bootstrap multiplier applied to `reserve` estimates before any `actual`
 /// samples have been observed.
@@ -352,10 +352,10 @@ const ADAPTIVE_DECODE_MULTIPLIER: u64 = MAX_ESTIMATE_MULTIPLIER as u64;
 const MAX_EXPERIMENTAL_SEGMENT_ADMISSION_CAP: usize = 1024;
 
 /// Per-query exact override used for controlled cap sweeps.
-const ENV_SEGMENT_ADMISSION_CAP: &str = "RERUN_SEGMENT_ADMISSION_CAP";
+const ENV_SEGMENT_ADMISSION_CAP: &str = "DALARAN_SEGMENT_ADMISSION_CAP";
 
 /// Override that disables or explicitly enables the default adaptive candidate.
-const ENV_ADAPTIVE_SEGMENT_ADMISSION: &str = "RERUN_ADAPTIVE_SEGMENT_ADMISSION";
+const ENV_ADAPTIVE_SEGMENT_ADMISSION: &str = "DALARAN_ADAPTIVE_SEGMENT_ADMISSION";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub(crate) struct SegmentAdmissionProfile {
@@ -596,7 +596,7 @@ const DEFAULT_DIRECT_FETCH_MAX_CONCURRENCY: usize = 128;
 /// Env override for [`DEFAULT_DIRECT_FETCH_MAX_CONCURRENCY`]. A positive
 /// integer; invalid/≤0 values log an error and fall back to the default,
 /// which is then floored at 1.
-const ENV_DIRECT_FETCH_MAX_CONCURRENCY: &str = "RERUN_DIRECT_FETCH_MAX_CONCURRENCY";
+const ENV_DIRECT_FETCH_MAX_CONCURRENCY: &str = "DALARAN_DIRECT_FETCH_MAX_CONCURRENCY";
 
 /// Number of consecutive `flush_incremental` calls that observed zero
 /// emittable rows while the budget was near-saturated before
@@ -1027,7 +1027,7 @@ const DEFAULT_QUERY_DATASET_MAX_CONCURRENCY: usize = 16;
 
 /// Env override for [`DEFAULT_QUERY_DATASET_MAX_CONCURRENCY`]. A positive
 /// integer; invalid/≤0 values fall back to the default, then floored at 1.
-const ENV_QUERY_DATASET_MAX_CONCURRENCY: &str = "RERUN_QUERY_DATASET_MAX_CONCURRENCY";
+const ENV_QUERY_DATASET_MAX_CONCURRENCY: &str = "DALARAN_QUERY_DATASET_MAX_CONCURRENCY";
 
 /// Resolved process-wide `query_dataset` concurrency ceiling.
 ///

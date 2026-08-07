@@ -1,6 +1,6 @@
-# The Rerun renderer
+# The Dalaran renderer
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_renderer.svg)](https://crates.io/crates/dl_renderer)
 [![Documentation](https://docs.rs/dl_renderer/badge.svg)](https://docs.rs/dl_renderer)
@@ -23,7 +23,7 @@ Goals & philosophy:
 * Automatic resource re-use & caching
 * Lazy loading whenever possible for best startup performance
 * Run great both on the desktop and web
-* No dependencies on `dl_viewer` or Rerun chunk store libraries
+* No dependencies on `dl_viewer` or Dalaran chunk store libraries
 
 
 ## Debugging
@@ -35,12 +35,12 @@ Start Chrome with `--enable-dawn-features=dump_shaders,disable_symbol_renaming` 
 
 #### Iterating
 
-In debug mode shaders are live-reloaded, if built from the Rerun workspace.
+In debug mode shaders are live-reloaded, if built from the Dalaran workspace.
 If a failure occurs during live-reload, an error is logged and the previous shader is kept.
 
 #### Inspecting final source
 
-If `RERUN_WGSL_SHADER_DUMP_PATH` is set, all readily stitched (import resolve) and patched
+If `DALARAN_WGSL_SHADER_DUMP_PATH` is set, all readily stitched (import resolve) and patched
 wgsl shaders will be written to the specified directory.
 
 Often you're also interested in the Naga translated shader. This can be done easily from command line using

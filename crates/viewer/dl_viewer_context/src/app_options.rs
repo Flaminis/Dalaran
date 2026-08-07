@@ -3,7 +3,7 @@ use dl_log_types::TimestampFormat;
 use dl_memory::MemoryLimit;
 use dl_video::{DecodeHardwareAcceleration, DecodeSettings};
 
-const MAPBOX_ACCESS_TOKEN_ENV_VAR: &str = "RERUN_MAPBOX_ACCESS_TOKEN";
+const MAPBOX_ACCESS_TOKEN_ENV_VAR: &str = "DALARAN_MAPBOX_ACCESS_TOKEN";
 
 /// Global options for the viewer.
 #[derive(Debug, PartialEq, serde::Deserialize, serde::Serialize, Clone)]
@@ -23,12 +23,12 @@ pub struct AppOptions {
     /// If false, you can still view them in the notifications panel.
     pub show_notification_toasts: bool,
 
-    /// Use Rerun's custom window decorations instead of the native OS decorations.
+    /// Use Dalaran's custom window decorations instead of the native OS decorations.
     pub custom_window_decorations: bool,
 
     /// Include the "Welcome screen" application in the recordings panel?
     #[serde(alias = "include_welcome_screen_button_in_recordings_panel")]
-    pub include_rerun_examples_button_in_recordings_panel: bool,
+    pub include_dalaran_examples_button_in_recordings_panel: bool,
 
     /// Displays an overlay for debugging picking.
     pub show_picking_debug_overlay: bool,
@@ -55,7 +55,7 @@ pub struct AppOptions {
 
     /// Mapbox API key (used to enable Mapbox-based map view backgrounds).
     ///
-    /// Can also be set using the `RERUN_MAPBOX_ACCESS_TOKEN` environment variable.
+    /// Can also be set using the `DALARAN_MAPBOX_ACCESS_TOKEN` environment variable.
     pub mapbox_access_token: String,
 
     /// When the total process RAM reaches this limit, we GC old data.
@@ -97,7 +97,7 @@ impl AppOptions {
 
             custom_window_decorations,
 
-            include_rerun_examples_button_in_recordings_panel: true,
+            include_dalaran_examples_button_in_recordings_panel: true,
 
             show_picking_debug_overlay: false,
 
@@ -151,7 +151,7 @@ impl AppOptions {
 
     /// Default cache directory
     pub fn default_cache_directory() -> Option<std::path::PathBuf> {
-        directories::ProjectDirs::from("io", "rerun", "Rerun")
+        directories::ProjectDirs::from("io", "dalaran", "Dalaran")
             .map(|dirs| dirs.cache_dir().to_owned())
     }
 

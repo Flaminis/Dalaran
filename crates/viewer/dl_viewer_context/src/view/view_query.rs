@@ -181,8 +181,8 @@ impl RecommendedMappings {
                 } => {
                     let name = source_component.as_str();
                     let short_name = name
-                        .strip_prefix("rerun.components.")
-                        .or_else(|| name.strip_prefix("rerun."))
+                        .strip_prefix("dalaran.components.")
+                        .or_else(|| name.strip_prefix("dalaran."))
                         .unwrap_or(name);
                     Some(format!("{short_name}{selector}"))
                 }

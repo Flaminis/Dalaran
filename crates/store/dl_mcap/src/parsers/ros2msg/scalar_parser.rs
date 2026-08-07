@@ -12,7 +12,7 @@ use crate::parsers::util::fixed_size_list_builder;
 /// Trait for extracting scalar values from ROS2 messages.
 ///
 /// This trait allows different message types to specify which fields should be
-/// extracted as scalar values for visualization in Rerun.
+/// extracted as scalar values for visualization in Dalaran.
 pub trait ScalarExtractor: serde::de::DeserializeOwned {
     /// Extract scalar values from the message.
     ///

@@ -110,7 +110,7 @@ impl Server {
                 }
 
                 info!(
-                    "Listening on {bind_addr}. To connect the Rerun Viewer, use the following address: rerun+http://{connect_addr}"
+                    "Listening on {bind_addr}. To connect the Dalaran Viewer, use the following address: dalaran+http://{connect_addr}"
                 );
 
                 #[expect(clippy::unwrap_used)]
@@ -138,10 +138,10 @@ impl Server {
 
             let middlewares = tower::ServiceBuilder::new()
                 .layer({
-                    let name = Some("rerun-oss".to_owned());
+                    let name = Some("dalaran-oss".to_owned());
                     let version = None;
                     let is_client = false;
-                    dl_protos::headers::new_rerun_headers_layer(name, version, is_client)
+                    dl_protos::headers::new_dalaran_headers_layer(name, version, is_client)
                 })
                 .layer(dl_grpc_server::cors_layer(&cors_allowed_origins))
                 .layer(LatencyLayer::new(artificial_latency))
@@ -273,7 +273,7 @@ impl ServerBuilder {
 
     /// Set additional origin patterns allowed to make cross-origin requests.
     ///
-    /// By default, only `localhost`, `127.0.0.1`, and `rerun.io` are allowed.
+    /// By default, only `localhost`, `127.0.0.1`, and `dalaran.dev` are allowed.
     pub fn with_cors_allowed_origins(mut self, origins: Vec<String>) -> Self {
         self.cors_allowed_origins = origins;
         self

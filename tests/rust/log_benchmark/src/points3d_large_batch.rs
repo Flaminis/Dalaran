@@ -2,7 +2,7 @@ use crate::points3d_shared::{Point3DInput, prepare_points3d};
 
 const NUM_POINTS: usize = 50_000_000;
 
-fn execute(rec: &rerun::RecordingStream, input: Point3DInput) -> anyhow::Result<()> {
+fn execute(rec: &dalaran::RecordingStream, input: Point3DInput) -> anyhow::Result<()> {
     dl_tracing::profile_function!();
 
     let Point3DInput {
@@ -14,7 +14,7 @@ fn execute(rec: &rerun::RecordingStream, input: Point3DInput) -> anyhow::Result<
 
     rec.log(
         "large_batch",
-        &rerun::Points3D::new(positions)
+        &dalaran::Points3D::new(positions)
             .with_colors(colors)
             .with_radii(radii)
             .with_labels([label]),
@@ -23,7 +23,7 @@ fn execute(rec: &rerun::RecordingStream, input: Point3DInput) -> anyhow::Result<
 }
 
 /// Log a single large batch of points with positions, colors, radii and a splatted string.
-pub fn run(rec: &rerun::RecordingStream) -> anyhow::Result<()> {
+pub fn run(rec: &dalaran::RecordingStream) -> anyhow::Result<()> {
     dl_tracing::profile_function!();
     let input = std::hint::black_box(prepare_points3d(42, NUM_POINTS));
     execute(rec, input)

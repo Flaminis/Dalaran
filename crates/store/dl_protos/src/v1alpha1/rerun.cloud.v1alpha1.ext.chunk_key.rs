@@ -2,7 +2,7 @@
 //! related ETag / URL utilities used on both the server (`FetchChunks`) and
 //! the OSS direct-fetch client paths.
 //!
-//! Split out of the main `rerun.cloud.v1alpha1.ext.rs` to keep that file
+//! Split out of the main `dalaran.cloud.v1alpha1.ext.rs` to keep that file
 //! under the size cap enforced by `scripts/ci/check_large_files.py`.
 
 use dl_types_core::LayerName;

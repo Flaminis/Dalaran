@@ -296,7 +296,7 @@ impl QueryCache {
 impl ChunkStoreSubscriber for QueryCache {
     #[inline]
     fn name(&self) -> String {
-        "rerun.store_subscribers.QueryCache".into()
+        "dalaran.store_subscribers.QueryCache".into()
     }
 
     #[inline]

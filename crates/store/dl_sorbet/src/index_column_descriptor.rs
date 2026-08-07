@@ -108,7 +108,7 @@ impl IndexColumnDescriptor {
 
         let mut metadata = std::collections::HashMap::from([
             (
-                crate::metadata::RERUN_KIND.to_owned(),
+                crate::metadata::DALARAN_KIND.to_owned(),
                 crate::ColumnKind::Index.to_string(),
             ),
             (
@@ -117,7 +117,7 @@ impl IndexColumnDescriptor {
             ),
         ]);
         if *is_sorted {
-            metadata.insert("rerun:is_sorted".to_owned(), "true".to_owned());
+            metadata.insert("dalaran:is_sorted".to_owned(), "true".to_owned());
         }
 
         ArrowField::new(self.column_name(), datatype.clone(), nullable).with_metadata(metadata)
@@ -142,7 +142,7 @@ impl TryFrom<&ArrowField> for IndexColumnDescriptor {
             name.to_owned()
         } else {
             dl_log::debug_once!(
-                "Timeline '{}' is missing 'rerun:index_name' metadata. Falling back on field/column name",
+                "Timeline '{}' is missing 'dalaran:index_name' metadata. Falling back on field/column name",
                 field.name()
             );
             field.name().to_owned()
@@ -159,7 +159,7 @@ impl TryFrom<&ArrowField> for IndexColumnDescriptor {
         Ok(Self {
             timeline,
             datatype,
-            is_sorted: field.metadata().get_bool("rerun:is_sorted"),
+            is_sorted: field.metadata().get_bool("dalaran:is_sorted"),
         })
     }
 }

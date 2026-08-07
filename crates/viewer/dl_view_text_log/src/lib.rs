@@ -1,4 +1,4 @@
-//! Rerun `TextLog` View
+//! Dalaran `TextLog` View
 //!
 //! A View that shows `TextLog` entries in a table and scrolls with the active time.
 

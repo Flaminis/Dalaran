@@ -27,8 +27,8 @@ pub const WEB_EVENT_LISTENER_SCHEME: &str = "web_event:";
 ///
 /// Not actually a valid origin.
 pub static EXAMPLES_ORIGIN: LazyLock<dl_uri::Origin> = LazyLock::new(|| dl_uri::Origin {
-    scheme: Scheme::RerunHttps,
-    host: url::Host::Domain(String::from("_examples.rerun.io")),
+    scheme: Scheme::DalaranHttps,
+    host: url::Host::Domain(String::from("_examples.dalaran.dev")),
     port: 443,
 });
 
@@ -57,12 +57,12 @@ pub enum ViewerOpenUrl {
     #[cfg(not(target_arch = "wasm32"))]
     FilePath(std::path::PathBuf),
 
-    /// A `rerun://` URI pointing to a recording.
+    /// A `dalaran://` URI pointing to a recording.
     ///
     /// See also [`LogDataSource::RedapDatasetSegment`].
     RedapDatasetSegment(dl_uri::DatasetSegmentUri),
 
-    /// A `rerun+http://` URI pointing to a proxy.
+    /// A `dalaran+http://` URI pointing to a proxy.
     ///
     /// See also [`LogDataSource::RedapProxy`].
     RedapProxy(dl_uri::ProxyUri),
@@ -153,7 +153,7 @@ impl std::str::FromStr for ViewerOpenUrl {
     /// Tries to parse a content URL or file inside the viewer.
     ///
     /// Uses conservative defaults: extensionless HTTP URLs are **not** accepted,
-    /// so plain URLs like `https://rerun.io/docs/getting-started/data-in` fall through to be opened
+    /// so plain URLs like `https://dalaran.dev/docs/getting-started/data-in` fall through to be opened
     /// in the browser. Use [`Self::parse_with_options`] to control this behavior.
     fn from_str(url: &str) -> Result<Self, Self::Err> {
         Self::parse_with_options(url, &dl_data_source::FromUriOptions::default())
@@ -400,7 +400,7 @@ impl ViewerOpenUrl {
 
             Route::RedapServer(server) => {
                 // `as_url` on the origin gives us an http link.
-                // We want a rerun link here instead.
+                // We want a dalaran link here instead.
                 Ok(Self::RedapCatalog(dl_uri::CatalogUri::new(server.clone())))
             }
 
@@ -658,7 +658,7 @@ impl ViewerOpenUrl {
                 {
                     // We _are_ a web viewer.
                     // If the base URL doesn't match our own then that's reason for concern (==warn),
-                    // because this URL was probably meant to be opened in a different Rerun version.
+                    // because this URL was probably meant to be opened in a different Dalaran version.
                     if let Ok(location) = dl_web::browser::current_page_url()
                         && let Ok(location) = Url::parse(&location)
                     {
@@ -666,7 +666,7 @@ impl ViewerOpenUrl {
 
                         if _base_url != current_webpage_base_url {
                             dl_log::warn!(
-                                "The base URL of the web viewer ({:?}) does not match the URL being opened ({:?}). This URL may be intended for a different Rerun version.",
+                                "The base URL of the web viewer ({:?}) does not match the URL being opened ({:?}). This URL may be intended for a different Dalaran version.",
                                 current_webpage_base_url.as_str(),
                                 _base_url.as_str(),
                             );
@@ -907,31 +907,31 @@ mod tests {
     #[test]
     fn test_viewer_open_url_from_str() {
         // RedapCatalog
-        let url = "rerun://localhost:51234/catalog";
+        let url = "dalaran://localhost:51234/catalog";
         assert_eq!(
             ViewerOpenUrl::from_str(url).unwrap(),
             ViewerOpenUrl::RedapCatalog(dl_uri::CatalogUri::from_str(url).unwrap())
         );
 
-        let url = "rerun http://127.0.0.1:9876/proxy";
+        let url = "dalaran http://127.0.0.1:9876/proxy";
         assert_eq!(
             ViewerOpenUrl::from_str(url).unwrap(),
             ViewerOpenUrl::RedapProxy(dl_uri::ProxyUri::new(Origin::from_scheme_and_socket_addr(
-                Scheme::RerunHttp,
+                Scheme::DalaranHttp,
                 SocketAddrV4::new(Ipv4Addr::LOCALHOST, 9876).into()
             )))
         );
 
         // RedapEntry
         let entry_id = EntryId::new();
-        let url = format!("rerun://localhost:51234/entry/{entry_id}");
+        let url = format!("dalaran://localhost:51234/entry/{entry_id}");
         assert_eq!(
             ViewerOpenUrl::from_str(&url).unwrap(),
             ViewerOpenUrl::RedapEntry(dl_uri::EntryUri::from_str(&url).unwrap())
         );
 
         // DatasetSegmentUri
-        let url = format!("rerun://127.0.0.1:1234/dataset/{entry_id}?segment_id=pid");
+        let url = format!("dalaran://127.0.0.1:1234/dataset/{entry_id}?segment_id=pid");
         assert_eq!(
             ViewerOpenUrl::from_str(&url).unwrap(),
             ViewerOpenUrl::RedapDatasetSegment(url.parse().unwrap())
@@ -1018,12 +1018,12 @@ mod tests {
             );
 
             // Complex - multiple URL parameters of different typesl
-            let url = "https://foo.com/?url=rerun://localhost:51234/catalog&url=recording://camera&url=https://example.com/data.rrd";
+            let url = "https://foo.com/?url=dalaran://localhost:51234/catalog&url=recording://camera&url=https://example.com/data.rrd";
             let expected = ViewerOpenUrl::WebViewerUrl {
                 base_url: Url::parse("https://foo.com/").unwrap(),
                 url_parameters: vec1::vec1![
                     ViewerOpenUrl::RedapCatalog(
-                        dl_uri::CatalogUri::from_str("rerun://localhost:51234/catalog").unwrap()
+                        dl_uri::CatalogUri::from_str("dalaran://localhost:51234/catalog").unwrap()
                     ),
                     ViewerOpenUrl::IntraRecordingSelection(Item::InstancePath(
                         InstancePath::entity_all(EntityPath::from("camera"))
@@ -1062,10 +1062,10 @@ mod tests {
         assert_eq!(
             ViewerOpenUrl::from_route(
                 &store_hub,
-                &Route::RedapServer("rerun://localhost:51234".parse().unwrap()),
+                &Route::RedapServer("dalaran://localhost:51234".parse().unwrap()),
             )
             .unwrap(),
-            ViewerOpenUrl::RedapCatalog("rerun://localhost:51234".parse().unwrap())
+            ViewerOpenUrl::RedapCatalog("dalaran://localhost:51234".parse().unwrap())
         );
 
         // LocalTable
@@ -1078,7 +1078,7 @@ mod tests {
         );
 
         // RedapEntry
-        let origin: dl_uri::Origin = "rerun://localhost:51234".parse().unwrap();
+        let origin: dl_uri::Origin = "dalaran://localhost:51234".parse().unwrap();
         let entry_uri = dl_uri::EntryUri::new(origin.clone(), EntryId::new());
         assert_eq!(
             ViewerOpenUrl::from_route(&store_hub, &Route::from(entry_uri.clone())).unwrap(),
@@ -1206,7 +1206,7 @@ mod tests {
 
         // originating from Redap gRPC stream.
         let entry_id = EntryId::new();
-        let uri = format!("rerun://127.0.0.1:1234/dataset/{entry_id}?segment_id=pid");
+        let uri = format!("dalaran://127.0.0.1:1234/dataset/{entry_id}?segment_id=pid");
         let id = add_store(
             &mut store_hub,
             Some(LogSource::RedapGrpcStream {
@@ -1256,7 +1256,7 @@ mod tests {
         assert_eq!(url, ViewerOpenUrl::RedapDatasetSegment(uri),);
 
         // originating from message proxy.
-        let uri = "rerun://localhost:51234/proxy";
+        let uri = "dalaran://localhost:51234/proxy";
         let id = add_store(
             &mut store_hub,
             Some(LogSource::MessageProxy(uri.parse().unwrap())),
@@ -1299,7 +1299,7 @@ mod tests {
         );
 
         let entry_id = EntryId::new();
-        let uri = format!("rerun://127.0.0.1:1234/dataset/{entry_id}?segment_id=pid");
+        let uri = format!("dalaran://127.0.0.1:1234/dataset/{entry_id}?segment_id=pid");
         assert_eq!(
             ViewerOpenUrl::RedapDatasetSegment(uri.parse().unwrap())
                 .sharable_url(None)
@@ -1308,20 +1308,20 @@ mod tests {
         );
 
         assert_eq!(
-            ViewerOpenUrl::RedapProxy("rerun://localhost:51234/proxy".parse().unwrap())
+            ViewerOpenUrl::RedapProxy("dalaran://localhost:51234/proxy".parse().unwrap())
                 .sharable_url(None)
                 .unwrap(),
-            "rerun://localhost:51234/proxy"
+            "dalaran://localhost:51234/proxy"
         );
 
         assert_eq!(
-            ViewerOpenUrl::RedapCatalog("rerun://localhost:51234/catalog".parse().unwrap())
+            ViewerOpenUrl::RedapCatalog("dalaran://localhost:51234/catalog".parse().unwrap())
                 .sharable_url(None)
                 .unwrap(),
-            "rerun://localhost:51234/catalog"
+            "dalaran://localhost:51234/catalog"
         );
 
-        let url = format!("rerun://localhost:51234/entry/{entry_id}");
+        let url = format!("dalaran://localhost:51234/entry/{entry_id}");
         assert_eq!(
             ViewerOpenUrl::RedapEntry(url.parse().unwrap())
                 .sharable_url(None)
@@ -1364,7 +1364,7 @@ mod tests {
                 base_url: Url::parse("https://foo.com/test").unwrap(),
                 url_parameters: vec1::vec1![
                     ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/bar.rrd").unwrap()),
-                    ViewerOpenUrl::RedapProxy("rerun://localhost:51234/proxy".parse().unwrap())
+                    ViewerOpenUrl::RedapProxy("dalaran://localhost:51234/proxy".parse().unwrap())
                 ],
             }
             .sharable_url(None)
@@ -1393,31 +1393,31 @@ mod tests {
 
         assert_eq!(
             ViewerOpenUrl::RedapDatasetSegment(
-                "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae?segment_id=pid"
+                "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae?segment_id=pid"
                     .parse()
                     .unwrap()
             )
             .sharable_url(base_url_param)
             .unwrap(),
-            "https://foo.com/test?url=rerun%3A%2F%2F127.0.0.1%3A1234%2Fdataset%2F1830B33B45B963E7774455beb91701ae%3Fsegment_id%3Dpid".to_owned()
+            "https://foo.com/test?url=dalaran%3A%2F%2F127.0.0.1%3A1234%2Fdataset%2F1830B33B45B963E7774455beb91701ae%3Fsegment_id%3Dpid".to_owned()
         );
 
         assert_eq!(
-            ViewerOpenUrl::RedapProxy("rerun://localhost:51234/proxy".parse().unwrap())
+            ViewerOpenUrl::RedapProxy("dalaran://localhost:51234/proxy".parse().unwrap())
                 .sharable_url(base_url_param)
                 .unwrap(),
-            "https://foo.com/test?url=rerun%3A%2F%2Flocalhost%3A51234%2Fproxy"
+            "https://foo.com/test?url=dalaran%3A%2F%2Flocalhost%3A51234%2Fproxy"
         );
 
         assert_eq!(
-            ViewerOpenUrl::RedapCatalog("rerun://localhost:51234/catalog".parse().unwrap())
+            ViewerOpenUrl::RedapCatalog("dalaran://localhost:51234/catalog".parse().unwrap())
                 .sharable_url(base_url_param)
                 .unwrap(),
-            "https://foo.com/test?url=rerun%3A%2F%2Flocalhost%3A51234%2Fcatalog"
+            "https://foo.com/test?url=dalaran%3A%2F%2Flocalhost%3A51234%2Fcatalog"
         );
 
         let entry_id = EntryId::new();
-        let url = format!("rerun://localhost:51234/entry/{entry_id}");
+        let url = format!("dalaran://localhost:51234/entry/{entry_id}");
         let encoded_url = url::form_urlencoded::byte_serialize(url.as_bytes()).collect::<String>();
         assert_eq!(
             ViewerOpenUrl::RedapEntry(url.parse().unwrap())
@@ -1449,12 +1449,12 @@ mod tests {
                 base_url: Url::parse("http://foo.com/doesn't-matter").unwrap(),
                 url_parameters: vec1::vec1![
                     ViewerOpenUrl::HttpUrl(Url::parse("https://example.com/bar.rrd").unwrap()),
-                    ViewerOpenUrl::RedapProxy("rerun://localhost:51234/proxy".parse().unwrap())
+                    ViewerOpenUrl::RedapProxy("dalaran://localhost:51234/proxy".parse().unwrap())
                 ],
             }
             .sharable_url(base_url_param)
             .unwrap(),
-            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fbar.rrd&url=rerun%3A%2F%2Flocalhost%3A51234%2Fproxy",
+            "https://foo.com/test?url=https%3A%2F%2Fexample.com%2Fbar.rrd&url=dalaran%3A%2F%2Flocalhost%3A51234%2Fproxy",
         );
     }
 
@@ -1462,24 +1462,24 @@ mod tests {
     fn test_fragment_uri() {
         let uri_out = [
             (
-                "rerun+http://localhost:51234/",
+                "dalaran+http://localhost:51234/",
                 ViewerOpenUrl::RedapCatalog(CatalogUri {
-                    origin: "rerun+http://localhost:51234".parse().unwrap(),
+                    origin: "dalaran+http://localhost:51234".parse().unwrap(),
                 }),
             ),
             (
-                "rerun+http://localhost:51234/dataset/187A3200CAE4DD795748a7ad187e21a3?segment_id=6977dcfd524a45b3b786c9a5a0bde4e1",
+                "dalaran+http://localhost:51234/dataset/187A3200CAE4DD795748a7ad187e21a3?segment_id=6977dcfd524a45b3b786c9a5a0bde4e1",
                 ViewerOpenUrl::RedapDatasetSegment(DatasetSegmentUri {
-                    origin: "rerun+http://localhost:51234".parse().unwrap(),
+                    origin: "dalaran+http://localhost:51234".parse().unwrap(),
                     dataset_id: "187A3200CAE4DD795748a7ad187e21a3".parse().unwrap(),
                     segment_id: "6977dcfd524a45b3b786c9a5a0bde4e1".into(),
                     fragment: Default::default(),
                 }),
             ),
             (
-                "rerun+http://localhost:51234/dataset/187A3200CAE4DD795748a7ad187e21a3?segment_id=6977dcfd524a45b3b786c9a5a0bde4e1#time_selection=stable_time@+1.096s..+2.097s",
+                "dalaran+http://localhost:51234/dataset/187A3200CAE4DD795748a7ad187e21a3?segment_id=6977dcfd524a45b3b786c9a5a0bde4e1#time_selection=stable_time@+1.096s..+2.097s",
                 ViewerOpenUrl::RedapDatasetSegment(DatasetSegmentUri {
-                    origin: "rerun+http://localhost:51234".parse().unwrap(),
+                    origin: "dalaran+http://localhost:51234".parse().unwrap(),
                     dataset_id: "187A3200CAE4DD795748a7ad187e21a3".parse().unwrap(),
                     segment_id: "6977dcfd524a45b3b786c9a5a0bde4e1".into(),
                     fragment: dl_uri::Fragment {
@@ -1489,9 +1489,9 @@ mod tests {
                 }),
             ),
             (
-                "rerun+http://localhost:51234/dataset/187A3200CAE4DD795748a7ad187e21a3?segment_id=6977dcfd524a45b3b786c9a5a0bde4e1#time_selection=stable_time@+1.096s..+2.097s&when=stable_time@+3.990s",
+                "dalaran+http://localhost:51234/dataset/187A3200CAE4DD795748a7ad187e21a3?segment_id=6977dcfd524a45b3b786c9a5a0bde4e1#time_selection=stable_time@+1.096s..+2.097s&when=stable_time@+3.990s",
                 ViewerOpenUrl::RedapDatasetSegment(DatasetSegmentUri {
-                    origin: "rerun+http://localhost:51234".parse().unwrap(),
+                    origin: "dalaran+http://localhost:51234".parse().unwrap(),
                     dataset_id: "187A3200CAE4DD795748a7ad187e21a3".parse().unwrap(),
                     segment_id: "6977dcfd524a45b3b786c9a5a0bde4e1".into(),
                     fragment: dl_uri::Fragment {

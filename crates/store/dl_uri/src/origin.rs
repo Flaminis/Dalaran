@@ -84,11 +84,11 @@ impl Origin {
         } else {
             // No scheme - make a guess:
             if input.contains("localhost") || input.contains("127.0.0.1") {
-                // Assume `rerun+http://`, because that is the default for localhost
-                (Scheme::RerunHttp, format!("http://{input}"))
-            } else if input.contains("rerun.io") {
-                // Default to `rerun://` (gRPC over TLS)
-                (Scheme::RerunHttps, format!("https://{input}"))
+                // Assume `dalaran+http://`, because that is the default for localhost
+                (Scheme::DalaranHttp, format!("http://{input}"))
+            } else if input.contains("dalaran.dev") {
+                // Default to `dalaran://` (gRPC over TLS)
+                (Scheme::DalaranHttps, format!("https://{input}"))
             } else {
                 return Err(Error::InvalidScheme);
             }
@@ -195,26 +195,26 @@ mod tests {
     fn test_origin_format() {
         assert_eq!(
             Origin::from_scheme_and_socket_addr(
-                Scheme::RerunHttps,
+                Scheme::DalaranHttps,
                 "192.168.0.2:1234".parse().unwrap()
             )
             .to_string(),
-            "rerun://192.168.0.2:1234"
+            "dalaran://192.168.0.2:1234"
         );
         assert_eq!(
             Origin::from_scheme_and_socket_addr(
-                Scheme::RerunHttps,
+                Scheme::DalaranHttps,
                 "0.0.0.0:1234".parse().unwrap()
             )
             .to_string(),
-            "rerun://127.0.0.1:1234"
+            "dalaran://127.0.0.1:1234"
         );
     }
 
     #[test]
-    fn test_rerun_alias() {
-        let https = "rerun+https://some.url.io:443".parse::<Origin>().unwrap();
-        let rerun = "rerun://some.url.io:443".parse::<Origin>().unwrap();
-        assert_eq!(https, rerun);
+    fn test_dalaran_alias() {
+        let https = "dalaran+https://some.url.io:443".parse::<Origin>().unwrap();
+        let dalaran = "dalaran://some.url.io:443".parse::<Origin>().unwrap();
+        assert_eq!(https, dalaran);
     }
 }

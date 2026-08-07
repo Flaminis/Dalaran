@@ -1,6 +1,6 @@
 #![allow(clippy::iter_over_hash_type)]
 
-//! Library providing utilities to load MCAP files with Rerun.
+//! Library providing utilities to load MCAP files with Dalaran.
 
 /// Every MCAP record is framed by a fixed header containing a one-byte opcode followed by an
 /// eight-byte little-endian `u64` body length.

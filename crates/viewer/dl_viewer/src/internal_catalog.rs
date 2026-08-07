@@ -13,12 +13,12 @@ use std::net::{Ipv4Addr, SocketAddr};
 use std::sync::Arc;
 
 use dl_redap_client::Connection;
-use dl_server::RerunCloudHandlerBuilder;
+use dl_server::DalaranCloudHandlerBuilder;
 
 #[cfg(not(target_arch = "wasm32"))]
 use {
-    dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudServiceServer,
-    dl_server::RerunCloudHandler,
+    dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudServiceServer,
+    dl_server::DalaranCloudHandler,
 };
 
 /// The in-process internal catalog.
@@ -31,14 +31,14 @@ pub struct InternalCatalog {
 
     /// The single handler shared between [`Self::connection`] and [`Self::grpc_service`].
     #[cfg(not(target_arch = "wasm32"))]
-    handler: Arc<RerunCloudHandler>,
+    handler: Arc<DalaranCloudHandler>,
 }
 
 impl InternalCatalog {
     /// The catalog as a gRPC service, to be served (loopback-only) on the proxy server's port.
     #[cfg(not(target_arch = "wasm32"))]
-    pub fn grpc_service(&self) -> RerunCloudServiceServer<RerunCloudHandler> {
-        RerunCloudServiceServer::from_arc(self.handler.clone())
+    pub fn grpc_service(&self) -> DalaranCloudServiceServer<DalaranCloudHandler> {
+        DalaranCloudServiceServer::from_arc(self.handler.clone())
             .max_decoding_message_size(dl_redap_client::MAX_DECODING_MESSAGE_SIZE)
     }
 }
@@ -47,11 +47,11 @@ impl InternalCatalog {
 #[cfg(not(target_arch = "wasm32"))]
 pub fn build(proxy_addr: SocketAddr) -> InternalCatalog {
     let origin = dl_uri::Origin::from_scheme_and_socket_addr(
-        dl_uri::Scheme::RerunHttp,
+        dl_uri::Scheme::DalaranHttp,
         SocketAddr::from((Ipv4Addr::LOCALHOST, proxy_addr.port())),
     );
 
-    let handler = Arc::new(RerunCloudHandlerBuilder::new().build());
+    let handler = Arc::new(DalaranCloudHandlerBuilder::new().build());
     let connection = Connection::from_service(handler.clone());
 
     InternalCatalog {
@@ -64,13 +64,13 @@ pub fn build(proxy_addr: SocketAddr) -> InternalCatalog {
 /// Build the in-process internal catalog.
 #[cfg(target_arch = "wasm32")]
 pub fn build() -> InternalCatalog {
-    let handler = Arc::new(RerunCloudHandlerBuilder::new().build());
+    let handler = Arc::new(DalaranCloudHandlerBuilder::new().build());
     let connection = Connection::from_service(handler);
 
     // The Wasm catalog lives purely in-process; the loopback address is a stable identity for the
     // in-memory handler (matching the native construction), not a reachable endpoint.
     let origin = dl_uri::Origin::from_scheme_and_socket_addr(
-        dl_uri::Scheme::RerunHttp,
+        dl_uri::Scheme::DalaranHttp,
         SocketAddr::from((Ipv4Addr::LOCALHOST, 0)),
     );
 

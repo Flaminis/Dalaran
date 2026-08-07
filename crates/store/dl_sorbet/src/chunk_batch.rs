@@ -23,7 +23,7 @@ impl MismatchedChunkSchemaError {
     }
 }
 
-/// The [`ArrowRecordBatch`] representation of a Rerun chunk.
+/// The [`ArrowRecordBatch`] representation of a Dalaran chunk.
 ///
 /// This is a wrapper around a [`ChunkSchema`] and a [`ArrowRecordBatch`].
 ///
@@ -53,7 +53,7 @@ impl ChunkBatch {
 }
 
 impl ChunkBatch {
-    /// The parsed rerun schema of this chunk.
+    /// The parsed dalaran schema of this chunk.
     ///
     /// *IMPORTANT*: the returned `ChunkSchema` has potentially incorrect metadata, since it can
     /// only be derived from an entire chunk store (e.g. a column is static if _any_ chunk

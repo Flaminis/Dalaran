@@ -1,5 +1,5 @@
 //! Writes the canonical small HDF5 fixtures used by the Python tests
-//! (`rerun_py/tests/assets/hdf5/`). Pure Rust and reproducible:
+//! (`dalaran_py/tests/assets/hdf5/`). Pure Rust and reproducible:
 //!
 //! ```sh
 //! cargo run -p dl_hdf5 --example gen_test_fixture -- <output_dir>

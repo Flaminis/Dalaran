@@ -92,7 +92,7 @@ async fn send_next_row_batch(
         dl_tracing::profile_scope!("build_and_align_batch");
         let batch_schema = Arc::new(prepend_string_column_schema(
             &query_schema,
-            ScanSegmentTableDataframe::COLUMN_RERUN_SEGMENT_ID_NAME,
+            ScanSegmentTableDataframe::COLUMN_DALARAN_SEGMENT_ID_NAME,
         ));
 
         let batch = RecordBatch::try_new_with_options(
@@ -604,7 +604,7 @@ impl CurrentStores {
     ///
     /// **Carry-forward protection.** A naive "drop everything with
     /// `time_max < horizon`" would corrupt latest-at semantics:
-    /// rerun queries resolve a row at time `T` to the *most recent*
+    /// dalaran queries resolve a row at time `T` to the *most recent*
     /// component value at or before `T`, so the chunk that holds an
     /// entity's last-known value before the horizon must stay around
     /// to keep supplying that value for rows past the horizon.

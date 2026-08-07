@@ -20,7 +20,7 @@ pub fn compressed_image(time_type: TimeType) -> Result<Lens, LensBuilderError> {
             Selector::parse(".frame_id")?.pipe(op::string_suffix_nonempty(IMAGE_PLANE_SUFFIX)),
         )
         // The format field can be "jpeg", "png", "webp" or "avif" in the Foxglove schema.
-        // We prefix with "image/" to get valid MIME types for Rerun.
+        // We prefix with "image/" to get valid MIME types for Dalaran.
         .to_component(
             EncodedImage::descriptor_media_type(),
             Selector::parse(".format")?.pipe(op::string_prefix("image/")),

@@ -1,4 +1,4 @@
-//! Rerun Viewer context
+//! Dalaran Viewer context
 //!
 //! This crate contains data structures that are shared with most modules of the viewer.
 

@@ -34,8 +34,8 @@ impl ChunkStore {
     /// The column names are based on the following proposals and are further sanitized to ensure
     /// compatibility with Lance datasets.
     ///
-    /// <https://www.notion.so/rerunio/Canonical-column-identifier-for-dataframe-queries-206b24554b1980d98454eb989703ce2b>
-    /// <https://www.notion.so/rerunio/Canonical-column-identifier-for-properties-215b24554b1980029ff1cc6cdfad3f76>
+    /// <https://www.notion.so/dalaranio/Canonical-column-identifier-for-dataframe-queries-206b24554b1980d98454eb989703ce2b>
+    /// <https://www.notion.so/dalaranio/Canonical-column-identifier-for-properties-215b24554b1980029ff1cc6cdfad3f76>
     // TODO(ab): move these ^ to a better place.
     pub fn extract_properties(&self) -> Result<RecordBatch, ExtractPropertiesError> {
         let per_entity = self.property_entities_query_results();
@@ -161,7 +161,7 @@ fn build_properties_record_batch(
                 let list_array = ListArray::from(column.list_array.clone());
 
                 // we strip __properties from the entity path, see
-                // <https://www.notion.so/rerunio/Canonical-column-identifier-for-properties-215b24554b1980029ff1cc6cdfad3f76>
+                // <https://www.notion.so/dalaranio/Canonical-column-identifier-for-properties-215b24554b1980029ff1cc6cdfad3f76>
                 // NOTE: we need to handle both `/__properties` AND `/__properties/$FOO` here
                 let name = property_column_name(entity, component_desc);
 

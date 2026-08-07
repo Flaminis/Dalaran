@@ -1,0 +1,16 @@
+namespace dalaran.blueprint.archetypes;
+
+
+/// Configuration of the text log rows.
+table TextLogRows (
+  "attr.dalaran.scope": "blueprint"
+) {
+  // --- Optional ---
+
+  /// Log levels to display.
+  ///
+  /// Defaults to showing all logged levels.
+  filter_by_log_level: [dalaran.components.TextLogLevel] ("attr.dalaran.component_optional", nullable, order: 100);
+}
+
+

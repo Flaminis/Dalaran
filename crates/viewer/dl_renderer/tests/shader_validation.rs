@@ -61,7 +61,7 @@ fn all_wgsl_shaders_are_valid() {
     // `CARGO_MANIFEST_DIR` points at the `dl_renderer` crate directory.
     let crate_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let shader_dir = crate_dir.join("shader");
-    // …/rerun (the workspace root that holds both `crates/` and `examples/`).
+    // …/dalaran (the workspace root that holds both `crates/` and `examples/`).
     let workspace_root = crate_dir
         .ancestors()
         .nth(3)

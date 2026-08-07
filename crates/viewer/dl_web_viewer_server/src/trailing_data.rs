@@ -1,12 +1,12 @@
 //! Reading of the zip archive appended to the executable.
 //!
-//! This module is used in `trailing_web_viewer` builds (`RERUN_TRAILING_WEB_VIEWER=1`),
+//! This module is used in `trailing_web_viewer` builds (`DALARAN_TRAILING_WEB_VIEWER=1`),
 //! where the web viewer assets are appended to the binary in a post-processing step
 //! using `scripts/append_web_viewer.py`.
 //!
 //! Format of trailing data:
 //! ```text
-//! [Original Binary] [ZIP Archive] [ZIP Offset: 8 bytes LE] [Magic: "RERUNWEB"]
+//! [Original Binary] [ZIP Archive] [ZIP Offset: 8 bytes LE] [Magic: "DALARANWEB"]
 //! ```
 
 use std::io::{Read as _, Seek as _};
@@ -14,7 +14,7 @@ use std::io::{Read as _, Seek as _};
 use crate::WebViewerDataError;
 
 /// Magic marker at the end of the binary to identify the trailing data.
-const MAGIC: &[u8] = b"RERUNWEB";
+const MAGIC: &[u8] = b"DALARANWEB";
 const MAGIC_LEN: usize = 8;
 const OFFSET_LEN: usize = 8;
 const TRAILER_LEN: usize = MAGIC_LEN + OFFSET_LEN;

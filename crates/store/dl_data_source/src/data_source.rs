@@ -12,7 +12,7 @@ use crate::stream_rrd_from_http::stream_from_http_to_channel;
 pub type AuthErrorHandler =
     Arc<dyn Fn(dl_uri::DatasetSegmentUri, &dl_redap_client::ClientCredentialsError) + Send + Sync>;
 
-/// Somewhere we can get Rerun logging data from.
+/// Somewhere we can get Dalaran logging data from.
 // TODO(emilk): there is a lot of overlap between this and `ViewerOpenUrl`
 // TODO(RR-5034): Once all loading goes to the internal catalog unconditionally,
 // we can get rid of some of the variants here.
@@ -49,14 +49,14 @@ pub enum LogDataSource {
     #[cfg(not(target_arch = "wasm32"))]
     Stdin,
 
-    /// A `rerun://` URI pointing to a recording.
+    /// A `dalaran://` URI pointing to a recording.
     RedapDatasetSegment {
         uri: dl_uri::DatasetSegmentUri,
 
         open_behavior: RecordingOpenBehavior,
     },
 
-    /// A `rerun+http://` URI pointing to a proxy.
+    /// A `dalaran+http://` URI pointing to a proxy.
     RedapProxy(dl_uri::ProxyUri),
 }
 
@@ -67,7 +67,7 @@ pub struct FromUriOptions {
     ///
     /// This should be `true` at external entry points (CLI, explicit user URL input),
     /// but `false` when parsing URLs from viewer-internal links, where extensionless
-    /// URLs (e.g. `https://rerun.io/docs/getting-started/data-in`) should fall through to be opened in
+    /// URLs (e.g. `https://dalaran.dev/docs/getting-started/data-in`) should fall through to be opened in
     /// the browser.
     pub accept_extensionless_http: bool,
 }
@@ -540,17 +540,17 @@ mod tests {
         ];
         let grpc = [
             // segment_id (new)
-            "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid",
-            "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid&time_range=timeline@1230ms..1m12s",
-            "rerun+http://example.com/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid",
+            "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid",
+            "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid&time_range=timeline@1230ms..1m12s",
+            "dalaran+http://example.com/dataset/1830B33B45B963E7774455beb91701ae/data?segment_id=sid",
             // partition_id (legacy, for backward compatibility)
-            "rerun://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid",
+            "dalaran://127.0.0.1:1234/dataset/1830B33B45B963E7774455beb91701ae/data?partition_id=pid",
         ];
 
         let proxy = [
-            "rerun+http://127.0.0.1:9876/proxy",
-            "rerun+https://127.0.0.1:9876/proxy",
-            "rerun+http://example.com/proxy",
+            "dalaran+http://127.0.0.1:9876/proxy",
+            "dalaran+https://127.0.0.1:9876/proxy",
+            "dalaran+http://example.com/proxy",
         ];
 
         let invalid = [
@@ -655,14 +655,14 @@ mod tests {
     fn test_data_source_from_viewer_url() {
         // This is the sort of url:s we get when sharing copying links from the web viewer:
 
-        let url = "https://customer.cloud.rerun.io/?url=rerun%3A%2F%2Fapi.customer.cloud.rerun.io%3A443%2Fdataset%2F18A23D2FAC59F8572563b312ef21f53b%3Fsegment_id%3Dthe_segment_name";
+        let url = "https://customer.cloud.dalaran.dev/?url=dalaran%3A%2F%2Fapi.customer.cloud.dalaran.dev%3A443%2Fdataset%2F18A23D2FAC59F8572563b312ef21f53b%3Fsegment_id%3Dthe_segment_name";
 
         let data_source = LogDataSource::from_uri(FileSource::Cli, url, &FromUriOptions::default());
         assert_eq!(
             data_source,
             Some(LogDataSource::RedapDatasetSegment {
                 uri: dl_uri::DatasetSegmentUri {
-                    origin: "api.customer.cloud.rerun.io:443".parse().unwrap(),
+                    origin: "api.customer.cloud.dalaran.dev:443".parse().unwrap(),
                     dataset_id: "18A23D2FAC59F8572563b312ef21f53b".parse().unwrap(),
                     segment_id: "the_segment_name".into(),
                     fragment: Default::default(),

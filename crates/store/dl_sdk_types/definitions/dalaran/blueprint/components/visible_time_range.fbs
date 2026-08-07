@@ -1,0 +1,15 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// The range of values on a given timeline that will be included in a view's query.
+///
+/// Refer to `VisibleTimeRanges` archetype for more information.
+table VisibleTimeRange (
+  "attr.arrow.transparent",
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.repr": "transparent",
+  "attr.rust.derive": "Default, PartialEq, Eq"
+) {
+  value: dalaran.datatypes.VisibleTimeRange (order: 100);
+}

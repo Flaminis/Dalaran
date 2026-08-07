@@ -1,0 +1,12 @@
+namespace dalaran.blueprint.components;
+
+
+/// How many columns a grid container should have.
+table GridColumns (
+  "attr.dalaran.scope": "blueprint",
+  "attr.python.aliases": "int",
+  "attr.rust.derive": "Default, PartialEq, Eq, PartialOrd, Ord"
+) {
+  /// The number of columns.
+  columns: dalaran.datatypes.UInt32 (order: 100);
+}

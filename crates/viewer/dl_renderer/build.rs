@@ -20,7 +20,7 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context as _, bail, ensure};
 use dl_build_tools::{
-    Environment, get_and_track_env_var, rerun_if_changed, write_file_if_necessary,
+    Environment, get_and_track_env_var, dalaran_if_changed, write_file_if_necessary,
 };
 use walkdir::{DirEntry, WalkDir};
 
@@ -111,7 +111,7 @@ fn should_run(environment: Environment) -> bool {
         Environment::PublishingCrates => false,
 
         // The code we're generating here is actual source code that gets committed into the repository.
-        Environment::RerunCI | Environment::CondaBuild => false,
+        Environment::DalaranCI | Environment::CondaBuild => false,
 
         Environment::DeveloperInWorkspace => true,
 
@@ -206,7 +206,7 @@ pub fn init() {
     );
 
     for entry in entries {
-        rerun_if_changed(entry.path());
+        dalaran_if_changed(entry.path());
 
         // The relative path to get from the current shader file to `workspace_shaders.rs`.
         // We must make sure to pass relative paths to `include_str`!

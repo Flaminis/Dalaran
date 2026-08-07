@@ -1,6 +1,6 @@
-//! Rerun arrow metadata and record batch definitions.
+//! Dalaran arrow metadata and record batch definitions.
 //!
-//! Handles the structure of arrow record batches and their meta data for different use cases for Rerun.
+//! Handles the structure of arrow record batches and their meta data for different use cases for Dalaran.
 //!
 //! An arrow record batch that follows a specific schema is called a [`SorbetBatch`].
 //!
@@ -84,8 +84,8 @@ pub fn chunk_id_of_schema(
 ) -> Result<dl_types_core::ChunkId, SorbetError> {
     let metadata = schema.metadata();
     if let Some(chunk_id_str) = metadata
-        .get(crate::metadata::RERUN_CHUNK_ID)
-        .or_else(|| metadata.get("rerun.id"))
+        .get(crate::metadata::DALARAN_CHUNK_ID)
+        .or_else(|| metadata.get("dalaran.id"))
     {
         chunk_id_str.parse().map_err(|err| {
             SorbetError::ChunkIdDeserializationError(format!(

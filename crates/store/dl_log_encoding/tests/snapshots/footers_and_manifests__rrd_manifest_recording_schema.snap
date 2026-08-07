@@ -10,146 +10,146 @@ chunk_id: non-null FixedSizeBinary(16)
 chunk_is_static: non-null Boolean
 chunk_num_rows: non-null UInt64
 elapsed_time:end: Duration(ns) [
-    rerun:index: "elapsed time"
+    dalaran:index: "elapsed time"
 ]
 elapsed_time:example_MyPoints:colors:end: Duration(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "elapsed time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "elapsed time"
 ]
 elapsed_time:example_MyPoints:colors:num_rows: UInt64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "elapsed time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "elapsed time"
 ]
 elapsed_time:example_MyPoints:colors:start: Duration(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "elapsed time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "elapsed time"
 ]
 elapsed_time:example_MyPoints:points:end: Duration(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "elapsed time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "elapsed time"
 ]
 elapsed_time:example_MyPoints:points:num_rows: UInt64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "elapsed time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "elapsed time"
 ]
 elapsed_time:example_MyPoints:points:start: Duration(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "elapsed time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "elapsed time"
 ]
 elapsed_time:start: Duration(ns) [
-    rerun:index: "elapsed time"
+    dalaran:index: "elapsed time"
 ]
 example_MyPoints:colors:has_static_data: non-null Boolean [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "rerun:static"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "dalaran:static"
 ]
 example_MyPoints:labels:has_static_data: non-null Boolean [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:labels"
-    rerun:component_type: "example.MyLabel"
-    rerun:index: "rerun:static"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:labels"
+    dalaran:component_type: "example.MyLabel"
+    dalaran:index: "dalaran:static"
 ]
 example_MyPoints:points:has_static_data: non-null Boolean [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "rerun:static"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "dalaran:static"
 ]
 frame_nr:end: Int64 [
-    rerun:index: "frame_nr"
+    dalaran:index: "frame_nr"
 ]
 frame_nr:example_MyPoints:colors:end: Int64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "frame_nr"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "frame_nr"
 ]
 frame_nr:example_MyPoints:colors:num_rows: UInt64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "frame_nr"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "frame_nr"
 ]
 frame_nr:example_MyPoints:colors:start: Int64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "frame_nr"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "frame_nr"
 ]
 frame_nr:example_MyPoints:points:end: Int64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "frame_nr"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "frame_nr"
 ]
 frame_nr:example_MyPoints:points:num_rows: UInt64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "frame_nr"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "frame_nr"
 ]
 frame_nr:example_MyPoints:points:start: Int64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "frame_nr"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "frame_nr"
 ]
 frame_nr:start: Int64 [
-    rerun:index: "frame_nr"
+    dalaran:index: "frame_nr"
 ]
 log_time:end: Timestamp(ns) [
-    rerun:index: "log_time"
+    dalaran:index: "log_time"
 ]
 log_time:example_MyPoints:colors:end: Timestamp(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "log_time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "log_time"
 ]
 log_time:example_MyPoints:colors:num_rows: UInt64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "log_time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "log_time"
 ]
 log_time:example_MyPoints:colors:start: Timestamp(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:colors"
-    rerun:component_type: "example.MyColor"
-    rerun:index: "log_time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:colors"
+    dalaran:component_type: "example.MyColor"
+    dalaran:index: "log_time"
 ]
 log_time:example_MyPoints:points:end: Timestamp(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "log_time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "log_time"
 ]
 log_time:example_MyPoints:points:num_rows: UInt64 [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "log_time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "log_time"
 ]
 log_time:example_MyPoints:points:start: Timestamp(ns) [
-    rerun:archetype: "example.MyPoints"
-    rerun:component: "example.MyPoints:points"
-    rerun:component_type: "example.MyPoint"
-    rerun:index: "log_time"
+    dalaran:archetype: "example.MyPoints"
+    dalaran:component: "example.MyPoints:points"
+    dalaran:component_type: "example.MyPoint"
+    dalaran:index: "log_time"
 ]
 log_time:start: Timestamp(ns) [
-    rerun:index: "log_time"
+    dalaran:index: "log_time"
 ]

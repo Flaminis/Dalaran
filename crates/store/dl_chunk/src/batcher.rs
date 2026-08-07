@@ -216,22 +216,22 @@ impl ChunkBatcherConfig {
     }
 
     /// Environment variable to configure [`Self::flush_tick`].
-    pub const ENV_FLUSH_TICK: &'static str = "RERUN_FLUSH_TICK_SECS";
+    pub const ENV_FLUSH_TICK: &'static str = "DALARAN_FLUSH_TICK_SECS";
 
     /// Environment variable to configure [`Self::flush_num_bytes`].
-    pub const ENV_FLUSH_NUM_BYTES: &'static str = "RERUN_FLUSH_NUM_BYTES";
+    pub const ENV_FLUSH_NUM_BYTES: &'static str = "DALARAN_FLUSH_NUM_BYTES";
 
     /// Environment variable to configure [`Self::flush_num_rows`].
-    pub const ENV_FLUSH_NUM_ROWS: &'static str = "RERUN_FLUSH_NUM_ROWS";
+    pub const ENV_FLUSH_NUM_ROWS: &'static str = "DALARAN_FLUSH_NUM_ROWS";
 
     /// Environment variable to configure [`Self::chunk_max_rows_if_unsorted`].
     //
     // NOTE: Shared with the same env-var on the store side, for consistency.
-    pub const ENV_CHUNK_MAX_ROWS_IF_UNSORTED: &'static str = "RERUN_CHUNK_MAX_ROWS_IF_UNSORTED";
+    pub const ENV_CHUNK_MAX_ROWS_IF_UNSORTED: &'static str = "DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED";
 
     /// Environment variable to configure [`Self::chunk_max_rows_if_unsorted`].
-    #[deprecated(note = "use `RERUN_CHUNK_MAX_ROWS_IF_UNSORTED` instead")]
-    const ENV_MAX_CHUNK_ROWS_IF_UNSORTED: &'static str = "RERUN_MAX_CHUNK_ROWS_IF_UNSORTED";
+    #[deprecated(note = "use `DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED` instead")]
+    const ENV_MAX_CHUNK_ROWS_IF_UNSORTED: &'static str = "DALARAN_MAX_CHUNK_ROWS_IF_UNSORTED";
 
     /// Creates a new `ChunkBatcherConfig` using the default values, optionally overridden
     /// through the environment.
@@ -319,10 +319,10 @@ fn chunk_batcher_config() {
     // Detect breaking changes in our environment variables.
     // SAFETY: it's a test
     unsafe {
-        std::env::set_var("RERUN_FLUSH_TICK_SECS", "0.3");
-        std::env::set_var("RERUN_FLUSH_NUM_BYTES", "42");
-        std::env::set_var("RERUN_FLUSH_NUM_ROWS", "666");
-        std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", "7777");
+        std::env::set_var("DALARAN_FLUSH_TICK_SECS", "0.3");
+        std::env::set_var("DALARAN_FLUSH_NUM_BYTES", "42");
+        std::env::set_var("DALARAN_FLUSH_NUM_ROWS", "666");
+        std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", "7777");
     }
 
     let config = ChunkBatcherConfig::from_env().unwrap();
@@ -337,7 +337,7 @@ fn chunk_batcher_config() {
 
     // SAFETY: it's a test
     unsafe {
-        std::env::set_var("RERUN_MAX_CHUNK_ROWS_IF_UNSORTED", "9999");
+        std::env::set_var("DALARAN_MAX_CHUNK_ROWS_IF_UNSORTED", "9999");
     }
 
     let config = ChunkBatcherConfig::from_env().unwrap();

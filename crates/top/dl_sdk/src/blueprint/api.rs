@@ -169,7 +169,7 @@ impl Blueprint {
         let application_id = recording
             .store_info()
             .map(|info| info.application_id().clone())
-            .unwrap_or_else(|| dl_log_types::ApplicationId::from("rerun_example_app"));
+            .unwrap_or_else(|| dl_log_types::ApplicationId::from("dalaran_example_app"));
 
         let msgs = self.to_log_msgs(application_id)?;
 

@@ -1,4 +1,4 @@
-//! Interpret an arbitrary Arrow record batch as Rerun chunk data.
+//! Interpret an arbitrary Arrow record batch as Dalaran chunk data.
 //!
 //! This is the core implementation for the Arrow → chunk interpretation that the SDKs and the
 //! platform share. It is surfaced in Python through `Chunk.from_record_batch` and
@@ -19,7 +19,7 @@ use dl_types_core::{ChunkId, FIELD_METADATA_KEY_COMPONENT, Loggable as _, RowId}
 use crate::{
     BatchType, ChunkBatch, ComponentColumnDescriptor, IndexColumnDescriptor, MetadataExt as _,
     RowIdColumnDescriptor, SorbetBatch, SorbetError, SorbetSchema,
-    metadata::{RERUN_CHUNK_ID, RERUN_KIND, SORBET_ENTITY_PATH, SORBET_INDEX_NAME},
+    metadata::{DALARAN_CHUNK_ID, DALARAN_KIND, SORBET_ENTITY_PATH, SORBET_INDEX_NAME},
 };
 
 /// The Arrow field metadata key that holds the extension name (e.g. the TUID extension).
@@ -28,7 +28,7 @@ const ARROW_EXTENSION_NAME: &str = "ARROW:extension:name";
 /// How index (timeline) columns are chosen when interpreting a dataframe batch.
 #[derive(Clone, Debug)]
 pub enum DataframeIndex {
-    /// Derive index columns from `rerun:kind`/`rerun:index_name` metadata; error if none found.
+    /// Derive index columns from `dalaran:kind`/`dalaran:index_name` metadata; error if none found.
     Auto,
 
     /// Promote exactly these columns to timelines; all other non-row-id columns become components.
@@ -95,12 +95,12 @@ pub enum DataframeToChunksError {
 /// Component columns are grouped by entity path, and one [`ChunkBatch`] is emitted per distinct
 /// entity path, in first-seen column order.
 ///
-/// `rerun:*` Arrow metadata, when present, drives the classification of each column, as well as the
+/// `dalaran:*` Arrow metadata, when present, drives the classification of each column, as well as the
 /// entity path / archetype / component / component-type of component columns.
 ///
 /// # Chunk identity
 ///
-/// A row-id column together with a `rerun:id` chunk id mark the batch as a *fully identified* chunk
+/// A row-id column together with a `dalaran:id` chunk id mark the batch as a *fully identified* chunk
 /// (e.g. one produced from a [`ChunkBatch`]). Both the row ids and chunk id are preserved when:
 /// - both are present in the input batch,
 /// - `index` is [`DataframeIndex::Auto`] (the default), and
@@ -108,7 +108,7 @@ pub enum DataframeToChunksError {
 ///
 /// Such an identified chunk round-trips into a single chunk, and must resolve to a single entity
 /// path (otherwise [`DataframeToChunksError::IdentifiedChunkWithMultipleEntities`]). A row-id column
-/// is recognized by a `rerun:kind` of `row_id`/`control`, or the `rerun.datatypes.TUID` Arrow
+/// is recognized by a `dalaran:kind` of `row_id`/`control`, or the `dalaran.datatypes.TUID` Arrow
 /// extension.
 ///
 /// If any of these conditions is not met, the batch is either not fully identified, or its data is
@@ -137,15 +137,15 @@ pub enum DataframeToChunksError {
 /// single-element lists.
 ///
 /// A component's entity path is resolved, in order, from:
-/// - its own `rerun:entity_path` metadata,
-/// - the batch-level `rerun:entity_path` metadata,
+/// - its own `dalaran:entity_path` metadata,
+/// - the batch-level `dalaran:entity_path` metadata,
 /// - the column-name convention (see below),
 /// - the `entity_path` argument, if provided,
 /// - the root entity (`/`).
 ///
 /// ## Column-name convention
 ///
-/// When a component column has no `rerun:entity_path` metadata and its name starts with `/` and
+/// When a component column has no `dalaran:entity_path` metadata and its name starts with `/` and
 /// contains a `:`, the part before the first `:` is taken as the entity path and the remainder as
 /// the component identifier (e.g. `/points:Points3D:positions` → entity `/points`, component
 /// `Points3D:positions`). Names without a leading `/` are not split and land on the resolved
@@ -185,7 +185,7 @@ pub fn chunk_batches_from_dataframe_record_batch(
         .fields()
         .iter()
         .any(|f| is_row_id_field(f));
-    let has_chunk_id = batch.schema_ref().metadata().contains_key(RERUN_CHUNK_ID);
+    let has_chunk_id = batch.schema_ref().metadata().contains_key(DALARAN_CHUNK_ID);
     let preserve_requested = matches!(index, DataframeIndex::Auto) && entity_path.is_none();
 
     if has_row_id && has_chunk_id && preserve_requested {
@@ -195,7 +195,7 @@ pub fn chunk_batches_from_dataframe_record_batch(
 
     // Otherwise we mint a fresh identity. Drop any provided row-id column so it is neither carried
     // as a component nor mistaken for the minted one (the input chunk id is likewise ignored — the
-    // assembly step stamps a freshly-minted `rerun:id` per chunk).
+    // assembly step stamps a freshly-minted `dalaran:id` per chunk).
     let batch = drop_row_id_columns(batch)?;
 
     // Step 1: pre-stamp a working copy of the schema metadata.
@@ -275,21 +275,21 @@ fn reject_null_index_columns<'a>(
 
 /// Is this field a row-id column?
 ///
-/// A field with `rerun:kind ∈ {row_id, control}` or the TUID Arrow extension.
+/// A field with `dalaran:kind ∈ {row_id, control}` or the TUID Arrow extension.
 fn is_row_id_field(field: &ArrowField) -> bool {
-    matches!(field.get_opt(RERUN_KIND), Some("row_id" | "control"))
+    matches!(field.get_opt(DALARAN_KIND), Some("row_id" | "control"))
         || field.get_opt(ARROW_EXTENSION_NAME) == Some(dl_tuid::Tuid::ARROW_EXTENSION_NAME)
 }
 
-/// Was this field detected as a row-id column *only* via the TUID extension (no `rerun:kind`)?
+/// Was this field detected as a row-id column *only* via the TUID extension (no `dalaran:kind`)?
 fn is_row_id_via_extension_only(field: &ArrowField) -> bool {
-    !matches!(field.get_opt(RERUN_KIND), Some("row_id" | "control"))
+    !matches!(field.get_opt(DALARAN_KIND), Some("row_id" | "control"))
         && field.get_opt(ARROW_EXTENSION_NAME) == Some(dl_tuid::Tuid::ARROW_EXTENSION_NAME)
 }
 
 /// Is this field an index (timeline) column under `Auto` classification?
 fn is_index_field_auto(field: &ArrowField) -> bool {
-    matches!(field.get_opt(RERUN_KIND), Some("index" | "time"))
+    matches!(field.get_opt(DALARAN_KIND), Some("index" | "time"))
         || field.get_opt(SORBET_INDEX_NAME).is_some()
 }
 
@@ -362,7 +362,7 @@ fn preserve_identified_chunk(
         if is_row_id_via_extension_only(&field) {
             field
                 .metadata_mut()
-                .insert(RERUN_KIND.to_owned(), "control".to_owned());
+                .insert(DALARAN_KIND.to_owned(), "control".to_owned());
         }
         fields.push(field);
     }
@@ -403,7 +403,7 @@ fn rebuild_record_batch(
     )?)
 }
 
-/// Build a working copy of the batch with stamped Rerun metadata, ready for Dataframe classification.
+/// Build a working copy of the batch with stamped Dalaran metadata, ready for Dataframe classification.
 fn stamp_dataframe_metadata(
     batch: &ArrowRecordBatch,
     index: &DataframeIndex,
@@ -436,7 +436,7 @@ fn stamp_dataframe_metadata(
 
         // Static contradiction check (on the raw field metadata).
         if matches!(index, DataframeIndex::Static)
-            && (matches!(field.get_opt(RERUN_KIND), Some("index" | "time"))
+            && (matches!(field.get_opt(DALARAN_KIND), Some("index" | "time"))
                 || field.get_opt(SORBET_INDEX_NAME).is_some())
         {
             return Err(DataframeToChunksError::StaticWithIndex);
@@ -451,7 +451,7 @@ fn stamp_dataframe_metadata(
         if is_index {
             field
                 .metadata_mut()
-                .insert(RERUN_KIND.to_owned(), "index".to_owned());
+                .insert(DALARAN_KIND.to_owned(), "index".to_owned());
             field
                 .metadata_mut()
                 .entry(SORBET_INDEX_NAME.to_owned())
@@ -460,7 +460,7 @@ fn stamp_dataframe_metadata(
             // Component column. Make the kind explicit.
             field
                 .metadata_mut()
-                .insert(RERUN_KIND.to_owned(), "data".to_owned());
+                .insert(DALARAN_KIND.to_owned(), "data".to_owned());
 
             // Resolve the entity path (field metadata → batch metadata → name convention → arg →
             // root) and stamp it so per-column classification picks it up.
@@ -527,7 +527,7 @@ fn assemble_chunk_batch(
     }
 
     let batch_metadata = HashMap::from([
-        (RERUN_CHUNK_ID.to_owned(), ChunkId::new().to_string()),
+        (DALARAN_CHUNK_ID.to_owned(), ChunkId::new().to_string()),
         (SORBET_ENTITY_PATH.to_owned(), entity.to_string()),
         (
             SorbetSchema::METADATA_KEY_VERSION.to_owned(),
@@ -579,7 +579,7 @@ mod tests {
     use super::{DataframeIndex, chunk_batches_from_dataframe_record_batch};
     use crate::{
         ChunkBatch, DataframeToChunksError, RowIdColumnDescriptor, SorbetError, SorbetSchema,
-        metadata::{RERUN_CHUNK_ID, RERUN_KIND, SORBET_ENTITY_PATH, SORBET_INDEX_NAME},
+        metadata::{DALARAN_CHUNK_ID, DALARAN_KIND, SORBET_ENTITY_PATH, SORBET_INDEX_NAME},
     };
 
     fn field(name: &str, dt: ArrowDatatype, meta: &[(&str, &str)]) -> ArrowField {
@@ -624,7 +624,7 @@ mod tests {
     fn auto_temporal() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "/e:c",
                     ArrowDatatype::Float32,
@@ -647,7 +647,7 @@ mod tests {
         );
     }
 
-    /// An `index_name`-only column (no `rerun:kind`) is still promoted to a timeline under Auto.
+    /// An `index_name`-only column (no `dalaran:kind`) is still promoted to a timeline under Auto.
     /// Guards the `reader()` round-trip.
     #[test]
     fn auto_index_name_only() {
@@ -679,7 +679,7 @@ mod tests {
     fn plain_component_array_is_list_wrapped() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "/e:c",
                     ArrowDatatype::Float32,
@@ -820,7 +820,7 @@ mod tests {
     fn null_index_value_rejected() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "/e:c",
                     ArrowDatatype::Float32,
@@ -860,7 +860,7 @@ mod tests {
 
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "/e:c",
                     ArrowDatatype::Float32,
@@ -883,7 +883,7 @@ mod tests {
     fn multi_entity_split_order() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "/b:c",
                     ArrowDatatype::Float32,
@@ -913,12 +913,12 @@ mod tests {
         }
     }
 
-    /// Batch-level `rerun:entity_path` wins over the column-name convention (resolution-order guard).
+    /// Batch-level `dalaran:entity_path` wins over the column-name convention (resolution-order guard).
     #[test]
     fn batch_level_entity_path_wins_over_name_convention() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 // A conventional name that *would* resolve to `/a`, but no own entity metadata.
                 field("/a:c", ArrowDatatype::Float32, &[]),
             ],
@@ -936,7 +936,7 @@ mod tests {
     fn name_convention_extracts_component_id() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field("/points:Points3D:positions", ArrowDatatype::Float32, &[]),
             ],
             vec![int64(&[0, 1]), floats(&[1.0, 2.0])],
@@ -961,7 +961,7 @@ mod tests {
         for (name, expected_entity) in cases {
             let rb = batch(
                 vec![
-                    field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                    field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                     field(name, ArrowDatatype::Float32, &[]),
                 ],
                 vec![int64(&[0, 1]), floats(&[1.0, 2.0])],
@@ -983,7 +983,7 @@ mod tests {
     fn entity_path_arg_default() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field("bare", ArrowDatatype::Float32, &[]),
             ],
             vec![int64(&[0, 1]), floats(&[1.0, 2.0])],
@@ -1005,7 +1005,7 @@ mod tests {
             vec![field(
                 "frame",
                 ArrowDatatype::Int64,
-                &[(RERUN_KIND, "index")],
+                &[(DALARAN_KIND, "index")],
             )],
             vec![int64(&[0, 1])],
             &[],
@@ -1029,7 +1029,7 @@ mod tests {
         let row_ids = RowId::arrow_from_slice(&[first_row_id, first_row_id.next()]);
 
         let mut batch_meta = vec![
-            (RERUN_CHUNK_ID.to_owned(), chunk_id.to_string()),
+            (DALARAN_CHUNK_ID.to_owned(), chunk_id.to_string()),
             (SORBET_ENTITY_PATH.to_owned(), entity.to_owned()),
         ];
         if with_version {
@@ -1058,7 +1058,7 @@ mod tests {
     /// The preserve path keeps the chunk id and row ids.
     #[test]
     fn preserve_keeps_ids() {
-        let (rb, chunk_id, first_row_id) = row_id_batch(&[(RERUN_KIND, "data")], true, "/foo");
+        let (rb, chunk_id, first_row_id) = row_id_batch(&[(DALARAN_KIND, "data")], true, "/foo");
         let chunks =
             chunk_batches_from_dataframe_record_batch(&rb, &DataframeIndex::Auto, None).unwrap();
         assert_eq!(chunks.len(), 1);
@@ -1069,20 +1069,20 @@ mod tests {
         assert_eq!(preserved[0], first_row_id);
     }
 
-    /// A TUID-extension-only row-id column (no `rerun:kind`) preserves correctly.
+    /// A TUID-extension-only row-id column (no `dalaran:kind`) preserves correctly.
     #[test]
     fn preserve_tuid_extension_only() {
         let chunk_id = dl_types_core::ChunkId::new();
         let mut row_id_field = RowIdColumnDescriptor::from_sorted(true).to_arrow_field();
-        // Drop the `rerun:kind` so only the TUID extension marks it.
-        row_id_field.metadata_mut().remove(RERUN_KIND);
+        // Drop the `dalaran:kind` so only the TUID extension marks it.
+        row_id_field.metadata_mut().remove(DALARAN_KIND);
         let schema = Arc::new(ArrowSchema::new_with_metadata(
             vec![
                 row_id_field,
-                field("c", ArrowDatatype::Float32, &[(RERUN_KIND, "data")]),
+                field("c", ArrowDatatype::Float32, &[(DALARAN_KIND, "data")]),
             ],
             [
-                (RERUN_CHUNK_ID.to_owned(), chunk_id.to_string()),
+                (DALARAN_CHUNK_ID.to_owned(), chunk_id.to_string()),
                 (SORBET_ENTITY_PATH.to_owned(), "/foo".to_owned()),
                 (
                     SorbetSchema::METADATA_KEY_VERSION.to_owned(),
@@ -1111,7 +1111,7 @@ mod tests {
     /// the provided chunk id / row ids.
     #[test]
     fn reinterpretation_mints_fresh_identity() {
-        let (rb, chunk_id, first_row_id) = row_id_batch(&[(RERUN_KIND, "data")], true, "/foo");
+        let (rb, chunk_id, first_row_id) = row_id_batch(&[(DALARAN_KIND, "data")], true, "/foo");
         let chunks =
             chunk_batches_from_dataframe_record_batch(&rb, &DataframeIndex::Static, None).unwrap();
         assert_eq!(chunks.len(), 1);
@@ -1134,15 +1134,15 @@ mod tests {
         let schema = Arc::new(ArrowSchema::new_with_metadata(
             vec![
                 RowIdColumnDescriptor::from_sorted(true).to_arrow_field(),
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "c",
                     ArrowDatatype::Float32,
-                    &[(RERUN_KIND, "data"), (SORBET_ENTITY_PATH, "/foo")],
+                    &[(DALARAN_KIND, "data"), (SORBET_ENTITY_PATH, "/foo")],
                 ),
             ],
             [
-                (RERUN_CHUNK_ID.to_owned(), chunk_id.to_string()),
+                (DALARAN_CHUNK_ID.to_owned(), chunk_id.to_string()),
                 (SORBET_ENTITY_PATH.to_owned(), "/foo".to_owned()),
                 (
                     SorbetSchema::METADATA_KEY_VERSION.to_owned(),
@@ -1192,19 +1192,19 @@ mod tests {
         let schema = Arc::new(ArrowSchema::new_with_metadata(
             vec![
                 RowIdColumnDescriptor::from_sorted(true).to_arrow_field(),
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "x",
                     ArrowDatatype::Float32,
-                    &[(RERUN_KIND, "data"), (SORBET_ENTITY_PATH, "/a")],
+                    &[(DALARAN_KIND, "data"), (SORBET_ENTITY_PATH, "/a")],
                 ),
                 field(
                     "y",
                     ArrowDatatype::Float32,
-                    &[(RERUN_KIND, "data"), (SORBET_ENTITY_PATH, "/b")],
+                    &[(DALARAN_KIND, "data"), (SORBET_ENTITY_PATH, "/b")],
                 ),
             ],
-            // Note: no `rerun:id` → only partially identified.
+            // Note: no `dalaran:id` → only partially identified.
             std::iter::once((
                 SorbetSchema::METADATA_KEY_VERSION.to_owned(),
                 SorbetSchema::METADATA_VERSION.to_string(),
@@ -1238,16 +1238,16 @@ mod tests {
                 field(
                     "x",
                     ArrowDatatype::Float32,
-                    &[(RERUN_KIND, "data"), (SORBET_ENTITY_PATH, "/a")],
+                    &[(DALARAN_KIND, "data"), (SORBET_ENTITY_PATH, "/a")],
                 ),
                 field(
                     "y",
                     ArrowDatatype::Float32,
-                    &[(RERUN_KIND, "data"), (SORBET_ENTITY_PATH, "/b")],
+                    &[(DALARAN_KIND, "data"), (SORBET_ENTITY_PATH, "/b")],
                 ),
             ],
             [
-                (RERUN_CHUNK_ID.to_owned(), chunk_id.to_string()),
+                (DALARAN_CHUNK_ID.to_owned(), chunk_id.to_string()),
                 (
                     SorbetSchema::METADATA_KEY_VERSION.to_owned(),
                     SorbetSchema::METADATA_VERSION.to_string(),
@@ -1283,9 +1283,9 @@ mod tests {
     fn preserve_migration_safety() {
         let (rb, _, _) = row_id_batch(
             &[
-                (RERUN_KIND, "data"),
-                ("rerun:component", "translation"),
-                ("rerun:component_type", "rerun.components.PoseTranslation3D"),
+                (DALARAN_KIND, "data"),
+                ("dalaran:component", "translation"),
+                ("dalaran:component_type", "dalaran.components.PoseTranslation3D"),
             ],
             /* with_version = */ false,
             "/foo",
@@ -1295,7 +1295,7 @@ mod tests {
         let (descr, _) = chunks[0].component_columns().next().unwrap();
         assert_eq!(
             descr.component_type.map(|c| c.to_string()),
-            Some("rerun.components.PoseTranslation3D".to_owned()),
+            Some("dalaran.components.PoseTranslation3D".to_owned()),
             "the Pose component type should not have been migrated away"
         );
     }
@@ -1305,7 +1305,7 @@ mod tests {
     fn assembly_is_a_valid_chunk_batch() {
         let rb = batch(
             vec![
-                field("frame", ArrowDatatype::Int64, &[(RERUN_KIND, "index")]),
+                field("frame", ArrowDatatype::Int64, &[(DALARAN_KIND, "index")]),
                 field(
                     "/e:c",
                     ArrowDatatype::Float32,

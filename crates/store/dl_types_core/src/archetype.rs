@@ -12,9 +12,9 @@ use crate::{ComponentDescriptor, DeserializationResult};
 /// otherwise.
 ///
 /// E.g. consider the `crate::archetypes::Points3D` archetype, which represents the set of
-/// components to consider when working with a 3D point cloud within Rerun.
+/// components to consider when working with a 3D point cloud within Dalaran.
 pub trait Archetype {
-    /// The fully-qualified name of this archetype, e.g. `rerun.archetypes.Points2D`.
+    /// The fully-qualified name of this archetype, e.g. `dalaran.archetypes.Points2D`.
     fn name() -> ArchetypeName;
 
     /// Readable name for displaying in UI.
@@ -123,7 +123,7 @@ pub trait ArchetypeReflectionMarker {}
 // ---
 
 dl_string_interner::declare_new_type_nonempty!(
-    /// The fully-qualified name of an [`Archetype`], e.g. `rerun.archetypes.Points3D`.
+    /// The fully-qualified name of an [`Archetype`], e.g. `dalaran.archetypes.Points3D`.
     pub struct ArchetypeName;
 );
 
@@ -134,12 +134,12 @@ impl ArchetypeName {
     pub fn sanity_check(&self) {
         let full_name = self.0.as_str();
         dl_log::debug_assert!(
-            !full_name.starts_with("rerun.archetypes.rerun.archetypes."),
+            !full_name.starts_with("dalaran.archetypes.dalaran.archetypes."),
             "Found archetype with full name {full_name:?}. Maybe some bad round-tripping?"
         );
     }
 
-    /// Returns the fully-qualified name, e.g. `rerun.archetypes.Points3D`.
+    /// Returns the fully-qualified name, e.g. `dalaran.archetypes.Points3D`.
     ///
     /// This is the default `Display` implementation for [`ArchetypeName`].
     #[inline]
@@ -154,30 +154,30 @@ impl ArchetypeName {
     ///
     /// ```
     /// # use dl_types_core::ArchetypeName;
-    /// assert_eq!(ArchetypeName::from("rerun.archetypes.Points3D").short_name(), "Points3D");
+    /// assert_eq!(ArchetypeName::from("dalaran.archetypes.Points3D").short_name(), "Points3D");
     /// ```
     #[inline]
     pub fn short_name(&self) -> &'static str {
         self.sanity_check();
         let full_name = self.0.as_str();
-        if let Some(short_name) = full_name.strip_prefix("rerun.archetypes.") {
+        if let Some(short_name) = full_name.strip_prefix("dalaran.archetypes.") {
             short_name
-        } else if let Some(short_name) = full_name.strip_prefix("rerun.blueprint.archetypes.") {
+        } else if let Some(short_name) = full_name.strip_prefix("dalaran.blueprint.archetypes.") {
             short_name
-        } else if let Some(short_name) = full_name.strip_prefix("rerun.") {
+        } else if let Some(short_name) = full_name.strip_prefix("dalaran.") {
             short_name
         } else {
             full_name
         }
     }
 
-    /// Url to the rerun docs for this Rerun archetype.
+    /// Url to the dalaran docs for this Dalaran archetype.
     pub fn doc_url(&self) -> Option<String> {
         // This code should be correct as long as this url passes our link checker:
-        // https://rerun.io/docs/reference/types/archetypes/line_strips3d
-        let short_name_pascal_case = self.full_name().strip_prefix("rerun.archetypes.")?;
+        // https://dalaran.dev/docs/reference/types/archetypes/line_strips3d
+        let short_name_pascal_case = self.full_name().strip_prefix("dalaran.archetypes.")?;
         let archetype_name_snake_case = dl_case::to_snake_case(short_name_pascal_case);
-        let base_url = "https://rerun.io/docs/reference/types/archetypes";
+        let base_url = "https://dalaran.dev/docs/reference/types/archetypes";
         Some(format!("{base_url}/{archetype_name_snake_case}"))
     }
 }

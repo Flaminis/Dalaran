@@ -11,7 +11,7 @@ enum BlueprintLoadError {
 
 /// Try to load the given `.blueprint` file.
 ///
-/// The file must be of a matching version of rerun.
+/// The file must be of a matching version of dalaran.
 #[must_use]
 pub fn load_blueprint_file(path: &std::path::Path) -> Option<StoreBundle> {
     fn load_file_path_impl(path: &std::path::Path) -> Result<StoreBundle, BlueprintLoadError> {

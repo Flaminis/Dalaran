@@ -1,0 +1,111 @@
+// The "type zoo": a hand-authored menagerie of exotic type combinations
+// (nullable fields, arrays, unions, enums, transparent/nested datatypes,
+// fixed-size arrays, …) used to exercise every corner of the codegen.
+// Despite the `AffixFuzzer*` names, nothing here is randomly fuzzed.
+
+namespace dalaran.testing.archetypes;
+
+// ---
+
+// TODO(cmc): we actually have an opportunity to resolve the nullability situation here if we make
+// component_required vs. required do different things:
+// - component_required affects the nullability of the component itself at the archetype level (as it does today)
+// - required affects the nullability of the element values for the underlying array (both native and arrow)
+
+table AffixFuzzer1 (
+  "attr.rust.derive": "PartialEq"
+) {
+  fuzz1001: dalaran.testing.components.AffixFuzzer1 ("attr.dalaran.component_required", order: 1001);
+  fuzz1002: dalaran.testing.components.AffixFuzzer2 ("attr.dalaran.component_required", order: 1002);
+  fuzz1003: dalaran.testing.components.AffixFuzzer3 ("attr.dalaran.component_required", order: 1003);
+  fuzz1004: dalaran.testing.components.AffixFuzzer4 ("attr.dalaran.component_required", order: 1004);
+  fuzz1005: dalaran.testing.components.AffixFuzzer5 ("attr.dalaran.component_required", order: 1005);
+  fuzz1006: dalaran.testing.components.AffixFuzzer6 ("attr.dalaran.component_required", order: 1006);
+  fuzz1007: dalaran.testing.components.AffixFuzzer7 ("attr.dalaran.component_required", order: 1007);
+  fuzz1008: dalaran.testing.components.AffixFuzzer8 ("attr.dalaran.component_required", order: 1008);
+  fuzz1009: dalaran.testing.components.AffixFuzzer9 ("attr.dalaran.component_required", order: 1009);
+  fuzz1010: dalaran.testing.components.AffixFuzzer10 ("attr.dalaran.component_required", order: 1010);
+  fuzz1011: dalaran.testing.components.AffixFuzzer11 ("attr.dalaran.component_required", order: 1011);
+  fuzz1012: dalaran.testing.components.AffixFuzzer12 ("attr.dalaran.component_required", order: 1012);
+  fuzz1013: dalaran.testing.components.AffixFuzzer13 ("attr.dalaran.component_required", order: 1013);
+  fuzz1014: dalaran.testing.components.AffixFuzzer14 ("attr.dalaran.component_required", order: 1014);
+  fuzz1015: dalaran.testing.components.AffixFuzzer15 ("attr.dalaran.component_required", order: 1015);
+  fuzz1016: dalaran.testing.components.AffixFuzzer16 ("attr.dalaran.component_required", order: 1016);
+  fuzz1017: dalaran.testing.components.AffixFuzzer17 ("attr.dalaran.component_required", order: 1017);
+  fuzz1018: dalaran.testing.components.AffixFuzzer18 ("attr.dalaran.component_required", order: 1018);
+  fuzz1019: dalaran.testing.components.AffixFuzzer19 ("attr.dalaran.component_required", order: 1019);
+  fuzz1020: dalaran.testing.components.AffixFuzzer20 ("attr.dalaran.component_required", order: 1020);
+  fuzz1021: dalaran.testing.components.AffixFuzzer21 ("attr.dalaran.component_required", order: 1021);
+  fuzz1022: dalaran.testing.components.AffixFuzzer22 ("attr.dalaran.component_required", order: 1022);
+}
+
+table AffixFuzzer2 (
+  "attr.rust.derive": "PartialEq"
+) {
+  fuzz1101: [dalaran.testing.components.AffixFuzzer1] ("attr.dalaran.component_required", order: 1101);
+  fuzz1102: [dalaran.testing.components.AffixFuzzer2] ("attr.dalaran.component_required", order: 1102);
+  fuzz1103: [dalaran.testing.components.AffixFuzzer3] ("attr.dalaran.component_required", order: 1103);
+  fuzz1104: [dalaran.testing.components.AffixFuzzer4] ("attr.dalaran.component_required", order: 1104);
+  fuzz1105: [dalaran.testing.components.AffixFuzzer5] ("attr.dalaran.component_required", order: 1105);
+  fuzz1106: [dalaran.testing.components.AffixFuzzer6] ("attr.dalaran.component_required", order: 1106);
+  fuzz1107: [dalaran.testing.components.AffixFuzzer7] ("attr.dalaran.component_required", order: 1107);
+  fuzz1108: [dalaran.testing.components.AffixFuzzer8] ("attr.dalaran.component_required", order: 1108);
+  fuzz1109: [dalaran.testing.components.AffixFuzzer9] ("attr.dalaran.component_required", order: 1109);
+  fuzz1110: [dalaran.testing.components.AffixFuzzer10] ("attr.dalaran.component_required", order: 1110);
+  fuzz1111: [dalaran.testing.components.AffixFuzzer11] ("attr.dalaran.component_required", order: 1111);
+  fuzz1112: [dalaran.testing.components.AffixFuzzer12] ("attr.dalaran.component_required", order: 1112);
+  fuzz1113: [dalaran.testing.components.AffixFuzzer13] ("attr.dalaran.component_required", order: 1113);
+  fuzz1114: [dalaran.testing.components.AffixFuzzer14] ("attr.dalaran.component_required", order: 1114);
+  fuzz1115: [dalaran.testing.components.AffixFuzzer15] ("attr.dalaran.component_required", order: 1115);
+  fuzz1116: [dalaran.testing.components.AffixFuzzer16] ("attr.dalaran.component_required", order: 1116);
+  fuzz1117: [dalaran.testing.components.AffixFuzzer17] ("attr.dalaran.component_required", order: 1117);
+  fuzz1118: [dalaran.testing.components.AffixFuzzer18] ("attr.dalaran.component_required", order: 1118);
+  fuzz1122: [dalaran.testing.components.AffixFuzzer22] ("attr.dalaran.component_required", order: 1122);
+}
+
+table AffixFuzzer3 (
+  "attr.rust.derive": "PartialEq"
+) {
+  fuzz2001: dalaran.testing.components.AffixFuzzer1 ("attr.dalaran.component_optional", nullable, order: 2001);
+  fuzz2002: dalaran.testing.components.AffixFuzzer2 ("attr.dalaran.component_optional", nullable, order: 2002);
+  fuzz2003: dalaran.testing.components.AffixFuzzer3 ("attr.dalaran.component_optional", nullable, order: 2003);
+  fuzz2004: dalaran.testing.components.AffixFuzzer4 ("attr.dalaran.component_optional", nullable, order: 2004);
+  fuzz2005: dalaran.testing.components.AffixFuzzer5 ("attr.dalaran.component_optional", nullable, order: 2005);
+  fuzz2006: dalaran.testing.components.AffixFuzzer6 ("attr.dalaran.component_optional", nullable, order: 2006);
+  fuzz2007: dalaran.testing.components.AffixFuzzer7 ("attr.dalaran.component_optional", nullable, order: 2007);
+  fuzz2008: dalaran.testing.components.AffixFuzzer8 ("attr.dalaran.component_optional", nullable, order: 2008);
+  fuzz2009: dalaran.testing.components.AffixFuzzer9 ("attr.dalaran.component_optional", nullable, order: 2009);
+  fuzz2010: dalaran.testing.components.AffixFuzzer10 ("attr.dalaran.component_optional", nullable, order: 2010);
+  fuzz2011: dalaran.testing.components.AffixFuzzer11 ("attr.dalaran.component_optional", nullable, order: 2011);
+  fuzz2012: dalaran.testing.components.AffixFuzzer12 ("attr.dalaran.component_optional", nullable, order: 2012);
+  fuzz2013: dalaran.testing.components.AffixFuzzer13 ("attr.dalaran.component_optional", nullable, order: 2013);
+  fuzz2014: dalaran.testing.components.AffixFuzzer14 ("attr.dalaran.component_optional", nullable, order: 2014);
+  fuzz2015: dalaran.testing.components.AffixFuzzer15 ("attr.dalaran.component_optional", nullable, order: 2015);
+  fuzz2016: dalaran.testing.components.AffixFuzzer16 ("attr.dalaran.component_optional", nullable, order: 2016);
+  fuzz2017: dalaran.testing.components.AffixFuzzer17 ("attr.dalaran.component_optional", nullable, order: 2017);
+  fuzz2018: dalaran.testing.components.AffixFuzzer18 ("attr.dalaran.component_optional", nullable, order: 2018);
+
+}
+
+table AffixFuzzer4 (
+  "attr.rust.derive": "PartialEq"
+) {
+  fuzz2101: [dalaran.testing.components.AffixFuzzer1] ("attr.dalaran.component_optional", nullable, order: 2101);
+  fuzz2102: [dalaran.testing.components.AffixFuzzer2] ("attr.dalaran.component_optional", nullable, order: 2102);
+  fuzz2103: [dalaran.testing.components.AffixFuzzer3] ("attr.dalaran.component_optional", nullable, order: 2103);
+  fuzz2104: [dalaran.testing.components.AffixFuzzer4] ("attr.dalaran.component_optional", nullable, order: 2104);
+  fuzz2105: [dalaran.testing.components.AffixFuzzer5] ("attr.dalaran.component_optional", nullable, order: 2105);
+  fuzz2106: [dalaran.testing.components.AffixFuzzer6] ("attr.dalaran.component_optional", nullable, order: 2106);
+  fuzz2107: [dalaran.testing.components.AffixFuzzer7] ("attr.dalaran.component_optional", nullable, order: 2107);
+  fuzz2108: [dalaran.testing.components.AffixFuzzer8] ("attr.dalaran.component_optional", nullable, order: 2108);
+  fuzz2109: [dalaran.testing.components.AffixFuzzer9] ("attr.dalaran.component_optional", nullable, order: 2109);
+  fuzz2110: [dalaran.testing.components.AffixFuzzer10] ("attr.dalaran.component_optional", nullable, order: 2110);
+  fuzz2111: [dalaran.testing.components.AffixFuzzer11] ("attr.dalaran.component_optional", nullable, order: 2111);
+  fuzz2112: [dalaran.testing.components.AffixFuzzer12] ("attr.dalaran.component_optional", nullable, order: 2112);
+  fuzz2113: [dalaran.testing.components.AffixFuzzer13] ("attr.dalaran.component_optional", nullable, order: 2113);
+  fuzz2114: [dalaran.testing.components.AffixFuzzer14] ("attr.dalaran.component_optional", nullable, order: 2114);
+  fuzz2115: [dalaran.testing.components.AffixFuzzer15] ("attr.dalaran.component_optional", nullable, order: 2115);
+  fuzz2116: [dalaran.testing.components.AffixFuzzer16] ("attr.dalaran.component_optional", nullable, order: 2116);
+  fuzz2117: [dalaran.testing.components.AffixFuzzer17] ("attr.dalaran.component_optional", nullable, order: 2117);
+  fuzz2118: [dalaran.testing.components.AffixFuzzer18] ("attr.dalaran.component_optional", nullable, order: 2118);
+}

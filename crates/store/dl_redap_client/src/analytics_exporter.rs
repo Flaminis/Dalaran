@@ -8,7 +8,7 @@
 use opentelemetry_proto::tonic::collector::trace::v1::{
     ExportTraceServiceRequest, ExportTraceServiceResponse,
 };
-use dl_protos::trace_id_layer::RERUN_HTTP_HEADER_REQUEST_TRACE_ID;
+use dl_protos::trace_id_layer::DALARAN_HTTP_HEADER_REQUEST_TRACE_ID;
 use dl_uri::Origin;
 
 const EXPORT_PATH: &str = "/opentelemetry.proto.collector.trace.v1.TraceService/Export";
@@ -57,7 +57,7 @@ impl ConnectionAnalyticsExporter {
         {
             request
                 .metadata_mut()
-                .insert(RERUN_HTTP_HEADER_REQUEST_TRACE_ID, value);
+                .insert(DALARAN_HTTP_HEADER_REQUEST_TRACE_ID, value);
         }
 
         grpc.ready().await.map_err(|err| {

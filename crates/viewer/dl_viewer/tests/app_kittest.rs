@@ -67,13 +67,13 @@ async fn settings_screen() {
     }
 }
 
-/// Snapshots the "About Rerun" menu content with a fixed, realistic `BuildInfo`.
+/// Snapshots the "About Dalaran" menu content with a fixed, realistic `BuildInfo`.
 #[test]
-fn about_rerun() {
+fn about_dalaran() {
     let test_context = TestContext::new();
 
     let build_info = dl_build_info::BuildInfo {
-        crate_name: "rerun-cli".into(),
+        crate_name: "dalaran-cli".into(),
         features: "default analytics map_view nasm".into(),
         version: dl_build_info::CrateVersion {
             major: 0,
@@ -85,7 +85,7 @@ fn about_rerun() {
         llvm_version: "19.1.5".into(),
         git_hash: "abc1234deadbeefcafebabe00000000000000".into(),
         git_branch: "main".into(),
-        is_in_rerun_workspace: true,
+        is_in_dalaran_workspace: true,
         target_triple: "aarch64-apple-darwin".into(),
         datetime: "2026-05-25T12:34:56Z".into(),
         is_debug_build: false,
@@ -101,15 +101,15 @@ fn about_rerun() {
     let mut harness = harness.build_ui(|ui| {
         dl_ui::apply_style_and_install_loaders(ui.ctx());
         egui::containers::menu::menu_style(ui.style_mut()); // The about-dialog is in a menu
-        dl_viewer::about_rerun_ui(ui, &build_info, render_state.as_ref());
+        dl_viewer::about_dalaran_ui(ui, &build_info, render_state.as_ref());
     });
 
     harness.run();
     harness.fit_contents();
-    harness.snapshot("about_rerun");
+    harness.snapshot("about_dalaran");
 }
 
-/// Opens the Rerun menu without an active recording and snapshots the app.
+/// Opens the Dalaran menu without an active recording and snapshots the app.
 /// Tests that certain recording-related entries are disabled (e.g. save or close recording).
 #[tokio::test]
 async fn menu_without_recording() {

@@ -1,4 +1,4 @@
-//! Case conversions, the way Rerun likes them.
+//! Case conversions, the way Dalaran likes them.
 
 /// Converts a snake or pascal case input into a snake case output.
 ///
@@ -6,7 +6,7 @@
 pub fn to_snake_case(s: &str) -> String {
     use convert_case::{Boundary, Converter, Pattern};
 
-    let rerun_snake = Converter::new()
+    let dalaran_snake = Converter::new()
         .set_boundaries(&[
             Boundary::Hyphen,
             Boundary::Space,
@@ -24,7 +24,7 @@ pub fn to_snake_case(s: &str) -> String {
             .replace("IVec", "ivec")
             .replace("DVec", "dvec")
             .replace("UInt", "uint");
-        *last = rerun_snake.convert(last.as_str());
+        *last = dalaran_snake.convert(last.as_str());
     }
     parts.join(".")
 }
@@ -32,70 +32,70 @@ pub fn to_snake_case(s: &str) -> String {
 #[test]
 fn test_to_snake_case() {
     assert_eq!(
-        to_snake_case("rerun.components.Position2D"),
-        "rerun.components.position2d"
+        to_snake_case("dalaran.components.Position2D"),
+        "dalaran.components.position2d"
     );
     assert_eq!(
-        to_snake_case("rerun.components.position2d"),
-        "rerun.components.position2d"
-    );
-
-    assert_eq!(
-        to_snake_case("rerun.datatypes.Utf8"),
-        "rerun.datatypes.utf8"
-    );
-    assert_eq!(
-        to_snake_case("rerun.datatypes.utf8"),
-        "rerun.datatypes.utf8"
+        to_snake_case("dalaran.components.position2d"),
+        "dalaran.components.position2d"
     );
 
     assert_eq!(
-        to_snake_case("rerun.datatypes.UVec2D"),
-        "rerun.datatypes.uvec2d"
+        to_snake_case("dalaran.datatypes.Utf8"),
+        "dalaran.datatypes.utf8"
     );
     assert_eq!(
-        to_snake_case("rerun.datatypes.uvec2d"),
-        "rerun.datatypes.uvec2d"
-    );
-    assert_eq!(
-        to_snake_case("rerun.datatypes.IVec3D"),
-        "rerun.datatypes.ivec3d"
-    );
-    assert_eq!(
-        to_snake_case("rerun.datatypes.ivec3d"),
-        "rerun.datatypes.ivec3d"
+        to_snake_case("dalaran.datatypes.utf8"),
+        "dalaran.datatypes.utf8"
     );
 
     assert_eq!(
-        to_snake_case("rerun.datatypes.UInt32"),
-        "rerun.datatypes.uint32"
+        to_snake_case("dalaran.datatypes.UVec2D"),
+        "dalaran.datatypes.uvec2d"
     );
     assert_eq!(
-        to_snake_case("rerun.datatypes.uint32"),
-        "rerun.datatypes.uint32"
-    );
-
-    assert_eq!(
-        to_snake_case("rerun.archetypes.Points2DIndicator"),
-        "rerun.archetypes.points2d_indicator"
+        to_snake_case("dalaran.datatypes.uvec2d"),
+        "dalaran.datatypes.uvec2d"
     );
     assert_eq!(
-        to_snake_case("rerun.archetypes.points2d_indicator"),
-        "rerun.archetypes.points2d_indicator"
-    );
-
-    assert_eq!(
-        to_snake_case("rerun.components.TranslationAndMat3x3"),
-        "rerun.components.translation_and_mat3x3"
+        to_snake_case("dalaran.datatypes.IVec3D"),
+        "dalaran.datatypes.ivec3d"
     );
     assert_eq!(
-        to_snake_case("rerun.components.translation_and_mat3x3"),
-        "rerun.components.translation_and_mat3x3"
+        to_snake_case("dalaran.datatypes.ivec3d"),
+        "dalaran.datatypes.ivec3d"
     );
 
     assert_eq!(
-        to_snake_case("rerun.components.AnnotationContext"),
-        "rerun.components.annotation_context"
+        to_snake_case("dalaran.datatypes.UInt32"),
+        "dalaran.datatypes.uint32"
+    );
+    assert_eq!(
+        to_snake_case("dalaran.datatypes.uint32"),
+        "dalaran.datatypes.uint32"
+    );
+
+    assert_eq!(
+        to_snake_case("dalaran.archetypes.Points2DIndicator"),
+        "dalaran.archetypes.points2d_indicator"
+    );
+    assert_eq!(
+        to_snake_case("dalaran.archetypes.points2d_indicator"),
+        "dalaran.archetypes.points2d_indicator"
+    );
+
+    assert_eq!(
+        to_snake_case("dalaran.components.TranslationAndMat3x3"),
+        "dalaran.components.translation_and_mat3x3"
+    );
+    assert_eq!(
+        to_snake_case("dalaran.components.translation_and_mat3x3"),
+        "dalaran.components.translation_and_mat3x3"
+    );
+
+    assert_eq!(
+        to_snake_case("dalaran.components.AnnotationContext"),
+        "dalaran.components.annotation_context"
     );
 }
 
@@ -105,7 +105,7 @@ fn test_to_snake_case() {
 pub fn to_pascal_case(s: &str) -> String {
     use convert_case::{Boundary, Converter, Pattern};
 
-    let rerun_pascal = Converter::new()
+    let dalaran_pascal = Converter::new()
         .set_boundaries(&[
             Boundary::Hyphen,
             Boundary::Space,
@@ -126,7 +126,7 @@ pub fn to_pascal_case(s: &str) -> String {
             .replace("2d", "2D") // NOLINT
             .replace("3d", "3D") // NOLINT
             .replace("4d", "4D");
-        *last = rerun_pascal.convert(last.as_str());
+        *last = dalaran_pascal.convert(last.as_str());
     }
     parts.join(".")
 }
@@ -134,56 +134,56 @@ pub fn to_pascal_case(s: &str) -> String {
 #[test]
 fn test_to_pascal_case() {
     assert_eq!(
-        to_pascal_case("rerun.components.position2d"),
-        "rerun.components.Position2D"
+        to_pascal_case("dalaran.components.position2d"),
+        "dalaran.components.Position2D"
     );
     assert_eq!(
-        to_pascal_case("rerun.components.Position2D"),
-        "rerun.components.Position2D"
-    );
-
-    assert_eq!(
-        to_pascal_case("rerun.datatypes.uvec2d"),
-        "rerun.datatypes.UVec2D"
-    );
-    assert_eq!(
-        to_pascal_case("rerun.datatypes.UVec2D"),
-        "rerun.datatypes.UVec2D"
-    );
-    assert_eq!(
-        to_pascal_case("rerun.datatypes.ivec3d"),
-        "rerun.datatypes.IVec3D"
-    );
-    assert_eq!(
-        to_pascal_case("rerun.datatypes.IVec3D"),
-        "rerun.datatypes.IVec3D"
+        to_pascal_case("dalaran.components.Position2D"),
+        "dalaran.components.Position2D"
     );
 
     assert_eq!(
-        to_pascal_case("rerun.datatypes.uint32"),
-        "rerun.datatypes.UInt32"
+        to_pascal_case("dalaran.datatypes.uvec2d"),
+        "dalaran.datatypes.UVec2D"
     );
     assert_eq!(
-        to_pascal_case("rerun.datatypes.UInt32"),
-        "rerun.datatypes.UInt32"
+        to_pascal_case("dalaran.datatypes.UVec2D"),
+        "dalaran.datatypes.UVec2D"
+    );
+    assert_eq!(
+        to_pascal_case("dalaran.datatypes.ivec3d"),
+        "dalaran.datatypes.IVec3D"
+    );
+    assert_eq!(
+        to_pascal_case("dalaran.datatypes.IVec3D"),
+        "dalaran.datatypes.IVec3D"
     );
 
     assert_eq!(
-        to_pascal_case("rerun.archetypes.points2d_indicator"),
-        "rerun.archetypes.Points2DIndicator"
+        to_pascal_case("dalaran.datatypes.uint32"),
+        "dalaran.datatypes.UInt32"
     );
     assert_eq!(
-        to_pascal_case("rerun.archetypes.Points2DIndicator"),
-        "rerun.archetypes.Points2DIndicator"
+        to_pascal_case("dalaran.datatypes.UInt32"),
+        "dalaran.datatypes.UInt32"
     );
 
     assert_eq!(
-        to_pascal_case("rerun.components.translation_and_mat3x3"),
-        "rerun.components.TranslationAndMat3x3"
+        to_pascal_case("dalaran.archetypes.points2d_indicator"),
+        "dalaran.archetypes.Points2DIndicator"
     );
     assert_eq!(
-        to_pascal_case("rerun.components.TranslationAndMat3x3"),
-        "rerun.components.TranslationAndMat3x3"
+        to_pascal_case("dalaran.archetypes.Points2DIndicator"),
+        "dalaran.archetypes.Points2DIndicator"
+    );
+
+    assert_eq!(
+        to_pascal_case("dalaran.components.translation_and_mat3x3"),
+        "dalaran.components.TranslationAndMat3x3"
+    );
+    assert_eq!(
+        to_pascal_case("dalaran.components.TranslationAndMat3x3"),
+        "dalaran.components.TranslationAndMat3x3"
     );
 }
 
@@ -193,7 +193,7 @@ fn test_to_pascal_case() {
 pub fn to_human_case(s: &str) -> String {
     use convert_case::{Boundary, Converter, Pattern};
 
-    let rerun_human = Converter::new()
+    let dalaran_human = Converter::new()
         .set_boundaries(&[
             Boundary::Hyphen,
             Boundary::Space,
@@ -207,7 +207,7 @@ pub fn to_human_case(s: &str) -> String {
 
     let mut parts: Vec<_> = s.split('.').map(ToOwned::to_owned).collect();
     if let Some(last) = parts.last_mut() {
-        *last = rerun_human.convert(last.as_str());
+        *last = dalaran_human.convert(last.as_str());
         *last = last
             .replace("Uvec", "UVec")
             .replace("Ivec", "IVec")
@@ -228,55 +228,55 @@ pub fn to_human_case(s: &str) -> String {
 #[test]
 fn test_to_human_case() {
     assert_eq!(
-        to_human_case("rerun.components.position2d"),
-        "rerun.components.Position 2D"
+        to_human_case("dalaran.components.position2d"),
+        "dalaran.components.Position 2D"
     );
     assert_eq!(
-        to_human_case("rerun.components.Position2D"),
-        "rerun.components.Position 2D"
-    );
-
-    assert_eq!(
-        to_human_case("rerun.datatypes.uvec2d"),
-        "rerun.datatypes.UVec 2D"
-    );
-    assert_eq!(
-        to_human_case("rerun.datatypes.UVec2D"),
-        "rerun.datatypes.UVec 2D"
-    );
-    assert_eq!(
-        to_human_case("rerun.datatypes.ivec3d"),
-        "rerun.datatypes.IVec 3D"
-    );
-    assert_eq!(
-        to_human_case("rerun.datatypes.IVec3D"),
-        "rerun.datatypes.IVec 3D"
+        to_human_case("dalaran.components.Position2D"),
+        "dalaran.components.Position 2D"
     );
 
     assert_eq!(
-        to_human_case("rerun.datatypes.uint32"),
-        "rerun.datatypes.UInt32"
+        to_human_case("dalaran.datatypes.uvec2d"),
+        "dalaran.datatypes.UVec 2D"
     );
     assert_eq!(
-        to_human_case("rerun.datatypes.UInt32"),
-        "rerun.datatypes.UInt32"
+        to_human_case("dalaran.datatypes.UVec2D"),
+        "dalaran.datatypes.UVec 2D"
+    );
+    assert_eq!(
+        to_human_case("dalaran.datatypes.ivec3d"),
+        "dalaran.datatypes.IVec 3D"
+    );
+    assert_eq!(
+        to_human_case("dalaran.datatypes.IVec3D"),
+        "dalaran.datatypes.IVec 3D"
     );
 
     assert_eq!(
-        to_human_case("rerun.archetypes.points2d_indicator"),
-        "rerun.archetypes.Points 2D indicator"
+        to_human_case("dalaran.datatypes.uint32"),
+        "dalaran.datatypes.UInt32"
     );
     assert_eq!(
-        to_human_case("rerun.archetypes.Points2DIndicator"),
-        "rerun.archetypes.Points 2D indicator"
+        to_human_case("dalaran.datatypes.UInt32"),
+        "dalaran.datatypes.UInt32"
     );
 
     assert_eq!(
-        to_human_case("rerun.components.translation_and_mat3x3"),
-        "rerun.components.Translation and mat3x3"
+        to_human_case("dalaran.archetypes.points2d_indicator"),
+        "dalaran.archetypes.Points 2D indicator"
     );
     assert_eq!(
-        to_human_case("rerun.components.TranslationAndMat3x3"),
-        "rerun.components.Translation and mat3x3"
+        to_human_case("dalaran.archetypes.Points2DIndicator"),
+        "dalaran.archetypes.Points 2D indicator"
+    );
+
+    assert_eq!(
+        to_human_case("dalaran.components.translation_and_mat3x3"),
+        "dalaran.components.Translation and mat3x3"
+    );
+    assert_eq!(
+        to_human_case("dalaran.components.TranslationAndMat3x3"),
+        "dalaran.components.Translation and mat3x3"
     );
 }

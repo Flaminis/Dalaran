@@ -111,7 +111,7 @@ pub enum ImageUrl<'a> {
     /// ```
     ///
     /// The `https://static.rerun.io/` base is optional.
-    Rerun(RerunImageUrl<'a>),
+    Dalaran(DalaranImageUrl<'a>),
 
     /// Any other URL.
     Other(&'a str),
@@ -119,7 +119,7 @@ pub enum ImageUrl<'a> {
 
 impl ImageUrl<'_> {
     pub fn parse(s: &str) -> ImageUrl<'_> {
-        RerunImageUrl::parse(s).map_or(ImageUrl::Other(s), ImageUrl::Rerun)
+        DalaranImageUrl::parse(s).map_or(ImageUrl::Other(s), ImageUrl::Dalaran)
     }
 
     /// Try to generate a `<picture>` stack, falling back to a single `<img>` element.
@@ -168,7 +168,7 @@ impl<'a> ImageStack<'a> {
 
     pub fn finish(self) -> Vec<String> {
         match self.url {
-            ImageUrl::Rerun(rerun) => rerun.image_stack(self.snippet_id, self.width, self.center),
+            ImageUrl::Dalaran(dalaran) => dalaran.image_stack(self.snippet_id, self.width, self.center),
             ImageUrl::Other(url) => {
                 vec![format!(r#"<img src="{url}">"#)]
             }
@@ -185,18 +185,18 @@ impl std::fmt::Display for SnippetId<'_> {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub struct RerunImageUrl<'a> {
+pub struct DalaranImageUrl<'a> {
     pub name: &'a str,
     pub hash: &'a str,
     pub max_width: Option<u16>,
     pub extension: &'a str,
 }
 
-impl RerunImageUrl<'_> {
+impl DalaranImageUrl<'_> {
     /// Parses e.g. `https://static.rerun.io/annotation_context_rects/9b446c36011ed30fce7dc6ed03d5fd9557460f70/1200w.png`
-    pub fn parse(s: &str) -> Option<RerunImageUrl<'_>> {
+    pub fn parse(s: &str) -> Option<DalaranImageUrl<'_>> {
         let path = s.strip_prefix("https://static.rerun.io/")?;
-        // We're on a `static.rerun.io` URL, so we can make assumptions about the format:
+        // We're on a `static.dalaran.dev` URL, so we can make assumptions about the format:
 
         let (rest, extension) = path.rsplit_once('.')?;
         let mut parts = rest.split('/');
@@ -209,7 +209,7 @@ impl RerunImageUrl<'_> {
             return None;
         }
 
-        Some(RerunImageUrl {
+        Some(DalaranImageUrl {
             name,
             hash,
             max_width,
@@ -225,7 +225,7 @@ impl RerunImageUrl<'_> {
     ) -> Vec<String> {
         const WIDTHS: [u16; 4] = [480, 768, 1024, 1200];
 
-        let RerunImageUrl {
+        let DalaranImageUrl {
             name,
             hash,
             max_width,
@@ -273,7 +273,7 @@ impl RerunImageUrl<'_> {
     }
 
     pub fn markdown_tag(&self) -> String {
-        let RerunImageUrl {
+        let DalaranImageUrl {
             name,
             hash,
             max_width: _,
@@ -293,7 +293,7 @@ pub fn collect_snippets_for_api_docs<'a>(
     extension: &str,
     required: bool,
 ) -> anyhow::Result<Vec<Example<'a>>> {
-    let base_path = crate::rerun_workspace_path().join("docs/snippets/all");
+    let base_path = crate::dalaran_workspace_path().join("docs/snippets/all");
 
     let examples: Vec<&'a str> = docs.only_lines_tagged("example");
 

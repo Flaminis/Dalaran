@@ -3,19 +3,19 @@ use arrow::datatypes as arrow_schema;
 use futures::TryStreamExt as _;
 use itertools::Itertools as _;
 use dl_protos::cloud::v1alpha1::ext::EntryDetails;
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use dl_protos::cloud::v1alpha1::{
     FindEntriesRequest, ScanTableRequest, TableInsertMode, WriteTableRequest,
 };
-use dl_protos::headers::RerunHeadersInjectorExt as _;
+use dl_protos::headers::DalaranHeadersInjectorExt as _;
 
 use crate::RecordBatchTestExt as _;
-use crate::tests::common::{RerunCloudServiceExt as _, concat_record_batches, entry_name};
+use crate::tests::common::{DalaranCloudServiceExt as _, concat_record_batches, entry_name};
 use crate::utils::streaming::make_streaming_request;
 use crate::utils::tables::create_simple_lance_dataset;
 
 async fn get_table_batches(
-    service: &impl RerunCloudService,
+    service: &impl DalaranCloudService,
     entry: &EntryDetails,
 ) -> Vec<RecordBatch> {
     let scan_request = ScanTableRequest {
@@ -42,7 +42,7 @@ async fn get_table_batches(
         .collect_vec()
 }
 
-pub async fn write_table(service: impl RerunCloudService) {
+pub async fn write_table(service: impl DalaranCloudService) {
     let table_name = "test_table";
     let path = create_simple_lance_dataset()
         .await

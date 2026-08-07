@@ -1,6 +1,6 @@
 use crate::RecordBatchTestExt as _;
 use crate::tests::common::{
-    DataSourcesDefinition, LayerDefinition, RerunCloudServiceExt as _, concat_record_batches,
+    DataSourcesDefinition, LayerDefinition, DalaranCloudServiceExt as _, concat_record_batches,
 };
 use crate::utils::client::{TestClient, create_test_client};
 use arrow::array::RecordBatch;
@@ -12,16 +12,16 @@ use futures::{StreamExt as _, TryStreamExt as _};
 use itertools::Itertools as _;
 use dl_datafusion::{DataframeClientAPI, DataframeQueryTableProvider};
 use dl_log_types::{EntityPath, EntryId};
-use dl_protos::cloud::v1alpha1::rerun_cloud_service_server::RerunCloudService;
+use dl_protos::cloud::v1alpha1::dalaran_cloud_service_server::DalaranCloudService;
 use std::sync::Arc;
 
-pub async fn query_dataset_simple_filter(service: impl RerunCloudService) {
+pub async fn query_dataset_simple_filter(service: impl DalaranCloudService) {
     #![expect(unsafe_code)]
-    let original_env = std::env::var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED").ok();
+    let original_env = std::env::var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED").ok();
 
     // SAFETY:
     // This is simply a test
-    unsafe { std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", "3") };
+    unsafe { std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", "3") };
 
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
@@ -52,7 +52,7 @@ pub async fn query_dataset_simple_filter(service: impl RerunCloudService) {
     let tests = vec![
         (lit(true), "default"),
         (
-            col("rerun_segment_id").eq(lit("my_segment_id2")),
+            col("dalaran_segment_id").eq(lit("my_segment_id2")),
             "seg_id_eq",
         ),
         (col("frame_nr").eq(lit(50)), "frame_nr_eq"),
@@ -122,8 +122,8 @@ pub async fn query_dataset_simple_filter(service: impl RerunCloudService) {
     // This is simply a test
     unsafe {
         match original_env {
-            Some(val) => std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", val),
-            None => std::env::remove_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED"),
+            Some(val) => std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", val),
+            None => std::env::remove_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED"),
         }
     }
 }
@@ -151,14 +151,14 @@ pub async fn query_dataset_simple_filter(service: impl RerunCloudService) {
 ///   strictly more rows than the pure range scan). An explicit assertion
 ///   enforces this.
 pub async fn query_dataset_range_filter_with_and_without_latest_at_fill(
-    service: impl RerunCloudService,
+    service: impl DalaranCloudService,
 ) {
     #![expect(unsafe_code)]
-    let original_env = std::env::var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED").ok();
+    let original_env = std::env::var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED").ok();
 
     // SAFETY:
     // This is simply a test
-    unsafe { std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", "3") };
+    unsafe { std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", "3") };
 
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
@@ -247,8 +247,8 @@ pub async fn query_dataset_range_filter_with_and_without_latest_at_fill(
     // This is simply a test
     unsafe {
         match original_env {
-            Some(val) => std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", val),
-            None => std::env::remove_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED"),
+            Some(val) => std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", val),
+            None => std::env::remove_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED"),
         }
     }
 }
@@ -291,13 +291,13 @@ async fn query_dataset_count_and_snapshot<T: DataframeClientAPI>(
     );
 }
 
-pub async fn query_dataset_with_limit(service: impl RerunCloudService) {
+pub async fn query_dataset_with_limit(service: impl DalaranCloudService) {
     #![expect(unsafe_code)]
-    let original_env = std::env::var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED").ok();
+    let original_env = std::env::var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED").ok();
 
     // SAFETY:
     // This is simply a test
-    unsafe { std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", "3") };
+    unsafe { std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", "3") };
 
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
         1,
@@ -382,8 +382,8 @@ pub async fn query_dataset_with_limit(service: impl RerunCloudService) {
     // This is simply a test
     unsafe {
         match original_env {
-            Some(val) => std::env::set_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED", val),
-            None => std::env::remove_var("RERUN_CHUNK_MAX_ROWS_IF_UNSORTED"),
+            Some(val) => std::env::set_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED", val),
+            None => std::env::remove_var("DALARAN_CHUNK_MAX_ROWS_IF_UNSORTED"),
         }
     }
 }
@@ -436,7 +436,7 @@ async fn execute_with_limit<T: DataframeClientAPI>(
 /// - `B = [50, 70]` selects the `{40, 50, 60}` and `{70, 80, 90}` chunks.
 /// - `C = [55, 75]` selects the same two chunks as `B` — redundant, so it
 ///   exercises dedup without widening the selected chunk set.
-pub async fn query_dataset_or_of_ranges_fans_out(service: impl RerunCloudService) {
+pub async fn query_dataset_or_of_ranges_fans_out(service: impl DalaranCloudService) {
     let service = Arc::new(service);
 
     let data_sources_def = DataSourcesDefinition::new_with_tuid_prefix(
@@ -522,7 +522,7 @@ pub async fn query_dataset_or_of_ranges_fans_out(service: impl RerunCloudService
 ///
 /// A fresh client per call keeps the recorded request count scoped to this one
 /// scan.
-async fn scan_collect_rows<T: RerunCloudService>(
+async fn scan_collect_rows<T: DalaranCloudService>(
     service: &Arc<T>,
     dataset_id: EntryId,
     query: &dl_chunk_store::QueryExpression,

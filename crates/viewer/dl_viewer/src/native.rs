@@ -1,12 +1,12 @@
 /// Used by `eframe` to decide where to store the app state.
-pub const APP_ID: &str = "rerun";
+pub const APP_ID: &str = "dalaran";
 
 type DynError = Box<dyn std::error::Error + Send + Sync>;
 
 type AppCreator =
     Box<dyn FnOnce(&eframe::CreationContext<'_>) -> Result<Box<dyn eframe::App>, DynError>>;
 
-// NOTE: the name of this function is hard-coded in `crates/top/rerun/src/crash_handler.rs`!
+// NOTE: the name of this function is hard-coded in `crates/top/dalaran/src/crash_handler.rs`!
 pub fn run_native_app(
     // `eframe::run_native` may only be called on the main thread.
     _: crate::MainThreadToken,
@@ -15,13 +15,13 @@ pub fn run_native_app(
 ) -> eframe::Result {
     if crate::docker_detection::is_docker() {
         dl_log::warn_once!(
-            "It looks like you are running the Rerun Viewer inside a Docker container. This is not officially supported, and may lead to performance issues and bugs. See https://github.com/rerun-io/rerun/issues/6835 for more.",
+            "It looks like you are running the Dalaran Viewer inside a Docker container. This is not officially supported, and may lead to performance issues and bugs. See https://github.com/rerun-io/rerun/issues/6835 for more.",
         );
     }
 
     let native_options = eframe_options(force_wgpu_backend);
 
-    let window_title = "Rerun";
+    let window_title = "Dalaran";
     eframe::run_native(
         window_title,
         native_options,
@@ -43,7 +43,7 @@ pub fn eframe_options(force_wgpu_backend: Option<&str>) -> eframe::NativeOptions
                 .with_app_id(APP_ID) // Controls where on disk the app state is persisted
                 .with_icon(icon_data())
                 .with_inner_size([1600.0, 1200.0])
-                .with_min_inner_size([320.0, 450.0]), // Should be high enough to fit the rerun menu
+                .with_min_inner_size([320.0, 450.0]), // Should be high enough to fit the dalaran menu
             dl_ui::custom_window_decorations_default(),
         ),
 

@@ -119,7 +119,7 @@ fn recording_rrd(
     log_data: impl FnOnce(&dl_sdk::RecordingStream),
 ) -> Result<tempfile::NamedTempFile, Box<dyn Error>> {
     let path = tempfile::NamedTempFile::new()?;
-    let stream = RecordingStreamBuilder::new("rerun_example_integration_test")
+    let stream = RecordingStreamBuilder::new("dalaran_example_integration_test")
         .recording_id(recording_id)
         .save(path.path())?;
 

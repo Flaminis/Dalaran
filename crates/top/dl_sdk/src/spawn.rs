@@ -18,30 +18,30 @@ pub struct SpawnOptions {
     /// Defaults to `9876`.
     pub port: u16,
 
-    /// If `true`, the call to [`spawn`] will block until the Rerun Viewer
+    /// If `true`, the call to [`spawn`] will block until the Dalaran Viewer
     /// has successfully bound to the port.
     pub wait_for_bind: bool,
 
-    /// An upper limit on how much memory the Rerun Viewer should use.
-    /// When this limit is reached, Rerun will drop the oldest data.
+    /// An upper limit on how much memory the Dalaran Viewer should use.
+    /// When this limit is reached, Dalaran will drop the oldest data.
     /// Example: `16GB` or `50%` (of system total).
     ///
     /// Defaults to `75%`.
     pub memory_limit: String,
 
     /// An upper limit on how much memory the gRPC server running
-    /// in the same process as the Rerun Viewer should use.
-    /// When this limit is reached, Rerun will drop the oldest data.
+    /// in the same process as the Dalaran Viewer should use.
+    /// When this limit is reached, Dalaran will drop the oldest data.
     /// Example: `16GB` or `50%` (of system total).
     ///
     /// Defaults to `1GiB`.
     pub server_memory_limit: String,
 
-    /// Specifies the name of the Rerun executable.
+    /// Specifies the name of the Dalaran executable.
     ///
     /// You can omit the `.exe` suffix on Windows.
     ///
-    /// Defaults to `rerun`.
+    /// Defaults to `dalaran`.
     pub executable_name: String,
 
     /// Enforce a specific executable to use instead of searching through PATH
@@ -50,10 +50,10 @@ pub struct SpawnOptions {
     /// Unspecified by default.
     pub executable_path: Option<String>,
 
-    /// Extra arguments that will be passed as-is to the Rerun Viewer process.
+    /// Extra arguments that will be passed as-is to the Dalaran Viewer process.
     pub extra_args: Vec<String>,
 
-    /// Extra environment variables that will be passed as-is to the Rerun Viewer process.
+    /// Extra environment variables that will be passed as-is to the Dalaran Viewer process.
     pub extra_env: Vec<(String, String)>,
 
     /// Always start a new viewer. If the port is already in use, a free port will be picked automatically.
@@ -64,7 +64,7 @@ pub struct SpawnOptions {
     /// Hide the welcome screen.
     pub hide_welcome_screen: bool,
 
-    /// Detach Rerun Viewer process from the application process.
+    /// Detach Dalaran Viewer process from the application process.
     pub detach_process: bool,
 
     /// Run the spawned viewer in headless mode (no OS window).
@@ -72,7 +72,7 @@ pub struct SpawnOptions {
 }
 
 // NOTE: No need for .exe extension on windows.
-const RERUN_BINARY: &str = "rerun";
+const DALARAN_BINARY: &str = "dalaran";
 
 impl Default for SpawnOptions {
     fn default() -> Self {
@@ -81,7 +81,7 @@ impl Default for SpawnOptions {
             wait_for_bind: false,
             memory_limit: "75%".into(),
             server_memory_limit: "1GiB".into(),
-            executable_name: RERUN_BINARY.into(),
+            executable_name: DALARAN_BINARY.into(),
             executable_path: None,
             extra_args: Vec::new(),
             extra_env: Vec::new(),
@@ -126,11 +126,11 @@ impl SpawnOptions {
                 std::env::consts::EXE_SUFFIX
             );
             if std::fs::metadata(&local_build_path).is_ok() {
-                dl_log::info!("Spawning the locally built rerun at {local_build_path}");
+                dl_log::info!("Spawning the locally built dalaran at {local_build_path}");
                 return local_build_path;
             } else {
                 dl_log::info!(
-                    "No locally built rerun found at {local_build_path:?}, using executable named {:?} from PATH.",
+                    "No locally built dalaran found at {local_build_path:?}, using executable named {:?} from PATH.",
                     self.executable_name
                 );
             }
@@ -140,11 +140,11 @@ impl SpawnOptions {
     }
 }
 
-/// Errors that can occur when [`spawn`]ing a Rerun Viewer.
+/// Errors that can occur when [`spawn`]ing a Dalaran Viewer.
 #[derive(thiserror::Error)]
 pub enum SpawnError {
-    /// Failed to find Rerun Viewer executable in PATH.
-    #[error("Failed to find Rerun Viewer executable in PATH.\n{message}\nPATH={search_path:?}")]
+    /// Failed to find Dalaran Viewer executable in PATH.
+    #[error("Failed to find Dalaran Viewer executable in PATH.\n{message}\nPATH={search_path:?}")]
     ExecutableNotFoundInPath {
         /// High-level error message meant to be printed to the user (install tips etc).
         message: String,
@@ -156,15 +156,15 @@ pub enum SpawnError {
         search_path: String,
     },
 
-    /// Failed to find Rerun Viewer executable at explicit path.
-    #[error("Failed to find Rerun Viewer executable at {executable_path:?}")]
+    /// Failed to find Dalaran Viewer executable at explicit path.
+    #[error("Failed to find Dalaran Viewer executable at {executable_path:?}")]
     ExecutableNotFound {
         /// Explicit path of the executable (specified by the caller).
         executable_path: String,
     },
 
     /// Other I/O error.
-    #[error("Failed to spawn the Rerun Viewer process: {0}")]
+    #[error("Failed to spawn the Dalaran Viewer process: {0}")]
     Io(#[from] std::io::Error),
 }
 
@@ -183,7 +183,7 @@ impl std::fmt::Debug for SpawnError {
 /// Result of [`spawn`].
 #[derive(Debug, Clone, Copy)]
 pub struct SpawnInfo {
-    /// The port the spawned (or reused) Rerun Viewer is listening on.
+    /// The port the spawned (or reused) Dalaran Viewer is listening on.
     pub port: u16,
 
     /// PID of the newly spawned viewer process, or `None` if an existing
@@ -194,10 +194,10 @@ pub struct SpawnInfo {
     pub child_pid: Option<u32>,
 }
 
-/// Spawns a new Rerun Viewer process ready to listen for connections.
+/// Spawns a new Dalaran Viewer process ready to listen for connections.
 ///
-/// If there is already a process listening on this port (Rerun or not), this function returns `Ok`
-/// WITHOUT spawning a `rerun` process (!).
+/// If there is already a process listening on this port (Dalaran or not), this function returns `Ok`
+/// WITHOUT spawning a `dalaran` process (!).
 ///
 /// Refer to [`SpawnOptions`]'s documentation for configuration options.
 ///
@@ -214,38 +214,38 @@ pub fn spawn(opts: &SpawnOptions) -> Result<SpawnInfo, SpawnError> {
 
     const MSG_INSTALL_HOW_TO: &str = //
     "
-    You can install binary releases of the Rerun Viewer:
-    * Using `cargo`: `cargo binstall rerun-cli` (see https://github.com/cargo-bins/cargo-binstall)
+    You can install binary releases of the Dalaran Viewer:
+    * Using `cargo`: `cargo binstall dalaran-cli` (see https://github.com/cargo-bins/cargo-binstall)
     * Via direct download from our release assets: https://github.com/rerun-io/rerun/releases/latest/
-    * Using `pip`: `pip3 install rerun-sdk`
+    * Using `pip`: `pip3 install dalaran-sdk`
 
     For more information, refer to our complete install documentation over at:
-    https://rerun.io/docs/overview/installing-rerun/viewer
+    https://dalaran.dev/docs/overview/installing-dalaran/viewer
     ";
 
     const MSG_INSTALL_HOW_TO_VERSIONED: &str = //
     "
-    You can install an appropriate version of the Rerun Viewer via binary releases:
-    * Using `cargo`: `cargo binstall --force rerun-cli@__VIEWER_VERSION__` (see https://github.com/cargo-bins/cargo-binstall)
+    You can install an appropriate version of the Dalaran Viewer via binary releases:
+    * Using `cargo`: `cargo binstall --force dalaran-cli@__VIEWER_VERSION__` (see https://github.com/cargo-bins/cargo-binstall)
     * Via direct download from our release assets: https://github.com/rerun-io/rerun/releases/__VIEWER_VERSION__/
-    * Using `pip`: `pip3 install rerun-sdk==__VIEWER_VERSION__`
+    * Using `pip`: `pip3 install dalaran-sdk==__VIEWER_VERSION__`
 
     For more information, refer to our complete install documentation over at:
-    https://rerun.io/docs/overview/installing-rerun/viewer
+    https://dalaran.dev/docs/overview/installing-dalaran/viewer
     ";
 
     const MSG_VERSION_MISMATCH: &str = //
         "
-    ⚠ The version of the Rerun Viewer available on your PATH does not match the version of your Rerun SDK ⚠
+    ⚠ The version of the Dalaran Viewer available on your PATH does not match the version of your Dalaran SDK ⚠
 
-    Rerun does not make any kind of backwards/forwards compatibility guarantee yet: this can lead to (subtle) bugs.
+    Dalaran does not make any kind of backwards/forwards compatibility guarantee yet: this can lead to (subtle) bugs.
 
-    > Rerun Viewer: v__VIEWER_VERSION__ (executable: \"__VIEWER_PATH__\")
-    > Rerun SDK: v__SDK_VERSION__";
+    > Dalaran Viewer: v__VIEWER_VERSION__ (executable: \"__VIEWER_PATH__\")
+    > Dalaran SDK: v__SDK_VERSION__";
 
     if std::env::var_os("CI").is_some() {
         dl_log::warn!(
-            "Spawning a Rerun Viewer while the `CI` environment variable is set. \
+            "Spawning a Dalaran Viewer while the `CI` environment variable is set. \
             This is almost certainly unintended and will hang or fail on most CI runners. \
             Consider removing `spawn=True` from this code path."
         );
@@ -261,7 +261,7 @@ pub fn spawn(opts: &SpawnOptions) -> Result<SpawnInfo, SpawnError> {
     if !opts.new && TcpStream::connect_timeout(&connect_addr, Duration::from_secs(1)).is_ok() {
         dl_log::info!(
             addr = %opts.listen_addr(),
-            "A process is already listening at this address. Assuming it's a Rerun Viewer. \
+            "A process is already listening at this address. Assuming it's a Dalaran Viewer. \
             Use `new: true` in SpawnOptions or `--port auto` on the CLI to force a new viewer."
         );
         return Ok(SpawnInfo {
@@ -350,12 +350,12 @@ pub fn spawn(opts: &SpawnOptions) -> Result<SpawnInfo, SpawnError> {
         }
     }
 
-    let mut rerun_bin = Command::new(&executable_path);
+    let mut dalaran_bin = Command::new(&executable_path);
 
     // By default stdin is inherited which may cause issues in some debugger setups.
     // Also, there's really no reason to forward stdin to the child process in this case.
     // `stdout`/`stderr` we leave at default inheritance because it can be useful to see the Viewer's output.
-    rerun_bin
+    dalaran_bin
         .stdin(std::process::Stdio::null())
         .arg(format!("--port={port}"))
         .arg(format!("--memory-limit={memory_limit}"))
@@ -363,15 +363,15 @@ pub fn spawn(opts: &SpawnOptions) -> Result<SpawnInfo, SpawnError> {
         .arg("--expect-data-soon");
 
     if opts.hide_welcome_screen {
-        rerun_bin.arg("--hide-welcome-screen");
+        dalaran_bin.arg("--hide-welcome-screen");
     }
 
     if opts.headless {
-        rerun_bin.arg("--headless");
+        dalaran_bin.arg("--headless");
     }
 
-    rerun_bin.args(opts.extra_args.clone());
-    rerun_bin.envs(opts.extra_env.clone());
+    dalaran_bin.args(opts.extra_args.clone());
+    dalaran_bin.envs(opts.extra_env.clone());
 
     #[cfg(target_family = "unix")]
     {
@@ -383,14 +383,14 @@ pub fn spawn(opts: &SpawnOptions) -> Result<SpawnInfo, SpawnError> {
         // async-signal-safe libc functions and don't touch memory shared with the parent.
         #[expect(unsafe_code)]
         unsafe {
-            rerun_bin.pre_exec(move || {
+            dalaran_bin.pre_exec(move || {
                 if should_detach {
                     // Make the child its own session leader so a detached viewer doesn't die
                     // if the parent process crashes or is killed.
                     libc::setsid();
                 } else {
                     // Put the attached child in its own process group (it does not become a
-                    // session leader). The `rerun` launcher forks the actual viewer process and
+                    // session leader). The `dalaran` launcher forks the actual viewer process and
                     // exits, and that viewer inherits this group — so the owner can terminate the
                     // whole group on close, instead of only the launcher (which would orphan the
                     // viewer and leak the port it holds).
@@ -402,11 +402,11 @@ pub fn spawn(opts: &SpawnOptions) -> Result<SpawnInfo, SpawnError> {
         };
     }
 
-    let child = rerun_bin.spawn().map_err(map_err)?;
+    let child = dalaran_bin.spawn().map_err(map_err)?;
     let child_pid = child.id();
 
     if opts.wait_for_bind {
-        // Give the newly spawned Rerun Viewer some time to bind.
+        // Give the newly spawned Dalaran Viewer some time to bind.
         //
         // NOTE: The timeout only covers the TCP handshake: if no process is bound to that address
         // at all, the connection will fail immediately, irrelevant of the timeout configuration.
@@ -425,17 +425,17 @@ pub fn spawn(opts: &SpawnOptions) -> Result<SpawnInfo, SpawnError> {
 
         if !bound {
             dl_log::warn!(
-                "Spawned Rerun Viewer did not bind to port {port} in time. Connections to it may fail."
+                "Spawned Dalaran Viewer did not bind to port {port} in time. Connections to it may fail."
             );
         }
         dl_log::debug_assert!(
             bound,
-            "Spawned Rerun Viewer did not bind to port {port} in time"
+            "Spawned Dalaran Viewer did not bind to port {port} in time"
         );
     }
 
     // Simply forget about the child process, we want it to outlive the parent process if needed.
-    _ = rerun_bin;
+    _ = dalaran_bin;
     _ = child;
 
     Ok(SpawnInfo {

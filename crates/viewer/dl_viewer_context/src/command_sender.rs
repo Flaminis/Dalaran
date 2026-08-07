@@ -185,7 +185,7 @@ pub enum SystemCommand {
         email: String,
     },
 
-    /// Logout from Rerun Hub
+    /// Logout from Dalaran Hub
     Logout,
 
     /// Save a screenshot to a file.

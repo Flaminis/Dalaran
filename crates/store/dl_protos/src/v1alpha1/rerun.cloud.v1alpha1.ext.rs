@@ -85,7 +85,7 @@ impl std::str::FromStr for LayerRegistrationStatus {
             Self::ERROR_STR => Ok(Self::Error),
             Self::DELETED_STR => Ok(Self::Deleted),
             _ => Err(crate::TypeConversionError::InvalidField {
-                package_name: "rerun.cloud.v1alpha1",
+                package_name: "dalaran.cloud.v1alpha1",
                 type_name: "SegmentRegistrationStatus",
                 field_name: "value",
                 reason: format!("invalid registration status: {s}"),
@@ -104,7 +104,7 @@ impl TryFrom<u8> for LayerRegistrationStatus {
             2 => Ok(Self::Error),
             3 => Ok(Self::Deleted),
             _ => Err(crate::TypeConversionError::InvalidField {
-                package_name: "rerun.cloud.v1alpha1",
+                package_name: "dalaran.cloud.v1alpha1",
                 type_name: "SegmentRegistrationStatus",
                 field_name: "value",
                 reason: format!("invalid registration status: {value}"),
@@ -386,15 +386,15 @@ impl QueryDatasetResponse {
     /// horizon; no other downstream consumer reads the time range, so there is no matching
     /// `:end` column.
     ///
-    /// The column type is `Int64` because all rerun time types store `i64` internally.
+    /// The column type is `Int64` because all dalaran time types store `i64` internally.
     pub fn field_timeline_start(timeline_name: &str) -> FieldRef {
         let metadata = std::collections::HashMap::from([
-            ("rerun:index".to_owned(), timeline_name.to_owned()),
+            ("dalaran:index".to_owned(), timeline_name.to_owned()),
             (
-                dl_sorbet::metadata::RERUN_KIND.to_owned(),
+                dl_sorbet::metadata::DALARAN_KIND.to_owned(),
                 "index".to_owned(),
             ),
-            ("rerun:index_marker".to_owned(), "start".to_owned()),
+            ("dalaran:index_marker".to_owned(), "start".to_owned()),
         ]);
         Arc::new(
             Field::new(format!("{timeline_name}:start"), DataType::Int64, true)
@@ -445,14 +445,14 @@ impl QueryDatasetResponse {
         QueryDatasetDataframe {
             chunk_id: chunk_ids.into(),
             chunk_segment_id: chunk_segment_ids.into(),
-            rerun_segment_layer: chunk_layer_names.into(),
+            dalaran_segment_layer: chunk_layer_names.into(),
             chunk_key: chunk_keys.into(),
             chunk_entity_path: chunk_entity_paths.into(),
             chunk_is_static: chunk_is_static.into(),
             chunk_byte_len: chunk_byte_lengths.into(),
             chunk_byte_size_uncompressed: chunk_byte_lengths_uncompressed.into(),
-            rerun_layer_direct_url: quiver::Column::try_from_values(chunk_direct_urls)?,
-            rerun_layer_direct_url_expires_at: quiver::Column::try_from_values(
+            dalaran_layer_direct_url: quiver::Column::try_from_values(chunk_direct_urls)?,
+            dalaran_layer_direct_url_expires_at: quiver::Column::try_from_values(
                 chunk_direct_urls_expiry,
             )?,
 
@@ -514,7 +514,7 @@ impl FetchChunksRequest {
     //TODO(RR-2677): actually, these are also required for now.
     pub const FIELD_CHUNK_ID: &str = QueryDatasetDataframe::COLUMN_CHUNK_ID_NAME;
     pub const FIELD_CHUNK_SEGMENT_ID: &str = QueryDatasetDataframe::COLUMN_CHUNK_SEGMENT_ID_NAME;
-    pub const FIELD_CHUNK_LAYER_NAME: &str = QueryDatasetDataframe::COLUMN_RERUN_SEGMENT_LAYER_NAME;
+    pub const FIELD_CHUNK_LAYER_NAME: &str = QueryDatasetDataframe::COLUMN_DALARAN_SEGMENT_LAYER_NAME;
     pub const FIELD_CHUNK_BYTE_LENGTH: &str = QueryDatasetDataframe::COLUMN_CHUNK_BYTE_LEN_NAME;
 
     pub fn required_column_names() -> Vec<String> {
@@ -1701,7 +1701,7 @@ impl TryFrom<&prost_types::Any> for ProviderDetails {
             Ok(Self::SystemTable(table))
         } else {
             Err(TypeConversionError::InvalidField {
-                package_name: "rerun.cloud.v1alpha1",
+                package_name: "dalaran.cloud.v1alpha1",
                 type_name: "ProviderDetails",
                 field_name: "",
                 reason: "enum value unspecified".to_owned(),
@@ -2086,12 +2086,12 @@ impl ScanSegmentTableResponse {
         size_bytes: Vec<u64>,
     ) -> arrow::error::Result<RecordBatch> {
         ScanSegmentTableDataframe {
-            rerun_segment_id: segment_ids.into(),
-            rerun_layer_names: layer_names.into(),
-            rerun_storage_urls: storage_urls.into(),
-            rerun_last_updated_at: last_updated_at.into(),
-            rerun_num_chunks: num_chunks.into(),
-            rerun_size_bytes: size_bytes.into(),
+            dalaran_segment_id: segment_ids.into(),
+            dalaran_layer_names: layer_names.into(),
+            dalaran_storage_urls: storage_urls.into(),
+            dalaran_last_updated_at: last_updated_at.into(),
+            dalaran_num_chunks: num_chunks.into(),
+            dalaran_size_bytes: size_bytes.into(),
             extra_columns: vec![],
         }
         .into_record_batch()
@@ -2133,7 +2133,7 @@ impl ScanDatasetManifestResponse {
 // NOTE: Match the values of the Protobuf definition to keep life simple.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, serde::Serialize, serde::Deserialize)]
 pub enum DataSourceKind {
-    /// Rerun recording data (`.rrd` files).
+    /// Dalaran recording data (`.rrd` files).
     Rrd = 1,
 }
 
@@ -2160,7 +2160,7 @@ impl TryFrom<crate::cloud::v1alpha1::DataSourceKind> for DataSourceKind {
 
             crate::cloud::v1alpha1::DataSourceKind::Unspecified => {
                 return Err(TypeConversionError::InvalidField {
-                    package_name: "rerun.manifest_registry.v1alpha1",
+                    package_name: "dalaran.manifest_registry.v1alpha1",
                     type_name: "DataSourceKind",
                     field_name: "",
                     reason: "enum value unspecified".to_owned(),

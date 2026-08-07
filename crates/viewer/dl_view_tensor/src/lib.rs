@@ -1,4 +1,4 @@
-//! Rerun tensor view.
+//! Dalaran tensor view.
 //!
 //! A view dedicated to visualizing tensors with arbitrary dimensionality.
 

@@ -1,6 +1,6 @@
 # Yet another string interning library
 
-Part of the [`rerun`](https://github.com/rerun-io/rerun) family of crates.
+Part of the [`dalaran`](https://github.com/rerun-io/rerun) family of crates.
 
 [![Latest version](https://img.shields.io/crates/v/dl_string_interner.svg)](https://crates.io/crates/dl_string_interner)
 [![Documentation](https://docs.rs/dl_string_interner/badge.svg)](https://docs.rs/dl_string_interner)

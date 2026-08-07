@@ -19,7 +19,7 @@ fn should_run() -> bool {
         Environment::PublishingCrates | Environment::CondaBuild => false,
 
         // Dependencies shouldn't change on CI, but who knows 🤷‍♂️
-        Environment::RerunCI => true,
+        Environment::DalaranCI => true,
 
         // Yes - this is what we want tracking for.
         Environment::DeveloperInWorkspace => true,
@@ -52,16 +52,16 @@ pub fn rebuild_if_crate_changed(pkg_name: &str) {
     let pkgs = Packages::from_metadata(&metadata);
     pkgs.track_implicit_dep(pkg_name, &mut files_to_watch);
 
-    #[expect(clippy::iter_over_hash_type)] // Cargo rerun directives are order-independent.
+    #[expect(clippy::iter_over_hash_type)] // Cargo dalaran directives are order-independent.
     for path in &files_to_watch {
-        rerun_if_changed(path);
+        dalaran_if_changed(path);
     }
 }
 
 /// Read the environment variable and trigger a rebuild whenever the environment variable changes.
 pub fn get_and_track_env_var(env_var_name: &str) -> Result<String, std::env::VarError> {
     if should_output_cargo_build_instructions() {
-        println!("cargo:rerun-if-env-changed={env_var_name}");
+        println!("cargo:dalaran-if-env-changed={env_var_name}");
     }
     std::env::var(env_var_name)
 }
@@ -85,27 +85,27 @@ pub fn is_tracked_env_var_set(env_var_name: &str) -> bool {
 /// Call from `build.rs` to trigger a rebuild whenever the file at `path` changes.
 ///
 /// This requires the file to exist, which may or may not be what you want!
-pub fn rerun_if_changed(path: impl AsRef<Path>) {
+pub fn dalaran_if_changed(path: impl AsRef<Path>) {
     let path = path.as_ref();
     // Make sure the file exists, otherwise we'll be rebuilding all the time.
     assert!(path.exists(), "Failed to find {path:?}");
     if should_output_cargo_build_instructions() {
-        println!("cargo:rerun-if-changed={}", path.to_str().unwrap());
+        println!("cargo:dalaran-if-changed={}", path.to_str().unwrap());
     }
 }
 
 /// Call from `build.rs` to trigger a rebuild whenever the file at `path` changes, or it doesn't
 /// exist.
-pub fn rerun_if_changed_or_doesnt_exist(path: impl AsRef<Path>) {
+pub fn dalaran_if_changed_or_doesnt_exist(path: impl AsRef<Path>) {
     let path = path.as_ref();
     if should_output_cargo_build_instructions() {
-        println!("cargo:rerun-if-changed={}", path.to_str().unwrap());
+        println!("cargo:dalaran-if-changed={}", path.to_str().unwrap());
     }
 }
 
 /// Call from `build.rs` to trigger a rebuild whenever any of the files identified by the given
 /// globbed `path` change.
-pub fn rerun_if_changed_glob(path: impl AsRef<Path>, files_to_watch: &mut HashSet<PathBuf>) {
+pub fn dalaran_if_changed_glob(path: impl AsRef<Path>, files_to_watch: &mut HashSet<PathBuf>) {
     let path = path.as_ref();
 
     // Workaround for windows verbatim paths not working with glob.
@@ -122,7 +122,7 @@ pub fn rerun_if_changed_glob(path: impl AsRef<Path>, files_to_watch: &mut HashSe
 /// Writes `content` to a file iff it differs from what's already there.
 ///
 /// This prevents recursive feedback loops where one generates source files from build.rs, which in
-/// turn triggers `cargo`'s implicit `rerun-if-changed=src/**` clause.
+/// turn triggers `cargo`'s implicit `dalaran-if-changed=src/**` clause.
 //
 // TODO(cmc): use the same source tracking system as dl_sdk_types* instead
 pub fn write_file_if_necessary(
@@ -143,9 +143,9 @@ fn track_crate_files(manifest_path: &Utf8Path, files_to_watch: &mut HashSet<Path
     let mut dep_path = manifest_path.to_owned();
     dep_path.pop();
 
-    rerun_if_changed_glob(dep_path.join("Cargo.toml"), files_to_watch); // manifest too!
-    rerun_if_changed_glob(dep_path.join("**/*.rs"), files_to_watch);
-    rerun_if_changed_glob(dep_path.join("**/*.wgsl"), files_to_watch);
+    dalaran_if_changed_glob(dep_path.join("Cargo.toml"), files_to_watch); // manifest too!
+    dalaran_if_changed_glob(dep_path.join("**/*.rs"), files_to_watch);
+    dalaran_if_changed_glob(dep_path.join("**/*.wgsl"), files_to_watch);
 }
 
 // ---
@@ -167,7 +167,7 @@ impl<'a> Packages<'a> {
 
     /// Tracks an implicit dependency of the given name.
     ///
-    /// This will generate all the appropriate `cargo:rerun-if-changed` clauses
+    /// This will generate all the appropriate `cargo:dalaran-if-changed` clauses
     /// so that package `pkg_name` as well as all of it direct and indirect
     /// dependencies are properly tracked whether they are remote, in-workspace,
     /// or locally patched.

@@ -42,7 +42,7 @@ pub async fn dataset_ui_test() {
     harness.run_ok();
     harness
         .get_by_role_and_label(egui::accesskit::Role::TextInput, "Address:")
-        .type_text(&format!("rerun+http://localhost:{}", server.port()));
+        .type_text(&format!("dalaran+http://localhost:{}", server.port()));
     harness.run_ok();
 
     harness.get_by_label("No authentication").click();
@@ -87,7 +87,7 @@ pub async fn start_with_dataset_url() {
 
     let mut harness = viewer_test_utils::viewer_harness(&HarnessOptions {
         startup_url: Some(format!(
-            "rerun+http://localhost:{}/entry/187b552b95a5c2f73f37894708825ba5",
+            "dalaran+http://localhost:{}/entry/187b552b95a5c2f73f37894708825ba5",
             server.port()
         )),
         ..Default::default()
@@ -115,7 +115,7 @@ pub async fn start_with_segment_fragment_url() {
         dl_tuid::Tuid::from_str("187b552b95a5c2f73f37894708825ba5").expect("Failed to parse TUID");
     let segment_uri = dl_uri::DatasetSegmentUri {
         origin: dl_uri::Origin {
-            scheme: dl_uri::Scheme::RerunHttp,
+            scheme: dl_uri::Scheme::DalaranHttp,
             host: dl_uri::external::url::Host::Domain("localhost".to_owned()),
             port: server.port(),
         },

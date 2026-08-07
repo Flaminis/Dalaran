@@ -1,16 +1,16 @@
 # Rust quick start
 
-## Installing Rerun
+## Installing Dalaran
 
-After you have [installed the viewer](https://www.rerun.io/docs/overview/installing-rerun/viewer) you can simply add [the Rerun crate](https://crates.io/crates/rerun) to your project with `cargo add rerun`.
+After you have [installed the viewer](https://www.dalaran.dev/docs/overview/installing-dalaran/viewer) you can simply add [the Dalaran crate](https://crates.io/crates/dalaran) to your project with `cargo add dalaran`.
 
 Let's try it out in a brand-new Rust project:
 
 ```sh
-cargo init cube && cd cube && cargo add rerun
+cargo init cube && cd cube && cargo add dalaran
 ```
 
-Note that the Rerun SDK requires a working installation of Rust 1.95+.
+Note that the Dalaran SDK requires a working installation of Rust 1.95+.
 
 ## Logging your own data
 

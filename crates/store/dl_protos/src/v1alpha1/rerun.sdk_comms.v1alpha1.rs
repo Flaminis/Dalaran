@@ -6,36 +6,36 @@ pub struct WriteMessagesRequest {
 }
 impl ::prost::Name for WriteMessagesRequest {
     const NAME: &'static str = "WriteMessagesRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.WriteMessagesRequest".into()
+        "dalaran.sdk_comms.v1alpha1.WriteMessagesRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.WriteMessagesRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.WriteMessagesRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WriteMessagesResponse {}
 impl ::prost::Name for WriteMessagesResponse {
     const NAME: &'static str = "WriteMessagesResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.WriteMessagesResponse".into()
+        "dalaran.sdk_comms.v1alpha1.WriteMessagesResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.WriteMessagesResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.WriteMessagesResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReadMessagesRequest {}
 impl ::prost::Name for ReadMessagesRequest {
     const NAME: &'static str = "ReadMessagesRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.ReadMessagesRequest".into()
+        "dalaran.sdk_comms.v1alpha1.ReadMessagesRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.ReadMessagesRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.ReadMessagesRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -45,12 +45,12 @@ pub struct ReadMessagesResponse {
 }
 impl ::prost::Name for ReadMessagesResponse {
     const NAME: &'static str = "ReadMessagesResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.ReadMessagesResponse".into()
+        "dalaran.sdk_comms.v1alpha1.ReadMessagesResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.ReadMessagesResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.ReadMessagesResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -62,36 +62,36 @@ pub struct WriteTableRequest {
 }
 impl ::prost::Name for WriteTableRequest {
     const NAME: &'static str = "WriteTableRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.WriteTableRequest".into()
+        "dalaran.sdk_comms.v1alpha1.WriteTableRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.WriteTableRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.WriteTableRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct WriteTableResponse {}
 impl ::prost::Name for WriteTableResponse {
     const NAME: &'static str = "WriteTableResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.WriteTableResponse".into()
+        "dalaran.sdk_comms.v1alpha1.WriteTableResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.WriteTableResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.WriteTableResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct ReadTablesRequest {}
 impl ::prost::Name for ReadTablesRequest {
     const NAME: &'static str = "ReadTablesRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.ReadTablesRequest".into()
+        "dalaran.sdk_comms.v1alpha1.ReadTablesRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.ReadTablesRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.ReadTablesRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -103,12 +103,12 @@ pub struct ReadTablesResponse {
 }
 impl ::prost::Name for ReadTablesResponse {
     const NAME: &'static str = "ReadTablesResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.ReadTablesResponse".into()
+        "dalaran.sdk_comms.v1alpha1.ReadTablesResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.ReadTablesResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.ReadTablesResponse".into()
     }
 }
 /// Generated client implementations.
@@ -211,11 +211,11 @@ pub mod message_proxy_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/WriteMessages",
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/WriteMessages",
             );
             let mut req = request.into_streaming_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.MessageProxyService",
+                "dalaran.sdk_comms.v1alpha1.MessageProxyService",
                 "WriteMessages",
             ));
             self.inner.client_streaming(req, path, codec).await
@@ -232,11 +232,11 @@ pub mod message_proxy_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/ReadMessages",
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/ReadMessages",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.MessageProxyService",
+                "dalaran.sdk_comms.v1alpha1.MessageProxyService",
                 "ReadMessages",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -251,11 +251,11 @@ pub mod message_proxy_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/WriteTable",
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/WriteTable",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.MessageProxyService",
+                "dalaran.sdk_comms.v1alpha1.MessageProxyService",
                 "WriteTable",
             ));
             self.inner.unary(req, path, codec).await
@@ -272,11 +272,11 @@ pub mod message_proxy_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/ReadTables",
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/ReadTables",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.MessageProxyService",
+                "dalaran.sdk_comms.v1alpha1.MessageProxyService",
                 "ReadTables",
             ));
             self.inner.server_streaming(req, path, codec).await
@@ -407,7 +407,7 @@ pub mod message_proxy_service_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/WriteMessages" => {
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/WriteMessages" => {
                     #[allow(non_camel_case_types)]
                     struct WriteMessagesSvc<T: MessageProxyService>(pub Arc<T>);
                     impl<T: MessageProxyService>
@@ -449,7 +449,7 @@ pub mod message_proxy_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/ReadMessages" => {
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/ReadMessages" => {
                     #[allow(non_camel_case_types)]
                     struct ReadMessagesSvc<T: MessageProxyService>(pub Arc<T>);
                     impl<T: MessageProxyService>
@@ -493,7 +493,7 @@ pub mod message_proxy_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/WriteTable" => {
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/WriteTable" => {
                     #[allow(non_camel_case_types)]
                     struct WriteTableSvc<T: MessageProxyService>(pub Arc<T>);
                     impl<T: MessageProxyService>
@@ -534,7 +534,7 @@ pub mod message_proxy_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.sdk_comms.v1alpha1.MessageProxyService/ReadTables" => {
+                "/dalaran.sdk_comms.v1alpha1.MessageProxyService/ReadTables" => {
                     #[allow(non_camel_case_types)]
                     struct ReadTablesSvc<T: MessageProxyService>(pub Arc<T>);
                     impl<T: MessageProxyService>
@@ -607,7 +607,7 @@ pub mod message_proxy_service_server {
         }
     }
     /// Generated gRPC service name
-    pub const SERVICE_NAME: &str = "rerun.sdk_comms.v1alpha1.MessageProxyService";
+    pub const SERVICE_NAME: &str = "dalaran.sdk_comms.v1alpha1.MessageProxyService";
     impl<T> tonic::server::NamedService for MessageProxyServiceServer<T> {
         const NAME: &'static str = SERVICE_NAME;
     }
@@ -624,24 +624,24 @@ pub struct SaveScreenshotRequest {
 }
 impl ::prost::Name for SaveScreenshotRequest {
     const NAME: &'static str = "SaveScreenshotRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.SaveScreenshotRequest".into()
+        "dalaran.sdk_comms.v1alpha1.SaveScreenshotRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.SaveScreenshotRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.SaveScreenshotRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SaveScreenshotResponse {}
 impl ::prost::Name for SaveScreenshotResponse {
     const NAME: &'static str = "SaveScreenshotResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.SaveScreenshotResponse".into()
+        "dalaran.sdk_comms.v1alpha1.SaveScreenshotResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.SaveScreenshotResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.SaveScreenshotResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -662,12 +662,12 @@ pub struct SetTimeCursorRequest {
 }
 impl ::prost::Name for SetTimeCursorRequest {
     const NAME: &'static str = "SetTimeCursorRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.SetTimeCursorRequest".into()
+        "dalaran.sdk_comms.v1alpha1.SetTimeCursorRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.SetTimeCursorRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.SetTimeCursorRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -687,41 +687,41 @@ pub struct SetTimeCursorResponse {
 }
 impl ::prost::Name for SetTimeCursorResponse {
     const NAME: &'static str = "SetTimeCursorResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.SetTimeCursorResponse".into()
+        "dalaran.sdk_comms.v1alpha1.SetTimeCursorResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.SetTimeCursorResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.SetTimeCursorResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OpenUrlRequest {
-    /// The URL to open in the viewer. This can be a recording/blueprint file URL, a `rerun://`
+    /// The URL to open in the viewer. This can be a recording/blueprint file URL, a `dalaran://`
     /// dataset URI, a redap server/catalog URL, or an intra-recording link.
     #[prost(string, tag = "1")]
     pub url: ::prost::alloc::string::String,
 }
 impl ::prost::Name for OpenUrlRequest {
     const NAME: &'static str = "OpenUrlRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.OpenUrlRequest".into()
+        "dalaran.sdk_comms.v1alpha1.OpenUrlRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.OpenUrlRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.OpenUrlRequest".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct OpenUrlResponse {}
 impl ::prost::Name for OpenUrlResponse {
     const NAME: &'static str = "OpenUrlResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.OpenUrlResponse".into()
+        "dalaran.sdk_comms.v1alpha1.OpenUrlResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.OpenUrlResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.OpenUrlResponse".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -732,12 +732,12 @@ pub struct InspectRequest {
 }
 impl ::prost::Name for InspectRequest {
     const NAME: &'static str = "InspectRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.InspectRequest".into()
+        "dalaran.sdk_comms.v1alpha1.InspectRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.InspectRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.InspectRequest".into()
     }
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
@@ -748,24 +748,24 @@ pub struct InspectResponse {
 }
 impl ::prost::Name for InspectResponse {
     const NAME: &'static str = "InspectResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.InspectResponse".into()
+        "dalaran.sdk_comms.v1alpha1.InspectResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.InspectResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.InspectResponse".into()
     }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct GetViewerStateRequest {}
 impl ::prost::Name for GetViewerStateRequest {
     const NAME: &'static str = "GetViewerStateRequest";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.GetViewerStateRequest".into()
+        "dalaran.sdk_comms.v1alpha1.GetViewerStateRequest".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.GetViewerStateRequest".into()
+        "/dalaran.sdk_comms.v1alpha1.GetViewerStateRequest".into()
     }
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -782,12 +782,12 @@ pub struct GetViewerStateResponse {
 }
 impl ::prost::Name for GetViewerStateResponse {
     const NAME: &'static str = "GetViewerStateResponse";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.GetViewerStateResponse".into()
+        "dalaran.sdk_comms.v1alpha1.GetViewerStateResponse".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.GetViewerStateResponse".into()
+        "/dalaran.sdk_comms.v1alpha1.GetViewerStateResponse".into()
     }
 }
 /// One open recording in the viewer.
@@ -805,12 +805,12 @@ pub struct ViewerRecording {
 }
 impl ::prost::Name for ViewerRecording {
     const NAME: &'static str = "ViewerRecording";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.ViewerRecording".into()
+        "dalaran.sdk_comms.v1alpha1.ViewerRecording".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.ViewerRecording".into()
+        "/dalaran.sdk_comms.v1alpha1.ViewerRecording".into()
     }
 }
 /// A timeline of a recording, with its time range.
@@ -827,12 +827,12 @@ pub struct ViewerTimeline {
 }
 impl ::prost::Name for ViewerTimeline {
     const NAME: &'static str = "ViewerTimeline";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.ViewerTimeline".into()
+        "dalaran.sdk_comms.v1alpha1.ViewerTimeline".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.ViewerTimeline".into()
+        "/dalaran.sdk_comms.v1alpha1.ViewerTimeline".into()
     }
 }
 /// A position on a timeline.
@@ -853,12 +853,12 @@ pub struct TimeCursor {
 }
 impl ::prost::Name for TimeCursor {
     const NAME: &'static str = "TimeCursor";
-    const PACKAGE: &'static str = "rerun.sdk_comms.v1alpha1";
+    const PACKAGE: &'static str = "dalaran.sdk_comms.v1alpha1";
     fn full_name() -> ::prost::alloc::string::String {
-        "rerun.sdk_comms.v1alpha1.TimeCursor".into()
+        "dalaran.sdk_comms.v1alpha1.TimeCursor".into()
     }
     fn type_url() -> ::prost::alloc::string::String {
-        "/rerun.sdk_comms.v1alpha1.TimeCursor".into()
+        "/dalaran.sdk_comms.v1alpha1.TimeCursor".into()
     }
 }
 /// Generated client implementations.
@@ -950,11 +950,11 @@ pub mod viewer_control_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/SaveScreenshot",
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/SaveScreenshot",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.ViewerControlService",
+                "dalaran.sdk_comms.v1alpha1.ViewerControlService",
                 "SaveScreenshot",
             ));
             self.inner.unary(req, path, codec).await
@@ -970,16 +970,16 @@ pub mod viewer_control_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/SetTimeCursor",
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/SetTimeCursor",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.ViewerControlService",
+                "dalaran.sdk_comms.v1alpha1.ViewerControlService",
                 "SetTimeCursor",
             ));
             self.inner.unary(req, path, codec).await
         }
-        /// Open a URL in the viewer (a recording/blueprint file, a `rerun://` dataset URI, a redap
+        /// Open a URL in the viewer (a recording/blueprint file, a `dalaran://` dataset URI, a redap
         /// server/catalog URL, or an intra-recording link).
         pub async fn open_url(
             &mut self,
@@ -990,11 +990,11 @@ pub mod viewer_control_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/OpenUrl",
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/OpenUrl",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.ViewerControlService",
+                "dalaran.sdk_comms.v1alpha1.ViewerControlService",
                 "OpenUrl",
             ));
             self.inner.unary(req, path, codec).await
@@ -1009,11 +1009,11 @@ pub mod viewer_control_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/Inspect",
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/Inspect",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.ViewerControlService",
+                "dalaran.sdk_comms.v1alpha1.ViewerControlService",
                 "Inspect",
             ));
             self.inner.unary(req, path, codec).await
@@ -1029,11 +1029,11 @@ pub mod viewer_control_service_client {
             })?;
             let codec = tonic_prost::ProstCodec::default();
             let path = http::uri::PathAndQuery::from_static(
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/GetViewerState",
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/GetViewerState",
             );
             let mut req = request.into_request();
             req.extensions_mut().insert(GrpcMethod::new(
-                "rerun.sdk_comms.v1alpha1.ViewerControlService",
+                "dalaran.sdk_comms.v1alpha1.ViewerControlService",
                 "GetViewerState",
             ));
             self.inner.unary(req, path, codec).await
@@ -1062,7 +1062,7 @@ pub mod viewer_control_service_server {
             &self,
             request: tonic::Request<super::SetTimeCursorRequest>,
         ) -> std::result::Result<tonic::Response<super::SetTimeCursorResponse>, tonic::Status>;
-        /// Open a URL in the viewer (a recording/blueprint file, a `rerun://` dataset URI, a redap
+        /// Open a URL in the viewer (a recording/blueprint file, a `dalaran://` dataset URI, a redap
         /// server/catalog URL, or an intra-recording link).
         async fn open_url(
             &self,
@@ -1152,7 +1152,7 @@ pub mod viewer_control_service_server {
         }
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             match req.uri().path() {
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/SaveScreenshot" => {
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/SaveScreenshot" => {
                     #[allow(non_camel_case_types)]
                     struct SaveScreenshotSvc<T: ViewerControlService>(pub Arc<T>);
                     impl<T: ViewerControlService>
@@ -1194,7 +1194,7 @@ pub mod viewer_control_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/SetTimeCursor" => {
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/SetTimeCursor" => {
                     #[allow(non_camel_case_types)]
                     struct SetTimeCursorSvc<T: ViewerControlService>(pub Arc<T>);
                     impl<T: ViewerControlService>
@@ -1236,7 +1236,7 @@ pub mod viewer_control_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/OpenUrl" => {
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/OpenUrl" => {
                     #[allow(non_camel_case_types)]
                     struct OpenUrlSvc<T: ViewerControlService>(pub Arc<T>);
                     impl<T: ViewerControlService> tonic::server::UnaryService<super::OpenUrlRequest> for OpenUrlSvc<T> {
@@ -1275,7 +1275,7 @@ pub mod viewer_control_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/Inspect" => {
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/Inspect" => {
                     #[allow(non_camel_case_types)]
                     struct InspectSvc<T: ViewerControlService>(pub Arc<T>);
                     impl<T: ViewerControlService> tonic::server::UnaryService<super::InspectRequest> for InspectSvc<T> {
@@ -1314,7 +1314,7 @@ pub mod viewer_control_service_server {
                     };
                     Box::pin(fut)
                 }
-                "/rerun.sdk_comms.v1alpha1.ViewerControlService/GetViewerState" => {
+                "/dalaran.sdk_comms.v1alpha1.ViewerControlService/GetViewerState" => {
                     #[allow(non_camel_case_types)]
                     struct GetViewerStateSvc<T: ViewerControlService>(pub Arc<T>);
                     impl<T: ViewerControlService>
@@ -1385,7 +1385,7 @@ pub mod viewer_control_service_server {
         }
     }
     /// Generated gRPC service name
-    pub const SERVICE_NAME: &str = "rerun.sdk_comms.v1alpha1.ViewerControlService";
+    pub const SERVICE_NAME: &str = "dalaran.sdk_comms.v1alpha1.ViewerControlService";
     impl<T> tonic::server::NamedService for ViewerControlServiceServer<T> {
         const NAME: &'static str = SERVICE_NAME;
     }

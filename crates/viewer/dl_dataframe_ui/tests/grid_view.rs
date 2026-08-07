@@ -111,7 +111,7 @@ async fn test_grid_view_flagging() {
 
     // Fake remote URI — flagging requires remote_table + table index to be enabled.
     let remote_uri: dl_uri::EntryUri =
-        "rerun+http://localhost:1234/entry/00000000000000000000000000000001"
+        "dalaran+http://localhost:1234/entry/00000000000000000000000000000001"
             .parse()
             .unwrap();
 
@@ -202,8 +202,8 @@ async fn test_grid_view_non_uniform_cards() {
 /// Sets up a test table.
 ///
 /// When `with_flagging` is true, the schema is configured for flagging:
-/// - `id` column gets `rerun:is_table_index` metadata (required for upsert)
-/// - Schema gets `rerun:flag_column` metadata pointing at the `flagged` column
+/// - `id` column gets `dalaran:is_table_index` metadata (required for upsert)
+/// - Schema gets `dalaran:flag_column` metadata pointing at the `flagged` column
 fn setup_test_table(with_flagging: bool) -> (Arc<SessionContext>, &'static str) {
     let mut id_field = Field::new("id", DataType::Int64, false);
     let mut flagged_field = Field::new("flagged", DataType::Boolean, true);

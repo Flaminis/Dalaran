@@ -1,7 +1,7 @@
 [package]
 name = "dl_dev_tools"
 authors.workspace = true
-description = "Various tools for rerun development"
+description = "Various tools for dalaran development"
 edition.workspace = true
 homepage.workspace = true
 include.workspace = true

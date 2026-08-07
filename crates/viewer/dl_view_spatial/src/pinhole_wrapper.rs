@@ -42,7 +42,7 @@ impl PinholeWrapper {
         self.world_from_cam().inverse()
     }
 
-    /// Scene-space from Rerun view-space (RUB).
+    /// Scene-space from Dalaran view-space (RUB).
     pub fn world_from_rub_view(&self) -> Option<IsoTransform> {
         match self.pinhole_view_coordinates.from_rub_quat() {
             Ok(from_rub) => Some(self.world_from_camera * IsoTransform::from_quat(from_rub)),

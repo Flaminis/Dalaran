@@ -33,7 +33,7 @@ pub enum GltfImportError {
     NoTrianglePrimitives { mesh_name: String },
 
     #[error(
-        "This file requires glTF extension(s) that Rerun does not support: {0}. \
+        "This file requires glTF extension(s) that Dalaran does not support: {0}. \
          If this is Draco or meshopt compression, re-export the model uncompressed."
     )]
     UnsupportedRequiredExtensions(String),

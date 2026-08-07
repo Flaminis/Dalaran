@@ -1,4 +1,4 @@
-//! Rerun map visualization View.
+//! Dalaran map visualization View.
 //!
 //! A View that shows geographic objects on a map.
 

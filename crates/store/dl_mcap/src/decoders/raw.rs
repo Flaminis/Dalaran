@@ -52,7 +52,7 @@ impl MessageParser for RawMcapMessageParser {
     }
 }
 
-/// Logs the raw, encoded bytes of arbitrary MCAP messages as Rerun blobs.
+/// Logs the raw, encoded bytes of arbitrary MCAP messages as Dalaran blobs.
 ///
 /// The result will be verbatim copies of the original messages without decoding
 /// or imposing any semantic meaning on the data.

@@ -6,7 +6,7 @@ use crate::log_sink::SinkFlushError;
 
 // ----------------------------------------------------------------------------
 
-/// Failure to host a web viewer and/or Rerun server.
+/// Failure to host a web viewer and/or Dalaran server.
 #[derive(thiserror::Error, Debug)]
 pub enum WebViewerSinkError {
     /// Failure to host the web viewer.
@@ -18,7 +18,7 @@ pub enum WebViewerSinkError {
     InvalidAddress(#[from] std::net::AddrParseError),
 }
 
-/// A [`crate::sink::LogSink`] tied to a hosted Rerun web viewer. This internally stores two servers:
+/// A [`crate::sink::LogSink`] tied to a hosted Dalaran web viewer. This internally stores two servers:
 /// * A gRPC server to relay messages from the sink to any connected web viewers
 /// * A [`WebViewerServer`] to serve the Wasm+HTML
 struct WebViewerSink {
@@ -74,9 +74,9 @@ impl WebViewerSink {
 
         let viewer_url =
             if grpc_server_addr.ip().is_unspecified() || grpc_server_addr.ip().is_loopback() {
-                format!("{http_web_viewer_url}?url=rerun%2Bhttp://localhost:{grpc_port}/proxy")
+                format!("{http_web_viewer_url}?url=dalaran%2Bhttp://localhost:{grpc_port}/proxy")
             } else {
-                format!("{http_web_viewer_url}?url=rerun%2Bhttp://{grpc_server_addr}/proxy")
+                format!("{http_web_viewer_url}?url=dalaran%2Bhttp://{grpc_server_addr}/proxy")
             };
 
         dl_log::info!(
@@ -232,7 +232,7 @@ impl WebViewerConfig {
         };
 
         for source_url in connect_to {
-            // TODO(jan): remove after we change from `rerun+http` to `rerun-http`
+            // TODO(jan): remove after we change from `dalaran+http` to `dalaran-http`
             let source_url = percent_encoding::utf8_percent_encode(
                 &source_url,
                 percent_encoding::NON_ALPHANUMERIC,
@@ -259,12 +259,12 @@ impl WebViewerConfig {
 
 // ----------------------------------------------------------------------------
 
-/// Serve log-data over gRPC and serve a Rerun web viewer over HTTP.
+/// Serve log-data over gRPC and serve a Dalaran web viewer over HTTP.
 ///
 /// If the `open_browser` argument is `true`, your default browser
 /// will be opened with a connected web-viewer.
 ///
-/// If not, you can connect to this server using the `rerun` binary (`cargo install rerun-cli --locked`).
+/// If not, you can connect to this server using the `dalaran` binary (`cargo install dalaran-cli --locked`).
 ///
 /// NOTE: you can not connect one `Session` to another.
 ///
@@ -288,14 +288,14 @@ pub fn new_sink(
     )?))
 }
 
-/// Serves the Rerun Web Viewer (HTML+JS+Wasm) over http.
+/// Serves the Dalaran Web Viewer (HTML+JS+Wasm) over http.
 ///
 /// The server will immediately start listening for incoming connections
 /// and stop doing so when the returned [`WebViewerServer`] is dropped.
 ///
 /// Note: this does NOT start a gRPC server.
 /// To start a gRPC server, use [`crate::RecordingStreamBuilder::serve_grpc`] and connect to it
-/// by setting [`WebViewerConfig::connect_to`] to `rerun+http://localhost/proxy`.
+/// by setting [`WebViewerConfig::connect_to`] to `dalaran+http://localhost/proxy`.
 ///
 /// Note: this function just calls [`WebViewerConfig::host_web_viewer`] and is here only
 /// for convenience, visibility, and for symmetry with our Python SDK.

@@ -72,11 +72,11 @@ impl MediaType {
     // -------------------------------------------------------
     // Robotics formats:
 
-    /// Rerun recording data: `application/x-rerun`.
+    /// Dalaran recording data: `application/x-dalaran`.
     ///
     /// This is not a standardized format and mostly exists here to accommodate file type detection
     /// in the data loader.
-    pub const RRD: &'static str = "application/x-rerun";
+    pub const RRD: &'static str = "application/x-dalaran";
 
     /// [MCAP](https://mcap.dev/) recording: `application/x-mcap`.
     ///
@@ -176,7 +176,7 @@ impl MediaType {
     // -------------------------------------------------------
     // Robotics formats:
 
-    /// `application/x-rerun`
+    /// `application/x-dalaran`
     ///
     /// This is not a standardized format and mostly exists here to accommodate file type detection
     /// in the data loader.
@@ -306,7 +306,7 @@ impl MediaType {
         // NOTE:
         // - gltf is simply json, so no magic byte
         //   (also most gltf files contain file:// links, so not much point in sending that to
-        //   Rerun for now…)
+        //   Dalaran for now…)
         // - obj is simply text, so no magic byte
 
         let mut inferer = infer::Infer::new();

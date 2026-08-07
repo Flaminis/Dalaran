@@ -1,0 +1,13 @@
+namespace dalaran.blueprint.components;
+
+// ---
+
+/// Visual bounds in 2D space used for `Spatial2DView`.
+struct VisualBounds2D (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Copy, PartialEq, bytemuck::Pod, bytemuck::Zeroable",
+  "attr.rust.repr": "transparent"
+) {
+  /// X and y ranges that should be visible.
+  range2d: dalaran.datatypes.Range2D (order: 100);
+}

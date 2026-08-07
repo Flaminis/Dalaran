@@ -231,7 +231,7 @@ dependencies = [
  "anyhow",
  "clap",
  "emath",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -1187,7 +1187,7 @@ name = "blueprint"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "clap",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -1197,7 +1197,7 @@ dependencies = [
  "anyhow",
  "chrono",
  "clap",
- "rerun",
+ "dalaran",
  "serde",
  "serde_json",
  "strum",
@@ -1585,7 +1585,7 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -2096,7 +2096,7 @@ dependencies = [
  "bincode",
  "mimalloc",
  "parking_lot",
- "rerun",
+ "dalaran",
  "serde",
  "tokio",
 ]
@@ -2108,7 +2108,7 @@ dependencies = [
  "crossbeam",
  "dl_build_tools",
  "dl_quota_channel",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -2116,7 +2116,7 @@ name = "custom_store_subscriber"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "dl_build_tools",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -2124,7 +2124,7 @@ name = "custom_view"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "mimalloc",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -2133,7 +2133,7 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "bytemuck",
  "mimalloc",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -2241,7 +2241,7 @@ name = "dataframe_query"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "itertools 0.15.0",
- "rerun",
+ "dalaran",
  "unindent",
 ]
 
@@ -3111,7 +3111,7 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "itertools 0.15.0",
  "rand 0.9.5",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -3658,7 +3658,7 @@ name = "extend_viewer_ui"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "mimalloc",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -4306,7 +4306,7 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "itertools 0.15.0",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -4898,7 +4898,7 @@ dependencies = [
  "anyhow",
  "clap",
  "rand 0.9.5",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -5926,7 +5926,7 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "arrow",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -6130,7 +6130,7 @@ dependencies = [
  "itertools 0.15.0",
  "rand 0.9.5",
  "dl_tracing",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -6139,7 +6139,7 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -6425,7 +6425,7 @@ dependencies = [
 name = "minimal"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -6435,14 +6435,14 @@ dependencies = [
  "anyhow",
  "clap",
  "glam",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
 name = "minimal_serve"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -7181,7 +7181,7 @@ dependencies = [
  "prost-build",
  "protoc-bin-vendored",
  "dl_build_tools",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -7745,7 +7745,7 @@ dependencies = [
  "rand 0.9.5",
  "rand_distr",
  "dl_log",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -8474,7 +8474,7 @@ dependencies = [
  "bytes",
  "clap",
  "gltf",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -11366,7 +11366,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rerun"
+name = "dalaran"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "ahash",
@@ -11434,7 +11434,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rerun-cli"
+name = "dalaran-cli"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "document-features",
@@ -11445,16 +11445,16 @@ dependencies = [
  "dl_log",
  "dl_memory",
  "dl_server",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
-name = "rerun-importer-rust-file"
+name = "dalaran-importer-rust-file"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "argh",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -11483,7 +11483,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rerun_c"
+name = "dalaran_c"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "ahash",
@@ -11502,7 +11502,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rerun_py"
+name = "dalaran_py"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
@@ -12234,7 +12234,7 @@ dependencies = [
 name = "shared_recording"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12442,7 +12442,7 @@ dependencies = [
  "rand 0.9.5",
  "rand_distr",
  "dl_build_tools",
- "rerun",
+ "dalaran",
  "similar-asserts",
 ]
 
@@ -12460,7 +12460,7 @@ dependencies = [
 name = "spawn_viewer"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12556,7 +12556,7 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "arrow",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12576,7 +12576,7 @@ name = "stdio"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "itertools 0.15.0",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12753,7 +12753,7 @@ dependencies = [
 name = "template"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12772,7 +12772,7 @@ dependencies = [
  "anyhow",
  "rand 0.9.5",
  "dl_log",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12798,7 +12798,7 @@ dependencies = [
  "mimalloc",
  "dl_format",
  "dl_memory",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12808,7 +12808,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dl_log",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12819,7 +12819,7 @@ dependencies = [
  "clap",
  "glam",
  "dl_log",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -12829,7 +12829,7 @@ dependencies = [
  "anyhow",
  "clap",
  "dl_log",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]
@@ -13758,7 +13758,7 @@ name = "viewer_callbacks"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "mimalloc",
- "rerun",
+ "dalaran",
 ]
 
 [[package]]

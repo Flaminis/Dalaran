@@ -1,0 +1,53 @@
+namespace dalaran.blueprint.archetypes;
+
+// ---
+
+/// Shared state for the 3 collapsible panels.
+table PanelBlueprint (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Default"
+) {
+  // --- Required ---
+
+  // --- Optional ---
+
+  /// Current state of the panel.
+  state: dalaran.blueprint.components.PanelState ("attr.dalaran.component_optional", nullable, order: 1000);
+
+  // TODO(jleibs): Add a float to track how expanded the panel is.
+}
+
+/// Time panel specific state.
+table TimePanelBlueprint (
+  "attr.dalaran.scope": "blueprint",
+  "attr.rust.derive": "Default"
+) {
+  // --- Required ---
+
+  // --- Optional ---
+
+  /// Current state of the panel.
+  state: dalaran.blueprint.components.PanelState ("attr.dalaran.component_optional", nullable, order: 1000);
+
+  /// What timeline the panel is on.
+  timeline: dalaran.blueprint.components.TimelineName ("attr.dalaran.component_optional", nullable, order: 2000);
+
+  /// A time playback speed multiplier.
+  playback_speed: dalaran.blueprint.components.PlaybackSpeed ("attr.dalaran.component_optional", nullable, order: 2200);
+
+  /// Frames per second. Only applicable for sequence timelines.
+  fps: dalaran.blueprint.components.Fps ("attr.dalaran.component_optional", nullable, order: 2300);
+
+  /// If the time is currently paused, playing, or following.
+  ///
+  /// Defaults to either playing or following, depending on the data source.
+  play_state: dalaran.blueprint.components.PlayState ("attr.dalaran.component_optional", nullable, order: 2400);
+
+  /// How the time should loop. A selection loop only works if there is also a `time_selection` passed.
+  ///
+  /// Defaults to off.
+  loop_mode: dalaran.blueprint.components.LoopMode ("attr.dalaran.component_optional", nullable, order: 2500);
+
+  /// Selects a range of time on the time panel.
+  time_selection: dalaran.blueprint.components.AbsoluteTimeRange ("attr.dalaran.component_optional", nullable, order: 2600);
+}

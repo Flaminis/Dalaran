@@ -1,100 +1,100 @@
-//! Rerun gRPC header conventions: the `x-rerun-*` header consts, the
-//! [`RerunVersionInterceptor`] that stamps every outbound request with the
+//! Dalaran gRPC header conventions: the `x-dalaran-*` header consts, the
+//! [`DalaranVersionInterceptor`] that stamps every outbound request with the
 //! client (or server) identity and version, the matching tower `Layer`
 //! helpers that wire it into a stack, and a small fork of
-//! `tower-http::propagate_header` used to propagate multiple Rerun headers
+//! `tower-http::propagate_header` used to propagate multiple Dalaran headers
 //! between requests and responses.
 
-/// The HTTP header key to pass an entry ID to the `RerunCloudService` APIs.
-pub const RERUN_HTTP_HEADER_ENTRY_ID: &str = "x-rerun-entry-id";
+/// The HTTP header key to pass an entry ID to the `DalaranCloudService` APIs.
+pub const DALARAN_HTTP_HEADER_ENTRY_ID: &str = "x-dalaran-entry-id";
 
-/// The HTTP header key to pass an entry name to the `RerunCloudService` APIs.
+/// The HTTP header key to pass an entry name to the `DalaranCloudService` APIs.
 ///
 /// This will automatically be resolved to an entry ID, as long as a dataset with the associated
 /// name can be found in the database.
 ///
 /// This is serialized as base64-encoded data (hence `-bin`), since entry names can be any UTF8 strings,
 /// while HTTP2 headers only support ASCII.
-pub const RERUN_HTTP_HEADER_ENTRY_NAME: &str = "x-rerun-entry-name-bin";
+pub const DALARAN_HTTP_HEADER_ENTRY_NAME: &str = "x-dalaran-entry-name-bin";
 
 /// The HTTP header key that all our official gRPC clients use to specify their identity and version.
 ///
 /// All our official gRPC servers make sure to always return a copy of this header to the client as-is, in
 /// addition to propagating it into our gRPC metrics and traces.
-pub const RERUN_HTTP_HEADER_CLIENT_VERSION: &str = "x-rerun-client-version";
+pub const DALARAN_HTTP_HEADER_CLIENT_VERSION: &str = "x-dalaran-client-version";
 
 /// The HTTP header key that all our official gRPC servers use to specify their identity and version.
 ///
 /// All our official gRPC servers always set this header in all their responses, in addition to
 /// propagating it into our gRPC metrics and traces.
-pub const RERUN_HTTP_HEADER_SERVER_VERSION: &str = "x-rerun-server-version";
+pub const DALARAN_HTTP_HEADER_SERVER_VERSION: &str = "x-dalaran-server-version";
 
 /// HTTP authorization header key, used to transport authorization tokens
 pub const HTTP_HEADER_AUTHORIZATION: &str = "authorization";
 
 // ---
 
-pub type RerunHeadersLayer = tower::layer::util::Stack<
+pub type DalaranHeadersLayer = tower::layer::util::Stack<
     PropagateHeadersLayer,
     tower::layer::util::Stack<
-        tonic::service::InterceptorLayer<RerunVersionInterceptor>,
+        tonic::service::InterceptorLayer<DalaranVersionInterceptor>,
         tower::layer::util::Identity,
     >,
 >;
 
-/// Instantiates a compound [`tower::Layer`] that handles all things related to Rerun headers.
-pub fn new_rerun_headers_layer(
+/// Instantiates a compound [`tower::Layer`] that handles all things related to Dalaran headers.
+pub fn new_dalaran_headers_layer(
     name: Option<String>,
     version: Option<String>,
     is_client: bool,
-) -> RerunHeadersLayer {
+) -> DalaranHeadersLayer {
     tower::ServiceBuilder::new()
         .layer(tonic::service::interceptor::InterceptorLayer::new({
-            RerunVersionInterceptor::new(is_client, name, version)
+            DalaranVersionInterceptor::new(is_client, name, version)
         }))
-        .layer(new_rerun_headers_propagation_layer())
+        .layer(new_dalaran_headers_propagation_layer())
         .into_inner()
 }
 
-/// Build the standard SDK-side Rerun headers layer.
+/// Build the standard SDK-side Dalaran headers layer.
 ///
-/// This is the `(name, version, is_client)` triple every Rerun gRPC client should use
+/// This is the `(name, version, is_client)` triple every Dalaran gRPC client should use
 /// unless it has a specific reason not to (e.g. the `redap_cli` binary, which advertises
 /// its own `CARGO_PKG_VERSION`). It is the single source of truth for client-side header
 /// configuration, so any path that opens a sibling channel (the main redap RPC stack, the
 /// per-connection analytics OTLP exports, etc.) presents the same
-/// `x-rerun-client-version` value to the server.
+/// `x-dalaran-client-version` value to the server.
 ///
-/// On wasm, the identity is hard-coded to `"rerun-web"` so the cloud server can
+/// On wasm, the identity is hard-coded to `"dalaran-web"` so the cloud server can
 /// distinguish browser traffic. On native, identity is left to fall through the standard
-/// `RerunVersionInterceptor` chain (`OTEL_SERVICE_NAME` → exe stem → `dl_protos`'s
-/// `CARGO_PKG_NAME`) and the version respects `RERUN_CLIENT_VERSION_OVERRIDE` for tests.
+/// `DalaranVersionInterceptor` chain (`OTEL_SERVICE_NAME` → exe stem → `dl_protos`'s
+/// `CARGO_PKG_NAME`) and the version respects `DALARAN_CLIENT_VERSION_OVERRIDE` for tests.
 #[cfg(target_arch = "wasm32")]
-pub fn new_rerun_client_headers_layer() -> RerunHeadersLayer {
-    new_rerun_headers_layer(
-        Some("rerun-web".to_owned()),
+pub fn new_dalaran_client_headers_layer() -> DalaranHeadersLayer {
+    new_dalaran_headers_layer(
+        Some("dalaran-web".to_owned()),
         None,
         /* is_client */ true,
     )
 }
 
 #[cfg(not(target_arch = "wasm32"))]
-pub fn new_rerun_client_headers_layer() -> RerunHeadersLayer {
-    new_rerun_headers_layer(
+pub fn new_dalaran_client_headers_layer() -> DalaranHeadersLayer {
+    new_dalaran_headers_layer(
         None,
-        std::env::var("RERUN_CLIENT_VERSION_OVERRIDE").ok(),
+        std::env::var("DALARAN_CLIENT_VERSION_OVERRIDE").ok(),
         /* is_client */ true,
     )
 }
 
-/// Creates a new [`tower::Layer`] middleware that always makes sure to propagate Rerun headers
+/// Creates a new [`tower::Layer`] middleware that always makes sure to propagate Dalaran headers
 /// back and forth across requests and responses.
-pub fn new_rerun_headers_propagation_layer() -> PropagateHeadersLayer {
+pub fn new_dalaran_headers_propagation_layer() -> PropagateHeadersLayer {
     PropagateHeadersLayer::new(
         [
-            http::HeaderName::from_static(RERUN_HTTP_HEADER_ENTRY_ID),
-            http::HeaderName::from_static(RERUN_HTTP_HEADER_CLIENT_VERSION),
-            http::HeaderName::from_static(RERUN_HTTP_HEADER_SERVER_VERSION),
+            http::HeaderName::from_static(DALARAN_HTTP_HEADER_ENTRY_ID),
+            http::HeaderName::from_static(DALARAN_HTTP_HEADER_CLIENT_VERSION),
+            http::HeaderName::from_static(DALARAN_HTTP_HEADER_SERVER_VERSION),
         ]
         .into_iter()
         .collect(),
@@ -104,15 +104,15 @@ pub fn new_rerun_headers_propagation_layer() -> PropagateHeadersLayer {
 /// Implements a `[tonic::service::Interceptor]` that records the identity and version of the client and/or server
 /// in well-known headers.
 ///
-/// See also [`RERUN_HTTP_HEADER_CLIENT_VERSION`] & [`RERUN_HTTP_HEADER_SERVER_VERSION`].
+/// See also [`DALARAN_HTTP_HEADER_CLIENT_VERSION`] & [`DALARAN_HTTP_HEADER_SERVER_VERSION`].
 #[derive(Clone)]
-pub struct RerunVersionInterceptor {
+pub struct DalaranVersionInterceptor {
     is_client: bool,
     name: String,
     version: String,
 }
 
-impl RerunVersionInterceptor {
+impl DalaranVersionInterceptor {
     pub fn new_client(name: Option<String>, version: Option<String>) -> Self {
         Self::new(true, name, version)
     }
@@ -146,7 +146,7 @@ impl RerunVersionInterceptor {
     }
 }
 
-impl tonic::service::Interceptor for RerunVersionInterceptor {
+impl tonic::service::Interceptor for DalaranVersionInterceptor {
     fn call(&mut self, mut req: tonic::Request<()>) -> tonic::Result<tonic::Request<()>> {
         let Self {
             is_client,
@@ -158,9 +158,9 @@ impl tonic::service::Interceptor for RerunVersionInterceptor {
 
         req.metadata_mut().insert(
             if *is_client {
-                RERUN_HTTP_HEADER_CLIENT_VERSION
+                DALARAN_HTTP_HEADER_CLIENT_VERSION
             } else {
-                RERUN_HTTP_HEADER_SERVER_VERSION
+                DALARAN_HTTP_HEADER_SERVER_VERSION
             },
             version
                 .parse()
@@ -234,7 +234,7 @@ use tower::layer::Layer;
 /// Layer that applies [`PropagateHeaders`] which propagates multiple headers at once from requests to responses.
 ///
 /// If the headers are present on the request they'll be applied to the response as well. This could
-/// for example be used to propagate headers such as `x-rerun-entry-id`, `x-rerun-client-version`, etc.
+/// for example be used to propagate headers such as `x-dalaran-entry-id`, `x-dalaran-client-version`, etc.
 #[derive(Clone, Debug)]
 pub struct PropagateHeadersLayer {
     headers: HashSet<HeaderName>,
@@ -261,7 +261,7 @@ impl<S> Layer<S> for PropagateHeadersLayer {
 /// Middleware that propagates multiple headers at once from requests to responses.
 ///
 /// If the headers are present on the request they'll be applied to the response as well. This could
-/// for example be used to propagate headers such as `x-rerun-entry-id`, `x-rerun-client-version`, etc.
+/// for example be used to propagate headers such as `x-dalaran-entry-id`, `x-dalaran-client-version`, etc.
 #[derive(Clone, Debug)]
 pub struct PropagateHeaders<S> {
     inner: S,

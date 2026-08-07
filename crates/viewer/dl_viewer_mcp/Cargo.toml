@@ -1,6 +1,6 @@
 [package]
 authors.workspace = true
-description = "MCP server that allows llm agents to use the Rerun Viewer."
+description = "MCP server that allows llm agents to use the Dalaran Viewer."
 edition.workspace = true
 homepage.workspace = true
 license.workspace = true

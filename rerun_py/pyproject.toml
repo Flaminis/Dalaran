@@ -34,7 +34,7 @@ email = "opensource@rerun.io"
 name = "Rerun.io"
 
 [project.license]
-text = "MIT OR Apache-2.0"
+text = "Apache-2.0"
 
 [project.optional-dependencies]
 tests = [

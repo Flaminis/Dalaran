@@ -1,0 +1,21 @@
+namespace dalaran.archetypes;
+
+/// A visual representation of a [archetypes.Transform3D].
+///
+/// \example archetypes/transform3d_axes title="Visual representation of a transform as three arrows" image="https://static.rerun.io/transform3d_axes/574c482088e9d317b19127fc8bef957dbfd3abe8/1200w.png"
+table TransformAxes3D (
+  "attr.docs.category": "Transforms",
+  "attr.docs.view_types": "Spatial3DView",
+  "attr.dalaran.state": "stable",
+  "attr.dalaran.visualizer": "TransformAxes3D",
+  "attr.rust.derive": "PartialEq"
+) {
+  /// Visual length of the 3 axes.
+  ///
+  /// The length is interpreted in the local coordinate system of the transform.
+  /// If the transform is scaled, the axes will be scaled accordingly.
+  axis_length: dalaran.components.AxisLength ("attr.dalaran.component_required", order: 1000);
+
+  /// Whether to show a text label with the corresponding frame.
+  show_frame: dalaran.components.ShowLabels ("attr.dalaran.component_optional", nullable, order: 2000);
+}

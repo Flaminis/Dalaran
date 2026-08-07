@@ -21,7 +21,7 @@ fn generate_read_only_token_with_duration() {
         .token(
             Duration::from_hours(2),
             "re_auth_test",
-            "test@rerun.io",
+            "test@dalaran.dev",
             dl_auth::Permission::ReadWrite,
             None,
         )
@@ -31,7 +31,7 @@ fn generate_read_only_token_with_duration() {
         .verify(&token, VerificationOptions::default())
         .unwrap();
 
-    assert_eq!(user.sub(), "test@rerun.io");
+    assert_eq!(user.sub(), "test@dalaran.dev");
     assert_eq!(user.iss(), "re_auth_test");
 }
 
@@ -45,7 +45,7 @@ fn expired_token() {
         .token(
             Duration::from_secs(1),
             "re_auth_test",
-            "test@rerun.io",
+            "test@dalaran.dev",
             dl_auth::Permission::ReadWrite,
             None,
         )

@@ -9,7 +9,7 @@ use quote::{format_ident, quote};
 use super::util::{append_tokens, doc_as_lines};
 use crate::codegen::{Target, autogen_warning};
 use crate::{
-    ATTR_RERUN_COMPONENT_NO_UI_EDIT, ATTR_RERUN_COMPONENT_REQUIRED, ATTR_RUST_DERIVE,
+    ATTR_DALARAN_COMPONENT_NO_UI_EDIT, ATTR_DALARAN_COMPONENT_REQUIRED, ATTR_RUST_DERIVE,
     ATTR_RUST_DERIVE_ONLY, ObjectKind, Objects, Reporter,
 };
 
@@ -218,8 +218,8 @@ fn generate_archetype_reflection(reporter: &Reporter, objects: &Objects) -> Toke
                 Target::WebDocsMarkdown,
             )
             .join("\n");
-            let required = field.attrs.has(ATTR_RERUN_COMPONENT_REQUIRED);
-            let ui_editable = !field.attrs.has(ATTR_RERUN_COMPONENT_NO_UI_EDIT);
+            let required = field.attrs.has(ATTR_DALARAN_COMPONENT_REQUIRED);
+            let ui_editable = !field.attrs.has(ATTR_DALARAN_COMPONENT_NO_UI_EDIT);
 
             let mut flag_tokens: Vec<TokenStream> = Vec::new();
             if required {

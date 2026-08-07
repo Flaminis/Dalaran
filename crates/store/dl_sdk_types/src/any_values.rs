@@ -1,10 +1,10 @@
-//! Utilities to log arbitrary data to Rerun.
+//! Utilities to log arbitrary data to Dalaran.
 
 use dl_types_core::{AsComponents, ComponentIdentifier, ComponentType, DynamicArchetype, Loggable};
 
 use crate::{Component, SerializedComponentBatch};
 
-/// A helper for logging arbitrary data to Rerun.
+/// A helper for logging arbitrary data to Dalaran.
 pub struct AnyValues {
     builder: DynamicArchetype,
 }
@@ -21,7 +21,7 @@ impl Default for AnyValues {
 impl AnyValues {
     /// Adds a component generated from arbitrary data to this collection.
     ///
-    /// In many cases, it might be more convenient to use [`Self::with_component`] to log an existing Rerun component instead.
+    /// In many cases, it might be more convenient to use [`Self::with_component`] to log an existing Dalaran component instead.
     #[inline]
     pub fn with_component_from_data(
         self,
@@ -33,7 +33,7 @@ impl AnyValues {
         }
     }
 
-    /// Adds an existing Rerun [`Component`] to this collection.
+    /// Adds an existing Dalaran [`Component`] to this collection.
     #[inline]
     pub fn with_component<C: Component>(
         self,
@@ -45,7 +45,7 @@ impl AnyValues {
         }
     }
 
-    /// Adds an existing Rerun [`Component`] to this collection.
+    /// Adds an existing Dalaran [`Component`] to this collection.
     ///
     /// This method can be used to override the component type.
     #[inline]
@@ -83,7 +83,7 @@ mod test {
     fn without_archetype() {
         let values = AnyValues::default()
             .with_component::<components::Scalar>("confidence", [1.2f64, 3.4, 5.6])
-            .with_component_override::<Utf8>("homepage", "user.url", vec!["https://www.rerun.io"])
+            .with_component_override::<Utf8>("homepage", "user.url", vec!["https://www.dalaran.dev"])
             .with_component_from_data(
                 "description",
                 std::sync::Arc::new(arrow::array::StringArray::from(vec!["Bla bla bla…"])),

@@ -377,7 +377,7 @@ mod tests {
 
     impl ChunkStoreSubscriber for AllEvents {
         fn name(&self) -> String {
-            "rerun.testing.store_subscribers.AllEvents".into()
+            "dalaran.testing.store_subscribers.AllEvents".into()
         }
 
         fn as_any(&self) -> &dyn std::any::Any {
