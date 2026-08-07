@@ -10,9 +10,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-import numpy as np
-import numpy.typing as npt
-
 from ._math import (
     compose,
     identity,
@@ -23,6 +20,9 @@ from ._math import (
 )
 
 if TYPE_CHECKING:
+    import numpy as np
+    import numpy.typing as npt
+
     from dalaran.recording_stream import RecordingStream
 
 __all__ = ["Frame", "TransformTree"]

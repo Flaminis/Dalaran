@@ -385,7 +385,7 @@ def log_imu(
             dl.Arrows3D(vectors=[vec * scale], origins=[[0.0, 0.0, 0.0]], colors=[color]),
             recording=recording,
         )
-        for axis, component in zip("xyz", vec):
+        for axis, component in zip("xyz", vec, strict=True):
             dl.log(f"{entity_path}/{name}/{axis}", dl.Scalars(float(component)), recording=recording)
 
 
