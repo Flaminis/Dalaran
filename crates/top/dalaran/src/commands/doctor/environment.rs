@@ -58,6 +58,10 @@ pub const KNOWN_ENV_VARS: &[(&str, &str)] = &[
     ),
     // Native-only, i.e. things the Python script never sees:
     (
+        "DALARAN_DISABLE_WEB_VIEWER_SERVER",
+        "build the viewer without the bundled web viewer (development only)",
+    ),
+    (
         "DALARAN_CHUNK_MAX_BYTES",
         "maximum chunk size threshold for the compactor",
     ),

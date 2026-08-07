@@ -1,6 +1,7 @@
 //! `dalaran doctor`: diagnose a Dalaran installation from the viewer binary itself.
 
 mod environment;
+mod graphics;
 mod report;
 
 use std::path::PathBuf;
@@ -64,8 +65,12 @@ pub struct DoctorCommand {
 
 impl DoctorCommand {
     /// Runs every check and prints the report, returning the process exit code.
-    pub fn run(&self, build_info: &dl_build_info::BuildInfo) -> anyhow::Result<u8> {
-        let report = self.diagnose(build_info);
+    pub fn run(
+        &self,
+        build_info: &dl_build_info::BuildInfo,
+        tokio_runtime: &tokio::runtime::Handle,
+    ) -> anyhow::Result<u8> {
+        let report = self.diagnose(build_info, tokio_runtime);
 
         if self.json {
             println!("{:#}", report.to_json());
@@ -77,11 +82,16 @@ impl DoctorCommand {
     }
 
     /// Runs every check, without printing anything.
-    fn diagnose(&self, build_info: &dl_build_info::BuildInfo) -> Report {
+    fn diagnose(
+        &self,
+        build_info: &dl_build_info::BuildInfo,
+        tokio_runtime: &tokio::runtime::Handle,
+    ) -> Report {
         let env = environment::snapshot();
 
         let checks = vec![
             check_build(build_info),
+            graphics::check_graphics(tokio_runtime),
             environment::check_environment(&env),
             environment::check_display(&env),
             environment::check_ros2(&env),
@@ -245,8 +255,24 @@ mod tests {
 
     #[test]
     fn test_diagnose_produces_a_well_formed_report() {
-        let report = command(&["dalaran", "doctor", "--no-network"]).diagnose(&build_info(false));
-        assert!(!report.checks.is_empty());
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+
+        let report = command(&["dalaran", "doctor", "--no-network"])
+            .diagnose(&build_info(false), runtime.handle());
+
+        // Every check must have a distinct name, so that `--json` consumers can index by it.
+        let names = report
+            .checks
+            .iter()
+            .map(|check| check.name)
+            .collect::<std::collections::BTreeSet<_>>();
+        assert_eq!(names.len(), report.checks.len(), "duplicate check names");
+
+        assert!(names.contains("build"));
+        assert!(names.contains("environment"));
         assert!(report.to_json()["checks"].is_array());
     }
 }

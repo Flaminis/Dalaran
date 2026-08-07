@@ -2187,6 +2187,7 @@ dependencies = [
  "dl_protos",
  "dl_quota_channel",
  "dl_redap_client",
+ "dl_renderer",
  "dl_sdk",
  "dl_sdk_types",
  "dl_server",

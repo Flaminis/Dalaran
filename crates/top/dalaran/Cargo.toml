@@ -90,7 +90,16 @@ nasm = ["dl_video/nasm"]
 ## This adds a lot of extra dependencies, so only enable this feature if you need it!
 ##
 ## Also enables the `dalaran viewer-mcp` command.
-native_viewer = ["dep:libc", "dep:dl_viewer", "dep:dl_crash_handler", "dep:dl_viewer_mcp"]
+##
+## `dl_renderer` comes along for the ride (`dl_viewer` depends on it anyway) so that
+## `dalaran doctor` can enumerate wgpu adapters without pulling in wgpu a second time.
+native_viewer = [
+  "dep:libc",
+  "dep:dl_viewer",
+  "dep:dl_crash_handler",
+  "dep:dl_viewer_mcp",
+  "dep:dl_renderer",
+]
 
 ## Enable the in-memory Dalaran data server.
 oss_server = ["dep:dl_server"]
@@ -193,6 +202,7 @@ dl_dataframe = { workspace = true, optional = true }
 dl_grpc_server = { workspace = true, optional = true }
 dl_importer = { workspace = true, optional = true }
 dl_mcap = { workspace = true, optional = true }
+dl_renderer = { workspace = true, optional = true }
 mcap = { workspace = true, optional = true }
 dl_sdk = { workspace = true, optional = true }
 dl_server = { workspace = true, optional = true }
