@@ -41,12 +41,48 @@ pub struct MissingFieldMetadata {
     pub metadata_key: String,
 }
 
+/// The namespace Dalaran writes its Arrow metadata keys under.
+pub const DALARAN_METADATA_PREFIX: &str = "dalaran:";
+
+/// The namespace upstream Rerun writes its Arrow metadata keys under.
+///
+/// Dalaran renamed the prefix when it forked, but the on-disk container is
+/// unchanged, so recordings written by upstream still carry `rerun:…` keys. We
+/// read both spellings and only ever write [`DALARAN_METADATA_PREFIX`], which is
+/// what makes existing `.rrd` files readable rather than merely openable.
+pub const LEGACY_RERUN_METADATA_PREFIX: &str = "rerun:";
+
+/// The upstream spelling of a Dalaran metadata key, if it has one.
+///
+/// ```ignore
+/// assert_eq!(legacy_metadata_key("dalaran:id").as_deref(), Some("rerun:id"));
+/// assert_eq!(legacy_metadata_key("sorbet:version"), None);
+/// ```
+pub fn legacy_metadata_key(key: &str) -> Option<String> {
+    key.strip_prefix(DALARAN_METADATA_PREFIX)
+        .map(|suffix| format!("{LEGACY_RERUN_METADATA_PREFIX}{suffix}"))
+}
+
 /// Make it more ergonomic to work with arrow metadata.
 pub trait MetadataExt {
     type Error;
 
     fn missing_key_error(&self, key: &str) -> Self::Error;
-    fn get_opt(&self, key: &str) -> Option<&str>;
+
+    /// Look up exactly this key, with no legacy fallback.
+    fn get_opt_raw(&self, key: &str) -> Option<&str>;
+
+    /// Look up a key, falling back to its upstream Rerun spelling.
+    ///
+    /// This is the reason a recording written by upstream decodes here at all:
+    /// its batch and field metadata is namespaced `rerun:…`, and every reader in
+    /// the tree goes through this method.
+    fn get_opt(&self, key: &str) -> Option<&str> {
+        if let Some(value) = self.get_opt_raw(key) {
+            return Some(value);
+        }
+        legacy_metadata_key(key).and_then(|legacy| self.get_opt_raw(&legacy))
+    }
 
     fn get_or_err(&self, key: &str) -> Result<&str, Self::Error> {
         self.get_opt(key).ok_or_else(|| self.missing_key_error(key))
@@ -69,7 +105,7 @@ impl MetadataExt for HashMap<String, String> {
         }
     }
 
-    fn get_opt(&self, key: &str) -> Option<&str> {
+    fn get_opt_raw(&self, key: &str) -> Option<&str> {
         self.get(key).map(|value| value.as_str())
     }
 }
@@ -84,7 +120,7 @@ impl MetadataExt for ArrowField {
         }
     }
 
-    fn get_opt(&self, key: &str) -> Option<&str> {
+    fn get_opt_raw(&self, key: &str) -> Option<&str> {
         self.metadata().get(key).map(|v| v.as_str())
     }
 }

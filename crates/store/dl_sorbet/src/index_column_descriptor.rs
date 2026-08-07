@@ -138,7 +138,7 @@ impl TryFrom<&ArrowField> for IndexColumnDescriptor {
     type Error = IndexColumnError;
 
     fn try_from(field: &ArrowField) -> Result<Self, Self::Error> {
-        let name = if let Some(name) = field.metadata().get(crate::metadata::SORBET_INDEX_NAME) {
+        let name = if let Some(name) = field.get_opt(crate::metadata::SORBET_INDEX_NAME) {
             name.to_owned()
         } else {
             dl_log::debug_once!(

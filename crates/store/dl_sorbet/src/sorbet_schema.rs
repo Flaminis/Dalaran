@@ -5,7 +5,8 @@ use dl_log_types::EntityPath;
 use dl_types_core::{ChunkId, SegmentId};
 
 use crate::{
-    ArrowBatchMetadata, SorbetColumnDescriptors, SorbetError, TimestampMetadata, migrate_schema_ref,
+    ArrowBatchMetadata, MetadataExt as _, SorbetColumnDescriptors, SorbetError, TimestampMetadata,
+    migrate_schema_ref,
 };
 
 // ----------------------------------------------------------------------------
@@ -141,12 +142,13 @@ impl SorbetSchema {
         let ArrowSchema { metadata, fields } = arrow_schema;
 
         let entity_path = metadata
-            .get(crate::metadata::SORBET_ENTITY_PATH)
-            .map(|s| EntityPath::parse_forgiving(s));
+            .get_opt(crate::metadata::SORBET_ENTITY_PATH)
+            .map(EntityPath::parse_forgiving);
 
         let columns = SorbetColumnDescriptors::try_from_arrow_fields(entity_path.as_ref(), fields)?;
 
-        let chunk_id = if let Some(chunk_id_str) = metadata.get(crate::metadata::DALARAN_CHUNK_ID) {
+        let chunk_id = if let Some(chunk_id_str) = metadata.get_opt(crate::metadata::DALARAN_CHUNK_ID)
+        {
             Some(chunk_id_str.parse().map_err(|err| {
                 SorbetError::ChunkIdDeserializationError(format!(
                     "Failed to deserialize chunk id {chunk_id_str:?}: {err}"
@@ -156,11 +158,12 @@ impl SorbetSchema {
             None
         };
 
-        // Support both new "dalaran:segment_id" and legacy "dalaran:partition_id" keys
+        // Support the current "dalaran:segment_id", the older "dalaran:partition_id",
+        // and both of their upstream Rerun spellings (via `get_opt`).
         let segment_id = metadata
-            .get("dalaran:segment_id")
-            .or_else(|| metadata.get("dalaran:partition_id"))
-            .map(|s| SegmentId::from(s.as_str()));
+            .get_opt("dalaran:segment_id")
+            .or_else(|| metadata.get_opt("dalaran:partition_id"))
+            .map(SegmentId::from);
 
         // Verify version
         if let Some(batch_version) = metadata.get(Self::METADATA_KEY_VERSION)

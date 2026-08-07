@@ -5,7 +5,7 @@
 use std::collections::BTreeMap;
 use std::ops::{Deref, DerefMut};
 
-use crate::ArrowBatchMetadata;
+use crate::{ArrowBatchMetadata, MetadataExt as _};
 
 /// Important stops along the data transform part, from SDK to viewer.
 ///
@@ -138,8 +138,8 @@ impl TimestampMetadata {
 
         for location in TimestampLocation::iter() {
             if let Some(key) = location.metadata_key()
-                && let Some(value) = metadata.get(key)
-                && let Some(timestamp) = parse_timestamp(value.as_str())
+                && let Some(value) = metadata.get_opt(key)
+                && let Some(timestamp) = parse_timestamp(value)
             {
                 map.insert(location, timestamp);
             }

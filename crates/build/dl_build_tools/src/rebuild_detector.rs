@@ -61,7 +61,7 @@ pub fn rebuild_if_crate_changed(pkg_name: &str) {
 /// Read the environment variable and trigger a rebuild whenever the environment variable changes.
 pub fn get_and_track_env_var(env_var_name: &str) -> Result<String, std::env::VarError> {
     if should_output_cargo_build_instructions() {
-        println!("cargo:dalaran-if-env-changed={env_var_name}");
+        println!("cargo:rerun-if-env-changed={env_var_name}");
     }
     std::env::var(env_var_name)
 }
@@ -90,7 +90,7 @@ pub fn dalaran_if_changed(path: impl AsRef<Path>) {
     // Make sure the file exists, otherwise we'll be rebuilding all the time.
     assert!(path.exists(), "Failed to find {path:?}");
     if should_output_cargo_build_instructions() {
-        println!("cargo:dalaran-if-changed={}", path.to_str().unwrap());
+        println!("cargo:rerun-if-changed={}", path.to_str().unwrap());
     }
 }
 
@@ -99,7 +99,7 @@ pub fn dalaran_if_changed(path: impl AsRef<Path>) {
 pub fn dalaran_if_changed_or_doesnt_exist(path: impl AsRef<Path>) {
     let path = path.as_ref();
     if should_output_cargo_build_instructions() {
-        println!("cargo:dalaran-if-changed={}", path.to_str().unwrap());
+        println!("cargo:rerun-if-changed={}", path.to_str().unwrap());
     }
 }
 
@@ -167,7 +167,7 @@ impl<'a> Packages<'a> {
 
     /// Tracks an implicit dependency of the given name.
     ///
-    /// This will generate all the appropriate `cargo:dalaran-if-changed` clauses
+    /// This will generate all the appropriate `cargo:rerun-if-changed` clauses
     /// so that package `pkg_name` as well as all of it direct and indirect
     /// dependencies are properly tracked whether they are remote, in-workspace,
     /// or locally patched.

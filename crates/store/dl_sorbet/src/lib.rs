@@ -84,8 +84,8 @@ pub fn chunk_id_of_schema(
 ) -> Result<dl_types_core::ChunkId, SorbetError> {
     let metadata = schema.metadata();
     if let Some(chunk_id_str) = metadata
-        .get(crate::metadata::DALARAN_CHUNK_ID)
-        .or_else(|| metadata.get("dalaran.id"))
+        .get_opt(crate::metadata::DALARAN_CHUNK_ID)
+        .or_else(|| metadata.get_opt("dalaran.id"))
     {
         chunk_id_str.parse().map_err(|err| {
             SorbetError::ChunkIdDeserializationError(format!(
