@@ -1,0 +1,123 @@
+# Documentation checks.
+#
+# Runs on pull requests that touch documentation (or the SDK docstrings that the
+# API reference is generated from) and on pushes to `main`.
+
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "dalaran_py/**"
+      - "**/*.md"
+      - "lychee.toml"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "dalaran_py/**"
+      - "**/*.md"
+      - "lychee.toml"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+jobs:
+  link-check:
+    name: Check links (lychee)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      # Keeps the number of outbound requests (and therefore the flakiness) down
+      # between runs. `lychee.toml` holds the exclusion list.
+      - name: Restore the lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: lychee-${{ github.sha }}
+          restore-keys: lychee-
+
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: "--config lychee.toml --cache --max-cache-age 1d --no-progress ."
+          fail: true
+
+  redirects:
+    name: Check doc redirects
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # `check_doc_redirects.py` diffs against the base branch.
+          fetch-depth: 0
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Every deleted or renamed doc page has a redirect
+        run: uv run --group dev python scripts/ci/check_doc_redirects.py --base origin/${{ github.base_ref || 'main' }}
+
+  api-reference:
+    name: Build the Python API reference
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libssl-dev pkg-config
+
+      - uses: arduino/setup-protoc@v3
+        with:
+          version: "27.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: docs-api-reference
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # mkdocstrings imports `dalaran`, which is a compiled extension module, so
+      # the bindings have to be built before the reference can be rendered.
+      - name: Build and install the SDK
+        run: |
+          uvx maturin@1.14.1 build --release --manifest-path dalaran_py/Cargo.toml --out dist
+          uv sync --group docs
+          uv pip install "$(ls dist/*.whl)"
+
+      - name: mkdocs build --strict
+        run: .venv/bin/mkdocs build --strict -f dalaran_py/mkdocs.yml
