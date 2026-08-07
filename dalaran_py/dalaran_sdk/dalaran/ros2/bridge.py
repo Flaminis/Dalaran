@@ -17,7 +17,7 @@ import time
 from typing import TYPE_CHECKING, Any
 
 from .context import Context
-from .msg_map import convert, lookup, normalize_type_name
+from .msg_map import convert, lookup, lookup_topic, normalize_type_name
 from .naming import Throttler, TopicFilter, stamp_to_nanos, topic_to_entity_path
 
 if TYPE_CHECKING:
@@ -264,7 +264,7 @@ class Ros2Bridge:
         """
         if not self.filter.accepts(topic):
             return False
-        if lookup(type_name) is None:
+        if lookup_topic(topic) is None and lookup(type_name) is None:
             if type_name not in self._warned_types:
                 self._warned_types.add(type_name)
                 self._on_unknown_type(type_name)
@@ -309,7 +309,7 @@ class Ros2Bridge:
             self.context.set_time(self.timeline, timestamp=np.datetime64(stamp_ns, "ns"))
         self.context.set_time(self.wall_timeline, timestamp=np.datetime64(int(wall_time * 1e9), "ns"))
 
-        return convert(type_name, msg, self.entity_path_for(topic), self.context)
+        return convert(type_name, msg, self.entity_path_for(topic), self.context, topic=topic)
 
     # -- ROS plumbing (rclpy is imported lazily, here and nowhere else) -----
 
