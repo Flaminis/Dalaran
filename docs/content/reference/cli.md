@@ -21,6 +21,7 @@ The Dalaran command-line interface:
 * `analytics`: Configure the behavior of our analytics.
 * `auth`: Authentication with the redap.
 * `convert`: Convert any supported file into a single Dalaran `.dlr` recording.
+* `doctor`: Diagnose this Dalaran installation and print a report.
 * `download`: Download recordings and save them as .dlr files.
 * `man`: Generates the Dalaran CLI manual (markdown).
 * `mcap`: Manipulate the contents of .mcap files.
@@ -387,6 +388,57 @@ Examples:
 >
 > [Default: `false`]
 
+## dalaran doctor
+
+Diagnose this Dalaran installation and print a report.
+
+Most "Dalaran does not work" reports come down to a handful of environment problems: a GPU driver that wgpu cannot use, a headless machine without a display, a stale `RERUN_*` environment variable left over from a migration, a firewalled gRPC port, or a recording that was truncated before it was flushed. This command checks all of that in one go, without needing a working Python installation.
+
+The exit code is non-zero only when something is actually broken. Warnings keep it at zero, so this is safe to run in CI.
+
+Examples:
+
+* Check the installation: `dalaran doctor`
+
+* Check a recording someone sent you: `dalaran doctor session.dlr`
+
+* Machine-readable output for CI, with no network access: `dalaran doctor --json --no-network`
+
+* Check that a viewer is listening where you think it is: `dalaran doctor --endpoint dalaran+http://127.0.0.1:9876/proxy`
+
+**Usage**: `dalaran doctor [OPTIONS] [FILE]…`
+
+**Arguments**
+
+* `<FILE>`
+> Recordings to validate, e.g. `session.dlr`.
+>
+> Legacy Rerun `.rrd`/`.rbl` files are accepted too; they use the same framing.
+
+**Options**
+
+* `--json <JSON>`
+> Emit a machine-readable report instead of the human-readable one.
+>
+> The schema is shared with the `dalaran-doctor` Python script.
+>
+> [Default: `false`]
+
+* `-v, --verbose <VERBOSE>`
+> Print the structured details of every check, not just its summary.
+>
+> [Default: `false`]
+
+* `--no-network <NO_NETWORK>`
+> Do not touch the network. Any endpoint probe is reported as skipped.
+>
+> [Default: `false`]
+
+* `--endpoint <URL>`
+> A gRPC endpoint to probe, e.g. `dalaran+http://127.0.0.1:9876/proxy`.
+>
+> Without this, no connection is attempted at all.
+
 ## dalaran download
 
 Download recordings and save them as .dlr files.
@@ -546,6 +598,8 @@ Reports timelines that disagree on row ordering, whole-topic ordering conflicts,
 ## dalaran dlr
 
 Manipulate the contents of .dlr and .dbl files.
+
+Legacy Rerun `.rrd`/`.rbl` files use the same on-disk format and are accepted everywhere a `.dlr`/`.dbl` is.
 
 **Usage**: `dalaran dlr <COMMAND>`
 
