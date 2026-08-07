@@ -43,6 +43,10 @@ def fetch_dataset(root: Path) -> None:
         urllib.request.urlretrieve(f"{BASE}/{remote}", target)  # noqa: S310
 
 
+CAMERA_FRAME = "camera_top"
+CAMERA_PATH = "world/camera_top"
+
+
 def _box(x, y, z, ox=0.0, oy=0.0, oz=0.0, rgba="0.55 0.58 0.68 1"):
     return (
         f'<visual><origin xyz="{ox} {oy} {oz}"/><geometry>'
@@ -188,7 +192,7 @@ dl.send_blueprint(
                 row_shares=[3, 1],
             ),
             dlb.Vertical(
-                dlb.Spatial2DView(origin="/world/camera_top", name="Overhead camera"),
+                dlb.Spatial2DView(origin=CAMERA_PATH, name="Overhead camera"),
                 dlb.TimeSeriesView(origin="/joints/left", name="Left arm joints"),
                 dlb.TimeSeriesView(origin="/joints/right", name="Right arm joints"),
                 dlb.TimeSeriesView(origin="/gripper", name="Grippers"),
@@ -202,18 +206,49 @@ dl.send_blueprint(
 
 robot = Robot("aloha", base_frame="torso", root_frame="world", urdf=URDF, timeline="time")
 
-# The overhead camera is a real video. Index its frames on the SAME timeline as the
-# robot ("time"), otherwise a view showing this entity on the robot's timeline has
-# nothing to display. Episode 0 is the head of the video, so the timestamps line up.
+# The overhead camera is a real video. Two things it needs to sit correctly in the
+# scene:
+#
+# 1. Its frames are indexed on the SAME timeline as the robot ("time"), otherwise a
+#    view showing this entity on the robot's timeline has nothing to display.
+#    Episode 0 is the head of the video, so the timestamps line up.
+# 2. It is declared as a frame in the transform tree. Everything under the 3D view
+#    has to be reachable in the frame graph; an entity logged under /world with no
+#    frame of its own makes the viewer report "No transform path from
+#    tf#/world/camera_top to the view's target frame".
+robot.tree.add(CAMERA_FRAME, parent="world")
+robot.tree.set(
+    CAMERA_FRAME,
+    translation=(0.35, 0.0, 1.05),
+    # Look down at the table: the optical frame is RDF, so rotate the camera to
+    # point its +Z along world -Z.
+    rpy=(0.0, np.pi / 2, 0.0),
+    static=True,
+)
+camera_path = robot.tree.entity_path(CAMERA_FRAME)
+assert camera_path == CAMERA_PATH, f"blueprint points at {CAMERA_PATH}, tree logs to {camera_path}"
+
 video = dl.AssetVideo(path=ROOT / "top.mp4")
-dl.log("world/camera_top", video, static=True)
+dl.log(camera_path, video, static=True)
+dl.log(
+    camera_path,
+    dl.Pinhole(
+        width=640,
+        height=480,
+        focal_length=420.0,
+        camera_xyz=dl.ViewCoordinates.RDF,
+        image_plane_distance=0.45,
+    ),
+    static=True,
+)
 frame_nanos = video.read_frame_timestamps_nanos()
 n_frames = min(len(frame_nanos), int(episode.sum()))
 dl.send_columns(
-    "world/camera_top",
+    camera_path,
     indexes=[dl.TimeColumn("time", duration=1e-9 * frame_nanos[:n_frames])],
     columns=dl.VideoFrameReference.columns_nanos(frame_nanos[:n_frames]),
 )
+
 
 for i, t in enumerate(stamps):
     with robot.timestep(float(t)):
