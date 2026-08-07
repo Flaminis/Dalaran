@@ -25,7 +25,7 @@ impl crate::Importer for RrdImporter {
 
         dl_tracing::profile_function!(filepath.display().to_string());
 
-        let mut extension = crate::extension(&filepath);
+        let mut extension = normalize_extension(&crate::extension(&filepath), &filepath);
         if !matches!(extension.as_str(), "dbl" | "dlr") {
             if filepath.is_file() || filepath.is_dir() {
                 // NOTE: blueprints and recordings have the same file format
@@ -119,7 +119,7 @@ impl crate::Importer for RrdImporter {
     ) -> Result<(), crate::ImporterError> {
         dl_tracing::profile_function!(filepath.display().to_string());
 
-        let extension = crate::extension(&filepath);
+        let extension = normalize_extension(&crate::extension(&filepath), &filepath);
         if !matches!(extension.as_str(), "dbl" | "dlr") {
             // NOTE: blueprints and recordings has the same file format
             return Err(crate::ImporterError::Incompatible(filepath));
@@ -160,6 +160,35 @@ impl crate::Importer for RrdImporter {
 
         Ok(())
     }
+}
+
+/// Maps legacy upstream Rerun extensions (`.rrd`, `.rbl`) onto their Dalaran equivalents.
+///
+/// The on-disk framing is identical (Dalaran deliberately kept the `RRF2` fourcc), so legacy files
+/// are read natively without any conversion step. We only tell the user about it once, when the
+/// file is picked up.
+///
+/// Anything that isn't a legacy extension is returned unchanged.
+fn normalize_extension(extension: &str, filepath: &std::path::Path) -> String {
+    if let Some(dalaran_extension) = crate::dalaran_extension_for_legacy(extension) {
+        dl_log::info!(
+            "Loaded legacy Rerun recording {} (.{extension}); Dalaran reads these natively.",
+            filepath.display(),
+        );
+        dalaran_extension.to_owned()
+    } else {
+        extension.to_owned()
+    }
+}
+
+#[test]
+fn test_normalize_extension() {
+    let path = std::path::Path::new("recording.rrd");
+    assert_eq!(normalize_extension("rrd", path), "dlr");
+    assert_eq!(normalize_extension("rbl", path), "dbl");
+    assert_eq!(normalize_extension("dlr", path), "dlr");
+    assert_eq!(normalize_extension("dbl", path), "dbl");
+    assert_eq!(normalize_extension("mcap", path), "mcap");
 }
 
 fn decode_and_stream(

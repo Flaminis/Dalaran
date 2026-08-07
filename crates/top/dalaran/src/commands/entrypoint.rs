@@ -3,11 +3,11 @@ use std::net::IpAddr;
 use std::time::Duration;
 
 use clap::{CommandFactory as _, Subcommand};
-use itertools::Itertools as _;
 use dl_data_source::{AuthErrorHandler, LogDataSource};
 use dl_log_channel::{DataSourceMessage, LogReceiver, LogReceiverSet, SmartMessagePayload};
 #[cfg(feature = "web_viewer")]
 use dl_sdk::web_viewer::WebViewerConfig;
+use itertools::Itertools as _;
 use tokio::runtime::Runtime;
 
 #[cfg(feature = "auth")]
@@ -15,10 +15,10 @@ use super::auth::AuthCommands;
 use crate::CallSource;
 #[cfg(feature = "analytics")]
 use crate::commands::AnalyticsCommands;
-use crate::commands::DownloadCommand;
 #[cfg(feature = "importers")]
 use crate::commands::McapCommands;
 use crate::commands::RrdCommands;
+use crate::commands::{ConvertCommand, DownloadCommand};
 
 // ---
 
@@ -54,6 +54,9 @@ Examples:
 
     Load some files and show them in the Dalaran Viewer:
         dalaran recording.dlr mesh.obj image.png https://example.com/recording.dlr
+
+    Open a recording produced by upstream Rerun (read natively, no conversion needed):
+        dalaran legacy_recording.rrd
 
     Open an .dlr file and stream it to a Web Viewer:
         dalaran recording.dlr --web-viewer
@@ -274,7 +277,8 @@ When persisted, the state will be stored at the following locations:
 - A gRPC url to a Dalaran server
 - A path to a Dalaran .dlr recording
 - A path to a Dalaran .dbl blueprint
-- An HTTP(S) URL to an .dlr or .dbl file to load
+- A path to a legacy Rerun .rrd recording or .rbl blueprint (read natively, no conversion needed)
+- An HTTP(S) URL to an .dlr, .dbl, .rrd or .rbl file to load
 - A path to an image or mesh, or any other file that Dalaran can load (see https://www.dalaran.dev/docs/concepts/logging-and-ingestion/importers/overview)
 
 If no arguments are given, a server will be hosted which a Dalaran SDK can connect to.")]
@@ -606,6 +610,9 @@ enum Command {
     #[command(subcommand)]
     Auth(AuthCommands),
 
+    /// Convert supported files into a single Dalaran .dlr recording.
+    Convert(ConvertCommand),
+
     /// Download recordings and save them as .dlr files.
     ///
     /// Supports downloading from Dalaran Hub as well as any other supported URI.
@@ -755,6 +762,8 @@ where
 
             #[cfg(feature = "analytics")]
             Command::Analytics(analytics) => analytics.run().map_err(Into::into),
+
+            Command::Convert(cmd) => cmd.run(),
 
             Command::Download(cmd) => cmd.run(tokio_runtime.handle()),
 
@@ -1133,7 +1142,7 @@ fn start_native_viewer(
     #[cfg(feature = "server")] server_addr: std::net::SocketAddr,
     #[cfg(feature = "server")] server_options: dl_sdk::ServerOptions,
 ) -> anyhow::Result<()> {
-    use dl_viewer::external::{eframe, dl_viewer_context};
+    use dl_viewer::external::{dl_viewer_context, eframe};
 
     use crate::external::dl_ui::{UICommand, UICommandSender as _};
 
@@ -1991,6 +2000,8 @@ fn record_cli_command_analytics(args: &Args) {
 
         #[cfg(feature = "native_viewer")]
         Some(Command::ViewerMcp) => ("viewer-mcp", None),
+
+        Some(Command::Convert(_)) => ("convert", None),
 
         Some(Command::Download(_)) => ("download", None),
 

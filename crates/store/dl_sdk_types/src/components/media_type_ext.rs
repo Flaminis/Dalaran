@@ -78,6 +78,13 @@ impl MediaType {
     /// in the data loader.
     pub const DLR: &'static str = "application/x-dalaran";
 
+    /// Dalaran blueprint data: `application/x-dalaran-blueprint`.
+    ///
+    /// Blueprints (`.dbl`, and legacy Rerun `.rbl`) use the exact same on-disk format as
+    /// recordings; this separate media type only exists so that file type detection can tell
+    /// the two apart by name.
+    pub const DBL: &'static str = "application/x-dalaran-blueprint";
+
     /// [MCAP](https://mcap.dev/) recording: `application/x-mcap`.
     ///
     /// This is not a standardized format and mostly exists here to accommodate file type detection
@@ -185,6 +192,15 @@ impl MediaType {
         Self(Self::DLR.into())
     }
 
+    /// `application/x-dalaran-blueprint`
+    ///
+    /// Blueprints share their on-disk format with recordings; this only exists to accommodate
+    /// file type detection in the data loader.
+    #[inline]
+    pub fn dbl() -> Self {
+        Self(Self::DBL.into())
+    }
+
     /// `application/x-mcap`
     ///
     /// This is not a standardized format and mostly exists here to accommodate file type detection
@@ -232,6 +248,17 @@ impl MediaType {
             // `mime_guess2` considers `.stl` to be a `application/vnd.ms-pki.stl`.
             Some("stl") => {
                 return Some(Self::stl());
+            }
+            // Our own formats are unknown to `mime_guess2`.
+            //
+            // `.rrd`/`.rbl` are the upstream Rerun spellings of `.dlr`/`.dbl`. The framing is
+            // identical (the `RRF2` fourcc was deliberately kept), so they resolve to the very
+            // same media type and are read natively.
+            Some("dlr" | "rrd") => {
+                return Some(Self::dlr());
+            }
+            Some("dbl" | "rbl") => {
+                return Some(Self::dbl());
             }
             _ => {}
         }
@@ -353,6 +380,7 @@ impl MediaType {
 
             // Custom MIME types not known to mime_guess2:
             Self::DLR => Some("dlr"),
+            Self::DBL => Some("dbl"),
             Self::MCAP => Some("mcap"),
             Self::PLY => Some("ply"),
 
@@ -403,6 +431,36 @@ fn test_media_type_extension() {
     assert_eq!(MediaType::png().file_extension(), Some("png"));
     assert_eq!(MediaType::rvl().file_extension(), Some("rvl"));
     assert_eq!(MediaType::stl().file_extension(), Some("stl"));
+    assert_eq!(MediaType::dlr().file_extension(), Some("dlr"));
+    assert_eq!(MediaType::dbl().file_extension(), Some("dbl"));
+}
+
+#[test]
+fn test_legacy_rerun_extensions_guess_the_same_media_type() {
+    // Upstream Rerun `.rrd`/`.rbl` files are byte-compatible with `.dlr`/`.dbl`,
+    // so they must be inferred as the exact same media type.
+    assert_eq!(
+        MediaType::guess_from_path("recording.rrd"),
+        Some(MediaType::dlr())
+    );
+    assert_eq!(
+        MediaType::guess_from_path("recording.dlr"),
+        Some(MediaType::dlr())
+    );
+    assert_eq!(
+        MediaType::guess_from_path("blueprint.rbl"),
+        Some(MediaType::dbl())
+    );
+    assert_eq!(
+        MediaType::guess_from_path("blueprint.dbl"),
+        Some(MediaType::dbl())
+    );
+
+    // Case shouldn't matter.
+    assert_eq!(
+        MediaType::guess_from_path("RECORDING.RRD"),
+        Some(MediaType::dlr())
+    );
 }
 
 #[test]

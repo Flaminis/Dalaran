@@ -1,12 +1,12 @@
 use std::io::{IsTerminal as _, Write as _};
 
 use anyhow::Context as _;
-use itertools::Either;
 use dl_byte_size::SizeBytes as _;
 use dl_chunk_store::{ChunkStoreConfig, CompactionOptions, IsStartOfGop, OptimizationProfile};
 use dl_entity_db::EntityDb;
 use dl_log_types::StoreId;
 use dl_sdk::StoreKind;
+use itertools::Either;
 
 use crate::commands::read_dlr_streams_from_file_or_stdin;
 
@@ -345,7 +345,8 @@ fn optimize_dir_mirror(
     if pairs.is_empty() {
         anyhow::bail!(
             "no `.dlr`/`.dbl` files found under any of: {inputs:?}\n\
-             (directory mirror mode skips other extensions)"
+             (directory mirror mode skips other extensions; legacy Rerun `.rrd`/`.rbl` \
+             files are also picked up)"
         );
     }
 
@@ -386,11 +387,29 @@ fn optimize_dir_mirror(
     Ok(())
 }
 
+/// Is this a Dalaran recording/blueprint, including the legacy Rerun spellings?
+///
+/// `.rrd`/`.rbl` are upstream Rerun's names for `.dlr`/`.dbl`; the on-disk framing is identical,
+/// so they can be optimized in place just like native files.
 fn is_dlr_like(path: &std::path::Path) -> bool {
-    matches!(
-        path.extension().and_then(|s| s.to_str()),
-        Some("dlr" | "dbl"),
-    )
+    path.extension()
+        .and_then(|s| s.to_str())
+        .is_some_and(|extension| {
+            matches!(
+                extension.to_ascii_lowercase().as_str(),
+                "dlr" | "dbl" | "rrd" | "rbl"
+            )
+        })
+}
+
+#[test]
+fn test_is_dlr_like() {
+    for path in ["a.dlr", "a.dbl", "a.rrd", "a.rbl", "a.DLR", "a.RRD"] {
+        assert!(is_dlr_like(std::path::Path::new(path)), "{path}");
+    }
+    for path in ["a.mcap", "a.png", "a"] {
+        assert!(!is_dlr_like(std::path::Path::new(path)), "{path}");
+    }
 }
 
 // ---
