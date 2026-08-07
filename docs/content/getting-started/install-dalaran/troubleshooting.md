@@ -7,7 +7,7 @@ description: Common installation issues and how to fix them
 You can set `RUST_LOG=debug` before running to get some verbose logging output.
 
 If you run into any issues don't hesitate to [open a ticket](https://github.com/Flaminis/Dalaran/issues/new/choose)
-or [join our Discord](https://discord.gg/Gcm8BbTaAj).
+or ask in [GitHub Discussions](https://github.com/Flaminis/Dalaran/discussions).
 
 ## Running on Linux
 

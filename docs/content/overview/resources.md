@@ -27,6 +27,7 @@ order: 400
 
 ## Beyond the docs
 
-- [Discord](https://discord.gg/PXtCgFBSmH) — ask questions and chat with other Dalaran users
 - [GitHub](https://github.com/Flaminis/Dalaran) — source code and issue tracker
+- [Discussions](https://github.com/Flaminis/Dalaran/discussions) — ask questions and talk to other Dalaran users
+- [Roadmap](https://github.com/Flaminis/Dalaran/blob/main/ROADMAP.md) — what is planned, and what is not
 - [Examples](https://dalaran.dev/examples) — see Dalaran in action

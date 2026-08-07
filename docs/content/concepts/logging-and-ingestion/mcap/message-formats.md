@@ -134,4 +134,4 @@ Please refer to the `rosbags` documentation for further information.
 To request support for additional message types:
 
 - [File a GitHub issue](https://github.com/Flaminis/Dalaran/issues) requesting the specific message type
-- Join the Dalaran community on [Discord](https://discord.gg/PXtCgFBSmH) to discuss and provide feedback on message support priorities. Or if you're open for a conversation, [sign up here](https://dalaran.dev/feedback)
+- Tell us which message types matter to you by opening a [robotics integration issue](https://github.com/Flaminis/Dalaran/issues/new/choose). Include the `.msg` definition and, if you can, a small sample bag — that is what determines the order we add support in.

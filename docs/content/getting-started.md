@@ -26,7 +26,7 @@ Also available in-browser at [dalaran.dev/viewer](https://dalaran.dev/viewer).
 ## Scale across many recordings
 
 Dalaran's catalog organizes recordings as queryable [**segments**](./concepts/query-and-transform/catalog-object-model.md).
-The workflow: log (or convert) data to an `.dlr`, start a catalog server (or connect to an existing one if using the commercial Dalaran Hub), register the `.dlr` as a segment, then visualize and query across recordings.
+The workflow: log (or convert) data to an `.dlr`, start a catalog server (or connect to one that is already running), register the `.dlr` as a segment, then visualize and query across recordings.
 
 ### Log
 
@@ -36,7 +36,7 @@ If you already have data in another format see our [how-to](https://dalaran.dev/
 snippet: tutorials/getting_started_log
 ### Start a catalog server
 
-`dalaran server` starts a local catalog on port `51234` (use Dalaran Hub for persistent, multi-user storage), then connect from your code:
+`dalaran server` starts a local catalog on port `51234`. Run the same binary on a shared machine when you need persistent, multi-user storage. Then connect from your code:
 
 ```bash
 dalaran server
@@ -75,4 +75,4 @@ snippet: tutorials/getting_started[train]
 
 -   Check the [troubleshooting guide](./getting-started/install-dalaran/troubleshooting.md).
 -   [Open an issue](https://github.com/Flaminis/Dalaran/issues/new/choose).
--   [Join the Discord server](https://discord.gg/PXtCgFBSmH).
+-   Ask in [GitHub Discussions](https://github.com/Flaminis/Dalaran/discussions).
