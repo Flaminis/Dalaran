@@ -27,6 +27,7 @@ mod download;
 
 mod convert;
 mod dlr;
+mod doctor;
 mod entrypoint;
 #[cfg(feature = "importers")]
 mod mcap;
@@ -39,6 +40,7 @@ mod analytics;
 pub(crate) use self::analytics::AnalyticsCommands;
 pub use self::convert::ConvertCommand;
 pub use self::dlr::RrdCommands;
+pub use self::doctor::DoctorCommand;
 pub use self::download::DownloadCommand;
 pub use self::entrypoint::run;
 #[cfg(feature = "importers")]

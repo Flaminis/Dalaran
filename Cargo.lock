@@ -2210,6 +2210,7 @@ dependencies = [
  "parking_lot",
  "puffin",
  "rayon",
+ "serde_json",
  "similar-asserts",
  "tempfile",
  "tokio",

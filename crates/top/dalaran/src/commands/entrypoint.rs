@@ -18,7 +18,7 @@ use crate::commands::AnalyticsCommands;
 #[cfg(feature = "importers")]
 use crate::commands::McapCommands;
 use crate::commands::RrdCommands;
-use crate::commands::{ConvertCommand, DownloadCommand};
+use crate::commands::{ConvertCommand, DoctorCommand, DownloadCommand};
 
 // ---
 
@@ -614,6 +614,10 @@ enum Command {
     // (much richer) one on `ConvertCommand` itself, and `--help` would lose the examples.
     Convert(ConvertCommand),
 
+    // NOTE: no doc comment here on purpose: a doc comment on the variant would override the
+    // (much richer) one on `DoctorCommand` itself, and `--help` would lose the examples.
+    Doctor(DoctorCommand),
+
     /// Download recordings and save them as .dlr files.
     ///
     /// Supports downloading from Dalaran Hub as well as any other supported URI.
@@ -765,6 +769,13 @@ where
             Command::Analytics(analytics) => analytics.run().map_err(Into::into),
 
             Command::Convert(cmd) => cmd.run(),
+
+            Command::Doctor(cmd) => {
+                // `doctor` is the one command whose exit code is part of its contract: it must be
+                // non-zero for real failures and zero for mere warnings, and it must never look
+                // like a crash of the CLI itself.
+                return cmd.run(&build_info);
+            }
 
             Command::Download(cmd) => cmd.run(tokio_runtime.handle()),
 
@@ -2003,6 +2014,8 @@ fn record_cli_command_analytics(args: &Args) {
         Some(Command::ViewerMcp) => ("viewer-mcp", None),
 
         Some(Command::Convert(_)) => ("convert", None),
+
+        Some(Command::Doctor(_)) => ("doctor", None),
 
         Some(Command::Download(_)) => ("download", None),
 
