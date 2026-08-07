@@ -70,13 +70,13 @@ ogImageUrl: <url>  # Optional: open-graph thumbnail
 
 ### Previewing and updating the live site
 
-PRs that touch `docs/content/` automatically get a Vercel preview deployment (link posted as a PR comment). For a full local preview, clone the [landing](https://github.com/rerun-io/landing) repo.
+There is no hosted documentation site yet, and therefore no preview deployment: the
+upstream pipeline deployed to infrastructure that this fork does not have. See
+[`.github/workflows/README.md`](../.github/workflows/README.md).
 
-Production deploys from the `docs-latest` branch. Do not push to it directly.
-
-- **Normal flow**: Merge to `main`. If the PR has the `deploy docs` label, the commit is automatically cherry-picked to `docs-latest` (via `.github/workflows/auto_docs.yml`), which triggers a Vercel redeploy.
-- **Releases**: The release process force-pushes `main` to `docs-latest`.
-- Any commits only on `docs-latest` (not on `main`) will be lost on the next release.
+What CI does check on a documentation pull request is that every link resolves, that a
+deleted or renamed page leaves a redirect behind, and that the Python API reference still
+builds with `mkdocs --strict`.
 
 ### Redirects
 
@@ -165,8 +165,8 @@ Build locally: `pixi run js-docs` / `pixi run js-docs-serve`
 
 ### Deployment
 
-API docs are built and uploaded to Google Cloud Storage (`gs://dalaran-docs/docs/{python,cpp,js}/{version}/`) by `.github/workflows/reusable_deploy_docs.yml`. Each release creates a versioned copy and updates the `stable` alias.
+Not wired up yet. The API docs are built in CI (`.github/workflows/docs.yml`) but nothing publishes them; picking a host is still an open decision.
 
 ## Search index
 
-The search at `dalaran.dev/docs` is powered by Meilisearch. The index is built by `pixi run search-index build`, which ingests content from docs pages, Python/Rust API docs, and code examples. This runs in CI on pushes to `docs-latest` (see `.github/workflows/on_push_docs.yml`). It requires a nightly Rust toolchain for rustdoc JSON output.
+The index is built by `pixi run search-index build`, which ingests content from docs pages, Python/Rust API docs, and code examples. It requires a nightly Rust toolchain for rustdoc JSON output. It is a local-only command for now: there is no search backend to publish to and no CI job that runs it.
