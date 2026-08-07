@@ -320,3 +320,49 @@ def test_inline_urdf_markup_is_not_treated_as_a_path() -> None:
     assert native is None
     assert model.actuated_joint_names == ["j"]
     assert model.root_link == "base_link"
+
+
+def test_urdf_joints_publish_frame_transforms(monkeypatch: pytest.MonkeyPatch) -> None:
+    """
+    URDF-driven joints must move the FRAME graph, not just the entity hierarchy.
+
+    The URDF importer attaches every visual mesh to a coordinate frame, so a robot
+    that only updates its entity-hierarchy transforms renders at its zero pose
+    forever. Regression test for exactly that: the arm rendered but never moved.
+    """
+    import dalaran as dl
+
+    class _FakeTransform3D:
+        def __init__(self, **fields: Any) -> None:
+            self.fields = fields
+
+    logged: list[tuple[str, Any]] = []
+    monkeypatch.setattr(dl, "log", lambda path, arch, **kw: logged.append((path, arch)), raising=False)
+    monkeypatch.setattr(dl, "Transform3D", _FakeTransform3D, raising=False)
+    monkeypatch.setattr(dl, "Scalars", lambda *a, **k: None, raising=False)
+
+    with pytest.warns(UserWarning, match="URDF geometry was not logged"):
+        # No native bindings in a source checkout, so geometry logging is skipped;
+        # the kinematics under test are unaffected.
+        robot = Robot("arm", base_frame="base_link", urdf=ARM_URDF, timeline="t")
+    logged.clear()
+    robot.log_joint_states(["shoulder", "left_finger"], [0.5, 0.02])
+
+    framed = [
+        (path, arch.fields)
+        for path, arch in logged
+        if isinstance(arch, _FakeTransform3D) and "parent_frame" in arch.fields
+    ]
+    assert framed, "no frame-based transforms were published; the meshes will not move"
+
+    edges = {(f["parent_frame"], f["child_frame"]) for _, f in framed}
+    assert ("base_link", "shoulder_link") in edges
+    assert ("gripper_link", "left_finger_link") in edges
+    # the mimic finger has to be published too, or the gripper renders half-open
+    assert ("gripper_link", "right_finger_link") in edges
+
+    # One entity per joint: components are latest-wins per entity per timestamp,
+    # so sharing an entity would silently keep only the last joint.
+    paths = [path for path, _ in framed]
+    assert len(paths) == len(set(paths))
+    assert all(path.startswith("arm_tf/") for path in paths), paths

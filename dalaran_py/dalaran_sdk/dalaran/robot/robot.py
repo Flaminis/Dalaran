@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import numpy.typing as npt
 
-from ._math import euler_to_matrix, make_matrix, quaternion_to_matrix
+from ._math import euler_to_matrix, make_matrix, matrix_to_quaternion, quaternion_to_matrix
 from .frames import TransformTree
 from .urdf_model import UrdfModel
 
@@ -202,6 +202,9 @@ class Robot:
         self._urdf: UrdfModel | None = None
         self._urdf_link_frames: dict[str, str] = {}
         self._urdf_joint_frames: dict[str, str] = {}
+        # Frame-graph transforms go here, one entity per joint. Deliberately not the
+        # URDF importer's own static transform entity, which must keep the rest pose.
+        self._urdf_tf_path = f"{name}_tf"
         self._unknown_joints_warned = False
 
         if urdf is not None:
@@ -396,16 +399,53 @@ class Robot:
                 self._urdf_joint_frames[joint.name] = child_frame
 
     def _animate_urdf(self, positions: Mapping[str, float]) -> dict[str, npt.NDArray[np.float64]]:
-        """Move every frame implied by `positions`, mimic joints included."""
+        """
+        Move every frame implied by `positions`, mimic joints included.
+
+        Each joint is published twice, because a URDF-driven robot lives in two
+        transform systems at once:
+
+        * down the **entity hierarchy**, via [`TransformTree`][dalaran.robot.TransformTree],
+          which is what `tree.lookup()` and any child entity you log under a link
+          resolve against;
+        * across the **frame graph**, as a `Transform3D` carrying `parent_frame`
+          and `child_frame`, which is what the URDF's geometry is attached to
+          (the importer puts a `CoordinateFrame` on every visual) and therefore
+          what actually makes the meshes move.
+
+        Publishing only the first leaves the robot rendered at its zero pose
+        forever, because the meshes follow frames, not entity paths.
+
+        Each joint gets its own entity: components are latest-wins per entity per
+        timestamp, so sharing one entity across joints would keep only the last
+        one, and writing to the URDF's own static transform entity would clobber
+        the robot's rest pose.
+        """
         model = self._urdf
         if model is None:
             return {}
+
+        import dalaran as dl
+
         moved: dict[str, npt.NDArray[np.float64]] = {}
         for name, value in model.resolve_positions(positions).items():
+            joint = model.joint(name)
+            local = joint.transform(value, clamp=False)
+
             frame = self._urdf_joint_frames.get(name)
-            if frame is None:
-                continue
-            moved[frame] = self._tree.set(frame, matrix=model.joint(name).transform(value, clamp=False))
+            if frame is not None:
+                moved[frame] = self._tree.set(frame, matrix=local)
+
+            dl.log(
+                f"{self._urdf_tf_path}/{name}",
+                dl.Transform3D(
+                    translation=local[:3, 3],
+                    quaternion=matrix_to_quaternion(local[:3, :3]),
+                    parent_frame=joint.parent_link,
+                    child_frame=joint.child_link,
+                ),
+                recording=self._recording,
+            )
         return moved
 
     def _warn_unknown_joints(self, names: Sequence[str]) -> None:
