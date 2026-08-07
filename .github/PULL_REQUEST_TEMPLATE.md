@@ -1,53 +1,67 @@
 <!--
-Thank you for filing a pull request! We kindly ask you to:
+Thanks for opening a pull request. Please fill this in — it is what a reviewer
+reads first. See CONTRIBUTING.md for the dev setup, commit conventions, and the
+DCO sign-off requirement.
 
-1. Fill out this pull request template below, to make the review smoother.
-2. Enable edits to your branch by our maintainers. This helps us to get your branch ready to merge. See here for more details:
+Please also allow maintainers to push to your branch, so small fixes do not
+need a round-trip:
 https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork
 -->
 
 ### Related
 
-<!--
-Include links to any related issues/PRs in a bulleted list, for example:
+<!-- Link related issues and PRs, e.g.
 * Closes #1234
 * Part of #1337
 -->
 
 ### What
 
-<!--
-Make sure the PR title and labels are set to maximize their usefulness for the CHANGELOG,
-and our `git log`. Every PR needs exactly one of these changelog labels:
+<!-- What does this change do? One or two paragraphs is usually right. -->
 
-* `exclude from changelog`: not user-facing — kept out of the changelog.
-* `🪳 bug`: a bug fix — auto-added to the changelog from this PR's title.
-* `📉 performance`: a performance improvement — auto-added to the changelog from this PR's title.
-* `include in changelog`: a user-facing change — add a hand-written entry by copying
-  `docs/content/changelog/upcoming/_template.md` to `upcoming/<short-slug>.md` (one file per
-  PR avoids conflicts), including a migration guide (breaking changes), screenshot/GIF (visual
-  features), and docs/example links (new features). A `TODO(name): …` placeholder is fine, but
-  it blocks the release.
+### Why
 
-It's fine to combine `🪳 bug` with `exclude from changelog` for a fix to a bug that was never
-released (e.g. introduced earlier in the same release cycle) — users never saw it, so it doesn't
-belong in the changelog.
+<!-- Why is this change worth making? What problem does it solve, for whom?
+A reviewer can read the diff to see what you did; they cannot infer the reason. -->
 
-We track various metrics at <https://build.dalaran.dev>.
+### How it was tested
 
-For maintainers:
-* To run all checks from `main`, comment on the PR with `@dalaran-bot full-check`.
-* To deploy documentation changes immediately after merging this PR, add the `deploy docs` label.
+<!-- Which suites you ran, and anything you could not run and why (for example
+image comparison tests need a Vulkan/Metal capable driver).
 
-For more details check the PR section on <https://github.com/Flaminis/Dalaran/blob/main/CONTRIBUTING.md>.
+  cargo nextest run --all-targets --all-features
+  pixi run py-test
+  pixi run -e cpp cpp-test
+  pixi run fast-lint
 -->
 
-<!--
-If you are a coding agent, include the section below.
-Make sure to remove the comments and instructions around this section.
-Optionally add information about the model that was used.
+### What to review
 
-### Agent
+<!-- Point reviewers at what you actually want scrutinised: the API shape, the
+architecture, the UX, or just the code. Say how confident you are — "simple fix
+in an area I know well" and "outside my domain, please check carefully" are
+both useful and both fine. -->
 
-🤖 This PR was opened by a coding agent.
--->
+### Screenshots / video
+
+<!-- Required for anything that changes what the viewer looks like or how it
+behaves. -->
+
+### Checklist
+
+- [ ] The PR title is a conventional-commit subject, e.g. `feat(robot): …`
+- [ ] Commits are signed off (`git commit -s`) per the DCO
+- [ ] `pixi run fast-lint` passes
+- [ ] Tests were added or updated, or there is a reason none were needed
+- [ ] Public APIs have doc comments with a runnable example
+- [ ] Docs under `docs/content/` updated if this is user-facing
+- [ ] New names follow the `dl_*` / `dalaran` conventions and reintroduce no
+      upstream naming for first-party things
+- [ ] No new dependency, or the PR explains why the new one is needed and that
+      its licence is Apache-2.0 compatible
+
+### Agent disclosure
+
+<!-- If a coding agent wrote a meaningful part of this PR, say so and name the
+model. Agent-assisted work is welcome; unreviewed agent output is not. Delete
+this section if it does not apply. -->
