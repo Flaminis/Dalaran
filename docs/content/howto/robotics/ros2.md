@@ -71,6 +71,7 @@ the most common reason `dalaran-ros2 bridge` cannot find `rclpy`.
 | `nav_msgs/Odometry` | [`Transform3D`](../../reference/types/archetypes/transform3d.md) plus twist series |
 | `nav_msgs/Path` | [`LineStrips3D`](../../reference/types/archetypes/line_strips3d.md) |
 | `nav_msgs/OccupancyGrid` | [`GridMap`](../../reference/types/archetypes/grid_map.md) with the RViz map colormap |
+| `nav2_msgs/Costmap`, `*/costmap` topics | Cost-colormapped [`GridMap`](../../reference/types/archetypes/grid_map.md) layers, see [costmaps](costmaps.md) |
 | `geometry_msgs/PoseStamped`, `PoseArray`, `Twist` | Transforms, points with heading arrows, arrows plus series |
 | `geometry_msgs/TransformStamped`, `tf2_msgs/TFMessage` | The transform tree |
 | `visualization_msgs/Marker`, `MarkerArray` | Boxes, ellipsoids, cylinders, line strips, points, meshes, text |
@@ -292,5 +293,7 @@ code.
 
 * [Log a robot with the high-level robot API](robot-api.md) - the transform tree
   and sensor conventions the bridge builds on.
+* [Visualize nav2 costmaps](costmaps.md) - cost semantics, layered costmaps and
+  the rolling local window.
 * [`GridMap`](../../reference/types/archetypes/grid_map.md) - the occupancy grid
   and costmap archetype.
