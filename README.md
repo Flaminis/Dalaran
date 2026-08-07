@@ -114,19 +114,21 @@ Everything below is what Dalaran adds for robotics teams specifically. Items
 marked *(in progress)* are being actively built and are not something you should
 depend on yet; unmarked items work today.
 
-- **`dalaran.robot`, a high-level robotics logging API** *(in progress)* — one
-  handle that knows about a robot: joint states, base pose, sensor frames, and
-  URDF-driven link transforms, so you log `robot.joint_states(...)` instead of
-  hand-rolling a dozen entity paths and quaternion conversions.
+- **`dalaran.robot`, a high-level robotics logging API** — one handle that knows
+  about a robot: joint states, base pose, sensor frames, and URDF-driven link
+  transforms, so you log `robot.log_joint_states(...)` instead of hand-rolling a
+  dozen entity paths and quaternion conversions. Point it at a URDF and joint
+  limits, joint axes and `<mimic>` joints are honoured for you.
 - **ROS 2 bridge and rosbag2 replay** *(in progress)* — subscribe to live ROS 2
   topics or replay a rosbag2 into Dalaran, backed by an **extensible message
   registry** so you can teach it your own `.msg` types without patching the
   core. Today the repository already ingests MCAP and a set of common ROS
   message schemas.
-- **ROS axis-convention helpers** *(in progress)* — REP-103/REP-105 conventions
-  (`x`-forward `z`-up, ENU vs. NED, `map`/`odom`/`base_link` frame semantics)
-  as first-class helpers, because silently mismatched axis conventions are the
-  single most common way a robotics visualization ends up wrong.
+- **ROS axis-convention helpers** — REP-103/REP-105 conventions (`x`-forward
+  `z`-up, ENU vs. NED for positions *and* orientations, `map`/`odom`/`base_link`
+  frame semantics that make the direction hard to get backwards) as first-class
+  helpers, because silently mismatched axis conventions are the single most
+  common way a robotics visualization ends up wrong.
 - **Occupancy grids and costmaps** *(in progress)* — `nav_msgs/OccupancyGrid`
   and layered costmaps as a real archetype with proper origin/resolution
   handling, instead of being flattened into an untyped image.
