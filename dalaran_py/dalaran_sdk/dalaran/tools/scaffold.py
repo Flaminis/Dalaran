@@ -482,7 +482,7 @@ if(DALARAN_FIND_PACKAGE)
 else()
     include(FetchContent)
     set(DALARAN_CPP_URL
-        "https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip"
+        "https://github.com/Flaminis/Dalaran/releases/latest/download/dalaran_cpp_sdk.zip"
         CACHE STRING "URL of the dalaran_cpp SDK zip")
     FetchContent_Declare(dalaran_sdk URL ${DALARAN_CPP_URL})
     FetchContent_MakeAvailable(dalaran_sdk)
