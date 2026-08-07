@@ -123,7 +123,7 @@ pub fn check_recording(path: &Path) -> Check {
     let mut store_versions = BTreeSet::new();
     let mut decode_error = None;
 
-    while let Some(message) = decoder.next() {
+    for message in decoder.by_ref() {
         match message {
             Ok(message) => {
                 num_messages += 1;

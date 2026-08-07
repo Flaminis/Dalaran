@@ -774,7 +774,7 @@ where
                 // `doctor` is the one command whose exit code is part of its contract: it must be
                 // non-zero for real failures and zero for mere warnings, and it must never look
                 // like a crash of the CLI itself.
-                return cmd.run(&build_info, tokio_runtime.handle());
+                return Ok(cmd.run(&build_info, tokio_runtime.handle()));
             }
 
             Command::Download(cmd) => cmd.run(tokio_runtime.handle()),

@@ -71,16 +71,22 @@ impl DoctorCommand {
         &self,
         build_info: &dl_build_info::BuildInfo,
         tokio_runtime: &tokio::runtime::Handle,
-    ) -> anyhow::Result<u8> {
+    ) -> u8 {
         let report = self.diagnose(build_info, tokio_runtime);
 
         if self.json {
             println!("{:#}", report.to_json());
         } else {
-            println!("{}", report.to_text(report::supports_color(), self.verbose));
+            println!(
+                "{}",
+                report.to_text(report::TextOptions {
+                    color: report::supports_color(),
+                    verbose: self.verbose,
+                })
+            );
         }
 
-        Ok(report.exit_code())
+        report.exit_code()
     }
 
     /// Runs every check, without printing anything.

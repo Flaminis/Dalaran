@@ -179,6 +179,16 @@ impl Check {
     }
 }
 
+/// How to render a [`Report`] as text.
+#[derive(Clone, Copy, Debug)]
+pub struct TextOptions {
+    /// Emit ANSI escape codes. See [`supports_color`].
+    pub color: bool,
+
+    /// Print the structured details of every check, not just its summary.
+    pub verbose: bool,
+}
+
 /// Everything `dalaran doctor` found out, ready to be printed or serialized.
 #[derive(Clone, Debug)]
 pub struct Report {
@@ -227,7 +237,8 @@ impl Report {
     }
 
     /// The human-readable report.
-    pub fn to_text(&self, color: bool, verbose: bool) -> String {
+    pub fn to_text(&self, options: TextOptions) -> String {
+        let TextOptions { color, verbose } = options;
         let mut lines = vec![
             colorize(
                 &format!("dalaran doctor  (dalaran {})", self.dalaran_version),
@@ -392,7 +403,10 @@ mod tests {
             ],
         };
 
-        let text = report.to_text(false, true);
+        let text = report.to_text(TextOptions {
+            color: false,
+            verbose: true,
+        });
         assert!(!text.contains('\x1b'), "colors leaked: {text}");
         assert!(text.contains("[ok  ] good"), "{text}");
         assert!(text.contains("[FAIL] bad"), "{text}");
@@ -405,10 +419,20 @@ mod tests {
             dalaran_version: "0.1.0".to_owned(),
             checks: vec![check("good", Status::Ok).with_hint("ignored")],
         }
-        .to_text(false, false);
+        .to_text(TextOptions {
+            color: false,
+            verbose: false,
+        });
         assert!(!quiet.contains("ignored"), "{quiet}");
         assert!(quiet.contains("no failures"), "{quiet}");
 
-        assert!(report.to_text(true, false).contains('\x1b'));
+        assert!(
+            report
+                .to_text(TextOptions {
+                    color: true,
+                    verbose: false,
+                })
+                .contains('\x1b')
+        );
     }
 }
