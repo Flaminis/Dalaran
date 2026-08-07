@@ -1,0 +1,158 @@
+# Python CI for the `dalaran` SDK.
+#
+# The linting and type-checking jobs are cheap and run on every push. The test
+# job needs the compiled `dalaran_bindings` extension module, so it builds a
+# wheel once (the bindings are `abi3-py310`, i.e. a single wheel is valid for
+# every supported interpreter) and then re-uses it across the version matrix.
+
+name: Python
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+env:
+  CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
+  # Ruff is pinned in `pyproject.toml`; keep the two in sync.
+  RUFF_VERSION: "0.15.7"
+
+jobs:
+  lint:
+    name: ruff
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: ruff format --check
+        run: uvx ruff@${{ env.RUFF_VERSION }} format --check .
+
+      - name: ruff check
+        run: uvx ruff@${{ env.RUFF_VERSION }} check .
+
+  typecheck:
+    name: mypy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # `dalaran_bindings` ships a `.pyi` stub plus `py.typed`, and `tool.mypy`
+      # points `mypy_path` at the sources, so this does not need a built wheel.
+      # `av`, `torch` and `torchvision` are only needed so that the dataloader
+      # modules type-check; they are extras of the SDK, not dev dependencies.
+      # `pyrightconfig.json` is kept for editors; mypy is the checker we gate on.
+      - name: mypy
+        run: |
+          uv run --group dev --with av --with torch --with torchvision \
+            mypy --no-warn-unused-ignore
+
+  build-wheel:
+    name: Build the SDK wheel
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libssl-dev pkg-config
+
+      - uses: arduino/setup-protoc@v3
+        with:
+          version: "27.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: python-wheel
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: maturin build
+        run: |
+          uvx maturin@1.14.1 build \
+            --release \
+            --manifest-path dalaran_py/Cargo.toml \
+            --out dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dalaran-sdk-wheel
+          path: dist/*.whl
+          if-no-files-found: error
+          retention-days: 7
+
+  test:
+    name: pytest (Python ${{ matrix.python-version }})
+    needs: build-wheel
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dalaran-sdk-wheel
+          path: dist
+
+      - name: Install the wheel and the test dependencies
+        run: |
+          uv venv --python ${{ matrix.python-version }}
+          uv pip install "$(ls dist/*.whl)[tests]"
+
+      # `dalaran_py/tests/unit` is the hermetic suite: it only needs the SDK. The
+      # integration, sandbox and redap end-to-end suites need a running server and
+      # are therefore not part of CI.
+      - name: pytest
+        run: .venv/bin/python -m pytest -v dalaran_py/tests/unit
