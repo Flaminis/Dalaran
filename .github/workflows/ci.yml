@@ -1,0 +1,194 @@
+# Rust CI for Dalaran.
+#
+# This runs on stock GitHub-hosted runners only: no self-hosted labels, no cloud
+# caches, no secrets. Everything here must stay green for an outside contributor
+# who forked the repository and has no access to any organisation secret.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash --noprofile --norc -euo pipefail {0}
+
+env:
+  CARGO_TERM_COLOR: always
+  # Keep the cache and the runner disk small: debug info is useless in CI.
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_INCREMENTAL: "0"
+  RUST_BACKTRACE: "1"
+
+jobs:
+  rustfmt:
+    name: rustfmt
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: |
+          rustup show active-toolchain || rustup toolchain install
+          rustup component add rustfmt
+
+      - name: cargo fmt --check
+        run: cargo fmt --all --check
+
+  clippy:
+    name: clippy (core crates)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libatk1.0-dev \
+            libgtk-3-dev \
+            libssl-dev \
+            libudev-dev \
+            libxkbcommon-dev \
+            pkg-config
+
+      - uses: arduino/setup-protoc@v3
+        with:
+          version: "27.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: |
+          rustup show active-toolchain || rustup toolchain install
+          rustup component add clippy
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: clippy
+          # Only the `main` build writes the cache; PRs read it.
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      # The full workspace includes the viewer and its wgpu/egui stack, which is
+      # far too slow to lint on a free runner. We lint the store/utility crates,
+      # which is where almost all of our own logic lives.
+      - name: cargo clippy
+        run: |
+          cargo clippy --all-targets \
+            -p dl_arrow_util \
+            -p dl_byte_size \
+            -p dl_case \
+            -p dl_chunk \
+            -p dl_error \
+            -p dl_format \
+            -p dl_int \
+            -p dl_log_types \
+            -p dl_ros_msg \
+            -p dl_sorbet \
+            -p dl_span \
+            -p dl_string_interner \
+            -p dl_tf \
+            -p dl_tuid \
+            -p dl_types \
+            -p dl_uri \
+            -- --deny warnings
+
+  check:
+    name: cargo check --workspace
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      # `cargo check` of the whole workspace needs more scratch space than the
+      # stock image leaves free once the pre-installed SDKs are counted.
+      - name: Free up disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          df -h /
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libatk1.0-dev \
+            libgtk-3-dev \
+            libssl-dev \
+            libudev-dev \
+            libxkbcommon-dev \
+            pkg-config
+
+      - uses: arduino/setup-protoc@v3
+        with:
+          version: "27.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: check
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: cargo check --workspace
+        run: cargo check --workspace --locked
+
+  test:
+    name: cargo test (fast crates)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libssl-dev pkg-config
+
+      - uses: arduino/setup-protoc@v3
+        with:
+          version: "27.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install the toolchain pinned by rust-toolchain
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: test
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+
+      # Deliberately a subset: these crates build in a few minutes and cover the
+      # data model, the chunk store primitives and the utility crates. Viewer and
+      # end-to-end tests need a GPU and a running server, so they are not run here.
+      - name: cargo test
+        run: |
+          cargo test \
+            -p dl_byte_size \
+            -p dl_case \
+            -p dl_chunk \
+            -p dl_error \
+            -p dl_format \
+            -p dl_int \
+            -p dl_log_types \
+            -p dl_ros_msg \
+            -p dl_sorbet \
+            -p dl_span \
+            -p dl_string_interner \
+            -p dl_tf \
+            -p dl_tuid \
+            -p dl_types \
+            -p dl_uri
