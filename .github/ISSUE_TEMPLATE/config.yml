@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Question about using Dalaran
+    url: https://github.com/Flaminis/Dalaran/discussions
+    about: Ask in Discussions rather than opening an issue. Usage questions get better answers there, and the answers stay searchable.
+  - name: Documentation
+    url: https://github.com/Flaminis/Dalaran/tree/main/docs/content
+    about: Concepts, how-to guides, and reference. Please check here before filing an issue.
+  - name: Security vulnerability
+    url: https://github.com/Flaminis/Dalaran/security/advisories/new
+    about: Report privately. Do not open a public issue for a suspected vulnerability - see SECURITY.md.
+  - name: Contributing
+    url: https://github.com/Flaminis/Dalaran/blob/main/CONTRIBUTING.md
+    about: Dev setup, commit conventions, DCO sign-off, and how to propose a feature.

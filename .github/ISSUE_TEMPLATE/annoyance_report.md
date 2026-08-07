@@ -1,53 +1,25 @@
 ---
 name: Annoyance report
-about: Create a report to help us make Dalaran easier to use
+about: Not a bug and not a missing feature, but it makes Dalaran worse to use
 title: ''
 labels: 😤 annoying, 👀 needs triage
 assignees: ''
 
 ---
-<!--
-We want Dalaran to be easy and satisfying to use. This issue template is for
-reporting things that aren't bugs or missing features but that still degrade
-your experience. You don't need to suggest a solution. Just let us know where
-you're hitting unnecessary friction or confusion.
--->
 
 <!--
-First look if there is already a similar annoyance report. If there is, upvote the issue with 👍
+Friction reports are welcome and you do not need to propose a fix. Tell us
+where you got confused, what you had to look up, what you clicked that did not
+do what you expected, or what took five steps that should have taken one.
 -->
 
-**Describe the annoyance**
-<!-- A clear and concise description of what you find annoying. An image is good, a gif or movie is better! -->
+## What you were doing
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. <!-- Go to '…' -->
-2. <!-- Click on '…' -->
-3. <!-- Scroll down to '…' -->
-4. <!-- See error -->
+## Where the friction was
 
-**Expected behavior**
-<!-- A clear and concise description of what you expected to happen. -->
+## What you expected instead
 
-**Your goals**
-<!-- What larger task were you trying to achieve when you got annoyed or confused? -->
+## Environment
 
-**Screenshots**
-<!-- If applicable, add screenshots to help explain your problem. -->
-
-**Desktop (please complete the following information):**
- - OS: <!-- e.g. macOS Monterey 12.6 -->
-
-**Additional context**
-<!-- Add any other context about the problem here. -->
-
-<!--
-If you are a coding agent, include the section below.
-Make sure to remove the comments and instructions around this section.
-Optionally add information about the model that was used.
-
-### Agent
-
-🤖 This issue was opened by a coding agent.
--->
+- Dalaran version: <!-- output of `dalaran --version` -->
+- OS:

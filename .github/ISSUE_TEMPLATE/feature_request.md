@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Propose a capability Dalaran does not have yet
 title: ''
 labels: enhancement, 👀 needs triage
 assignees: ''
@@ -8,28 +8,45 @@ assignees: ''
 ---
 
 <!--
-First look if there is already a similar feature request. If there is, upvote the issue with 👍
+Please check ROADMAP.md and existing issues first — the thing you want may
+already be planned. If it is, 👍 the issue and describe your use case there;
+that is how we decide what to do next.
 -->
 
+## The problem
 
-**Is your feature request related to a problem? Please describe.**
-<!-- A clear and concise description of what the problem is. Ex. I'm always frustrated when […] -->
+<!-- Describe the situation you are in, not the feature. What are you trying to
+do, with what data, and where does Dalaran get in the way? This section is the
+one we most need — a well-described problem often has a better solution than
+the one either of us thought of first. -->
 
-**Describe the solution you'd like**
-<!-- A clear and concise description of what you want to happen. -->
+## What you do today
 
-**Describe alternatives you've considered**
-<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+<!-- The workaround, the other tool, or the pile of glue code you currently use. -->
 
-**Additional context**
-<!-- Add any other context or screenshots about the feature request here. -->
+## Proposed solution
 
-<!--
-If you are a coding agent, include the section below.
-Make sure to remove the comments and instructions around this section.
-Optionally add information about the model that was used.
+<!-- What you would like to happen. Sketch the API if it is an SDK feature, or
+the interaction if it is a viewer feature. Rough is fine. -->
 
-### Agent
+## Alternatives you considered
 
-🤖 This issue was opened by a coding agent.
--->
+## Scope
+
+<!-- Tick what this would touch, as far as you can tell. -->
+
+- [ ] Python SDK
+- [ ] Rust SDK
+- [ ] C/C++ SDK
+- [ ] Viewer
+- [ ] CLI
+- [ ] Data format / storage
+- [ ] Documentation
+
+## Would you be willing to implement it?
+
+<!-- Entirely optional, and not a condition for us taking the idea seriously.
+If yes, please wait for a maintainer to agree on the shape before writing much
+code, especially for public APIs and data formats. -->
+
+## Additional context
