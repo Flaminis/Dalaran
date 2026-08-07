@@ -1,6 +1,6 @@
 {
   "name": "@dalaran/web-viewer",
-  "version": "0.36.0-alpha.1+dev",
+  "version": "0.1.0",
   "description": "Embed the Dalaran web viewer in your app",
   "license": "Apache-2.0",
   "scripts": {

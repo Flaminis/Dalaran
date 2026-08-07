@@ -7,8 +7,6 @@ Dalaran is an Apache-2.0, robotics-first observability and visualization stack f
 
 It consists of the **Dalaran SDK** (Python, Rust, C++) for logging, storing, and querying multi-rate multimodal data; the **Dalaran Viewer**, which renders all of it in sync on a shared timeline; and a **catalog server** for organizing many recordings into queryable datasets. All three are in [this repository](https://github.com/Flaminis/Dalaran) under the same licence — there is no hosted tier holding features back.
 
-Dalaran is a hard fork of [Rerun](https://github.com/rerun-io/rerun); see [ATTRIBUTION.md](https://github.com/Flaminis/Dalaran/blob/main/ATTRIBUTION.md) for what we inherited and why the fork exists.
-
 ## The problem
 
 Building intelligent physical systems requires rapid iteration on both data and models. But teams often get stuck because:

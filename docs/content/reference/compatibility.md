@@ -3,10 +3,10 @@ title: Rerun compatibility
 order: 1050
 ---
 
-Dalaran is a hard fork of [Rerun](https://github.com/rerun-io/rerun). The storage format was
-deliberately left alone during the fork, so **existing Rerun recordings open in Dalaran as-is**,
-with no conversion step and no loss of fidelity. The parts that did change are the names of things:
-file extensions, the protobuf namespace, and the URI scheme.
+Dalaran shares its storage container with [Rerun](https://github.com/rerun-io/rerun), so
+**existing Rerun recordings open in Dalaran as-is**, with no conversion step and no loss of
+fidelity. The parts that differ are the names of things: file extensions, the protobuf
+namespace, and the URI scheme.
 
 This page spells out exactly what carries over and what does not.
 

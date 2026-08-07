@@ -32,9 +32,9 @@ The things we are working on now, or next.
   content-type plumbing plus a migration path for older schema generations.
   Renaming an `.rrd` to `.dlr` already works; `dalaran recording.rrd` should
   work too.
-- **Documentation that matches the fork.** The inherited docs still describe an
-  upstream product in places. This is unglamorous and we are doing it anyway,
-  because docs that lie are worse than missing docs.
+- **Documentation that matches the product.** A few pages still describe
+  behaviour we have since changed. This is unglamorous and we are doing it
+  anyway, because docs that lie are worse than missing docs.
 
 ## Mid term
 

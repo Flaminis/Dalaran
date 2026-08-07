@@ -2,13 +2,13 @@
 ///
 /// This should match the string returned by `dl_version_string` (C) or `dalaran::version_string` (C++).
 /// If not, the SDK's binary and the C header are out of sync.
-#define DALARAN_SDK_HEADER_VERSION "0.36.0-alpha.1+dev"
+#define DALARAN_SDK_HEADER_VERSION "0.1.0"
 
 /// Major version of the Dalaran C SDK.
 #define DALARAN_SDK_HEADER_VERSION_MAJOR 0
 
 /// Minor version of the Dalaran C SDK.
-#define DALARAN_SDK_HEADER_VERSION_MINOR 36
+#define DALARAN_SDK_HEADER_VERSION_MINOR 1
 
 /// Patch version of the Dalaran C SDK.
 #define DALARAN_SDK_HEADER_VERSION_PATCH 0

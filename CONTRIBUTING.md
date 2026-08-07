@@ -3,10 +3,6 @@
 Thanks for considering it. This guide covers how to get a working development
 environment, what we expect from a change, and how to get it merged.
 
-Dalaran is a hard fork of [Rerun](https://github.com/rerun-io/rerun) — see
-[`ATTRIBUTION.md`](ATTRIBUTION.md). If you are fixing a bug that also exists
-upstream, please consider sending it there too; we do the same.
-
 ## See also
 
 * [`ROADMAP.md`](ROADMAP.md) — what we are planning, and what we are not
@@ -20,7 +16,7 @@ upstream, please consider sending it there too; we do the same.
 
 ## Naming conventions
 
-The fork renamed everything user-facing, and PRs are expected to follow it:
+Dalaran has one naming scheme and PRs are expected to follow it:
 
 * Rust crates are `dl_*`; the umbrella crate is `dalaran` and the CLI crate is
   `dalaran-cli` (binary `dalaran`).
@@ -30,9 +26,9 @@ The fork renamed everything user-facing, and PRs are expected to follow it:
 * Recordings are `.dlr`, blueprints `.dbl`, and URIs use the `dalaran://`
   scheme.
 
-Do not reintroduce `rerun`/`re_` naming for anything of ours. Links to
-`github.com/rerun-io/*`, `static.rerun.io` asset URLs, and the `RRF2` on-disk
-fourcc are intentional and must stay — see [`ATTRIBUTION.md`](ATTRIBUTION.md).
+Do not introduce `rerun`/`re_` naming for anything of ours. A small number of
+third-party URLs and the `RRF2` on-disk fourcc are intentional and must stay —
+see [`ATTRIBUTION.md`](ATTRIBUTION.md).
 
 ## Development setup
 

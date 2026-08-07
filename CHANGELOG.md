@@ -1,5 +1,47 @@
 # Dalaran changelog
 
+## 0.1.0 - unreleased
+
+The first Dalaran release. Versioning restarts at `0.1.0`.
+
+### Robotics
+
+- `dalaran.robot`: a `TransformTree` with tf2 `lookup_transform` semantics, a
+  `Robot` handle (poses, odometry with trails, twists, trajectories, joint
+  states, revolute/prismatic forward kinematics, a `timestep()` context
+  manager), sensor helpers for laser scans, point clouds, IMU and pinhole
+  cameras, and explicit FLU/RDF/FRD/RUB axis-convention conversion.
+- `dalaran.ros2`: an extensible message registry (33 built-in converters, plus a
+  `@register` decorator for your own types), a dependency-free PointCloud2
+  decoder that handles real driver layouts, `nav_msgs/OccupancyGrid` onto the
+  native `GridMap` archetype, a live rclpy bridge with QoS presets, topic globs
+  and per-topic throttling, and offline rosbag2 replay. Every ROS import is
+  lazy, so the SDK works with no ROS installed.
+
+### Tooling
+
+- `dalaran convert`: turn MCAP, ROS bags, URDF, meshes, images, parquet and
+  legacy recordings into a single `.dlr`.
+- `dalaran-doctor`: environment diagnostics with a `--json` mode and CI-safe
+  exit codes.
+- `dalaran-init`: project scaffolding for Python, ROS 2, C++ and Rust.
+- `dalaran-pack` / `dalaran-unpack`: portable `.dlrpack` dataset bundles with a
+  manifest and per-file checksum verification.
+
+### Format
+
+- Recordings are `.dlr` and blueprints `.dbl`. The on-disk container is
+  unchanged, so `.rrd` and `.rbl` files are read natively — see
+  [compatibility](https://dalaran.dev/docs/reference/compatibility).
+
+### Project
+
+- Apache-2.0 throughout, with an explicit patent grant for every user.
+
+---
+
+The entries below predate Dalaran and are kept for historical reference.
+
 ## [0.35.0](https://github.com/rerun-io/rerun/compare/0.34.1...0.35.0) - 2026-07-23
 
 🧳 Migration guide: https://dalaran.dev/docs/changelog/changeset-0-35#breaking-changes

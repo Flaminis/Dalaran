@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "dalaran-notebook"
 description = "Implementation helper for running dalaran-sdk in notebooks"
-version = "0.36.0-alpha.1+dev"
+version = "0.1.0"
 dependencies = [
   "anywidget",
   "jupyter-ui-poll",

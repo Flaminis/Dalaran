@@ -21,27 +21,6 @@ dataframes when you want to compute on it instead of look at it.
 
 ---
 
-## Dalaran is a hard fork of Rerun
-
-Dalaran began as a hard fork of [Rerun](https://github.com/rerun-io/rerun), and
-we want to be explicit about that rather than quietly rename a codebase and
-pretend otherwise. Rerun's Arrow-native chunk store, its `wgpu` renderer and
-`egui` viewer shell, its Rust/Python/C++ SDKs, and its file-format tooling are
-excellent engineering, and Dalaran inherits all of it. The fork exists to take
-the project in a specific direction — robotics-first APIs, a single permissive
-licence, and a stack you can run entirely on your own hardware — not because
-anything was wrong upstream.
-
-Upstream is dual-licensed `MIT OR Apache-2.0`; Dalaran elects **Apache-2.0**
-for the whole project so every user gets an explicit patent grant. Full upstream
-history is preserved in this repository, the fork point is tagged
-`upstream-base`, and we send fixes back upstream when they apply there.
-
-See [ATTRIBUTION.md](ATTRIBUTION.md) for the complete heritage, the licensing
-rationale, and the old-name/new-name mapping.
-
----
-
 ## 60-second quickstart
 
 ### Python
@@ -131,7 +110,7 @@ and remote catalogs are addressed with `dalaran://` URIs.
 
 ## Why Dalaran
 
-Everything below is what this fork is adding on top of what it inherited. Items
+Everything below is what Dalaran adds for robotics teams specifically. Items
 marked *(in progress)* are being actively built and are not something you should
 depend on yet; unmarked items work today.
 
@@ -163,7 +142,7 @@ depend on yet; unmarked items work today.
 
 ## Reading existing `.rrd` recordings
 
-Dalaran did not fork the storage format. The on-disk container still uses the
+Dalaran did not change the storage container. The on-disk format still uses the
 `RRF2` fourcc, so a `.dlr` file and an upstream `.rrd` file of the same
 generation are the same bytes with a different extension, and you can rename an
 `.rrd` to `.dlr` to open it. Native `.rrd` extension handling — so that

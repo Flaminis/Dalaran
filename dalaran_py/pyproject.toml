@@ -50,7 +50,7 @@ tests = [
   "torchvision", # Imported at top of `dalaran.experimental.dataloader._decoders`, so needed to import the dataloader module at all
   "datafusion==54.0.0",
 ]
-notebook = ["dalaran-notebook==0.36.0-alpha.1+dev"]
+notebook = ["dalaran-notebook==0.1.0+dev"]
 # TODO(RR-3786): when pyarrow is fixed, we should remove the pandas dependency
 datafusion = ["datafusion==54.0.0", "pandas>=2"] # deprecated, replaced by `catalog`
 dataplatform = [ # deprecated, replaced by `catalog` (NOLINT)
@@ -73,7 +73,7 @@ tracing = ["opentelemetry-api", "opentelemetry-sdk", "opentelemetry-exporter-otl
 # Note: We avoid self-referential extras like "dalaran-sdk[notebook]" because they cause
 # uv to fetch dalaran-sdk from PyPI when the local package isn't built yet.
 # TODO(RR-3786): when pyarrow is fixed, we should remove the pandas dependency
-all = ["datafusion==54.0.0", "pandas>=2", "dalaran-notebook==0.36.0-alpha.1+dev"]
+all = ["datafusion==54.0.0", "pandas>=2", "dalaran-notebook==0.1.0+dev"]
 
 [project.urls]
 documentation = "https://www.dalaran.dev/docs"
