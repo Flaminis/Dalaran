@@ -107,6 +107,10 @@ Because the joints were declared against the tree, `log_joint_states` both plots
 the joint positions as scalar time series *and* animates the transform tree. If
 you only want the plots, pass `animate=False`.
 
+If you have a URDF, you do not need `add_joint` at all: `Robot("arm", urdf=...)`
+registers every joint from the description, limits and `<mimic>` joints
+included. See [Animate a URDF robot](urdf.md).
+
 `Robot.timestep` infers the kind of time from its argument: an `int` becomes a
 sequence index, a `float` or `timedelta` a duration in seconds, and a `datetime`
 an absolute timestamp. Setting the timeline once per block is much harder to get
@@ -193,6 +197,11 @@ robot.tree.set(
 the similarity `R @ T @ R.T` so the result describes the same physical transform
 written in the destination convention. Left-handed or degenerate codes such as
 `"FLD"` or `"FLB"` are rejected instead of silently mirroring your scene.
+
+Axis bases are only one of the conventions a robot stack has to agree on. ENU
+versus NED geographic frames, the REP-105 `map -> odom -> base_link` chain and
+the convention implied by a frame's *name* are covered in
+[Get the frame conventions right](conventions.md).
 
 ## A complete example
 
