@@ -130,9 +130,12 @@ depend on yet; unmarked items work today.
 - **Occupancy grids and costmaps** *(in progress)* — `nav_msgs/OccupancyGrid`
   and layered costmaps as a real archetype with proper origin/resolution
   handling, instead of being flattened into an untyped image.
-- **`dalaran doctor`** *(in progress)* — a diagnostic subcommand that inspects
-  your environment (GPU and driver, viewer/SDK version skew, ROS 2 setup,
-  recording integrity) and tells you what is wrong in plain language.
+- **`dalaran doctor`** — a diagnostic subcommand that inspects your environment
+  (build info, wgpu adapters and drivers, `DALARAN_*` variables, headless and
+  ROS 2 setup, recording integrity) and tells you what is wrong in plain
+  language. It lives in the viewer binary, so it still runs when your Python
+  installation is the thing that is broken; `dalaran-doctor` covers the
+  interpreter and SDK/viewer version skew from the Python side.
 - **`.dlrpack` portable dataset bundles** *(in progress)* — a single file that
   carries recordings, the blueprint, referenced assets, and metadata, so
   "here is the run that failed" is one artifact you can hand to a colleague.
