@@ -140,7 +140,7 @@ def fetch_binary_assets(
                 #
                 # ATTENTION: Renaming this file has tremendous ripple effects:
                 # Not only is this the convenient short name we use in examples,
-                # we also rely on https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip
+                # we also rely on https://github.com/Flaminis/Dalaran/releases/latest/download/dalaran_cpp_sdk.zip
                 # to always give you the latest stable version of the Dalaran SDK.
                 # -> The name should *not* contain the version number.
                 assets["dalaran_cpp_sdk.zip"] = blob

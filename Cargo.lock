@@ -230,8 +230,8 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "emath",
  "dalaran",
+ "emath",
 ]
 
 [[package]]
@@ -2094,9 +2094,9 @@ name = "custom_callback"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "bincode",
+ "dalaran",
  "mimalloc",
  "parking_lot",
- "dalaran",
  "serde",
  "tokio",
 ]
@@ -2106,25 +2106,25 @@ name = "custom_importer"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "crossbeam",
+ "dalaran",
  "dl_build_tools",
  "dl_quota_channel",
- "dalaran",
 ]
 
 [[package]]
 name = "custom_store_subscriber"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "dl_build_tools",
  "dalaran",
+ "dl_build_tools",
 ]
 
 [[package]]
 name = "custom_view"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "mimalloc",
  "dalaran",
+ "mimalloc",
 ]
 
 [[package]]
@@ -2132,8 +2132,8 @@ name = "custom_visualizer"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "bytemuck",
- "mimalloc",
  "dalaran",
+ "mimalloc",
 ]
 
 [[package]]
@@ -2146,6 +2146,189 @@ dependencies = [
  "minidom-14",
  "percent-encoding",
  "ref-cast",
+]
+
+[[package]]
+name = "dalaran"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "camino",
+ "clap",
+ "comfy-table",
+ "crossbeam",
+ "dl_analytics",
+ "dl_arrow_util",
+ "dl_async",
+ "dl_auth",
+ "dl_build_info",
+ "dl_build_tools",
+ "dl_byte_size",
+ "dl_capabilities",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_crash_handler",
+ "dl_data_source",
+ "dl_dataframe",
+ "dl_entity_db",
+ "dl_error",
+ "dl_format",
+ "dl_grpc_server",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_mcap",
+ "dl_memory",
+ "dl_perf_telemetry",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_redap_client",
+ "dl_sdk",
+ "dl_sdk_types",
+ "dl_server",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_uri",
+ "dl_video",
+ "dl_viewer",
+ "dl_viewer_mcp",
+ "dl_web_viewer_server",
+ "document-features",
+ "env_filter",
+ "indexmap 2.14.0",
+ "indicatif",
+ "itertools 0.15.0",
+ "jiff",
+ "libc",
+ "log",
+ "mcap",
+ "memmap2 0.9.11",
+ "parking_lot",
+ "puffin",
+ "rayon",
+ "similar-asserts",
+ "tokio",
+ "unindent",
+ "url",
+ "walkdir",
+]
+
+[[package]]
+name = "dalaran-cli"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dalaran",
+ "dl_build_info",
+ "dl_build_tools",
+ "dl_error",
+ "dl_log",
+ "dl_memory",
+ "dl_server",
+ "document-features",
+ "mimalloc",
+]
+
+[[package]]
+name = "dalaran-importer-rust-file"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "argh",
+ "dalaran",
+]
+
+[[package]]
+name = "dalaran_c"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "dl_arrow_util",
+ "dl_build_info",
+ "dl_build_tools",
+ "dl_crash_handler",
+ "dl_log",
+ "dl_sdk",
+ "dl_video",
+ "half",
+ "infer",
+ "itertools 0.15.0",
+ "parking_lot",
+]
+
+[[package]]
+name = "dalaran_py"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "arrow",
+ "chrono",
+ "comfy-table",
+ "crossbeam",
+ "datafusion",
+ "datafusion-ffi",
+ "dl_arrow_util",
+ "dl_auth",
+ "dl_build_info",
+ "dl_build_tools",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_datafusion",
+ "dl_error",
+ "dl_format",
+ "dl_grpc_client",
+ "dl_grpc_server",
+ "dl_hdf5",
+ "dl_importer",
+ "dl_lenses",
+ "dl_lenses_core",
+ "dl_log",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_mcap",
+ "dl_memory",
+ "dl_mp4_reader",
+ "dl_parquet",
+ "dl_perf_telemetry",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_redap_client",
+ "dl_sdk",
+ "dl_sdk_types",
+ "dl_server",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_tuid",
+ "dl_types_core",
+ "dl_uri",
+ "dl_video",
+ "dl_web_viewer_server",
+ "document-features",
+ "futures",
+ "infer",
+ "itertools 0.15.0",
+ "jiff",
+ "memmap2 0.9.11",
+ "mimalloc",
+ "numpy",
+ "parking_lot",
+ "pyo3",
+ "pyo3-build-config",
+ "rand 0.9.5",
+ "rustls",
+ "strum",
+ "strum_macros",
+ "tempfile",
+ "thiserror 2.0.19",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tracing",
+ "url",
+ "uuid",
 ]
 
 [[package]]
@@ -2240,8 +2423,8 @@ checksum = "5c297a1c74b71ae29df00c3e22dd9534821d60eb9af5a0192823fa2acea70c2a"
 name = "dataframe_query"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "itertools 0.15.0",
  "dalaran",
+ "itertools 0.15.0",
  "unindent",
 ]
 
@@ -3097,6 +3280,2645 @@ dependencies = [
 ]
 
 [[package]]
+name = "dl_analytics"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "crossbeam",
+ "directories",
+ "dl_build_info",
+ "dl_log",
+ "dl_quota_channel",
+ "ehttp",
+ "jiff",
+ "regex-lite",
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "thiserror 2.0.19",
+ "url",
+ "uuid",
+ "web-sys",
+]
+
+[[package]]
+name = "dl_arrow_ui"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_arrow_util",
+ "dl_format",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_ui",
+ "egui",
+ "egui_kittest",
+ "insta",
+ "itertools 0.15.0",
+ "jiff",
+]
+
+[[package]]
+name = "dl_arrow_util"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "arrow",
+ "comfy-table",
+ "datafusion",
+ "dl_log",
+ "dl_tracing",
+ "dl_tuid",
+ "half",
+ "insta",
+ "itertools 0.15.0",
+ "serde_json",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_async"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "futures",
+ "js-sys",
+ "thiserror 2.0.19",
+ "tokio",
+ "wasm-bindgen",
+ "wasm-bindgen-test",
+ "web-sys",
+]
+
+[[package]]
+name = "dl_auth"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "async-trait",
+ "base64 0.23.0",
+ "directories",
+ "dl_analytics",
+ "dl_int",
+ "dl_log",
+ "dl_web",
+ "ehttp",
+ "getrandom 0.2.17",
+ "getrandom 0.3.4",
+ "hmac",
+ "http",
+ "indicatif",
+ "jiff",
+ "jsonwebtoken",
+ "parking_lot",
+ "rand 0.9.5",
+ "ring",
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "signature",
+ "thiserror 2.0.19",
+ "tiny_http",
+ "tokio",
+ "tonic",
+ "tower",
+ "url",
+ "uuid",
+ "web-sys",
+ "webbrowser",
+]
+
+[[package]]
+name = "dl_backoff"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_async",
+ "getrandom 0.3.4",
+ "rand 0.9.5",
+]
+
+[[package]]
+name = "dl_blueprint_tree"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_chunk_store",
+ "dl_context_menu",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view_spatial",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_kittest",
+ "egui_tiles",
+ "insta",
+ "itertools 0.15.0",
+ "serde",
+ "smallvec",
+]
+
+[[package]]
+name = "dl_build_info"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_byte_size",
+ "serde",
+]
+
+[[package]]
+name = "dl_build_tools"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "cargo_metadata",
+ "glob",
+ "jiff",
+ "regex-lite",
+ "sha2 0.10.9",
+ "unindent",
+ "walkdir",
+]
+
+[[package]]
+name = "dl_byte_size"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_byte_size_derive",
+ "ecolor",
+ "egui",
+ "glam",
+ "half",
+ "insta",
+ "macaw",
+ "parking_lot",
+ "smallvec",
+ "vec1",
+]
+
+[[package]]
+name = "dl_byte_size_derive"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn 3.0.3",
+]
+
+[[package]]
+name = "dl_capabilities"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_log",
+ "document-features",
+ "egui",
+ "static_assertions",
+]
+
+[[package]]
+name = "dl_case"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "convert_case",
+]
+
+[[package]]
+name = "dl_chunk"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "bytemuck",
+ "crossbeam",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_error",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_quota_channel",
+ "dl_sorbet",
+ "dl_span",
+ "dl_tracing",
+ "dl_types_core",
+ "document-features",
+ "half",
+ "insta",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "rand 0.9.5",
+ "similar-asserts",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_chunk_store"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "criterion",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_format",
+ "dl_int",
+ "dl_log",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_types_core",
+ "document-features",
+ "futures",
+ "indent",
+ "insta",
+ "itertools 0.15.0",
+ "mimalloc",
+ "nohash-hasher",
+ "parking_lot",
+ "rand 0.9.5",
+ "similar-asserts",
+ "tempfile",
+ "thiserror 2.0.19",
+ "web-time",
+]
+
+[[package]]
+name = "dl_chunk_store_ui"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_arrow_ui",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_chunk_store",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_types_core",
+ "dl_ui",
+ "dl_viewer_context",
+ "egui",
+ "egui_extras",
+ "itertools 0.15.0",
+]
+
+[[package]]
+name = "dl_component_fallbacks"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_log_types",
+ "dl_rvl",
+ "dl_sdk_types",
+ "dl_video",
+ "dl_viewer_context",
+]
+
+[[package]]
+name = "dl_component_ui"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_data_ui",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_protos",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_uri",
+ "dl_viewer_context",
+ "egui",
+ "egui_dnd",
+ "egui_extras",
+ "egui_kittest",
+ "egui_plot",
+ "itertools 0.15.0",
+ "nohash-hasher",
+]
+
+[[package]]
+name = "dl_context_menu"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_ui",
+ "dl_uri",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "dl_web",
+ "egui",
+ "egui_tiles",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "static_assertions",
+]
+
+[[package]]
+name = "dl_crash_handler"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "backtrace",
+ "dl_analytics",
+ "dl_build_info",
+ "econtext",
+ "itertools 0.15.0",
+ "libc",
+ "parking_lot",
+]
+
+[[package]]
+name = "dl_data_source"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "dl_async",
+ "dl_format",
+ "dl_grpc_client",
+ "dl_importer",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_redap_client",
+ "dl_tracing",
+ "dl_uri",
+ "dl_web",
+ "ehttp",
+ "itertools 0.15.0",
+ "rayon",
+ "url",
+ "web-sys",
+]
+
+[[package]]
+name = "dl_data_ui"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "bytemuck",
+ "dl_arrow_ui",
+ "dl_capabilities",
+ "dl_chunk_store",
+ "dl_entity_db",
+ "dl_format",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_types",
+ "dl_query",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_uri",
+ "dl_video",
+ "dl_viewer_context",
+ "egui",
+ "egui_extras",
+ "egui_plot",
+ "itertools 0.15.0",
+ "jiff",
+ "rexif",
+ "unindent",
+]
+
+[[package]]
+name = "dl_dataframe"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "arrow",
+ "criterion",
+ "dl_arrow_util",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_log",
+ "dl_log_types",
+ "dl_query",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_span",
+ "dl_tracing",
+ "dl_types_core",
+ "insta",
+ "itertools 0.15.0",
+ "mimalloc",
+ "nohash-hasher",
+ "rayon",
+ "similar-asserts",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
+name = "dl_dataframe_ui"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "async-trait",
+ "crossbeam",
+ "datafusion",
+ "dl_arrow_util",
+ "dl_async",
+ "dl_chunk_store",
+ "dl_component_ui",
+ "dl_data_source",
+ "dl_dataframe",
+ "dl_entity_db",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_mutex",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_redap_client",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_test_context",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_uri",
+ "dl_viewer_context",
+ "dl_viewport",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_dnd",
+ "egui_kittest",
+ "egui_table",
+ "futures",
+ "insta",
+ "itertools 0.15.0",
+ "jiff",
+ "nohash-hasher",
+ "ordered-float 5.3.0",
+ "serde",
+ "static_assertions",
+ "strum",
+ "thiserror 2.0.19",
+ "tokio",
+]
+
+[[package]]
+name = "dl_datafusion"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "async-stream",
+ "async-trait",
+ "bytes",
+ "chrono",
+ "datafusion",
+ "dl_analytics",
+ "dl_arrow_util",
+ "dl_async",
+ "dl_backoff",
+ "dl_byte_size",
+ "dl_dataframe",
+ "dl_format",
+ "dl_int",
+ "dl_log",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_perf_telemetry",
+ "dl_protos",
+ "dl_redap_client",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_uri",
+ "futures",
+ "futures-util",
+ "getrandom 0.3.4",
+ "itertools 0.15.0",
+ "jiff",
+ "opentelemetry",
+ "opentelemetry-proto",
+ "parking_lot",
+ "quiver",
+ "reqwest",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tracing",
+ "web-time",
+]
+
+[[package]]
+name = "dl_dev_tools"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "argh",
+ "camino",
+ "cargo_metadata",
+ "dl_build_tools",
+ "dl_format",
+ "glob",
+ "indicatif",
+ "itertools 0.15.0",
+ "rayon",
+ "roxmltree",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "toml",
+ "ureq",
+ "url",
+ "wasm-bindgen-cli-support",
+]
+
+[[package]]
+name = "dl_entity_db"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "dl_arrow_util",
+ "dl_build_info",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_format",
+ "dl_int",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_mutex",
+ "dl_query",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_uri",
+ "document-features",
+ "emath",
+ "indexmap 2.14.0",
+ "insta",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "poll-promise",
+ "serde",
+ "similar-asserts",
+ "static_assertions",
+ "tap",
+ "thiserror 2.0.19",
+ "vec1",
+ "web-time",
+]
+
+[[package]]
+name = "dl_error"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
+name = "dl_format"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_int",
+ "dl_log",
+ "half",
+ "itertools 0.15.0",
+ "num-traits",
+]
+
+[[package]]
+name = "dl_gamepad"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_log",
+ "gilrs",
+ "glam",
+ "parking_lot",
+]
+
+[[package]]
+name = "dl_grpc_client"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "async-stream",
+ "crossbeam",
+ "dl_async",
+ "dl_chunk",
+ "dl_error",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_uri",
+ "rerun-tonic-web-wasm-client",
+ "thiserror 2.0.19",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "web-time",
+]
+
+[[package]]
+name = "dl_grpc_headers"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "http",
+ "pin-project-lite",
+ "tonic",
+ "tower",
+]
+
+[[package]]
+name = "dl_grpc_server"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "async-stream",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_error",
+ "dl_format",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_memory",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_uri",
+ "futures",
+ "itertools 0.15.0",
+ "parking_lot",
+ "similar-asserts",
+ "tokio",
+ "tokio-stream",
+ "tokio-util",
+ "tonic",
+ "tonic-web",
+ "tower-http",
+ "wildmatch",
+]
+
+[[package]]
+name = "dl_hdf5"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_tracing",
+ "hdf5-pure",
+ "itertools 0.15.0",
+ "tempfile",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_importer"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "crossbeam",
+ "dl_arrow_util",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_error",
+ "dl_format",
+ "dl_lenses",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_mcap",
+ "dl_mp4_reader",
+ "dl_parquet",
+ "dl_quota_channel",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_video",
+ "image",
+ "indexmap 2.14.0",
+ "insta",
+ "itertools 0.15.0",
+ "mcap",
+ "memmap2 0.9.11",
+ "parking_lot",
+ "parquet",
+ "rayon",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.19",
+ "urdf-rs",
+ "ureq",
+ "walkdir",
+]
+
+[[package]]
+name = "dl_int"
+version = "0.36.0-alpha.1+dev"
+
+[[package]]
+name = "dl_integration_test"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "datafusion",
+ "directories",
+ "dl_build_info",
+ "dl_dataframe_ui",
+ "dl_datafusion",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_protos",
+ "dl_redap_client",
+ "dl_sdk",
+ "dl_sdk_types",
+ "dl_server",
+ "dl_test_context",
+ "dl_ui",
+ "dl_uri",
+ "dl_view_bar_chart",
+ "dl_view_state_timeline",
+ "dl_view_tensor",
+ "dl_view_text_document",
+ "dl_view_text_log",
+ "dl_view_time_series",
+ "dl_viewer",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_kittest",
+ "egui_tiles",
+ "futures",
+ "insta",
+ "ndarray",
+ "parking_lot",
+ "reqwest",
+ "serde",
+ "tempfile",
+ "tokio",
+ "uuid",
+]
+
+[[package]]
+name = "dl_lenses"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_arrow_util",
+ "dl_int",
+ "dl_lenses_core",
+ "dl_log",
+ "dl_log_types",
+ "dl_mcap",
+ "dl_sdk_types",
+ "dl_tracing",
+ "insta",
+ "itertools 0.15.0",
+]
+
+[[package]]
+name = "dl_lenses_core"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "insta",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "thiserror 2.0.19",
+ "vec1",
+]
+
+[[package]]
+name = "dl_log"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "crossbeam",
+ "log",
+ "log-once",
+ "parking_lot",
+ "tracing",
+ "tracing-log",
+ "tracing-subscriber",
+ "tracing-web",
+]
+
+[[package]]
+name = "dl_log_channel"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "camino",
+ "crossbeam",
+ "dl_byte_size",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_tracing",
+ "dl_uri",
+ "futures",
+ "parking_lot",
+ "serde",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_log_encoding"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "async-trait",
+ "bytes",
+ "criterion",
+ "crossbeam",
+ "dl_arrow_util",
+ "dl_async",
+ "dl_build_info",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_log",
+ "dl_log_types",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_span",
+ "dl_tracing",
+ "dl_types_core",
+ "ehttp",
+ "futures",
+ "insta",
+ "itertools 0.15.0",
+ "jiff",
+ "js-sys",
+ "lz4_flex",
+ "mimalloc",
+ "parking_lot",
+ "sha2 0.10.9",
+ "similar-asserts",
+ "tempfile",
+ "thiserror 2.0.19",
+ "tracing",
+ "url",
+ "wasm-bindgen",
+ "web-sys",
+ "web-time",
+ "xxhash-rust",
+]
+
+[[package]]
+name = "dl_log_types"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "bytemuck",
+ "clean-path",
+ "criterion",
+ "dl_arrow_util",
+ "dl_build_info",
+ "dl_byte_size",
+ "dl_format",
+ "dl_log",
+ "dl_string_interner",
+ "dl_tracing",
+ "dl_tuid",
+ "dl_types_core",
+ "document-features",
+ "fixed",
+ "half",
+ "itertools 0.15.0",
+ "jiff",
+ "mimalloc",
+ "natord",
+ "nohash-hasher",
+ "num-derive",
+ "num-traits",
+ "parking_lot",
+ "quiver",
+ "serde",
+ "similar-asserts",
+ "static_assertions",
+ "thiserror 2.0.19",
+ "typenum",
+ "uuid",
+ "web-time",
+ "xxhash-rust",
+]
+
+[[package]]
+name = "dl_mcap"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "byteorder",
+ "crossbeam",
+ "dl_arrow_util",
+ "dl_chunk",
+ "dl_int",
+ "dl_log",
+ "dl_log_types",
+ "dl_quota_channel",
+ "dl_ros_msg",
+ "dl_sdk_types",
+ "dl_tracing",
+ "insta",
+ "itertools 0.15.0",
+ "mcap",
+ "parking_lot",
+ "prost-reflect",
+ "rayon",
+ "re_cdr",
+ "regex-lite",
+ "serde",
+ "serde_bytes",
+ "strum",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_memory"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "backtrace",
+ "crossbeam",
+ "dl_format",
+ "dl_log",
+ "dl_quota_channel",
+ "dl_tracing",
+ "itertools 0.15.0",
+ "memory-stats",
+ "nohash-hasher",
+ "parking_lot",
+ "serde",
+ "smallvec",
+ "sysinfo",
+ "wasm-bindgen",
+ "web-time",
+]
+
+[[package]]
+name = "dl_memory_view"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_byte_size",
+ "dl_format",
+ "eframe",
+ "egui",
+ "wgpu",
+]
+
+[[package]]
+name = "dl_mp4_reader"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_chunk",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_video",
+ "itertools 0.15.0",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_mutex"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_byte_size",
+ "dl_log",
+ "parking_lot",
+]
+
+[[package]]
+name = "dl_parquet"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "arrow",
+ "bytes",
+ "dl_chunk",
+ "dl_lenses",
+ "dl_lenses_core",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_tracing",
+ "itertools 0.15.0",
+ "parquet",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_perf_telemetry"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "axum",
+ "base64 0.23.0",
+ "clap",
+ "dl_auth",
+ "dl_grpc_headers",
+ "dl_test_mocks",
+ "http",
+ "memory-stats",
+ "opentelemetry",
+ "opentelemetry-appender-tracing",
+ "opentelemetry-http",
+ "opentelemetry-otlp",
+ "opentelemetry_sdk",
+ "parking_lot",
+ "prometheus-client",
+ "rand 0.9.5",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tonic",
+ "tower",
+ "tower-http",
+ "tracing",
+ "tracing-opentelemetry",
+ "tracing-subscriber",
+ "tracing-tracy",
+]
+
+[[package]]
+name = "dl_plot"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "dl_ui",
+ "egui",
+ "indexmap 2.14.0",
+]
+
+[[package]]
+name = "dl_protos"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_arrow_util",
+ "dl_build_info",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_grpc_headers",
+ "dl_log_types",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_tuid",
+ "dl_types_core",
+ "http",
+ "insta",
+ "itertools 0.15.0",
+ "jiff",
+ "lz4_flex",
+ "opentelemetry",
+ "prost",
+ "prost-types",
+ "pyo3",
+ "quiver",
+ "serde",
+ "thiserror 2.0.19",
+ "tonic",
+ "tonic-prost",
+ "tower",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "dl_protos_builder"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "camino",
+ "dl_log",
+ "tonic-prost-build",
+]
+
+[[package]]
+name = "dl_query"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "bytemuck",
+ "criterion",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_error",
+ "dl_format",
+ "dl_log",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_types_core",
+ "indent",
+ "itertools 0.15.0",
+ "mimalloc",
+ "nohash-hasher",
+ "parking_lot",
+ "paste",
+ "rand 0.9.5",
+ "seq-macro",
+ "similar-asserts",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_quota_channel"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "crossbeam",
+ "dl_byte_size",
+ "dl_format",
+ "dl_log",
+ "parking_lot",
+ "tokio",
+]
+
+[[package]]
+name = "dl_recording_panel"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_types",
+ "dl_redap_browser",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_tracing",
+ "dl_ui",
+ "dl_uri",
+ "dl_viewer_context",
+ "egui",
+ "insta",
+ "itertools 0.15.0",
+ "serde",
+]
+
+[[package]]
+name = "dl_redap_browser"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "crossbeam",
+ "datafusion",
+ "dl_async",
+ "dl_auth",
+ "dl_backoff",
+ "dl_component_ui",
+ "dl_dataframe_ui",
+ "dl_datafusion",
+ "dl_log",
+ "dl_log_types",
+ "dl_protos",
+ "dl_quota_channel",
+ "dl_redap_client",
+ "dl_sorbet",
+ "dl_ui",
+ "dl_uri",
+ "dl_viewer_context",
+ "dl_web",
+ "egui",
+ "egui_extras",
+ "futures",
+ "itertools 0.15.0",
+ "serde",
+ "serde_json",
+ "url",
+ "uuid",
+ "wasm-bindgen",
+ "web-sys",
+ "webbrowser",
+]
+
+[[package]]
+name = "dl_redap_client"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "async-trait",
+ "bitflags 2.13.1",
+ "dl_arrow_util",
+ "dl_async",
+ "dl_auth",
+ "dl_backoff",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_error",
+ "dl_format",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_perf_telemetry",
+ "dl_protos",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_uri",
+ "ehttp",
+ "futures",
+ "http",
+ "http-body",
+ "itertools 0.15.0",
+ "jiff",
+ "opentelemetry",
+ "opentelemetry-proto",
+ "quiver",
+ "rerun-tonic-web-wasm-client",
+ "serde",
+ "thiserror 2.0.19",
+ "tiny_http",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+ "tonic-prost",
+ "tower",
+ "tracing",
+ "url",
+ "wasm-bindgen-test",
+ "web-sys",
+ "web-time",
+]
+
+[[package]]
+name = "dl_redap_tests"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "arrow",
+ "async-trait",
+ "datafusion",
+ "dl_arrow_util",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_datafusion",
+ "dl_log_types",
+ "dl_protos",
+ "dl_sdk",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_tuid",
+ "dl_types_core",
+ "futures",
+ "insta",
+ "itertools 0.15.0",
+ "lance",
+ "parking_lot",
+ "prost-types",
+ "tempfile",
+ "tokio",
+ "tonic",
+ "url",
+]
+
+[[package]]
+name = "dl_renderer"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "bitflags 2.13.1",
+ "bytemuck",
+ "cfg_aliases",
+ "clean-path",
+ "criterion",
+ "crossbeam",
+ "dae-parser",
+ "dl_build_tools",
+ "dl_byte_size",
+ "dl_error",
+ "dl_log",
+ "dl_mutex",
+ "dl_quota_channel",
+ "dl_tracing",
+ "dl_video",
+ "dl_web",
+ "document-features",
+ "ecolor",
+ "enumset",
+ "getrandom 0.3.4",
+ "glam",
+ "gltf",
+ "half",
+ "itertools 0.15.0",
+ "macaw",
+ "never",
+ "notify",
+ "ordered-float 5.3.0",
+ "parking_lot",
+ "pathdiff",
+ "pollster 1.0.1",
+ "profiling",
+ "regex-lite",
+ "serde",
+ "slotmap",
+ "smallvec",
+ "static_assertions",
+ "stl_io",
+ "thiserror 2.0.19",
+ "tobj",
+ "type-map",
+ "unindent",
+ "walkdir",
+ "web-sys",
+ "wgpu",
+]
+
+[[package]]
+name = "dl_renderer_examples"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "bytemuck",
+ "clap",
+ "console_error_panic_hook",
+ "dl_async",
+ "dl_log",
+ "dl_renderer",
+ "glam",
+ "image",
+ "itertools 0.15.0",
+ "macaw",
+ "pollster 1.0.1",
+ "rand 0.9.5",
+ "web-sys",
+ "web-time",
+ "wgpu",
+ "winit",
+]
+
+[[package]]
+name = "dl_ros_msg"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "itertools 0.15.0",
+ "re_cdr",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_rvl"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "byteorder",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_sdk"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "const_format",
+ "crossbeam",
+ "dl_async",
+ "dl_build_info",
+ "dl_build_tools",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_grpc_client",
+ "dl_grpc_server",
+ "dl_importer",
+ "dl_lenses",
+ "dl_lenses_core",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_memory",
+ "dl_quota_channel",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_uri",
+ "dl_web_viewer_server",
+ "document-features",
+ "insta",
+ "itertools 0.15.0",
+ "libc",
+ "nohash-hasher",
+ "parking_lot",
+ "percent-encoding",
+ "serde",
+ "serde_json",
+ "similar-asserts",
+ "thiserror 2.0.19",
+ "tokio",
+ "uuid",
+ "webbrowser",
+]
+
+[[package]]
+name = "dl_sdk_types"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "array-init",
+ "arrow",
+ "bytemuck",
+ "dl_byte_size",
+ "dl_error",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_rvl",
+ "dl_sorbet",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_video",
+ "document-features",
+ "ecolor",
+ "egui_plot",
+ "emath",
+ "glam",
+ "half",
+ "image",
+ "infer",
+ "insta",
+ "itertools 0.15.0",
+ "macaw",
+ "mime_guess2",
+ "mint",
+ "ndarray",
+ "nohash-hasher",
+ "ply-rs-bw",
+ "rand 0.9.5",
+ "serde",
+ "similar-asserts",
+ "smallvec",
+ "thiserror 2.0.19",
+ "tiff",
+ "uuid",
+]
+
+[[package]]
+name = "dl_selection_panel"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_case",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_component_ui",
+ "dl_context_menu",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_format",
+ "dl_lenses_core",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_tiles",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "serde",
+ "smallvec",
+ "static_assertions",
+]
+
+[[package]]
+name = "dl_server"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "axum",
+ "bincode",
+ "bytes",
+ "chrono",
+ "clap",
+ "datafusion",
+ "dl_arrow_util",
+ "dl_async",
+ "dl_build_info",
+ "dl_build_tools",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_entity_db",
+ "dl_format",
+ "dl_grpc_server",
+ "dl_log",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_protos",
+ "dl_redap_tests",
+ "dl_sorbet",
+ "dl_span",
+ "dl_tuid",
+ "dl_types_core",
+ "dl_web",
+ "ehttp",
+ "futures",
+ "getrandom 0.3.4",
+ "http",
+ "http-body",
+ "itertools 0.15.0",
+ "jiff",
+ "lance",
+ "nohash-hasher",
+ "opentelemetry",
+ "parking_lot",
+ "percent-encoding",
+ "serde",
+ "tempfile",
+ "thiserror 2.0.19",
+ "tokio",
+ "tokio-stream",
+ "tokio-util",
+ "tonic",
+ "tonic-web",
+ "tower",
+ "tower-service",
+ "tracing",
+ "url",
+ "wasm-bindgen-test",
+]
+
+[[package]]
+name = "dl_sorbet"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "arrow",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_log",
+ "dl_log_types",
+ "dl_tracing",
+ "dl_tuid",
+ "dl_types_core",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "semver",
+ "strum",
+ "thiserror 2.0.19",
+ "tracing",
+ "web-time",
+]
+
+[[package]]
+name = "dl_span"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
+name = "dl_string_interner"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "dl_byte_size",
+ "nohash-hasher",
+ "parking_lot",
+ "paste",
+ "serde",
+ "static_assertions",
+]
+
+[[package]]
+name = "dl_test_context"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "dl_build_info",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_component_fallbacks",
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_redap_client",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_uri",
+ "dl_viewer_context",
+ "egui",
+ "egui-wgpu",
+ "egui_kittest",
+ "jiff",
+ "parking_lot",
+ "pollster 1.0.1",
+ "wgpu",
+]
+
+[[package]]
+name = "dl_test_mocks"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "axum",
+ "opentelemetry-proto",
+ "parking_lot",
+ "reqwest",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
+ "tonic",
+]
+
+[[package]]
+name = "dl_test_viewport"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_context_menu",
+ "dl_entity_db",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_ui",
+ "dl_viewer_context",
+ "dl_viewport",
+ "dl_viewport_blueprint",
+ "egui",
+]
+
+[[package]]
+name = "dl_tf"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "bitflags 2.13.1",
+ "criterion",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_chunk_store",
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_mutex",
+ "dl_sdk_types",
+ "dl_tracing",
+ "glam",
+ "insta",
+ "itertools 0.15.0",
+ "mimalloc",
+ "nohash-hasher",
+ "parking_lot",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_time_panel"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "criterion",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_context_menu",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_format",
+ "dl_log",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_time_ruler",
+ "dl_tracing",
+ "dl_ui",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "insta",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "rand 0.9.5",
+ "serde",
+ "smallvec",
+ "vec1",
+]
+
+[[package]]
+name = "dl_time_ruler"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_ui",
+ "dl_viewer_context",
+ "egui",
+ "itertools 0.15.0",
+]
+
+[[package]]
+name = "dl_tracing"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_log",
+ "parking_lot",
+ "puffin",
+ "puffin_http",
+ "rfd",
+ "wayland-sys",
+]
+
+[[package]]
+name = "dl_tuid"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "bytemuck",
+ "criterion",
+ "dl_byte_size",
+ "dl_log",
+ "document-features",
+ "getrandom 0.3.4",
+ "quiver",
+ "rand 0.9.5",
+ "serde",
+ "web-time",
+]
+
+[[package]]
+name = "dl_types"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_sdk_types",
+]
+
+[[package]]
+name = "dl_types_builder"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "camino",
+ "colored",
+ "crossbeam",
+ "dl_build_tools",
+ "dl_case",
+ "dl_error",
+ "dl_log",
+ "dl_quota_channel",
+ "dl_tracing",
+ "flatbuffers",
+ "indent",
+ "insta",
+ "itertools 0.15.0",
+ "prettyplease 0.3.0",
+ "proc-macro2",
+ "quote",
+ "rayon",
+ "regex-lite",
+ "serde",
+ "syn 3.0.3",
+ "tempfile",
+ "toml",
+ "unindent",
+ "xshell",
+]
+
+[[package]]
+name = "dl_types_builder_macros"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 3.0.3",
+]
+
+[[package]]
+name = "dl_types_builder_prelude"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_types_builder_macros",
+ "half",
+]
+
+[[package]]
+name = "dl_types_core"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "arrow",
+ "bitflags 2.13.1",
+ "bytemuck",
+ "criterion",
+ "dl_arrow_util",
+ "dl_byte_size",
+ "dl_case",
+ "dl_error",
+ "dl_log",
+ "dl_string_interner",
+ "dl_tracing",
+ "dl_tuid",
+ "document-features",
+ "half",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "quiver",
+ "serde",
+ "serde_json",
+ "similar-asserts",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_ui"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "crossbeam",
+ "dl_analytics",
+ "dl_build_tools",
+ "dl_entity_db",
+ "dl_error",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_mutex",
+ "dl_quota_channel",
+ "dl_tracing",
+ "dl_uri",
+ "eframe",
+ "egui",
+ "egui_commonmark",
+ "egui_extras",
+ "egui_kittest",
+ "egui_tiles",
+ "getrandom 0.3.4",
+ "itertools 0.15.0",
+ "jiff",
+ "notify",
+ "nucleo-matcher",
+ "num-traits",
+ "parking_lot",
+ "rand 0.9.5",
+ "raw-window-handle",
+ "ron",
+ "serde",
+ "smallvec",
+ "strum",
+ "strum_macros",
+ "thiserror 2.0.19",
+ "url",
+ "wayland-client",
+ "wayland-protocols",
+ "web-time",
+]
+
+[[package]]
+name = "dl_uri"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_byte_size",
+ "dl_log",
+ "dl_log_types",
+ "dl_tuid",
+ "dl_types_core",
+ "percent-encoding",
+ "serde",
+ "static_assertions",
+ "thiserror 2.0.19",
+ "url",
+]
+
+[[package]]
+name = "dl_video"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "bit-vec",
+ "bytemuck",
+ "cfg_aliases",
+ "criterion",
+ "cros-codecs",
+ "dl_async",
+ "dl_byte_size",
+ "dl_int",
+ "dl_log",
+ "dl_mutex",
+ "dl_quota_channel",
+ "dl_rvl",
+ "dl_span",
+ "dl_tracing",
+ "dl_tuid",
+ "dl_web",
+ "econtext",
+ "ffmpeg-sidecar",
+ "getrandom 0.3.4",
+ "h264-reader",
+ "image",
+ "indicatif",
+ "itertools 0.15.0",
+ "js-sys",
+ "poll-promise",
+ "re_mp4",
+ "re_rav1d",
+ "scuffle-av1",
+ "scuffle-bytes-util",
+ "serde",
+ "smallvec",
+ "thiserror 2.0.19",
+ "wasm-bindgen",
+ "web-sys",
+ "web-time",
+]
+
+[[package]]
+name = "dl_view"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "dl_chunk_store",
+ "dl_entity_db",
+ "dl_lenses_core",
+ "dl_log",
+ "dl_log_types",
+ "dl_query",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "glam",
+ "itertools 0.15.0",
+ "nohash-hasher",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_view_bar_chart"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "dl_chunk_store",
+ "dl_format",
+ "dl_log_types",
+ "dl_plot",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_plot",
+ "itertools 0.15.0",
+]
+
+[[package]]
+name = "dl_view_dataframe"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "arrow",
+ "dl_byte_size",
+ "dl_chunk_store",
+ "dl_component_ui",
+ "dl_dataframe",
+ "dl_dataframe_ui",
+ "dl_error",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_sorbet",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_dnd",
+ "egui_table",
+ "itertools 0.15.0",
+]
+
+[[package]]
+name = "dl_view_graph"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_query",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "fjadra",
+ "itertools 0.15.0",
+ "nohash-hasher",
+]
+
+[[package]]
+name = "dl_view_map"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "bytemuck",
+ "dl_byte_size",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_types",
+ "dl_query",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "glam",
+ "itertools 0.15.0",
+ "macaw",
+ "walkers",
+]
+
+[[package]]
+name = "dl_view_spatial"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "bitflags 2.13.1",
+ "bytemuck",
+ "dl_byte_size",
+ "dl_chunk_store",
+ "dl_component_ui",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_error",
+ "dl_format",
+ "dl_gamepad",
+ "dl_int",
+ "dl_log",
+ "dl_log_types",
+ "dl_query",
+ "dl_renderer",
+ "dl_rvl",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tf",
+ "dl_tracing",
+ "dl_ui",
+ "dl_video",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport",
+ "dl_viewport_blueprint",
+ "egui",
+ "glam",
+ "half",
+ "hexasphere",
+ "image",
+ "insta",
+ "itertools 0.15.0",
+ "macaw",
+ "ndarray",
+ "nohash-hasher",
+ "ordered-float 5.3.0",
+ "parking_lot",
+ "re_mp4",
+ "serde",
+ "smallvec",
+ "thiserror 2.0.19",
+ "vec1",
+]
+
+[[package]]
+name = "dl_view_state_timeline"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_byte_size",
+ "dl_chunk_store",
+ "dl_component_ui",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_selection_panel",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_time_ruler",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport",
+ "dl_viewport_blueprint",
+ "egui",
+ "nohash-hasher",
+]
+
+[[package]]
+name = "dl_view_tensor"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "bytemuck",
+ "dl_byte_size",
+ "dl_chunk_store",
+ "dl_data_ui",
+ "dl_log_types",
+ "dl_query",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "half",
+ "ndarray",
+ "thiserror 2.0.19",
+ "wgpu",
+]
+
+[[package]]
+name = "dl_view_text_document"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_byte_size",
+ "dl_chunk_store",
+ "dl_log_types",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_commonmark",
+]
+
+[[package]]
+name = "dl_view_text_log"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_data_ui",
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_types",
+ "dl_query",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_extras",
+ "itertools 0.15.0",
+]
+
+[[package]]
+name = "dl_view_time_series"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrayvec",
+ "dl_byte_size",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_component_ui",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_plot",
+ "dl_query",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_tracing",
+ "dl_ui",
+ "dl_view",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_plot",
+ "glam",
+ "itertools 0.15.0",
+ "macaw",
+ "nohash-hasher",
+ "rayon",
+ "smallvec",
+ "vec1",
+]
+
+[[package]]
+name = "dl_viewer"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "bytemuck",
+ "camino",
+ "crossbeam",
+ "dl_analytics",
+ "dl_async",
+ "dl_auth",
+ "dl_blueprint_tree",
+ "dl_build_info",
+ "dl_build_tools",
+ "dl_byte_size",
+ "dl_capabilities",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_chunk_store_ui",
+ "dl_component_fallbacks",
+ "dl_component_ui",
+ "dl_data_source",
+ "dl_data_ui",
+ "dl_dataframe_ui",
+ "dl_entity_db",
+ "dl_error",
+ "dl_format",
+ "dl_gamepad",
+ "dl_importer",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_memory",
+ "dl_memory_view",
+ "dl_mutex",
+ "dl_perf_telemetry",
+ "dl_protos",
+ "dl_query",
+ "dl_recording_panel",
+ "dl_redap_browser",
+ "dl_redap_client",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_selection_panel",
+ "dl_server",
+ "dl_sorbet",
+ "dl_string_interner",
+ "dl_test_context",
+ "dl_test_viewport",
+ "dl_time_panel",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_uri",
+ "dl_video",
+ "dl_view",
+ "dl_view_bar_chart",
+ "dl_view_dataframe",
+ "dl_view_graph",
+ "dl_view_map",
+ "dl_view_spatial",
+ "dl_view_state_timeline",
+ "dl_view_tensor",
+ "dl_view_text_document",
+ "dl_view_text_log",
+ "dl_view_time_series",
+ "dl_viewer_context",
+ "dl_viewport",
+ "dl_viewport_blueprint",
+ "dl_web",
+ "eframe",
+ "egui",
+ "egui-wgpu",
+ "egui_inspection",
+ "egui_kittest",
+ "egui_plot",
+ "ehttp",
+ "emath",
+ "futures",
+ "glam",
+ "image",
+ "insta",
+ "itertools 0.15.0",
+ "jiff",
+ "js-sys",
+ "num-traits",
+ "parking_lot",
+ "poll-promise",
+ "rayon",
+ "rfd",
+ "ron",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "strum",
+ "strum_macros",
+ "tap",
+ "tempfile",
+ "thiserror 2.0.19",
+ "tokio",
+ "tokio-stream",
+ "url",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+ "web-time",
+ "wgpu",
+]
+
+[[package]]
+name = "dl_viewer_context"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "anyhow",
+ "arrow",
+ "bitflags 2.13.1",
+ "bytemuck",
+ "camino",
+ "crossbeam",
+ "datafusion",
+ "directories",
+ "dl_arrow_ui",
+ "dl_arrow_util",
+ "dl_async",
+ "dl_byte_size",
+ "dl_capabilities",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_data_source",
+ "dl_entity_db",
+ "dl_error",
+ "dl_format",
+ "dl_lenses_core",
+ "dl_log",
+ "dl_log_channel",
+ "dl_log_encoding",
+ "dl_log_types",
+ "dl_memory",
+ "dl_mutex",
+ "dl_query",
+ "dl_quota_channel",
+ "dl_redap_client",
+ "dl_renderer",
+ "dl_rvl",
+ "dl_sdk_types",
+ "dl_string_interner",
+ "dl_tf",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_uri",
+ "dl_video",
+ "dl_web",
+ "egui",
+ "egui-wgpu",
+ "egui_kittest",
+ "egui_tiles",
+ "emath",
+ "glam",
+ "half",
+ "image",
+ "indexmap 2.14.0",
+ "itertools 0.15.0",
+ "linked-hash-map",
+ "macaw",
+ "ndarray",
+ "nohash-hasher",
+ "parking_lot",
+ "rand 0.9.5",
+ "rayon",
+ "rfd",
+ "serde",
+ "slotmap",
+ "smallvec",
+ "static_assertions",
+ "strum_macros",
+ "thiserror 2.0.19",
+ "tokio",
+ "uuid",
+ "vec1",
+ "wgpu",
+]
+
+[[package]]
+name = "dl_viewer_mcp"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "dl_log",
+ "dl_protos",
+ "egui_inspection",
+ "egui_mcp",
+ "insta",
+ "parking_lot",
+ "rmcp",
+ "schemars 1.2.2",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tonic",
+]
+
+[[package]]
+name = "dl_viewport"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "dl_context_menu",
+ "dl_entity_db",
+ "dl_format",
+ "dl_log",
+ "dl_log_types",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_tracing",
+ "dl_ui",
+ "dl_viewer_context",
+ "dl_viewport_blueprint",
+ "egui",
+ "egui_tiles",
+ "nohash-hasher",
+ "rayon",
+ "web-time",
+]
+
+[[package]]
+name = "dl_viewport_blueprint"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "ahash",
+ "arrow",
+ "criterion",
+ "dl_chunk",
+ "dl_chunk_store",
+ "dl_entity_db",
+ "dl_log",
+ "dl_log_types",
+ "dl_mutex",
+ "dl_sdk_types",
+ "dl_test_context",
+ "dl_tracing",
+ "dl_types_core",
+ "dl_ui",
+ "dl_viewer_context",
+ "egui",
+ "egui_tiles",
+ "itertools 0.15.0",
+ "mimalloc",
+ "nohash-hasher",
+ "rand 0.9.5",
+ "slotmap",
+ "smallvec",
+ "thiserror 2.0.19",
+]
+
+[[package]]
+name = "dl_web"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "dl_async",
+ "dl_tuid",
+ "getrandom 0.3.4",
+ "js-sys",
+ "wasm-bindgen",
+ "wasm-bindgen-test",
+ "web-sys",
+]
+
+[[package]]
+name = "dl_web_tests"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "anyhow",
+ "argh",
+ "cargo_metadata",
+ "dl_server",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "dl_web_viewer_server"
+version = "0.36.0-alpha.1+dev"
+dependencies = [
+ "dl_analytics",
+ "dl_build_tools",
+ "dl_log",
+ "document-features",
+ "tempfile",
+ "thiserror 2.0.19",
+ "tiny_http",
+ "zip",
+]
+
+[[package]]
 name = "dlib"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3109,9 +5931,9 @@ dependencies = [
 name = "dna"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
+ "dalaran",
  "itertools 0.15.0",
  "rand 0.9.5",
- "dalaran",
 ]
 
 [[package]]
@@ -3657,8 +6479,8 @@ dependencies = [
 name = "extend_viewer_ui"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "mimalloc",
  "dalaran",
+ "mimalloc",
 ]
 
 [[package]]
@@ -4305,8 +7127,8 @@ name = "graph_lattice"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
- "itertools 0.15.0",
  "dalaran",
+ "itertools 0.15.0",
 ]
 
 [[package]]
@@ -4897,8 +7719,8 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "rand 0.9.5",
  "dalaran",
+ "rand 0.9.5",
 ]
 
 [[package]]
@@ -6125,12 +8947,12 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
+ "dalaran",
+ "dl_tracing",
  "emath",
  "glam",
  "itertools 0.15.0",
  "rand 0.9.5",
- "dl_tracing",
- "dalaran",
 ]
 
 [[package]]
@@ -6434,8 +9256,8 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "glam",
  "dalaran",
+ "glam",
 ]
 
 [[package]]
@@ -7176,12 +9998,12 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
+ "dalaran",
+ "dl_build_tools",
  "glam",
  "prost",
  "prost-build",
  "protoc-bin-vendored",
- "dl_build_tools",
- "dalaran",
 ]
 
 [[package]]
@@ -7742,10 +10564,10 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
+ "dalaran",
+ "dl_log",
  "rand 0.9.5",
  "rand_distr",
- "dl_log",
- "dalaran",
 ]
 
 [[package]]
@@ -8473,8 +11295,8 @@ dependencies = [
  "anyhow",
  "bytes",
  "clap",
- "gltf",
  "dalaran",
+ "gltf",
 ]
 
 [[package]]
@@ -8504,217 +11326,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dl_analytics"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "crossbeam",
- "directories",
- "ehttp",
- "jiff",
- "dl_build_info",
- "dl_log",
- "dl_quota_channel",
- "regex-lite",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "thiserror 2.0.19",
- "url",
- "uuid",
- "web-sys",
-]
-
-[[package]]
-name = "dl_arrow_ui"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "egui",
- "egui_kittest",
- "insta",
- "itertools 0.15.0",
- "jiff",
- "dl_arrow_util",
- "dl_format",
- "dl_log_types",
- "dl_sdk_types",
- "dl_tracing",
- "dl_ui",
-]
-
-[[package]]
-name = "dl_arrow_util"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "arrow",
- "comfy-table",
- "datafusion",
- "half",
- "insta",
- "itertools 0.15.0",
- "dl_log",
- "dl_tracing",
- "dl_tuid",
- "serde_json",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_async"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "async-trait",
- "bytes",
- "futures",
- "js-sys",
- "thiserror 2.0.19",
- "tokio",
- "wasm-bindgen",
- "wasm-bindgen-test",
- "web-sys",
-]
-
-[[package]]
-name = "dl_auth"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "async-trait",
- "base64 0.23.0",
- "directories",
- "ehttp",
- "getrandom 0.2.17",
- "getrandom 0.3.4",
- "hmac",
- "http",
- "indicatif",
- "jiff",
- "jsonwebtoken",
- "parking_lot",
- "rand 0.9.5",
- "dl_analytics",
- "dl_int",
- "dl_log",
- "dl_web",
- "ring",
- "serde",
- "serde_json",
- "sha2 0.10.9",
- "signature",
- "thiserror 2.0.19",
- "tiny_http",
- "tokio",
- "tonic",
- "tower",
- "url",
- "uuid",
- "web-sys",
- "webbrowser",
-]
-
-[[package]]
-name = "dl_backoff"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "getrandom 0.3.4",
- "rand 0.9.5",
- "dl_async",
-]
-
-[[package]]
-name = "dl_blueprint_tree"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "egui",
- "egui_kittest",
- "egui_tiles",
- "insta",
- "itertools 0.15.0",
- "dl_chunk_store",
- "dl_context_menu",
- "dl_data_ui",
- "dl_entity_db",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_ui",
- "dl_view_spatial",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "serde",
- "smallvec",
-]
-
-[[package]]
-name = "dl_build_info"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "dl_byte_size",
- "serde",
-]
-
-[[package]]
-name = "dl_build_tools"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "cargo_metadata",
- "glob",
- "jiff",
- "regex-lite",
- "sha2 0.10.9",
- "unindent",
- "walkdir",
-]
-
-[[package]]
-name = "dl_byte_size"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "ecolor",
- "egui",
- "glam",
- "half",
- "insta",
- "macaw",
- "parking_lot",
- "dl_byte_size_derive",
- "smallvec",
- "vec1",
-]
-
-[[package]]
-name = "dl_byte_size_derive"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "proc-macro-crate",
- "proc-macro2",
- "quote",
- "syn 3.0.3",
-]
-
-[[package]]
-name = "dl_capabilities"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "document-features",
- "egui",
- "dl_log",
- "static_assertions",
-]
-
-[[package]]
-name = "dl_case"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "convert_case",
-]
-
-[[package]]
 name = "re_cdr"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8724,833 +11335,6 @@ dependencies = [
  "byteorder",
  "serde",
  "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_chunk"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "bytemuck",
- "crossbeam",
- "document-features",
- "half",
- "insta",
- "itertools 0.15.0",
- "nohash-hasher",
- "rand 0.9.5",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_error",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_quota_channel",
- "dl_sorbet",
- "dl_span",
- "dl_tracing",
- "dl_types_core",
- "similar-asserts",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_chunk_store"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "criterion",
- "document-features",
- "futures",
- "indent",
- "insta",
- "itertools 0.15.0",
- "mimalloc",
- "nohash-hasher",
- "parking_lot",
- "rand 0.9.5",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_chunk",
- "dl_format",
- "dl_int",
- "dl_log",
- "dl_log_encoding",
- "dl_log_types",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_tracing",
- "dl_types_core",
- "similar-asserts",
- "tempfile",
- "thiserror 2.0.19",
- "web-time",
-]
-
-[[package]]
-name = "dl_chunk_store_ui"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "egui",
- "egui_extras",
- "itertools 0.15.0",
- "dl_arrow_ui",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_chunk_store",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_types_core",
- "dl_ui",
- "dl_viewer_context",
-]
-
-[[package]]
-name = "dl_component_fallbacks"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "dl_log_types",
- "dl_rvl",
- "dl_sdk_types",
- "dl_video",
- "dl_viewer_context",
-]
-
-[[package]]
-name = "dl_component_ui"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "egui",
- "egui_dnd",
- "egui_extras",
- "egui_kittest",
- "egui_plot",
- "itertools 0.15.0",
- "nohash-hasher",
- "dl_data_ui",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_protos",
- "dl_sdk_types",
- "dl_test_context",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_uri",
- "dl_viewer_context",
-]
-
-[[package]]
-name = "dl_context_menu"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "egui",
- "egui_tiles",
- "itertools 0.15.0",
- "nohash-hasher",
- "dl_entity_db",
- "dl_log",
- "dl_log_channel",
- "dl_log_types",
- "dl_sdk_types",
- "dl_tracing",
- "dl_ui",
- "dl_uri",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "dl_web",
- "static_assertions",
-]
-
-[[package]]
-name = "dl_crash_handler"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "backtrace",
- "econtext",
- "itertools 0.15.0",
- "libc",
- "parking_lot",
- "dl_analytics",
- "dl_build_info",
-]
-
-[[package]]
-name = "dl_data_source"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "ehttp",
- "itertools 0.15.0",
- "rayon",
- "dl_async",
- "dl_format",
- "dl_grpc_client",
- "dl_importer",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_redap_client",
- "dl_tracing",
- "dl_uri",
- "dl_web",
- "url",
- "web-sys",
-]
-
-[[package]]
-name = "dl_data_ui"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "bytemuck",
- "egui",
- "egui_extras",
- "egui_plot",
- "itertools 0.15.0",
- "jiff",
- "dl_arrow_ui",
- "dl_capabilities",
- "dl_chunk_store",
- "dl_entity_db",
- "dl_format",
- "dl_log",
- "dl_log_channel",
- "dl_log_types",
- "dl_query",
- "dl_renderer",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_uri",
- "dl_video",
- "dl_viewer_context",
- "rexif",
- "unindent",
-]
-
-[[package]]
-name = "dl_dataframe"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "arrow",
- "criterion",
- "insta",
- "itertools 0.15.0",
- "mimalloc",
- "nohash-hasher",
- "rayon",
- "dl_arrow_util",
- "dl_chunk",
- "dl_chunk_store",
- "dl_log",
- "dl_log_types",
- "dl_query",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_span",
- "dl_tracing",
- "dl_types_core",
- "similar-asserts",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
-name = "dl_dataframe_ui"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "async-trait",
- "crossbeam",
- "datafusion",
- "egui",
- "egui_dnd",
- "egui_kittest",
- "egui_table",
- "futures",
- "insta",
- "itertools 0.15.0",
- "jiff",
- "nohash-hasher",
- "ordered-float 5.3.0",
- "dl_arrow_util",
- "dl_async",
- "dl_chunk_store",
- "dl_component_ui",
- "dl_data_source",
- "dl_dataframe",
- "dl_entity_db",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_mutex",
- "dl_protos",
- "dl_quota_channel",
- "dl_redap_client",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_test_context",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_uri",
- "dl_viewer_context",
- "dl_viewport",
- "dl_viewport_blueprint",
- "serde",
- "static_assertions",
- "strum",
- "thiserror 2.0.19",
- "tokio",
-]
-
-[[package]]
-name = "dl_datafusion"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "async-stream",
- "async-trait",
- "bytes",
- "chrono",
- "datafusion",
- "futures",
- "futures-util",
- "getrandom 0.3.4",
- "itertools 0.15.0",
- "jiff",
- "opentelemetry",
- "opentelemetry-proto",
- "parking_lot",
- "quiver",
- "dl_analytics",
- "dl_arrow_util",
- "dl_async",
- "dl_backoff",
- "dl_byte_size",
- "dl_dataframe",
- "dl_format",
- "dl_int",
- "dl_log",
- "dl_log_encoding",
- "dl_log_types",
- "dl_perf_telemetry",
- "dl_protos",
- "dl_redap_client",
- "dl_sorbet",
- "dl_tracing",
- "dl_types_core",
- "dl_uri",
- "reqwest",
- "tokio",
- "tokio-stream",
- "tonic",
- "tracing",
- "web-time",
-]
-
-[[package]]
-name = "dl_dev_tools"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "argh",
- "camino",
- "cargo_metadata",
- "glob",
- "indicatif",
- "itertools 0.15.0",
- "rayon",
- "dl_build_tools",
- "dl_format",
- "roxmltree",
- "serde",
- "serde_json",
- "tempfile",
- "toml",
- "ureq",
- "url",
- "wasm-bindgen-cli-support",
-]
-
-[[package]]
-name = "dl_entity_db"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "document-features",
- "emath",
- "indexmap 2.14.0",
- "insta",
- "itertools 0.15.0",
- "nohash-hasher",
- "poll-promise",
- "dl_arrow_util",
- "dl_build_info",
- "dl_byte_size",
- "dl_chunk",
- "dl_chunk_store",
- "dl_format",
- "dl_int",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_mutex",
- "dl_query",
- "dl_sorbet",
- "dl_tracing",
- "dl_types_core",
- "dl_uri",
- "serde",
- "similar-asserts",
- "static_assertions",
- "tap",
- "thiserror 2.0.19",
- "vec1",
- "web-time",
-]
-
-[[package]]
-name = "dl_error"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
-]
-
-[[package]]
-name = "dl_format"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "half",
- "itertools 0.15.0",
- "num-traits",
- "dl_int",
- "dl_log",
-]
-
-[[package]]
-name = "dl_gamepad"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "gilrs",
- "glam",
- "parking_lot",
- "dl_log",
-]
-
-[[package]]
-name = "dl_grpc_client"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "async-stream",
- "crossbeam",
- "dl_async",
- "dl_chunk",
- "dl_error",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_protos",
- "dl_quota_channel",
- "dl_sorbet",
- "dl_tracing",
- "dl_uri",
- "rerun-tonic-web-wasm-client",
- "thiserror 2.0.19",
- "tokio",
- "tokio-stream",
- "tonic",
- "web-time",
-]
-
-[[package]]
-name = "dl_grpc_headers"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "http",
- "pin-project-lite",
- "tonic",
- "tower",
-]
-
-[[package]]
-name = "dl_grpc_server"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "async-stream",
- "futures",
- "itertools 0.15.0",
- "parking_lot",
- "dl_byte_size",
- "dl_chunk",
- "dl_error",
- "dl_format",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_memory",
- "dl_protos",
- "dl_quota_channel",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_tracing",
- "dl_uri",
- "similar-asserts",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tonic",
- "tonic-web",
- "tower-http",
- "wildmatch",
-]
-
-[[package]]
-name = "dl_hdf5"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "hdf5-pure",
- "itertools 0.15.0",
- "dl_chunk",
- "dl_chunk_store",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "dl_tracing",
- "tempfile",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_importer"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "crossbeam",
- "image",
- "indexmap 2.14.0",
- "insta",
- "itertools 0.15.0",
- "mcap",
- "memmap2 0.9.11",
- "parking_lot",
- "parquet",
- "rayon",
- "dl_arrow_util",
- "dl_chunk",
- "dl_chunk_store",
- "dl_error",
- "dl_format",
- "dl_lenses",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_mcap",
- "dl_mp4_reader",
- "dl_parquet",
- "dl_quota_channel",
- "dl_sdk_types",
- "dl_tracing",
- "dl_video",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 2.0.19",
- "urdf-rs",
- "ureq",
- "walkdir",
-]
-
-[[package]]
-name = "dl_int"
-version = "0.36.0-alpha.1+dev"
-
-[[package]]
-name = "dl_integration_test"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "datafusion",
- "directories",
- "egui",
- "egui_kittest",
- "egui_tiles",
- "futures",
- "insta",
- "ndarray",
- "parking_lot",
- "dl_build_info",
- "dl_dataframe_ui",
- "dl_datafusion",
- "dl_log_encoding",
- "dl_log_types",
- "dl_protos",
- "dl_redap_client",
- "dl_sdk",
- "dl_sdk_types",
- "dl_server",
- "dl_test_context",
- "dl_ui",
- "dl_uri",
- "dl_view_bar_chart",
- "dl_view_state_timeline",
- "dl_view_tensor",
- "dl_view_text_document",
- "dl_view_text_log",
- "dl_view_time_series",
- "dl_viewer",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "reqwest",
- "serde",
- "tempfile",
- "tokio",
- "uuid",
-]
-
-[[package]]
-name = "dl_lenses"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "insta",
- "itertools 0.15.0",
- "dl_arrow_util",
- "dl_int",
- "dl_lenses_core",
- "dl_log",
- "dl_log_types",
- "dl_mcap",
- "dl_sdk_types",
- "dl_tracing",
-]
-
-[[package]]
-name = "dl_lenses_core"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "insta",
- "itertools 0.15.0",
- "nohash-hasher",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_chunk",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "thiserror 2.0.19",
- "vec1",
-]
-
-[[package]]
-name = "dl_log"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "crossbeam",
- "log",
- "log-once",
- "parking_lot",
- "tracing",
- "tracing-log",
- "tracing-subscriber",
- "tracing-web",
-]
-
-[[package]]
-name = "dl_log_channel"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "camino",
- "crossbeam",
- "futures",
- "parking_lot",
- "dl_byte_size",
- "dl_log_encoding",
- "dl_log_types",
- "dl_protos",
- "dl_quota_channel",
- "dl_tracing",
- "dl_uri",
- "serde",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_log_encoding"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "async-trait",
- "bytes",
- "criterion",
- "crossbeam",
- "ehttp",
- "futures",
- "insta",
- "itertools 0.15.0",
- "jiff",
- "js-sys",
- "lz4_flex",
- "mimalloc",
- "parking_lot",
- "dl_arrow_util",
- "dl_async",
- "dl_build_info",
- "dl_byte_size",
- "dl_chunk",
- "dl_log",
- "dl_log_types",
- "dl_protos",
- "dl_quota_channel",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_span",
- "dl_tracing",
- "dl_types_core",
- "sha2 0.10.9",
- "similar-asserts",
- "tempfile",
- "thiserror 2.0.19",
- "tracing",
- "url",
- "wasm-bindgen",
- "web-sys",
- "web-time",
- "xxhash-rust",
-]
-
-[[package]]
-name = "dl_log_types"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "bytemuck",
- "clean-path",
- "criterion",
- "document-features",
- "fixed",
- "half",
- "itertools 0.15.0",
- "jiff",
- "mimalloc",
- "natord",
- "nohash-hasher",
- "num-derive",
- "num-traits",
- "parking_lot",
- "quiver",
- "dl_arrow_util",
- "dl_build_info",
- "dl_byte_size",
- "dl_format",
- "dl_log",
- "dl_string_interner",
- "dl_tracing",
- "dl_tuid",
- "dl_types_core",
- "serde",
- "similar-asserts",
- "static_assertions",
- "thiserror 2.0.19",
- "typenum",
- "uuid",
- "web-time",
- "xxhash-rust",
-]
-
-[[package]]
-name = "dl_mcap"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "byteorder",
- "crossbeam",
- "insta",
- "itertools 0.15.0",
- "mcap",
- "parking_lot",
- "prost-reflect",
- "rayon",
- "dl_arrow_util",
- "re_cdr",
- "dl_chunk",
- "dl_int",
- "dl_log",
- "dl_log_types",
- "dl_quota_channel",
- "dl_ros_msg",
- "dl_sdk_types",
- "dl_tracing",
- "regex-lite",
- "serde",
- "serde_bytes",
- "strum",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_memory"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "backtrace",
- "crossbeam",
- "itertools 0.15.0",
- "memory-stats",
- "nohash-hasher",
- "parking_lot",
- "dl_format",
- "dl_log",
- "dl_quota_channel",
- "dl_tracing",
- "serde",
- "smallvec",
- "sysinfo",
- "wasm-bindgen",
- "web-time",
-]
-
-[[package]]
-name = "dl_memory_view"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "eframe",
- "egui",
- "dl_byte_size",
- "dl_format",
- "wgpu",
 ]
 
 [[package]]
@@ -9565,181 +11349,6 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_mp4_reader"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "itertools 0.15.0",
- "dl_chunk",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "dl_tracing",
- "dl_video",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_mutex"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "parking_lot",
- "dl_byte_size",
- "dl_log",
-]
-
-[[package]]
-name = "dl_parquet"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "arrow",
- "bytes",
- "itertools 0.15.0",
- "parquet",
- "dl_chunk",
- "dl_lenses",
- "dl_lenses_core",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "dl_tracing",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_perf_telemetry"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "axum",
- "base64 0.23.0",
- "clap",
- "http",
- "memory-stats",
- "opentelemetry",
- "opentelemetry-appender-tracing",
- "opentelemetry-http",
- "opentelemetry-otlp",
- "opentelemetry_sdk",
- "parking_lot",
- "prometheus-client",
- "rand 0.9.5",
- "dl_auth",
- "dl_grpc_headers",
- "dl_test_mocks",
- "serde",
- "serde_json",
- "tokio",
- "tonic",
- "tower",
- "tower-http",
- "tracing",
- "tracing-opentelemetry",
- "tracing-subscriber",
- "tracing-tracy",
-]
-
-[[package]]
-name = "dl_plot"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "egui",
- "indexmap 2.14.0",
- "dl_ui",
-]
-
-[[package]]
-name = "dl_protos"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "http",
- "insta",
- "itertools 0.15.0",
- "jiff",
- "lz4_flex",
- "opentelemetry",
- "prost",
- "prost-types",
- "pyo3",
- "quiver",
- "dl_arrow_util",
- "dl_build_info",
- "dl_byte_size",
- "dl_chunk",
- "dl_grpc_headers",
- "dl_log_types",
- "dl_sorbet",
- "dl_tracing",
- "dl_tuid",
- "dl_types_core",
- "serde",
- "thiserror 2.0.19",
- "tonic",
- "tonic-prost",
- "tower",
- "tracing",
- "url",
-]
-
-[[package]]
-name = "dl_protos_builder"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "camino",
- "dl_log",
- "tonic-prost-build",
-]
-
-[[package]]
-name = "dl_query"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "bytemuck",
- "criterion",
- "indent",
- "itertools 0.15.0",
- "mimalloc",
- "nohash-hasher",
- "parking_lot",
- "paste",
- "rand 0.9.5",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_chunk",
- "dl_chunk_store",
- "dl_error",
- "dl_format",
- "dl_log",
- "dl_log_encoding",
- "dl_log_types",
- "dl_sdk_types",
- "dl_tracing",
- "dl_types_core",
- "seq-macro",
- "similar-asserts",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_quota_channel"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "crossbeam",
- "parking_lot",
- "dl_byte_size",
- "dl_format",
- "dl_log",
- "tokio",
 ]
 
 [[package]]
@@ -9763,1432 +11372,6 @@ dependencies = [
  "strum",
  "to_method",
  "zerocopy 0.7.35",
-]
-
-[[package]]
-name = "dl_recording_panel"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "egui",
- "insta",
- "itertools 0.15.0",
- "dl_data_ui",
- "dl_entity_db",
- "dl_log",
- "dl_log_channel",
- "dl_log_types",
- "dl_redap_browser",
- "dl_sdk_types",
- "dl_test_context",
- "dl_tracing",
- "dl_ui",
- "dl_uri",
- "dl_viewer_context",
- "serde",
-]
-
-[[package]]
-name = "dl_redap_browser"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "crossbeam",
- "datafusion",
- "egui",
- "egui_extras",
- "futures",
- "itertools 0.15.0",
- "dl_async",
- "dl_auth",
- "dl_backoff",
- "dl_component_ui",
- "dl_dataframe_ui",
- "dl_datafusion",
- "dl_log",
- "dl_log_types",
- "dl_protos",
- "dl_quota_channel",
- "dl_redap_client",
- "dl_sorbet",
- "dl_ui",
- "dl_uri",
- "dl_viewer_context",
- "dl_web",
- "serde",
- "serde_json",
- "url",
- "uuid",
- "wasm-bindgen",
- "web-sys",
- "webbrowser",
-]
-
-[[package]]
-name = "dl_redap_client"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "async-trait",
- "bitflags 2.13.1",
- "ehttp",
- "futures",
- "http",
- "http-body",
- "itertools 0.15.0",
- "jiff",
- "opentelemetry",
- "opentelemetry-proto",
- "quiver",
- "dl_arrow_util",
- "dl_async",
- "dl_auth",
- "dl_backoff",
- "dl_byte_size",
- "dl_chunk",
- "dl_error",
- "dl_format",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_perf_telemetry",
- "dl_protos",
- "dl_tracing",
- "dl_types_core",
- "dl_uri",
- "rerun-tonic-web-wasm-client",
- "serde",
- "thiserror 2.0.19",
- "tiny_http",
- "tokio",
- "tokio-stream",
- "tonic",
- "tonic-prost",
- "tower",
- "tracing",
- "url",
- "wasm-bindgen-test",
- "web-sys",
- "web-time",
-]
-
-[[package]]
-name = "dl_redap_tests"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "arrow",
- "async-trait",
- "datafusion",
- "futures",
- "insta",
- "itertools 0.15.0",
- "lance",
- "parking_lot",
- "prost-types",
- "dl_arrow_util",
- "dl_chunk",
- "dl_chunk_store",
- "dl_datafusion",
- "dl_log_types",
- "dl_protos",
- "dl_sdk",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_tuid",
- "dl_types_core",
- "tempfile",
- "tokio",
- "tonic",
- "url",
-]
-
-[[package]]
-name = "dl_renderer"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "bitflags 2.13.1",
- "bytemuck",
- "cfg_aliases",
- "clean-path",
- "criterion",
- "crossbeam",
- "dae-parser",
- "document-features",
- "ecolor",
- "enumset",
- "getrandom 0.3.4",
- "glam",
- "gltf",
- "half",
- "itertools 0.15.0",
- "macaw",
- "never",
- "notify",
- "ordered-float 5.3.0",
- "parking_lot",
- "pathdiff",
- "pollster 1.0.1",
- "profiling",
- "dl_build_tools",
- "dl_byte_size",
- "dl_error",
- "dl_log",
- "dl_mutex",
- "dl_quota_channel",
- "dl_tracing",
- "dl_video",
- "dl_web",
- "regex-lite",
- "serde",
- "slotmap",
- "smallvec",
- "static_assertions",
- "stl_io",
- "thiserror 2.0.19",
- "tobj",
- "type-map",
- "unindent",
- "walkdir",
- "web-sys",
- "wgpu",
-]
-
-[[package]]
-name = "dl_renderer_examples"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "bytemuck",
- "clap",
- "console_error_panic_hook",
- "glam",
- "image",
- "itertools 0.15.0",
- "macaw",
- "pollster 1.0.1",
- "rand 0.9.5",
- "dl_async",
- "dl_log",
- "dl_renderer",
- "web-sys",
- "web-time",
- "wgpu",
- "winit",
-]
-
-[[package]]
-name = "dl_ros_msg"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "itertools 0.15.0",
- "re_cdr",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_rvl"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "byteorder",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_sdk"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "const_format",
- "crossbeam",
- "document-features",
- "insta",
- "itertools 0.15.0",
- "libc",
- "nohash-hasher",
- "parking_lot",
- "percent-encoding",
- "dl_async",
- "dl_build_info",
- "dl_build_tools",
- "dl_byte_size",
- "dl_chunk",
- "dl_grpc_client",
- "dl_grpc_server",
- "dl_importer",
- "dl_lenses",
- "dl_lenses_core",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_memory",
- "dl_quota_channel",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_tracing",
- "dl_uri",
- "dl_web_viewer_server",
- "serde",
- "serde_json",
- "similar-asserts",
- "thiserror 2.0.19",
- "tokio",
- "uuid",
- "webbrowser",
-]
-
-[[package]]
-name = "dl_sdk_types"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "array-init",
- "arrow",
- "bytemuck",
- "document-features",
- "ecolor",
- "egui_plot",
- "emath",
- "glam",
- "half",
- "image",
- "infer",
- "insta",
- "itertools 0.15.0",
- "macaw",
- "mime_guess2",
- "mint",
- "ndarray",
- "nohash-hasher",
- "ply-rs-bw",
- "rand 0.9.5",
- "dl_byte_size",
- "dl_error",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_rvl",
- "dl_sorbet",
- "dl_tracing",
- "dl_types_core",
- "dl_video",
- "serde",
- "similar-asserts",
- "smallvec",
- "thiserror 2.0.19",
- "tiff",
- "uuid",
-]
-
-[[package]]
-name = "dl_selection_panel"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "egui",
- "egui_tiles",
- "itertools 0.15.0",
- "nohash-hasher",
- "dl_case",
- "dl_chunk",
- "dl_chunk_store",
- "dl_component_ui",
- "dl_context_menu",
- "dl_data_ui",
- "dl_entity_db",
- "dl_format",
- "dl_lenses_core",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "serde",
- "smallvec",
- "static_assertions",
-]
-
-[[package]]
-name = "dl_server"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "axum",
- "bincode",
- "bytes",
- "chrono",
- "clap",
- "datafusion",
- "ehttp",
- "futures",
- "getrandom 0.3.4",
- "http",
- "http-body",
- "itertools 0.15.0",
- "jiff",
- "lance",
- "nohash-hasher",
- "opentelemetry",
- "parking_lot",
- "percent-encoding",
- "dl_arrow_util",
- "dl_async",
- "dl_build_info",
- "dl_build_tools",
- "dl_byte_size",
- "dl_chunk",
- "dl_chunk_store",
- "dl_entity_db",
- "dl_format",
- "dl_grpc_server",
- "dl_log",
- "dl_log_encoding",
- "dl_log_types",
- "dl_protos",
- "dl_redap_tests",
- "dl_sorbet",
- "dl_span",
- "dl_tuid",
- "dl_types_core",
- "dl_web",
- "serde",
- "tempfile",
- "thiserror 2.0.19",
- "tokio",
- "tokio-stream",
- "tokio-util",
- "tonic",
- "tonic-web",
- "tower",
- "tower-service",
- "tracing",
- "url",
- "wasm-bindgen-test",
-]
-
-[[package]]
-name = "dl_sorbet"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "arrow",
- "itertools 0.15.0",
- "nohash-hasher",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_log",
- "dl_log_types",
- "dl_tracing",
- "dl_tuid",
- "dl_types_core",
- "semver",
- "strum",
- "thiserror 2.0.19",
- "tracing",
- "web-time",
-]
-
-[[package]]
-name = "dl_span"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "num-traits",
-]
-
-[[package]]
-name = "dl_string_interner"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "nohash-hasher",
- "parking_lot",
- "paste",
- "dl_byte_size",
- "serde",
- "static_assertions",
-]
-
-[[package]]
-name = "dl_test_context"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "egui",
- "egui-wgpu",
- "egui_kittest",
- "jiff",
- "parking_lot",
- "pollster 1.0.1",
- "dl_build_info",
- "dl_chunk",
- "dl_chunk_store",
- "dl_component_fallbacks",
- "dl_entity_db",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_redap_client",
- "dl_renderer",
- "dl_sdk_types",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_uri",
- "dl_viewer_context",
- "wgpu",
-]
-
-[[package]]
-name = "dl_test_mocks"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "axum",
- "opentelemetry-proto",
- "parking_lot",
- "reqwest",
- "serde_json",
- "tokio",
- "tokio-stream",
- "tonic",
-]
-
-[[package]]
-name = "dl_test_viewport"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "egui",
- "dl_byte_size",
- "dl_chunk",
- "dl_context_menu",
- "dl_entity_db",
- "dl_log_types",
- "dl_sdk_types",
- "dl_test_context",
- "dl_ui",
- "dl_viewer_context",
- "dl_viewport",
- "dl_viewport_blueprint",
-]
-
-[[package]]
-name = "dl_tf"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "bitflags 2.13.1",
- "criterion",
- "glam",
- "insta",
- "itertools 0.15.0",
- "mimalloc",
- "nohash-hasher",
- "parking_lot",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_chunk_store",
- "dl_entity_db",
- "dl_log",
- "dl_log_encoding",
- "dl_log_types",
- "dl_mutex",
- "dl_sdk_types",
- "dl_tracing",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_time_panel"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "criterion",
- "egui",
- "insta",
- "itertools 0.15.0",
- "nohash-hasher",
- "rand 0.9.5",
- "dl_byte_size",
- "dl_chunk",
- "dl_chunk_store",
- "dl_context_menu",
- "dl_data_ui",
- "dl_entity_db",
- "dl_format",
- "dl_log",
- "dl_log_encoding",
- "dl_log_types",
- "dl_sdk_types",
- "dl_test_context",
- "dl_time_ruler",
- "dl_tracing",
- "dl_ui",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "serde",
- "smallvec",
- "vec1",
-]
-
-[[package]]
-name = "dl_time_ruler"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "egui",
- "itertools 0.15.0",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "dl_tracing",
- "dl_ui",
- "dl_viewer_context",
-]
-
-[[package]]
-name = "dl_tracing"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "parking_lot",
- "puffin",
- "puffin_http",
- "dl_log",
- "rfd",
- "wayland-sys",
-]
-
-[[package]]
-name = "dl_tuid"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "bytemuck",
- "criterion",
- "document-features",
- "getrandom 0.3.4",
- "quiver",
- "rand 0.9.5",
- "dl_byte_size",
- "dl_log",
- "serde",
- "web-time",
-]
-
-[[package]]
-name = "dl_types"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "dl_sdk_types",
-]
-
-[[package]]
-name = "dl_types_builder"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "camino",
- "colored",
- "crossbeam",
- "flatbuffers",
- "indent",
- "insta",
- "itertools 0.15.0",
- "prettyplease 0.3.0",
- "proc-macro2",
- "quote",
- "rayon",
- "dl_build_tools",
- "dl_case",
- "dl_error",
- "dl_log",
- "dl_quota_channel",
- "dl_tracing",
- "regex-lite",
- "serde",
- "syn 3.0.3",
- "tempfile",
- "toml",
- "unindent",
- "xshell",
-]
-
-[[package]]
-name = "dl_types_builder_macros"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 3.0.3",
-]
-
-[[package]]
-name = "dl_types_builder_prelude"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "half",
- "dl_types_builder_macros",
-]
-
-[[package]]
-name = "dl_types_core"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "arrow",
- "bitflags 2.13.1",
- "bytemuck",
- "criterion",
- "document-features",
- "half",
- "itertools 0.15.0",
- "nohash-hasher",
- "quiver",
- "dl_arrow_util",
- "dl_byte_size",
- "dl_case",
- "dl_error",
- "dl_log",
- "dl_string_interner",
- "dl_tracing",
- "dl_tuid",
- "serde",
- "serde_json",
- "similar-asserts",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_ui"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "crossbeam",
- "eframe",
- "egui",
- "egui_commonmark",
- "egui_extras",
- "egui_kittest",
- "egui_tiles",
- "getrandom 0.3.4",
- "itertools 0.15.0",
- "jiff",
- "notify",
- "nucleo-matcher",
- "num-traits",
- "parking_lot",
- "rand 0.9.5",
- "raw-window-handle",
- "dl_analytics",
- "dl_build_tools",
- "dl_entity_db",
- "dl_error",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_mutex",
- "dl_quota_channel",
- "dl_tracing",
- "dl_uri",
- "ron",
- "serde",
- "smallvec",
- "strum",
- "strum_macros",
- "thiserror 2.0.19",
- "url",
- "wayland-client",
- "wayland-protocols",
- "web-time",
-]
-
-[[package]]
-name = "dl_uri"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "percent-encoding",
- "dl_byte_size",
- "dl_log",
- "dl_log_types",
- "dl_tuid",
- "dl_types_core",
- "serde",
- "static_assertions",
- "thiserror 2.0.19",
- "url",
-]
-
-[[package]]
-name = "dl_video"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "bit-vec",
- "bytemuck",
- "cfg_aliases",
- "criterion",
- "cros-codecs",
- "econtext",
- "ffmpeg-sidecar",
- "getrandom 0.3.4",
- "h264-reader",
- "image",
- "indicatif",
- "itertools 0.15.0",
- "js-sys",
- "poll-promise",
- "dl_async",
- "dl_byte_size",
- "dl_int",
- "dl_log",
- "re_mp4",
- "dl_mutex",
- "dl_quota_channel",
- "re_rav1d",
- "dl_rvl",
- "dl_span",
- "dl_tracing",
- "dl_tuid",
- "dl_web",
- "scuffle-av1",
- "scuffle-bytes-util",
- "serde",
- "smallvec",
- "thiserror 2.0.19",
- "wasm-bindgen",
- "web-sys",
- "web-time",
-]
-
-[[package]]
-name = "dl_view"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "egui",
- "glam",
- "itertools 0.15.0",
- "nohash-hasher",
- "dl_chunk_store",
- "dl_entity_db",
- "dl_lenses_core",
- "dl_log",
- "dl_log_types",
- "dl_query",
- "dl_renderer",
- "dl_sdk_types",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_view_bar_chart"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "egui",
- "egui_plot",
- "itertools 0.15.0",
- "dl_chunk_store",
- "dl_format",
- "dl_log_types",
- "dl_plot",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
-]
-
-[[package]]
-name = "dl_view_dataframe"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "arrow",
- "egui",
- "egui_dnd",
- "egui_table",
- "itertools 0.15.0",
- "dl_byte_size",
- "dl_chunk_store",
- "dl_component_ui",
- "dl_dataframe",
- "dl_dataframe_ui",
- "dl_error",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_sdk_types",
- "dl_sorbet",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_viewer_context",
- "dl_viewport_blueprint",
-]
-
-[[package]]
-name = "dl_view_graph"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "egui",
- "fjadra",
- "itertools 0.15.0",
- "nohash-hasher",
- "dl_byte_size",
- "dl_chunk",
- "dl_chunk_store",
- "dl_data_ui",
- "dl_entity_db",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_query",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
-]
-
-[[package]]
-name = "dl_view_map"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "bytemuck",
- "egui",
- "glam",
- "itertools 0.15.0",
- "macaw",
- "dl_byte_size",
- "dl_data_ui",
- "dl_entity_db",
- "dl_log",
- "dl_log_types",
- "dl_query",
- "dl_renderer",
- "dl_sdk_types",
- "dl_test_context",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "walkers",
-]
-
-[[package]]
-name = "dl_view_spatial"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "bitflags 2.13.1",
- "bytemuck",
- "egui",
- "glam",
- "half",
- "hexasphere",
- "image",
- "insta",
- "itertools 0.15.0",
- "macaw",
- "ndarray",
- "nohash-hasher",
- "ordered-float 5.3.0",
- "parking_lot",
- "dl_byte_size",
- "dl_chunk_store",
- "dl_component_ui",
- "dl_data_ui",
- "dl_entity_db",
- "dl_error",
- "dl_format",
- "dl_gamepad",
- "dl_int",
- "dl_log",
- "dl_log_types",
- "re_mp4",
- "dl_query",
- "dl_renderer",
- "dl_rvl",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tf",
- "dl_tracing",
- "dl_ui",
- "dl_video",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport",
- "dl_viewport_blueprint",
- "serde",
- "smallvec",
- "thiserror 2.0.19",
- "vec1",
-]
-
-[[package]]
-name = "dl_view_state_timeline"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "egui",
- "nohash-hasher",
- "dl_byte_size",
- "dl_chunk_store",
- "dl_component_ui",
- "dl_log_types",
- "dl_sdk_types",
- "dl_selection_panel",
- "dl_test_context",
- "dl_test_viewport",
- "dl_time_ruler",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport",
- "dl_viewport_blueprint",
-]
-
-[[package]]
-name = "dl_view_tensor"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "bytemuck",
- "egui",
- "half",
- "ndarray",
- "dl_byte_size",
- "dl_chunk_store",
- "dl_data_ui",
- "dl_log_types",
- "dl_query",
- "dl_renderer",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "thiserror 2.0.19",
- "wgpu",
-]
-
-[[package]]
-name = "dl_view_text_document"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "egui",
- "egui_commonmark",
- "dl_byte_size",
- "dl_chunk_store",
- "dl_log_types",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
-]
-
-[[package]]
-name = "dl_view_text_log"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "egui",
- "egui_extras",
- "itertools 0.15.0",
- "dl_byte_size",
- "dl_chunk",
- "dl_chunk_store",
- "dl_data_ui",
- "dl_entity_db",
- "dl_log",
- "dl_log_types",
- "dl_query",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
-]
-
-[[package]]
-name = "dl_view_time_series"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrayvec",
- "egui",
- "egui_plot",
- "glam",
- "itertools 0.15.0",
- "macaw",
- "nohash-hasher",
- "rayon",
- "dl_byte_size",
- "dl_chunk",
- "dl_chunk_store",
- "dl_component_ui",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_plot",
- "dl_query",
- "dl_renderer",
- "dl_sdk_types",
- "dl_test_context",
- "dl_test_viewport",
- "dl_tracing",
- "dl_ui",
- "dl_view",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "smallvec",
- "vec1",
-]
-
-[[package]]
-name = "dl_viewer"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "bytemuck",
- "camino",
- "crossbeam",
- "eframe",
- "egui",
- "egui-wgpu",
- "egui_inspection",
- "egui_kittest",
- "egui_plot",
- "ehttp",
- "emath",
- "futures",
- "glam",
- "image",
- "insta",
- "itertools 0.15.0",
- "jiff",
- "js-sys",
- "num-traits",
- "parking_lot",
- "poll-promise",
- "rayon",
- "dl_analytics",
- "dl_async",
- "dl_auth",
- "dl_blueprint_tree",
- "dl_build_info",
- "dl_build_tools",
- "dl_byte_size",
- "dl_capabilities",
- "dl_chunk",
- "dl_chunk_store",
- "dl_chunk_store_ui",
- "dl_component_fallbacks",
- "dl_component_ui",
- "dl_data_source",
- "dl_data_ui",
- "dl_dataframe_ui",
- "dl_entity_db",
- "dl_error",
- "dl_format",
- "dl_gamepad",
- "dl_importer",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_memory",
- "dl_memory_view",
- "dl_mutex",
- "dl_perf_telemetry",
- "dl_protos",
- "dl_query",
- "dl_recording_panel",
- "dl_redap_browser",
- "dl_redap_client",
- "dl_renderer",
- "dl_sdk_types",
- "dl_selection_panel",
- "dl_server",
- "dl_sorbet",
- "dl_string_interner",
- "dl_test_context",
- "dl_test_viewport",
- "dl_time_panel",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_uri",
- "dl_video",
- "dl_view",
- "dl_view_bar_chart",
- "dl_view_dataframe",
- "dl_view_graph",
- "dl_view_map",
- "dl_view_spatial",
- "dl_view_state_timeline",
- "dl_view_tensor",
- "dl_view_text_document",
- "dl_view_text_log",
- "dl_view_time_series",
- "dl_viewer_context",
- "dl_viewport",
- "dl_viewport_blueprint",
- "dl_web",
- "rfd",
- "ron",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "strum",
- "strum_macros",
- "tap",
- "tempfile",
- "thiserror 2.0.19",
- "tokio",
- "tokio-stream",
- "url",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "web-sys",
- "web-time",
- "wgpu",
-]
-
-[[package]]
-name = "dl_viewer_context"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "bitflags 2.13.1",
- "bytemuck",
- "camino",
- "crossbeam",
- "datafusion",
- "directories",
- "egui",
- "egui-wgpu",
- "egui_kittest",
- "egui_tiles",
- "emath",
- "glam",
- "half",
- "image",
- "indexmap 2.14.0",
- "itertools 0.15.0",
- "linked-hash-map",
- "macaw",
- "ndarray",
- "nohash-hasher",
- "parking_lot",
- "rand 0.9.5",
- "rayon",
- "dl_arrow_ui",
- "dl_arrow_util",
- "dl_async",
- "dl_byte_size",
- "dl_capabilities",
- "dl_chunk",
- "dl_chunk_store",
- "dl_data_source",
- "dl_entity_db",
- "dl_error",
- "dl_format",
- "dl_lenses_core",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_memory",
- "dl_mutex",
- "dl_query",
- "dl_quota_channel",
- "dl_redap_client",
- "dl_renderer",
- "dl_rvl",
- "dl_sdk_types",
- "dl_string_interner",
- "dl_tf",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_uri",
- "dl_video",
- "dl_web",
- "rfd",
- "serde",
- "slotmap",
- "smallvec",
- "static_assertions",
- "strum_macros",
- "thiserror 2.0.19",
- "tokio",
- "uuid",
- "vec1",
- "wgpu",
-]
-
-[[package]]
-name = "dl_viewer_mcp"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "egui_inspection",
- "egui_mcp",
- "insta",
- "parking_lot",
- "dl_log",
- "dl_protos",
- "rmcp",
- "schemars 1.2.2",
- "serde",
- "serde_json",
- "tokio",
- "tonic",
-]
-
-[[package]]
-name = "dl_viewport"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "egui",
- "egui_tiles",
- "nohash-hasher",
- "rayon",
- "dl_context_menu",
- "dl_entity_db",
- "dl_format",
- "dl_log",
- "dl_log_types",
- "dl_renderer",
- "dl_sdk_types",
- "dl_tracing",
- "dl_ui",
- "dl_viewer_context",
- "dl_viewport_blueprint",
- "web-time",
-]
-
-[[package]]
-name = "dl_viewport_blueprint"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "criterion",
- "egui",
- "egui_tiles",
- "itertools 0.15.0",
- "mimalloc",
- "nohash-hasher",
- "rand 0.9.5",
- "dl_chunk",
- "dl_chunk_store",
- "dl_entity_db",
- "dl_log",
- "dl_log_types",
- "dl_mutex",
- "dl_sdk_types",
- "dl_test_context",
- "dl_tracing",
- "dl_types_core",
- "dl_ui",
- "dl_viewer_context",
- "slotmap",
- "smallvec",
- "thiserror 2.0.19",
-]
-
-[[package]]
-name = "dl_web"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "async-trait",
- "bytes",
- "getrandom 0.3.4",
- "js-sys",
- "dl_async",
- "dl_tuid",
- "wasm-bindgen",
- "wasm-bindgen-test",
- "web-sys",
-]
-
-[[package]]
-name = "dl_web_tests"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "argh",
- "cargo_metadata",
- "dl_server",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "dl_web_viewer_server"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "document-features",
- "dl_analytics",
- "dl_build_tools",
- "dl_log",
- "tempfile",
- "thiserror 2.0.19",
- "tiny_http",
- "zip",
 ]
 
 [[package]]
@@ -11366,98 +11549,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "dalaran"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "anyhow",
- "arrow",
- "camino",
- "clap",
- "comfy-table",
- "crossbeam",
- "document-features",
- "env_filter",
- "indexmap 2.14.0",
- "indicatif",
- "itertools 0.15.0",
- "jiff",
- "libc",
- "log",
- "mcap",
- "memmap2 0.9.11",
- "parking_lot",
- "puffin",
- "rayon",
- "dl_analytics",
- "dl_arrow_util",
- "dl_async",
- "dl_auth",
- "dl_build_info",
- "dl_build_tools",
- "dl_byte_size",
- "dl_capabilities",
- "dl_chunk",
- "dl_chunk_store",
- "dl_crash_handler",
- "dl_data_source",
- "dl_dataframe",
- "dl_entity_db",
- "dl_error",
- "dl_format",
- "dl_grpc_server",
- "dl_log",
- "dl_log_channel",
- "dl_log_encoding",
- "dl_log_types",
- "dl_mcap",
- "dl_memory",
- "dl_perf_telemetry",
- "dl_protos",
- "dl_quota_channel",
- "dl_redap_client",
- "dl_sdk",
- "dl_sdk_types",
- "dl_server",
- "dl_sorbet",
- "dl_tracing",
- "dl_uri",
- "dl_video",
- "dl_viewer",
- "dl_viewer_mcp",
- "dl_web_viewer_server",
- "similar-asserts",
- "tokio",
- "unindent",
- "url",
- "walkdir",
-]
-
-[[package]]
-name = "dalaran-cli"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "document-features",
- "mimalloc",
- "dl_build_info",
- "dl_build_tools",
- "dl_error",
- "dl_log",
- "dl_memory",
- "dl_server",
- "dalaran",
-]
-
-[[package]]
-name = "dalaran-importer-rust-file"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "argh",
- "dalaran",
-]
-
-[[package]]
 name = "rerun-tonic-web-wasm-client"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11480,97 +11571,6 @@ dependencies = [
  "wasm-bindgen-futures",
  "wasm-streams",
  "web-sys",
-]
-
-[[package]]
-name = "dalaran_c"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "ahash",
- "arrow",
- "half",
- "infer",
- "itertools 0.15.0",
- "parking_lot",
- "dl_arrow_util",
- "dl_build_info",
- "dl_build_tools",
- "dl_crash_handler",
- "dl_log",
- "dl_sdk",
- "dl_video",
-]
-
-[[package]]
-name = "dalaran_py"
-version = "0.36.0-alpha.1+dev"
-dependencies = [
- "anyhow",
- "arrow",
- "chrono",
- "comfy-table",
- "crossbeam",
- "datafusion",
- "datafusion-ffi",
- "document-features",
- "futures",
- "infer",
- "itertools 0.15.0",
- "jiff",
- "memmap2 0.9.11",
- "mimalloc",
- "numpy",
- "parking_lot",
- "pyo3",
- "pyo3-build-config",
- "rand 0.9.5",
- "dl_arrow_util",
- "dl_auth",
- "dl_build_info",
- "dl_build_tools",
- "dl_chunk",
- "dl_chunk_store",
- "dl_datafusion",
- "dl_error",
- "dl_format",
- "dl_grpc_client",
- "dl_grpc_server",
- "dl_hdf5",
- "dl_importer",
- "dl_lenses",
- "dl_lenses_core",
- "dl_log",
- "dl_log_encoding",
- "dl_log_types",
- "dl_mcap",
- "dl_memory",
- "dl_mp4_reader",
- "dl_parquet",
- "dl_perf_telemetry",
- "dl_protos",
- "dl_quota_channel",
- "dl_redap_client",
- "dl_sdk",
- "dl_sdk_types",
- "dl_server",
- "dl_sorbet",
- "dl_tracing",
- "dl_tuid",
- "dl_types_core",
- "dl_uri",
- "dl_video",
- "dl_web_viewer_server",
- "rustls",
- "strum",
- "strum_macros",
- "tempfile",
- "thiserror 2.0.19",
- "tokio",
- "tokio-stream",
- "tonic",
- "tracing",
- "url",
- "uuid",
 ]
 
 [[package]]
@@ -12437,12 +12437,12 @@ name = "snippets"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "crossbeam",
+ "dalaran",
+ "dl_build_tools",
  "itertools 0.15.0",
  "ndarray",
  "rand 0.9.5",
  "rand_distr",
- "dl_build_tools",
- "dalaran",
  "similar-asserts",
 ]
 
@@ -12575,8 +12575,8 @@ checksum = "8207e78455ffdf55661170876f88daf85356e4edd54e0a3dbc79586ca1e50cbe"
 name = "stdio"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "itertools 0.15.0",
  "dalaran",
+ "itertools 0.15.0",
 ]
 
 [[package]]
@@ -12770,9 +12770,9 @@ name = "test_data_density_graph"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
- "rand 0.9.5",
- "dl_log",
  "dalaran",
+ "dl_log",
+ "rand 0.9.5",
 ]
 
 [[package]]
@@ -12781,13 +12781,13 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
+ "dl_renderer",
+ "dl_sdk_types",
+ "dl_types_core",
  "glam",
  "image",
  "macaw",
  "pollster 1.0.1",
- "dl_renderer",
- "dl_sdk_types",
- "dl_types_core",
  "wgpu",
 ]
 
@@ -12795,10 +12795,10 @@ dependencies = [
 name = "test_image_memory"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "mimalloc",
+ "dalaran",
  "dl_format",
  "dl_memory",
- "dalaran",
+ "mimalloc",
 ]
 
 [[package]]
@@ -12807,8 +12807,8 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "dl_log",
  "dalaran",
+ "dl_log",
 ]
 
 [[package]]
@@ -12817,9 +12817,9 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "glam",
- "dl_log",
  "dalaran",
+ "dl_log",
+ "glam",
 ]
 
 [[package]]
@@ -12828,8 +12828,8 @@ version = "0.36.0-alpha.1+dev"
 dependencies = [
  "anyhow",
  "clap",
- "dl_log",
  "dalaran",
+ "dl_log",
 ]
 
 [[package]]
@@ -13757,8 +13757,8 @@ checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
 name = "viewer_callbacks"
 version = "0.36.0-alpha.1+dev"
 dependencies = [
- "mimalloc",
  "dalaran",
+ "mimalloc",
 ]
 
 [[package]]

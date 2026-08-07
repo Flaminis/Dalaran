@@ -12,7 +12,7 @@ By far the easiest way to add Dalaran to your project is using `FetchContent`:
 ```cmake
 include(FetchContent)
 FetchContent_Declare(dalaran_sdk URL
-    https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip)
+    https://github.com/Flaminis/Dalaran/releases/latest/download/dalaran_cpp_sdk.zip)
 FetchContent_MakeAvailable(dalaran_sdk)
 ```
 
@@ -51,7 +51,7 @@ If you want to pre-build `dalaran_sdk` for use with a different build system, or
 `dalaran_sdk`, it can be useful to use CMake's install command to install a re-usable version of `dalaran_sdk` on your system.
 
 To do so, follow these following steps:
-* Download and unpack the desired `dalaran_cpp_sdk.zip` (e.g https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip for the latest version)
+* Download and unpack the desired `dalaran_cpp_sdk.zip` (e.g https://github.com/Flaminis/Dalaran/releases/latest/download/dalaran_cpp_sdk.zip for the latest version)
 * In the directory of the unpacked `dalaran_cpp_sdk` run:
   * Configure:
     * `cmake -B build -S . -DCMAKE_BUILD_TYPE=Release`

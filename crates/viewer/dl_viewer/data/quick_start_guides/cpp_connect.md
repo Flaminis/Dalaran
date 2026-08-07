@@ -16,7 +16,7 @@ After you have installed it, you should be able to type `dalaran` in your termin
 ```cmake
 include(FetchContent)
 FetchContent_Declare(dalaran_sdk URL
-    https://github.com/Flaminis/Dalaran/releases/latest/download/rerun_cpp_sdk.zip)
+    https://github.com/Flaminis/Dalaran/releases/latest/download/dalaran_cpp_sdk.zip)
 FetchContent_MakeAvailable(dalaran_sdk)
 ```
 
