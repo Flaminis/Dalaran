@@ -120,8 +120,27 @@ impl StreamHeader {
                 CrateVersion::from_bytes(self.version)
             };
 
-            if encoded_version.major == 0 && encoded_version.minor < 23 {
-                // We broke compatibility for 0.23 for (hopefully) the last time.
+            // Upstream Rerun broke the stream encoding for (hopefully) the last time in 0.23,
+            // so nothing older than that can be decoded.
+            //
+            // Dalaran restarted its versioning at 0.1.0 when it forked, which means the version
+            // field on its own no longer identifies the encoding: `0.1.0` is a modern Dalaran
+            // file, while `0.22.0` is an ancient Rerun one. Rejecting everything below 0.23 would
+            // therefore reject every recording Dalaran itself writes.
+            //
+            // We resolve the ambiguity with the local version: a file that claims to be at or
+            // below the version of the build reading it was written by a Dalaran of our own
+            // vintage and uses our encoding, while a `< 0.23` file that is somehow *newer* than
+            // this build can only have come from upstream Rerun.
+            //
+            // TODO(dalaran): revisit this when Dalaran's own minor version approaches 23, at
+            // which point the two version namespaces overlap for real and the stream header needs
+            // to say who wrote it.
+            let is_ancient_upstream_file = encoded_version.major == 0
+                && encoded_version.minor < 23
+                && CrateVersion::LOCAL < encoded_version;
+
+            if is_ancient_upstream_file {
                 return Err(crate::dlr::CodecError::IncompatibleDalaranVersion {
                     file: Box::new(encoded_version),
                     local: Box::new(CrateVersion::LOCAL),
@@ -529,5 +548,66 @@ impl Decodable for MessageHeader {
         let len = u64::from_le_bytes(data[8..16].try_into().expect("cannot fail, checked above"));
 
         Ok(Self { kind, len })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn header(version: CrateVersion) -> StreamHeader {
+        StreamHeader {
+            fourcc: crate::DLR_FOURCC,
+            version: version.to_bytes(),
+            options: EncodingOptions::PROTOBUF_COMPRESSED,
+        }
+    }
+
+    #[test]
+    fn test_dalaran_can_read_its_own_recordings() {
+        // Dalaran restarted versioning at 0.1.0, well below the 0.23 cutoff that upstream Rerun
+        // left behind. Every recording this build writes carries its own version, so refusing
+        // those would mean Dalaran cannot open its own files.
+        let (version, _options) = header(CrateVersion::LOCAL)
+            .to_version_and_options()
+            .unwrap();
+        assert_eq!(version, CrateVersion::LOCAL);
+
+        let older = CrateVersion::new(0, 0, 1);
+        assert!(header(older).to_version_and_options().is_ok());
+    }
+
+    #[test]
+    fn test_ancient_upstream_recordings_are_still_rejected() {
+        // These are real upstream Rerun releases using an encoding nothing here can read.
+        for version in [
+            CrateVersion::new(0, 2, 0),
+            CrateVersion::new(0, 15, 1),
+            CrateVersion::new(0, 22, 0),
+        ] {
+            assert!(
+                CrateVersion::LOCAL < version,
+                "this test assumes Dalaran is still below {version}"
+            );
+            let err = header(version).to_version_and_options().unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    crate::dlr::CodecError::IncompatibleDalaranVersion { .. }
+                ),
+                "{version} should have been rejected, got {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn test_post_cutoff_recordings_are_accepted() {
+        // Anything from 0.23 onwards uses the encoding we still speak.
+        for version in [CrateVersion::new(0, 23, 0), CrateVersion::new(1, 0, 0)] {
+            assert!(
+                header(version).to_version_and_options().is_ok(),
+                "{version}"
+            );
+        }
     }
 }
