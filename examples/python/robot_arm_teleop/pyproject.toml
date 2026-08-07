@@ -1,0 +1,16 @@
+[project]
+name = "robot_arm_teleop"
+version = "0.1.0"
+readme = "README.md"
+dependencies = ["numpy", "dalaran-sdk"]
+
+[project.scripts]
+robot_arm_teleop = "main:main"
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.dalaran-example]
+extra-args = ["--steps=200"]
