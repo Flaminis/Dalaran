@@ -173,8 +173,8 @@ How far that goes, stated precisely, because "compatible" is easy to overclaim:
 
 ## Architecture
 
-Rust crates live under `crates/` and are prefixed `dl_*`. The table lists the
-ones worth knowing about first; each directory has its own `README.md`.
+Rust crates live under `crates/` and are prefixed `dl_*`, apart from the user-facing `dalaran`, `dalaran-cli` and `dalaran_c` under `crates/top/`.
+The table lists the ones worth knowing about first; each directory has its own `README.md`.
 
 | Crate | Group | What it does |
 | --- | --- | --- |
