@@ -117,8 +117,8 @@ roadmap. What is *not* built yet lives in [ROADMAP.md](ROADMAP.md).
 - **`dalaran.robot`, a high-level robotics logging API** — one handle that knows
   about a robot: joint states, base pose, sensor frames, and URDF-driven link
   transforms, so you log `robot.log_joint_states(...)` instead of hand-rolling a
-  dozen entity paths and quaternion conversions. Point it at a URDF and joint
-  limits, joint axes and `<mimic>` joints are honoured for you.
+  dozen entity paths and quaternion conversions.
+  Point it at a URDF, and joint limits, joint axes and `<mimic>` joints are honoured for you.
 - **ROS 2 bridge and rosbag2 replay** — subscribe to live ROS 2
   topics or replay a rosbag2 into Dalaran, backed by an **extensible message
   registry** so you can teach it your own `.msg` types without patching the
